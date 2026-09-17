@@ -1,9 +1,9 @@
-import type { Game } from '../types/game';
+import type { Game } from "../types/game";
 
 /**
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
- * Moissonnée et enrichie via l'API Steam Store & IGDB.
- * Total de jeux : 84
+ * Moissonnée et vérifiée via l'API Steam Store officielle (Règle 0 Hallucination).
+ * Total de jeux jouables et certifiés : 83
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -2489,7 +2489,7 @@ export const INDIE_GAMES: Game[] = [
   {
     "id": "hades-ii",
     "title": "Hades II",
-    "releaseYear": 2025,
+    "releaseYear": 2024,
     "genre": [
       "Action",
       "Indépendant",
@@ -2938,41 +2938,6 @@ export const INDIE_GAMES: Game[] = [
         "en": "ANTONBLAST is a fast-paced explosive action platformer that's all about destruction. Play as the enraged Dynamite Anton (or his cranked-out coworker Annie) and use your Mighty F’n Hammer to demolish bizarre worlds, tussle with screen-filling bosses, and steal your Spirits back from Satan!"
       },
       "composer": "Tony Grayson"
-    }
-  },
-  {
-    "id": "slay-the-spire-2",
-    "title": "Slay the Spire 2",
-    "releaseYear": 2025,
-    "genre": [
-      "Indépendant",
-      "Stratégie",
-      "Accès anticipé"
-    ],
-    "artStyle": {
-      "fr": "Illustration 2D moderne et sombre redessinée sous Godot",
-      "en": "Modern dark 2D illustration in Godot Engine"
-    },
-    "camera": {
-      "fr": "Vue de profil 2D de combat tactique",
-      "en": "2D Side-view Tactical Battle"
-    },
-    "developer": "Mega Crit",
-    "steamUrl": "https://store.steampowered.com/app/2868840/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/1a373a95229aab0cfd97f553ecbe86092364bb9c/ss_1a373a95229aab0cfd97f553ecbe86092364bb9c.1920x1080.jpg?t=1787169309",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/f3af7cb9693b9c4b6a7555227db3fef943db3992/ss_f3af7cb9693b9c4b6a7555227db3fef943db3992.1920x1080.jpg?t=1787169309",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/c3db69efd984ef012ae85c5b426663720152f0a4/ss_c3db69efd984ef012ae85c5b426663720152f0a4.1920x1080.jpg?t=1787169309",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/0fdb2940c0d367a40b2be6433daf12e3634089cf/ss_0fdb2940c0d367a40b2be6433daf12e3634089cf.1920x1080.jpg?t=1787169309",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/18e8bda7bc4cdb37b90e0e2ce546967cbec87076/ss_18e8bda7bc4cdb37b90e0e2ce546967cbec87076.1920x1080.jpg?t=1787169309",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/0aa6bff0eff26e37ccfdb07ad6cab52f8ab1ed4b/ss_0aa6bff0eff26e37ccfdb07ad6cab52f8ab1ed4b.1920x1080.jpg?t=1787169309"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Le deckbuilder roguelike emblématique fait son grand retour. Construisez un deck unique, affrontez des créatures étranges, et découvrez de puissantes reliques dans Slay the Spire 2 !",
-        "en": "Le deckbuilder roguelike emblématique fait son grand retour. Construisez un deck unique, affrontez des créatures étranges, et découvrez de puissantes reliques dans Slay the Spire 2 !"
-      },
-      "composer": "Clark Aboud"
     }
   }
 ];

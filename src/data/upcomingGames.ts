@@ -44,6 +44,32 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80',
   },
   {
+    id: 'slaythespire2',
+    title: 'Slay the Spire 2',
+    developer: 'Mega Crit',
+    publisher: 'Mega Crit',
+    expectedDate: {
+      fr: 'Accès Anticipé annoncé (TBA)',
+      en: 'Announced Early Access (TBA)',
+    },
+    genres: [
+      { fr: 'Roguelike Deckbuilder', en: 'Roguelike Deckbuilder' },
+      { fr: 'Stratégie', en: 'Strategy' },
+    ],
+    platforms: ['PC (Steam)'],
+    steamUrl: 'https://store.steampowered.com/app/2868840/Slay_the_Spire_2/',
+    description: {
+      fr: 'La suite du roi incontesté du deckbuilder rogue-like. Reconstruit de zéro sous le moteur Godot Engine avec de nouveaux personnages, cartes et reliques.',
+      en: 'The sequel to the benchmark roguelike deckbuilder. Rebuilt from scratch in Godot Engine with new characters, cards, and relics.',
+    },
+    highlight: {
+      fr: 'Développé avec passion sur le moteur libre Godot Engine.',
+      en: 'Proudly built using the open-source Godot Engine.',
+    },
+    hypeScore: 98,
+    coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
+  },
+  {
     id: 'earthblade',
     title: 'Earthblade',
     developer: 'Extremely OK Games',

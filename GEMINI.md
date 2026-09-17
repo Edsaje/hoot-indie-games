@@ -159,7 +159,7 @@ export interface DailyConnectionsPuzzle {
 
 ## 7. Gestion & Moissonnage de la Base de Données de Jeux Indés
 
-La base de données officielle de **Hoot Indie Games** compte **84 chefs-d'œuvre et pépites indés certifiés** (allant des pionniers 2010 aux sorties marquantes 2024–2026 comme *Hades II*, *Slay the Spire 2*, *Neva*, *UFO 50*, *Mouthwashing*, *Nine Sols*, *Animal Well*, *Balatro*, *Crow Country*).
+La base de données officielle de **Hoot Indie Games** compte **83 chefs-d'œuvre et pépites indés certifiés** (allant des pionniers 2010 aux sorties marquantes 2024 comme *Hades II*, *Neva*, *UFO 50*, *Mouthwashing*, *Nine Sols*, *Animal Well*, *Balatro*, *Crow Country*).
 
 ### Commandes CLI de Maintenance
 
@@ -174,3 +174,24 @@ La base de données officielle de **Hoot Indie Games** compte **84 chefs-d'œuvr
    npm run update-db
    ```
    Exécute la suite de moissonnage `scripts/addBatchGames.ts` et fusionne les nouvelles fiches dans `src/data/games.ts` sans doublons ni régressions.
+
+---
+
+## 8. Règle Fondamentale : ZÉRO Hallucination & Rigueur Factuelle
+
+Cette règle est absolue et prévaut sur toute autre considération :
+
+1. **Aucune invention de données ni de dates** :
+   - Interdiction formelle d'inventer des dates de sortie, des noms de studios, des compositeurs, des captures d'écran, des prix ou des tags.
+   - Toute métadonnée de jeu doit être extraite et vérifiée auprès d'une source officielle (API Steam Store officielle, annonce officielle du studio, ou base IGDB).
+
+2. **Séparation étanche entre Jeux Jouables et Jeux à Venir** :
+   - `src/data/games.ts` ne contient **QUE** des jeux effectivement commercialisés, vérifiables et jouables.
+   - Les jeux non encore parus doivent obligatoirement résider dans `src/data/upcomingGames.ts` avec la mention officielle communiquée par les développeurs (ex : *"TBA / En développement"* ou fenêtre officielle), sans jamais extrapoler une année fictive.
+
+3. **Aucune extrapolation temporelle ou spéculative** :
+   - Ne jamais présumer ou affirmer comme fait acquis ce qui n'est pas vérifié dans la réalité documentaire. Si une date n'est pas officiellement fixée, l'indiquer explicitement comme *"À confirmer / TBA"*.
+
+4. **Code, Dépendances et APIs Réels** :
+   - Aucun import fantôme, aucune fonction fictive, aucun mock se faisant passer pour une API externe sans étiquetage explicite.
+   - Le code doit passer `tsc -b` sans aucune erreur de typage et `npm run lint` avec 0 warning.
