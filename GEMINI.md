@@ -255,9 +255,18 @@ Pour prévenir toute fausse déduction ou frustration dans Indledle :
 
 ---
 
-## 12. Hébergement & Déploiement Continu
+## 12. Hébergement, Dépôt GitHub & Déploiement Continu
 
-- **Configuration SPA Vercel** : Présente dans [`vercel.json`](file:///home/user/hoot-indie-games/vercel.json) pour rediriger toutes les routes et deep-links vers `/index.html`.
-- **Configuration Cloudflare Pages & Netlify** : Présente dans [`public/_redirects`](file:///home/user/hoot-indie-games/public/_redirects).
-- **Déploiement en 1 clic** : Guide complet étape par étape dans [`DEPLOY.md`](file:///home/user/hoot-indie-games/DEPLOY.md).
+- **Dépôt GitHub officiel** : [`https://github.com/Edsaje/hoot-indie-games`](https://github.com/Edsaje/hoot-indie-games)
+- **Site en production** : [`http://www.hootindiegames.com/`](http://www.hootindiegames.com/)
+- **Pipeline CI/CD OVH automatique** : Tout `git push` sur la branche `main` déclenche le workflow GitHub Actions [`.github/workflows/deploy-ovh.yml`](file:///.github/workflows/deploy-ovh.yml). Le runner GitHub exécute `npm run audit-db`, `npm run build`, puis transfère via FTP vers le cluster OVH (`ftp.cluster129.hosting.ovh.net` -> `./www/`).
+- **Télémétrie Privée** : Endpoint souverain [`public/api/track.php`](file:///public/api/track.php) avec mot de passe Bcrypt et blocage `.htaccess`.
+- **Guide de secours & déploiement alternatif** : [`DEPLOY.md`](file:///DEPLOY.md).
+
+---
+
+## 13. Feuille de Route & Todolist Active
+
+Consulter impérativement le fichier [`TODOLIST.md`](file:///TODOLIST.md) à la racine du projet pour prendre connaissance des tâches en cours, décisions de l'utilisateur (renommage des modes, suggestion Steam, véritable multijoueur 1v1, onglet Arcade dédié, réhabilitation du Perchoir) et priorités de développement.
+
 
