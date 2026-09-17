@@ -4,7 +4,7 @@ import type { Game } from '../types/game';
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 90
+ * Total de jeux : 94
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -3197,6 +3197,113 @@ export const INDIE_GAMES: Game[] = [
         "fr": "Incarnez des singes démineurs entre amis ! Coopérez en équipe de trois singes : un aveugle, un sourd et un muet. Chaque joueur dispose d’une partie différente des informations. Communiquez, résolvez des casse-têtes et jouez contre la montre. Désamorcerez-vous les bombes avant qu’elles explosent ?",
         "en": "Chaotic bomb disposal fun with friends &amp; monkeys! Work together as a 3-player co-op team of blind, deaf, and mute monkeys. Each player has only part of the needed information. Communicate, solve puzzles, and race against the clock. Can you defuse the bombs before they explode?"
       }
+    }
+  },
+  {
+    "id": "no-rest-for-the-wicked",
+    "title": "No Rest for the Wicked",
+    "releaseYear": 2024,
+    "genre": [
+      "Action-RPG",
+      "Soulslike",
+      "Dark Fantasy",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
+    },
+    "developer": "Moon Studios GmbH",
+    "steamUrl": "https://store.steampowered.com/app/1371980/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1371980/079327abaf4866604f9f77200ded37da18d7089e/ss_079327abaf4866604f9f77200ded37da18d7089e.1920x1080.jpg?t=1789377119",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1371980/56066f44f29e8b042c482e0b0680bc101bf1ecd5/ss_56066f44f29e8b042c482e0b0680bc101bf1ecd5.1920x1080.jpg?t=1789377119",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1371980/1163c9191d2261d845aa96cbc011ed6490182ae8/ss_1163c9191d2261d845aa96cbc011ed6490182ae8.1920x1080.jpg?t=1789377119",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1371980/ss_01a87d9ec6cef10244eb5dd8d3f55047060da954.1920x1080.jpg?t=1789377119",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1371980/5b7da66aa69e175a215b52a4461c1d3748ec571e/ss_5b7da66aa69e175a215b52a4461c1d3748ec571e.1920x1080.jpg?t=1789377119",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1371980/5ced8490a4743651afb3fe68e480ab5422e56e74/ss_5ced8490a4743651afb3fe68e480ab5422e56e74.1920x1080.jpg?t=1789377119"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Moon Studios, les créateurs récompensés pour Ori and the Blind Forest et Ori and the Will of the Wisps, vous présentent No Rest for the Wicked, un jeu d'action-RPG unique et sanglant qui se déroule dans un monde dessiné à la main et qui propose des combats de type souls-like.",
+        "en": "From Moon Studios, the award-winning creators of Ori and the Blind Forest and Ori and the Will of the Wisps, comes No Rest for the Wicked, a unique, visceral Action RPG set in a hand-crafted world with Souls-like combat. Featuring co-op for up to four players."
+      },
+      "composer": "unlikely of places"
+    }
+  },
+  {
+    "id": "rv-there-yet",
+    "title": "RV There Yet?",
+    "releaseYear": 2025,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Coop"
+    ],
+    "artStyle": {
+      "fr": "3D Rétro Low-poly",
+      "en": "Retro Low-poly 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Nuggets Entertainment",
+    "steamUrl": "https://store.steampowered.com/app/3949040/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/ed2f7080c6622688a72a86ca85af600f2a2bdfb9/ss_ed2f7080c6622688a72a86ca85af600f2a2bdfb9.1920x1080.jpg?t=1789134289",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/7d246f94e4ec2ff4c7be3ded82bcdd558274d7c7/ss_7d246f94e4ec2ff4c7be3ded82bcdd558274d7c7.1920x1080.jpg?t=1789134289",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/f5663e0220e188d4c9db0789f0cbb4ddefd762d5/ss_f5663e0220e188d4c9db0789f0cbb4ddefd762d5.1920x1080.jpg?t=1789134289",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/9face7033df9bd0274428d6215711c5dec20f245/ss_9face7033df9bd0274428d6215711c5dec20f245.1920x1080.jpg?t=1789134289",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/aa6d58ff1f0eb5c5b3e6d7cc10c1576b62a745b0/ss_aa6d58ff1f0eb5c5b3e6d7cc10c1576b62a745b0.1920x1080.jpg?t=1789134289",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/9c06d0d1e31ab3e05b1ce24692a9397ca7bfabf1/ss_9c06d0d1e31ab3e05b1ce24692a9397ca7bfabf1.1920x1080.jpg?t=1789134289"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu d'aventure coopératif qui vous met au défi de conduire votre caravane jusqu'à votre domicile !",
+        "en": "A co-op adventure about driving your Recreational Vehicle home."
+      },
+      "composer": "road bumps"
+    }
+  },
+  {
+    "id": "palworld",
+    "title": "Palworld",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG",
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "Pocketpair",
+    "steamUrl": "https://store.steampowered.com/app/1623730/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1784714419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/648ed4266fc18f413292292741304ef648421c55/ss_648ed4266fc18f413292292741304ef648421c55.1920x1080.jpg?t=1784714419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_b3cea7c9f04a67d784d4c6a0c157a11d6268b189.1920x1080.jpg?t=1784714419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/cd7b46028d10c21db8fc8217192094d309efcebc/ss_cd7b46028d10c21db8fc8217192094d309efcebc.1920x1080.jpg?t=1784714419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_06e27c15c7b4b10233c937b887cf6a6925c83009.1920x1080.jpg?t=1784714419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_a99fba5536acde781bd863cb3555c10b5b96c0ae.1920x1080.jpg?t=1784714419"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un tout nouveau jeu de survie multijoueur en monde ouvert où le but est de collectionner de mystérieuses créatures, les Pals, afin de les faire combattre, bâtir des structures, travailler dans les champs et faire tourner vos usines.",
+        "en": "Fight, farm, build and work alongside mysterious creatures called &quot;Pals&quot; in this completely new multiplayer, open world survival and crafting game!"
+      },
+      "composer": "dangerous areas"
     }
   }
 ];

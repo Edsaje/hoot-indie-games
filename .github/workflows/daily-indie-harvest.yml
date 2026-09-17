@@ -42,15 +42,15 @@ jobs:
         run: |
           git config --local user.email "bot@hootindiegames.com"
           git config --local user.name "Hoot Bot (Daily Harvest)"
-          if [ -n "$(git status --porcelain src/data/games.ts)" ]; then
-            git add src/data/games.ts
-            git commit -m "chore(data): moissonnage automatique des nouveaux jeux indés [skip ci]"
+          if [ -n "$(git status --porcelain src/data/)" ]; then
+            git add src/data/games.ts src/data/upcomingGames.ts
+            git commit -m "chore(data): moissonnage nocturne et synchronisation du radar [skip ci]"
             git push origin main
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
-            echo "🎉 Base de données mise à jour et poussée sur GitHub avec succès !"
+            echo "🎉 Base de données et Radar mis à jour et poussés sur GitHub avec succès !"
           else
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
-            echo "☕ Aucun nouveau jeu à pousser aujourd'hui."
+            echo "☕ Aucun changement à pousser aujourd'hui."
           fi
 
       - name: 📤 Déploiement automatique vers l'hébergement OVH
