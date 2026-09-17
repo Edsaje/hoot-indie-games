@@ -23,6 +23,7 @@ import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { downloadShareCard } from '../../utils/generateShareCard';
 import { CustomLinkleBuilder } from './CustomLinkleBuilder';
+import { telemetry } from '../../services/telemetry';
 
 interface LinkleGameProps {
   currentDate: string;
@@ -167,6 +168,15 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [previousGuesses, setPreviousGuesses] = useState<string[][]>(savedState.previousGuesses);
 
+  // Suivi télémétrie cookieless au lancement de Linkle
+  useEffect(() => {
+    telemetry.track('game', 'linkle_play', puzzle.id, undefined, {
+      isCustomMode,
+      date: currentDate,
+      alreadyCompleted: isCompleted,
+    });
+  }, [puzzle.id, isCustomMode, currentDate, isCompleted]);
+
   // Listen to hash changes for deep linking
   useEffect(() => {
     const handleHashChange = () => {
@@ -291,6 +301,13 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
       setSolvedCategories(newSolved);
       setSelectedGameIds([]);
 
+      telemetry.track(
+        'interaction',
+        'linkle_category_solved',
+        matchedCategory.label[lang],
+        newSolved.length
+      );
+
       // Remove solved tiles
       const remainingTiles = tiles.filter(
         (tile) => tile.categoryId !== matchedCategory!.id
@@ -315,6 +332,10 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         }
 
         soundFx.playVictory();
+        telemetry.track('game', 'linkle_win', puzzle.id, mistakesRemaining, {
+          mistakesRemaining,
+          isCustomMode,
+        });
         confetti({
           particleCount: 150,
           spread: 100,
@@ -344,6 +365,9 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         setSolvedCategories(puzzle.categories);
         setTiles([]);
         saveGameState(puzzle.categories, 0, true, false, nextPreviousGuesses);
+        telemetry.track('game', 'linkle_loss', puzzle.id, 0, {
+          isCustomMode,
+        });
         if (!isCustomMode) {
           recordGameResult('linkle', currentDate, false, 0);
           unlockAchievement('first_flight');

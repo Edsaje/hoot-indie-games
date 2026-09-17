@@ -18,6 +18,7 @@ import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
 import { INDIE_AVATARS } from '../../data/avatars';
+import { telemetry } from '../../services/telemetry';
 
 export type NavTab = 'screenle' | 'indledle' | 'linkle' | 'versus' | 'toolbox' | 'roost';
 
@@ -49,9 +50,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const currentAvatar = INDIE_AVATARS.find((a) => a.id === profile.avatarId) || INDIE_AVATARS[0];
 
+  const handleTabSelect = (tab: NavTab) => {
+    soundFx.playClick();
+    telemetry.track('navigation', 'tab_change', tab);
+    onTabChange(tab);
+  };
+
   const toggleSound = () => {
     const next = soundFx.toggleSound();
     setSoundEnabled(next);
+    telemetry.track('interaction', 'sound_toggle', next ? 'on' : 'off');
   };
 
   const toggleLanguage = () => {
@@ -59,6 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     const nextLang = i18n.language.startsWith('fr') ? 'en' : 'fr';
     i18n.changeLanguage(nextLang);
     unlockAchievement('polyglot');
+    telemetry.track('interaction', 'language_toggle', nextLang);
   };
 
   return (
@@ -70,10 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <OwlLogo onEasterEggTrigger={onEasterEggTrigger} size="md" />
             <div
               className="cursor-pointer select-none"
-              onClick={() => {
-                soundFx.playClick();
-                onTabChange('screenle');
-              }}
+              onClick={() => handleTabSelect('screenle')}
             >
               <div className="flex items-center gap-2">
                 <span className="text-lg font-black text-white tracking-wider flex items-center gap-1">
@@ -92,10 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Center Navigation Tabs */}
           <nav className="hidden lg:flex items-center gap-1 bg-[#131a29] p-1.5 rounded-2xl border border-[#1e293b]">
             <button
-              onClick={() => {
-                soundFx.playClick();
-                onTabChange('screenle');
-              }}
+              onClick={() => handleTabSelect('screenle')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'screenle'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
@@ -107,10 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => {
-                soundFx.playClick();
-                onTabChange('indledle');
-              }}
+              onClick={() => handleTabSelect('indledle')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'indledle'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
@@ -122,10 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => {
-                soundFx.playClick();
-                onTabChange('linkle');
-              }}
+              onClick={() => handleTabSelect('linkle')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'linkle'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
@@ -137,10 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => {
-                soundFx.playClick();
-                onTabChange('versus');
-              }}
+              onClick={() => handleTabSelect('versus')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'versus'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
@@ -157,10 +151,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="h-4 w-px bg-slate-700 mx-1" />
 
             <button
-              onClick={() => {
-                soundFx.playClick();
-                onTabChange('toolbox');
-              }}
+              onClick={() => handleTabSelect('toolbox')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'toolbox'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
@@ -172,10 +163,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => {
-                soundFx.playClick();
-                onTabChange('roost');
-              }}
+              onClick={() => handleTabSelect('roost')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'roost'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
@@ -288,10 +276,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             return (
               <button
                 key={item.id}
-                onClick={() => {
-                  soundFx.playClick();
-                  onTabChange(item.id);
-                }}
+                onClick={() => handleTabSelect(item.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition ${
                   active
                     ? 'bg-[#f59e0b] text-slate-950 font-black'

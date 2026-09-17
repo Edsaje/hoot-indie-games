@@ -4,8 +4,10 @@ import { Heart, Globe, Terminal } from 'lucide-react';
 import { GithubIcon, YoutubeIcon } from './SocialIcons';
 import { soundFx } from '../../utils/audio';
 
+import type { NavTab } from './Navbar';
+
 interface FooterProps {
-  onSelectTab: (tab: 'screenle' | 'indledle' | 'linkle' | 'toolbox' | 'roost') => void;
+  onSelectTab: (tab: NavTab) => void;
   onEasterEggTrigger: () => void;
 }
 
@@ -105,13 +107,24 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   Mode 3 : Linkle (Connections)
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => onSelectTab('versus')}
+                  className="hover:text-amber-400 transition flex items-center gap-1.5"
+                >
+                  <span>Mode 4 : Versus 1v1</span>
+                  <span className="text-[9px] font-black uppercase px-1 py-0.2 bg-amber-500/20 text-amber-400 rounded border border-amber-500/30">
+                    Live
+                  </span>
+                </button>
+              </li>
             </ul>
           </div>
 
           {/* Col 3: Espaces */}
           <div>
             <h4 className="text-xs font-black uppercase text-white tracking-widest mb-3">
-              Espaces
+              Espaces & Données
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
@@ -128,6 +141,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   className="hover:text-amber-400 transition"
                 >
                   {t('nav.roost')}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectTab('toolbox')}
+                  className="hover:text-emerald-400 transition flex items-center gap-1.5 text-emerald-400/90"
+                >
+                  <span>🛡️ Observatoire Sans Cookie</span>
                 </button>
               </li>
               <li className="pt-2 text-[11px] text-slate-500 flex items-center gap-1">

@@ -19,6 +19,7 @@ import { useUserAccount } from '../../context/useUserAccount';
 import { useAchievements } from '../../context/useAchievements';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { soundFx } from '../../utils/audio';
+import { telemetry } from '../../services/telemetry';
 
 type VersusPhase = 'lobby' | 'queueing' | 'countdown' | 'playing' | 'round_end' | 'match_end';
 
@@ -198,6 +199,11 @@ export const VersusArena: React.FC = () => {
     setOpponentScore(0);
     setCurrentRoundNumber(1);
 
+    telemetry.track('versus', 'versus_play', opponent?.name || 'Inconnu', undefined, {
+      opponentElo: opponent?.elo || 1000,
+      isBot: Boolean(opponent?.isBot),
+    });
+
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -341,9 +347,17 @@ export const VersusArena: React.FC = () => {
       });
       unlockAchievement('versus_champion');
       recordVersusResult(true, opponent?.elo || 1000);
+      telemetry.track('versus', 'versus_win', opponent?.name || 'Inconnu', finalPScore, {
+        finalScore: `${finalPScore}-${finalOScore}`,
+        opponentElo: opponent?.elo || 1000,
+      });
     } else {
       soundFx.playError();
       recordVersusResult(false, opponent?.elo || 1000);
+      telemetry.track('versus', 'versus_loss', opponent?.name || 'Inconnu', finalPScore, {
+        finalScore: `${finalPScore}-${finalOScore}`,
+        opponentElo: opponent?.elo || 1000,
+      });
     }
   };
 

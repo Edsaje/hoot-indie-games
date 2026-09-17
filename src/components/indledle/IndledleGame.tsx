@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -20,6 +20,7 @@ import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { downloadShareCard } from '../../utils/generateShareCard';
+import { telemetry } from '../../services/telemetry';
 
 interface IndledleGameProps {
   currentDate: string;
@@ -96,6 +97,14 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
     }
   };
 
+  // Suivi télémétrie cookieless au lancement
+  useEffect(() => {
+    telemetry.track('game', 'indledle_play', secretGame.title, undefined, {
+      date: currentDate,
+      alreadyCompleted: isCompleted,
+    });
+  }, [currentDate, secretGame.title, isCompleted]);
+
   const handleGuess = (guessedGame: Game) => {
     if (isCompleted || guesses.some((g) => g.id === guessedGame.id)) return;
 
@@ -113,6 +122,10 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
       }
       checkDailyTrifecta();
       soundFx.playVictory();
+      telemetry.track('game', 'indledle_win', secretGame.title, newGuesses.length, {
+        attempts: newGuesses.length,
+        game: secretGame.title,
+      });
       confetti({
         particleCount: 140,
         spread: 90,
@@ -126,9 +139,14 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
       recordGameResult('indledle', currentDate, false, MAX_GUESSES);
       unlockAchievement('first_flight');
       soundFx.playError();
+      telemetry.track('game', 'indledle_loss', secretGame.title, MAX_GUESSES, {
+        attempts: MAX_GUESSES,
+        game: secretGame.title,
+      });
     } else {
       saveGameState(newGuesses, false, false);
       soundFx.playClick();
+      telemetry.track('interaction', 'indledle_guess', guessedGame.title, newGuesses.length);
     }
   };
 

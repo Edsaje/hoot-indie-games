@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
 import {
@@ -23,6 +23,7 @@ import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { downloadShareCard } from '../../utils/generateShareCard';
+import { telemetry } from '../../services/telemetry';
 
 interface ScreenleGameProps {
   currentDate: string;
@@ -111,6 +112,14 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     }
   };
 
+  // Suivi télémétrie cookieless au chargement du défi
+  useEffect(() => {
+    telemetry.track('game', 'screenle_play', secretGame.title, undefined, {
+      date: currentDate,
+      alreadyCompleted: isCompleted,
+    });
+  }, [currentDate, secretGame.title, isCompleted]);
+
   const unlockedStagesCount = isCompleted
     ? 6
     : Math.min(6, guesses.length + 1);
@@ -134,6 +143,10 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       }
       checkDailyTrifecta();
       soundFx.playVictory();
+      telemetry.track('game', 'screenle_win', secretGame.title, newGuesses.length, {
+        attempts: newGuesses.length,
+        game: secretGame.title,
+      });
       confetti({
         particleCount: 120,
         spread: 80,
@@ -149,11 +162,18 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       recordGameResult('screenle', currentDate, false, 6);
       unlockAchievement('first_flight');
       soundFx.playError();
+      telemetry.track('game', 'screenle_loss', secretGame.title, 6, {
+        attempts: 6,
+        game: secretGame.title,
+      });
     } else {
       // Reveal next stage
       setActiveStageIndex(newGuesses.length);
       saveGameState(newGuesses, false, false);
       soundFx.playError();
+      telemetry.track('interaction', 'screenle_guess', game.title, newGuesses.length, {
+        stage: newGuesses.length,
+      });
     }
   };
 
