@@ -1,15 +1,20 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Sparkles, ExternalLink, Gamepad2 } from 'lucide-react';
+import { X, Sparkles, Gamepad2 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 
 interface OwlEasterEggModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenArcade?: () => void;
 }
 
-export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({ isOpen, onClose }) => {
+export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({
+  isOpen,
+  onClose,
+  onOpenArcade,
+}) => {
   const { t } = useTranslation();
   const { unlockAchievement } = useAchievements();
 
@@ -62,22 +67,23 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({ isOpen, on
         </div>
 
         <div className="flex gap-3 justify-center">
-          <a
-            href="https://quentinbeaud.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-amber-500/20"
+          <button
+            onClick={() => {
+              soundFx.playClick();
+              onClose();
+              onOpenArcade?.();
+            }}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-amber-500/20 cursor-pointer"
           >
             <Gamepad2 className="w-4 h-4" />
-            Visiter l'Arcade
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+            Entrer dans l'Arcade
+          </button>
           <button
             onClick={() => {
               soundFx.playClick();
               onClose();
             }}
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-xl transition"
+            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-xl transition cursor-pointer"
           >
             Retour au Perchoir
           </button>

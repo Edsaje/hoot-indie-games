@@ -15,6 +15,7 @@ import { LinkleGame } from './components/linkle/LinkleGame';
 import { VersusArena } from './components/versus/VersusArena';
 import { ToolboxHub } from './components/toolbox/ToolboxHub';
 import { TheRoostHub } from './components/roost/TheRoostHub';
+import { ArcadeModal, type ArcadeGameId } from './components/arcade/ArcadeModal';
 import { GameStatsProvider } from './context/GameStatsProvider';
 import { AchievementsProvider } from './context/AchievementsProvider';
 import { UserAccountProvider } from './context/UserAccountProvider';
@@ -44,6 +45,13 @@ export const AppContent: React.FC = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isEasterEggOpen, setIsEasterEggOpen] = useState<boolean>(false);
+  const [isArcadeOpen, setIsArcadeOpen] = useState<boolean>(false);
+  const [arcadeGame, setArcadeGame] = useState<ArcadeGameId>('snake');
+
+  const handleOpenArcade = (gameId: ArcadeGameId = 'snake') => {
+    setArcadeGame(gameId);
+    setIsArcadeOpen(true);
+  };
 
   // Hash listener pour deep linking direct (#versus, #linkle)
   useEffect(() => {
@@ -124,7 +132,7 @@ export const AppContent: React.FC = () => {
         {currentTab === 'linkle' && <LinkleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'versus' && <VersusArena />}
         {currentTab === 'toolbox' && <ToolboxHub />}
-        {currentTab === 'roost' && <TheRoostHub />}
+        {currentTab === 'roost' && <TheRoostHub onOpenArcade={handleOpenArcade} />}
       </main>
 
       {/* Global Modals */}
@@ -158,6 +166,13 @@ export const AppContent: React.FC = () => {
       <OwlEasterEggModal
         isOpen={isEasterEggOpen}
         onClose={() => setIsEasterEggOpen(false)}
+        onOpenArcade={() => handleOpenArcade('snake')}
+      />
+
+      <ArcadeModal
+        isOpen={isArcadeOpen}
+        initialGame={arcadeGame}
+        onClose={() => setIsArcadeOpen(false)}
       />
 
       {/* Footer */}

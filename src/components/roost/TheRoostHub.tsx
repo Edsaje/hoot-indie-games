@@ -14,10 +14,15 @@ import { GithubIcon, YoutubeIcon } from '../common/SocialIcons';
 import { ROOST_PROJECTS } from '../../data/roostProjects';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
+import type { ArcadeGameId } from '../arcade/ArcadeModal';
 
 type CategoryFilter = 'all' | 'game' | 'lore' | 'prototype';
 
-export const TheRoostHub: React.FC = () => {
+interface TheRoostHubProps {
+  onOpenArcade?: (gameId?: ArcadeGameId) => void;
+}
+
+export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
   const { t, i18n } = useTranslation();
   const { unlockAchievement } = useAchievements();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
@@ -118,6 +123,38 @@ export const TheRoostHub: React.FC = () => {
             <span className="px-2 py-0.5 rounded bg-[#0b0f19] border border-slate-800">Lore Analysis</span>
           </div>
         </div>
+      </div>
+
+      {/* Playable Arcade Banner */}
+      <div className="bg-gradient-to-r from-amber-500/20 via-emerald-500/15 to-amber-500/20 border-2 border-amber-500/50 rounded-2xl p-5 sm:p-7 mb-10 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-2xl relative overflow-hidden">
+        <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none" />
+        <div className="flex items-center gap-4 text-center sm:text-left relative z-10">
+          <div className="p-3.5 rounded-2xl bg-amber-500 text-slate-950 text-3xl select-none shadow-lg shadow-amber-500/30 shrink-0">
+            🕹️
+          </div>
+          <div>
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[10px] font-black uppercase tracking-wider mb-1">
+              ✨ 8 Mini-Jeux Jouables Immédiatement
+            </div>
+            <h3 className="text-lg sm:text-xl font-black text-white">
+              La Salle d'Arcade Secrète d'Hibouxe
+            </h3>
+            <p className="text-xs text-slate-300 mt-1 max-w-xl leading-relaxed">
+              Snake Doré, Pong Magique, Casse-Briques, Flappy Hibou, Hibou Invaders, Forest Run, Tetris Mystique et Mine Storm Vectrex 1982 intégrés directement sans quitter le site !
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            soundFx.playClick();
+            onOpenArcade?.('snake');
+          }}
+          className="shrink-0 flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/25 active:scale-95 cursor-pointer relative z-10"
+        >
+          <Gamepad2 className="w-4 h-4" />
+          Ouvrir la Salle d'Arcade
+        </button>
       </div>
 
       {/* Filter Tabs */}
@@ -222,7 +259,21 @@ export const TheRoostHub: React.FC = () => {
 
                 <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    {project.links.demoUrl && (
+                    {['arcade-secrete', 'vectrex-mine-storm', 'la-foret-du-hibou', 'hibou-clicker'].includes(project.id) ? (
+                      <button
+                        onClick={() => {
+                          soundFx.playClick();
+                          if (project.id === 'vectrex-mine-storm') onOpenArcade?.('vectrex');
+                          else if (project.id === 'la-foret-du-hibou') onOpenArcade?.('run');
+                          else if (project.id === 'hibou-clicker') onOpenArcade?.('flappy');
+                          else onOpenArcade?.('snake');
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition shadow-md shadow-amber-500/25 cursor-pointer active:scale-95"
+                      >
+                        <Gamepad2 className="w-3.5 h-3.5" />
+                        Jouer en direct
+                      </button>
+                    ) : project.links.demoUrl ? (
                       <a
                         href={project.links.demoUrl}
                         target="_blank"
@@ -232,7 +283,7 @@ export const TheRoostHub: React.FC = () => {
                         <Gamepad2 className="w-3.5 h-3.5" />
                         {t('roost.viewDemo')}
                       </a>
-                    )}
+                    ) : null}
                     {project.links.videoUrl && (
                       <a
                         href={project.links.videoUrl}
