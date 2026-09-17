@@ -133,12 +133,12 @@ export const ROOST_PROJECTS: RoostProject[] = [
     id: 'arcade-secrete',
     title: 'La Salle d\'Arcade Secrète',
     tagline: {
-      fr: '7 mini-jeux rétro immersifs cachés dans un coffre numérique',
-      en: '7 retro arcade mini-games hidden in a digital treasure chest',
+      fr: '8 mini-jeux rétro immersifs intégrés directement dans le navigateur',
+      en: '8 retro arcade mini-games integrated directly in the browser',
     },
     description: {
-      fr: 'Snake Doré, Casse-Briques, Flappy Hibou, Tetris Mystique, Pong Magique et Hibou Invaders : un concentré de game design classique taillé pour le web rapide.',
-      en: 'Golden Snake, Brick Breaker, Flappy Owl, Mystic Tetris, Magic Pong, and Owl Invaders: timeless game loops optimized for instantaneous browser play.',
+      fr: 'Snake Doré, Pong Magique, Casse-Briques, Flappy Hibou, Hibou Invaders, Forest Run, Tetris Mystique et Mine Storm Vectrex 1982 : un concentré de game design classique taillé pour le web rapide.',
+      en: 'Golden Snake, Magic Pong, Brick Breaker, Flappy Owl, Owl Invaders, Forest Run, Mystic Tetris, and Mine Storm Vectrex: timeless game loops optimized for instantaneous browser play.',
     },
     category: 'prototype',
     tags: ['Arcade', 'Canvas 2D', 'Retro Audio', 'Mobile Ready'],
