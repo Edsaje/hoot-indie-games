@@ -197,6 +197,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       stopAllLoops();
     };
 
+    let customCleanup: (() => void) | null = null;
+
     // ==========================================
     // 1. SNAKE DORÉ
     // ==========================================
@@ -211,6 +213,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let nextDir = 'RIGHT';
       let food = { x: 14 * gridSize, y: 10 * gridSize };
       let gameActive = true;
+      let started = false;
 
       const spawnFood = () => {
         const maxX = width / gridSize - 1;
@@ -223,6 +226,45 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
       const step = () => {
         if (!gameActive) return;
+
+        if (!started) {
+          ctx.fillStyle = '#060f09';
+          ctx.fillRect(0, 0, width, height);
+
+          // Food
+          ctx.fillStyle = '#f59e0b';
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = '#f59e0b';
+          ctx.beginPath();
+          ctx.arc(food.x + 10, food.y + 10, 7, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          // Snake
+          snake.forEach((seg, i) => {
+            if (i === 0) {
+              ctx.fillStyle = '#f59e0b';
+              ctx.fillRect(seg.x, seg.y, gridSize, gridSize);
+              ctx.fillStyle = '#0b0f19';
+              ctx.fillRect(seg.x + 4, seg.y + 4, 4, 4);
+              ctx.fillRect(seg.x + 12, seg.y + 4, 4, 4);
+            } else {
+              ctx.fillStyle = i % 2 === 0 ? '#10b981' : '#059669';
+              ctx.fillRect(seg.x + 1, seg.y + 1, gridSize - 2, gridSize - 2);
+            }
+          });
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Appuyez sur une direction ou cliquez pour jouer', width / 2, height / 2 + 55);
+
+          if (isKeyDown(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyS', 'KeyA', 'KeyD', 'KeyZ', 'KeyQ', 'Space'])) {
+            started = true;
+            soundFx.playClick();
+          }
+          return;
+        }
 
         // Direction mapping (Arrows + ZQSD / WASD)
         if ((isKeyDown(['ArrowUp', 'KeyW', 'KeyZ'])) && dir !== 'DOWN') nextDir = 'UP';
@@ -293,7 +335,14 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         });
       };
 
-      intervalIdRef.current = window.setInterval(step, 90);
+      canvas.onclick = () => {
+        if (!started) {
+          started = true;
+          soundFx.playClick();
+        }
+      };
+
+      intervalIdRef.current = window.setInterval(step, 100);
     }
 
     // ==========================================
@@ -309,6 +358,13 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let ball = { x: 200, y: 200, r: 7, vx: 4.5, vy: 3 };
       let gameActive = true;
       let started = false;
+
+      canvas.onclick = () => {
+        if (!started) {
+          started = true;
+          soundFx.playClick();
+        }
+      };
 
       const loop = () => {
         if (!gameActive) return;
@@ -581,15 +637,22 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.shadowBlur = 0;
 
         if (!started) {
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-          ctx.font = '13px sans-serif';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.font = 'bold 13px sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText('Appuyez sur ESPACE pour lancer la balle', width / 2, height / 2 + 50);
+          ctx.fillText('Appuyez sur ESPACE ou Clic pour lancer la bille', width / 2, height / 2 + 50);
           ctx.textAlign = 'left';
         }
 
         if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
+        }
+      };
+
+      canvas.onclick = () => {
+        if (!started) {
+          started = true;
+          soundFx.playClick();
         }
       };
 
@@ -730,6 +793,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let shootTimer = 0;
       let direction = 1;
       let gameActive = true;
+      let started = false;
 
       for (let r = 0; r < 4; r++) {
         for (let c = 0; c < 7; c++) {
@@ -742,9 +806,47 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
       }
 
+      canvas.onclick = () => {
+        started = true;
+        if (shootTimer <= 0) {
+          bullets.push({ x: playerX, y: height - 40 });
+          shootTimer = 14;
+          soundFx.playClick();
+        }
+      };
+
       const loop = () => {
         if (!gameActive) return;
         shootTimer--;
+
+        if (!started) {
+          ctx.fillStyle = '#060f09';
+          ctx.fillRect(0, 0, width, height);
+
+          // Player (Owl)
+          ctx.font = '28px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText('🦉', playerX, height - 20);
+
+          // Invaders
+          for (const inv of invaders) {
+            ctx.fillText(inv.icon, inv.x, inv.y);
+          }
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Appuyez sur ESPACE ou Clic pour attaquer', width / 2, height / 2 + 50);
+          ctx.textAlign = 'left';
+
+          if (isKeyDown(['Space', 'ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD', 'KeyQ'])) {
+            started = true;
+          }
+          if (gameActive) {
+            animFrameIdRef.current = requestAnimationFrame(loop);
+          }
+          return;
+        }
 
         if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 5;
         if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 5;
@@ -841,20 +943,23 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let obstacles: Obstacle[] = [];
       let frame = 0;
       let gameActive = true;
+      let started = false;
 
-      const loop = () => {
-        if (!gameActive) return;
-        frame++;
-
-        if (frame % 6 === 0) {
-          addScore(1);
-        }
-
-        if (isKeyDown(['Space', 'ArrowUp', 'KeyW', 'KeyZ']) && player.onGround) {
+      canvas.onclick = () => {
+        if (!started) {
+          started = true;
+          player.vy = player.jump;
+          player.onGround = false;
+          soundFx.playClick();
+        } else if (player.onGround) {
           player.vy = player.jump;
           player.onGround = false;
           soundFx.playClick();
         }
+      };
+
+      const loop = () => {
+        if (!gameActive) return;
 
         ctx.fillStyle = '#060f09';
         ctx.fillRect(0, 0, width, height);
@@ -867,6 +972,42 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.lineTo(width, 355);
         ctx.stroke();
 
+        // Runner Owl
+        ctx.font = '30px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('🦉', 60, player.y);
+
+        if (!started) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Appuyez sur ESPACE ou Clic pour courir', width / 2, height / 2);
+          ctx.textAlign = 'left';
+
+          if (isKeyDown(['Space', 'ArrowUp', 'KeyW', 'KeyZ'])) {
+            started = true;
+            player.vy = player.jump;
+            player.onGround = false;
+            soundFx.playClick();
+          }
+          if (gameActive) {
+            animFrameIdRef.current = requestAnimationFrame(loop);
+          }
+          return;
+        }
+
+        frame++;
+
+        if (frame % 6 === 0) {
+          addScore(1);
+        }
+
+        if (isKeyDown(['Space', 'ArrowUp', 'KeyW', 'KeyZ']) && player.onGround) {
+          player.vy = player.jump;
+          player.onGround = false;
+          soundFx.playClick();
+        }
+
         // Physics
         player.vy += player.gravity;
         player.y += player.vy;
@@ -875,11 +1016,6 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           player.vy = 0;
           player.onGround = true;
         }
-
-        // Runner Owl
-        ctx.font = '30px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('🦉', 60, player.y);
 
         // Spawn obstacles
         if (frame % 85 === 0 || (frame > 300 && Math.random() < 0.015 && frame % 30 !== 0)) {
@@ -909,14 +1045,6 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
         if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
-        }
-      };
-
-      canvas.onclick = () => {
-        if (player.onGround) {
-          player.vy = player.jump;
-          player.onGround = false;
-          soundFx.playClick();
         }
       };
 
@@ -1059,13 +1187,23 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         if (['ArrowUp', 'KeyW', 'KeyZ'].includes(e.code)) {
           rotate(curPiece);
         }
+        if (['Space'].includes(e.code)) {
+          while (!collides(curPiece, pX, pY + 1)) {
+            pY++;
+          }
+          merge();
+        }
+        draw();
+      };
+
+      canvas.onclick = () => {
+        rotate(curPiece);
         draw();
       };
 
       window.addEventListener('keydown', onKeyDownTetris);
-      return () => {
+      customCleanup = () => {
         window.removeEventListener('keydown', onKeyDownTetris);
-        stopAllLoops();
       };
     }
 
@@ -1092,17 +1230,43 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let mines: Mine[] = [];
       let shootTimer = 0;
       let gameActive = true;
+      let shieldTimer = 100; // ~1.6s safe spawn shield
 
-      // Spawn mines
-      for (let i = 0; i < 5; i++) {
-        mines.push({
-          x: Math.random() * width,
-          y: Math.random() * (height - 120),
-          vx: (Math.random() - 0.5) * 1.6,
-          vy: (Math.random() - 0.5) * 1.6,
-          r: 16,
-        });
-      }
+      // Safe spawn avoiding ship at center (200, 200)
+      const spawnMines = (count: number, baseSpeed: number) => {
+        for (let i = 0; i < count; i++) {
+          let mx = 0;
+          let my = 0;
+          do {
+            mx = Math.random() * width;
+            my = Math.random() * height;
+          } while (Math.hypot(mx - 200, my - 200) < 110);
+
+          mines.push({
+            x: mx,
+            y: my,
+            vx: (Math.random() - 0.5) * baseSpeed,
+            vy: (Math.random() - 0.5) * baseSpeed,
+            r: 16,
+          });
+        }
+      };
+
+      spawnMines(5, 1.6);
+
+      canvas.onclick = () => {
+        if (shootTimer <= 0) {
+          lasers.push({
+            x: ship.x,
+            y: ship.y,
+            vx: Math.cos(ship.angle) * 7.5 + ship.vx,
+            vy: Math.sin(ship.angle) * 7.5 + ship.vy,
+            life: 45,
+          });
+          shootTimer = 12;
+          soundFx.playClick();
+        }
+      };
 
       const loop = () => {
         if (!gameActive) return;
@@ -1162,6 +1326,17 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.stroke();
         ctx.restore();
 
+        // Draw Spawn Shield
+        if (shieldTimer > 0) {
+          shieldTimer--;
+          if (Math.floor(shieldTimer / 6) % 2 === 0) {
+            ctx.strokeStyle = '#00ffcc';
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y, 22, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        }
+
         // Lasers
         ctx.shadowColor = '#f59e0b';
         ctx.strokeStyle = '#f59e0b';
@@ -1215,12 +1390,14 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             }
           }
 
-          // Hit test ship
-          const shipDist = Math.hypot(ship.x - m.x, ship.y - m.y);
-          if (shipDist < m.r + 8) {
-            gameActive = false;
-            triggerGameOver();
-            return;
+          // Hit test ship (only if shield expired)
+          if (shieldTimer <= 0) {
+            const shipDist = Math.hypot(ship.x - m.x, ship.y - m.y);
+            if (shipDist < m.r + 8) {
+              gameActive = false;
+              triggerGameOver();
+              return;
+            }
           }
         }
 
@@ -1230,15 +1407,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         if (mines.length === 0) {
           soundFx.playVictory();
           addScore(100);
-          for (let i = 0; i < 7; i++) {
-            mines.push({
-              x: Math.random() * width,
-              y: Math.random() * (height - 100),
-              vx: (Math.random() - 0.5) * 2.2,
-              vy: (Math.random() - 0.5) * 2.2,
-              r: 16,
-            });
-          }
+          spawnMines(7, 2.2);
+          shieldTimer = 70;
         }
 
         if (gameActive) {
@@ -1251,6 +1421,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
     return () => {
       stopAllLoops();
+      if (customCleanup) customCleanup();
     };
   }, [isOpen, selectedGame, gameKey, saveHighScore]);
 
@@ -1288,9 +1459,11 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   // Continuous touch / mouse press handlers for virtual controls
   const handleVirtualPress = (code: string) => {
     keysDownRef.current.add(code);
+    window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code, bubbles: true }));
   };
   const handleVirtualRelease = (code: string) => {
     keysDownRef.current.delete(code);
+    window.dispatchEvent(new KeyboardEvent('keyup', { code, key: code, bubbles: true }));
   };
 
   return (
@@ -1420,8 +1593,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           {currentGameMeta.instructions}
         </p>
 
-        {/* Virtual Mobile D-Pad Controls (Continuous Hold Support) */}
-        <div className="sm:hidden flex items-center justify-center gap-6 mt-4 pt-3 border-t border-[#1e293b] w-full max-w-[400px] select-none">
+        {/* Virtual Arcade D-Pad Controls (Continuous Hold Support) */}
+        <div className="flex items-center justify-center gap-6 mt-4 pt-3 border-t border-[#1e293b] w-full max-w-[400px] select-none">
           <div className="grid grid-cols-3 gap-1">
             <div />
             <button
