@@ -1,7 +1,13 @@
 # 🦉 Hoot Indie Games
 
 > **Le sanctuaire quotidien officiel dédié aux jeux vidéo indépendants**
-> Développé avec **React 18+**, **TypeScript (Strict)**, **Tailwind CSS v4**, **i18next**, **Framer Motion** et **Lucide Icons**.
+> Développé avec **React 18+**, **TypeScript (Strict, 0 `any`)**, **Tailwind CSS v4**, **i18next**, **Framer Motion**, **Web Audio API** et **Lucide Icons**.
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict_0_any-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18+-61dafb?logo=react)](https://react.dev/)
+[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
+[![Oxlint](https://img.shields.io/badge/Oxlint-0_warnings-emerald)](https://oxc.rs/)
+[![Licence](https://img.shields.io/badge/Auteur-Quentin_Beaud_(Hibouxe)-amber)](https://quentinbeaud.com/)
 
 ---
 
@@ -10,17 +16,32 @@
 **Hoot Indie Games** est une plateforme web bilingue (**Français / Anglais**) conçue pour célébrer la culture, l'art et les mécaniques des pépites du jeu vidéo indépendant.
 
 Elle combine en une interface unifiée :
+
 1. **Trois mini-jeux quotidiens de déduction :**
    - 🔍 **Mode 1 : "Screenle"** — Déduction progressive par capture d'écran sur 6 niveaux de zoom / plans, avec indices de lore (accroche) et de musique (compositeur).
-   - 📊 **Mode 2 : "Indledle"** — Comparaison d'attributs façon Wordle / Loldle : Année de sortie (indicateur `▲` / `▼`), superposition des genres (vert = exact, jaune = partiel, rouge = aucun), direction artistique, perspective caméra et studio de développement.
+   - 📊 **Mode 2 : "Indledle"** — Comparaison d'attributs façon Wordle / Loldle : Année de sortie (`▲` / `▼`), superposition des genres (vert = exact, jaune = partiel, rouge = aucun), direction artistique, perspective caméra et studio de développement.
    - 🧩 **Mode 3 : "Linkle / Connections"** — Regroupement interactif de 16 jeux sous forme de jaquettes/captures en 4 catégories secrètes de 4 jeux, réparties en 4 niveaux de difficulté avec identité chromatique (Facile : Jaune moutarde `#eab308`, Moyen : Vert émeraude `#10b981`, Difficile : Bleu `#3b82f6`, Mystique : Violet `#8b5cf6`), compteur de plumes/erreurs et détection du "One away" (3 sur 4).
-2. 🧰 **Une boîte à outils / utilitaires pour joueurs :**
-   - 🎲 **Roulette Indé du Soir** : Générateur aléatoire animé selon l'ambiance désirée (Détente, Action, Cérébral, Sombre).
+   - 🛠️ **Créateur de Linkle Communautaire** — Outil intégré permettant de composer ses propres grilles 4x4 et de les partager instantanément via un lien encodé dans l'URL hash (`#linkle=...`).
+
+2. **Système de Succès & Plumes d'Or (11 Hauts Faits) :**
+   - 🪶 Système d'achievements (*Premier Envol*, *Œil de Hibou*, *Harmonie Parfaite*, *Vigie Nocturne*, *Murmure des Bois*, *Tiercé Nocturne*...).
+   - Fanfare audio polyphonique synthétisée par Web Audio API, toasts animés et compteur de plumes d'or dans la barre de navigation.
+
+3. **Archives Quotidiennes & Calendrier Rétroactif :**
+   - Calendrier interactif permettant de rejouer les défis de n'importe quelle date passée, avec indicateurs visuels des résultats (vert = gagné, rouge = échoué, gris = non joué).
+
+4. **Cartes de Partage Réseaux Sociaux HD 1200x630 :**
+   - Générateur Canvas 2D intégré créant une image de score haute résolution aux ratios officiels Twitter / Discord / OpenGraph en un clic.
+
+5. 🧰 **Une boîte à outils / utilitaires pour joueurs :**
+   - 🎲 **Roulette Indé du Soir** : Générateur aléatoire animé selon l'ambiance désirée (*Cozy*, *Action*, *Cérébral*, *Sombre*).
    - ⏳ **Calculateur de Backlog & Temps de Jeu** : Estimation précise du temps d'aventure total et projection calendaire de fin selon le rythme quotidien.
    - 💰 **Optimiseur de Soldes Steam** : Algorithme glouton maximisant le ratio note / heures de jeu pour un budget donné en euros.
    - 🧭 **Explorateur de Pépites** : Filtre multicritères par genre, année et studio avec liens Steam directs.
-   - ❓ **Mini-Quiz Lore & Trivia** : 5 questions interactives avec anecdotes de développement.
-3. 🪶 **L'espace vitrine "The Roost / Le Perchoir" :**
+   - ❓ **Mini-Quiz Lore & Trivia** : Questions interactives avec anecdotes de game design.
+   - 🔥 **Radar des Sorties Indés** : Suivi des jeux indés attendus avec jauge de hype et wishlists Steam (*Silksong*, *Mewgenics*, *Earthblade*, *Possessor(s)*, *Wanderstop*, *Citizen Sleeper 2*, etc.).
+
+6. 🪶 **L'espace vitrine "The Roost / Le Perchoir" :**
    - Mise en valeur des projets, prototypes et vidéos signés par **Quentin Beaud (Hibouxe / Edsaje)** :
      - *La Forêt du Hibou* (Canvas 2D & particules)
      - *Mine Storm Vectrex Revival* (Arcade vectorielle cathodique 1982)
@@ -34,9 +55,9 @@ Elle combine en une interface unifiée :
 ## 🎨 Identité Visuelle & Thème
 
 - **Palette Nocturne Ardoise** :
-  - Fond d'écran principal : `#0b0f19` avec micro-poussières d'étoiles / lucioles ambiantes
+  - Fond d'écran principal : `#0b0f19` avec micro-poussières d'étoiles et **moteur de lucioles interactives** (`FirefliesBackground.tsx`)
   - Cartes et conteneurs : `#131a29`
-  - Bordures de structure : `#1e293b`
+  - Bordures structurales nettes : `#1e293b`
   - Accentuation or / ambre : `#f59e0b`
 - **Codes Couleurs de Jeu & Feedback** :
   - Vert émeraude : `#10b981` (Exactitude / Victoire)
@@ -45,75 +66,107 @@ Elle combine en une interface unifiée :
   - Bleu saphir : `#3b82f6` (Catégorie Difficile)
   - Violet mystique : `#8b5cf6` (Catégorie Expert / Compositeur)
 - **Easter Egg du Hibou** :
-  - Survol prolongé (>750ms) ou double-clic sur l'icône de hibou dans la barre de navigation : les yeux s'allument en ambre vibrant avec pulsation continue (`owl-eye-pulsing`), un hululement Web Audio retentit et le modal secret s'ouvre !
+  - Survol prolongé (>750ms) ou double-clic sur l'icône de hibou dans la barre de navigation : les yeux s'allument en ambre vibrant avec pulsation continue (`owl-eye-pulsing`), un hululement Web Audio retentit et ouvre le modal secret du hibou.
 
 ---
 
-## 🏗️ Architecture Technique
+## 🏗️ Arborescence Technique du Projet
 
 ```
 src/
 ├── types/
-│   └── game.ts                # Types stricts (Game, ConnectionCategory, DailyConnectionsPuzzle, etc.)
+│   ├── game.ts                    # Types stricts (Game, ConnectionCategory, DailyConnectionsPuzzle)
+│   └── achievements.ts            # Schéma des 11 succès & plumes d'or
 ├── data/
-│   ├── games.ts               # Base de données de 20+ jeux cultes avec 6 captures & indices
-│   ├── connectionsPuzzles.ts  # Énigmes quotidiennes de Connections (4 catégories x 4 items)
-│   └── roostProjects.ts       # Créations, prototypes et liens d'Hibouxe
+│   ├── games.ts                   # Base de 83 jeux certifiés (1080p screenshots & métadonnées)
+│   ├── upcomingGames.ts           # Radar des sorties indés attendues
+│   ├── achievements.ts            # Définitions des 11 succès
+│   ├── connectionsPuzzles.ts      # Énigmes quotidiennes de Connections
+│   └── roostProjects.ts           # Créations, prototypes et liens d'Hibouxe
 ├── i18n/
-│   ├── index.ts               # Configuration i18next & persistance LocalStorage
+│   ├── index.ts                   # Configuration i18next & persistance LocalStorage
 │   └── locales/
-│       ├── fr.json            # Traductions françaises complètes
-│       └── en.json            # Traductions anglaises complètes
+│       ├── fr.json                # Traductions françaises complètes
+│       └── en.json                # Traductions anglaises complètes
 ├── context/
-│   ├── GameStatsContext.ts    # Définition du contexte et valeurs par défaut
-│   ├── GameStatsProvider.tsx  # Provider gérant la persistance des streaks & scores
-│   └── useGameStats.ts        # Hook personnalisé pour les statistiques
+│   ├── GameStatsContext.ts        # Contexte des stats & streaks
+│   ├── GameStatsProvider.tsx      # Provider stats & persistance
+│   ├── useGameStats.ts            # Hook useGameStats
+│   ├── AchievementsContext.ts     # Contexte des succès
+│   ├── AchievementsProvider.tsx   # Provider succès, toasts & sons
+│   └── useAchievements.ts         # Hook useAchievements
 ├── utils/
-│   └── audio.ts               # Synthétiseur Web Audio API (zéro fichier audio externe requis)
+│   ├── audio.ts                   # Synthétiseur Web Audio API (zéro dépendance externe)
+│   └── generateShareCard.ts       # Générateur de carte de partage Canvas 1200x630
 ├── components/
 │   ├── common/
-│   │   ├── Navbar.tsx         # Navigation, date du jour, bascule de langue, son & stats
-│   │   ├── Footer.tsx         # Pied de page avec liens communautaires & mini easter egg
-│   │   ├── OwlLogo.tsx        # Logo SVG interactif avec yeux ambrés animés
-│   │   ├── StatsModal.tsx     # Graphique de répartition des essais & streaks
-│   │   ├── OwlEasterEggModal.tsx # Fenêtre secrète du hibou
-│   │   ├── SocialIcons.tsx    # Icônes SVG optimisées (GitHub, YouTube)
-│   │   └── GameSearchBar.tsx  # Barre de recherche avec autocomplétion & vignettes
+│   │   ├── Navbar.tsx             # Barre de navigation, date, langue, son, stats & plumes
+│   │   ├── Footer.tsx             # Pied de page & signatures
+│   │   ├── OwlLogo.tsx            # Logo SVG interactif avec yeux ambrés animés
+│   │   ├── StatsModal.tsx         # Graphique de répartition des essais & streaks
+│   │   ├── AchievementsModal.tsx  # Galerie des succès & compteur de plumes
+│   │   ├── CalendarArchiveModal.tsx # Calendrier de rétro-jeu
+│   │   ├── FirefliesBackground.tsx# Toile Canvas 2D ambiante
+│   │   ├── OwlEasterEggModal.tsx  # Fenêtre secrète du hibou
+│   │   ├── SocialIcons.tsx        # Icônes SVG optimisées (GitHub, YouTube)
+│   │   └── GameSearchBar.tsx      # Recherche prédictive avec vignettes
 │   ├── screenle/
-│   │   └── ScreenleGame.tsx   # Mode 1 : Zoom 6 étapes, navigation & indices progressifs
+│   │   └── ScreenleGame.tsx       # Mode 1 : Zoom 6 étapes, indices & share card
 │   ├── indledle/
-│   │   └── IndledleGame.tsx   # Mode 2 : Comparaison de caractéristiques & animations 3D
+│   │   └── IndledleGame.tsx       # Mode 2 : Comparaison de caractéristiques & share card
 │   ├── linkle/
-│   │   └── LinkleGame.tsx     # Mode 3 : Grille 4x4, mélange déterministe & feedback couleur
+│   │   ├── LinkleGame.tsx         # Mode 3 : Grille 4x4 & share card
+│   │   └── CustomLinkleBuilder.tsx# Constructeur de puzzle personnalisé avec URL hash
 │   ├── toolbox/
-│   │   └── ToolboxHub.tsx     # Hub avec Roulette, Backlog, Soldes Steam, Pépites & Quiz
+│   │   └── ToolboxHub.tsx         # Hub avec Roulette, Backlog, Soldes, Radar & Quiz
 │   └── roost/
-│       └── TheRoostHub.tsx    # Vitrine des créations, prototypes & lore par Hibouxe
-├── App.tsx                    # Sélecteur de modes, gestion des défis du jour & clés de rendu
-├── main.tsx                   # Point d'entrée React
-└── index.css                  # Thème Tailwind v4, animations de lueur & scrollbars sombres
+│       └── TheRoostHub.tsx        # Vitrine créative d'Hibouxe
+├── App.tsx                        # Routage des onglets, clés temporelles & modaux
+├── main.tsx                       # Point d'entrée React 18
+└── index.css                      # Thème Tailwind v4 & animations
 ```
 
 ---
 
-## ⚡ Commandes de Développement
+## ⚡ Commandes Disponibles
 
 ```bash
-# Installation des dépendances
-npm install
-
 # Lancement en développement (Vite HMR)
 npm run dev
 
-# Vérification du typage et build de production
+# Vérification du typage et build de production (Strict)
 npm run build
 
-# Analyse de qualité de code (Oxlint)
+# Analyse de qualité de code (Oxlint, 0 warning garanti)
 npm run lint
 
-# Prévisualisation du bundle de production
+# Prévisualisation locale du bundle de production
 npm run preview
+
+# Moissonner un jeu depuis Steam et obtenir son objet TypeScript
+npm run add-game <STEAM_APP_ID>
+
+# Exécuter le moissonnage et la fusion par lot de la base
+npm run update-db
 ```
+
+---
+
+## 📜 Règles pour Agents & Contributeurs
+
+Tout agent AI (Gemini, Claude, GPT, etc.) ou développeur reprenant ce projet **DOIT respecter rigoureusement les règles consignées dans [`GEMINI.md`](./GEMINI.md)** :
+
+1. **Règle 0 Hallucination** :
+   - Ne jamais inventer de dates, de jeux, de studios ou de métadonnées.
+   - `src/data/games.ts` ne contient **QUE** des jeux réellement sortis et vérifiables.
+   - Les jeux non parus résident exclusivement dans `src/data/upcomingGames.ts` avec la mention officielle (*TBA*).
+2. **Typage Strict 0 `any`** :
+   - `tsc -b` doit compiler sans la moindre erreur.
+3. **Qualité de code** :
+   - `npm run lint` (Oxlint) doit retourner 0 warning et 0 erreur.
+4. **Anti "IA Slop"** :
+   - Pas de pilules génériques géantes `rounded-full` sur les cartes de contenu.
+   - Pas de faux glassmorphism laiteux illisible : surfaces sombres ciselées (`#0b0f19`, `#131a29`, `#1e293b`).
 
 ---
 
