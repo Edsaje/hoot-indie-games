@@ -199,6 +199,24 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
     let customCleanup: (() => void) | null = null;
 
+    // Fixed 60 FPS loop runner (immune to 120Hz/144Hz/240Hz screen over-speeding)
+    const startFixedLoop = (isActive: () => boolean, updateAndRender: () => void) => {
+      let lastTime = performance.now();
+      const targetInterval = 1000 / 60; // 16.666 ms
+      const runner = (now: number) => {
+        if (!isActive()) return;
+        const elapsed = now - lastTime;
+        if (elapsed >= targetInterval - 1.5) {
+          lastTime = now - (elapsed % targetInterval);
+          updateAndRender();
+        }
+        if (isActive()) {
+          animFrameIdRef.current = requestAnimationFrame(runner);
+        }
+      };
+      animFrameIdRef.current = requestAnimationFrame(runner);
+    };
+
     // ==========================================
     // 1. SNAKE DORÉ
     // ==========================================
@@ -342,7 +360,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
       };
 
-      intervalIdRef.current = window.setInterval(step, 100);
+      intervalIdRef.current = window.setInterval(step, 145);
     }
 
     // ==========================================
@@ -355,7 +373,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let rightY = 160;
       let leftScore = 0;
       let rightScore = 0;
-      let ball = { x: 200, y: 200, r: 7, vx: 4.5, vy: 3 };
+      let ball = { x: 200, y: 200, r: 7, vx: 2.8, vy: 1.6 };
       let gameActive = true;
       let started = false;
 
@@ -370,8 +388,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         if (!gameActive) return;
 
         // Player controls
-        if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']) && leftY > 0) leftY -= 6.5;
-        if (isKeyDown(['ArrowDown', 'KeyS']) && leftY < height - padH) leftY += 6.5;
+        if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']) && leftY > 0) leftY -= 4.8;
+        if (isKeyDown(['ArrowDown', 'KeyS']) && leftY < height - padH) leftY += 4.8;
 
         // Launch ball on space or arrow press
         if (!started && (isKeyDown(['Space', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyS']))) {
@@ -381,7 +399,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
         if (started) {
           // Adaptive AI
-          const aiSpeed = 4.2 + leftScore * 0.35;
+          const aiSpeed = 2.2 + leftScore * 0.12;
           if (ball.y < rightY + padH / 2 - 5) rightY -= aiSpeed;
           else if (ball.y > rightY + padH / 2 + 5) rightY += aiSpeed;
           rightY = Math.max(0, Math.min(height - padH, rightY));
@@ -403,9 +421,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             ball.y <= leftY + padH &&
             ball.vx < 0
           ) {
-            ball.vx = Math.abs(ball.vx) * 1.05;
+            ball.vx = Math.abs(ball.vx) * 1.02;
             const delta = (ball.y - (leftY + padH / 2)) / (padH / 2);
-            ball.vy = delta * 5;
+            ball.vy = delta * 3.2;
             ball.x = 25 + ball.r;
             addScore(1);
             soundFx.playChime();
@@ -419,9 +437,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             ball.y <= rightY + padH &&
             ball.vx > 0
           ) {
-            ball.vx = -Math.abs(ball.vx) * 1.05;
+            ball.vx = -Math.abs(ball.vx) * 1.02;
             const delta = (ball.y - (rightY + padH / 2)) / (padH / 2);
-            ball.vy = delta * 5;
+            ball.vy = delta * 3.2;
             ball.x = width - 25 - ball.r;
             soundFx.playClick();
           }
@@ -434,12 +452,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
               triggerGameOver();
               return;
             }
-            ball = { x: 200, y: 200, r: 7, vx: 4.5, vy: (Math.random() - 0.5) * 6 };
+            ball = { x: 200, y: 200, r: 7, vx: 2.8, vy: (Math.random() - 0.5) * 3 };
             started = false;
           } else if (ball.x > width) {
             leftScore++;
             soundFx.playVictory();
-            ball = { x: 200, y: 200, r: 7, vx: -4.5, vy: (Math.random() - 0.5) * 6 };
+            ball = { x: 200, y: 200, r: 7, vx: -2.8, vy: (Math.random() - 0.5) * 3 };
             started = false;
           }
         }
@@ -480,19 +498,15 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.fillText(String(rightScore), width / 2 + 30, 40);
 
         if (!started) {
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-          ctx.font = '13px sans-serif';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.font = 'bold 13px sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText('Appuyez sur ESPACE pour engager', width / 2, height / 2 + 50);
+          ctx.fillText('Appuyez sur ESPACE ou Clic pour engager', width / 2, height / 2 + 50);
           ctx.textAlign = 'left';
-        }
-
-        if (gameActive) {
-          animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
+      startFixedLoop(() => gameActive, loop);
     }
 
     // ==========================================
@@ -502,7 +516,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const padW = 80;
       const padH = 10;
       let padX = width / 2 - padW / 2;
-      let ball = { x: 200, y: 350, r: 6, vx: 4, vy: -4 };
+      let ball = { x: 200, y: 350, r: 6, vx: 2.4, vy: -2.6 };
       let started = false;
       let gameActive = true;
 
@@ -529,8 +543,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const loop = () => {
         if (!gameActive) return;
 
-        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && padX > 0) padX -= 6.5;
-        if (isKeyDown(['ArrowRight', 'KeyD']) && padX < width - padW) padX += 6.5;
+        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && padX > 0) padX -= 4.8;
+        if (isKeyDown(['ArrowRight', 'KeyD']) && padX < width - padW) padX += 4.8;
 
         if (!started) {
           ball.x = padX + padW / 2;
@@ -573,7 +587,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           ) {
             ball.vy = -Math.abs(ball.vy);
             const hit = (ball.x - (padX + padW / 2)) / (padW / 2);
-            ball.vx = hit * 5;
+            ball.vx = hit * 3.2;
             soundFx.playClick();
           }
 
@@ -643,10 +657,6 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           ctx.fillText('Appuyez sur ESPACE ou Clic pour lancer la bille', width / 2, height / 2 + 50);
           ctx.textAlign = 'left';
         }
-
-        if (gameActive) {
-          animFrameIdRef.current = requestAnimationFrame(loop);
-        }
       };
 
       canvas.onclick = () => {
@@ -656,14 +666,14 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
+      startFixedLoop(() => gameActive, loop);
     }
 
     // ==========================================
     // 4. FLAPPY HIBOU
     // ==========================================
     else if (selectedGame === 'flappy') {
-      let bird = { y: 200, vy: 0, gravity: 0.42, jump: -6.5 };
+      let bird = { y: 200, vy: 0, gravity: 0.22, jump: -4.4 };
       interface Pipe {
         x: number;
         w: number;
@@ -699,16 +709,16 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           bird.y += bird.vy;
 
           // Spawn pipes
-          if (frame % 85 === 0) {
-            const gap = 125;
-            const top = Math.random() * (height - gap - 70) + 35;
+          if (frame % 115 === 0) {
+            const gap = 138;
+            const top = Math.random() * (height - gap - 80) + 40;
             pipes.push({ x: width, w: 45, top, gap, passed: false });
           }
 
           // Move pipes & test collision
           for (let i = pipes.length - 1; i >= 0; i--) {
             const p = pipes[i];
-            p.x -= 2.6;
+            p.x -= 1.6;
 
             // Score point
             if (p.x + p.w < 60 && !p.passed) {
@@ -735,6 +745,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             triggerGameOver();
             return;
           }
+        } else {
+          bird.y = 190 + Math.sin(Date.now() / 250) * 6;
         }
 
         // Draw Pipes
@@ -754,13 +766,11 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.fillText('🦉', 60, bird.y + 10);
 
         if (!started) {
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-          ctx.font = '13px sans-serif';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.textAlign = 'center';
           ctx.fillText('Appuyez sur ESPACE ou cliquez pour voler', width / 2, height / 2 + 50);
-        }
-
-        if (gameActive) {
-          animFrameIdRef.current = requestAnimationFrame(loop);
+          ctx.textAlign = 'left';
         }
       };
 
@@ -770,7 +780,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         soundFx.playClick();
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
+      startFixedLoop(() => gameActive, loop);
     }
 
     // ==========================================
@@ -810,7 +820,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         started = true;
         if (shootTimer <= 0) {
           bullets.push({ x: playerX, y: height - 40 });
-          shootTimer = 14;
+          shootTimer = 18;
           soundFx.playClick();
         }
       };
@@ -842,18 +852,15 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           if (isKeyDown(['Space', 'ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD', 'KeyQ'])) {
             started = true;
           }
-          if (gameActive) {
-            animFrameIdRef.current = requestAnimationFrame(loop);
-          }
           return;
         }
 
-        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 5;
-        if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 5;
+        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 3.8;
+        if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 3.8;
 
         if (isKeyDown(['Space']) && shootTimer <= 0) {
           bullets.push({ x: playerX, y: height - 40 });
-          shootTimer = 14;
+          shootTimer = 18;
           soundFx.playClick();
         }
 
@@ -871,7 +878,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.shadowColor = '#f59e0b';
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i];
-          b.y -= 7;
+          b.y -= 5.2;
           ctx.fillRect(b.x - 2, b.y, 4, 12);
           if (b.y < 0) bullets.splice(i, 1);
         }
@@ -883,7 +890,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         for (const inv of invaders) {
           if (!inv.alive) continue;
           aliveCount++;
-          inv.x += direction * 0.8;
+          inv.x += direction * 0.36;
           if (inv.x > width - 25 || inv.x < 25) hitEdge = true;
 
           ctx.fillText(inv.icon, inv.x, inv.y);
@@ -909,7 +916,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
         if (hitEdge) {
           direction *= -1;
-          for (const inv of invaders) inv.y += 14;
+          for (const inv of invaders) inv.y += 8;
         }
 
         // Wave cleared -> respawn stronger
@@ -918,23 +925,19 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           addScore(100);
           for (const inv of invaders) {
             inv.alive = true;
-            inv.y = Math.max(40, inv.y - 60);
+            inv.y = Math.max(40, inv.y - 50);
           }
-        }
-
-        if (gameActive) {
-          animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
+      startFixedLoop(() => gameActive, loop);
     }
 
     // ==========================================
     // 6. FOREST RUN
     // ==========================================
     else if (selectedGame === 'run') {
-      let player = { y: 340, vy: 0, gravity: 0.75, jump: -12.5, onGround: true };
+      let player = { y: 340, vy: 0, gravity: 0.42, jump: -8.2, onGround: true };
       interface Obstacle {
         x: number;
         w: number;
@@ -990,15 +993,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             player.onGround = false;
             soundFx.playClick();
           }
-          if (gameActive) {
-            animFrameIdRef.current = requestAnimationFrame(loop);
-          }
           return;
         }
 
         frame++;
 
-        if (frame % 6 === 0) {
+        if (frame % 10 === 0) {
           addScore(1);
         }
 
@@ -1018,7 +1018,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
 
         // Spawn obstacles
-        if (frame % 85 === 0 || (frame > 300 && Math.random() < 0.015 && frame % 30 !== 0)) {
+        if (frame % 120 === 0 || (frame > 350 && Math.random() < 0.01 && frame % 40 !== 0)) {
           obstacles.push({ x: width, w: 22, h: 32 });
         }
 
@@ -1026,7 +1026,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.fillStyle = '#f59e0b';
         for (let i = obstacles.length - 1; i >= 0; i--) {
           const obs = obstacles[i];
-          obs.x -= 4.8 + scoreRef.current / 1500;
+          obs.x -= 2.4 + scoreRef.current / 4000;
           ctx.fillRect(obs.x, 355 - obs.h, obs.w, obs.h);
 
           // Hit test
@@ -1042,13 +1042,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
           if (obs.x + obs.w < 0) obstacles.splice(i, 1);
         }
-
-        if (gameActive) {
-          animFrameIdRef.current = requestAnimationFrame(loop);
-        }
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
+      startFixedLoop(() => gameActive, loop);
     }
 
     // ==========================================
@@ -1076,7 +1072,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let pX = 3;
       let pY = 0;
       let gameActive = true;
-      let dropInterval = 400;
+      let dropInterval = 750;
 
       const collides = (piece: number[][], ox: number, oy: number) => {
         for (let r = 0; r < piece.length; r++) {
@@ -1252,18 +1248,18 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
       };
 
-      spawnMines(5, 1.6);
+      spawnMines(5, 0.75);
 
       canvas.onclick = () => {
         if (shootTimer <= 0) {
           lasers.push({
             x: ship.x,
             y: ship.y,
-            vx: Math.cos(ship.angle) * 7.5 + ship.vx,
-            vy: Math.sin(ship.angle) * 7.5 + ship.vy,
+            vx: Math.cos(ship.angle) * 5.5 + ship.vx,
+            vy: Math.sin(ship.angle) * 5.5 + ship.vy,
             life: 45,
           });
-          shootTimer = 12;
+          shootTimer = 15;
           soundFx.playClick();
         }
       };
@@ -1272,16 +1268,16 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         if (!gameActive) return;
         shootTimer--;
 
-        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ'])) ship.angle -= 0.08;
-        if (isKeyDown(['ArrowRight', 'KeyD'])) ship.angle += 0.08;
+        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ'])) ship.angle -= 0.048;
+        if (isKeyDown(['ArrowRight', 'KeyD'])) ship.angle += 0.048;
         if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ'])) {
-          ship.vx += Math.cos(ship.angle) * 0.18;
-          ship.vy += Math.sin(ship.angle) * 0.18;
+          ship.vx += Math.cos(ship.angle) * 0.09;
+          ship.vy += Math.sin(ship.angle) * 0.09;
         }
 
         // Friction & Move
-        ship.vx *= 0.985;
-        ship.vy *= 0.985;
+        ship.vx *= 0.972;
+        ship.vy *= 0.972;
         ship.x += ship.vx;
         ship.y += ship.vy;
 
@@ -1296,11 +1292,11 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           lasers.push({
             x: ship.x,
             y: ship.y,
-            vx: Math.cos(ship.angle) * 7.5 + ship.vx,
-            vy: Math.sin(ship.angle) * 7.5 + ship.vy,
+            vx: Math.cos(ship.angle) * 5.5 + ship.vx,
+            vy: Math.sin(ship.angle) * 5.5 + ship.vy,
             life: 45,
           });
-          shootTimer = 12;
+          shootTimer = 15;
           soundFx.playClick();
         }
 
@@ -1407,16 +1403,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         if (mines.length === 0) {
           soundFx.playVictory();
           addScore(100);
-          spawnMines(7, 2.2);
+          spawnMines(7, 0.95);
           shieldTimer = 70;
-        }
-
-        if (gameActive) {
-          animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
+      startFixedLoop(() => gameActive, loop);
     }
 
     return () => {
