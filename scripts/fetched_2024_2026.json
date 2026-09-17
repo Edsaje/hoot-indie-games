@@ -1,0 +1,491 @@
+[
+  {
+    "id": "hades-ii",
+    "title": "Hades II",
+    "releaseYear": 2025,
+    "genre": [
+      "Action",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Dessin 2D isométrique mythologique peint à la main",
+      "en": "Hand-painted mythological 2D isometric art"
+    },
+    "camera": {
+      "fr": "Vue Isométrique 2.5D (Isometric)",
+      "en": "2.5D Isometric"
+    },
+    "developer": "Supergiant Games",
+    "steamUrl": "https://store.steampowered.com/app/1145350/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145350/ss_ef0f63061d0a0a9a7e46f3b84f125d25330e8f19.1920x1080.jpg?t=1779901265",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145350/ss_c88996aa0af82894a8e50ebb951a503ebce3ab24.1920x1080.jpg?t=1779901265",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145350/ss_b88cb7b48a86f07a7288bf37141f6558279f9bfc.1920x1080.jpg?t=1779901265",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145350/ss_c8d2b18451a2cc4d5b4fdd78ed84a5e64e051eac.1920x1080.jpg?t=1779901265",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145350/ss_f366f20f4fb699f6735581e04c7c45a1ef7bd1b8.1920x1080.jpg?t=1779901265",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145350/ss_47e14ed55ac7f1bf9266b2cd5b3e4d9eae0ca54c.1920x1080.jpg?t=1779901265"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Frayez-vous un chemin vers et au-delà des Enfers et affrontez le Titan du Temps dans ce deuxième volet ensorcelant du dungeon crawler de type rogue-like multiprimé.",
+        "en": "Frayez-vous un chemin vers et au-delà des Enfers et affrontez le Titan du Temps dans ce deuxième volet ensorcelant du dungeon crawler de type rogue-like multiprimé."
+      },
+      "composer": "Darren Korb"
+    }
+  },
+  {
+    "id": "neva",
+    "title": "Neva",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Aquarelle numérique et aplats vectoriels poétiques",
+      "en": "Poetic digital watercolor & clean vector art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Nomada Studio",
+    "steamUrl": "https://store.steampowered.com/app/2420660/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420660/ss_62a1d600f868ac02023335d29a4c744f71fc4f97.1920x1080.jpg?t=1771587898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420660/ss_25875a2bbb2656d449ce512ffcfad6fd7c66807a.1920x1080.jpg?t=1771587898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420660/ss_835f96b38d13781397beb6ca5a0046ff23b692ee.1920x1080.jpg?t=1771587898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420660/ss_f8c9358149ccd86f1046d031bc749b6ff13bc64e.1920x1080.jpg?t=1771587898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420660/ss_78c8c22f665548d1d8557a35136ee61e81e97cb9.1920x1080.jpg?t=1771587898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420660/ss_52acca00d787f0f0c3a830904024e48f0a1e0e17.1920x1080.jpg?t=1771587898"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Découvrez le lien émouvant qui unit une jeune femme et un loup majestueux dans leur épopée palpitante à travers un monde mourant.",
+        "en": "Découvrez le lien émouvant qui unit une jeune femme et un loup majestueux dans leur épopée palpitante à travers un monde mourant."
+      },
+      "composer": "Berlinist"
+    }
+  },
+  {
+    "id": "mouthwashing",
+    "title": "Mouthwashing",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Rétro 3D low-poly PlayStation 1 / Dégradés sombres",
+      "en": "PS1 style low-poly retro 3D"
+    },
+    "camera": {
+      "fr": "Première personne 3D (First-person)",
+      "en": "First-person 3D"
+    },
+    "developer": "Wrong Organ",
+    "steamUrl": "https://store.steampowered.com/app/2475490/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2475490/ss_d582f6e384652c1a05fb6e928ab6557b0abba1b3.1920x1080.jpg?t=1786624390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2475490/ss_ec922c5769acb9986aa009e41b71ecdcd51e484f.1920x1080.jpg?t=1786624390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2475490/ss_bf9f8aeca93daffa7a4493d9af8ffc4524cada74.1920x1080.jpg?t=1786624390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2475490/ss_fc1d15989f3d8ef8c6493881bb68dd284defa0cb.1920x1080.jpg?t=1786624390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2475490/ss_a81b2d5c2c76ef972898d2c62b98f7d191f9c64a.1920x1080.jpg?t=1786624390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2475490/ss_f707dcc6da5c778d9730949037b06089ba92efa4.1920x1080.jpg?t=1786624390"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Les cinq membres d'équipage du Tulpar se retrouvent coincés aux confins de l'espace, plongés dans un crépuscule perpétuel. Dieu les a abandonnés.",
+        "en": "Les cinq membres d'équipage du Tulpar se retrouvent coincés aux confins de l'espace, plongés dans un crépuscule perpétuel. Dieu les a abandonnés."
+      },
+      "composer": "Martin Kvale"
+    }
+  },
+  {
+    "id": "tactical-breach-wizards",
+    "title": "Tactical Breach Wizards",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Indépendant",
+      "RPG",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Cel-shaded humoristique et bande dessinée",
+      "en": "Comic-book cel-shaded 3D"
+    },
+    "camera": {
+      "fr": "Vue Isométrique tactique (Turn-based)",
+      "en": "Tactical Isometric"
+    },
+    "developer": "Suspicious Developments",
+    "steamUrl": "https://store.steampowered.com/app/1043810/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1043810/ss_c3b796b5e159b2ed4078ca74212e627ffa92b111.1920x1080.jpg?t=1785842156",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1043810/ss_e1a7ace21c2a2f1c38fcb4284aa22c9e0bb12661.1920x1080.jpg?t=1785842156",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1043810/ss_34f2a9e1f76acbb72a53ddf54d13627cbf41a974.1920x1080.jpg?t=1785842156",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1043810/ss_e3c68f5a27d841c0c12adcafb04f29dde0908108.1920x1080.jpg?t=1785842156",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1043810/ss_51ed8b4f2d9d7fa8c8b3c851195f3f7cc1d1607d.1920x1080.jpg?t=1785842156",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1043810/ss_2862f0012134de2cd564526f4df9fcb77a6075fc.1920x1080.jpg?t=1785842156"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "In Tactical Breach Wizards, you lead a team of renegade wizards in kevlar through turn-based battles to unravel a modern conspiracy plot. Combine their unique spells in clever ways, or rewind time to try every crazy plan you can think of to punch a Traffic Warlock through a 4th story window.",
+        "en": "In Tactical Breach Wizards, you lead a team of renegade wizards in kevlar through turn-based battles to unravel a modern conspiracy plot. Combine their unique spells in clever ways, or rewind time to try every crazy plan you can think of to punch a Traffic Warlock through a 4th story window."
+      },
+      "composer": "Suspicious Developments"
+    }
+  },
+  {
+    "id": "1000xresist",
+    "title": "1000xRESIST",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée anime dystopique / Mise en scène théâtrale",
+      "en": "Dystopian cinematic anime 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne 3D cinématographique",
+      "en": "Cinematic Third-person 3D"
+    },
+    "developer": "sunset visitor 斜陽過客",
+    "steamUrl": "https://store.steampowered.com/app/1675830/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1675830/ss_31555847848f488834c689a1bae292c1277a11fa.1920x1080.jpg?t=1782502154",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1675830/ss_dcb4a4f1976652d191b459dfea395543f55d7a6c.1920x1080.jpg?t=1782502154",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1675830/ss_3356fdfb22efb582924561944494100bf8823a51.1920x1080.jpg?t=1782502154",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1675830/ss_00df2986d4bff270a9bde6140b4192462584a00f.1920x1080.jpg?t=1782502154",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1675830/ss_ac46f054525466ec962929d3f93f1c67f189c9a4.1920x1080.jpg?t=1782502154",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1675830/ss_0e873f65ea07a5a7b75d658c9c5a267486de8b37.1920x1080.jpg?t=1782502154"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "1000xRESIST est une aventure palpitante de science-fiction. Dans le futur, une maladie extraterrestre vous force à vivre sous terre. Vous êtes Qui-observe, au service de la MÈRE-DE-TOUTES, jusqu'au jour où vous apprenez un terrible secret qui va tout bouleverser.",
+        "en": "1000xRESIST est une aventure palpitante de science-fiction. Dans le futur, une maladie extraterrestre vous force à vivre sous terre. Vous êtes Qui-observe, au service de la MÈRE-DE-TOUTES, jusqu'au jour où vous apprenez un terrible secret qui va tout bouleverser."
+      },
+      "composer": "Anthony H. Fung"
+    }
+  },
+  {
+    "id": "arco",
+    "title": "Arco",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Indépendant",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art miniature sublime et paysages panoramiques",
+      "en": "Breathtaking miniature pixel art"
+    },
+    "camera": {
+      "fr": "Vue Isométrique du dessus simultanée",
+      "en": "Simultaneous Top-down Isometric"
+    },
+    "developer": "Franek, Max Cahill, Bibiki, Fáyer",
+    "steamUrl": "https://store.steampowered.com/app/2366970/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366970/ss_e8b3c413b3ce2f1085010ef0e9b3032ad3cef001.1920x1080.jpg?t=1776481494",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366970/ss_08dbd83808bc80f4d3a42f563fe6c0cc802495fb.1920x1080.jpg?t=1776481494",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366970/ss_afbb365dd82bcbde39f03aea4234d717619235a2.1920x1080.jpg?t=1776481494",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366970/ss_d59e140a188622c5725e4b85460c9c229f467498.1920x1080.jpg?t=1776481494",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366970/ss_7ccbeac08d7edbc5cc4c88826ad27f8119a492de.1920x1080.jpg?t=1776481494",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366970/ss_cba7f9fc9f6465f49bdfdcd911af3e8b48cd08c3.1920x1080.jpg?t=1776481494"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Découvrez la beauté saisissante du monde d'Arco, un jeu d'action tactique unique en son genre dans lequel vos choix façonnent votre aventure. Trois récits sanguinaires et magiques, réunis par une même soif de vengeance.",
+        "en": "Découvrez la beauté saisissante du monde d'Arco, un jeu d'action tactique unique en son genre dans lequel vos choix façonnent votre aventure. Trois récits sanguinaires et magiques, réunis par une même soif de vengeance."
+      },
+      "composer": "José Ramón \"Fáyer\" García"
+    }
+  },
+  {
+    "id": "core-keeper",
+    "title": "Core Keeper",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art lumineux avec éclairages dynamiques souterrains",
+      "en": "Vibrant underground pixel art with dynamic lighting"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "Pugstorm",
+    "steamUrl": "https://store.steampowered.com/app/1621690/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1621690/632a42b91e005b2d2daf99fee946732c95a9737c/ss_632a42b91e005b2d2daf99fee946732c95a9737c.1920x1080.jpg?t=1788195083",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1621690/bca1feb5ec1bf64543f80c74effdcaed4216033c/ss_bca1feb5ec1bf64543f80c74effdcaed4216033c.1920x1080.jpg?t=1788195083",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1621690/804585b7772d3ae5c7d56fc80401469d5bf6fd27/ss_804585b7772d3ae5c7d56fc80401469d5bf6fd27.1920x1080.jpg?t=1788195083",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1621690/ss_1e162c49418038f8042c92810fe3c753449e204b.1920x1080.jpg?t=1788195083",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1621690/ss_2a6cdb26200932593b4edd5ab3d1cc2da5bc15ee.1920x1080.jpg?t=1788195083",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1621690/ss_8f3fd22bc5c385450d36309755323ca18efda4be.1920x1080.jpg?t=1788195083"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Explorez une caverne infinie pleine de créatures, d'objets et de ressources dans une aventure bac à sable pour 1 à 8 joueurs. Creusez, construisez, combattez, fabriquez et cultivez pour découvrir le mystère du Cœur.",
+        "en": "Explorez une caverne infinie pleine de créatures, d'objets et de ressources dans une aventure bac à sable pour 1 à 8 joueurs. Creusez, construisez, combattez, fabriquez et cultivez pour découvrir le mystère du Cœur."
+      },
+      "composer": "Jonathan Geer"
+    }
+  },
+  {
+    "id": "manor-lords",
+    "title": "Manor Lords",
+    "releaseYear": 2024,
+    "genre": [
+      "Simulation",
+      "Stratégie",
+      "Accès anticipé"
+    ],
+    "artStyle": {
+      "fr": "3D Réaliste historique médiévale ultra-détaillée",
+      "en": "Hyper-detailed realistic medieval 3D"
+    },
+    "camera": {
+      "fr": "Vue stratégique aérienne & troisième personne (Bird-eye / Third-person)",
+      "en": "Strategic Bird-eye / Third-person"
+    },
+    "developer": "Slavic Magic",
+    "steamUrl": "https://store.steampowered.com/app/1363080/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/bffe9f34abaae09855becd6e8ca2ddb9065b2ebb/ss_bffe9f34abaae09855becd6e8ca2ddb9065b2ebb.1920x1080.jpg?t=1787906126",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/2a8486cf95c15af440a4857d6021bb15c057416c/ss_2a8486cf95c15af440a4857d6021bb15c057416c.1920x1080.jpg?t=1787906126",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/e96c54a784a4fa874beb1c21ce0e34ada8eb932f/ss_e96c54a784a4fa874beb1c21ce0e34ada8eb932f.1920x1080.jpg?t=1787906126",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/5111f429dfbd8b65611e0e322dc90f470d015dca/ss_5111f429dfbd8b65611e0e322dc90f470d015dca.1920x1080.jpg?t=1787906126",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/541dce83a952beb779f2221cb107c6557f192439/ss_541dce83a952beb779f2221cb107c6557f192439.1920x1080.jpg?t=1787906126",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/ce313af5e85391c7ebee3b654a35a7ab78a1fe38/ss_ce313af5e85391c7ebee3b654a35a7ab78a1fe38.1920x1080.jpg?t=1787906126"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Manor Lords est un jeu de stratégie médiéval où vous construisez des villes, menez des combats tactiques et réalisez des simulations économiques et sociales complexes. Gérez vos terres comme un seigneur : au fil des saisons et de la météo, les villes se développent et déclinent.",
+        "en": "Manor Lords est un jeu de stratégie médiéval où vous construisez des villes, menez des combats tactiques et réalisez des simulations économiques et sociales complexes. Gérez vos terres comme un seigneur : au fil des saisons et de la météo, les villes se développent et déclinent."
+      },
+      "composer": "Isaac Noss & T中间"
+    }
+  },
+  {
+    "id": "fields-of-mistria",
+    "title": "Fields of Mistria",
+    "releaseYear": 2024,
+    "genre": [
+      "Indépendant",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art nostalgique anime des années 90 (Sailor Moon)",
+      "en": "Nostalgic 90s anime-inspired pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "NPC Studio",
+    "steamUrl": "https://store.steampowered.com/app/2142790/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/da8367fe734a77cc4d400199a9661eeea84170b1/ss_da8367fe734a77cc4d400199a9661eeea84170b1.1920x1080.jpg?t=1785944891",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/9933944638583f30c37fc4a51977de639f86624c/ss_9933944638583f30c37fc4a51977de639f86624c.1920x1080.jpg?t=1785944891",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/72a83ad1fd494bca5a01d876137f545d562ee735/ss_72a83ad1fd494bca5a01d876137f545d562ee735.1920x1080.jpg?t=1785944891",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/72b3122d8f42afe7359eeac6cef959cf03caabcf/ss_72b3122d8f42afe7359eeac6cef959cf03caabcf.1920x1080.jpg?t=1785944891",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/54ee7238977f0c2b75a075916a6f7cf396eabe8a/ss_54ee7238977f0c2b75a075916a6f7cf396eabe8a.1920x1080.jpg?t=1785944891",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/a3b1416dc3b0152fa31b359fc492316b5c331c5b/ss_a3b1416dc3b0152fa31b359fc492316b5c331c5b.1920x1080.jpg?t=1785944891"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Commencez une nouvelle vie ! Construisez la ferme de vos rêves tout en découvrant un monde aux innombrables possibilités. Magie, idylles et aventure vous attendent dans ce RPG de simulation de vie et de ferme au charme plein de nostalgie !",
+        "en": "Commencez une nouvelle vie ! Construisez la ferme de vos rêves tout en découvrant un monde aux innombrables possibilités. Magie, idylles et aventure vous attendent dans ce RPG de simulation de vie et de ferme au charme plein de nostalgie !"
+      },
+      "composer": "Toby Fox & Friends"
+    }
+  },
+  {
+    "id": "cryptmaster",
+    "title": "Cryptmaster",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Monochrome crayonné noir et blanc rétro dungeon crawler",
+      "en": "Monochrome sketchbook dungeon crawler aesthetic"
+    },
+    "camera": {
+      "fr": "Première personne 3D case par case (Grid-based Dungeon Crawler)",
+      "en": "First-person 3D grid dungeon crawler"
+    },
+    "developer": "Paul Hart, Lee Williams, Akupara Games",
+    "steamUrl": "https://store.steampowered.com/app/1885110/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1885110/ss_89523b1b24301aaf8a886f2fa57db399f4b98c12.1920x1080.jpg?t=1786047657",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1885110/ss_01b173293f80b7eab18f5254eed3e7d7a54a8f52.1920x1080.jpg?t=1786047657",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1885110/ss_61c499d619b40d63e70eebf1a9eb25245c8fdc1b.1920x1080.jpg?t=1786047657",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1885110/ss_70aff26595463a6b7f5039e0fc6d53ce2dafc685.1920x1080.jpg?t=1786047657",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1885110/639461a24fb085e425bba0349ad1fa829a6ad930/ss_639461a24fb085e425bba0349ad1fa829a6ad930.1920x1080.jpg?t=1786047657",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1885110/ss_ad2153f58a12f63d7e1a05cf8c895e97a7c73b96.1920x1080.jpg?t=1786047657"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "EXPRIMEZ-VOUS dans ce jeu d'exploration de donjon insolite où les mots ont le pouvoir. Comblez les blancs à l'oral ou à l'écrit pour révéler des facultés perdues et résoudre des quêtes et des énigmes déconcertantes. Réussirez-vous à conquérir la crypte et percer le mystère de CRYPTMASTER ?",
+        "en": "EXPRIMEZ-VOUS dans ce jeu d'exploration de donjon insolite où les mots ont le pouvoir. Comblez les blancs à l'oral ou à l'écrit pour révéler des facultés perdues et résoudre des quêtes et des énigmes déconcertantes. Réussirez-vous à conquérir la crypte et percer le mystère de CRYPTMASTER ?"
+      },
+      "composer": "Paul Hart"
+    }
+  },
+  {
+    "id": "mullet-madjack",
+    "title": "MULLET MADJACK",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Anime rétro cyberpunk VHS des années 80 / 90",
+      "en": "80s/90s retro cyberpunk anime aesthetic"
+    },
+    "camera": {
+      "fr": "Première personne 3D Boomer Shooter survolté",
+      "en": "First-person 3D Boomer Shooter"
+    },
+    "developer": "HAMMER95",
+    "steamUrl": "https://store.steampowered.com/app/2111190/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2111190/ss_b29d24d0e6947d7c9665a422196ddd53d38e613b.1920x1080.jpg?t=1787078659",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2111190/ss_07fc22bc458406e0030e8774ae87461420c09d46.1920x1080.jpg?t=1787078659",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2111190/ss_f397e42c1a7c7ef5507c063edf2a576d5d7f4868.1920x1080.jpg?t=1787078659",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2111190/ss_9721e68e39c26b644fd7f0215ab0aeb2dbb826ea.1920x1080.jpg?t=1787078659",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2111190/ss_e3d2324968e3e101b961350430d344da1de1732e.1920x1080.jpg?t=1787078659",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2111190/ss_e7dd428121728e5b029cb6f1c8ec7fd5f44f9a4c.1920x1080.jpg?t=1787078659"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "MULLET MADJACK est un FPS solo frénétique qui vous propulse directement dans un ANIME AUTHENTIQUE. Renforcez votre personnage et atteignez le dernier étage ; Battez votre meilleur temps ou réessayez.",
+        "en": "MULLET MADJACK est un FPS solo frénétique qui vous propulse directement dans un ANIME AUTHENTIQUE. Renforcez votre personnage et atteignez le dernier étage ; Battez votre meilleur temps ou réessayez."
+      },
+      "composer": "HAMMER95"
+    }
+  },
+  {
+    "id": "anger-foot",
+    "title": "Anger Foot",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Cartoon déjantée, fluo et hyper-saturée",
+      "en": "Hyper-saturated neon cartoon 3D"
+    },
+    "camera": {
+      "fr": "Première personne 3D fast-FPS",
+      "en": "First-person 3D fast-FPS"
+    },
+    "developer": "Free Lives",
+    "steamUrl": "https://store.steampowered.com/app/1978590/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1978590/ss_6ca80dd86ee1f4d4f395f0f14a74d0eb00cbb7b3.1920x1080.jpg?t=1757596248",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1978590/ss_e68f57c04fe7640837981077e0d045b6816e61e1.1920x1080.jpg?t=1757596248",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1978590/ss_c63267ba4546435ea30471bce8bfc4057643e4c6.1920x1080.jpg?t=1757596248",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1978590/ss_e934f4b47f429770628c5b3aa5d47eeeb7cf8fa1.1920x1080.jpg?t=1757596248",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1978590/ss_cb8021df9b54506827e615546918b685a4d95822.1920x1080.jpg?t=1757596248",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1978590/ss_d3773812157d4ecea5b16546a30038c3cd0ba599.1920x1080.jpg?t=1757596248"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Anger Foot est un FPS ultra-rapide dans lequel les seules choses plus dures que vos pieds sont les basses qui tabassent.",
+        "en": "Anger Foot est un FPS ultra-rapide dans lequel les seules choses plus dures que vos pieds sont les basses qui tabassent."
+      },
+      "composer": "Free Lives Sound Team"
+    }
+  },
+  {
+    "id": "antonblast",
+    "title": "ANTONBLAST",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art cartoonesque frénétique style Game Boy Advance / Wario Land",
+      "en": "Frenetic GBA/Wario Land cartoon pixel art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Summitsphere",
+    "steamUrl": "https://store.steampowered.com/app/1887400/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1887400/ss_8f98125a0c4b920ea750550c64b9428b9024eed9.1920x1080.jpg?t=1785401615",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1887400/ss_d77a534f9d64e188c2991e24a68508de1d765637.1920x1080.jpg?t=1785401615",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1887400/ss_526c18a89076e2e9106295cf1e71f74cdd9cae6d.1920x1080.jpg?t=1785401615",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1887400/ss_8ad7bc8667f72207b8d2802d3a69a6588fb180ec.1920x1080.jpg?t=1785401615",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1887400/ss_dff0b54af27d0d8760e95d450a9be3312c5a277f.1920x1080.jpg?t=1785401615",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1887400/ss_0d45224a5d936f763745ddd9201a1e29cc9f9c0a.1920x1080.jpg?t=1785401615"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "ANTONBLAST is a fast-paced explosive action platformer that's all about destruction. Play as the enraged Dynamite Anton (or his cranked-out coworker Annie) and use your Mighty F’n Hammer to demolish bizarre worlds, tussle with screen-filling bosses, and steal your Spirits back from Satan!",
+        "en": "ANTONBLAST is a fast-paced explosive action platformer that's all about destruction. Play as the enraged Dynamite Anton (or his cranked-out coworker Annie) and use your Mighty F’n Hammer to demolish bizarre worlds, tussle with screen-filling bosses, and steal your Spirits back from Satan!"
+      },
+      "composer": "Tony Grayson"
+    }
+  },
+  {
+    "id": "slay-the-spire-2",
+    "title": "Slay the Spire 2",
+    "releaseYear": 2025,
+    "genre": [
+      "Indépendant",
+      "Stratégie",
+      "Accès anticipé"
+    ],
+    "artStyle": {
+      "fr": "Illustration 2D moderne et sombre redessinée sous Godot",
+      "en": "Modern dark 2D illustration in Godot Engine"
+    },
+    "camera": {
+      "fr": "Vue de profil 2D de combat tactique",
+      "en": "2D Side-view Tactical Battle"
+    },
+    "developer": "Mega Crit",
+    "steamUrl": "https://store.steampowered.com/app/2868840/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/1a373a95229aab0cfd97f553ecbe86092364bb9c/ss_1a373a95229aab0cfd97f553ecbe86092364bb9c.1920x1080.jpg?t=1787169309",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/f3af7cb9693b9c4b6a7555227db3fef943db3992/ss_f3af7cb9693b9c4b6a7555227db3fef943db3992.1920x1080.jpg?t=1787169309",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/c3db69efd984ef012ae85c5b426663720152f0a4/ss_c3db69efd984ef012ae85c5b426663720152f0a4.1920x1080.jpg?t=1787169309",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/0fdb2940c0d367a40b2be6433daf12e3634089cf/ss_0fdb2940c0d367a40b2be6433daf12e3634089cf.1920x1080.jpg?t=1787169309",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/18e8bda7bc4cdb37b90e0e2ce546967cbec87076/ss_18e8bda7bc4cdb37b90e0e2ce546967cbec87076.1920x1080.jpg?t=1787169309",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/0aa6bff0eff26e37ccfdb07ad6cab52f8ab1ed4b/ss_0aa6bff0eff26e37ccfdb07ad6cab52f8ab1ed4b.1920x1080.jpg?t=1787169309"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le deckbuilder roguelike emblématique fait son grand retour. Construisez un deck unique, affrontez des créatures étranges, et découvrez de puissantes reliques dans Slay the Spire 2 !",
+        "en": "Le deckbuilder roguelike emblématique fait son grand retour. Construisez un deck unique, affrontez des créatures étranges, et découvrez de puissantes reliques dans Slay the Spire 2 !"
+      },
+      "composer": "Clark Aboud"
+    }
+  }
+]

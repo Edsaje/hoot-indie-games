@@ -159,7 +159,7 @@ export interface DailyConnectionsPuzzle {
 
 ## 7. Gestion & Moissonnage de la Base de Données de Jeux Indés
 
-La base de données officielle de **Hoot Indie Games** compte **70 chefs-d'œuvre et pépites indés** (allant des classiques 2010 aux sorties majeures 2024 comme *UFO 50*, *Nine Sols*, *Animal Well*, *Balatro*, *Crow Country*).
+La base de données officielle de **Hoot Indie Games** compte **84 chefs-d'œuvre et pépites indés certifiés** (allant des pionniers 2010 aux sorties marquantes 2024–2026 comme *Hades II*, *Slay the Spire 2*, *Neva*, *UFO 50*, *Mouthwashing*, *Nine Sols*, *Animal Well*, *Balatro*, *Crow Country*).
 
 ### Commandes CLI de Maintenance
 

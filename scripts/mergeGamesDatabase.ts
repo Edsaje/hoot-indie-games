@@ -2,19 +2,29 @@ import fs from 'fs';
 import { INDIE_GAMES } from '../src/data/games';
 import type { Game } from '../src/types/game';
 
-const fetchedRaw = fs.readFileSync('scripts/fetched_games.json', 'utf8');
-const fetchedGames: Game[] = JSON.parse(fetchedRaw);
+const fetchedRaw1 = fs.readFileSync('scripts/fetched_games.json', 'utf8');
+const fetchedGames1: Game[] = JSON.parse(fetchedRaw1);
+
+let fetchedGames2: Game[] = [];
+if (fs.existsSync('scripts/fetched_2024_2026.json')) {
+  fetchedGames2 = JSON.parse(fs.readFileSync('scripts/fetched_2024_2026.json', 'utf8'));
+}
+
+const allNew = [...fetchedGames1, ...fetchedGames2];
 
 console.log(`Current existing games: ${INDIE_GAMES.length}`);
-console.log(`Fetched games to merge: ${fetchedGames.length}`);
+console.log(`Fetched games to merge: ${allNew.length}`);
 
 // Merge ensuring no duplicate ids
-const existingIds = new Set(INDIE_GAMES.map((g) => g.id));
-const uniqueNew = fetchedGames.filter((g) => !existingIds.has(g.id));
+const existingIds = new Set<string>();
+const mergedList: Game[] = [];
 
-console.log(`Unique new games to add: ${uniqueNew.length}`);
-
-const mergedList: Game[] = [...INDIE_GAMES, ...uniqueNew];
+for (const g of [...INDIE_GAMES, ...allNew]) {
+  if (!existingIds.has(g.id)) {
+    existingIds.add(g.id);
+    mergedList.push(g);
+  }
+}
 console.log(`Total games in database: ${mergedList.length}`);
 
 const fileHeader = `import type { Game } from '../types/game';
