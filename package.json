@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "add-game": "npx tsx scripts/fetchSteamGame.ts",
     "update-db": "npx tsx scripts/addBatchGames.ts && npx tsx scripts/mergeGamesDatabase.ts",
-    "audit-db": "npx tsx scripts/verifySteamDatabase.ts"
+    "audit-db": "npx tsx scripts/verifySteamDatabase.ts",
+    "fetch-steam": "npx tsx scripts/fetchSteamCatalog.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",

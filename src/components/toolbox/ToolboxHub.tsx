@@ -14,14 +14,16 @@ import {
   XCircle,
   Flame,
   Activity,
+  Database,
 } from 'lucide-react';
 import { INDIE_GAMES } from '../../data/games';
 import { UPCOMING_INDIE_GAMES } from '../../data/upcomingGames';
 import { AnalyticsDashboard } from '../analytics/AnalyticsDashboard';
+import { SteamCatalogExplorer } from '../steam/SteamCatalogExplorer';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 
-type ToolboxTab = 'roulette' | 'backlog' | 'budget' | 'gems' | 'quiz' | 'radar' | 'analytics';
+type ToolboxTab = 'roulette' | 'backlog' | 'budget' | 'gems' | 'quiz' | 'radar' | 'analytics' | 'steam';
 
 interface GameBacklogInfo {
   id: string;
@@ -318,6 +320,7 @@ export const ToolboxHub: React.FC = () => {
             { id: 'quiz', label: t('toolbox.tabs.quiz'), icon: HelpCircle },
             { id: 'radar', label: lang === 'fr' ? 'Radar Sorties' : 'Upcoming Radar', icon: Flame },
             { id: 'analytics', label: lang === 'fr' ? 'Observatoire Télémétrie' : 'Cookieless Tracker', icon: Activity },
+            { id: 'steam', label: lang === 'fr' ? 'Catalogue Steam' : 'Steam Catalog', icon: Database },
           ] as const
         ).map((tab) => {
           const Icon = tab.icon;
@@ -930,6 +933,9 @@ export const ToolboxHub: React.FC = () => {
 
       {/* TAB 7: ANALYTICS & TELEMETRY */}
       {activeTab === 'analytics' && <AnalyticsDashboard />}
+
+      {/* TAB 8: STEAM CATALOG EXPLORER & INGESTION */}
+      {activeTab === 'steam' && <SteamCatalogExplorer />}
     </div>
   );
 };

@@ -18,6 +18,7 @@ import { TheRoostHub } from './components/roost/TheRoostHub';
 import { GameStatsProvider } from './context/GameStatsProvider';
 import { AchievementsProvider } from './context/AchievementsProvider';
 import { UserAccountProvider } from './context/UserAccountProvider';
+import { SteamCatalogProvider } from './context/SteamCatalogProvider';
 import { Calendar, RefreshCw, Archive } from 'lucide-react';
 import { soundFx } from './utils/audio';
 
@@ -175,7 +176,9 @@ export default function App() {
     <UserAccountProvider>
       <GameStatsProvider>
         <AchievementsProvider>
-          <AppContent />
+          <SteamCatalogProvider>
+            <AppContent />
+          </SteamCatalogProvider>
         </AchievementsProvider>
       </GameStatsProvider>
     </UserAccountProvider>

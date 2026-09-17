@@ -19,6 +19,7 @@ import { GameSearchBar } from '../common/GameSearchBar';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { downloadShareCard } from '../../utils/generateShareCard';
 import { telemetry } from '../../services/telemetry';
 
@@ -56,6 +57,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
   })();
 
   const { unlockAchievement } = useAchievements();
+  const { allPlayableGames } = useSteamCatalog();
   const [guesses, setGuesses] = useState<Game[]>(savedState.guesses);
   const [isCompleted, setIsCompleted] = useState<boolean>(savedState.isCompleted);
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
@@ -265,7 +267,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
       {!isCompleted ? (
         <div className="mb-8">
           <GameSearchBar
-            games={INDIE_GAMES}
+            games={allPlayableGames}
             guessedGameIds={guesses.map((g) => g.id)}
             onSelectGame={handleGuess}
             placeholder={t('indledle.searchPlaceholder')}

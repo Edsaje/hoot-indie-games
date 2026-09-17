@@ -17,6 +17,7 @@ import { INDIE_GAMES } from '../../data/games';
 import type { Game } from '../../types/game';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useAchievements } from '../../context/useAchievements';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { soundFx } from '../../utils/audio';
 import { telemetry } from '../../services/telemetry';
@@ -62,8 +63,9 @@ function getRandomBot(playerElo: number): OpponentData {
   };
 }
 
-function getRandomGame(): Game {
-  return INDIE_GAMES[Math.floor(Math.random() * INDIE_GAMES.length)];
+function pickRandomGame(pool: Game[]): Game {
+  if (!pool || pool.length === 0) return INDIE_GAMES[0];
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function getBotDecision(): { willGuess: boolean; delayMs: number } {
@@ -87,6 +89,7 @@ function createFriendOpponent(code: string): OpponentData {
 export const VersusArena: React.FC = () => {
   const { profile, recordVersusResult } = useUserAccount();
   const { unlockAchievement } = useAchievements();
+  const { allPlayableGames } = useSteamCatalog();
 
   const [phase, setPhase] = useState<VersusPhase>('lobby');
   const [roomCode, setRoomCode] = useState<string>('');
@@ -97,6 +100,8 @@ export const VersusArena: React.FC = () => {
     return '';
   });
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
+
+  const gamePool = allPlayableGames.length > 0 ? allPlayableGames : INDIE_GAMES;
 
   // Match State
   const [opponent, setOpponent] = useState<OpponentData | null>(null);
@@ -124,9 +129,9 @@ export const VersusArena: React.FC = () => {
     ? INDIE_AVATARS.find((a) => a.id === opponent.avatarId) || INDIE_AVATARS[1]
     : INDIE_AVATARS[1];
 
-  // Filtre de recherche de jeux pour le guess
+  // Filtre de recherche de jeux pour le guess (parmi tout le catalogue Steam)
   const filteredGames = guessQuery.trim().length > 0
-    ? INDIE_GAMES.filter((g) =>
+    ? gamePool.filter((g) =>
         g.title.toLowerCase().includes(guessQuery.toLowerCase())
       ).slice(0, 6)
     : [];
@@ -228,7 +233,7 @@ export const VersusArena: React.FC = () => {
     setIsLockedOut(false);
 
     // Tirer un jeu indé aléatoire pour la manche
-    const randomGame = getRandomGame();
+    const randomGame = pickRandomGame(gamePool);
     setCurrentRoundGame(randomGame);
 
     // Timer du round
