@@ -13,13 +13,19 @@ import {
 import { GithubIcon, YoutubeIcon } from '../common/SocialIcons';
 import { ROOST_PROJECTS } from '../../data/roostProjects';
 import { soundFx } from '../../utils/audio';
+import { useAchievements } from '../../context/useAchievements';
 
 type CategoryFilter = 'all' | 'game' | 'lore' | 'prototype';
 
 export const TheRoostHub: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { unlockAchievement } = useAchievements();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
   const [filter, setFilter] = useState<CategoryFilter>('all');
+
+  React.useEffect(() => {
+    unlockAchievement('roost_explorer');
+  }, [unlockAchievement]);
 
   const filteredProjects = ROOST_PROJECTS.filter((p) => {
     if (filter === 'all') return true;

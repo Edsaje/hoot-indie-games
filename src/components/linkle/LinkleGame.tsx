@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -12,11 +12,17 @@ import {
   Check,
   Feather,
   AlertTriangle,
+  Download,
+  PlusCircle,
+  Undo,
 } from 'lucide-react';
-import type { ConnectionCategory, DifficultyLevel } from '../../types/game';
+import type { ConnectionCategory, DifficultyLevel, DailyConnectionsPuzzle } from '../../types/game';
 import { getDailyConnectionsPuzzle } from '../../data/connectionsPuzzles';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
+import { useAchievements } from '../../context/useAchievements';
+import { downloadShareCard } from '../../utils/generateShareCard';
+import { CustomLinkleBuilder } from './CustomLinkleBuilder';
 
 interface LinkleGameProps {
   currentDate: string;
@@ -72,13 +78,35 @@ function deterministicShuffle<T>(array: T[], seed: string): T[] {
   return result;
 }
 
+const decodePuzzleFromHash = (): DailyConnectionsPuzzle | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const hash = window.location.hash;
+    if (hash.startsWith('#linkle=')) {
+      const base64 = hash.replace('#linkle=', '');
+      const json = decodeURIComponent(atob(base64));
+      return JSON.parse(json) as DailyConnectionsPuzzle;
+    }
+  } catch {
+    // Ignore invalid hash
+  }
+  return null;
+};
+
 export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
+  const { unlockAchievement } = useAchievements();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
-  const puzzle = getDailyConnectionsPuzzle(currentDate);
-  const storageKey = `linkle_state_${currentDate}`;
+  const [customPuzzle, setCustomPuzzle] = useState<DailyConnectionsPuzzle | null>(() => decodePuzzleFromHash());
+  const [isBuilderOpen, setIsBuilderOpen] = useState<boolean>(false);
+  const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
+
+  // Active puzzle is either custom or daily
+  const puzzle = customPuzzle || getDailyConnectionsPuzzle(currentDate);
+  const isCustomMode = Boolean(customPuzzle);
+  const storageKey = isCustomMode ? `linkle_custom_${puzzle.id}` : `linkle_state_${currentDate}`;
 
   const savedState = (() => {
     // Flatten 16 tiles
@@ -86,7 +114,9 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
     puzzle.categories.forEach((cat) => {
       cat.items.forEach((item) => {
         allItems.push({
-          ...item,
+          gameId: item.gameId,
+          gameTitle: item.gameTitle,
+          imageUrl: item.imageUrl,
           categoryId: cat.id,
         });
       });
@@ -115,7 +145,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
       // Fallback
     }
 
-    const shuffled = deterministicShuffle(allItems, currentDate);
+    const shuffled = deterministicShuffle(allItems, puzzle.date || currentDate);
     return {
       tiles: shuffled,
       solvedCategories: [] as ConnectionCategory[],
@@ -137,6 +167,19 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [previousGuesses, setPreviousGuesses] = useState<string[][]>(savedState.previousGuesses);
 
+  // Listen to hash changes for deep linking
+  useEffect(() => {
+    const handleHashChange = () => {
+      const p = decodePuzzleFromHash();
+      if (p) {
+        setCustomPuzzle(p);
+        unlockAchievement('custom_linkle_builder');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [unlockAchievement]);
+
   const saveGameState = (
     solvedCats: ConnectionCategory[],
     mistakes: number,
@@ -148,7 +191,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
       localStorage.setItem(
         storageKey,
         JSON.stringify({
-          date: currentDate,
+          date: puzzle.date || currentDate,
           solvedCategoryIds: solvedCats.map((c) => c.id),
           mistakesRemaining: mistakes,
           isCompleted: completed,
@@ -188,6 +231,22 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
   const handleDeselectAll = () => {
     soundFx.playClick();
     setSelectedGameIds([]);
+  };
+
+  const checkDailyTrifecta = () => {
+    try {
+      const s1 = localStorage.getItem(`screenle_state_${currentDate}`);
+      const s2 = localStorage.getItem(`indledle_state_${currentDate}`);
+      if (s1 && s2) {
+        const p1 = JSON.parse(s1);
+        const p2 = JSON.parse(s2);
+        if (p1.isWon && p2.isWon) {
+          unlockAchievement('daily_trifecta');
+        }
+      }
+    } catch {
+      // Ignore
+    }
   };
 
   const handleSubmit = () => {
@@ -243,7 +302,18 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         setIsWon(true);
         setIsCompleted(true);
         saveGameState(newSolved, mistakesRemaining, true, true, nextPreviousGuesses);
-        recordGameResult('linkle', currentDate, true, 4);
+
+        if (!isCustomMode) {
+          recordGameResult('linkle', currentDate, true, 4);
+          unlockAchievement('first_flight');
+          if (mistakesRemaining === 4) {
+            unlockAchievement('linkle_flawless');
+          }
+          checkDailyTrifecta();
+        } else {
+          unlockAchievement('custom_linkle_builder');
+        }
+
         soundFx.playVictory();
         confetti({
           particleCount: 150,
@@ -274,7 +344,10 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         setSolvedCategories(puzzle.categories);
         setTiles([]);
         saveGameState(puzzle.categories, 0, true, false, nextPreviousGuesses);
-        recordGameResult('linkle', currentDate, false, 0);
+        if (!isCustomMode) {
+          recordGameResult('linkle', currentDate, false, 0);
+          unlockAchievement('first_flight');
+        }
       } else {
         saveGameState(solvedCategories, newMistakes, false, false, nextPreviousGuesses);
       }
@@ -283,32 +356,98 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
 
   const handleShare = () => {
     soundFx.playClick();
-    const colorEmojiMap: Record<DifficultyLevel, string> = {
-      easy: '🟨',
-      medium: '🟩',
-      hard: '🟦',
-      expert: '🟪',
-    };
+    const categoryDifficultyMap: Record<string, string> = {};
+    puzzle.categories.forEach((cat) => {
+      cat.items.forEach((item) => {
+        categoryDifficultyMap[item.gameId] = cat.difficulty;
+      });
+    });
 
     const lines = previousGuesses.map((guess) => {
       return guess
         .map((gameId) => {
-          for (const cat of puzzle.categories) {
-            if (cat.items.some((i) => i.gameId === gameId)) {
-              return colorEmojiMap[cat.difficulty];
-            }
+          const diff = categoryDifficultyMap[gameId];
+          switch (diff) {
+            case 'easy':
+              return '🟨';
+            case 'medium':
+              return '🟩';
+            case 'hard':
+              return '🟦';
+            case 'expert':
+              return '🟪';
+            default:
+              return '⬛';
           }
-          return '⬛';
         })
         .join('');
     });
 
-    const text = `🦉 Linkle #${currentDate}\n${lines.join('\n')}\n🎮 https://hootindiegames.com`;
+    const text = `🦉 Linkle #${isCustomMode ? 'Custom' : currentDate}\n${lines.join('\n')}\n🎮 https://hootindiegames.com`;
 
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }).catch(() => {});
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      })
+      .catch(() => {});
+  };
+
+  const handleDownloadCard = async () => {
+    soundFx.playClick();
+    setIsDownloadingImage(true);
+    try {
+      const categoryDifficultyMap: Record<string, string> = {};
+      puzzle.categories.forEach((cat) => {
+        cat.items.forEach((item) => {
+          categoryDifficultyMap[item.gameId] = cat.difficulty;
+        });
+      });
+
+      const lines = previousGuesses.slice(0, 4).map((guess) => {
+        return guess
+          .map((gameId) => {
+            const diff = categoryDifficultyMap[gameId];
+            switch (diff) {
+              case 'easy':
+                return '🟨';
+              case 'medium':
+                return '🟩';
+              case 'hard':
+                return '🟦';
+              case 'expert':
+                return '🟪';
+              default:
+                return '⬛';
+            }
+          })
+          .join(' ');
+      });
+
+      await downloadShareCard({
+        gameMode: 'Linkle',
+        date: isCustomMode ? 'Community-Puzzle' : currentDate,
+        isWon,
+        scoreText: isWon
+          ? mistakesRemaining === 4
+            ? 'Sans faute ! (4/4)'
+            : `${4 - mistakesRemaining} erreurs`
+          : 'Partie terminée',
+        details: lines.length > 0 ? lines : ['🟨 🟨 🟨 🟨', '🟩 🟩 🟩 🟩', '🟦 🟦 🟦 🟦', '🟪 🟪 🟪 🟪'],
+      });
+      soundFx.playChime();
+    } catch {
+      // Ignore
+    } finally {
+      setIsDownloadingImage(false);
+    }
+  };
+
+  const resetToDaily = () => {
+    soundFx.playClick();
+    window.location.hash = '';
+    setCustomPuzzle(null);
   };
 
   return (
@@ -321,11 +460,50 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         </div>
       )}
 
+      {/* Custom Puzzle Active Banner */}
+      {isCustomMode && (
+        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-purple-500/20 to-blue-500/20 border border-amber-500/40 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
+            <div>
+              <p className="text-xs font-black text-white">
+                {lang === 'fr' ? '🌟 Défi Linkle Communautaire Personnalisé' : '🌟 Community Custom Linkle Challenge'}
+              </p>
+              <p className="text-[11px] text-slate-300">
+                {lang === 'fr'
+                  ? 'Vous jouez à une grille partagée par un joueur.'
+                  : 'You are playing a player-crafted puzzle.'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={resetToDaily}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-xs font-bold text-amber-400 hover:text-white transition"
+          >
+            <Undo className="w-3.5 h-3.5" />
+            {lang === 'fr' ? 'Revenir au quotidien' : 'Back to Daily'}
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
-          <Sparkles className="w-3.5 h-3.5" />
-          Mode 3 • Regroupement d'Indices
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            Mode 3 • Regroupement d'Indices
+          </div>
+          <button
+            onClick={() => {
+              soundFx.playClick();
+              setIsBuilderOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-amber-400 hover:border-amber-500/40 text-xs font-bold transition"
+            title="Créer votre propre Linkle"
+          >
+            <PlusCircle className="w-3.5 h-3.5 text-amber-400" />
+            <span>{lang === 'fr' ? 'Créer un Linkle' : 'Create Linkle'}</span>
+          </button>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
           {t('linkle.title')}
@@ -369,21 +547,21 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
               <div className="text-xs uppercase tracking-widest opacity-80 mb-0.5">
                 {t(config.labelKey)}
               </div>
-              <div className="text-lg font-black tracking-wide mb-1">
-                {cat.label[lang]}
-              </div>
-              <div className="text-xs opacity-90 font-medium">
-                {cat.items.map((i) => i.gameTitle).join(' • ')}
-              </div>
+              <h3 className="text-base sm:text-lg font-black tracking-wide">
+                {cat.label[lang] || cat.label.fr}
+              </h3>
+              <p className="text-xs opacity-90 mt-1 font-medium">
+                {cat.items.map((i) => i.gameTitle).join(', ')}
+              </p>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Unsolved Tiles Grid (4x4 or remaining) */}
+      {/* 4x4 Tiles Grid */}
       {tiles.length > 0 && (
         <motion.div
-          animate={isShaking ? { x: [-10, 10, -10, 10, 0] } : { x: 0 }}
+          animate={isShaking ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
           transition={{ duration: 0.4 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8"
         >
@@ -393,10 +571,10 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
               <button
                 key={tile.gameId}
                 onClick={() => toggleSelectTile(tile.gameId)}
-                className={`relative aspect-square rounded-2xl p-2 flex flex-col items-center justify-between overflow-hidden border-2 transition-all duration-200 group active:scale-95 ${
+                className={`group relative h-28 sm:h-32 rounded-2xl p-2 border flex flex-col items-center justify-between transition-all duration-200 text-left select-none overflow-hidden ${
                   isSelected
-                    ? 'border-[#f59e0b] bg-[#1a253a] ring-2 ring-amber-400 ring-offset-2 ring-offset-[#0b0f19] scale-[1.02] shadow-lg shadow-amber-500/20'
-                    : 'border-[#1e293b] bg-[#131a29] hover:border-slate-600 hover:bg-[#182133]'
+                    ? 'bg-amber-500/20 border-[#f59e0b] ring-2 ring-[#f59e0b] -translate-y-1 shadow-lg shadow-amber-500/20'
+                    : 'bg-[#131a29] border-[#1e293b] hover:border-slate-500 hover:bg-[#1a2336]'
                 }`}
               >
                 {/* Background image preview */}
@@ -406,6 +584,10 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
                     alt={tile.gameTitle}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400&q=80';
+                    }}
                   />
                 </div>
 
@@ -480,24 +662,50 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
             {isWon ? t('linkle.wonText') : t('linkle.lostText')}
           </p>
 
-          <button
-            onClick={handleShare}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4" />
-                {t('common.copied')}
-              </>
-            ) : (
-              <>
-                <Share2 className="w-4 h-4" />
-                {t('common.share')}
-              </>
-            )}
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  {t('common.copied')}
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-4 h-4" />
+                  {t('common.share')}
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={handleDownloadCard}
+              disabled={isDownloadingImage}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-[#1e293b] hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-600 transition shadow-lg active:scale-95 disabled:opacity-50"
+            >
+              <Download className="w-4 h-4 text-amber-400" />
+              <span>{isDownloadingImage ? 'Génération...' : 'Partager en Image 🪶'}</span>
+            </button>
+          </div>
         </div>
       )}
+
+      {/* Custom Linkle Builder Modal */}
+      <CustomLinkleBuilder
+        isOpen={isBuilderOpen}
+        onClose={() => setIsBuilderOpen(false)}
+        onPlayCustomPuzzle={(p) => {
+          setCustomPuzzle(p);
+          setTiles([]);
+          setSolvedCategories([]);
+          setMistakesRemaining(4);
+          setIsCompleted(false);
+          setIsWon(false);
+          setPreviousGuesses([]);
+        }}
+      />
     </div>
   );
 };

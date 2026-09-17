@@ -11,12 +11,15 @@ import {
   Share2,
   CheckCircle2,
   XCircle,
+  Download,
 } from 'lucide-react';
 import type { Game } from '../../types/game';
 import { INDIE_GAMES, getDailyGame } from '../../data/games';
 import { GameSearchBar } from '../common/GameSearchBar';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
+import { useAchievements } from '../../context/useAchievements';
+import { downloadShareCard } from '../../utils/generateShareCard';
 
 interface IndledleGameProps {
   currentDate: string;
@@ -51,10 +54,12 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
     return { guesses: [] as Game[], isCompleted: false, isWon: false };
   })();
 
+  const { unlockAchievement } = useAchievements();
   const [guesses, setGuesses] = useState<Game[]>(savedState.guesses);
   const [isCompleted, setIsCompleted] = useState<boolean>(savedState.isCompleted);
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
   const [copied, setCopied] = useState<boolean>(false);
+  const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
 
   // Max attempts
   const MAX_GUESSES = 8;
@@ -75,6 +80,22 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
     }
   };
 
+  const checkDailyTrifecta = () => {
+    try {
+      const s1 = localStorage.getItem(`screenle_state_${currentDate}`);
+      const s2 = localStorage.getItem(`linkle_state_${currentDate}`);
+      if (s1 && s2) {
+        const p1 = JSON.parse(s1);
+        const p2 = JSON.parse(s2);
+        if (p1.isWon && p2.isWon) {
+          unlockAchievement('daily_trifecta');
+        }
+      }
+    } catch {
+      // Ignore
+    }
+  };
+
   const handleGuess = (guessedGame: Game) => {
     if (isCompleted || guesses.some((g) => g.id === guessedGame.id)) return;
 
@@ -86,6 +107,11 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
       setIsCompleted(true);
       saveGameState(newGuesses, true, true);
       recordGameResult('indledle', currentDate, true, newGuesses.length);
+      unlockAchievement('first_flight');
+      if (newGuesses.length <= 4) {
+        unlockAchievement('archive_master');
+      }
+      checkDailyTrifecta();
       soundFx.playVictory();
       confetti({
         particleCount: 140,
@@ -98,10 +124,56 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
       setIsCompleted(true);
       saveGameState(newGuesses, true, false);
       recordGameResult('indledle', currentDate, false, MAX_GUESSES);
+      unlockAchievement('first_flight');
       soundFx.playError();
     } else {
       saveGameState(newGuesses, false, false);
       soundFx.playClick();
+    }
+  };
+
+  const handleDownloadCard = async () => {
+    soundFx.playClick();
+    setIsDownloadingImage(true);
+    try {
+      const rows = guesses
+        .slice()
+        .reverse()
+        .slice(0, 4)
+        .map((g) => {
+          const yearEmoji =
+            g.releaseYear === secretGame.releaseYear
+              ? '🟩'
+              : g.releaseYear < secretGame.releaseYear
+              ? '⬆️'
+              : '⬇️';
+          const genresOverlap = g.genre.filter((gen) =>
+            secretGame.genre.includes(gen)
+          );
+          const genreEmoji =
+            genresOverlap.length === secretGame.genre.length &&
+            g.genre.length === secretGame.genre.length
+              ? '🟩'
+              : genresOverlap.length > 0
+              ? '🟨'
+              : '🟥';
+          const artEmoji = g.artStyle[lang] === secretGame.artStyle[lang] ? '🟩' : '🟥';
+          const camEmoji = g.camera[lang] === secretGame.camera[lang] ? '🟩' : '🟥';
+          return `${g.title}: ${yearEmoji} ${genreEmoji} ${artEmoji} ${camEmoji}`;
+        });
+
+      await downloadShareCard({
+        gameMode: 'Indledle',
+        date: currentDate,
+        isWon,
+        scoreText: isWon ? `${guesses.length}/8 essais` : 'Défi non résolu',
+        details: rows.length > 0 ? rows : ['Défi terminé'],
+      });
+      soundFx.playChime();
+    } catch {
+      // Ignore
+    } finally {
+      setIsDownloadingImage(false);
     }
   };
 
@@ -257,6 +329,15 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
                   {t('common.share')}
                 </>
               )}
+            </button>
+
+            <button
+              onClick={handleDownloadCard}
+              disabled={isDownloadingImage}
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-600 transition shadow-lg active:scale-95 disabled:opacity-50"
+            >
+              <Download className="w-4 h-4 text-amber-400" />
+              <span>{isDownloadingImage ? 'Génération...' : 'Partager en Image 🪶'}</span>
             </button>
           </div>
         </div>

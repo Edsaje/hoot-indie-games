@@ -621,6 +621,440 @@ export const INDIE_GAMES: Game[] = [
       composer: 'Dday',
     },
   },
+  {
+    id: 'nine-sols',
+    title: 'Nine Sols',
+    releaseYear: 2024,
+    genre: ['Metroidvania', 'Action', 'Souls-like', 'Taopunk'],
+    artStyle: {
+      fr: 'Dessin animé Taopunk fait main',
+      en: 'Hand-drawn Taopunk Manga 2D',
+    },
+    camera: {
+      fr: 'Vue de côté 2D (Side-scroller)',
+      en: '2D Side-scroller',
+    },
+    developer: 'Red Candle Games',
+    steamUrl: 'https://store.steampowered.com/app/1809540/Nine_Sols/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_868b4226ba5cb830c2c31e9c20aa19aa36a7ea4b.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_752a78122d250325066dc10ae950a7b4f2c9ef89.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_5d774f9d2d8cb30bf04f7cbe8078ef3a4b64f9ef.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_493c0fec44a30e84b54e3d368e7ec89f41df5bc2.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Un périple de vengeance taopunk aux combats intenses axés sur la déviation et le rythme.',
+        en: 'A lore-rich, hand-drawn 2D action-platformer featuring Sekiro-inspired deflection combat in an Asian fantasy world.',
+      },
+      composer: 'Red Candle Sound Team',
+    },
+  },
+  {
+    id: 'crow-country',
+    title: 'Crow Country',
+    releaseYear: 2024,
+    genre: ['Survival Horror', 'Puzzle', 'Rétro', 'Mystère'],
+    artStyle: {
+      fr: '3D Low-poly Rétro ère PS1',
+      en: 'Retro PS1 Low-poly 3D',
+    },
+    camera: {
+      fr: 'Vue Isométrique 3D libre',
+      en: 'Isometric 3D Camera',
+    },
+    developer: 'SFB Games',
+    steamUrl: 'https://store.steampowered.com/app/1996010/Crow_Country/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_94229415c1e34df4e67277eefce2632b85fa1b66.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_ea4ea25d886fa31eeabac6504a75aa882c943806.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_868f763f9104fa2e558832a8dd936cb077e685f0.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_2a5aa44ff7fc3f0bc333c1f24d777651a5e1ae77.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_69e4c1945f44e1837fcfc258d4a960fb5ce110c7.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Explorez un parc d\'attractions abandonné et élucidez la disparition mystérieuse d\'Edward Crow.',
+        en: 'A survival horror game where you investigate the eerie quiet of an abandoned theme park.',
+      },
+      composer: 'Tom Vian',
+    },
+  },
+  {
+    id: 'pizza-tower',
+    title: 'Pizza Tower',
+    releaseYear: 2023,
+    genre: ['Platformer', 'Fast-paced', 'Comédie', 'Score Attack'],
+    artStyle: {
+      fr: 'Animation Cartoon 90s déjantée',
+      en: 'Zany 90s Cartoon Hand-drawn',
+    },
+    camera: {
+      fr: 'Vue de côté 2D (Side-scroller)',
+      en: '2D Side-scroller',
+    },
+    developer: 'Tour De Pizza',
+    steamUrl: 'https://store.steampowered.com/app/2231450/Pizza_Tower/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_b8fc17b439c3c1ca75635c15ee4e366b595b1e06.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_911ce20f864e2621748259d81d2db40ec0a0ba61.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_f8bfad73ae2c4bb47f9a8cb40428c946e382d6c1.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_544e3cb41b9d4f9bf34fca240f2f3e8271e16c90.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_4905a8f0a0e5b9826f5d5351e3c233cba799c922.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Sauvez votre pizzeria en détruisant la Tour de Pizza à une vitesse supersonique.',
+        en: 'A fast-paced 2D platformer inspired by the Wario Land series, with an emphasis on movement and destruction.',
+      },
+      composer: 'Ronan de Castel & ClascyJitto',
+    },
+  },
+  {
+    id: 'pacific-drive',
+    title: 'Pacific Drive',
+    releaseYear: 2024,
+    genre: ['Survie', 'Conduite', 'Sci-Fi', 'Roguelite'],
+    artStyle: {
+      fr: '3D Atmosphérique Réaliste & Anomale',
+      en: 'Atmospheric Anomaly-Rich 3D',
+    },
+    camera: {
+      fr: 'Vue à la première personne (FPS)',
+      en: 'First Person (FPS)',
+    },
+    developer: 'Ironwood Studios',
+    steamUrl: 'https://store.steampowered.com/app/1458140/Pacific_Drive/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_4996fbcefcfa11b069d511516e87754eb5e7096e.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_c7c4904eb12d46e01a884ec8136ff9c3a372eb06.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_e1e12ea993f39a7970d49479b007887aa85467ef.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_a1e5052994474775e5331ae0a0f67caae0d8ebf9.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_694cf6e1d51c4a4e12c1c6e1c79caadbe92e1069.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Affrontez les périls surnaturels de la Zone d\'exclusion olympique avec votre break pour seul refuge.',
+        en: 'Face the supernatural dangers of the Olympic Exclusion Zone with a car as your only lifeline.',
+      },
+      composer: 'Wilbert Roget II',
+    },
+  },
+  {
+    id: 'katana-zero',
+    title: 'Katana Zero',
+    releaseYear: 2019,
+    genre: ['Action', 'Slash', 'Cyberpunk', 'Récit'],
+    artStyle: {
+      fr: 'Pixel Art Néon Néo-noir tranchant',
+      en: 'Neo-noir Neon Pixel Art',
+    },
+    camera: {
+      fr: 'Vue de côté 2D (Side-scroller)',
+      en: '2D Side-scroller',
+    },
+    developer: 'Askiisoft',
+    steamUrl: 'https://store.steampowered.com/app/460950/Katana_ZERO/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_055fa053267d643d9c72f7ad4bc81d68377cb761.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_0d10c1f54cfebbeeaaeae2bf80b2a59a7fdbdbf0.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_5d6dafc02187b5bccecf6b509d3c52e46b328131.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_b831fa4358a9e64e5256e6bf4ea69a1ff099eaee.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_d44e5fae5ffeb68e1a1796d1354bb4a6433e387f.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/460950/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Tranchez, esquivez et manipulez le temps dans un ballet sanglant au katana néo-noir.',
+        en: 'A stylish neo-noir, action-platformer featuring breakneck action and instant-death combat.',
+      },
+      composer: 'LudoWic & Bill Kiley',
+    },
+  },
+  {
+    id: 'hotline-miami',
+    title: 'Hotline Miami',
+    releaseYear: 2012,
+    genre: ['Action', 'Brutal', 'Top-down', 'Synthwave'],
+    artStyle: {
+      fr: 'Pixel Art Psychédélique Rétro 80s',
+      en: 'Psychedelic Retro 80s Pixel Art',
+    },
+    camera: {
+      fr: 'Vue du dessus 2D (Top-down)',
+      en: '2D Top-down',
+    },
+    developer: 'Dennaton Games',
+    steamUrl: 'https://store.steampowered.com/app/219150/Hotline_Miami/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_75e8d890cf2c68a4b3d7967b66a50e932bce37bb.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_f8a00259f51fc8931168ad08c5c7d1e07b587cf5.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_91e0a297926e85501ae13768d60124caae4b29bb.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_5bbd5668ef19c3514a6026a798993f3c3065da4a.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_c7df0e02ebbe7f67724a7ba31379f8feef7eb3d0.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/219150/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Aimez-vous faire du mal aux autres ? Une fusillade néon sanglante dans le Miami de 1989.',
+        en: 'A high-octane action game overflowing with raw brutality, hard-boiled gunplay and skull crushing close combat.',
+      },
+      composer: 'Moon, Sun Araw & Jasper Byrne',
+    },
+  },
+  {
+    id: 'dredge',
+    title: 'Dredge',
+    releaseYear: 2023,
+    genre: ['Pêche', 'Horreur cosmique', 'Aventure', 'Gestion'],
+    artStyle: {
+      fr: '3D Low-poly Stylisée et Brumeuse',
+      en: 'Misty Low-poly Stylized 3D',
+    },
+    camera: {
+      fr: 'Vue Isométrique 3D / Troisième personne',
+      en: 'Isometric 3D / Third Person',
+    },
+    developer: 'Black Salt Games',
+    steamUrl: 'https://store.steampowered.com/app/1562430/DREDGE/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_37a1f592477383a18a54d6fc48bc9614f85e49cf.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_16ca74378f8ff4b830d93be7839ec9bce768656d.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_1c6cb9916ec0e0c03b1236fb6552431fa1a2c3a5.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_2c0d8328bf5858cfd7be875e533c3f9154f24f5c.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_19139589d825dd67746fa0d15197f805a5a1e2f9.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Pilotez votre chalutier, pêchez des créatures sous-marines et bravez les abominations de la nuit.',
+        en: 'A single-player fishing adventure with a sinister undercurrent.',
+      },
+      composer: 'David Webster',
+    },
+  },
+  {
+    id: 'chants-of-sennaar',
+    title: 'Chants of Sennaar',
+    releaseYear: 2023,
+    genre: ['Puzzle', 'Aventure', 'Linguistique', 'Exploration'],
+    artStyle: {
+      fr: 'Ligne claire inspirée de Moebius',
+      en: 'Moebius-inspired European Ligne Claire',
+    },
+    camera: {
+      fr: 'Vue Isométrique 3D fixe',
+      en: 'Fixed Isometric 3D',
+    },
+    developer: 'Rundisc',
+    steamUrl: 'https://store.steampowered.com/app/1931770/Chants_of_Sennaar/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_5a49ca8cbf7f87178051755ee0a82b95b866c1f1.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_e95267be85aeef3294314e30018f6d6c62c26f0c.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_8716bceb7f14b6fc70c1cb336183ef999b70b55a.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_75e21fbfaebfe7876a3d93b39fbfa7f2ef8bc164.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_40cfebce1c56f8f172551cf18b5cf3c95a09289d.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Déchiffrez d\'anciens glyphes et réunissez les peuples de la Tour de Babel.',
+        en: 'Unravel mysteries across the Tower of Babel by deciphering ancient languages.',
+      },
+      composer: 'Thomas Brunet',
+    },
+  },
+  {
+    id: 'a-short-hike',
+    title: 'A Short Hike',
+    releaseYear: 2019,
+    genre: ['Aventure', 'Exploration', 'Cozy', 'Vol'],
+    artStyle: {
+      fr: 'Pixel Art 3D Doux & Pastel',
+      en: 'Pastel Pixelated 3D',
+    },
+    camera: {
+      fr: 'Vue Isométrique 3D / Plongée',
+      en: 'Top-down / Isometric 3D',
+    },
+    developer: 'adamgryu',
+    steamUrl: 'https://store.steampowered.com/app/1055540/A_Short_Hike/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_37a91689dfbbba16dfaa0d226a27e02e23075677.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_8217bb3a0b5f13d806d20875c75bf69f104d49d9.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_df94d216fe0290b2b8006bf203ea5ebba285746b.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_89daecf701c385566ee2682df6a0b7692e105e4b.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_6dc03fce5fe283f6f1680abcf4ebc3d790d96525.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Randonnez, planez et grimpez jusqu\'au sommet paisible de Hawk Peak Provincial Park.',
+        en: 'Hike, climb, and soar through the peaceful mountainside landscapes of Hawk Peak Provincial Park.',
+      },
+      composer: 'Mark Sparling',
+    },
+  },
+  {
+    id: 'fez',
+    title: 'Fez',
+    releaseYear: 2012,
+    genre: ['Puzzle', 'Platformer', 'Perspective', 'Rétro'],
+    artStyle: {
+      fr: 'Pixel Art 2D cubique dans un monde 3D',
+      en: '2D Pixel Art in a 3D Multiverse',
+    },
+    camera: {
+      fr: 'Vue de profil 2D rotative sur 4 axes',
+      en: '2D Rotating Perspective',
+    },
+    developer: 'Polytron Corporation',
+    steamUrl: 'https://store.steampowered.com/app/224760/FEZ/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_fa73b438258296eb4cbb7928e3b08e2ecadba9ee.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_ef79ee5e11400d7fb4936d93e87fc4dcad30d5b4.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_d36bfa5880d75c3dbb90875e54d89617255169a8.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_89ca05256e2eb9b6cebcda7c29ae82136a546ce3.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_598007ae08f237bfb1cf8f600f723650170a417a.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/224760/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Gomez découvre l\'existence d\'une mystérieuse troisième dimension en recevant un fez magique.',
+        en: 'Gomez is a 2D creature living in a 2D world until the existence of a mysterious 3rd dimension is revealed to him.',
+      },
+      composer: 'Disasterpeace',
+    },
+  },
+  {
+    id: 'gris',
+    title: 'Gris',
+    releaseYear: 2018,
+    genre: ['Platformer', 'Aventure', 'Émotion', 'Artistique'],
+    artStyle: {
+      fr: 'Aquarelle Peinte à la Main',
+      en: 'Hand-painted Watercolor 2D',
+    },
+    camera: {
+      fr: 'Vue de côté 2D (Side-scroller)',
+      en: '2D Side-scroller',
+    },
+    developer: 'Nomada Studio',
+    steamUrl: 'https://store.steampowered.com/app/683320/GRIS/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_81b37651a7b4578b5e525ae7d9d832448378c74d.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_91e0a297926e85501ae13768d60124caae4b29bb.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_37a91689dfbbba16dfaa0d226a27e02e23075677.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_07981b2a95c967675fa8ea97a9f95f417f7b309e.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/683320/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Rendez les couleurs à un monde brisé à travers le deuil d\'une jeune fille pleine d\'espoir.',
+        en: 'GRIS is a serene and evocative experience, free of danger, frustration or death.',
+      },
+      composer: 'Berlinist',
+    },
+  },
+  {
+    id: 'darkest-dungeon',
+    title: 'Darkest Dungeon',
+    releaseYear: 2016,
+    genre: ['Roguelike', 'RPG', 'Tour par tour', 'Dark Fantasy'],
+    artStyle: {
+      fr: 'Comics Gothique encré façon Mignola',
+      en: 'Inked Gothic Comic Illustration',
+    },
+    camera: {
+      fr: 'Vue de profil 2D fixe en couloir',
+      en: '2D Side Exploration & Combat',
+    },
+    developer: 'Red Hook Studios',
+    steamUrl: 'https://store.steampowered.com/app/262060/Darkest_Dungeon/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_a5a7dc788fc23f663fe57e937d7a5b3a3c1a8e1b.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_89eb4257121287941011dcebbf7b8979e83e5a55.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_efb4592ca07b0493b86cb4886616a695e0c609df.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_6eaef7e98a1f76cf8b2b9f36f6d2f976a4dfc08b.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_a7c8be21fb7a641a9cb3a59daebfb4c58cf35b44.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/262060/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Gérez le stress et la folie de héros meurtris dans les catacombes d\'un manoir maudit.',
+        en: 'A challenging gothic roguelike turn-based RPG about the psychological stresses of adventuring.',
+      },
+      composer: 'Stuart Chatwood',
+    },
+  },
+  {
+    id: 'bramble',
+    title: 'Bramble: The Mountain King',
+    releaseYear: 2023,
+    genre: ['Horreur', 'Aventure', 'Folklore', 'Sombre'],
+    artStyle: {
+      fr: '3D Réaliste Cinématique Nordique',
+      en: 'Cinematic Nordic Photorealistic 3D',
+    },
+    camera: {
+      fr: 'Vue à la troisième personne cinématique',
+      en: 'Cinematic Third Person',
+    },
+    developer: 'Dimfrost Studios',
+    steamUrl: 'https://store.steampowered.com/app/1623940/Bramble_The_Mountain_King/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_493c0fec44a30e84b54e3d368e7ec89f41df5bc2.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_7be9719eb79bb410b0a562ef674a22ad3fb936d6.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_ff68ce49ea3aa5a1a1f044bbd2df807353f47e30.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_09904323672ea4fc69317d722dbfc05d0458b297.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Traversez une terre sinistre inspirée des contes nordiques pour sauver votre sœur d\'un infâme troll.',
+        en: 'A grim adventure set in a world inspired by dark, Nordic fables.',
+      },
+      composer: 'Martin Hall',
+    },
+  },
+  {
+    id: 'axiom-verge',
+    title: 'Axiom Verge',
+    releaseYear: 2015,
+    genre: ['Metroidvania', 'Sci-Fi', 'Action', 'Rétro'],
+    artStyle: {
+      fr: 'Pixel Art 16-bit Biomécanique Rétro',
+      en: 'Biomechanical 16-bit CRT Pixel Art',
+    },
+    camera: {
+      fr: 'Vue de côté 2D (Side-scroller)',
+      en: '2D Side-scroller',
+    },
+    developer: 'Thomas Happ Games LLC',
+    steamUrl: 'https://store.steampowered.com/app/332200/Axiom_Verge/',
+    screenshots: [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_868f763f9104fa2e558832a8dd936cb077e685f0.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_9107ffdc69c3a30c52eb4be1c6cc8c4b794fbd81.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_e1e5b8d2bbfa8d4389069d3e8a4a58eb6b7858c2.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_a43e49df9c9164287c2b3dc10b1069b22a0bb8ad.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_96eef667a4216e4fae7592cf1eef4f954316d5ba.1920x1080.jpg',
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/332200/header.jpg',
+    ],
+    hints: {
+      tagline: {
+        fr: 'Explorez et débloquez un monde extraterrestre labyrinthique à l\'aide de glitchs et d\'armes biomécaniques.',
+        en: 'The retro sci-fi action adventure you\'ve been waiting for, crafted by a solo developer.',
+      },
+      composer: 'Thomas Happ',
+    },
+  },
 ];
 
 // Helper pour retrouver un jeu par son ID

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { soundFx } from '../../utils/audio';
+import { useAchievements } from '../../context/useAchievements';
 
 export type NavTab = 'screenle' | 'indledle' | 'linkle' | 'toolbox' | 'roost';
 
@@ -21,6 +22,8 @@ interface NavbarProps {
   currentTab: NavTab;
   onTabChange: (tab: NavTab) => void;
   onOpenStats: () => void;
+  onOpenAchievements: () => void;
+  onOpenCalendar: () => void;
   onEasterEggTrigger: () => void;
   currentDate: string;
 }
@@ -29,10 +32,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   onTabChange,
   onOpenStats,
+  onOpenAchievements,
+  onOpenCalendar,
   onEasterEggTrigger,
   currentDate,
 }) => {
   const { t, i18n } = useTranslation();
+  const { feathersCount, unlockAchievement } = useAchievements();
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
 
   const toggleSound = () => {
@@ -44,6 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     soundFx.playClick();
     const nextLang = i18n.language.startsWith('fr') ? 'en' : 'fr';
     i18n.changeLanguage(nextLang);
+    unlockAchievement('polyglot');
   };
 
   return (
@@ -156,11 +163,32 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-2">
-            {/* Daily Date Badge */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-mono">
+            {/* Daily Date Button (Opens Calendar) */}
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                onOpenCalendar();
+              }}
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 text-xs font-mono transition cursor-pointer"
+              title="Ouvrir les archives quotidiennes"
+            >
               <Calendar className="w-3.5 h-3.5 text-[#f59e0b]" />
               {currentDate}
-            </div>
+            </button>
+
+            {/* Achievements Button */}
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                onOpenAchievements();
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition text-xs font-bold"
+              title={i18n.language.startsWith('fr') ? "Trésor des Plumes d'Or" : 'Feather Trove Achievements'}
+              aria-label="Achievements"
+            >
+              <Feather className="w-3.5 h-3.5 text-amber-400" />
+              <span className="font-mono text-amber-300">{feathersCount}</span>
+            </button>
 
             {/* Sound Toggle */}
             <button

@@ -171,6 +171,34 @@ class AudioManager {
       // Ignore
     }
   }
+
+  // Achievement unlocked fanfare
+  public playAchievement() {
+    if (!this.soundEnabled) return;
+    try {
+      const ctx = this.initCtx();
+      if (!ctx) return;
+      const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        const t = ctx.currentTime + i * 0.07;
+        osc.frequency.setValueAtTime(freq, t);
+
+        gain.gain.setValueAtTime(0.08, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(t);
+        osc.stop(t + 0.4);
+      });
+    } catch {
+      // Ignore
+    }
+  }
 }
 
 export const soundFx = new AudioManager();

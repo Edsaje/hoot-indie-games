@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Sparkles, ExternalLink, Gamepad2 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import { useAchievements } from '../../context/useAchievements';
 
 interface OwlEasterEggModalProps {
   isOpen: boolean;
@@ -10,6 +11,13 @@ interface OwlEasterEggModalProps {
 
 export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
+  const { unlockAchievement } = useAchievements();
+
+  useEffect(() => {
+    if (isOpen) {
+      unlockAchievement('secret_owl');
+    }
+  }, [isOpen, unlockAchievement]);
 
   if (!isOpen) return null;
 

@@ -1,0 +1,19 @@
+{
+  "name": "Hoot Indie Games | Sanctuaire Indé",
+  "short_name": "Hoot Indie",
+  "description": "Mini-jeux quotidiens de déduction indé, boîte à outils et perchoir par Hibouxe",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment"]
+}

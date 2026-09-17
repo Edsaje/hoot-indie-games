@@ -14,12 +14,15 @@ import {
   Check,
   ZoomIn,
   ZoomOut,
+  Download,
 } from 'lucide-react';
 import type { Game } from '../../types/game';
 import { INDIE_GAMES, getDailyGame } from '../../data/games';
 import { GameSearchBar } from '../common/GameSearchBar';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
+import { useAchievements } from '../../context/useAchievements';
+import { downloadShareCard } from '../../utils/generateShareCard';
 
 interface ScreenleGameProps {
   currentDate: string;
@@ -62,12 +65,14 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     };
   })();
 
+  const { unlockAchievement } = useAchievements();
   const [guesses, setGuesses] = useState<Game[]>(savedState.guesses);
   const [isCompleted, setIsCompleted] = useState<boolean>(savedState.isCompleted);
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
   const [activeStageIndex, setActiveStageIndex] = useState<number>(savedState.activeStageIndex);
   const [isZoomedIn, setIsZoomedIn] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
 
   // Sync to local storage
   const saveGameState = (
@@ -90,6 +95,22 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     }
   };
 
+  const checkDailyTrifecta = () => {
+    try {
+      const s1 = localStorage.getItem(`indledle_state_${currentDate}`);
+      const s2 = localStorage.getItem(`linkle_state_${currentDate}`);
+      if (s1 && s2) {
+        const p1 = JSON.parse(s1);
+        const p2 = JSON.parse(s2);
+        if (p1.isWon && p2.isWon) {
+          unlockAchievement('daily_trifecta');
+        }
+      }
+    } catch {
+      // Ignore
+    }
+  };
+
   const unlockedStagesCount = isCompleted
     ? 6
     : Math.min(6, guesses.length + 1);
@@ -107,6 +128,11 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       setActiveStageIndex(5);
       saveGameState(newGuesses, true, true);
       recordGameResult('screenle', currentDate, true, newGuesses.length);
+      unlockAchievement('first_flight');
+      if (newGuesses.length <= 2) {
+        unlockAchievement('owl_eyes');
+      }
+      checkDailyTrifecta();
       soundFx.playVictory();
       confetti({
         particleCount: 120,
@@ -121,12 +147,36 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       setActiveStageIndex(5);
       saveGameState(newGuesses, true, false);
       recordGameResult('screenle', currentDate, false, 6);
+      unlockAchievement('first_flight');
       soundFx.playError();
     } else {
       // Reveal next stage
       setActiveStageIndex(newGuesses.length);
       saveGameState(newGuesses, false, false);
       soundFx.playError();
+    }
+  };
+
+  const handleDownloadCard = async () => {
+    soundFx.playClick();
+    setIsDownloadingImage(true);
+    try {
+      const lines = guesses.slice(0, 4).map((g, idx) => {
+        const isHit = g.id === secretGame.id;
+        return `${idx + 1}. ${isHit ? '🟩' : '⬛'} ${g.title}`;
+      });
+      await downloadShareCard({
+        gameMode: 'Screenle',
+        date: currentDate,
+        isWon,
+        scoreText: isWon ? `${guesses.length}/6 tentatives` : 'Défi non résolu',
+        details: lines.length > 0 ? lines : ['Défi du jour terminé'],
+      });
+      soundFx.playChime();
+    } catch {
+      // Ignore
+    } finally {
+      setIsDownloadingImage(false);
     }
   };
 
@@ -457,6 +507,15 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
                   {t('common.share')}
                 </>
               )}
+            </button>
+
+            <button
+              onClick={handleDownloadCard}
+              disabled={isDownloadingImage}
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-600 transition shadow-lg active:scale-95 disabled:opacity-50"
+            >
+              <Download className="w-4 h-4 text-amber-400" />
+              <span>{isDownloadingImage ? 'Génération...' : 'Partager en Image 🪶'}</span>
             </button>
           </div>
         </div>
