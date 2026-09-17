@@ -109,6 +109,13 @@ class TelemetryEngine {
     this.registerSession();
     this.initPerformanceTracking();
     this.initDurationTimer();
+
+    // Visite initiale de page
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        this.track('navigation', 'page_view', window.location.pathname);
+      }, 500);
+    }
   }
 
   private loadStats(): AggregatedStats {
@@ -291,9 +298,42 @@ class TelemetryEngine {
 
     this.saveStats();
 
+    // Envoi asynchrone non-bloquant vers le tracker serveur OVH (/api/track.php)
+    this.sendToServer(event);
+
     // Émission d'un événement CustomEvent pour rafraîchir en direct les composants ouverts
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('hoot_telemetry_update', { detail: event }));
+    }
+  }
+
+  private sendToServer(event: TelemetryEvent): void {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const payload = JSON.stringify({
+        event: event.action,
+        category: event.category,
+        label: event.label,
+        value: event.value,
+        props: event.metadata || {},
+        referrer: typeof document !== 'undefined' && document.referrer ? document.referrer : 'direct',
+      });
+
+      const endpoint = '/api/track.php';
+      if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(endpoint, blob);
+      } else {
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {});
+      }
+    } catch {
+      // Ignorer silencieusement pour ne jamais altérer l'expérience utilisateur
     }
   }
 

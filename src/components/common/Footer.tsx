@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heart, Globe, Terminal, ShieldCheck } from 'lucide-react';
+import { Heart, Globe, Terminal } from 'lucide-react';
 import { GithubIcon, YoutubeIcon } from './SocialIcons';
 import { OwlLogo } from './OwlLogo';
 import { soundFx } from '../../utils/audio';
@@ -142,15 +142,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   className="hover:text-amber-400 text-slate-300 transition"
                 >
                   {t('nav.roost')}
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onSelectTab('toolbox')}
-                  className="hover:text-emerald-300 text-emerald-400 transition flex items-center gap-1.5 font-medium"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Observatoire Télémétrie Privée</span>
                 </button>
               </li>
               <li className="pt-2 text-xs text-slate-400 flex items-center gap-1">

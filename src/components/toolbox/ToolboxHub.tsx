@@ -13,17 +13,15 @@ import {
   CheckCircle2,
   XCircle,
   Flame,
-  Activity,
   Database,
 } from 'lucide-react';
 import { INDIE_GAMES } from '../../data/games';
 import { UPCOMING_INDIE_GAMES } from '../../data/upcomingGames';
-import { AnalyticsDashboard } from '../analytics/AnalyticsDashboard';
 import { SteamCatalogExplorer } from '../steam/SteamCatalogExplorer';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 
-type ToolboxTab = 'roulette' | 'backlog' | 'budget' | 'gems' | 'quiz' | 'radar' | 'analytics' | 'steam';
+type ToolboxTab = 'roulette' | 'backlog' | 'budget' | 'gems' | 'quiz' | 'radar' | 'steam';
 
 interface GameBacklogInfo {
   id: string;
@@ -319,7 +317,6 @@ export const ToolboxHub: React.FC = () => {
             { id: 'gems', label: t('toolbox.tabs.gems'), icon: Compass },
             { id: 'quiz', label: t('toolbox.tabs.quiz'), icon: HelpCircle },
             { id: 'radar', label: lang === 'fr' ? 'Radar Sorties' : 'Upcoming Radar', icon: Flame },
-            { id: 'analytics', label: lang === 'fr' ? 'Observatoire Télémétrie' : 'Cookieless Tracker', icon: Activity },
             { id: 'steam', label: lang === 'fr' ? 'Catalogue Steam' : 'Steam Catalog', icon: Database },
           ] as const
         ).map((tab) => {
@@ -931,10 +928,7 @@ export const ToolboxHub: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 7: ANALYTICS & TELEMETRY */}
-      {activeTab === 'analytics' && <AnalyticsDashboard />}
-
-      {/* TAB 8: STEAM CATALOG EXPLORER & INGESTION */}
+      {/* TAB 7: STEAM CATALOG EXPLORER & INGESTION */}
       {activeTab === 'steam' && <SteamCatalogExplorer />}
     </div>
   );
