@@ -4,7 +4,7 @@ import type { Game } from '../types/game';
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 87
+ * Total de jeux : 90
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -3097,6 +3097,106 @@ export const INDIE_GAMES: Game[] = [
         "en": "Discover a vast, haunted kingdom ruled by silk and song as the lethal huntress Hornet."
       },
       "composer": "Christopher Larkin"
+    }
+  },
+  {
+    "id": "kernel-hearts",
+    "title": "Kernel Hearts",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "RPG",
+      "Roguelike",
+      "Coop"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Ephemera Games",
+    "steamUrl": "https://store.steampowered.com/app/2902170/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/8ee81da0a56173915f4a1555fdb60d94e7858d34/ss_8ee81da0a56173915f4a1555fdb60d94e7858d34.1920x1080.jpg?t=1789664735",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/88078553b7fdd46bf11f0bcc1c435c0780e3a199/ss_88078553b7fdd46bf11f0bcc1c435c0780e3a199.1920x1080.jpg?t=1789664735",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/674a81ec253e5753f3df34b628bc8479ad0e1d2d/ss_674a81ec253e5753f3df34b628bc8479ad0e1d2d.1920x1080.jpg?t=1789664735",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/0edb6ca2e74c29ac41cd96308c0fc8d0d132fdd7/ss_0edb6ca2e74c29ac41cd96308c0fc8d0d132fdd7.1920x1080.jpg?t=1789664735",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/a7410d408fbbb0ea6cb91100314b3b7a26d054cc/ss_a7410d408fbbb0ea6cb91100314b3b7a26d054cc.1920x1080.jpg?t=1789664735",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/ss_2ddb69c6d0d4b3b45b5afe7d2909c113ce7c57b3.1920x1080.jpg?t=1789664735"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Rassemblez vos alliés, éliminez les anges, transformez-vous en fille magique et... tuez Dieu ! Kernel Hearts est un jeu d'action-RPG roguelike en coopération multijoueur qui raconte l'histoire de quatre filles magiques qui tentent de sauver un monde noyé dans les cendres.",
+        "en": "Gather your allies. Eliminate Angels. Transform into a Magical Girl. Slay god. Kernel Hearts is a Multiplayer Co-Op Roguelike Action RPG about four magical girls and their attempt to save a world that's drowning in ashes"
+      }
+    }
+  },
+  {
+    "id": "openfront",
+    "title": "OpenFront",
+    "releaseYear": 2026,
+    "genre": [
+      "Massivement multijoueur",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "OpenFront Inc, Evan Pellegrini",
+    "steamUrl": "https://store.steampowered.com/app/3560670/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/e4bb7a01224734f6393a5b2ed182a58487ab7071/ss_e4bb7a01224734f6393a5b2ed182a58487ab7071.1920x1080.jpg?t=1789647376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789647376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a66ab60ca56f5942913e14566e21bedb7f5a5a07/ss_a66ab60ca56f5942913e14566e21bedb7f5a5a07.1920x1080.jpg?t=1789647376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/578a0bf1e70bc6dad974c310f0841e8f4bbfb15e/ss_578a0bf1e70bc6dad974c310f0841e8f4bbfb15e.1920x1080.jpg?t=1789647376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789647376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/388957578e4ef7bdfd2382f13cbbc01d40dd3f89/ss_388957578e4ef7bdfd2382f13cbbc01d40dd3f89.1920x1080.jpg?t=1789647376"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "OpenFront est un jeu de battle royale PvP où des centaines de joueurs s'affrontent sur une immense carte, signant des alliances, amassant de l'or et déchaînant un enfer de frappes atomiques pour dominer le monde.",
+        "en": "A massively multiplayer real-time strategy game pitting hundreds of players against one another. Over one million nuke each other every month."
+      }
+    }
+  },
+  {
+    "id": "bombanana",
+    "title": "BOMBANANA!",
+    "releaseYear": 2026,
+    "genre": [
+      "Coop"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Lefto Studio",
+    "steamUrl": "https://store.steampowered.com/app/4656000/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/429d033410531fc2ec6ba0cd24956868beaff095/ss_429d033410531fc2ec6ba0cd24956868beaff095.1920x1080.jpg?t=1789051356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/e476a3ed312794922d58c9553130922acc7f393d/ss_e476a3ed312794922d58c9553130922acc7f393d.1920x1080.jpg?t=1789051356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/88b677bb5d6ec91c12ad8bfbdcc5faf3ff15a044/ss_88b677bb5d6ec91c12ad8bfbdcc5faf3ff15a044.1920x1080.jpg?t=1789051356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/edb04b7f1714524fc59691ad0368492488e317cc/ss_edb04b7f1714524fc59691ad0368492488e317cc.1920x1080.jpg?t=1789051356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/5564e2b1729232a6c4f9cdc190b5d10f0afc4946/ss_5564e2b1729232a6c4f9cdc190b5d10f0afc4946.1920x1080.jpg?t=1789051356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/c1063e896d08eaa213aa43498a1a9ac7e9c481d6/ss_c1063e896d08eaa213aa43498a1a9ac7e9c481d6.1920x1080.jpg?t=1789051356"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Incarnez des singes démineurs entre amis ! Coopérez en équipe de trois singes : un aveugle, un sourd et un muet. Chaque joueur dispose d’une partie différente des informations. Communiquez, résolvez des casse-têtes et jouez contre la montre. Désamorcerez-vous les bombes avant qu’elles explosent ?",
+        "en": "Chaotic bomb disposal fun with friends &amp; monkeys! Work together as a 3-player co-op team of blind, deaf, and mute monkeys. Each player has only part of the needed information. Communicate, solve puzzles, and race against the clock. Can you defuse the bombs before they explode?"
+      }
     }
   }
 ];
