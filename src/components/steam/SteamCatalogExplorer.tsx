@@ -390,11 +390,11 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                       loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-slate-950/80 backdrop-blur-md text-[10px] font-mono font-bold text-amber-400 border border-slate-700">
+                    <span className="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-slate-950/90 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-slate-700">
                       {game.releaseYear}
                     </span>
                     {steamGame.isCustomImport && (
-                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-emerald-500 text-[9px] font-black uppercase text-slate-950">
+                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-emerald-500 text-xs font-bold uppercase text-slate-950">
                         Import Direct
                       </span>
                     )}
@@ -404,17 +404,17 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                   <h4 className="font-bold text-white text-sm line-clamp-1 group-hover:text-amber-400 transition">
                     {game.title}
                   </h4>
-                  <p className="text-[11px] text-slate-400 line-clamp-1 mt-0.5">
+                  <p className="text-xs text-slate-300 line-clamp-1 mt-0.5">
                     {game.developer}
                   </p>
                 </div>
 
                 {/* Badges styles & caméras */}
-                <div className="pt-3 border-t border-[#1e293b] mt-3 flex items-center justify-between text-[10px] text-slate-400">
-                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 truncate max-w-[120px]">
+                <div className="pt-3 border-t border-[#1e293b] mt-3 flex items-center justify-between text-xs text-slate-300">
+                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-200 truncate max-w-[120px]">
                     {game.artStyle[lang]}
                   </span>
-                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 truncate max-w-[100px]">
+                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-200 truncate max-w-[100px]">
                     {game.camera[lang]}
                   </span>
                 </div>
@@ -518,18 +518,18 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-xs">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-500">Style Visuel</span>
+                  <span className="text-xs uppercase font-bold text-slate-400">Style Visuel</span>
                   <div className="font-bold text-white mt-0.5">{selectedGameForModal.artStyle[lang]}</div>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-500">Perspective</span>
+                  <span className="text-xs uppercase font-bold text-slate-400">Perspective</span>
                   <div className="font-bold text-white mt-0.5">{selectedGameForModal.camera[lang]}</div>
                 </div>
                 <div className="col-span-2">
-                  <span className="text-[10px] uppercase font-bold text-slate-500">Genres</span>
+                  <span className="text-xs uppercase font-bold text-slate-400">Genres</span>
                   <div className="flex flex-wrap gap-1 mt-0.5">
                     {selectedGameForModal.genre.map((g) => (
-                      <span key={g} className="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300">
+                      <span key={g} className="px-2 py-0.5 rounded bg-slate-800 text-xs text-slate-200">
                         {g}
                       </span>
                     ))}

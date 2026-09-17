@@ -1,8 +1,8 @@
 {
   "app": {
     "title": "Hoot Indie Games",
-    "tagline": "The daily sanctuary for passionate indie gaming explorers",
-    "description": "Daily deduction games, indie player toolbox, and creative showcase by Hibouxe."
+    "tagline": "The daily hub for passionate indie game fans and explorers",
+    "description": "Daily deduction games, indie gamer toolbox, and creative projects by Hibouxe."
   },
   "nav": {
     "games": "Mini-Games",
@@ -41,24 +41,24 @@
     "maxStreak": "Max Streak",
     "winRate": "Win Rate",
     "played": "Played",
-    "congratulations": "Congratulations, Visionary!",
+    "congratulations": "Congratulations!",
     "gameOver": "Game Over",
     "theSecretGameWas": "The secret game was:"
   },
   "screenle": {
     "title": "Screenle",
-    "subtitle": "Deduce the daily indie game from progressive zoomed screenshots",
-    "stage": "Visual Clue {{current}} of {{total}}",
+    "subtitle": "Guess the daily indie game from progressive screenshot stages",
+    "stage": "Visual clue {{current}} of {{total}}",
     "searchPlaceholder": "Search for an indie game...",
     "skipStep": "Skip / Reveal next stage",
     "hints": "Additional Clues",
-    "taglineHint": "Tagline / Lore",
+    "taglineHint": "Tagline / Description",
     "composerHint": "OST Composer",
     "unlockHintAt": "Unlocked at stage {{step}}",
     "attemptsLeft": "{{count}} attempt left",
     "attemptsLeft_plural": "{{count}} attempts left",
-    "wonText": "Brilliant! You identified the game at stage {{step}}/6!",
-    "lostText": "The roost turned dark... Try your luck again tomorrow!"
+    "wonText": "Well done! You identified the game at stage {{step}}/6!",
+    "lostText": "Game over! Check back tomorrow for a brand new challenge!"
   },
   "indledle": {
     "title": "Indledle",
@@ -67,7 +67,7 @@
     "attempts": "Guesses: {{count}} / {{max}}",
     "legend": "Color Legend",
     "legendGreen": "Exact match",
-    "legendYellow": "Partial match or close indicator",
+    "legendYellow": "Partial match or close value",
     "legendRed": "No match",
     "higher": "Released later (higher year)",
     "lower": "Released earlier (lower year)",
@@ -77,14 +77,14 @@
     "tableArt": "Art Direction",
     "tableCamera": "Camera",
     "tableDev": "Developer",
-    "wonText": "Spot on! Unmasked in {{guesses}} guess(es)!",
-    "lostText": "No more attempts. See you tomorrow at the Roost!"
+    "wonText": "Spot on! Found in {{guesses}} guess(es)!",
+    "lostText": "Out of guesses. A new indie puzzle will be ready tomorrow!"
   },
   "linkle": {
     "title": "Linkle (Connections)",
-    "subtitle": "Group 16 indie gems into 4 secret categories of 4 items",
+    "subtitle": "Group 16 indie games into 4 secret categories of 4 items",
     "mistakesRemaining": "Mistakes remaining:",
-    "oneAway": "So close! 3 out of 4 games share a secret category!",
+    "oneAway": "Close! 3 out of 4 games share a category!",
     "alreadyGuessed": "You already tried this 4-game combination!",
     "deselectAll": "Deselect all",
     "shuffle": "Shuffle",
@@ -92,19 +92,19 @@
     "easyCategory": "Easy",
     "mediumCategory": "Medium",
     "hardCategory": "Hard",
-    "expertCategory": "Mystic / Expert",
-    "wonText": "Flawless! All celestial connections of the owl's mind are aligned!",
+    "expertCategory": "Expert",
+    "wonText": "Well done! You found all the categories!",
     "lostText": "Out of attempts! Here are the revealed secret categories:"
   },
   "toolbox": {
     "title": "Indie Gamer Toolbox",
-    "subtitle": "Interactive utilities to plan, budget, and uncover your next indie masterpieces",
+    "subtitle": "Interactive utilities to plan, budget, and uncover your next indie favorites",
     "tabs": {
       "roulette": "Tonight's Wheel",
       "backlog": "Backlog Calculator",
       "budget": "Steam Sale Optimizer",
       "gems": "Hidden Gems Explorer",
-      "quiz": "Lore & Trivia Quiz"
+      "quiz": "Indie Trivia Quiz"
     },
     "roulette": {
       "heading": "What indie game should you play tonight?",
@@ -114,30 +114,30 @@
       "action": "Intense & Demanding",
       "cerebral": "Cerebral & Puzzles",
       "dark": "Dark & Mysterious",
-      "spin": "Spin the Nocturnal Wheel",
-      "spinning": "Summoning fate...",
-      "resultTitle": "Destiny has spoken:",
-      "launchSteam": "Launch on Steam"
+      "spin": "Spin the wheel",
+      "spinning": "Selecting a game...",
+      "resultTitle": "Recommended game:",
+      "launchSteam": "View on Steam"
     },
     "backlog": {
       "heading": "Backlog Roadmap & Playtime Estimator",
-      "desc": "Check the indie games resting in your backlog to estimate actual completion time.",
+      "desc": "Select games waiting in your library to calculate realistic completion time.",
       "dailyHours": "Available daily playtime:",
       "hoursPerDay": "{{count}}h / day",
       "totalEstimated": "Estimated Total Time:",
       "completionDate": "Projected Completion Date:",
-      "selectedGames": "Selected gems: {{count}}",
+      "selectedGames": "Selected games: {{count}}",
       "clearSelection": "Deselect all"
     },
     "budget": {
       "heading": "Indie Steam Sale Cart Optimizer",
-      "desc": "Set your budget and our greedy knapsack algorithm picks the optimal bundle to maximize review score & playtime per dollar!",
+      "desc": "Set your budget and our greedy algorithm bundles the best titles to maximize playtime and positive reviews!",
       "budgetLabel": "Available budget ($ / €):",
       "calculate": "Optimize my cart",
       "optimalSelection": "Recommended Ideal Cart:",
       "totalCost": "Total Cost: {{amount}} €",
       "remainingBudget": "Remaining: {{amount}} €",
-      "totalHours": "Hours of Wonder: ~{{hours}}h"
+      "totalHours": "Estimated Playtime: ~{{hours}}h"
     },
     "gems": {
       "heading": "Curated Indie Gems Library",
@@ -146,33 +146,33 @@
       "foundCount": "{{count}} game(s) selected"
     },
     "quiz": {
-      "heading": "Indie Lore & Trivia Mini-Quiz",
-      "desc": "Test your knowledge on indie developer quotes, soundtracks, and hidden secrets!",
+      "heading": "Indie Trivia Mini-Quiz",
+      "desc": "Test your knowledge on quotes, composers, and secrets of beloved indie games!",
       "question": "Question {{current}} / {{total}}",
       "score": "Score: {{score}} / {{total}}",
       "next": "Next Question",
       "restart": "Restart Quiz",
-      "correct": "Outstanding answer!",
-      "wrong": "Missed!",
-      "explanation": "Lore nugget:"
+      "correct": "Correct answer!",
+      "wrong": "Incorrect!",
+      "explanation": "Did you know?"
     }
   },
   "roost": {
     "title": "The Roost / Le Perchoir",
-    "subtitle": "The creative den, prototypes, and lore deep-dives by Quentin Beaud (Hibouxe)",
-    "creatorTitle": "Creator & Lore Analyst",
-    "creatorBio": "Fullstack Software Engineer and content creator under the alias Hibouxe. Passionate about game system architectures, environmental storytelling, and indie gaming mysteries.",
+    "subtitle": "Playable games, interactive prototypes, and video essays by Quentin Beaud (Hibouxe)",
+    "creatorTitle": "Software Developer & Content Creator",
+    "creatorBio": "Fullstack Software Engineer and content creator under the alias Hibouxe. Passionate about software architecture, custom Canvas game engines, and environmental storytelling in indie games.",
     "allFilter": "All Projects",
     "gameFilter": "Games & Canvas Engines",
-    "loreFilter": "Lore Analysis & Videos",
+    "loreFilter": "Essays & Videos",
     "prototypeFilter": "Prototypes & Tools",
-    "viewDemo": "Live Demo",
+    "viewDemo": "Play Online",
     "viewCode": "GitHub Repo",
     "watchVideo": "Watch Video Essay",
-    "highlights": "Technical Highlights & Game Design:"
+    "highlights": "Key Highlights & Tech:"
   },
   "easterEgg": {
-    "title": "The Golden Eyes of the Great Owl!",
-    "message": "You awakened the nocturnal watch of Hoot Indie Games. May fireflies guide your daily deductions!"
+    "title": "The Golden Eyes of the Owl!",
+    "message": "You discovered the secret easter egg of Hoot Indie Games! Thank you for supporting independent game creation."
   }
 }

@@ -11,6 +11,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { GithubIcon, YoutubeIcon } from '../common/SocialIcons';
+import { OwlLogo } from '../common/OwlLogo';
 import { ROOST_PROJECTS } from '../../data/roostProjects';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
@@ -40,14 +41,11 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8 animate-in fade-in duration-300">
       {/* Hero Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#192338] via-[#131a29] to-[#0b0f19] border border-[#1e293b] p-8 sm:p-12 mb-10 shadow-2xl">
-        {/* Glow ambient background element */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
+      <div className="relative rounded-2xl overflow-hidden bg-[#131a29] border border-[#1e293b] p-8 sm:p-12 mb-10 shadow-xl">
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
             <Feather className="w-3.5 h-3.5" />
-            Vitrine Créative Officielle
+            {lang === 'fr' ? 'Portfolio & Projets Indés' : 'Portfolio & Indie Projects'}
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
             {t('roost.title')}
@@ -73,7 +71,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
               href="https://www.youtube.com/@Hibouxe"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-200 font-bold text-xs hover:border-red-500/50 hover:text-red-400 transition"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-200 font-bold text-xs hover:border-red-500/50 hover:text-red-400 transition"
             >
               <YoutubeIcon className="w-4 h-4 text-red-500" />
               YouTube @Hibouxe
@@ -84,7 +82,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
               href="https://github.com/Edsaje"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-200 font-bold text-xs hover:border-amber-500/50 hover:text-white transition"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-200 font-bold text-xs hover:border-amber-500/50 hover:text-white transition"
             >
               <GithubIcon className="w-4 h-4 text-amber-400" />
               GitHub @Edsaje
@@ -97,50 +95,50 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
       {/* Creator Profile Spotlight */}
       <div className="bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 sm:p-8 mb-10 shadow-xl flex flex-col md:flex-row items-center gap-6">
         <div className="relative shrink-0">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-[#f59e0b] shadow-xl bg-slate-950 flex items-center justify-center text-5xl select-none">
-            🦉
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-amber-500/40 shadow-xl bg-slate-950/90 flex items-center justify-center p-3">
+            <OwlLogo size="lg" />
           </div>
-          <span className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-black uppercase">
-            Lead Dev
+          <span className="absolute -bottom-2 -right-2 px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-xs font-bold uppercase tracking-wider shadow">
+            Auteur & Dev
           </span>
         </div>
 
         <div className="flex-1 text-center md:text-left">
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-1">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-1.5">
             <h2 className="text-xl font-black text-white">Quentin Beaud (Hibouxe / Edsaje)</h2>
             <span className="text-xs px-2.5 py-0.5 rounded-md bg-slate-800 text-amber-400 font-bold border border-slate-700">
               Fullstack & Game Dev
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-3">
+          <p className="text-sm text-slate-300 leading-relaxed mb-4">
             {t('roost.creatorBio')}
           </p>
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs text-slate-400">
-            <span className="font-semibold text-slate-300">Spécialités :</span>
-            <span className="px-2 py-0.5 rounded bg-[#0b0f19] border border-slate-800">React & TypeScript</span>
-            <span className="px-2 py-0.5 rounded bg-[#0b0f19] border border-slate-800">Canvas 2D / Web Audio</span>
-            <span className="px-2 py-0.5 rounded bg-[#0b0f19] border border-slate-800">Java / C# Architecture</span>
-            <span className="px-2 py-0.5 rounded bg-[#0b0f19] border border-slate-800">Lore Analysis</span>
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs text-slate-300">
+            <span className="font-semibold text-slate-400">Compétences clés :</span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">React & TypeScript</span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">Canvas 2D / Web Audio</span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">Java / C# Architecture</span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">Analyse Narrative & Game Design</span>
           </div>
         </div>
       </div>
 
       {/* Playable Arcade Banner */}
-      <div className="bg-gradient-to-r from-amber-500/20 via-emerald-500/15 to-amber-500/20 border-2 border-amber-500/50 rounded-2xl p-5 sm:p-7 mb-10 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-2xl relative overflow-hidden">
-        <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none" />
-        <div className="flex items-center gap-4 text-center sm:text-left relative z-10">
-          <div className="p-3.5 rounded-2xl bg-amber-500 text-slate-950 text-3xl select-none shadow-lg shadow-amber-500/30 shrink-0">
-            🕹️
+      <div className="bg-[#131a29] border border-amber-500/40 hover:border-amber-500/60 rounded-2xl p-6 sm:p-7 mb-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl transition">
+        <div className="flex items-center gap-4 text-center sm:text-left">
+          <div className="p-3.5 rounded-2xl bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 shrink-0">
+            <Gamepad2 className="w-7 h-7" />
           </div>
           <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[10px] font-black uppercase tracking-wider mb-1">
-              ✨ 8 Mini-Jeux Jouables Immédiatement
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              8 Mini-Jeux Jouables Immédiatement
             </div>
-            <h3 className="text-lg sm:text-xl font-black text-white">
-              La Salle d'Arcade Secrète d'Hibouxe
+            <h3 className="text-xl font-black text-white">
+              La Salle d'Arcade d'Hibouxe
             </h3>
-            <p className="text-xs text-slate-300 mt-1 max-w-xl leading-relaxed">
-              Snake Doré, Pong Magique, Casse-Briques, Flappy Hibou, Hibou Invaders, Forest Run, Tetris Mystique et Mine Storm Vectrex 1982 intégrés directement sans quitter le site !
+            <p className="text-sm text-slate-300 mt-1 max-w-xl leading-relaxed">
+              Snake, Pong, Casse-Briques, Flappy Hibou, Invaders, Forest Run, Tetris et Mine Storm Vectrex 1982 : jouez directement dans le navigateur à 60 FPS constants sans quitter le site.
             </p>
           </div>
         </div>
@@ -150,7 +148,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
             soundFx.playClick();
             onOpenArcade?.('snake');
           }}
-          className="shrink-0 flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/25 active:scale-95 cursor-pointer relative z-10"
+          className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer"
         >
           <Gamepad2 className="w-4 h-4" />
           Ouvrir la Salle d'Arcade
@@ -178,7 +176,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
               }}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition ${
                 active
-                  ? 'bg-[#f59e0b] text-slate-950 font-black shadow-md shadow-amber-500/20'
+                  ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800'
               }`}
             >
@@ -206,11 +204,11 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#131a29] via-transparent to-transparent opacity-80" />
 
-              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-[#0b0f19]/80 backdrop-blur-md text-[10px] font-black uppercase tracking-wider text-amber-400 border border-amber-500/30">
+              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-[#0b0f19]/90 backdrop-blur-md text-xs font-bold uppercase tracking-wider text-amber-400 border border-amber-500/30">
                 {project.category}
               </div>
 
-              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-lg bg-black/75 backdrop-blur-md text-[10px] font-mono font-bold text-slate-300 border border-white/10">
+              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-xs font-mono font-bold text-slate-200 border border-white/10">
                 {project.releaseYear}
               </div>
             </div>
@@ -224,18 +222,18 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
                 <p className="text-xs font-semibold text-[#f59e0b] mb-3">
                   {project.tagline[lang]}
                 </p>
-                <p className="text-xs text-slate-300 leading-relaxed mb-4">
+                <p className="text-sm text-slate-300 leading-relaxed mb-4">
                   {project.description[lang]}
                 </p>
 
                 {/* Highlights */}
                 {project.highlights && project.highlights.length > 0 && (
-                  <div className="space-y-1.5 mb-5 bg-[#0b0f19] p-3 rounded-2xl border border-[#1e293b]">
-                    <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">
+                  <div className="space-y-1.5 mb-5 bg-[#0b0f19] p-3.5 rounded-xl border border-[#1e293b]">
+                    <div className="text-xs uppercase font-bold text-slate-300 tracking-wider mb-2">
                       {t('roost.highlights')}
                     </div>
                     {project.highlights.map((hl, i) => (
-                      <div key={i} className="flex items-start gap-1.5 text-[11px] text-slate-300">
+                      <div key={i} className="flex items-start gap-2 text-xs text-slate-200">
                         <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         <span>{hl[lang]}</span>
                       </div>
@@ -250,7 +248,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 rounded-md bg-[#0b0f19] border border-slate-800 text-slate-400 text-[10px] font-mono"
+                      className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 text-slate-300 text-xs font-medium"
                     >
                       {tag}
                     </span>
@@ -268,7 +266,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
                           else if (project.id === 'hibou-clicker') onOpenArcade?.('flappy');
                           else onOpenArcade?.('snake');
                         }}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition shadow-md shadow-amber-500/25 cursor-pointer active:scale-95"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition shadow-md shadow-amber-500/25 cursor-pointer active:scale-95"
                       >
                         <Gamepad2 className="w-3.5 h-3.5" />
                         Jouer en direct
@@ -278,7 +276,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
                         href={project.links.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition shadow-md shadow-amber-500/20"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition shadow-md shadow-amber-500/20"
                       >
                         <Gamepad2 className="w-3.5 h-3.5" />
                         {t('roost.viewDemo')}
@@ -289,7 +287,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
                         href={project.links.videoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition shadow-md shadow-red-600/20"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition shadow-md shadow-red-600/20"
                       >
                         <YoutubeIcon className="w-3.5 h-3.5" />
                         {t('roost.watchVideo')}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heart, Globe, Terminal } from 'lucide-react';
+import { Heart, Globe, Terminal, ShieldCheck } from 'lucide-react';
 import { GithubIcon, YoutubeIcon } from './SocialIcons';
+import { OwlLogo } from './OwlLogo';
 import { soundFx } from '../../utils/audio';
 
 import type { NavTab } from './Navbar';
@@ -29,22 +30,22 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
     <footer className="w-full bg-[#080b13] border-t border-[#1e293b] mt-16 py-12 text-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Col 1: Brand & Lore */}
+          {/* Col 1: Brand & Details */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-3">
-              <span
+            <div className="flex items-center gap-2.5 mb-3">
+              <div
                 onClick={handleFooterOwlClick}
-                className="text-2xl cursor-pointer select-none hover:scale-110 transition-transform inline-block"
+                className="cursor-pointer select-none hover:scale-110 transition-transform"
                 title="Tapotez 3 fois..."
               >
-                🦉
-              </span>
+                <OwlLogo size="sm" />
+              </div>
               <span className="font-black text-white text-lg tracking-wider">
                 HOOT <span className="text-[#f59e0b]">INDIE</span> GAMES
               </span>
             </div>
-            <p className="text-xs text-slate-400 max-w-md leading-relaxed mb-4">
-              La plateforme web bilingue consacrée à l'exploration, la déduction et la célébration des jeux vidéo indépendants. Conçue avec passion pour tous les curieux des mondes singuliers.
+            <p className="text-xs text-slate-300 max-w-md leading-relaxed mb-4">
+              La plateforme web bilingue consacrée à l'exploration, la déduction et la mise en valeur des jeux vidéo indépendants. Conçue pour les passionnés et curieux de créations singulières.
             </p>
             <div className="flex items-center gap-3">
               <a
@@ -86,7 +87,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('screenle')}
-                  className="hover:text-amber-400 transition"
+                  className="hover:text-amber-400 text-slate-300 transition"
                 >
                   Mode 1 : Screenle
                 </button>
@@ -94,7 +95,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('indledle')}
-                  className="hover:text-amber-400 transition"
+                  className="hover:text-amber-400 text-slate-300 transition"
                 >
                   Mode 2 : Indledle
                 </button>
@@ -102,7 +103,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('linkle')}
-                  className="hover:text-amber-400 transition"
+                  className="hover:text-amber-400 text-slate-300 transition"
                 >
                   Mode 3 : Linkle (Connections)
                 </button>
@@ -110,10 +111,10 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('versus')}
-                  className="hover:text-amber-400 transition flex items-center gap-1.5"
+                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1.5"
                 >
                   <span>Mode 4 : Versus 1v1</span>
-                  <span className="text-[9px] font-black uppercase px-1 py-0.2 bg-amber-500/20 text-amber-400 rounded border border-amber-500/30">
+                  <span className="text-xs font-bold uppercase px-1.5 py-0.5 bg-amber-500/15 text-amber-400 rounded border border-amber-500/30">
                     Live
                   </span>
                 </button>
@@ -124,13 +125,13 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
           {/* Col 3: Espaces */}
           <div>
             <h4 className="text-xs font-black uppercase text-white tracking-widest mb-3">
-              Espaces & Données
+              Espaces & Outils
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <button
                   onClick={() => onSelectTab('toolbox')}
-                  className="hover:text-amber-400 transition"
+                  className="hover:text-amber-400 text-slate-300 transition"
                 >
                   {t('nav.toolbox')}
                 </button>
@@ -138,7 +139,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('roost')}
-                  className="hover:text-amber-400 transition"
+                  className="hover:text-amber-400 text-slate-300 transition"
                 >
                   {t('nav.roost')}
                 </button>
@@ -146,25 +147,26 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('toolbox')}
-                  className="hover:text-emerald-400 transition flex items-center gap-1.5 text-emerald-400/90"
+                  className="hover:text-emerald-300 text-emerald-400 transition flex items-center gap-1.5 font-medium"
                 >
-                  <span>🛡️ Observatoire Sans Cookie</span>
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Observatoire Télémétrie Privée</span>
                 </button>
               </li>
-              <li className="pt-2 text-[11px] text-slate-500 flex items-center gap-1">
+              <li className="pt-2 text-xs text-slate-400 flex items-center gap-1">
                 <Terminal className="w-3.5 h-3.5" />
-                <span>React 18+ • Vite • TS Strict</span>
+                <span>React 18+ • TypeScript • Vite</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div className="pt-8 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <div>
-            © {new Date().getFullYear()} Hoot Indie Games — Signé Quentin Beaud (Hibouxe / Edsaje).
+            © {new Date().getFullYear()} Hoot Indie Games — Développé par Quentin Beaud (Hibouxe / Edsaje).
           </div>
           <div className="flex items-center gap-1">
-            <span>Fait avec minutie et amour pour le jeu vidéo indépendant</span>
+            <span>Fait pour les passionnés du jeu vidéo indépendant</span>
             <Heart className="w-3.5 h-3.5 text-amber-500 inline fill-amber-500" />
           </div>
         </div>

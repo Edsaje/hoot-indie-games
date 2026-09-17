@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Sparkles, Gamepad2 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
+import { OwlLogo } from './OwlLogo';
 
 interface OwlEasterEggModalProps {
   isOpen: boolean;
@@ -15,8 +16,9 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({
   onClose,
   onOpenArcade,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { unlockAchievement } = useAchievements();
+  const isFr = i18n.language.startsWith('fr');
 
   useEffect(() => {
     if (isOpen) {
@@ -28,10 +30,7 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in zoom-in-95 duration-200">
-      <div className="relative w-full max-w-md bg-gradient-to-b from-[#192338] to-[#131a29] border-2 border-amber-500/50 rounded-2xl p-6 shadow-2xl text-slate-200 text-center overflow-hidden">
-        {/* Amber glow halo */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-
+      <div className="relative w-full max-w-md bg-[#131a29] border border-amber-500/40 rounded-2xl p-6 shadow-2xl text-slate-200 text-center overflow-hidden">
         <button
           onClick={() => {
             soundFx.playClick();
@@ -42,15 +41,14 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Animated Owl Icon in Modal */}
-        <div className="w-20 h-20 mx-auto mb-4 relative flex items-center justify-center">
-          <div className="absolute inset-0 bg-amber-500/30 rounded-full blur-xl animate-pulse" />
-          <div className="text-5xl select-none">🦉</div>
+        {/* Clean Owl Logo in Modal */}
+        <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center p-2 rounded-2xl bg-[#0b0f19] border border-amber-500/30">
+          <OwlLogo size="lg" />
         </div>
 
-        <div className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2 border border-amber-500/30">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-500/15 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2 border border-amber-500/30">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          Secret Dévoilé
+          {isFr ? 'Secret Dévoilé' : 'Secret Discovered'}
         </div>
 
         <h3 className="text-xl font-black text-white mb-2 tracking-wide">
@@ -61,9 +59,13 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({
           {t('easterEgg.message')}
         </p>
 
-        <div className="bg-[#0b0f19]/80 border border-[#1e293b] p-3 rounded-xl mb-6 text-xs text-slate-400 text-left">
-          <span className="font-bold text-amber-400 block mb-1">🦉 Note de Lore :</span>
-          Les hiboux scrutent la nuit pour dénicher les joyaux indépendants les plus singuliers. Saviez-vous que Quentin Beaud (Hibouxe) a dissimulé une salle d'arcade secrète de 7 jeux sur son portfolio ?
+        <div className="bg-[#0b0f19] border border-[#1e293b] p-3.5 rounded-xl mb-6 text-xs text-slate-300 text-left leading-relaxed">
+          <span className="font-bold text-amber-400 block mb-1">
+            {isFr ? 'Le saviez-vous ?' : 'Did you know?'}
+          </span>
+          {isFr
+            ? "8 mini-jeux d'arcade rétro conçus par Quentin Beaud sont intégrés directement dans le site à 60 FPS constants, sans quitter la page !"
+            : "8 retro arcade mini-games built by Quentin Beaud are playable directly inside the browser at solid 60 FPS!"}
         </div>
 
         <div className="flex gap-3 justify-center">
@@ -76,7 +78,7 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({
             className="flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-amber-500/20 cursor-pointer"
           >
             <Gamepad2 className="w-4 h-4" />
-            Entrer dans l'Arcade
+            {isFr ? "Entrer dans l'Arcade" : 'Open Arcade'}
           </button>
           <button
             onClick={() => {
@@ -85,7 +87,7 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({
             }}
             className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-xl transition cursor-pointer"
           >
-            Retour au Perchoir
+            {t('common.close')}
           </button>
         </div>
       </div>

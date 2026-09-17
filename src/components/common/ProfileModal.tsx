@@ -264,14 +264,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   {/* Rating / Feathers Pill */}
                   <div className="flex sm:flex-col items-center gap-2 border-t sm:border-t-0 sm:border-l border-slate-800 pt-3 sm:pt-0 sm:pl-4">
                     <div className="text-center">
-                      <div className="text-[10px] uppercase font-bold text-slate-400">Plumes</div>
+                      <div className="text-xs uppercase font-bold text-slate-300">Plumes</div>
                       <div className="text-sm font-black text-amber-400 flex items-center justify-center gap-1">
                         <Sparkles className="w-3.5 h-3.5" />
                         {feathersCount}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-[10px] uppercase font-bold text-slate-400">Rang ELO</div>
+                      <div className="text-xs uppercase font-bold text-slate-300">Rang ELO</div>
                       <div className="text-sm font-black text-indigo-400 flex items-center justify-center gap-1">
                         <Swords className="w-3.5 h-3.5" />
                         {profile.versusStats.eloRating}

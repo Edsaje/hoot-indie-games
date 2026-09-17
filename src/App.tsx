@@ -103,7 +103,7 @@ export const AppContent: React.FC = () => {
             </button>
 
             {isArchiveMode && (
-              <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase tracking-wider animate-pulse">
+              <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-bold uppercase tracking-wider">
                 {currentLang === 'fr' ? 'Mode Archive' : 'Archive Mode'}
               </span>
             )}

@@ -85,11 +85,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="text-lg font-black text-white tracking-wider flex items-center gap-1">
                   HOOT <span className="text-[#f59e0b]">INDIE</span> GAMES
                 </span>
-                <span className="hidden sm:inline-block text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                  Bilingue
-                </span>
               </div>
-              <p className="hidden md:block text-[11px] text-slate-400">
+              <p className="hidden md:block text-xs text-slate-300 font-normal leading-tight mt-0.5">
                 {t('app.tagline')}
               </p>
             </div>
@@ -143,7 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Swords className="w-3.5 h-3.5" />
               {t('nav.versus')}
-              <span className="text-[9px] font-black uppercase px-1 py-0.5 bg-amber-500/20 text-amber-400 rounded border border-amber-500/30">
+              <span className="text-xs font-bold uppercase px-1.5 py-0.5 bg-amber-500/15 text-amber-400 rounded border border-amber-500/30">
                 1v1
               </span>
             </button>

@@ -353,11 +353,11 @@ export const ToolboxHub: React.FC = () => {
             {t('toolbox.roulette.heading')}
           </h2>
           <div className="flex items-center justify-between mb-6">
-            <p className="text-xs text-slate-400">
-              Laissez le hibou nocturne trancher pour vous selon votre état d'esprit du moment.
+            <p className="text-xs text-slate-300">
+              {lang === 'fr' ? 'Sélectionnez une ambiance pour tirer au sort un jeu adapté à votre soirée.' : 'Select a vibe to randomly pick an indie game tailored for tonight.'}
             </p>
             {spinCount > 0 && (
-              <span className="text-[11px] font-mono font-bold text-amber-400 px-2.5 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/30 shrink-0 ml-2">
+              <span className="text-xs font-mono font-bold text-amber-400 px-2.5 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/30 shrink-0 ml-2">
                 {spinCount} {spinCount === 1 ? 'tirage' : 'tirages'}
               </span>
             )}
@@ -478,7 +478,7 @@ export const ToolboxHub: React.FC = () => {
                   >
                     <div className="flex items-center gap-2.5">
                       <div
-                        className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] ${
+                        className={`w-5 h-5 rounded-md flex items-center justify-center border text-xs ${
                           isSelected
                             ? 'bg-[#f59e0b] border-amber-500 text-slate-950 font-bold'
                             : 'border-slate-700 bg-slate-900'
@@ -490,7 +490,7 @@ export const ToolboxHub: React.FC = () => {
                         <div className="text-xs font-bold text-slate-200 leading-tight">
                           {game.title}
                         </div>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="text-xs text-slate-400">
                           {game.genre}
                         </div>
                       </div>
@@ -625,10 +625,10 @@ export const ToolboxHub: React.FC = () => {
                   >
                     <div>
                       <span className="font-bold text-white">{item.title}</span>
-                      <span className="ml-2 text-[10px] text-slate-400">~{item.hours}h • {item.score}% positif</span>
+                      <span className="ml-2 text-xs text-slate-300">~{item.hours}h • {item.score}% positif</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold text-[10px]">
+                      <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">
                         -{item.discount}%
                       </span>
                       <span className="font-mono font-bold text-emerald-400">
@@ -641,19 +641,19 @@ export const ToolboxHub: React.FC = () => {
 
               <div className="grid grid-cols-3 gap-2 text-center pt-2 border-t border-[#1e293b]">
                 <div className="p-2 bg-[#131a29] rounded-xl">
-                  <div className="text-[10px] uppercase text-slate-400 font-bold">Total</div>
+                  <div className="text-xs uppercase text-slate-300 font-bold">Total</div>
                   <div className="text-sm font-black text-white">
                     {optimizedCart.reduce((acc, i) => acc + i.salePrice, 0).toFixed(2)} €
                   </div>
                 </div>
                 <div className="p-2 bg-[#131a29] rounded-xl">
-                  <div className="text-[10px] uppercase text-slate-400 font-bold">Reste</div>
+                  <div className="text-xs uppercase text-slate-300 font-bold">Reste</div>
                   <div className="text-sm font-black text-emerald-400">
                     {(userBudget - optimizedCart.reduce((acc, i) => acc + i.salePrice, 0)).toFixed(2)} €
                   </div>
                 </div>
                 <div className="p-2 bg-[#131a29] rounded-xl">
-                  <div className="text-[10px] uppercase text-slate-400 font-bold">Heures de jeu</div>
+                  <div className="text-xs uppercase text-slate-300 font-bold">Heures de jeu</div>
                   <div className="text-sm font-black text-[#f59e0b]">
                     ~{optimizedCart.reduce((acc, i) => acc + i.hours, 0)}h
                   </div>
@@ -702,7 +702,7 @@ export const ToolboxHub: React.FC = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />
-                  <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-lg bg-black/75 backdrop-blur-md text-[11px] font-mono font-bold text-amber-400 border border-white/10">
+                  <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-white/10">
                     {game.releaseYear}
                   </div>
                 </div>
@@ -725,7 +725,7 @@ export const ToolboxHub: React.FC = () => {
                       {game.genre.slice(0, 2).map((g) => (
                         <span
                           key={g}
-                          className="px-2 py-0.5 rounded-md bg-[#0b0f19] text-slate-400 text-[10px] font-medium border border-slate-800"
+                          className="px-2.5 py-0.5 rounded-md bg-[#0b0f19] text-slate-300 text-xs font-medium border border-slate-800"
                         >
                           {g}
                         </span>
@@ -861,19 +861,19 @@ export const ToolboxHub: React.FC = () => {
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30">
+                      <span className="text-xs font-bold uppercase tracking-wider text-amber-400 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30">
                         {game.expectedDate[lang]}
                       </span>
                       <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mt-1.5">
                         {game.title}
                       </h3>
-                      <p className="text-xs text-slate-400 font-medium">
+                      <p className="text-xs text-slate-300 font-medium">
                         {game.developer} {game.publisher !== game.developer && `• ${game.publisher}`}
                       </p>
                     </div>
 
                     <div className="text-right shrink-0">
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         Hype
                       </span>
                       <span className="text-sm font-mono font-black text-amber-400">
@@ -886,7 +886,7 @@ export const ToolboxHub: React.FC = () => {
                     {game.description[lang]}
                   </p>
 
-                  <div className="p-2.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] mb-4 text-[11px] text-amber-200/90 italic">
+                  <div className="p-2.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] mb-4 text-xs text-amber-200/90 italic">
                     « {game.highlight[lang]} »
                   </div>
                 </div>
@@ -897,7 +897,7 @@ export const ToolboxHub: React.FC = () => {
                     {game.genres.map((g, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded-md bg-[#0b0f19] border border-[#1e293b] text-[10px] text-slate-300 font-medium"
+                        className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-[#1e293b] text-xs text-slate-300 font-medium"
                       >
                         {g[lang]}
                       </span>
@@ -905,7 +905,7 @@ export const ToolboxHub: React.FC = () => {
                     {game.platforms.map((p, i) => (
                       <span
                         key={`plat-${i}`}
-                        className="px-2 py-0.5 rounded-md bg-slate-800 text-[10px] text-slate-400"
+                        className="px-2.5 py-1 rounded-lg bg-slate-800 text-xs text-slate-300 font-medium"
                       >
                         {p}
                       </span>

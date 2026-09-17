@@ -88,25 +88,25 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
         <div className="grid grid-cols-4 gap-2 text-center mb-6">
           <div className="bg-[#0b0f19] border border-[#1e293b] p-2.5 rounded-xl">
             <div className="text-2xl font-black text-white">{currentModeStats.played}</div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{t('common.played')}</div>
+            <div className="text-xs uppercase tracking-wider text-slate-300 font-semibold">{t('common.played')}</div>
           </div>
           <div className="bg-[#0b0f19] border border-[#1e293b] p-2.5 rounded-xl">
             <div className="text-2xl font-black text-[#10b981]">{winRate}%</div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{t('common.winRate')}</div>
+            <div className="text-xs uppercase tracking-wider text-slate-300 font-semibold">{t('common.winRate')}</div>
           </div>
           <div className="bg-[#0b0f19] border border-[#1e293b] p-2.5 rounded-xl">
             <div className="flex items-center justify-center gap-1 text-2xl font-black text-[#f59e0b]">
               <Flame className="w-4 h-4 text-[#f59e0b]" />
               {currentModeStats.currentStreak}
             </div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{t('common.streak')}</div>
+            <div className="text-xs uppercase tracking-wider text-slate-300 font-semibold">{t('common.streak')}</div>
           </div>
           <div className="bg-[#0b0f19] border border-[#1e293b] p-2.5 rounded-xl">
             <div className="flex items-center justify-center gap-1 text-2xl font-black text-[#8b5cf6]">
               <Award className="w-4 h-4 text-[#8b5cf6]" />
               {currentModeStats.maxStreak}
             </div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{t('common.maxStreak')}</div>
+            <div className="text-xs uppercase tracking-wider text-slate-300 font-semibold">{t('common.maxStreak')}</div>
           </div>
         </div>
 

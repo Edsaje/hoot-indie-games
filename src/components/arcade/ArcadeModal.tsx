@@ -11,6 +11,7 @@ import {
   Play,
   Volume2,
   VolumeX,
+  Gamepad2,
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
@@ -1460,24 +1461,21 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-gradient-to-br from-[#131a29] via-[#0e1524] to-[#070b12] border-2 border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl text-slate-100 flex flex-col items-center overflow-hidden">
-        {/* Ambient Glow */}
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-48 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
-
+      <div className="relative w-full max-w-2xl bg-[#131a29] border border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl text-slate-100 flex flex-col items-center overflow-hidden">
         {/* Modal Header */}
         <div className="w-full flex items-center justify-between pb-3 border-b border-[#1e293b] mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 text-lg select-none">
-              🕹️
+            <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
+              <Gamepad2 className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
-                La Salle d'Arcade Secrète
-                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-black uppercase tracking-wider">
+                La Salle d'Arcade
+                <span className="text-xs px-2.5 py-0.5 rounded-lg bg-amber-500 text-slate-950 font-bold uppercase tracking-wider">
                   Hibouxe
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-300 font-medium">
                 8 mini-jeux rétro jouables directement dans le navigateur
               </p>
             </div>

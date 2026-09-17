@@ -5,12 +5,12 @@ export const ROOST_PROJECTS: RoostProject[] = [
     id: 'la-foret-du-hibou',
     title: 'La Forêt du Hibou',
     tagline: {
-      fr: 'Exploration atmosphérique et mystique au cœur d\'une sylve nocturne',
-      en: 'An atmospheric and mystical dark forest exploration adventure',
+      fr: 'Jeu d\'exploration et d\'ambiance développé en Canvas 2D',
+      en: 'Atmospheric forest exploration adventure built in Canvas 2D',
     },
     description: {
-      fr: 'Une expérience contemplative et interactive développée en Canvas 2D avec un système de lucioles dynamiques, une palette ardoise et or, et des secrets disséminés dans la brume.',
-      en: 'A contemplative and interactive Canvas 2D experience featuring dynamic firefly particles, a slate and gold aesthetic, and secrets scattered across the fog.',
+      fr: 'Expérience interactive fluide avec moteur de rendu 2D sur mesure, système de particules de lucioles, ambiance sonore synthétisée et contrôles tactiles pour mobiles.',
+      en: 'Contemplative 2D browser game featuring a custom Canvas rendering engine, dynamic firefly particles, and responsive touch controls.',
     },
     category: 'game',
     tags: ['Canvas 2D', 'Atmospheric', 'JavaScript ES6+', 'Audio Synth'],
@@ -41,15 +41,15 @@ export const ROOST_PROJECTS: RoostProject[] = [
     id: 'vectrex-mine-storm',
     title: 'Mine Storm Vectrex Revival',
     tagline: {
-      fr: 'Hommage vectoriel pur à la console mythique Vectrex de 1982',
-      en: 'Vector-line arcade tribute to the legendary 1982 Vectrex console',
+      fr: 'Hommage vectoriel à la console culte Vectrex de 1982',
+      en: 'Vector-line tribute to the legendary 1982 Vectrex console',
     },
     description: {
-      fr: 'Reconstitution fidèle des graphismes vectoriels cathodiques ultra-lumineux et de la physique inertielle de Mine Storm. Accessible via code secret ou easter egg rétro.',
-      en: 'Faithful recreation of radiant CRT vector glow graphics and zero-g inertial physics from Mine Storm. Discoverable via retro secret code.',
+      fr: 'Reconstitution fidèle des graphismes vectoriels cathodiques lumineux et de la physique inertielle de Mine Storm dans l\'espace.',
+      en: 'Faithful recreation of radiant CRT vector line graphics and zero-gravity inertial physics inspired by the 1982 classic.',
     },
     category: 'game',
-    tags: ['Retro Gaming', 'Vector Graphics', 'Arcade', 'Glow Shaders'],
+    tags: ['Retro Gaming', 'Vector Graphics', 'Arcade', 'Canvas 2D'],
     releaseYear: 2026,
     status: 'released',
     imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
@@ -63,21 +63,21 @@ export const ROOST_PROJECTS: RoostProject[] = [
         en: 'Real-time phosphor persistence and beam bloom simulation',
       },
       {
-        fr: 'Physique de poussée spatiale à faible friction',
+        fr: 'Physique spatiale à inertie sans frottement',
         en: 'Authentic frictionless Newtonian thrust physics',
       },
     ],
   },
   {
     id: 'hibou-clicker',
-    title: 'Hibou Clicker : Plumes Célestes',
+    title: 'Hibou Clicker',
     tagline: {
-      fr: 'Jeu incrémental et prestige astrale au clair de lune',
-      en: 'Incremental clicker game with cosmic owl prestige under the moonlight',
+      fr: 'Jeu incrémental et système de progression',
+      en: 'Incremental clicker game with progression and prestige',
     },
     description: {
-      fr: 'Collectez des plumes nocturnes, améliorez votre perchoir, invoquez des constellations de chouettes et débloquez le rituel du Grand Hibou Céleste avec sauvegarde locale continue.',
-      en: 'Gather nocturnal feathers, upgrade your roost, summon owl constellations, and trigger celestial ascension with continuous local state persistence.',
+      fr: 'Développez votre perchoir, optimisez vos multiplicateurs et débloquez des paliers d\'améliorations avec sauvegarde locale automatique continue.',
+      en: 'Gather feathers, unlock roost upgrades, and climb the progression tree with automated local storage saving.',
     },
     category: 'game',
     tags: ['Idle Clicker', 'LocalStorage', 'Achievements', 'Progression'],
@@ -90,8 +90,8 @@ export const ROOST_PROJECTS: RoostProject[] = [
     },
     highlights: [
       {
-        fr: 'Multiplicateurs exponentiels et arbre de prestige céleste',
-        en: 'Exponential multi-tier prestige ascension tree',
+        fr: 'Multiplicateurs exponentiels et arbre d\'améliorations',
+        en: 'Exponential multi-tier progression tree',
       },
       {
         fr: 'Sauvegarde automatique discrète dans le navigateur',
@@ -101,17 +101,17 @@ export const ROOST_PROJECTS: RoostProject[] = [
   },
   {
     id: 'hibouxe-lore-analyst',
-    title: 'Hibouxe : Lore Analyst & Essais Vidéo',
+    title: 'Hibouxe : Analyses & Essais Vidéo',
     tagline: {
-      fr: 'Décryptages narratifs approfondis des grands chefs-d\'œuvre du jeu vidéo indé',
-      en: 'In-depth narrative dissections of iconic indie gaming lore masterpieces',
+      fr: 'Décryptages narratifs et game design des chefs-d\'œuvre du jeu vidéo indé',
+      en: 'In-depth narrative dissections and game design essays on indie classics',
     },
     description: {
       fr: 'Chaîne YouTube et réflexions analytiques dédiées aux secrets de Hollow Knight, Outer Wilds, Rain World et Dark Souls : storytelling environnemental, symbolisme et philosophie de gameplay.',
-      en: 'Video essays and architectural narrative breakdowns analyzing environmental storytelling, cosmic philosophy, and worldbuilding in Hollow Knight, Outer Wilds, and Rain World.',
+      en: 'Video essays analyzing environmental storytelling, cosmic philosophy, and worldbuilding in Hollow Knight, Outer Wilds, and Rain World.',
     },
     category: 'lore',
-    tags: ['Video Essays', 'Lore Analysis', 'YouTube', 'Narrative Design'],
+    tags: ['Video Essays', 'Game Design', 'YouTube', 'Narrative Design'],
     releaseYear: 2025,
     status: 'featured',
     imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
@@ -124,21 +124,21 @@ export const ROOST_PROJECTS: RoostProject[] = [
         en: 'Comprehensive dissections of diegetic level design',
       },
       {
-        fr: 'Communauté de passionnés d\'indés et de secrets de lore',
+        fr: 'Vidéos de fond pour passionnés d\'indés et de secrets de lore',
         en: 'Engaged community of indie world-explorers and lore enthusiasts',
       },
     ],
   },
   {
     id: 'arcade-secrete',
-    title: 'La Salle d\'Arcade Secrète',
+    title: 'La Salle d\'Arcade',
     tagline: {
-      fr: '8 mini-jeux rétro immersifs intégrés directement dans le navigateur',
-      en: '8 retro arcade mini-games integrated directly in the browser',
+      fr: '8 mini-jeux rétro jouables directement dans le navigateur',
+      en: '8 retro arcade mini-games playable directly in the browser',
     },
     description: {
-      fr: 'Snake Doré, Pong Magique, Casse-Briques, Flappy Hibou, Hibou Invaders, Forest Run, Tetris Mystique et Mine Storm Vectrex 1982 : un concentré de game design classique taillé pour le web rapide.',
-      en: 'Golden Snake, Magic Pong, Brick Breaker, Flappy Owl, Owl Invaders, Forest Run, Mystic Tetris, and Mine Storm Vectrex: timeless game loops optimized for instantaneous browser play.',
+      fr: 'Snake, Pong, Casse-Briques, Flappy Hibou, Invaders, Forest Run, Tetris et Mine Storm Vectrex 1982 : mini-jeux classiques calibrés à 60 FPS pour des parties immédiates.',
+      en: 'Snake, Pong, Breakout, Flappy Owl, Invaders, Forest Run, Tetris, and Mine Storm Vectrex: classic arcade game loops calibrated at 60 FPS.',
     },
     category: 'prototype',
     tags: ['Arcade', 'Canvas 2D', 'Retro Audio', 'Mobile Ready'],
@@ -151,8 +151,8 @@ export const ROOST_PROJECTS: RoostProject[] = [
     },
     highlights: [
       {
-        fr: '7 boucles de gameplay arcade indépendantes et fluides',
-        en: '7 distinct zero-dependency arcade engines',
+        fr: '8 mini-jeux rétro indépendants calibrés à 60 FPS constants',
+        en: '8 distinct arcade engines calibrated at solid 60 FPS',
       },
       {
         fr: 'Tableau des records et gestion des scores locaux',
@@ -168,7 +168,7 @@ export const ROOST_PROJECTS: RoostProject[] = [
       en: 'Turn-based tactical dungeon crawler prototype',
     },
     description: {
-      fr: 'Expérimentation de grilles hexagonales, gestion de ligne de mire, probabilités de dés et combats tactiques d\'escarmouche inspirés des aventures donjonnesques humoristiques.',
+      fr: 'Expérimentation de grilles de déplacement, gestion de ligne de mire, probabilités de dés et combats tactiques d\'escarmouche.',
       en: 'Exploration of grid movement, line-of-sight algorithms, dice probability tables, and humorous tactical dungeon encounters.',
     },
     category: 'prototype',

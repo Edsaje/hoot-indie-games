@@ -91,15 +91,16 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, on
             </div>
             <div>
               <h2 id="achievements-modal-title" className="text-xl font-black text-white flex items-center gap-2">
-                {currentLang === 'fr' ? 'Le Trésor des Plumes' : 'The Feather Trove'}
-                <span className="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">
-                  {feathersCount} 🪶
+                {currentLang === 'fr' ? 'Succès & Récompenses' : 'Achievements & Rewards'}
+                <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono font-bold">
+                  <Feather className="w-3.5 h-3.5 text-amber-400" />
+                  {feathersCount}
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-300">
                 {currentLang === 'fr'
-                  ? 'Accomplissez des faits d’armes indés pour garnir votre perchoir.'
-                  : 'Achieve indie feats to feather your nocturnal roost.'}
+                  ? 'Accomplissez des défis dans chaque mode de jeu pour débloquer tous les succès.'
+                  : 'Complete challenges across all game modes to unlock achievements.'}
               </p>
             </div>
           </div>
@@ -108,7 +109,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, on
               soundFx.playClick();
               onClose();
             }}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -121,7 +122,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, on
               {currentLang === 'fr' ? 'Progression globale' : 'Overall Progress'}
             </span>
             <span className="text-amber-400 font-mono font-bold">
-              {unlockedIds.length} / {allAchievements.length} ({progressPercent}%) • {feathersCount} / {totalPossibleFeathers} 🪶
+              {unlockedIds.length} / {allAchievements.length} ({progressPercent}%) • {feathersCount} / {totalPossibleFeathers} plumes
             </span>
           </div>
           <div className="w-full h-2.5 bg-[#131a29] rounded-full overflow-hidden border border-[#1e293b]">
@@ -203,11 +204,11 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, on
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     )}
                   </div>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-slate-300 mt-0.5">
                     {isSecret
                       ? currentLang === 'fr'
-                        ? 'Gardez les yeux grands ouverts dans la nuit...'
-                        : 'Keep your eyes peeled during the dead of night...'
+                        ? 'Explorez les fonctionnalités du site pour révéler ce succès secret.'
+                        : 'Explore site features to discover this secret.'
                       : achievement.description[currentLang]}
                   </p>
                 </div>
@@ -217,10 +218,10 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, on
                   className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold shrink-0 border ${
                     unlocked
                       ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                      : 'bg-[#131a29] text-slate-500 border-[#1e293b]'
+                      : 'bg-[#131a29] text-slate-400 border-[#1e293b]'
                   }`}
                 >
-                  +{achievement.feathersReward} 🪶
+                  +{achievement.feathersReward} pts
                 </div>
               </div>
             );

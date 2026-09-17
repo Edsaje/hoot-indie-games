@@ -386,24 +386,24 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
           className={`p-4 rounded-2xl border transition ${
             guesses.length >= 2 || isCompleted
               ? 'bg-[#131a29] border-[#1e293b] text-slate-200'
-              : 'bg-[#131a29]/40 border-dashed border-slate-800 text-slate-600'
+              : 'bg-[#131a29]/50 border border-dashed border-slate-700 text-slate-400'
           }`}
         >
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-2">
             <Quote className="w-4 h-4 text-[#f59e0b]" />
-            <span className="text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
               {t('screenle.taglineHint')}
             </span>
             {guesses.length < 2 && !isCompleted && (
-              <span className="text-[10px] ml-auto font-mono text-slate-500">
+              <span className="text-xs ml-auto font-mono text-slate-400">
                 {t('screenle.unlockHintAt', { step: 3 })}
               </span>
             )}
           </div>
-          <p className="text-xs italic leading-relaxed">
+          <p className="text-sm italic leading-relaxed text-slate-200">
             {guesses.length >= 2 || isCompleted
               ? `"${secretGame.hints.tagline[lang]}"`
-              : 'Verrouillé : faites au moins 2 propositions pour révéler cet indice.'}
+              : (lang === 'fr' ? 'Verrouillé : faites au moins 2 propositions pour révéler cet indice.' : 'Locked: make at least 2 guesses to unlock.')}
           </p>
         </div>
 
@@ -412,24 +412,24 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
           className={`p-4 rounded-2xl border transition ${
             guesses.length >= 3 || isCompleted
               ? 'bg-[#131a29] border-[#1e293b] text-slate-200'
-              : 'bg-[#131a29]/40 border-dashed border-slate-800 text-slate-600'
+              : 'bg-[#131a29]/50 border border-dashed border-slate-700 text-slate-400'
           }`}
         >
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-2">
             <Music className="w-4 h-4 text-[#8b5cf6]" />
-            <span className="text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
               {t('screenle.composerHint')}
             </span>
             {guesses.length < 3 && !isCompleted && (
-              <span className="text-[10px] ml-auto font-mono text-slate-500">
+              <span className="text-xs ml-auto font-mono text-slate-400">
                 {t('screenle.unlockHintAt', { step: 4 })}
               </span>
             )}
           </div>
-          <p className="text-xs leading-relaxed">
+          <p className="text-sm leading-relaxed text-slate-200">
             {guesses.length >= 3 || isCompleted
-              ? secretGame.hints.composer || 'Compositeur indépendant'
-              : 'Verrouillé : faites au moins 3 propositions pour révéler le compositeur.'}
+              ? secretGame.hints.composer || (lang === 'fr' ? 'Compositeur indépendant' : 'Indie composer')
+              : (lang === 'fr' ? 'Verrouillé : faites au moins 3 propositions pour révéler le compositeur.' : 'Locked: make at least 3 guesses to unlock.')}
           </p>
         </div>
       </div>
@@ -495,7 +495,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
               <div className="text-xs text-[#f59e0b] font-medium">
                 {secretGame.releaseYear} • {secretGame.developer}
               </div>
-              <div className="text-xs text-slate-400 mt-1">
+              <div className="text-xs text-slate-300 mt-1">
                 {secretGame.genre.join(', ')}
               </div>
             </div>
@@ -516,7 +516,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
 
             <button
               onClick={handleShare}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer"
             >
               {copied ? (
                 <>
@@ -534,10 +534,10 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
             <button
               onClick={handleDownloadCard}
               disabled={isDownloadingImage}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-600 transition shadow-lg active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-600 transition shadow-lg active:scale-95 disabled:opacity-50 cursor-pointer"
             >
               <Download className="w-4 h-4 text-amber-400" />
-              <span>{isDownloadingImage ? 'Génération...' : 'Partager en Image 🪶'}</span>
+              <span>{isDownloadingImage ? (lang === 'fr' ? 'Génération...' : 'Generating...') : (lang === 'fr' ? 'Télécharger la carte' : 'Download card image')}</span>
             </button>
           </div>
         </div>

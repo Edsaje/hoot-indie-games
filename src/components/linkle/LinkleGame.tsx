@@ -490,12 +490,12 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
           <div className="flex items-center gap-2.5">
             <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
             <div>
-              <p className="text-xs font-black text-white">
-                {lang === 'fr' ? '🌟 Défi Linkle Communautaire Personnalisé' : '🌟 Community Custom Linkle Challenge'}
+              <p className="text-xs font-bold text-white">
+                {lang === 'fr' ? 'Défi Linkle Communautaire' : 'Community Custom Linkle Challenge'}
               </p>
-              <p className="text-[11px] text-slate-300">
+              <p className="text-xs text-slate-300">
                 {lang === 'fr'
-                  ? 'Vous jouez à une grille partagée par un joueur.'
+                  ? 'Vous jouez à une grille créée et partagée par un joueur.'
                   : 'You are playing a player-crafted puzzle.'}
               </p>
             </div>
@@ -625,7 +625,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
                 </span>
 
                 {isSelected && (
-                  <span className="absolute top-3 right-3 w-4 h-4 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-black text-[10px]">
+                  <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-xs shadow">
                     ✓
                   </span>
                 )}
@@ -707,10 +707,10 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
             <button
               onClick={handleDownloadCard}
               disabled={isDownloadingImage}
-              className="inline-flex items-center gap-2 px-5 py-3 bg-[#1e293b] hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-600 transition shadow-lg active:scale-95 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-[#1e293b] hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-600 transition shadow-lg active:scale-95 disabled:opacity-50 cursor-pointer"
             >
               <Download className="w-4 h-4 text-amber-400" />
-              <span>{isDownloadingImage ? 'Génération...' : 'Partager en Image 🪶'}</span>
+              <span>{isDownloadingImage ? (lang === 'fr' ? 'Génération...' : 'Generating...') : (lang === 'fr' ? 'Télécharger la carte' : 'Download card image')}</span>
             </button>
           </div>
         </div>
