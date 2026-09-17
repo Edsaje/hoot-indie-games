@@ -155,7 +155,11 @@ export const AppContent: React.FC = () => {
         isOpen={isCalendarOpen}
         onClose={() => setIsCalendarOpen(false)}
         currentDate={currentDate}
-        onSelectDate={(newDate) => setCurrentDate(newDate)}
+        onSelectDate={(newDate) => {
+          if (newDate <= todayStr) {
+            setCurrentDate(newDate);
+          }
+        }}
       />
 
       <ProfileModal

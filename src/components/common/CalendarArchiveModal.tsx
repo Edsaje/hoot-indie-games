@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Calendar, ChevronLeft, ChevronRight, X, Sparkles, Flame } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, X, Sparkles, Flame, Lock } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
 interface CalendarArchiveModalProps {
@@ -54,13 +54,17 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
 
   if (!isOpen) return null;
 
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth(); // 0-indexed
   const todayStr = (() => {
-    const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   })();
+
+  const isCurrentOrFutureMonth = viewYear > todayYear || (viewYear === todayYear && viewMonth >= todayMonth);
 
   const prevMonth = () => {
     soundFx.playClick();
@@ -73,6 +77,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
   };
 
   const nextMonth = () => {
+    if (isCurrentOrFutureMonth) return;
     soundFx.playClick();
     if (viewMonth === 11) {
       setViewYear((y) => y + 1);
@@ -167,7 +172,13 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
           </span>
           <button
             onClick={nextMonth}
-            className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 transition"
+            disabled={isCurrentOrFutureMonth}
+            title={isCurrentOrFutureMonth ? (currentLang === 'fr' ? 'Mois futurs inaccessibles' : 'Future months locked') : undefined}
+            className={`p-2 rounded-xl border transition ${
+              isCurrentOrFutureMonth
+                ? 'opacity-30 cursor-not-allowed bg-[#131a29]/40 border-slate-800 text-slate-600'
+                : 'bg-[#131a29] border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 cursor-pointer'
+            }`}
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -185,6 +196,27 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
           {days.map((item, idx) => {
             if (!item.isCurrentMonth) {
               return <div key={`empty-${idx}`} className="h-14 rounded-lg bg-transparent" />;
+            }
+
+            const isFuture = item.dateStr > todayStr;
+            if (isFuture) {
+              return (
+                <div
+                  key={item.dateStr}
+                  title={currentLang === 'fr' ? 'Jour futur verrouillé' : 'Future day locked'}
+                  className="h-14 p-1.5 rounded-xl border border-slate-800/40 bg-[#0c121e]/50 text-slate-600 flex flex-col items-center justify-between text-xs opacity-40 select-none cursor-not-allowed"
+                >
+                  <div className="w-full flex items-center justify-between px-1">
+                    <span className="text-[11px] font-mono text-slate-600">{item.dayNum}</span>
+                    <Lock className="w-2.5 h-2.5 text-slate-600" />
+                  </div>
+                  <div className="flex items-center justify-center pb-1">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-600 font-bold">
+                      {currentLang === 'fr' ? 'Verrouillé' : 'Locked'}
+                    </span>
+                  </div>
+                </div>
+              );
             }
 
             const status = getChallengeStatusForDate(item.dateStr);
@@ -268,6 +300,10 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-slate-700" />
               {currentLang === 'fr' ? 'Non joué' : 'Unplayed'}
+            </span>
+            <span className="flex items-center gap-1 text-slate-500">
+              <Lock className="w-2.5 h-2.5" />
+              {currentLang === 'fr' ? 'Futur verrouillé' : 'Future locked'}
             </span>
           </div>
 
