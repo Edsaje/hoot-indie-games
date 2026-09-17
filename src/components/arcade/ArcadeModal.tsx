@@ -36,49 +36,49 @@ const ARCADE_GAMES: ArcadeGameMeta[] = [
     id: 'snake',
     name: 'Snake Doré',
     icon: '🐍',
-    instructions: 'Flèches directionnelles pour diriger le serpent. Mange les lucioles sans toucher les murs ni ta queue !',
+    instructions: 'Flèches directionnelles (ou ZQSD). Mange les lucioles sans heurter les murs ni ta queue !',
   },
   {
     id: 'pong',
     name: 'Pong Magique',
     icon: '🏓',
-    instructions: 'Flèches HAUT / BAS pour déplacer ta raquette. ESPACE pour engager la balle magique.',
+    instructions: 'Flèches HAUT / BAS pour bouger. ESPACE pour lancer la balle magique.',
   },
   {
     id: 'breakout',
     name: 'Casse-Briques',
     icon: '🧱',
-    instructions: 'Flèches GAUCHE / DROITE pour déplacer la barre. ESPACE pour lancer la balle dorée.',
+    instructions: 'Flèches GAUCHE / DROITE pour déplacer la barre. ESPACE pour lancer la bille.',
   },
   {
     id: 'flappy',
     name: 'Flappy Hibou',
     icon: '🦉',
-    instructions: 'ESPACE ou Clic pour faire battre les ailes du hibou et franchir les colonnes d\'arbres.',
+    instructions: 'ESPACE, HAUT ou Clic pour faire battre les ailes du hibou et franchir les colonnes.',
   },
   {
     id: 'invaders',
     name: 'Hibou Invaders',
     icon: '🚀',
-    instructions: 'Flèches GAUCHE / DROITE pour déplacer ton vaisseau. ESPACE pour tirer des salves laser.',
+    instructions: 'Flèches GAUCHE / DROITE pour bouger. ESPACE pour tirer des salves laser dorées.',
   },
   {
     id: 'run',
     name: 'Forest Run',
     icon: '🦘',
-    instructions: 'ESPACE ou Clic pour sauter par-dessus les ronces et obstacles nocturnes.',
+    instructions: 'ESPACE, HAUT ou Clic pour sauter par-dessus les ronces et obstacles de la sylve.',
   },
   {
     id: 'tetris',
     name: 'Tetris Mystique',
     icon: '🧩',
-    instructions: 'Flèches GAUCHE / DROITE pour bouger, HAUT pour faire pivoter, BAS pour accélérer la chute.',
+    instructions: 'Flèches GAUCHE/DROITE pour bouger, HAUT pour faire pivoter, BAS pour accélérer.',
   },
   {
     id: 'vectrex',
     name: 'Mine Storm Vectrex',
     icon: '⚡',
-    instructions: 'Flèches GAUCHE/DROITE pour pivoter, HAUT pour propulser, ESPACE pour détruire les mines.',
+    instructions: 'Flèches GAUCHE/DROITE pour pivoter, HAUT pour propulser le vaisseau, ESPACE pour tirer.',
   },
 ];
 
@@ -94,20 +94,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   initialGame = 'snake',
 }) => {
   const [selectedGame, setSelectedGame] = useState<ArcadeGameId>(initialGame);
-  const [prevInitial, setPrevInitial] = useState<ArcadeGameId>(initialGame);
+  const [gameKey, setGameKey] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
   const [highScore, setHighScore] = useState<number>(() => {
-    const saved = typeof window !== 'undefined' ? localStorage.getItem(`hoot_arcade_hs_${initialGame}`) : null;
+    const saved = localStorage.getItem(`hoot_arcade_hs_${initialGame}`);
     return saved ? parseInt(saved, 10) : 0;
   });
-
-  if (initialGame !== prevInitial) {
-    setPrevInitial(initialGame);
-    setSelectedGame(initialGame);
-    const saved = typeof window !== 'undefined' ? localStorage.getItem(`hoot_arcade_hs_${initialGame}`) : null;
-    setHighScore(saved ? parseInt(saved, 10) : 0);
-  }
-
-  const [score, setScore] = useState<number>(0);
   const [soundMuted, setSoundMuted] = useState<boolean>(!soundFx.isEnabled());
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
 
@@ -115,37 +107,59 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   const animFrameIdRef = useRef<number | null>(null);
   const intervalIdRef = useRef<number | null>(null);
 
-  const updateHighScore = useCallback(
-    (newScore: number) => {
-      if (newScore > highScore) {
-        setHighScore(newScore);
-        localStorage.setItem(`hoot_arcade_hs_${selectedGame}`, String(newScore));
-      }
-    },
-    [highScore, selectedGame]
-  );
+  // Persistent inputs state (supports holding keys & touch)
+  const keysDownRef = useRef<Set<string>>(new Set());
+  const scoreRef = useRef<number>(0);
+  const highScoreRef = useRef<number>(highScore);
+
+  const selectGame = (gameId: ArcadeGameId) => {
+    soundFx.playClick();
+    stopAllLoops();
+    const saved = localStorage.getItem(`hoot_arcade_hs_${gameId}`);
+    const hs = saved ? parseInt(saved, 10) : 0;
+    highScoreRef.current = hs;
+    scoreRef.current = 0;
+    setHighScore(hs);
+    setScore(0);
+    setIsGameOver(false);
+    setSelectedGame(gameId);
+  };
+
+  // Sync initialGame if prop changed from outside
+  useEffect(() => {
+    selectGame(initialGame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialGame]);
+
+  const saveHighScore = useCallback((val: number) => {
+    if (val > highScoreRef.current) {
+      highScoreRef.current = val;
+      setHighScore(val);
+      localStorage.setItem(`hoot_arcade_hs_${selectedGame}`, String(val));
+    }
+  }, [selectedGame]);
 
   const stopAllLoops = () => {
-    if (animFrameIdRef.current) {
+    if (animFrameIdRef.current !== null) {
       cancelAnimationFrame(animFrameIdRef.current);
       animFrameIdRef.current = null;
     }
-    if (intervalIdRef.current) {
+    if (intervalIdRef.current !== null) {
       clearInterval(intervalIdRef.current);
       intervalIdRef.current = null;
     }
   };
 
-  // Keyboard dispatcher
-  const keyHandlersRef = useRef<{
-    onKeyDown: (e: KeyboardEvent) => void;
-    onKeyUp: (e: KeyboardEvent) => void;
-  }>({
-    onKeyDown: () => {},
-    onKeyUp: () => {},
-  });
+  const restartCurrentGame = () => {
+    soundFx.playClick();
+    stopAllLoops();
+    setIsGameOver(false);
+    setScore(0);
+    scoreRef.current = 0;
+    setGameKey((k) => k + 1);
+  };
 
-  // Start the currently selected game on the canvas
+  // MAIN GAME ENGINE EFFECT
   useEffect(() => {
     if (!isOpen) {
       stopAllLoops();
@@ -158,26 +172,45 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     if (!ctx) return;
 
     stopAllLoops();
-    setIsGameOver(false);
-    setScore(0);
 
     const width = 400;
     const height = 400;
     canvas.width = width;
     canvas.height = height;
 
-    // --- GAME 1: SNAKE DORÉ ---
+    const isKeyDown = (codes: string[]) => {
+      for (const c of codes) {
+        if (keysDownRef.current.has(c)) return true;
+      }
+      return false;
+    };
+
+    const addScore = (pts: number) => {
+      scoreRef.current += pts;
+      setScore(scoreRef.current);
+      saveHighScore(scoreRef.current);
+    };
+
+    const triggerGameOver = () => {
+      setIsGameOver(true);
+      soundFx.playError();
+      stopAllLoops();
+    };
+
+    // ==========================================
+    // 1. SNAKE DORÉ
+    // ==========================================
     if (selectedGame === 'snake') {
       const gridSize = 20;
       let snake = [
         { x: 10 * gridSize, y: 10 * gridSize },
         { x: 9 * gridSize, y: 10 * gridSize },
+        { x: 8 * gridSize, y: 10 * gridSize },
       ];
       let dir = 'RIGHT';
       let nextDir = 'RIGHT';
-      let currentScore = 0;
       let food = { x: 14 * gridSize, y: 10 * gridSize };
-      let running = true;
+      let gameActive = true;
 
       const spawnFood = () => {
         const maxX = width / gridSize - 1;
@@ -189,13 +222,53 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       };
 
       const step = () => {
-        if (!running) return;
+        if (!gameActive) return;
+
+        // Direction mapping (Arrows + ZQSD / WASD)
+        if ((isKeyDown(['ArrowUp', 'KeyW', 'KeyZ'])) && dir !== 'DOWN') nextDir = 'UP';
+        if ((isKeyDown(['ArrowDown', 'KeyS'])) && dir !== 'UP') nextDir = 'DOWN';
+        if ((isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ'])) && dir !== 'RIGHT') nextDir = 'LEFT';
+        if ((isKeyDown(['ArrowRight', 'KeyD'])) && dir !== 'LEFT') nextDir = 'RIGHT';
+
         dir = nextDir;
 
+        let headX = snake[0].x;
+        let headY = snake[0].y;
+
+        if (dir === 'LEFT') headX -= gridSize;
+        if (dir === 'UP') headY -= gridSize;
+        if (dir === 'RIGHT') headX += gridSize;
+        if (dir === 'DOWN') headY += gridSize;
+
+        // Collision detection
+        if (
+          headX < 0 ||
+          headX >= width ||
+          headY < 0 ||
+          headY >= height ||
+          snake.some((seg) => seg.x === headX && seg.y === headY)
+        ) {
+          gameActive = false;
+          triggerGameOver();
+          return;
+        }
+
+        // Eat food
+        if (headX === food.x && headY === food.y) {
+          addScore(10);
+          soundFx.playChime();
+          spawnFood();
+        } else {
+          snake.pop();
+        }
+
+        snake.unshift({ x: headX, y: headY });
+
+        // Draw
         ctx.fillStyle = '#060f09';
         ctx.fillRect(0, 0, width, height);
 
-        // Food (Golden firefly)
+        // Food (Luciole dorée pulsante)
         ctx.fillStyle = '#f59e0b';
         ctx.shadowBlur = 12;
         ctx.shadowColor = '#f59e0b';
@@ -209,122 +282,110 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           if (i === 0) {
             ctx.fillStyle = '#f59e0b';
             ctx.fillRect(seg.x, seg.y, gridSize, gridSize);
-            // Eye
+            // Owl eyes on snake head
             ctx.fillStyle = '#0b0f19';
-            ctx.fillRect(seg.x + 5, seg.y + 5, 4, 4);
+            ctx.fillRect(seg.x + 4, seg.y + 4, 4, 4);
+            ctx.fillRect(seg.x + 12, seg.y + 4, 4, 4);
           } else {
             ctx.fillStyle = i % 2 === 0 ? '#10b981' : '#059669';
             ctx.fillRect(seg.x + 1, seg.y + 1, gridSize - 2, gridSize - 2);
           }
         });
-
-        let headX = snake[0].x;
-        let headY = snake[0].y;
-
-        if (dir === 'LEFT') headX -= gridSize;
-        if (dir === 'UP') headY -= gridSize;
-        if (dir === 'RIGHT') headX += gridSize;
-        if (dir === 'DOWN') headY += gridSize;
-
-        // Eat food
-        if (headX === food.x && headY === food.y) {
-          currentScore += 10;
-          setScore(currentScore);
-          updateHighScore(currentScore);
-          soundFx.playChime();
-          spawnFood();
-        } else {
-          snake.pop();
-        }
-
-        // Collision detection
-        if (
-          headX < 0 ||
-          headX >= width ||
-          headY < 0 ||
-          headY >= height ||
-          snake.some((seg) => seg.x === headX && seg.y === headY)
-        ) {
-          running = false;
-          setIsGameOver(true);
-          soundFx.playError();
-          return;
-        }
-
-        snake.unshift({ x: headX, y: headY });
       };
 
-      intervalIdRef.current = window.setInterval(step, 100);
-
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['ArrowUp', 'KeyW'].includes(e.code) && dir !== 'DOWN') nextDir = 'UP';
-        if (['ArrowDown', 'KeyS'].includes(e.code) && dir !== 'UP') nextDir = 'DOWN';
-        if (['ArrowLeft', 'KeyA'].includes(e.code) && dir !== 'RIGHT') nextDir = 'LEFT';
-        if (['ArrowRight', 'KeyD'].includes(e.code) && dir !== 'LEFT') nextDir = 'RIGHT';
-      };
+      intervalIdRef.current = window.setInterval(step, 90);
     }
 
-    // --- GAME 2: PONG MAGIQUE ---
+    // ==========================================
+    // 2. PONG MAGIQUE
+    // ==========================================
     else if (selectedGame === 'pong') {
       const padW = 10;
-      const padH = 75;
+      const padH = 80;
       let leftY = 160;
       let rightY = 160;
       let leftScore = 0;
       let rightScore = 0;
-      let ball = { x: 200, y: 200, r: 6, vx: 4.5, vy: 3 };
-      let up = false;
-      let down = false;
-      let running = true;
+      let ball = { x: 200, y: 200, r: 7, vx: 4.5, vy: 3 };
+      let gameActive = true;
+      let started = false;
 
       const loop = () => {
-        if (!running) return;
+        if (!gameActive) return;
 
-        if (up && leftY > 0) leftY -= 6;
-        if (down && leftY < height - padH) leftY += 6;
+        // Player controls
+        if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']) && leftY > 0) leftY -= 6.5;
+        if (isKeyDown(['ArrowDown', 'KeyS']) && leftY < height - padH) leftY += 6.5;
 
-        // AI
-        const aiSpeed = 4.2 + leftScore * 0.3;
-        if (ball.y < rightY + padH / 2) rightY -= aiSpeed;
-        if (ball.y > rightY + padH / 2) rightY += aiSpeed;
-
-        ball.x += ball.vx;
-        ball.y += ball.vy;
-
-        // Bounce top/bottom
-        if (ball.y - ball.r < 0 || ball.y + ball.r > height) {
-          ball.vy *= -1;
-        }
-
-        // Left paddle collision
-        if (ball.x - ball.r < 25 && ball.y > leftY && ball.y < leftY + padH) {
-          ball.vx = Math.abs(ball.vx) * 1.05;
-          ball.x = 25 + ball.r;
+        // Launch ball on space or arrow press
+        if (!started && (isKeyDown(['Space', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyS']))) {
+          started = true;
           soundFx.playClick();
         }
 
-        // Right paddle collision
-        if (ball.x + ball.r > width - 25 && ball.y > rightY && ball.y < rightY + padH) {
-          ball.vx = -Math.abs(ball.vx) * 1.05;
-          ball.x = width - 25 - ball.r;
-          soundFx.playClick();
-        }
+        if (started) {
+          // Adaptive AI
+          const aiSpeed = 4.2 + leftScore * 0.35;
+          if (ball.y < rightY + padH / 2 - 5) rightY -= aiSpeed;
+          else if (ball.y > rightY + padH / 2 + 5) rightY += aiSpeed;
+          rightY = Math.max(0, Math.min(height - padH, rightY));
 
-        // Score
-        if (ball.x < 0) {
-          rightScore++;
-          ball = { x: 200, y: 200, r: 6, vx: 4.5, vy: 3 };
-          if (rightScore >= 5) {
-            running = false;
-            setIsGameOver(true);
-            soundFx.playError();
+          ball.x += ball.vx;
+          ball.y += ball.vy;
+
+          // Wall bounce
+          if (ball.y - ball.r <= 0 || ball.y + ball.r >= height) {
+            ball.vy *= -1;
+            soundFx.playClick();
           }
-        } else if (ball.x > width) {
-          leftScore++;
-          setScore(leftScore);
-          updateHighScore(leftScore);
-          soundFx.playVictory();
-          ball = { x: 200, y: 200, r: 6, vx: -4.5, vy: 3 };
+
+          // Left paddle hit
+          if (
+            ball.x - ball.r <= 25 &&
+            ball.x - ball.r >= 10 &&
+            ball.y >= leftY &&
+            ball.y <= leftY + padH &&
+            ball.vx < 0
+          ) {
+            ball.vx = Math.abs(ball.vx) * 1.05;
+            const delta = (ball.y - (leftY + padH / 2)) / (padH / 2);
+            ball.vy = delta * 5;
+            ball.x = 25 + ball.r;
+            addScore(1);
+            soundFx.playChime();
+          }
+
+          // Right paddle hit
+          if (
+            ball.x + ball.r >= width - 25 &&
+            ball.x + ball.r <= width - 10 &&
+            ball.y >= rightY &&
+            ball.y <= rightY + padH &&
+            ball.vx > 0
+          ) {
+            ball.vx = -Math.abs(ball.vx) * 1.05;
+            const delta = (ball.y - (rightY + padH / 2)) / (padH / 2);
+            ball.vy = delta * 5;
+            ball.x = width - 25 - ball.r;
+            soundFx.playClick();
+          }
+
+          // Scoring
+          if (ball.x < 0) {
+            rightScore++;
+            if (rightScore >= 5) {
+              gameActive = false;
+              triggerGameOver();
+              return;
+            }
+            ball = { x: 200, y: 200, r: 7, vx: 4.5, vy: (Math.random() - 0.5) * 6 };
+            started = false;
+          } else if (ball.x > width) {
+            leftScore++;
+            soundFx.playVictory();
+            ball = { x: 200, y: 200, r: 7, vx: -4.5, vy: (Math.random() - 0.5) * 6 };
+            started = false;
+          }
         }
 
         // Draw
@@ -332,7 +393,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.fillRect(0, 0, width, height);
 
         // Center line
-        ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)';
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.25)';
         ctx.setLineDash([6, 8]);
         ctx.beginPath();
         ctx.moveTo(width / 2, 0);
@@ -348,54 +409,53 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
         // Ball
         ctx.fillStyle = '#ffffff';
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.shadowColor = '#f59e0b';
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Score overlay
-        ctx.font = "bold 20px 'Outfit', sans-serif";
+        // Score
+        ctx.font = "bold 24px 'Outfit', sans-serif";
         ctx.fillStyle = '#f59e0b';
-        ctx.fillText(String(leftScore), width / 2 - 40, 35);
+        ctx.fillText(String(leftScore), width / 2 - 45, 40);
         ctx.fillStyle = '#10b981';
-        ctx.fillText(String(rightScore), width / 2 + 25, 35);
+        ctx.fillText(String(rightScore), width / 2 + 30, 40);
 
-        if (running) {
+        if (!started) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.font = '13px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Appuyez sur ESPACE pour engager', width / 2, height / 2 + 50);
+          ctx.textAlign = 'left';
+        }
+
+        if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
       animFrameIdRef.current = requestAnimationFrame(loop);
-
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['ArrowUp', 'KeyW'].includes(e.code)) up = true;
-        if (['ArrowDown', 'KeyS'].includes(e.code)) down = true;
-      };
-      keyHandlersRef.current.onKeyUp = (e: KeyboardEvent) => {
-        if (['ArrowUp', 'KeyW'].includes(e.code)) up = false;
-        if (['ArrowDown', 'KeyS'].includes(e.code)) down = false;
-      };
     }
 
-    // --- GAME 3: CASSE-BRIQUES ---
+    // ==========================================
+    // 3. CASSE-BRIQUES
+    // ==========================================
     else if (selectedGame === 'breakout') {
-      const padW = 75;
+      const padW = 80;
       const padH = 10;
       let padX = width / 2 - padW / 2;
       let ball = { x: 200, y: 350, r: 6, vx: 4, vy: -4 };
-      let left = false;
-      let right = false;
-      let currentScore = 0;
-      let running = true;
+      let started = false;
+      let gameActive = true;
 
       const rows = 5;
       const cols = 6;
       const bW = 52;
       const bH = 18;
       const padding = 8;
-      const offLeft = 20;
+      const offLeft = 22;
       const offTop = 30;
 
       const bricks: Array<Array<{ x: number; y: number; active: boolean }>> = [];
@@ -411,75 +471,85 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       }
 
       const loop = () => {
-        if (!running) return;
+        if (!gameActive) return;
 
-        if (left && padX > 0) padX -= 6;
-        if (right && padX < width - padW) padX += 6;
+        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && padX > 0) padX -= 6.5;
+        if (isKeyDown(['ArrowRight', 'KeyD']) && padX < width - padW) padX += 6.5;
 
-        ball.x += ball.vx;
-        ball.y += ball.vy;
+        if (!started) {
+          ball.x = padX + padW / 2;
+          ball.y = height - 35;
+          if (isKeyDown(['Space', 'ArrowUp'])) {
+            started = true;
+            soundFx.playClick();
+          }
+        } else {
+          ball.x += ball.vx;
+          ball.y += ball.vy;
 
-        // Walls
-        if (ball.x - ball.r < 0) {
-          ball.x = ball.r;
-          ball.vx = Math.abs(ball.vx);
-        } else if (ball.x + ball.r > width) {
-          ball.x = width - ball.r;
-          ball.vx = -Math.abs(ball.vx);
-        }
-        if (ball.y - ball.r < 0) {
-          ball.y = ball.r;
-          ball.vy = Math.abs(ball.vy);
-        } else if (ball.y - ball.r > height) {
-          running = false;
-          setIsGameOver(true);
-          soundFx.playError();
-          return;
-        }
+          // Wall bounce
+          if (ball.x - ball.r <= 0) {
+            ball.x = ball.r;
+            ball.vx = Math.abs(ball.vx);
+            soundFx.playClick();
+          } else if (ball.x + ball.r >= width) {
+            ball.x = width - ball.r;
+            ball.vx = -Math.abs(ball.vx);
+            soundFx.playClick();
+          }
+          if (ball.y - ball.r <= 0) {
+            ball.y = ball.r;
+            ball.vy = Math.abs(ball.vy);
+            soundFx.playClick();
+          } else if (ball.y - ball.r > height) {
+            gameActive = false;
+            triggerGameOver();
+            return;
+          }
 
-        // Paddle collision
-        if (
-          ball.y + ball.r >= height - 25 &&
-          ball.y - ball.r <= height - 15 &&
-          ball.x >= padX &&
-          ball.x <= padX + padW &&
-          ball.vy > 0
-        ) {
-          ball.vy = -Math.abs(ball.vy);
-          const hit = (ball.x - (padX + padW / 2)) / (padW / 2);
-          ball.vx = hit * 5;
-          soundFx.playClick();
-        }
+          // Paddle collision
+          if (
+            ball.y + ball.r >= height - 25 &&
+            ball.y - ball.r <= height - 15 &&
+            ball.x >= padX &&
+            ball.x <= padX + padW &&
+            ball.vy > 0
+          ) {
+            ball.vy = -Math.abs(ball.vy);
+            const hit = (ball.x - (padX + padW / 2)) / (padW / 2);
+            ball.vx = hit * 5;
+            soundFx.playClick();
+          }
 
-        // Bricks collision
-        let won = true;
-        for (let c = 0; c < cols; c++) {
-          for (let r = 0; r < rows; r++) {
-            const b = bricks[c][r];
-            if (b.active) {
-              won = false;
-              if (
-                ball.x + ball.r > b.x &&
-                ball.x - ball.r < b.x + bW &&
-                ball.y + ball.r > b.y &&
-                ball.y - ball.r < b.y + bH
-              ) {
-                b.active = false;
-                ball.vy *= -1;
-                currentScore += 10;
-                setScore(currentScore);
-                updateHighScore(currentScore);
-                soundFx.playChime();
+          // Bricks collision
+          let remaining = 0;
+          for (let c = 0; c < cols; c++) {
+            for (let r = 0; r < rows; r++) {
+              const b = bricks[c][r];
+              if (b.active) {
+                remaining++;
+                if (
+                  ball.x + ball.r > b.x &&
+                  ball.x - ball.r < b.x + bW &&
+                  ball.y + ball.r > b.y &&
+                  ball.y - ball.r < b.y + bH
+                ) {
+                  b.active = false;
+                  ball.vy *= -1;
+                  addScore(10);
+                  soundFx.playChime();
+                }
               }
             }
           }
-        }
 
-        if (won) {
-          running = false;
-          setIsGameOver(true);
-          soundFx.playVictory();
-          return;
+          if (remaining === 0) {
+            soundFx.playVictory();
+            addScore(100);
+            gameActive = false;
+            setIsGameOver(true);
+            return;
+          }
         }
 
         // Draw
@@ -510,26 +580,27 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        if (running) {
+        if (!started) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.font = '13px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Appuyez sur ESPACE pour lancer la balle', width / 2, height / 2 + 50);
+          ctx.textAlign = 'left';
+        }
+
+        if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
       animFrameIdRef.current = requestAnimationFrame(loop);
-
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA'].includes(e.code)) left = true;
-        if (['ArrowRight', 'KeyD'].includes(e.code)) right = true;
-      };
-      keyHandlersRef.current.onKeyUp = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA'].includes(e.code)) left = false;
-        if (['ArrowRight', 'KeyD'].includes(e.code)) right = false;
-      };
     }
 
-    // --- GAME 4: FLAPPY HIBOU ---
+    // ==========================================
+    // 4. FLAPPY HIBOU
+    // ==========================================
     else if (selectedGame === 'flappy') {
-      let bird = { y: 200, vy: 0, gravity: 0.5, jump: -7 };
+      let bird = { y: 200, vy: 0, gravity: 0.42, jump: -6.5 };
       interface Pipe {
         x: number;
         w: number;
@@ -539,93 +610,109 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       }
       let pipes: Pipe[] = [];
       let frame = 0;
-      let currentScore = 0;
-      let running = true;
+      let gameActive = true;
+      let started = false;
 
       const loop = () => {
-        if (!running) return;
-        frame++;
+        if (!gameActive) return;
 
-        bird.vy += bird.gravity;
-        bird.y += bird.vy;
-
-        // Spawn pipes
-        if (frame % 85 === 0) {
-          const gap = 120;
-          const top = Math.random() * (height - gap - 60) + 30;
-          pipes.push({ x: width, w: 45, top, gap, passed: false });
+        if (isKeyDown(['Space', 'ArrowUp', 'KeyW', 'KeyZ'])) {
+          started = true;
+          bird.vy = bird.jump;
+          soundFx.playClick();
+          // Clear jump key so player must release and re-press
+          keysDownRef.current.delete('Space');
+          keysDownRef.current.delete('ArrowUp');
+          keysDownRef.current.delete('KeyW');
+          keysDownRef.current.delete('KeyZ');
         }
 
         ctx.fillStyle = '#060f09';
         ctx.fillRect(0, 0, width, height);
 
-        // Draw pipes
+        if (started) {
+          frame++;
+          bird.vy += bird.gravity;
+          bird.y += bird.vy;
+
+          // Spawn pipes
+          if (frame % 85 === 0) {
+            const gap = 125;
+            const top = Math.random() * (height - gap - 70) + 35;
+            pipes.push({ x: width, w: 45, top, gap, passed: false });
+          }
+
+          // Move pipes & test collision
+          for (let i = pipes.length - 1; i >= 0; i--) {
+            const p = pipes[i];
+            p.x -= 2.6;
+
+            // Score point
+            if (p.x + p.w < 60 && !p.passed) {
+              p.passed = true;
+              addScore(1);
+              soundFx.playChime();
+            }
+
+            // Hit test
+            if (60 + 10 > p.x && 60 - 10 < p.x + p.w) {
+              if (bird.y - 10 < p.top || bird.y + 10 > p.top + p.gap) {
+                gameActive = false;
+                triggerGameOver();
+                return;
+              }
+            }
+
+            if (p.x + p.w < 0) pipes.splice(i, 1);
+          }
+
+          // Ground / sky collision
+          if (bird.y > height - 15 || bird.y < 5) {
+            gameActive = false;
+            triggerGameOver();
+            return;
+          }
+        }
+
+        // Draw Pipes
         ctx.fillStyle = '#1e3a29';
         ctx.strokeStyle = '#f59e0b';
         ctx.lineWidth = 2;
-
-        for (let i = pipes.length - 1; i >= 0; i--) {
-          const p = pipes[i];
-          p.x -= 2.8;
-
+        for (const p of pipes) {
           ctx.fillRect(p.x, 0, p.w, p.top);
           ctx.strokeRect(p.x, 0, p.w, p.top);
-
           ctx.fillRect(p.x, p.top + p.gap, p.w, height - (p.top + p.gap));
           ctx.strokeRect(p.x, p.top + p.gap, p.w, height - (p.top + p.gap));
-
-          if (p.x + p.w < 60 && !p.passed) {
-            p.passed = true;
-            currentScore++;
-            setScore(currentScore);
-            updateHighScore(currentScore);
-            soundFx.playChime();
-          }
-
-          // Collision
-          if (60 + 12 > p.x && 60 - 12 < p.x + p.w) {
-            if (bird.y - 12 < p.top || bird.y + 12 > p.top + p.gap) {
-              running = false;
-              setIsGameOver(true);
-              soundFx.playError();
-              return;
-            }
-          }
-
-          if (p.x + p.w < 0) pipes.splice(i, 1);
         }
 
         // Draw Owl
-        ctx.font = '28px Arial';
+        ctx.font = '30px Arial';
         ctx.textAlign = 'center';
         ctx.fillText('🦉', 60, bird.y + 10);
 
-        if (bird.y > height || bird.y < 0) {
-          running = false;
-          setIsGameOver(true);
-          soundFx.playError();
-          return;
+        if (!started) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.font = '13px sans-serif';
+          ctx.fillText('Appuyez sur ESPACE ou cliquez pour voler', width / 2, height / 2 + 50);
         }
 
-        if (running) {
+        if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
-
-      const flap = () => {
+      canvas.onclick = () => {
+        started = true;
         bird.vy = bird.jump;
         soundFx.playClick();
       };
 
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) flap();
-      };
-      canvas.onclick = flap;
+      animFrameIdRef.current = requestAnimationFrame(loop);
     }
 
-    // --- GAME 5: HIBOU INVADERS ---
+    // ==========================================
+    // 5. HIBOU INVADERS
+    // ==========================================
     else if (selectedGame === 'invaders') {
       let playerX = 185;
       interface Bullet {
@@ -640,12 +727,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       }
       let bullets: Bullet[] = [];
       let invaders: Invader[] = [];
-      let left = false;
-      let right = false;
-      let currentScore = 0;
       let shootTimer = 0;
       let direction = 1;
-      let running = true;
+      let gameActive = true;
 
       for (let r = 0; r < 4; r++) {
         for (let c = 0; c < 7; c++) {
@@ -659,11 +743,17 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       }
 
       const loop = () => {
-        if (!running) return;
+        if (!gameActive) return;
         shootTimer--;
 
-        if (left && playerX > 20) playerX -= 5;
-        if (right && playerX < width - 20) playerX += 5;
+        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 5;
+        if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 5;
+
+        if (isKeyDown(['Space']) && shootTimer <= 0) {
+          bullets.push({ x: playerX, y: height - 40 });
+          shootTimer = 14;
+          soundFx.playClick();
+        }
 
         ctx.fillStyle = '#060f09';
         ctx.fillRect(0, 0, width, height);
@@ -702,18 +792,15 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             if (Math.abs(b.x - inv.x) < 16 && Math.abs(b.y - inv.y) < 16) {
               inv.alive = false;
               bullets.splice(i, 1);
-              currentScore += 10;
-              setScore(currentScore);
-              updateHighScore(currentScore);
+              addScore(10);
               soundFx.playChime();
               break;
             }
           }
 
           if (inv.y > height - 60) {
-            running = false;
-            setIsGameOver(true);
-            soundFx.playError();
+            gameActive = false;
+            triggerGameOver();
             return;
           }
         }
@@ -723,42 +810,29 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           for (const inv of invaders) inv.y += 14;
         }
 
+        // Wave cleared -> respawn stronger
         if (aliveCount === 0) {
           soundFx.playVictory();
-          currentScore += 100;
-          setScore(currentScore);
-          updateHighScore(currentScore);
+          addScore(100);
           for (const inv of invaders) {
             inv.alive = true;
-            inv.y -= 80;
+            inv.y = Math.max(40, inv.y - 60);
           }
         }
 
-        if (running) {
+        if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
       animFrameIdRef.current = requestAnimationFrame(loop);
-
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA'].includes(e.code)) left = true;
-        if (['ArrowRight', 'KeyD'].includes(e.code)) right = true;
-        if (e.code === 'Space' && shootTimer <= 0) {
-          bullets.push({ x: playerX, y: height - 40 });
-          shootTimer = 15;
-          soundFx.playClick();
-        }
-      };
-      keyHandlersRef.current.onKeyUp = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA'].includes(e.code)) left = false;
-        if (['ArrowRight', 'KeyD'].includes(e.code)) right = false;
-      };
     }
 
-    // --- GAME 6: FOREST RUN ---
+    // ==========================================
+    // 6. FOREST RUN
+    // ==========================================
     else if (selectedGame === 'run') {
-      let player = { y: 340, vy: 0, gravity: 0.7, jump: -12, onGround: true };
+      let player = { y: 340, vy: 0, gravity: 0.75, jump: -12.5, onGround: true };
       interface Obstacle {
         x: number;
         w: number;
@@ -766,16 +840,20 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       }
       let obstacles: Obstacle[] = [];
       let frame = 0;
-      let currentScore = 0;
-      let running = true;
+      let gameActive = true;
 
       const loop = () => {
-        if (!running) return;
+        if (!gameActive) return;
         frame++;
+
         if (frame % 6 === 0) {
-          currentScore++;
-          setScore(currentScore);
-          updateHighScore(currentScore);
+          addScore(1);
+        }
+
+        if (isKeyDown(['Space', 'ArrowUp', 'KeyW', 'KeyZ']) && player.onGround) {
+          player.vy = player.jump;
+          player.onGround = false;
+          soundFx.playClick();
         }
 
         ctx.fillStyle = '#060f09';
@@ -798,13 +876,13 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           player.onGround = true;
         }
 
-        // Draw runner owl
+        // Runner Owl
         ctx.font = '30px Arial';
         ctx.textAlign = 'center';
         ctx.fillText('🦉', 60, player.y);
 
         // Spawn obstacles
-        if (frame % 80 === 0 || (frame > 250 && Math.random() < 0.02 && frame % 25 !== 0)) {
+        if (frame % 85 === 0 || (frame > 300 && Math.random() < 0.015 && frame % 30 !== 0)) {
           obstacles.push({ x: width, w: 22, h: 32 });
         }
 
@@ -812,32 +890,29 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.fillStyle = '#f59e0b';
         for (let i = obstacles.length - 1; i >= 0; i--) {
           const obs = obstacles[i];
-          obs.x -= 5 + currentScore / 100;
+          obs.x -= 4.8 + scoreRef.current / 1500;
           ctx.fillRect(obs.x, 355 - obs.h, obs.w, obs.h);
 
-          // Hit
+          // Hit test
           if (
             60 + 10 > obs.x &&
             60 - 10 < obs.x + obs.w &&
             player.y > 355 - obs.h
           ) {
-            running = false;
-            setIsGameOver(true);
-            soundFx.playError();
+            gameActive = false;
+            triggerGameOver();
             return;
           }
 
           if (obs.x + obs.w < 0) obstacles.splice(i, 1);
         }
 
-        if (running) {
+        if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
-      animFrameIdRef.current = requestAnimationFrame(loop);
-
-      const jump = () => {
+      canvas.onclick = () => {
         if (player.onGround) {
           player.vy = player.jump;
           player.onGround = false;
@@ -845,13 +920,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
       };
 
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) jump();
-      };
-      canvas.onclick = jump;
+      animFrameIdRef.current = requestAnimationFrame(loop);
     }
 
-    // --- GAME 7: TETRIS MYSTIQUE ---
+    // ==========================================
+    // 7. TETRIS MYSTIQUE
+    // ==========================================
     else if (selectedGame === 'tetris') {
       const cols = 10;
       const rows = 20;
@@ -873,8 +947,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let curColor = Math.floor(Math.random() * 7) + 1;
       let pX = 3;
       let pY = 0;
-      let currentScore = 0;
-      let running = true;
+      let gameActive = true;
+      let dropInterval = 400;
 
       const collides = (piece: number[][], ox: number, oy: number) => {
         for (let r = 0; r < piece.length; r++) {
@@ -907,7 +981,6 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           }
         }
 
-        // Clear lines
         let linesCleared = 0;
         for (let r = rows - 1; r >= 0; r--) {
           if (board[r].every((val) => val !== 0)) {
@@ -919,9 +992,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
 
         if (linesCleared > 0) {
-          currentScore += linesCleared * 100;
-          setScore(currentScore);
-          updateHighScore(currentScore);
+          addScore(linesCleared * 100);
           soundFx.playVictory();
         }
 
@@ -932,14 +1003,13 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         pY = 0;
 
         if (collides(curPiece, pX, pY)) {
-          running = false;
-          setIsGameOver(true);
-          soundFx.playError();
+          gameActive = false;
+          triggerGameOver();
         }
       };
 
       const drop = () => {
-        if (!running) return;
+        if (!gameActive) return;
         if (!collides(curPiece, pX, pY + 1)) {
           pY++;
         } else {
@@ -962,7 +1032,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           }
         }
 
-        // Current
+        // Current piece
         for (let r = 0; r < curPiece.length; r++) {
           for (let c = 0; c < curPiece[r].length; c++) {
             if (curPiece[r][c] !== 0) {
@@ -973,10 +1043,11 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
       };
 
-      intervalIdRef.current = window.setInterval(drop, 400);
+      intervalIdRef.current = window.setInterval(drop, dropInterval);
 
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA'].includes(e.code)) {
+      // Tetris discrete key listener
+      const onKeyDownTetris = (e: KeyboardEvent) => {
+        if (['ArrowLeft', 'KeyA', 'KeyQ'].includes(e.code)) {
           if (!collides(curPiece, pX - 1, pY)) pX--;
         }
         if (['ArrowRight', 'KeyD'].includes(e.code)) {
@@ -985,14 +1056,22 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         if (['ArrowDown', 'KeyS'].includes(e.code)) {
           if (!collides(curPiece, pX, pY + 1)) pY++;
         }
-        if (['ArrowUp', 'KeyW'].includes(e.code)) {
+        if (['ArrowUp', 'KeyW', 'KeyZ'].includes(e.code)) {
           rotate(curPiece);
         }
         draw();
       };
+
+      window.addEventListener('keydown', onKeyDownTetris);
+      return () => {
+        window.removeEventListener('keydown', onKeyDownTetris);
+        stopAllLoops();
+      };
     }
 
-    // --- GAME 8: MINE STORM VECTREX REVIVAL (1982) ---
+    // ==========================================
+    // 8. MINE STORM VECTREX REVIVAL (1982)
+    // ==========================================
     else if (selectedGame === 'vectrex') {
       let ship = { x: 200, y: 200, vx: 0, vy: 0, angle: -Math.PI / 2 };
       interface Laser {
@@ -1011,49 +1090,60 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       }
       let lasers: Laser[] = [];
       let mines: Mine[] = [];
-      let left = false;
-      let right = false;
-      let thrust = false;
-      let currentScore = 0;
-      let running = true;
+      let shootTimer = 0;
+      let gameActive = true;
 
-      // Spawn initial mines
-      for (let i = 0; i < 6; i++) {
+      // Spawn mines
+      for (let i = 0; i < 5; i++) {
         mines.push({
           x: Math.random() * width,
-          y: Math.random() * (height - 100),
-          vx: (Math.random() - 0.5) * 1.5,
-          vy: (Math.random() - 0.5) * 1.5,
+          y: Math.random() * (height - 120),
+          vx: (Math.random() - 0.5) * 1.6,
+          vy: (Math.random() - 0.5) * 1.6,
           r: 16,
         });
       }
 
       const loop = () => {
-        if (!running) return;
+        if (!gameActive) return;
+        shootTimer--;
 
-        if (left) ship.angle -= 0.08;
-        if (right) ship.angle += 0.08;
-        if (thrust) {
-          ship.vx += Math.cos(ship.angle) * 0.15;
-          ship.vy += Math.sin(ship.angle) * 0.15;
+        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ'])) ship.angle -= 0.08;
+        if (isKeyDown(['ArrowRight', 'KeyD'])) ship.angle += 0.08;
+        if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ'])) {
+          ship.vx += Math.cos(ship.angle) * 0.18;
+          ship.vy += Math.sin(ship.angle) * 0.18;
         }
 
-        // Friction
+        // Friction & Move
         ship.vx *= 0.985;
         ship.vy *= 0.985;
         ship.x += ship.vx;
         ship.y += ship.vy;
 
-        // Wrap edges
+        // Wrap boundaries
         if (ship.x < 0) ship.x = width;
         if (ship.x > width) ship.x = 0;
         if (ship.y < 0) ship.y = height;
         if (ship.y > height) ship.y = 0;
 
+        // Shoot laser
+        if (isKeyDown(['Space']) && shootTimer <= 0) {
+          lasers.push({
+            x: ship.x,
+            y: ship.y,
+            vx: Math.cos(ship.angle) * 7.5 + ship.vx,
+            vy: Math.sin(ship.angle) * 7.5 + ship.vy,
+            life: 45,
+          });
+          shootTimer = 12;
+          soundFx.playClick();
+        }
+
         ctx.fillStyle = '#05070a';
         ctx.fillRect(0, 0, width, height);
 
-        // Vector glow style
+        // Phosphor vector glow
         ctx.shadowBlur = 10;
         ctx.shadowColor = '#00ffcc';
         ctx.strokeStyle = '#00ffcc';
@@ -1083,7 +1173,6 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           ctx.beginPath();
           ctx.arc(l.x, l.y, 2, 0, Math.PI * 2);
           ctx.stroke();
-
           if (l.life <= 0) lasers.splice(i, 1);
         }
 
@@ -1100,7 +1189,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           if (m.y < 0) m.y = height;
           if (m.y > height) m.y = 0;
 
-          // Draw vector mine
+          // Draw vector polygon mine
           ctx.beginPath();
           for (let j = 0; j < 8; j++) {
             const rad = (j * Math.PI) / 4;
@@ -1113,81 +1202,59 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           ctx.closePath();
           ctx.stroke();
 
-          // Laser hit mine
+          // Hit test lasers
           for (let li = lasers.length - 1; li >= 0; li--) {
             const l = lasers[li];
             const dist = Math.hypot(l.x - m.x, l.y - m.y);
             if (dist < m.r) {
               soundFx.playChime();
-              currentScore += 50;
-              setScore(currentScore);
-              updateHighScore(currentScore);
+              addScore(25);
               lasers.splice(li, 1);
               mines.splice(i, 1);
               break;
             }
           }
 
-          // Ship hit mine
+          // Hit test ship
           const shipDist = Math.hypot(ship.x - m.x, ship.y - m.y);
           if (shipDist < m.r + 8) {
-            running = false;
-            setIsGameOver(true);
-            soundFx.playError();
+            gameActive = false;
+            triggerGameOver();
             return;
           }
         }
 
         ctx.shadowBlur = 0;
 
+        // Respawn wave
         if (mines.length === 0) {
           soundFx.playVictory();
-          for (let i = 0; i < 8; i++) {
+          addScore(100);
+          for (let i = 0; i < 7; i++) {
             mines.push({
               x: Math.random() * width,
               y: Math.random() * (height - 100),
-              vx: (Math.random() - 0.5) * 2,
-              vy: (Math.random() - 0.5) * 2,
+              vx: (Math.random() - 0.5) * 2.2,
+              vy: (Math.random() - 0.5) * 2.2,
               r: 16,
             });
           }
         }
 
-        if (running) {
+        if (gameActive) {
           animFrameIdRef.current = requestAnimationFrame(loop);
         }
       };
 
       animFrameIdRef.current = requestAnimationFrame(loop);
-
-      keyHandlersRef.current.onKeyDown = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA'].includes(e.code)) left = true;
-        if (['ArrowRight', 'KeyD'].includes(e.code)) right = true;
-        if (['ArrowUp', 'KeyW'].includes(e.code)) thrust = true;
-        if (e.code === 'Space') {
-          lasers.push({
-            x: ship.x,
-            y: ship.y,
-            vx: Math.cos(ship.angle) * 7 + ship.vx,
-            vy: Math.sin(ship.angle) * 7 + ship.vy,
-            life: 45,
-          });
-          soundFx.playClick();
-        }
-      };
-      keyHandlersRef.current.onKeyUp = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA'].includes(e.code)) left = false;
-        if (['ArrowRight', 'KeyD'].includes(e.code)) right = false;
-        if (['ArrowUp', 'KeyW'].includes(e.code)) thrust = false;
-      };
     }
 
     return () => {
       stopAllLoops();
     };
-  }, [isOpen, selectedGame, updateHighScore]);
+  }, [isOpen, selectedGame, gameKey, saveHighScore]);
 
-  // Key event listeners
+  // Global Key Listener for modal
   useEffect(() => {
     if (!isOpen) return;
 
@@ -1195,19 +1262,21 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
         e.preventDefault();
       }
-      keyHandlersRef.current.onKeyDown(e);
+      keysDownRef.current.add(e.code);
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      keyHandlersRef.current.onKeyUp(e);
+      keysDownRef.current.delete(e.code);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
+    const keysDown = keysDownRef.current;
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      keysDown.clear();
     };
   }, [isOpen]);
 
@@ -1216,20 +1285,21 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   const currentGameMeta =
     ARCADE_GAMES.find((g) => g.id === selectedGame) || ARCADE_GAMES[0];
 
-  const triggerVirtualKey = (code: string) => {
-    keyHandlersRef.current.onKeyDown(new KeyboardEvent('keydown', { code }));
-    setTimeout(() => {
-      keyHandlersRef.current.onKeyUp(new KeyboardEvent('keyup', { code }));
-    }, 120);
+  // Continuous touch / mouse press handlers for virtual controls
+  const handleVirtualPress = (code: string) => {
+    keysDownRef.current.add(code);
+  };
+  const handleVirtualRelease = (code: string) => {
+    keysDownRef.current.delete(code);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
       <div className="relative w-full max-w-2xl bg-gradient-to-br from-[#131a29] via-[#0e1524] to-[#070b12] border-2 border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl text-slate-100 flex flex-col items-center overflow-hidden">
-        {/* Ambient Top Glow */}
+        {/* Ambient Glow */}
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-48 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Modal Top Header */}
+        {/* Modal Header */}
         <div className="w-full flex items-center justify-between pb-3 border-b border-[#1e293b] mb-4">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 text-lg select-none">
@@ -1254,7 +1324,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
                 const next = soundFx.toggleSound();
                 setSoundMuted(!next);
               }}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
               title={soundMuted ? 'Activer le son' : 'Couper le son'}
             >
               {soundMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-amber-400" />}
@@ -1266,7 +1336,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
                 stopAllLoops();
                 onClose();
               }}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -1280,13 +1350,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             return (
               <button
                 key={game.id}
-                onClick={() => {
-                  soundFx.playClick();
-                  setSelectedGame(game.id);
-                  const saved = localStorage.getItem(`hoot_arcade_hs_${game.id}`);
-                  setHighScore(saved ? parseInt(saved, 10) : 0);
-                }}
-                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                onClick={() => selectGame(game.id)}
+                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                   active
                     ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 scale-105'
                     : 'bg-[#131a29] text-slate-300 border border-[#1e293b] hover:border-amber-500/40 hover:text-white'
@@ -1299,7 +1364,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           })}
         </div>
 
-        {/* Score & Instructions Bar */}
+        {/* Score & Controls Bar */}
         <div className="w-full max-w-[400px] flex items-center justify-between px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl mb-3 text-xs">
           <div className="flex items-center gap-1.5 font-bold text-slate-200">
             <span>Score :</span>
@@ -1313,23 +1378,20 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           </div>
 
           <button
-            onClick={() => {
-              soundFx.playClick();
-              setSelectedGame((prev) => prev); // force reload
-            }}
-            className="flex items-center gap-1 text-[11px] font-bold text-slate-400 hover:text-amber-400 transition"
-            title="Recommencer"
+            onClick={restartCurrentGame}
+            className="flex items-center gap-1 text-[11px] font-bold text-slate-400 hover:text-amber-400 transition cursor-pointer"
+            title="Recommencer la partie"
           >
             <RotateCcw className="w-3 h-3" />
             <span>Rejouer</span>
           </button>
         </div>
 
-        {/* Game Canvas Container */}
+        {/* Canvas Game Area */}
         <div className="relative rounded-2xl overflow-hidden border-2 border-[#1e293b] bg-[#060f09] shadow-2xl">
           <canvas
             ref={canvasRef}
-            className="block w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] cursor-pointer"
+            className="block w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] cursor-pointer touch-none"
           />
 
           {isGameOver && (
@@ -1342,12 +1404,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
                 Score final : <span className="font-black text-amber-400 font-mono text-base">{score}</span>
               </p>
               <button
-                onClick={() => {
-                  soundFx.playClick();
-                  setIsGameOver(false);
-                  setSelectedGame((prev) => prev); // restart
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20"
+                onClick={restartCurrentGame}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
                 Rejouer Immédiatement
@@ -1356,46 +1414,61 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           )}
         </div>
 
-        {/* Game Instructions */}
+        {/* Instructions */}
         <p className="text-[11px] text-slate-400 text-center mt-3 max-w-[400px] leading-relaxed">
           <Sparkles className="w-3 h-3 text-amber-400 inline mr-1" />
           {currentGameMeta.instructions}
         </p>
 
-        {/* Virtual Mobile D-Pad Controls */}
-        <div className="sm:hidden flex items-center justify-center gap-6 mt-4 pt-3 border-t border-[#1e293b] w-full max-w-[400px]">
+        {/* Virtual Mobile D-Pad Controls (Continuous Hold Support) */}
+        <div className="sm:hidden flex items-center justify-center gap-6 mt-4 pt-3 border-t border-[#1e293b] w-full max-w-[400px] select-none">
           <div className="grid grid-cols-3 gap-1">
             <div />
             <button
-              onClick={() => triggerVirtualKey('ArrowUp')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950"
+              onTouchStart={() => handleVirtualPress('ArrowUp')}
+              onTouchEnd={() => handleVirtualRelease('ArrowUp')}
+              onMouseDown={() => handleVirtualPress('ArrowUp')}
+              onMouseUp={() => handleVirtualRelease('ArrowUp')}
+              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
             >
               <ArrowUp className="w-4 h-4" />
             </button>
             <div />
             <button
-              onClick={() => triggerVirtualKey('ArrowLeft')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950"
+              onTouchStart={() => handleVirtualPress('ArrowLeft')}
+              onTouchEnd={() => handleVirtualRelease('ArrowLeft')}
+              onMouseDown={() => handleVirtualPress('ArrowLeft')}
+              onMouseUp={() => handleVirtualRelease('ArrowLeft')}
+              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
             <button
-              onClick={() => triggerVirtualKey('ArrowDown')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950"
+              onTouchStart={() => handleVirtualPress('ArrowDown')}
+              onTouchEnd={() => handleVirtualRelease('ArrowDown')}
+              onMouseDown={() => handleVirtualPress('ArrowDown')}
+              onMouseUp={() => handleVirtualRelease('ArrowDown')}
+              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
             >
               <ArrowDown className="w-4 h-4" />
             </button>
             <button
-              onClick={() => triggerVirtualKey('ArrowRight')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950"
+              onTouchStart={() => handleVirtualPress('ArrowRight')}
+              onTouchEnd={() => handleVirtualRelease('ArrowRight')}
+              onMouseDown={() => handleVirtualPress('ArrowRight')}
+              onMouseUp={() => handleVirtualRelease('ArrowRight')}
+              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
             >
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
           <button
-            onClick={() => triggerVirtualKey('Space')}
-            className="px-6 py-4 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase shadow-lg shadow-amber-500/20 active:bg-amber-400"
+            onTouchStart={() => handleVirtualPress('Space')}
+            onTouchEnd={() => handleVirtualRelease('Space')}
+            onMouseDown={() => handleVirtualPress('Space')}
+            onMouseUp={() => handleVirtualRelease('Space')}
+            className="px-6 py-4 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase shadow-lg shadow-amber-500/20 active:bg-amber-400 touch-none select-none cursor-pointer"
           >
             Action
           </button>
