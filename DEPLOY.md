@@ -43,6 +43,18 @@ Cloudflare Pages offre une bande passante illimitée et une latence minimale au 
 
 ---
 
+## 🏰 Option 3 : Hébergement OVHcloud (Déploiement Continu Automatique)
+
+Votre hébergement web statique OVH est synchronisé automatiquement à chaque mise à jour :
+
+1. Rendez-vous sur votre dépôt GitHub : **Settings** ➔ **Secrets and variables** ➔ **Actions**.
+2. Cliquez sur **New repository secret** et ajoutez :
+   - Nom du secret : `OVH_FTP_PASSWORD`
+   - Valeur : votre mot de passe FTP associé à l'identifiant `hootinu`.
+3. C'est tout ! Dès que vous poussez du code ou que le robot de moissonnage nocturne découvre de nouvelles pépites indés, GitHub compile le site et l'envoie directement sur `ftp.cluster129.hosting.ovh.net` dans `/www`.
+
+---
+
 ## 🔒 Comment garantir que 100% des données restent vraies ?
 
 Pour maintenir la règle **0 Hallucination** et garantir l'authenticité absolue des données :

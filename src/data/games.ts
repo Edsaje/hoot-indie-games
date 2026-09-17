@@ -1,10 +1,10 @@
-import type { Game } from "../types/game";
+import type { Game } from '../types/game';
 
 /**
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
- * Attributs standardisés (ArtStyle & Camera en catégories canoniques)
- * 0 Hallucination : données vérifiées sur les sources officielles Steam.
- * Total de jeux jouables et certifiés : 83
+ * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
+ * 0 Hallucination : métadonnées et captures certifiées.
+ * Total de jeux : 86
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -2960,6 +2960,107 @@ export const INDIE_GAMES: Game[] = [
         "en": "An explosive action platformer all about destruction. Demolish bizarre worlds and steal your Spirits back from Satan!"
       },
       "composer": "Tony Grayson"
+    }
+  },
+  {
+    "id": "emberward",
+    "title": "Emberward",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Free-to-play",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Refic Games",
+    "steamUrl": "https://store.steampowered.com/app/2459550/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/80b9f622576d1c9ccfef45c57f1504378215c90d/ss_80b9f622576d1c9ccfef45c57f1504378215c90d.1920x1080.jpg?t=1789657527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/ss_4861d31990950a67a1797beadecb90b1cd79e22c.1920x1080.jpg?t=1789657527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/8011ef6ab4cfa1679bb3ded1e990f58e325ffdeb/ss_8011ef6ab4cfa1679bb3ded1e990f58e325ffdeb.1920x1080.jpg?t=1789657527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/28bd980ebd627c40fa6ad2e4fa2af2a7471543d0/ss_28bd980ebd627c40fa6ad2e4fa2af2a7471543d0.1920x1080.jpg?t=1789657527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/ss_1e69187064214f0881242624f2833a9bb909179f.1920x1080.jpg?t=1789657527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/1f08326bcf6cf6f85e95fd63e8a2780266c80e06/ss_1f08326bcf6cf6f85e95fd63e8a2780266c80e06.1920x1080.jpg?t=1789657527"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Bâtissez des labyrinthes de tétrominos puis installez tout un éventail de tourelles. Une aventure stratégique, de la défense de tours en mode roguelite !",
+        "en": "Build twisting mazes with tetromino blocks and deploy unique towers in this strategic roguelite tower defense adventure!"
+      }
+    }
+  },
+  {
+    "id": "ta-fiancee",
+    "title": "Ta fiancée",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "DigitalDream",
+    "steamUrl": "https://store.steampowered.com/app/4753760/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/23bb2f91caffe1fd1cade3d804af3915355d870a/ss_23bb2f91caffe1fd1cade3d804af3915355d870a.1920x1080.jpg?t=1789661941",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/4044e8c03ebac89d139dd672fe29eb883603965b/ss_4044e8c03ebac89d139dd672fe29eb883603965b.1920x1080.jpg?t=1789661941",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/39f38946dbb14974b399faa4ed42390617b19f40/ss_39f38946dbb14974b399faa4ed42390617b19f40.1920x1080.jpg?t=1789661941",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/18306662ee3be731702918be578be81dc63eba13/ss_18306662ee3be731702918be578be81dc63eba13.1920x1080.jpg?t=1789661941",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/300a0524e8005ccc158f2a121c3d1c38f25fe658/ss_300a0524e8005ccc158f2a121c3d1c38f25fe658.1920x1080.jpg?t=1789661941",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/911d0147101c56a58e682a4186db455388eafc04/ss_911d0147101c56a58e682a4186db455388eafc04.1920x1080.jpg?t=1789661941"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Une compagne de bureau tout-en-un avec avatar féminin élégant, outils de productivité, collection, évolution et écosystème animé. Personnalisez son apparence et ses tenues pendant qu'elle vous aide à surveiller le PC, planifier, gérer vos finances, écouter de la musique et bien plus.",
+        "en": "An all-in-one desktop companion with a stylish mature avatar, productivity tools, collection and growth features, and a lively desktop ecosystem. Customize her look and outfits while she helps with hardware monitoring, planning, finances, music, pets, desktop effects, and more."
+      },
+      "composer": "special presence on your PC"
+    }
+  },
+  {
+    "id": "how-to-fish",
+    "title": "How to Fish",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Dazed Games",
+    "steamUrl": "https://store.steampowered.com/app/4001890/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4001890/48f6817fe466a7c9666605527558bf1fac48d0d2/ss_48f6817fe466a7c9666605527558bf1fac48d0d2.1920x1080.jpg?t=1788788717",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4001890/5f867d8c9b03c63867cc95b7bfaa4a3d2193ea48/ss_5f867d8c9b03c63867cc95b7bfaa4a3d2193ea48.1920x1080.jpg?t=1788788717",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4001890/2a912cdbf746286400cece1ca607ac077c11a1dc/ss_2a912cdbf746286400cece1ca607ac077c11a1dc.1920x1080.jpg?t=1788788717",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4001890/e15ab15c09cd3f6ec06d4ffacdf07f6c2b679db2/ss_e15ab15c09cd3f6ec06d4ffacdf07f6c2b679db2.1920x1080.jpg?t=1788788717",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4001890/65be87272efaa4bac87e16dc764a9535165effd2/ss_65be87272efaa4bac87e16dc764a9535165effd2.1920x1080.jpg?t=1788788717",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4001890/3c10ad99000bdcf9cd99509de59d2a1351496690/ss_3c10ad99000bdcf9cd99509de59d2a1351496690.1920x1080.jpg?t=1788788717"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "How to Fish est un simulateur de pêche pour 1 à 4 joueurs qui s’appuie sur règles de la physique. Alors que vous êtes tranquillement en train de siroter un verre sur votre bateau, vous vous écrasez sur une petite île. Pour pouvoir rentrer chez vous, vous allez devoir apprendre à pêcher.",
+        "en": "A 1-4 player physics based fishing simulator. While drinking and boating you suddenly crash into a small island. To work your way back home you have to learn How to Fish."
+      }
     }
   }
 ];

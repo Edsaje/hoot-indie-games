@@ -1,0 +1,44 @@
+name: 🚀 Déploiement Continu OVH
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - 'DEPLOY.md'
+      - '.gitignore'
+  workflow_dispatch: # Déclenchement manuel en 1 clic depuis l'interface GitHub
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Récupération du code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configuration Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Installation des dépendances
+        run: npm ci
+
+      - name: 🛡️ Audit de conformité de la base de données
+        run: npm run audit-db
+
+      - name: 🏗️ Compilation de production (Vite / React)
+        run: npm run build
+
+      - name: 📤 Déploiement FTP vers OVH
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.cluster129.hosting.ovh.net
+          username: hootinu
+          password: ${{ secrets.OVH_FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./www/
+          dangerous-clean-slate: false
