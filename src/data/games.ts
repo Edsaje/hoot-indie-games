@@ -4,7 +4,7 @@ import type { Game } from '../types/game';
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 86
+ * Total de jeux : 87
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -3061,6 +3061,42 @@ export const INDIE_GAMES: Game[] = [
         "fr": "How to Fish est un simulateur de pêche pour 1 à 4 joueurs qui s’appuie sur règles de la physique. Alors que vous êtes tranquillement en train de siroter un verre sur votre bateau, vous vous écrasez sur une petite île. Pour pouvoir rentrer chez vous, vous allez devoir apprendre à pêcher.",
         "en": "A 1-4 player physics based fishing simulator. While drinking and boating you suddenly crash into a small island. To work your way back home you have to learn How to Fish."
       }
+    }
+  },
+  {
+    "id": "hollow-knight-silksong",
+    "title": "Hollow Knight: Silksong",
+    "releaseYear": 2025,
+    "genre": [
+      "Metroidvania",
+      "Action",
+      "Souls-like",
+      "Platformer"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Team Cherry",
+    "steamUrl": "https://store.steampowered.com/app/1030300/Hollow_Knight_Silksong/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d1a893ec6357b347a55ed929833ba793b57a79d2/ss_d1a893ec6357b347a55ed929833ba793b57a79d2.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/856e33e755a0b9a785c645d116036516ea08812b/ss_856e33e755a0b9a785c645d116036516ea08812b.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478/ss_8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d907d0cc2b10b5ea4788b8d502cc27787d520c1d/ss_d907d0cc2b10b5ea4788b8d502cc27787d520c1d.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/1b93e8131cb6f4bd9e3791a606d0da8f9ee78276/ss_1b93e8131cb6f4bd9e3791a606d0da8f9ee78276.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/header.jpg"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Incarnez Hornet et explorez un vaste royaume hanté régenté par la soie et la musique.",
+        "en": "Discover a vast, haunted kingdom ruled by silk and song as the lethal huntress Hornet."
+      },
+      "composer": "Christopher Larkin"
     }
   }
 ];
