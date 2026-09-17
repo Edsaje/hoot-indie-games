@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "add-game": "npx tsx scripts/fetchSteamGame.ts"
+    "add-game": "npx tsx scripts/fetchSteamGame.ts",
+    "update-db": "npx tsx scripts/addBatchGames.ts && npx tsx scripts/mergeGamesDatabase.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

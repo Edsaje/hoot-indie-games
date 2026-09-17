@@ -154,3 +154,23 @@ export interface DailyConnectionsPuzzle {
    - Le Provider réside dans `src/context/GameStatsProvider.tsx`.
    - Le hook réside dans `src/context/useGameStats.ts` (conformité React Fast Refresh).
 4. **Composants avec clé de date** : Dans `App.tsx`, les jeux quotidiens doivent obligatoirement recevoir `key={currentDate}` pour garantir une réinitialisation d'état synchrone et sans effet de bord lors du changement de date.
+
+---
+
+## 7. Gestion & Moissonnage de la Base de Données de Jeux Indés
+
+La base de données officielle de **Hoot Indie Games** compte **70 chefs-d'œuvre et pépites indés** (allant des classiques 2010 aux sorties majeures 2024 comme *UFO 50*, *Nine Sols*, *Animal Well*, *Balatro*, *Crow Country*).
+
+### Commandes CLI de Maintenance
+
+1. **Ajouter un jeu spécifique via son AppId Steam :**
+   ```bash
+   npm run add-game <STEAM_APP_ID>
+   ```
+   *Exemple :* `npm run add-game 1809540` interroge l'API Steam Store en français, extrait automatiquement le nom, les développeurs, l'année, les captures HD 1080p, et génère l'objet TypeScript prêt pour `src/data/games.ts`.
+
+2. **Mettre à jour et moissonner en lot :**
+   ```bash
+   npm run update-db
+   ```
+   Exécute la suite de moissonnage `scripts/addBatchGames.ts` et fusionne les nouvelles fiches dans `src/data/games.ts` sans doublons ni régressions.
