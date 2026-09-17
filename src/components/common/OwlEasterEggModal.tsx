@@ -35,7 +35,7 @@ export const OwlEasterEggModal: React.FC<OwlEasterEggModalProps> = ({ isOpen, on
           <div className="text-5xl select-none">🦉</div>
         </div>
 
-        <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2 border border-amber-500/30">
+        <div className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2 border border-amber-500/30">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           Secret Dévoilé
         </div>

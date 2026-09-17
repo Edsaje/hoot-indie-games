@@ -29,12 +29,12 @@ export const TheRoostHub: React.FC = () => {
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8 animate-in fade-in duration-300">
       {/* Hero Header */}
-      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#192338] via-[#131a29] to-[#0b0f19] border border-[#1e293b] p-8 sm:p-12 mb-10 shadow-2xl">
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#192338] via-[#131a29] to-[#0b0f19] border border-[#1e293b] p-8 sm:p-12 mb-10 shadow-2xl">
         {/* Glow ambient background element */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-wider mb-3">
             <Feather className="w-3.5 h-3.5" />
             Vitrine Créative Officielle
           </div>
@@ -84,7 +84,7 @@ export const TheRoostHub: React.FC = () => {
       </div>
 
       {/* Creator Profile Spotlight */}
-      <div className="bg-[#131a29] border border-[#1e293b] rounded-3xl p-6 sm:p-8 mb-10 shadow-xl flex flex-col md:flex-row items-center gap-6">
+      <div className="bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 sm:p-8 mb-10 shadow-xl flex flex-col md:flex-row items-center gap-6">
         <div className="relative shrink-0">
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-[#f59e0b] shadow-xl bg-slate-950 flex items-center justify-center text-5xl select-none">
             🦉
@@ -97,7 +97,7 @@ export const TheRoostHub: React.FC = () => {
         <div className="flex-1 text-center md:text-left">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-1">
             <h2 className="text-xl font-black text-white">Quentin Beaud (Hibouxe / Edsaje)</h2>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-amber-400 font-bold border border-slate-700">
+            <span className="text-xs px-2.5 py-0.5 rounded-md bg-slate-800 text-amber-400 font-bold border border-slate-700">
               Fullstack & Game Dev
             </span>
           </div>
@@ -151,7 +151,7 @@ export const TheRoostHub: React.FC = () => {
         {filteredProjects.map((project) => (
           <div
             key={project.id}
-            className="bg-[#131a29] border border-[#1e293b] rounded-3xl overflow-hidden hover:border-amber-500/40 transition duration-300 flex flex-col justify-between group shadow-xl hover:shadow-2xl hover:shadow-amber-500/5"
+            className="bg-[#131a29] border border-[#1e293b] rounded-2xl overflow-hidden hover:border-amber-500/40 transition duration-300 flex flex-col justify-between group shadow-xl hover:shadow-2xl hover:shadow-amber-500/5"
           >
             {/* Visual Header */}
             <div className="aspect-video relative overflow-hidden bg-slate-950">

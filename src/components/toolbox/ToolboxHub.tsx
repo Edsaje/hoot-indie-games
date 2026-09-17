@@ -281,7 +281,7 @@ export const ToolboxHub: React.FC = () => {
     <div className="w-full max-w-6xl mx-auto px-4 py-8 animate-in fade-in duration-300">
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
           <Wrench className="w-3.5 h-3.5" />
           Hub Pratique
         </div>
@@ -328,7 +328,7 @@ export const ToolboxHub: React.FC = () => {
 
       {/* TAB 1: ROULETTE */}
       {activeTab === 'roulette' && (
-        <div className="max-w-2xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div className="max-w-2xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 sm:p-8 shadow-2xl">
           <h2 className="text-xl font-black text-white mb-2 flex items-center gap-2">
             <Dices className="w-5 h-5 text-[#f59e0b]" />
             {t('toolbox.roulette.heading')}
@@ -420,7 +420,7 @@ export const ToolboxHub: React.FC = () => {
       {/* TAB 2: BACKLOG ESTIMATOR */}
       {activeTab === 'backlog' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-[#131a29] border border-[#1e293b] rounded-3xl p-6 shadow-xl">
+          <div className="lg:col-span-2 bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-black text-white flex items-center gap-2">
                 <Clock className="w-5 h-5 text-[#f59e0b]" />
@@ -479,7 +479,7 @@ export const ToolboxHub: React.FC = () => {
           </div>
 
           {/* Backlog Summary Sidebar */}
-          <div className="bg-[#131a29] border border-[#1e293b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+          <div className="bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 shadow-xl flex flex-col justify-between">
             <div>
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">
                 Synthèse Prévisionnelle
@@ -545,7 +545,7 @@ export const ToolboxHub: React.FC = () => {
 
       {/* TAB 3: STEAM SALE OPTIMIZER */}
       {activeTab === 'budget' && (
-        <div className="max-w-3xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div className="max-w-3xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 sm:p-8 shadow-2xl">
           <h2 className="text-xl font-black text-white mb-2 flex items-center gap-2">
             <PiggyBank className="w-5 h-5 text-[#f59e0b]" />
             {t('toolbox.budget.heading')}
@@ -727,7 +727,7 @@ export const ToolboxHub: React.FC = () => {
 
       {/* TAB 5: INDIE LORE & TRIVIA QUIZ */}
       {activeTab === 'quiz' && (
-        <div className="max-w-2xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div className="max-w-2xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 sm:p-8 shadow-2xl">
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs uppercase font-bold text-amber-400 tracking-wider">
               {t('toolbox.quiz.question', {

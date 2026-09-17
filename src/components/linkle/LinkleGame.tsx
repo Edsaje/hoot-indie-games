@@ -323,7 +323,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
 
       {/* Header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
           <Sparkles className="w-3.5 h-3.5" />
           Mode 3 • Regroupement d'Indices
         </div>
@@ -459,7 +459,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         </div>
       ) : (
         /* Completed Summary */
-        <div className="bg-[#131a29] border-2 border-amber-500/40 rounded-3xl p-6 text-center shadow-2xl animate-in zoom-in-95 duration-300">
+        <div className="bg-[#131a29] border border-amber-500/40 rounded-2xl p-6 text-center shadow-2xl animate-in zoom-in-95 duration-300">
           <div className="flex justify-center mb-3">
             {isWon ? (
               <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center ring-4 ring-emerald-500/30">
