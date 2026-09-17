@@ -9,9 +9,11 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "add-game": "npx tsx scripts/fetchSteamGame.ts",
-    "update-db": "npx tsx scripts/addBatchGames.ts && npx tsx scripts/mergeGamesDatabase.ts"
+    "update-db": "npx tsx scripts/addBatchGames.ts && npx tsx scripts/mergeGamesDatabase.ts",
+    "audit-db": "npx tsx scripts/verifySteamDatabase.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/canvas-confetti": "^1.9.0",
     "canvas-confetti": "^1.9.4",

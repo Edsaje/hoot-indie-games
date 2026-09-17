@@ -156,4 +156,18 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
     feathersReward: 20,
     category: 'exploration',
   },
+  {
+    id: 'versus_champion',
+    title: {
+      fr: 'Gladiateur du Perchoir',
+      en: 'Roost Gladiator',
+    },
+    description: {
+      fr: 'Remporter un duel en mode Versus 1v1 contre un ami ou un rival en ligne.',
+      en: 'Win a 1v1 Versus duel against a friend or an online rival.',
+    },
+    icon: 'Swords',
+    feathersReward: 35,
+    category: 'mastery',
+  },
 ];

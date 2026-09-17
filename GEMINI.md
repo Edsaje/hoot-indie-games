@@ -195,3 +195,69 @@ Cette règle est absolue et prévaut sur toute autre considération :
 4. **Code, Dépendances et APIs Réels** :
    - Aucun import fantôme, aucune fonction fictive, aucun mock se faisant passer pour une API externe sans étiquetage explicite.
    - Le code doit passer `tsc -b` sans aucune erreur de typage et `npm run lint` avec 0 warning.
+
+---
+
+## 9. Standardisation Canonique & Audit de Données (`npm run audit-db`)
+
+Pour prévenir toute fausse déduction ou frustration dans Indledle :
+1. **ArtStyle canonique** (exactement 6 valeurs normalisées) :
+   - `Pixel Art`
+   - `2D Dessiné à la main` / `2D Hand-drawn`
+   - `3D Stylisée` / `Stylized 3D`
+   - `3D Low-Poly / Rétro` / `Retro Low-poly 3D`
+   - `3D Réaliste` / `Realistic 3D`
+   - `Monochrome / Minimaliste` / `Monochrome`
+2. **Caméra canonique** (exactement 5 perspectives normalisées) :
+   - `Vue de côté 2D` / `2D Side-scroller`
+   - `Vue du dessus 2D` / `2D Top-down`
+   - `Isométrique / 2.5D` / `Isometric / 2.5D`
+   - `Première personne` / `First-Person`
+   - `Troisième personne` / `Third-Person`
+3. **Nettoyage des Genres** :
+   - Les tags méta comme `"Indépendant"`, `"Accès anticipé"` et `"Occasionnel"` sont strictement proscrits dans le champ `genre` pour ne pas fausser les correspondances Wordle/Indledle.
+4. **Commande d'Audit Automatisé** :
+   ```bash
+   npm run audit-db
+   ```
+   Valide instantanément la totalité des 83 jeux sur tous les critères d'intégrité et de conformité Steam.
+
+---
+
+## 10. Système de Compte & Sauvegarde Hybride (Local-First + Supabase)
+
+1. **Local-First par défaut** :
+   - Chaque joueur dispose d'un profil opérationnel immédiat en local sans obligation d'inscription.
+   - 8 Avatars Indés emblématiques (*The Knight*, *Madeline*, *Zagreus*, *The Lamb*, *Jimbo*, *Stray Cat*, *Untitled Goose*, *Hootie*).
+   - Suivi du rang ELO (départ 1000 ELO), des séries de victoires et des Plumes Dorées.
+2. **Synchronisation Cloud Supabase** :
+   - Activée si `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` sont renseignées.
+   - Authentification email/mot de passe sécurisée.
+   - Sauvegarde et synchronisation multi-écrans des succès et statistiques.
+3. **Souveraineté des Données** :
+   - Bouton d'exportation d'une sauvegarde complète en fichier JSON (`hoot-save-*.json`).
+   - Bouton d'importation pour restaurer sa progression sur n'importe quel navigateur, même en navigation privée.
+
+---
+
+## 11. Mode Versus 1v1 Multijoueur ("Screenle Sprint")
+
+1. **Arène Face-à-Face en direct** :
+   - Format Best of 3 (premier à 2 manches gagnantes).
+   - Capture mystère avec flou et zoom dégressifs au fil des 20 secondes.
+   - Pénalité de blocage de 3 secondes en cas de mauvaise proposition.
+2. **Deux modes de mise en relation** :
+   - **Duel entre Amis** : Génération d'un code de salon (ex: `HOOT-42`) avec lien d'invitation partageable (`#versus=HOOT-42`).
+   - **Matchmaking Rapide** : Appariement automatique avec un joueur en ligne ou un rival simulé intelligent de niveau équivalent pour zéro temps d'attente.
+3. **Récompenses & ELO** :
+   - +35 Plumes Dorées et déblocage du succès *Gladiateur du Perchoir*.
+   - Calcul de gain/perte ELO selon la formule officielle d'Arpad Elo.
+
+---
+
+## 12. Hébergement & Déploiement Continu
+
+- **Configuration SPA Vercel** : Présente dans [`vercel.json`](file:///home/user/hoot-indie-games/vercel.json) pour rediriger toutes les routes et deep-links vers `/index.html`.
+- **Configuration Cloudflare Pages & Netlify** : Présente dans [`public/_redirects`](file:///home/user/hoot-indie-games/public/_redirects).
+- **Déploiement en 1 clic** : Guide complet étape par étape dans [`DEPLOY.md`](file:///home/user/hoot-indie-games/DEPLOY.md).
+

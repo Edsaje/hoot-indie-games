@@ -2,7 +2,8 @@ import type { Game } from "../types/game";
 
 /**
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
- * Moissonnée et vérifiée via l'API Steam Store officielle (Règle 0 Hallucination).
+ * Attributs standardisés (ArtStyle & Camera en catégories canoniques)
+ * 0 Hallucination : données vérifiées sur les sources officielles Steam.
  * Total de jeux jouables et certifiés : 83
  */
 export const INDIE_GAMES: Game[] = [
@@ -17,11 +18,11 @@ export const INDIE_GAMES: Game[] = [
       "Platformer"
     ],
     "artStyle": {
-      "fr": "Dessiné à la main en 2D",
+      "fr": "2D Dessiné à la main",
       "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Team Cherry",
@@ -37,7 +38,7 @@ export const INDIE_GAMES: Game[] = [
     "hints": {
       "tagline": {
         "fr": "Explorez un vaste royaume en ruine peuplé d'insectes et de héros oubliés.",
-        "en": "Forge your own path in Hollow Knight! An epic action adventure through a vast ruined kingdom of insects."
+        "en": "Forge your own path through a vast ruined kingdom of insects and heroes."
       },
       "composer": "Christopher Larkin"
     }
@@ -48,16 +49,15 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2018,
     "genre": [
       "Platformer",
-      "Precision",
       "Aventure",
-      "Récit"
+      "Narratif"
     ],
     "artStyle": {
-      "fr": "Pixel Art rétro soigné",
-      "en": "Crisp Retro Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Maddy Makes Games",
@@ -84,17 +84,17 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2019,
     "genre": [
       "Exploration",
-      "Mystère",
+      "Aventure",
       "Sci-Fi",
       "Puzzle"
     ],
     "artStyle": {
-      "fr": "3D Stylisée & Planétaire",
-      "en": "Stylized 3D & Planetary"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue à la première personne (FPS)",
-      "en": "First Person (FPS)"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Mobius Digital",
     "steamUrl": "https://store.steampowered.com/app/753640/Outer_Wilds/",
@@ -108,8 +108,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Un système solaire pris au piège d'une boucle temporelle sans fin de 22 minutes.",
-        "en": "A hand-crafted solar system trapped in an endless 22-minute time loop."
+        "fr": "Explorez un système solaire condamné pris au piège d'une boucle temporelle infinie de 22 minutes.",
+        "en": "Explore a sun-soaked solar system trapped in an endless 22-minute time loop."
       },
       "composer": "Andrew Prahlow"
     }
@@ -120,17 +120,17 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2020,
     "genre": [
       "Roguelike",
-      "Action RPG",
+      "Action",
       "Hack and Slash",
       "Mythologie"
     ],
     "artStyle": {
-      "fr": "Dessin Isométrique peint à la main",
-      "en": "Hand-painted Isometric 2D/3D"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue Isométrique 3D",
-      "en": "Isometric 3D"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Supergiant Games",
     "steamUrl": "https://store.steampowered.com/app/1145360/Hades/",
@@ -144,7 +144,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Défiez le dieu des Enfers et frayez-vous un chemin vers la surface.",
+        "fr": "Défiez le dieu des morts et frayez-vous un chemin hors des Enfers grecs.",
         "en": "Defy the god of the dead as you hack and slash out of the Underworld of Greek myth."
       },
       "composer": "Darren Korb"
@@ -158,14 +158,14 @@ export const INDIE_GAMES: Game[] = [
       "Roguelite",
       "Metroidvania",
       "Action",
-      "Souls-lite"
+      "Souls-like"
     ],
     "artStyle": {
-      "fr": "Pixel Art 2.5D dynamique",
-      "en": "Dynamic 2.5D Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Motion Twin",
@@ -180,8 +180,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Tuez, mourez, apprenez, recommencez dans un château labyrinthique en perpétuelle mutation.",
-        "en": "Kill, die, learn, repeat. A rogue-lite, metroidvania action-platformer."
+        "fr": "Combattez dans un château labyrinthique en perpétuelle mutation dans ce Roguevania nerveux.",
+        "en": "Fight through an ever-changing labyrinthine island castle in this fast-paced Roguevania."
       },
       "composer": "Yoann Laulan"
     }
@@ -197,11 +197,11 @@ export const INDIE_GAMES: Game[] = [
       "Comédie"
     ],
     "artStyle": {
-      "fr": "Pixel Art rétro 8-bit & Noir/Blanc",
-      "en": "8-bit Retro Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "tobyfox",
@@ -216,8 +216,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Le RPG où vous n'êtes pas obligé de tuer qui que ce soit.",
-        "en": "The RPG game where you don't have to destroy anyone."
+        "fr": "Un RPG émouvant et hilarant où vous n'êtes obligé d'éliminer aucun ennemi.",
+        "en": "The friendly RPG where nobody has to die."
       },
       "composer": "Toby Fox"
     }
@@ -227,18 +227,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Slay the Spire",
     "releaseYear": 2019,
     "genre": [
-      "Roguelike",
       "Deckbuilder",
-      "Stratégie",
-      "Cartes"
+      "Roguelike",
+      "Stratégie"
     ],
     "artStyle": {
-      "fr": "Illustration 2D Peinte",
-      "en": "2D Painted Illustration"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de profil 2D fixe",
-      "en": "2D Frontal Combat View"
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
     },
     "developer": "Mega Crit Games",
     "steamUrl": "https://store.steampowered.com/app/646570/Slay_the_Spire/",
@@ -252,8 +251,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Fusionnez jeu de cartes et roguelike pour concevoir le deck ultime et gravir la Flèche.",
-        "en": "Craft a unique deck, encounter bizarre creatures, discover relics of immense power, and Slay the Spire!"
+        "fr": "Fusionnez jeu de cartes et roguelike pour gravir une flèche peuplée de reliques et de monstres.",
+        "en": "Craft a unique deck, encounter bizarre creatures, and discover relics of immense power."
       },
       "composer": "Clark Aboud"
     }
@@ -266,15 +265,15 @@ export const INDIE_GAMES: Game[] = [
       "Action",
       "Aventure",
       "Puzzle",
-      "Souls-lite"
+      "Souls-like"
     ],
     "artStyle": {
-      "fr": "3D Low-poly Isométrique éclatante",
-      "en": "Vibrant Low-poly Isometric 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique 3D",
-      "en": "Isometric 3D"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Andrew Shouldice",
     "steamUrl": "https://store.steampowered.com/app/553420/TUNIC/",
@@ -288,8 +287,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explorez une contrée de légendes oubliées en reconstituant le manuel d'instructions du jeu.",
-        "en": "Explore a land filled with lost legends, ancient powers, and ferocious monsters with an in-game manual."
+        "fr": "Guidez un jeune renard dans un vaste monde de légendes et reconstituez la notice du jeu page par page.",
+        "en": "Explore a land filled with lost legends, ancient powers, and ferocious monsters in this isometric adventure."
       },
       "composer": "Lifeformed & Janice Kwan"
     }
@@ -300,16 +299,15 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2017,
     "genre": [
       "Action",
-      "Run and Gun",
-      "Boss Rush",
+      "Platformer",
       "Co-op"
     ],
     "artStyle": {
-      "fr": "Animation traditionnelle style années 1930",
-      "en": "1930s Traditional Hand-drawn Cartoon"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Studio MDHR",
@@ -324,7 +322,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Remboursez votre dette envers le Diable dans un cartoon interactif frénétique.",
+        "fr": "Affrontez des boss gigantesques dans un style cartoon inspiré des années 1930 animé à la main.",
         "en": "A classic run and gun action game heavily focused on boss battles, inspired by 1930s cartoons."
       },
       "composer": "Kristofer Maddigan"
@@ -337,16 +335,15 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "RPG",
       "Narratif",
-      "Enquête",
-      "Psychologie"
+      "Enquête"
     ],
     "artStyle": {
-      "fr": "Peinture à l'huile expressionniste Isométrique",
-      "en": "Expressionist Oil Painting Isometric"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue Isométrique 3D",
-      "en": "Isometric 3D"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "ZA/UM",
     "steamUrl": "https://store.steampowered.com/app/632470/Disco_Elysium/",
@@ -360,8 +357,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Incarnez un détective amnésique doté d'un système de compétences psychologiques unique.",
-        "en": "A groundbreaking open world role playing game. You're a detective with a unique skill system."
+        "fr": "Incarnez un détective amnésique doté d'un système de compétences unique au cœur d'une cité décadente.",
+        "en": "A groundbreaking role-playing game where you are a detective with a unique skill system at your disposal."
       },
       "composer": "British Sea Power"
     }
@@ -371,18 +368,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Inscryption",
     "releaseYear": 2021,
     "genre": [
-      "Roguelike",
       "Deckbuilder",
       "Horreur",
-      "Escape Game"
+      "Roguelike",
+      "Puzzle"
     ],
     "artStyle": {
-      "fr": "3D Rétro Sombre & Cartes en bois",
-      "en": "Dark Retro 3D & Woodblock Cards"
+      "fr": "3D Low-Poly / Rétro",
+      "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Vue à la première personne (FPS)",
-      "en": "First Person (FPS)"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Daniel Mullins Games",
     "steamUrl": "https://store.steampowered.com/app/1092790/Inscryption/",
@@ -396,8 +393,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Une odyssée noire à base de cartes qui mêle roguelike, puzzles et horreur psychologique.",
-        "en": "An inky black card-based odyssey that blends the deckbuilding roguelike, escape-room style puzzles, and psychological horror."
+        "fr": "Une odyssée noire et mystérieuse mêlant deckbuilding, escape room et horreur psychologique.",
+        "en": "An inky black card-based rogue-like that blends deckbuilding, escape-room puzzles, and psychological horror."
       },
       "composer": "Jonah Senzel"
     }
@@ -408,16 +405,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2016,
     "genre": [
       "Simulation",
+      "Gestion",
       "RPG",
-      "Farming",
-      "Artisanat"
+      "Co-op"
     ],
     "artStyle": {
-      "fr": "Pixel Art bucolique 16-bit",
-      "en": "Charming 16-bit Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "ConcernedApe",
@@ -432,8 +429,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Héritez de la vieille parcelle agricole de votre grand-père et apprenez à vivre de la terre.",
-        "en": "You've inherited your grandfather's old farm plot in Stardew Valley. Can you learn to live off the land?"
+        "fr": "Héritez de la vieille parcelle de votre grand-père et construisez la ferme de vos rêves.",
+        "en": "You have inherited your grandfather's old farm plot. Can you learn to live off the land?"
       },
       "composer": "ConcernedApe"
     }
@@ -444,17 +441,17 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2018,
     "genre": [
       "Survie",
+      "Aventure",
       "Exploration",
-      "Sous-marin",
       "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "3D Réaliste & Bioluminescente",
-      "en": "Vibrant Bioluminescent 3D"
+      "fr": "3D Réaliste",
+      "en": "Realistic 3D"
     },
     "camera": {
-      "fr": "Vue à la première personne (FPS)",
-      "en": "First Person (FPS)"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Unknown Worlds Entertainment",
     "steamUrl": "https://store.steampowered.com/app/264710/Subnautica/",
@@ -468,7 +465,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Plongez dans les profondeurs d'un monde océanique extraterrestre fascinant et périlleux.",
+        "fr": "Plongez dans les profondeurs d'un monde sous-marin extraterrestre rempli de merveilles et de terreurs.",
         "en": "Descend into the depths of an alien underwater world filled with wonder and peril."
       },
       "composer": "Simon Chylinski"
@@ -479,17 +476,16 @@ export const INDIE_GAMES: Game[] = [
     "title": "Balatro",
     "releaseYear": 2024,
     "genre": [
-      "Roguelike",
       "Deckbuilder",
-      "Poker",
+      "Roguelike",
       "Stratégie"
     ],
     "artStyle": {
-      "fr": "Pixel Art CRT Rétro & Holographique",
-      "en": "Retro CRT Pixel Art & Holographic"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "LocalThunk",
@@ -504,8 +500,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Le roguelike de poker hypnotique où vous combinez jokers farfelus et multiplicateurs explosifs.",
-        "en": "The poker roguelike. Balatro is a hypnotically satisfying deckbuilder where you play illegal poker hands."
+        "fr": "Un roguelike de poker hypnotique où des cartes Joker modificateurs créent des combos démesurés.",
+        "en": "A poker-themed roguelike deckbuilder about creating powerful synergies and winning big."
       },
       "composer": "LouisF"
     }
@@ -517,15 +513,14 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Metroidvania",
       "Puzzle",
-      "Atmosphérique",
       "Exploration"
     ],
     "artStyle": {
-      "fr": "Pixel Art Néon dense & Effets volumétriques",
-      "en": "Dense Neon Pixel Art & Volumetric Lighting"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Shared Memory",
@@ -540,8 +535,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explorez un labyrinthe dense et énigmatique dissimulant d'innombrables secrets emboîtés.",
-        "en": "Hatch from a flower and explore the labyrinthine world of ANIMAL WELL."
+        "fr": "Explorez un labyrinthe souterrain interconnecté et dense regorgeant de secrets et d'énigmes subtiles.",
+        "en": "Explore a dense, interconnected labyrinth and decipher its many secrets in this atmospheric puzzle metroidvania."
       },
       "composer": "Billy Basso"
     }
@@ -552,17 +547,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2023,
     "genre": [
       "RPG",
-      "Tour par tour",
       "Aventure",
-      "Rétro"
+      "Tour par tour"
     ],
     "artStyle": {
-      "fr": "Pixel Art Moderne Haute Définition",
-      "en": "Modern High-Definition Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue Isométrique / Plongée 2D",
-      "en": "Top-down / Isometric 2D"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Sabotage Studio",
     "steamUrl": "https://store.steampowered.com/app/1244090/Sea_of_Stars/",
@@ -576,8 +570,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Deux Enfants du Solstice combinent les pouvoirs du soleil et de la lune pour vaincre le Fleshmancer.",
-        "en": "Sea of Stars is a turn-based RPG inspired by the classics, featuring seamless exploration and timed hits."
+        "fr": "Un RPG au tour par tour inspiré des classiques des années 90, contant l'histoire de deux Enfants du Solstice.",
+        "en": "A turn-based RPG inspired by the 90s classics, telling the story of two Children of the Solstice."
       },
       "composer": "Eric W. Brown & Yasunori Mitsuda"
     }
@@ -588,16 +582,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2019,
     "genre": [
       "Metroidvania",
-      "Souls-like",
       "Action",
+      "Souls-like",
       "Dark Fantasy"
     ],
     "artStyle": {
-      "fr": "Pixel Art Gothique baroque",
-      "en": "Baroque Gothic Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "The Game Kitchen",
@@ -612,8 +606,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Incarnez le Pénitent dans les terres maudites de Cvstodia et brisez le cycle éternel de la douleur.",
-        "en": "A punishing action-platformer that combines fast-paced, skilled combat with a deep and evocative narrative."
+        "fr": "Incarnez le Pénitent dans un monde de cauchemar ravagé par une terrible malédiction religieuse.",
+        "en": "A punishing action-platformer that combines fast-paced, skilled hack-and-slash combat with deep lore."
       },
       "composer": "Carlos Viola"
     }
@@ -625,15 +619,14 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Metroidvania",
       "Platformer",
-      "Aventure",
-      "Féérique"
+      "Aventure"
     ],
     "artStyle": {
-      "fr": "Peinture 2D Féérique & Effets de Particules",
-      "en": "Fairytale 2D Painterly & Particles"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Moon Studios",
@@ -648,8 +641,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Restaurez la forêt mourante de Nibel avec l'aide de la lumière ancestrale.",
-        "en": "The forest of Nibel is dying. After a powerful storm sets a series of devastating events in motion, Ori must journey."
+        "fr": "Voyagez à travers la forêt en déclin de Nibel dans cette fable visuellement éblouissante et émouvante.",
+        "en": "Embark on an emotional journey through the dying forest of Nibel to save an orphaned spirit's home."
       },
       "composer": "Gareth Coker"
     }
@@ -659,18 +652,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Signalis",
     "releaseYear": 2022,
     "genre": [
-      "Survival Horror",
-      "Psychologique",
+      "Horreur",
+      "Survie",
       "Sci-Fi",
-      "Rétro"
+      "Puzzle"
     ],
     "artStyle": {
-      "fr": "3D Rétro Low-poly PS1 & Anime",
-      "en": "Retro PS1 Low-poly 3D & Anime"
+      "fr": "3D Low-Poly / Rétro",
+      "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique / Plongée 2D",
-      "en": "Top-down / Isometric"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "rose-engine",
     "steamUrl": "https://store.steampowered.com/app/1262350/SIGNALIS/",
@@ -684,8 +677,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Un survival-horror psychologique dystopique empreint d'une angoisse cosmique et de mélancolie.",
-        "en": "A classic survival horror experience set in a dystopian future where humanity has uncovered a dark secret."
+        "fr": "Un survival horror rétro dystopique et mélancolique aux inspirations d'anime classique et d'horreur cosmique.",
+        "en": "A classic survival horror experience set in a dystopian future where humanity uncovered a dark secret."
       },
       "composer": "1000 Eyes & Cicada Sirens"
     }
@@ -698,14 +691,14 @@ export const INDIE_GAMES: Game[] = [
       "Aventure",
       "Gestion",
       "Simulation",
-      "Pêche"
+      "RPG"
     ],
     "artStyle": {
-      "fr": "Hybride Pixel Art & Décors 3D",
-      "en": "Hybrid Pixel Art & 3D Environments"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "MINTROCKET",
@@ -720,8 +713,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explorez le trou bleu le jour et servez des sushis d'exception le soir.",
-        "en": "A casual, single-player adventure RPG featuring deep-sea exploration and fishing during the day, and sushi restaurant management at night."
+        "fr": "Pêchez le jour dans le mystérieux Trou Bleu et tenez un restaurant de sushi florissant la nuit.",
+        "en": "Explore the depths of the mysterious Blue Hole by day and run a successful sushi restaurant by night."
       },
       "composer": "Dday"
     }
@@ -734,14 +727,14 @@ export const INDIE_GAMES: Game[] = [
       "Metroidvania",
       "Action",
       "Souls-like",
-      "Taopunk"
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "Dessin animé Taopunk fait main",
-      "en": "Hand-drawn Taopunk Manga 2D"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Red Candle Games",
@@ -756,8 +749,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Un périple de vengeance taopunk aux combats intenses axés sur la déviation et le rythme.",
-        "en": "A lore-rich, hand-drawn 2D action-platformer featuring Sekiro-inspired deflection combat in an Asian fantasy world."
+        "fr": "Un metroidvania 2D riche en action inspiré de Sekiro dans un univers taopunk cyberpunk oriental.",
+        "en": "A lore-rich, hand-drawn 2D action-platformer featuring Sekiro-inspired deflection-focused combat."
       },
       "composer": "Red Candle Sound Team"
     }
@@ -767,18 +760,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Crow Country",
     "releaseYear": 2024,
     "genre": [
-      "Survival Horror",
+      "Horreur",
+      "Survie",
       "Puzzle",
-      "Rétro",
-      "Mystère"
+      "Rétro"
     ],
     "artStyle": {
-      "fr": "3D Low-poly Rétro ère PS1",
-      "en": "Retro PS1 Low-poly 3D"
+      "fr": "3D Low-Poly / Rétro",
+      "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique 3D libre",
-      "en": "Isometric 3D Camera"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "SFB Games",
     "steamUrl": "https://store.steampowered.com/app/1996010/Crow_Country/",
@@ -792,8 +785,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explorez un parc d'attractions abandonné et élucidez la disparition mystérieuse d'Edward Crow.",
-        "en": "A survival horror game where you investigate the eerie quiet of an abandoned theme park."
+        "fr": "Enquêtez sur la disparition d'un magnat de parc d'attractions dans ce survival horror rétro inspiré de la PS1.",
+        "en": "Investigate an abandoned amusement park in this PS1-inspired survival horror mystery."
       },
       "composer": "Tom Vian"
     }
@@ -804,16 +797,15 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2023,
     "genre": [
       "Platformer",
-      "Fast-paced",
-      "Comédie",
-      "Score Attack"
+      "Action",
+      "Comédie"
     ],
     "artStyle": {
-      "fr": "Animation Cartoon 90s déjantée",
-      "en": "Zany 90s Cartoon Hand-drawn"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Tour De Pizza",
@@ -828,7 +820,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Sauvez votre pizzeria en détruisant la Tour de Pizza à une vitesse supersonique.",
+        "fr": "Un jeu de plateforme frénétique inspiré de Wario Land où Peppino Spaghetti détruit tout sur son passage.",
         "en": "A fast-paced 2D platformer inspired by the Wario Land series, with an emphasis on movement and destruction."
       },
       "composer": "Ronan de Castel & ClascyJitto"
@@ -842,15 +834,15 @@ export const INDIE_GAMES: Game[] = [
       "Survie",
       "Conduite",
       "Sci-Fi",
-      "Roguelite"
+      "Atmosphérique"
     ],
     "artStyle": {
-      "fr": "3D Atmosphérique Réaliste & Anomale",
-      "en": "Atmospheric Anomaly-Rich 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue à la première personne (FPS)",
-      "en": "First Person (FPS)"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Ironwood Studios",
     "steamUrl": "https://store.steampowered.com/app/1458140/Pacific_Drive/",
@@ -864,8 +856,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Affrontez les périls surnaturels de la Zone d'exclusion olympique avec votre break pour seul refuge.",
-        "en": "Face the supernatural dangers of the Olympic Exclusion Zone with a car as your only lifeline."
+        "fr": "Bravez les dangers surnaturels de la zone d'exclusion olympique au volant de votre fidèle break familial.",
+        "en": "Face the supernatural dangers of the Olympic Exclusion Zone with your car as your only lifeline."
       },
       "composer": "Wilbert Roget II"
     }
@@ -876,16 +868,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2019,
     "genre": [
       "Action",
-      "Slash",
+      "Platformer",
       "Cyberpunk",
-      "Récit"
+      "Narratif"
     ],
     "artStyle": {
-      "fr": "Pixel Art Néon Néo-noir tranchant",
-      "en": "Neo-noir Neon Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Askiisoft",
@@ -900,8 +892,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Tranchez, esquivez et manipulez le temps dans un ballet sanglant au katana néo-noir.",
-        "en": "A stylish neo-noir, action-platformer featuring breakneck action and instant-death combat."
+        "fr": "Fendez l'air et ralentissez le temps dans ce thriller néo-noir ultra-rapide où un seul coup est fatal.",
+        "en": "A stylish neo-noir, action-packed slash-'em-up with blindingly fast combat and instant-death mechanics."
       },
       "composer": "LudoWic & Bill Kiley"
     }
@@ -912,16 +904,15 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2012,
     "genre": [
       "Action",
-      "Brutal",
-      "Top-down",
-      "Synthwave"
+      "Fast-FPS",
+      "Rétro"
     ],
     "artStyle": {
-      "fr": "Pixel Art Psychédélique Rétro 80s",
-      "en": "Psychedelic Retro 80s Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "Dennaton Games",
@@ -936,8 +927,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Aimez-vous faire du mal aux autres ? Une fusillade néon sanglante dans le Miami de 1989.",
-        "en": "A high-octane action game overflowing with raw brutality, hard-boiled gunplay and skull crushing close combat."
+        "fr": "Un jeu d'action brutal et psychédélique baigné de néons dans le Miami violent de 1989.",
+        "en": "A high-octane action game overflowing with raw brutality, hard-boiled gunplay and skull-crushing combat."
       },
       "composer": "Moon, Sun Araw & Jasper Byrne"
     }
@@ -948,17 +939,17 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2023,
     "genre": [
       "Pêche",
-      "Horreur cosmique",
+      "Horreur",
       "Aventure",
-      "Gestion"
+      "Mystère"
     ],
     "artStyle": {
-      "fr": "3D Low-poly Stylisée et Brumeuse",
-      "en": "Misty Low-poly Stylized 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique 3D / Troisième personne",
-      "en": "Isometric 3D / Third Person"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Black Salt Games",
     "steamUrl": "https://store.steampowered.com/app/1562430/DREDGE/",
@@ -972,8 +963,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Pilotez votre chalutier, pêchez des créatures sous-marines et bravez les abominations de la nuit.",
-        "en": "A single-player fishing adventure with a sinister undercurrent."
+        "fr": "Pilotez votre chalutier, explorez un archipel brumeux et repêchez d'anciens secrets horrifiques des abysses.",
+        "en": "Captain your fishing trawler to explore a collection of remote isles and unravel dark secrets."
       },
       "composer": "David Webster"
     }
@@ -985,16 +976,15 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Puzzle",
       "Aventure",
-      "Linguistique",
-      "Exploration"
+      "Mystère"
     ],
     "artStyle": {
-      "fr": "Ligne claire inspirée de Moebius",
-      "en": "Moebius-inspired European Ligne Claire"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique 3D fixe",
-      "en": "Fixed Isometric 3D"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Rundisc",
     "steamUrl": "https://store.steampowered.com/app/1931770/Chants_of_Sennaar/",
@@ -1008,8 +998,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Déchiffrez d'anciens glyphes et réunissez les peuples de la Tour de Babel.",
-        "en": "Unravel mysteries across the Tower of Babel by deciphering ancient languages."
+        "fr": "Déchiffrez des langues anciennes et rétablissez le dialogue entre les peuples de la Tour de Babel.",
+        "en": "Unravel the mysteries of ancient tongues and restore harmony between the peoples of the Tower."
       },
       "composer": "Thomas Brunet"
     }
@@ -1021,16 +1011,15 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Aventure",
       "Exploration",
-      "Cozy",
-      "Vol"
+      "Cozy"
     ],
     "artStyle": {
-      "fr": "Pixel Art 3D Doux & Pastel",
-      "en": "Pastel Pixelated 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique 3D / Plongée",
-      "en": "Top-down / Isometric 3D"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "adamgryu",
     "steamUrl": "https://store.steampowered.com/app/1055540/A_Short_Hike/",
@@ -1044,7 +1033,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Randonnez, planez et grimpez jusqu'au sommet paisible de Hawk Peak Provincial Park.",
+        "fr": "Randonnez, planez et gravissez les paisibles paysages montagneux du parc provincial de Hawk Peak.",
         "en": "Hike, climb, and soar through the peaceful mountainside landscapes of Hawk Peak Provincial Park."
       },
       "composer": "Mark Sparling"
@@ -1057,16 +1046,15 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Puzzle",
       "Platformer",
-      "Perspective",
-      "Rétro"
+      "Exploration"
     ],
     "artStyle": {
-      "fr": "Pixel Art 2D cubique dans un monde 3D",
-      "en": "2D Pixel Art in a 3D Multiverse"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de profil 2D rotative sur 4 axes",
-      "en": "2D Rotating Perspective"
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
     },
     "developer": "Polytron Corporation",
     "steamUrl": "https://store.steampowered.com/app/224760/FEZ/",
@@ -1080,8 +1068,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Gomez découvre l'existence d'une mystérieuse troisième dimension en recevant un fez magique.",
-        "en": "Gomez is a 2D creature living in a 2D world until the existence of a mysterious 3rd dimension is revealed to him."
+        "fr": "Faites pivoter un monde 3D en perspective 2D pour résoudre des énigmes géométriques fascinantes.",
+        "en": "Explore an incredible 3D world from four distinct 2D perspectives with the magical Fez hat."
       },
       "composer": "Disasterpeace"
     }
@@ -1093,15 +1081,14 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Platformer",
       "Aventure",
-      "Émotion",
-      "Artistique"
+      "Narratif"
     ],
     "artStyle": {
-      "fr": "Aquarelle Peinte à la Main",
-      "en": "Hand-painted Watercolor 2D"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Nomada Studio",
@@ -1116,8 +1103,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Rendez les couleurs à un monde brisé à travers le deuil d'une jeune fille pleine d'espoir.",
-        "en": "GRIS is a serene and evocative experience, free of danger, frustration or death."
+        "fr": "Une expérience narrative contemplative et magnifiquement aquarellée sur le deuil et la renaissance.",
+        "en": "A serene and evocative experience, free of danger, frustration or death, about hope and sorrow."
       },
       "composer": "Berlinist"
     }
@@ -1129,16 +1116,16 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Roguelike",
       "RPG",
-      "Tour par tour",
-      "Dark Fantasy"
+      "Dark Fantasy",
+      "Tour par tour"
     ],
     "artStyle": {
-      "fr": "Comics Gothique encré façon Mignola",
-      "en": "Inked Gothic Comic Illustration"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de profil 2D fixe en couloir",
-      "en": "2D Side Exploration & Combat"
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
     },
     "developer": "Red Hook Studios",
     "steamUrl": "https://store.steampowered.com/app/262060/Darkest_Dungeon/",
@@ -1152,7 +1139,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Gérez le stress et la folie de héros meurtris dans les catacombes d'un manoir maudit.",
+        "fr": "Recrutez et menez une équipe de héros imparfaits face aux horreurs et au stress psychologique d'un manoir maudit.",
         "en": "A challenging gothic roguelike turn-based RPG about the psychological stresses of adventuring."
       },
       "composer": "Stuart Chatwood"
@@ -1163,18 +1150,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Bramble: The Mountain King",
     "releaseYear": 2023,
     "genre": [
-      "Horreur",
       "Aventure",
-      "Folklore",
-      "Sombre"
+      "Horreur",
+      "Folklorique"
     ],
     "artStyle": {
-      "fr": "3D Réaliste Cinématique Nordique",
-      "en": "Cinematic Nordic Photorealistic 3D"
+      "fr": "3D Réaliste",
+      "en": "Realistic 3D"
     },
     "camera": {
-      "fr": "Vue à la troisième personne cinématique",
-      "en": "Cinematic Third Person"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "Dimfrost Studios",
     "steamUrl": "https://store.steampowered.com/app/1623940/Bramble_The_Mountain_King/",
@@ -1188,8 +1174,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Traversez une terre sinistre inspirée des contes nordiques pour sauver votre sœur d'un infâme troll.",
-        "en": "A grim adventure set in a world inspired by dark, Nordic fables."
+        "fr": "Bravez les créatures terrifiantes du folklore nordique pour sauver votre sœur capturée.",
+        "en": "A grim adventure set in a world inspired by dark, Nordic fables. Explore beautiful yet dangerous lands."
       },
       "composer": "Martin Hall"
     }
@@ -1200,16 +1186,15 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2015,
     "genre": [
       "Metroidvania",
-      "Sci-Fi",
       "Action",
-      "Rétro"
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "Pixel Art 16-bit Biomécanique Rétro",
-      "en": "Biomechanical 16-bit CRT Pixel Art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Thomas Happ Games LLC",
@@ -1224,8 +1209,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explorez et débloquez un monde extraterrestre labyrinthique à l'aide de glitchs et d'armes biomécaniques.",
-        "en": "The retro sci-fi action adventure you've been waiting for, crafted by a solo developer."
+        "fr": "Explorez un vaste monde extraterrestre biomécanique dans ce Metroidvania créé par un développeur solo.",
+        "en": "Explore a sprawling alien world and exploit glitches in reality in this retro sci-fi metroidvania."
       },
       "composer": "Thomas Happ"
     }
@@ -1235,17 +1220,20 @@ export const INDIE_GAMES: Game[] = [
     "title": "The Binding of Isaac: Rebirth",
     "releaseYear": 2014,
     "genre": [
-      "Action"
+      "Roguelike",
+      "Action",
+      "Bullet Hell",
+      "Survie"
     ],
     "artStyle": {
-      "fr": "Pixel Art 16-bit macabre et expressif",
-      "en": "Grim and expressive 16-bit pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
-    "developer": "Nicalis, Inc., Edmund McMillen",
+    "developer": "Nicalis, Inc. & Edmund McMillen",
     "steamUrl": "https://store.steampowered.com/app/250900/",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/ss_25a4a446a433218d41a7e87e35b60c297e68e7a4.1920x1080.jpg?t=1731977365",
@@ -1257,8 +1245,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "The Binding of Isaac: Rebirth is a randomly generated action RPG shooter with heavy Rogue-like elements. Following Isaac on his journey players will find bizarre treasures that change Isaac’s form giving him super human abilities and enabling him to fight off droves of mysterious creatures, discover secrets and fight his way to safety.",
-        "en": "The Binding of Isaac: Rebirth is a randomly generated action RPG shooter with heavy Rogue-like elements. Following Isaac on his journey players will find bizarre treasures that change Isaac’s form giving him super human abilities and enabling him to fight off droves of mysterious creatures, discover secrets and fight his way to safety."
+        "fr": "Fuyez votre mère dans un sous-sol peuplé d'abominations dans ce roguelike jeu de tir frénétique.",
+        "en": "Escape into the monster-filled basement using tears as weapons in this legendary roguelike shooter."
       },
       "composer": "Ridiculon"
     }
@@ -1268,17 +1256,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Terraria",
     "releaseYear": 2011,
     "genre": [
-      "Action",
+      "Survie",
       "Aventure",
-      "Indépendant",
-      "RPG"
+      "Sandbox",
+      "Action"
     ],
     "artStyle": {
-      "fr": "Pixel Art rétro coloré et foisonnant",
-      "en": "Vibrant and detailed retro pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Re-Logic",
@@ -1293,10 +1281,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Creuser, survivre, explorer, construire ! Tout est possible dans ce jeu d'aventure bourré d'action. Pack de 4 jeux également disponible !",
-        "en": "Creuser, survivre, explorer, construire ! Tout est possible dans ce jeu d'aventure bourré d'action. Pack de 4 jeux également disponible !"
+        "fr": "Creusez, bâtissez, survivez et affrontez des boss mythiques dans ce bac à sable 2D infini.",
+        "en": "Dig, fight, explore, and build! The world is at your fingertips as you fight for survival and glory."
       },
-      "composer": "Scott Lloyd Shelly (RE-LOGIC)"
+      "composer": "Scott Lloyd Shelly"
     }
   },
   {
@@ -1304,17 +1292,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Vampire Survivors",
     "releaseYear": 2022,
     "genre": [
+      "Roguelite",
       "Action",
-      "Occasionnel",
-      "Indépendant",
-      "RPG"
+      "Bullet Hell",
+      "Survie"
     ],
     "artStyle": {
-      "fr": "Pixel Art rétro gothique style Castlevania",
-      "en": "Gothic retro pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "poncle",
@@ -1329,10 +1317,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Réduisez des milliers de créatures de la nuit en bouillie pour survivre jusqu'à l'aurore ! Vampire Survivors est un jeu d'horreur gothique teinté d'éléments de roguelite, dans lequel vos choix vous permettent de lutter contre des hordes de monstres qui vous assaillent de toute part.",
-        "en": "Réduisez des milliers de créatures de la nuit en bouillie pour survivre jusqu'à l'aurore ! Vampire Survivors est un jeu d'horreur gothique teinté d'éléments de roguelite, dans lequel vos choix vous permettent de lutter contre des hordes de monstres qui vous assaillent de toute part."
+        "fr": "Fauchez des milliers de monstres nocturnes et survivez jusqu'à l'aube dans ce phénomène roguelite.",
+        "en": "Mow down thousands of night creatures and survive until dawn in this gothic casual roguelite."
       },
-      "composer": "Daniele Zandara / Filippo Vicarelli"
+      "composer": "Daniele Zandara & Filippo Vicarelli"
     }
   },
   {
@@ -1340,18 +1328,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Cult of the Lamb",
     "releaseYear": 2022,
     "genre": [
+      "Roguelite",
+      "Gestion",
       "Action",
-      "Aventure",
-      "Indépendant",
-      "Stratégie"
+      "Dark Fantasy"
     ],
     "artStyle": {
-      "fr": "Dessin 2D cartoon mignon et occulte",
-      "en": "Cute and occult hand-drawn cartoon 2D"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue Isométrique 2.5D",
-      "en": "2.5D Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Massive Monster",
     "steamUrl": "https://store.steampowered.com/app/1313140/",
@@ -1365,8 +1353,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Montez votre propre culte dans un pays de faux prophètes, parcourez des régions étonnantes et mystérieuses pour faire croître une communauté d'adeptes fidèles dans les bois et répandez la bonne parole pour devenir le seul culte véritable.",
-        "en": "Montez votre propre culte dans un pays de faux prophètes, parcourez des régions étonnantes et mystérieuses pour faire croître une communauté d'adeptes fidèles dans les bois et répandez la bonne parole pour devenir le seul culte véritable."
+        "fr": "Fondez votre propre culte d'adorateurs fidèles et purgez les faux prophètes au fil de donjons sanglants.",
+        "en": "Start your own cult in a land of false prophets, venturing out into diverse and mysterious regions."
       },
       "composer": "River Boy (Narayana Johnson)"
     }
@@ -1376,16 +1364,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Shovel Knight: Treasure Trove",
     "releaseYear": 2014,
     "genre": [
+      "Platformer",
       "Action",
-      "Aventure",
-      "Indépendant"
+      "Rétro",
+      "Aventure"
     ],
     "artStyle": {
-      "fr": "Pixel Art 8-bit authentique style NES",
-      "en": "Authentic 8-bit NES pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Yacht Club Games",
@@ -1400,8 +1389,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Shovel Knight: Treasure Trove, l’édition complète de Shovel Knight, regroupe les 5 jeux de la saga ! Frayez-vous un chemin à coup de pelle et d'explosions dans un univers de plates-formes exigeant, peuplé de personnages mémorables et inspiré des classiques d'action/aventure de l'ère 8-bits.",
-        "en": "Shovel Knight: Treasure Trove, l’édition complète de Shovel Knight, regroupe les 5 jeux de la saga ! Frayez-vous un chemin à coup de pelle et d'explosions dans un univers de plates-formes exigeant, peuplé de personnages mémorables et inspiré des classiques d'action/aventure de l'ère 8-bits."
+        "fr": "Maniez votre fidèle pelle pour sauter et pourfendre les membres de l'Ordre des Sans-Quartier.",
+        "en": "A sweeping classic action adventure game with awesome gameplay, memorable characters, and an 8-bit retro aesthetic."
       },
       "composer": "Jake Kaufman & Manami Matsumae"
     }
@@ -1411,17 +1400,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "INSIDE",
     "releaseYear": 2016,
     "genre": [
-      "Action",
-      "Aventure",
-      "Indépendant"
+      "Puzzle",
+      "Platformer",
+      "Atmosphérique",
+      "Horreur"
     ],
     "artStyle": {
-      "fr": "3D Minimaliste atmosphérique en nuances de gris",
-      "en": "Atmospheric minimalist 3D in desaturated tones"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue de côté 2.5D cinématique",
-      "en": "Cinematic 2.5D Side-scroller"
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
     },
     "developer": "Playdead",
     "steamUrl": "https://store.steampowered.com/app/304430/",
@@ -1435,8 +1425,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Seul et pourchassé, un garçon se retrouve entraîné au cœur d'un sombre projet.",
-        "en": "Seul et pourchassé, un garçon se retrouve entraîné au cœur d'un sombre projet."
+        "fr": "Seul et pourchassé, un jeune garçon s'enfonce dans les rouages d'un projet dystopique terrifiant.",
+        "en": "Hunted and alone, a boy finds himself drawn into the center of a dark, dystopian project."
       },
       "composer": "Martin Stig Andersen & SØS Gunver Ryberg"
     }
@@ -1446,16 +1436,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "LIMBO",
     "releaseYear": 2011,
     "genre": [
-      "Action",
-      "Aventure",
-      "Indépendant"
+      "Puzzle",
+      "Platformer",
+      "Atmosphérique",
+      "Horreur"
     ],
     "artStyle": {
-      "fr": "Noir et blanc monochrome en ombres chinoises",
-      "en": "Monochrome black & white silhouette noir"
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Playdead",
@@ -1470,8 +1461,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Incertain du sort de sa sœur, un garçon pénètre dans LIMBO",
-        "en": "Incertain du sort de sa sœur, un garçon pénètre dans LIMBO"
+        "fr": "Incertain du destin de sa sœur, un garçon s'aventure dans l'obscurité hostile du monde de Limbo.",
+        "en": "Uncertain of his sister's fate, a boy enters the perilous, shadow-drenched world of LIMBO."
       },
       "composer": "Martin Stig Andersen"
     }
@@ -1481,16 +1472,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "COCOON",
     "releaseYear": 2023,
     "genre": [
+      "Puzzle",
       "Aventure",
-      "Indépendant"
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "3D Stylisée épurée et extraterrestre",
-      "en": "Sleek stylized alien 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique du dessus",
-      "en": "Top-down Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Geometric Interactive",
     "steamUrl": "https://store.steampowered.com/app/1497440/",
@@ -1504,8 +1496,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "De Jeppe Carlsen, le principal concepteur de gameplay de LIMBO et INSIDE — COCOON vous emmène dans une aventure à travers des mondes dans des mondes. Maîtrisez les mécanismes de saut du monde et résolvez des énigmes complexes pour percer un mystère cosmique.",
-        "en": "De Jeppe Carlsen, le principal concepteur de gameplay de LIMBO et INSIDE — COCOON vous emmène dans une aventure à travers des mondes dans des mondes. Maîtrisez les mécanismes de saut du monde et résolvez des énigmes complexes pour percer un mystère cosmique."
+        "fr": "Transportez des mondes entiers logés dans des orbes et sautez d'une dimension à l'autre.",
+        "en": "From the lead designer of LIMBO and INSIDE, leap between worlds contained inside spherical orbs."
       },
       "composer": "Jakob Schmid"
     }
@@ -1515,16 +1507,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Return of the Obra Dinn",
     "releaseYear": 2018,
     "genre": [
-      "Aventure",
-      "Indépendant"
+      "Enquête",
+      "Puzzle",
+      "Mystère",
+      "Historique"
     ],
     "artStyle": {
-      "fr": "Monochrome 1-bit dithering rétro Mac/PC",
-      "en": "1-bit monochrome dithering classic Macintosh"
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
     },
     "camera": {
-      "fr": "Première personne 3D (First-person)",
-      "en": "First-person 3D"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Lucas Pope",
     "steamUrl": "https://store.steampowered.com/app/653530/",
@@ -1538,8 +1532,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Perdu en mer, 1803 LE FIER VAISSEAU « OBRA DINN »",
-        "en": "Perdu en mer, 1803 LE FIER VAISSEAU « OBRA DINN »"
+        "fr": "Découvrez le sort funeste des 60 marins de l'Obra Dinn à l'aide d'un mystérieux cadran mémoriel.",
+        "en": "Lost at sea, 1803: identify the fates of all sixty souls aboard the ghost ship Obra Dinn."
       },
       "composer": "Lucas Pope"
     }
@@ -1549,17 +1543,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "ULTRAKILL",
     "releaseYear": 2020,
     "genre": [
+      "Fast-FPS",
       "Action",
-      "Indépendant",
-      "Accès anticipé"
+      "Rétro"
     ],
     "artStyle": {
-      "fr": "Rétro Low-poly texturé style PS1 / Quake",
-      "en": "Retro low-poly PS1/Quake aesthetic"
+      "fr": "3D Low-Poly / Rétro",
+      "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Première personne 3D (FPS)",
-      "en": "First-person 3D (FPS)"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Arsi \"Hakita\" Patala",
     "steamUrl": "https://store.steampowered.com/app/1229490/",
@@ -1573,8 +1567,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "ULTRAKILL est un FPS rétro ultra-violent au rythme effréné qui allie le système de score basé sur l'habileté des jeux d'action à la débauche de violence pure inspirée des meilleurs jeux de tir des années 90.",
-        "en": "ULTRAKILL est un FPS rétro ultra-violent au rythme effréné qui allie le système de score basé sur l'habileté des jeux d'action à la débauche de violence pure inspirée des meilleurs jeux de tir des années 90."
+        "fr": "L'humanité est morte. Le sang est votre carburant. Les Enfers sont pleins. Déchaînez un carnage rétro !",
+        "en": "Mankind is dead. Blood is fuel. Hell is full. Fast-paced ultraviolent retro FPS action."
       },
       "composer": "Hakita (Arsi Patala)"
     }
@@ -1584,16 +1578,16 @@ export const INDIE_GAMES: Game[] = [
     "title": "Enter the Gungeon",
     "releaseYear": 2016,
     "genre": [
-      "Action",
-      "Aventure",
-      "Indépendant"
+      "Roguelike",
+      "Bullet Hell",
+      "Action"
     ],
     "artStyle": {
-      "fr": "Pixel Art vibrant et hyper-animé",
-      "en": "Vibrant and richly animated pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "Dodge Roll",
@@ -1608,8 +1602,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Enter the Gungeon est un jeu d'exploration d'un donjon où une horde d'aventuriers tiraille à tout va, pille, manie la roulade d'esquive et renverse les tables dans l'espoir de trouver la rédemption.",
-        "en": "Enter the Gungeon est un jeu d'exploration d'un donjon où une horde d'aventuriers tiraille à tout va, pille, manie la roulade d'esquive et renverse les tables dans l'espoir de trouver la rédemption."
+        "fr": "Canardez et roulez au milieu d'armées de douilles pour atteindre l'arme ultime qui peut tuer le passé.",
+        "en": "A gunfight dungeon crawler following a band of misfits seeking to shoot, loot, dodge roll and find the past-killing gun."
       },
       "composer": "doseone"
     }
@@ -1619,16 +1613,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Risk of Rain 2",
     "releaseYear": 2020,
     "genre": [
+      "Roguelike",
       "Action",
-      "Indépendant"
+      "Sci-Fi",
+      "Co-op"
     ],
     "artStyle": {
-      "fr": "3D Cel-shaded stylisée et texturée",
-      "en": "Stylized cel-shaded 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Troisième personne 3D (Over-the-shoulder)",
-      "en": "Third-person 3D"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "Hopoo Games",
     "steamUrl": "https://store.steampowered.com/app/632360/",
@@ -1642,8 +1638,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Échappez à une planète étrangère chaotique en affrontant des hordes de monstres déchaînés, en solo ou entre amis. Combinez le butin de façon surprenante et maîtrisez chacun des personnages jusqu'à devenir vous-même le chaos que vous craigniez tant lors de votre premier écrasement.",
-        "en": "Échappez à une planète étrangère chaotique en affrontant des hordes de monstres déchaînés, en solo ou entre amis. Combinez le butin de façon surprenante et maîtrisez chacun des personnages jusqu'à devenir vous-même le chaos que vous craigniez tant lors de votre premier écrasement."
+        "fr": "Échappez à une planète extraterrestre hostile en accumulant des objets dévastateurs face à des hordes géantes.",
+        "en": "Escape a chaotic alien planet by fighting through hordes of frenzied monsters with friends."
       },
       "composer": "Chris Christodoulou"
     }
@@ -1655,15 +1651,14 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Action",
       "Aventure",
-      "Indépendant",
-      "RPG"
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "Pixel Art 16-bit néon et cinématique",
-      "en": "Neon-soaked cinematic 16-bit pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "Heart Machine",
@@ -1678,7 +1673,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explore a beautiful, vast and ruined world riddled with dangers and lost technologies.",
+        "fr": "Traversez un monde sublime en ruines frappé de néons pour chercher un remède à une maladie incurable.",
         "en": "Explore a beautiful, vast and ruined world riddled with dangers and lost technologies."
       },
       "composer": "Disasterpeace"
@@ -1689,18 +1684,19 @@ export const INDIE_GAMES: Game[] = [
     "title": "Spelunky 2",
     "releaseYear": 2020,
     "genre": [
-      "Action",
-      "Indépendant"
+      "Roguelike",
+      "Platformer",
+      "Action"
     ],
     "artStyle": {
-      "fr": "Dessin 2D cartoon soigné et précis",
-      "en": "Sharp hand-drawn 2D cartoon"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
-    "developer": "Mossmouth, BlitWorks",
+    "developer": "Mossmouth & BlitWorks",
     "steamUrl": "https://store.steampowered.com/app/418530/",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418530/ss_bf20692e69cfef2da4b6b4096f42823a5283701c.1920x1080.jpg?t=1663719294",
@@ -1712,8 +1708,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Spelunky 2 étoffe les défis aléatoires et uniques de son prédécesseur roguelike, offrant une aventure satisfaisante pour les anciens joueurs comme pour les nouveaux. Rencontrez la prochaine génération d'explorateurs lunaires, à la recherche de trésors et de proches disparus.",
-        "en": "Spelunky 2 étoffe les défis aléatoires et uniques de son prédécesseur roguelike, offrant une aventure satisfaisante pour les anciens joueurs comme pour les nouveaux. Rencontrez la prochaine génération d'explorateurs lunaires, à la recherche de trésors et de proches disparus."
+        "fr": "Pillez des cavernes lunaires générées aléatoirement regorgeant de pièges mortels et de créatures sauvages.",
+        "en": "Join the next generation of explorers as they find themselves on the Moon, searching for treasure and missing family."
       },
       "composer": "Eirik Suhrke"
     }
@@ -1723,17 +1719,16 @@ export const INDIE_GAMES: Game[] = [
     "title": "Rain World",
     "releaseYear": 2017,
     "genre": [
-      "Action",
-      "Aventure",
       "Survie",
-      "Indépendant"
+      "Platformer",
+      "Atmosphérique"
     ],
     "artStyle": {
-      "fr": "Pixel Art organique et animation procédurale",
-      "en": "Organic pixel art with procedural animation"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Videocult",
@@ -1748,8 +1743,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Vous êtes un chat-limace nomade, à la fois proie et prédateur, qui évolue dans un écosystème corrompu.",
-        "en": "You are a nomadic slugcat, both predator and prey in a broken ecosystem."
+        "fr": "Incarnez un chat-limace nomade, prédateur et proie à la fois, dans un écosystème ravagé par des pluies diluviennes.",
+        "en": "You are a nomadic slugcat, both predator and prey in a broken ecosystem filled with torrential downpours."
       },
       "composer": "James Primate & Lydia Esrig"
     }
@@ -1759,16 +1754,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Firewatch",
     "releaseYear": 2016,
     "genre": [
+      "Narratif",
       "Aventure",
-      "Indépendant"
+      "Mystère"
     ],
     "artStyle": {
-      "fr": "3D Stylisée chaude et picturale",
-      "en": "Warm pictorial stylized 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Première personne 3D (First-person)",
-      "en": "First-person 3D"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Campo Santo",
     "steamUrl": "https://store.steampowered.com/app/383870/",
@@ -1782,8 +1778,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Firewatch est un jeu plein de mystères pour un joueur à la première personne, qui se déroule dans le décor sauvage du Wyoming.",
-        "en": "Firewatch est un jeu plein de mystères pour un joueur à la première personne, qui se déroule dans le décor sauvage du Wyoming."
+        "fr": "Veillez sur la forêt sauvage du Wyoming tout en nouant un lien radio intense avec votre superviseuse Delilah.",
+        "en": "A single-player first-person mystery set in the Wyoming wilderness, where your only emotional lifeline is over a radio."
       },
       "composer": "Chris Remo"
     }
@@ -1793,16 +1789,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "What Remains of Edith Finch",
     "releaseYear": 2017,
     "genre": [
+      "Narratif",
       "Aventure",
-      "Indépendant"
+      "Mystère"
     ],
     "artStyle": {
-      "fr": "3D Réaliste narrative et poétique",
-      "en": "Poetic narrative realistic 3D"
+      "fr": "3D Réaliste",
+      "en": "Realistic 3D"
     },
     "camera": {
-      "fr": "Première personne 3D (First-person)",
-      "en": "First-person 3D"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Giant Sparrow",
     "steamUrl": "https://store.steampowered.com/app/501300/",
@@ -1815,8 +1812,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "What Remains of Edith Finch est une collection de contes étranges sur une famille de l’État de Washington. En incarnant Edith, vous allez explorer l’énorme demeure des Finch, à la recherche d’histoires sur le passé de cette famille et vous devrez découvrir pourquoi elle en est le dernier membre encore vivant.",
-        "en": "What Remains of Edith Finch est une collection de contes étranges sur une famille de l’État de Washington. En incarnant Edith, vous allez explorer l’énorme demeure des Finch, à la recherche d’histoires sur le passé de cette famille et vous devrez découvrir pourquoi elle en est le dernier membre encore vivant."
+        "fr": "Explorez l'immense manoir familial des Finch et revivez le destin tragique et poétique de chaque membre disparu.",
+        "en": "A collection of strange tales about a family in Washington state as they meet their untimely demises."
       },
       "composer": "Jeff Russo"
     }
@@ -1826,14 +1823,16 @@ export const INDIE_GAMES: Game[] = [
     "title": "Super Meat Boy",
     "releaseYear": 2010,
     "genre": [
-      "Indépendant"
+      "Platformer",
+      "Action",
+      "Rétro"
     ],
     "artStyle": {
-      "fr": "Dessin 2D cartoon vectoriel délirant",
-      "en": "Wild cartoon vector 2D"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Team Meat",
@@ -1848,8 +1847,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Le fameux jeu de plateforme arrive sur Steam avec un Head Crab jouable (exclusivité Steam) !",
-        "en": "Le fameux jeu de plateforme arrive sur Steam avec un Head Crab jouable (exclusivité Steam) !"
+        "fr": "Guidez un cube de viande animé à travers des scies circulaires mortelles pour sauver votre fiancée de sparadrap.",
+        "en": "A tough-as-nails platformer where you play as an animated cube of meat trying to save his girlfriend."
       },
       "composer": "Danny Baranowsky"
     }
@@ -1860,16 +1859,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2011,
     "genre": [
       "Action",
-      "Indépendant",
-      "RPG"
+      "RPG",
+      "Narratif"
     ],
     "artStyle": {
-      "fr": "Peinture numérique texturée et colorée",
-      "en": "Lush hand-painted digital art"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue Isométrique 2.5D",
-      "en": "2.5D Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Supergiant Games",
     "steamUrl": "https://store.steampowered.com/app/107100/",
@@ -1883,8 +1882,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Découvrez les secrets de la Calamité, une catastrophe surréaliste qui a brisé le monde en morceaux.",
-        "en": "Découvrez les secrets de la Calamité, une catastrophe surréaliste qui a brisé le monde en morceaux."
+        "fr": "Reconstruisez un refuge au sein d'un monde brisé commenté en temps réel par un mystérieux narrateur.",
+        "en": "An action role-playing game that redefines storytelling in games, with a reactive narrator marking your every move."
       },
       "composer": "Darren Korb"
     }
@@ -1895,16 +1894,17 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2014,
     "genre": [
       "Action",
-      "Indépendant",
-      "RPG"
+      "RPG",
+      "Sci-Fi",
+      "Stratégie"
     ],
     "artStyle": {
-      "fr": "Peinture numérique cyberpunk et Art Déco",
-      "en": "Art Deco cyberpunk painted aesthetic"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue Isométrique 2.5D",
-      "en": "2.5D Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Supergiant Games",
     "steamUrl": "https://store.steampowered.com/app/237930/",
@@ -1918,8 +1918,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Découvrez le monde de Transistor, un jeu de rôle / action SF développé par les créateurs de Bastion.",
-        "en": "Découvrez le monde de Transistor, un jeu de rôle / action SF développé par les créateurs de Bastion."
+        "fr": "Combattez dans une métropole futuriste saisissante armée d'une épée bavarde capable d'arrêter le temps.",
+        "en": "Wield an extraordinary weapon of unknown origin as you fight through a stunning futuristic city."
       },
       "composer": "Darren Korb"
     }
@@ -1929,17 +1929,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "FTL: Faster Than Light",
     "releaseYear": 2012,
     "genre": [
-      "Indépendant",
+      "Roguelike",
+      "Stratégie",
       "Simulation",
-      "Stratégie"
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "Pixel Art spatial épuré et fonctionnel",
-      "en": "Clean and functional sci-fi pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus vaisseau 2D (Top-down cockpit)",
-      "en": "2D Top-down Ship Overview"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "Subset Games",
     "steamUrl": "https://store.steampowered.com/app/212680/",
@@ -1953,8 +1954,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Ce jeu de simulation spatiale de type rogue-like vous permet de piloter votre vaisseau dans une galaxie générée aléatoirement où vous pourrez vous couvrir de gloire... si vous parvenez à éviter la défaite.",
-        "en": "Ce jeu de simulation spatiale de type rogue-like vous permet de piloter votre vaisseau dans une galaxie générée aléatoirement où vous pourrez vous couvrir de gloire... si vous parvenez à éviter la défaite."
+        "fr": "Pilotez votre vaisseau et son équipage à travers une galaxie hostile pour livrer des données capitales à la Fédération.",
+        "en": "A spaceship simulation roguelike-like that allows you to experience the atmosphere of running a spaceship."
       },
       "composer": "Ben Prunty"
     }
@@ -1964,18 +1965,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Into the Breach",
     "releaseYear": 2018,
     "genre": [
-      "Indépendant",
-      "RPG",
-      "Simulation",
-      "Stratégie"
+      "Stratégie",
+      "Tour par tour",
+      "Puzzle",
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "Pixel Art miniature isométrique précis",
-      "en": "Crisp isometric miniature pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue Isométrique 2D sur grille (Grid-based)",
-      "en": "2D Isometric Grid"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Subset Games",
     "steamUrl": "https://store.steampowered.com/app/590380/",
@@ -1989,8 +1990,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Contrôlez de puissants Mechas venus du futur pour vaincre une terrible menace extraterrestre. Chaque tentative faite pour sauver le monde est un nouveau défi généré aléatoirement dans ce jeu de stratégie au tour par tour.",
-        "en": "Contrôlez de puissants Mechas venus du futur pour vaincre une terrible menace extraterrestre. Chaque tentative faite pour sauver le monde est un nouveau défi généré aléatoirement dans ce jeu de stratégie au tour par tour."
+        "fr": "Commandez de puissants méchas venus du futur pour repousser une invasion d'insectes géants tour par tour.",
+        "en": "Control powerful mechs from the future to defeat an alien threat in minimal, turn-based combat."
       },
       "composer": "Ben Prunty"
     }
@@ -2000,17 +2001,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "OMORI",
     "releaseYear": 2020,
     "genre": [
-      "Aventure",
-      "Indépendant",
-      "RPG"
+      "RPG",
+      "Horreur",
+      "Narratif",
+      "Psychologique"
     ],
     "artStyle": {
-      "fr": "Dessin aux crayons de papier et Pixel Art 16-bit",
-      "en": "Hand-drawn colored pencil sketches & 16-bit pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down RPG)",
-      "en": "2D Top-down RPG"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "OMOCAT, LLC",
     "steamUrl": "https://store.steampowered.com/app/1150690/",
@@ -2024,10 +2026,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explore a strange world full of colorful friends and foes. When the time comes, the path you’ve chosen will determine your fate... and perhaps the fate of others as well.",
-        "en": "Explore a strange world full of colorful friends and foes. When the time comes, the path you’ve chosen will determine your fate... and perhaps the fate of others as well."
+        "fr": "Naviguez entre un monde imaginaire pastel et une réalité troublante pour déterrer des souvenirs enfouis.",
+        "en": "Explore a strange world full of colorful friends and foes. When the time comes, the path you’ve chosen will determine your fate."
       },
-      "composer": "OMOCAT, Pedro Silva, Jami Lynne"
+      "composer": "OMOCAT, Pedro Silva & Jami Lynne"
     }
   },
   {
@@ -2035,19 +2037,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "UFO 50",
     "releaseYear": 2024,
     "genre": [
+      "Anthologie",
+      "Rétro",
       "Action",
-      "Aventure",
-      "Indépendant",
-      "RPG",
-      "Stratégie"
+      "Aventure"
     ],
     "artStyle": {
-      "fr": "Pixel Art 8-bit fictionnel console vintage",
-      "en": "Fictional 8-bit vintage console pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Multiples perspectives rétro 2D",
-      "en": "Multiple retro 2D perspectives"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "Mossmouth",
     "steamUrl": "https://store.steampowered.com/app/1147860/",
@@ -2061,8 +2062,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "UFO 50 est une compilation de 50 jeux solo et multijoueur recouvrant un large panel de genres, du jeu de plateforme aux shoot ‘em up en passant par le jeu de puzzle, le roguelite ou le RPG. Notre but est de marier une esthétique 8-bit bien connue à des idées nouvelles et un design moderne.",
-        "en": "UFO 50 est une compilation de 50 jeux solo et multijoueur recouvrant un large panel de genres, du jeu de plateforme aux shoot ‘em up en passant par le jeu de puzzle, le roguelite ou le RPG. Notre but est de marier une esthétique 8-bit bien connue à des idées nouvelles et un design moderne."
+        "fr": "Une collection anthologique de 50 jeux rétro complets conçus pour une console imaginaire des années 80.",
+        "en": "A collection of 50 individual, full-sized games by the creators of Spelunky and Downwell."
       },
       "composer": "Eirik Suhrke"
     }
@@ -2072,16 +2073,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Lorelei and the Laser Eyes",
     "releaseYear": 2024,
     "genre": [
-      "Aventure",
-      "Indépendant"
+      "Puzzle",
+      "Mystère",
+      "Horreur",
+      "Enquête"
     ],
     "artStyle": {
-      "fr": "3D Monochrome noir & blanc avec accents cramoisis",
-      "en": "Black & white 3D monochrome with crimson accents"
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
     },
     "camera": {
-      "fr": "Plans fixes cinématographiques 3D",
-      "en": "Fixed cinematic 3D angles"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "Simogo",
     "steamUrl": "https://store.steampowered.com/app/2008920/",
@@ -2095,10 +2098,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Le décor est planté. Imaginez un vieux manoir baroque, voire un hôtel ou un musée, quelque part en Europe centrale. Une femme erre à la recherche de réponses.",
-        "en": "Le décor est planté. Imaginez un vieux manoir baroque, voire un hôtel ou un musée, quelque part en Europe centrale. Une femme erre à la recherche de réponses."
+        "fr": "Plongez dans un hôtel baroque mystérieux et résolvez des énigmes surréalistes en noir et blanc.",
+        "en": "A non-linear mystery adventure game full of riddles and surreal optical illusions."
       },
-      "composer": "Simogo / Daniel Olsén"
+      "composer": "Daniel Olsén"
     }
   },
   {
@@ -2106,16 +2109,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "SANABI",
     "releaseYear": 2023,
     "genre": [
+      "Platformer",
       "Action",
-      "Aventure",
-      "Indépendant"
+      "Cyberpunk",
+      "Narratif"
     ],
     "artStyle": {
-      "fr": "Pixel Art cyberpunk dynamique et néon",
-      "en": "Dynamic neon cyberpunk pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "WONDER POTION",
@@ -2130,8 +2134,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "SANABI est un jeu dystopique de plateforme et d'action, stylé et exaltant. Incarnez un ancien combattant légendaire à la retraite et utilisez votre célèbre prothèse de bras pour sauter par-dessus des falaises et des gratte-ciels, esquiver des balles et des pièges et vaincre de puissants ennemis.",
-        "en": "SANABI est un jeu dystopique de plateforme et d'action, stylé et exaltant. Incarnez un ancien combattant légendaire à la retraite et utilisez votre célèbre prothèse de bras pour sauter par-dessus des falaises et des gratte-ciels, esquiver des balles et des pièges et vaincre de puissants ennemis."
+        "fr": "Propulsez-vous à travers une mégapole cyberpunk à l'aide de votre bras-grappin bionique dévastateur.",
+        "en": "An exhilarating, stylish dystopian action-platformer. Play as a legendary retired veteran and grapple across skyscrapers."
       },
       "composer": "WONDER POTION"
     }
@@ -2141,18 +2145,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Lethal Company",
     "releaseYear": 2023,
     "genre": [
-      "Action",
-      "Aventure",
-      "Indépendant",
-      "Accès anticipé"
+      "Horreur",
+      "Co-op",
+      "Survie",
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "3D Rétro basse fidélité style cassette VHS",
-      "en": "Low-fi VHS retro 3D"
+      "fr": "3D Low-Poly / Rétro",
+      "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Première personne 3D (First-person)",
-      "en": "First-person 3D"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Zeekerss",
     "steamUrl": "https://store.steampowered.com/app/1966720/",
@@ -2166,8 +2170,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "A co-op horror about scavenging at abandoned moons to sell scrap to the Company.",
-        "en": "A co-op horror about scavenging at abandoned moons to sell scrap to the Company."
+        "fr": "Pillez des lunes industrialisées abandonnées pour remplir le quota de ferraille de la Compagnie... au péril de votre vie.",
+        "en": "A co-op horror scavenger game about scavenging at abandoned moons to sell scrap to the Company."
       },
       "composer": "Zeekerss"
     }
@@ -2177,17 +2181,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Citizen Sleeper",
     "releaseYear": 2022,
     "genre": [
-      "Aventure",
-      "Indépendant",
-      "RPG"
+      "RPG",
+      "Narratif",
+      "Sci-Fi",
+      "Cyberpunk"
     ],
     "artStyle": {
-      "fr": "Illustrations de personnages manga & UI cyberpunk épurée",
-      "en": "Manga character portraits & slick cyberpunk UI"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue statique 2D de station / Visual Novel",
-      "en": "2D Static Station Map & Visual Novel"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Jump Over The Age",
     "steamUrl": "https://store.steampowered.com/app/1578650/",
@@ -2201,8 +2206,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Une aventure dans les ruines du capitalisme interplanétaire. Incarnez un fugitif échoué sur une station anarchique aux confins d'une société interstellaire. Explorez les lieux, choisissez vos amis, fuyez votre passé et changez votre avenir avec une liberté inspirée des jeux de rôle papier.",
-        "en": "Une aventure dans les ruines du capitalisme interplanétaire. Incarnez un fugitif échoué sur une station anarchique aux confins d'une société interstellaire. Explorez les lieux, choisissez vos amis, fuyez votre passé et changez votre avenir avec une liberté inspirée des jeux de rôle papier."
+        "fr": "Incarnez une conscience humaine numérisée en fuite dans une station spatiale anarchique inspirée des jeux de rôle papier.",
+        "en": "Roleplaying in the ruins of interplanetary capitalism. Live the life of an escaped worker on a lawless station."
       },
       "composer": "Amos Roddy"
     }
@@ -2212,16 +2217,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Crypt of the NecroDancer",
     "releaseYear": 2015,
     "genre": [
+      "Rythme",
+      "Roguelike",
       "Action",
-      "Indépendant",
-      "RPG"
+      "Dungeon Crawler"
     ],
     "artStyle": {
-      "fr": "Pixel Art rétro vif et musical",
-      "en": "Lively retro musical pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "Brace Yourself Games",
@@ -2236,8 +2242,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Crypt of the NecroDancer est un jeu de rythme roguelike primé. Bouge sur la musique et bats-toi en suivant les pulsations ! Groove avec la bande-son épique de Danny Baranowsky, ou choisis des chansons de ta propre collection MP3 !",
-        "en": "Crypt of the NecroDancer est un jeu de rythme roguelike primé. Bouge sur la musique et bats-toi en suivant les pulsations ! Groove avec la bande-son épique de Danny Baranowsky, ou choisis des chansons de ta propre collection MP3 !"
+        "fr": "Bougez en rythme avec le tempo de la musique pour vaincre les monstres d'un donjon disco en perpétuel mouvement.",
+        "en": "An award-winning hardcore roguelike rhythm game. Move to the music and deliver beatdowns to the beat!"
       },
       "composer": "Danny Baranowsky"
     }
@@ -2247,17 +2253,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Don't Starve",
     "releaseYear": 2013,
     "genre": [
+      "Survie",
+      "Artisanat",
       "Aventure",
-      "Indépendant",
-      "Simulation"
+      "Dark Fantasy"
     ],
     "artStyle": {
-      "fr": "Dessin gothique au trait style gravure macabre",
-      "en": "Gothic scratchboard storybook art style"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue Isométrique 2.5D orientable",
-      "en": "2.5D Rotatable Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Klei Entertainment",
     "steamUrl": "https://store.steampowered.com/app/219740/",
@@ -2271,8 +2278,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Don’t Starve is an uncompromising wilderness survival game full of science and magic. Enter a strange and unexplored world full of strange creatures, dangers, and surprises. Gather resources to craft items and structures that match your survival style.",
-        "en": "Don’t Starve is an uncompromising wilderness survival game full of science and magic. Enter a strange and unexplored world full of strange creatures, dangers, and surprises. Gather resources to craft items and structures that match your survival style."
+        "fr": "Survivez dans une contrée sauvage hostile et ténébreuse peuplée de créatures inquiétantes sans jamais céder à la folie.",
+        "en": "An uncompromising wilderness survival game full of science and magic. Play as Wilson, an intrepid gentleman scientist."
       },
       "composer": "Vince de Giorgi"
     }
@@ -2283,15 +2290,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2022,
     "genre": [
       "Aventure",
-      "Indépendant"
+      "Exploration",
+      "Cyberpunk"
     ],
     "artStyle": {
-      "fr": "3D Réaliste immersive et néon-cyberpunk",
-      "en": "Immersive realistic neon-cyberpunk 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Troisième personne féline 3D",
-      "en": "Third-person Feline 3D"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "BlueTwelve Studio",
     "steamUrl": "https://store.steampowered.com/app/1332010/",
@@ -2305,8 +2313,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Perdu, seul et séparé de sa famille, un chat errant doit résoudre un ancien mystère pour fuir une cyber-cité tombée dans l’oubli et retourner chez lui.",
-        "en": "Perdu, seul et séparé de sa famille, un chat errant doit résoudre un ancien mystère pour fuir une cyber-cité tombée dans l’oubli et retourner chez lui."
+        "fr": "Incarnez un chat errant égaré dans une cité cybernétique oubliée habitée par des droïdes mélancoliques.",
+        "en": "Lost, alone and separated from family, a stray cat must untangle an ancient mystery to escape a long-forgotten cybercity."
       },
       "composer": "Yann van der Cruyssen"
     }
@@ -2317,18 +2325,18 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2021,
     "genre": [
       "Aventure",
-      "Indépendant",
-      "RPG"
+      "Puzzle",
+      "Cozy"
     ],
     "artStyle": {
-      "fr": "Dessin à la main noir et blanc à peindre",
-      "en": "Coloring book black and white hand-drawn"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
-    "developer": "Wishes Ultd., Greg Lobanov, Alexis Dean-Jones, Lena Raine, Madeline Berger, A Shell in the Pit",
+    "developer": "Greg Lobanov & Wishes Ultd.",
     "steamUrl": "https://store.steampowered.com/app/1123450/",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1123450/ss_2f643ac851b504a1c10e0b6f1cfdc3089707ab55.1920x1080.jpg?t=1783360001",
@@ -2340,8 +2348,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Une aventure en vue de dessus dans un monde haut en couleurs. Utilise ta peinture pour explorer, te faire des amis, résoudre des énigmes, et dessine partout ! Par les créateurs de Celeste &amp; Wandersong.",
-        "en": "Une aventure en vue de dessus dans un monde haut en couleurs. Utilise ta peinture pour explorer, te faire des amis, résoudre des énigmes, et dessine partout ! Par les créateurs de Celeste &amp; Wandersong."
+        "fr": "Maniez un pinceau magique pour colorer le monde et résoudre des énigmes dans cette touchante aventure.",
+        "en": "A top-down adventure game about a dog with a magical paintbrush who draws on everything."
       },
       "composer": "Lena Raine"
     }
@@ -2352,15 +2360,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2023,
     "genre": [
       "Action",
-      "Indépendant"
+      "Arts martiaux",
+      "Beat them all"
     ],
     "artStyle": {
-      "fr": "3D Stylisée façon peinture à l’huile et cinéma d’arts martiaux",
-      "en": "Stylized oil-painted martial arts cinematic 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Troisième personne 3D (Over-the-shoulder)",
-      "en": "Third-person 3D"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "Sloclap",
     "steamUrl": "https://store.steampowered.com/app/2138710/",
@@ -2374,8 +2383,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Sifu est un jeu de combat réaliste à la troisième personne, avec des mécaniques pointues de kung-fu et une action digne des films d'arts martiaux qui vous entraîne dans une quête de vengeance.",
-        "en": "Sifu est un jeu de combat réaliste à la troisième personne, avec des mécaniques pointues de kung-fu et une action digne des films d'arts martiaux qui vous entraîne dans une quête de vengeance."
+        "fr": "Traquez les assassins de votre famille dans une quête de vengeance où chaque défaite vous fait vieillir de plusieurs années.",
+        "en": "A realistic third-person brawler with tight Kung Fu combat mechanics and a cinematic martial arts vengeance story."
       },
       "composer": "Howie Lee"
     }
@@ -2385,17 +2394,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Jusant",
     "releaseYear": 2023,
     "genre": [
-      "Action",
       "Aventure",
-      "Indépendant"
+      "Escalade",
+      "Atmosphérique",
+      "Méditatif"
     ],
     "artStyle": {
-      "fr": "3D Stylisée lumineuse et minérale",
-      "en": "Luminous and mineral stylized 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Troisième personne 3D d’escalade",
-      "en": "Third-person Climbing 3D"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "DON'T NOD",
     "steamUrl": "https://store.steampowered.com/app/1977170/",
@@ -2409,8 +2419,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Laissez-vous emporter par l'ambiance méditative de Jusant, un jeu d'escalade d'action &amp; puzzle. Défiez les hauteurs infinies d’une tour colossale et découvrez ses mystères aux côtés de votre compagnon constitué d'eau.",
-        "en": "Laissez-vous emporter par l'ambiance méditative de Jusant, un jeu d'escalade d'action &amp; puzzle. Défiez les hauteurs infinies d’une tour colossale et découvrez ses mystères aux côtés de votre compagnon constitué d'eau."
+        "fr": "Grimpez au sommet d'une tour cyclopéenne minérale et découvrez la trace d'une civilisation disparue.",
+        "en": "Enjoy meditative vibes in Jusant, an action-puzzle climbing game. Scale an immeasurably tall tower."
       },
       "composer": "Guillaume Ferran"
     }
@@ -2420,17 +2430,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Thank Goodness You're Here!",
     "releaseYear": 2024,
     "genre": [
+      "Comédie",
       "Aventure",
-      "Occasionnel",
-      "Indépendant"
+      "Narratif"
     ],
     "artStyle": {
-      "fr": "Dessin animé britannique traditionnel fait main",
-      "en": "Traditional hand-drawn British comedy cartoon"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de dessus / latérale 2D cartoon",
-      "en": "2D Cartoon Top-down / Side hybrid"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "Coal Supper",
     "steamUrl": "https://store.steampowered.com/app/2366980/",
@@ -2444,8 +2454,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Thank Goodness You're Here! est un jeu de claqueforme comique et absurde au cœur du nord de l'Angleterre, dans l'étrange ville de Barnsworth. En tant que commercial itinérant, visitez les lieux et rencontrez ses habitants, impatients de vous confier des tâches plus loufoques les unes que les autres…",
-        "en": "Thank Goodness You're Here! est un jeu de claqueforme comique et absurde au cœur du nord de l'Angleterre, dans l'étrange ville de Barnsworth. En tant que commercial itinérant, visitez les lieux et rencontrez ses habitants, impatients de vous confier des tâches plus loufoques les unes que les autres…"
+        "fr": "Explorez une petite ville britannique absurde et rendez des services farfelus à des habitants excentriques.",
+        "en": "A comedy slapformer that unfolds over time as the players exploration and antics leave their mark on the quirky town of Barnsworth."
       },
       "composer": "Coal Supper"
     }
@@ -2455,18 +2465,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Minishoot' Adventures",
     "releaseYear": 2024,
     "genre": [
+      "Metroidvania",
       "Action",
-      "Aventure",
-      "Occasionnel",
-      "RPG"
+      "Bullet Hell",
+      "Twin-stick"
     ],
     "artStyle": {
-      "fr": "Dessin vectoriel 2D vibrant et coloré",
-      "en": "Vibrant and colorful 2D vector art"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Twin-stick / Metroidvania)",
-      "en": "2D Top-down Twin-stick"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "SoulGame Studio",
     "steamUrl": "https://store.steampowered.com/app/1634860/",
@@ -2480,10 +2490,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Minishoot' est un jeu d'aventure unique mêlant exploration libre et gameplay twin stick shooter. Combattez à travers le monde de la surface et celui des profondeurs, améliorez votre vaisseau pour venir à bout des boss de donjon et secourir vos amis !",
-        "en": "Minishoot' est un jeu d'aventure unique mêlant exploration libre et gameplay twin stick shooter. Combattez à travers le monde de la surface et celui des profondeurs, améliorez votre vaisseau pour venir à bout des boss de donjon et secourir vos amis !"
+        "fr": "Pilotez un petit vaisseau dans un monde ouvert féérique mêlant exploration Zelda-like et combats shoot'em up nerveux.",
+        "en": "Fly into a charming handcrafted world and embark on an adventure that mixes twin-stick shooter action with Zelda-style exploration."
       },
-      "composer": "SoulGame"
+      "composer": "SoulGame Studio"
     }
   },
   {
@@ -2491,17 +2501,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Hades II",
     "releaseYear": 2024,
     "genre": [
+      "Roguelike",
       "Action",
-      "Indépendant",
-      "RPG"
+      "Hack and Slash",
+      "Mythologie"
     ],
     "artStyle": {
-      "fr": "Dessin 2D isométrique mythologique peint à la main",
-      "en": "Hand-painted mythological 2D isometric art"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue Isométrique 2.5D (Isometric)",
-      "en": "2.5D Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Supergiant Games",
     "steamUrl": "https://store.steampowered.com/app/1145350/",
@@ -2515,8 +2526,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Frayez-vous un chemin vers et au-delà des Enfers et affrontez le Titan du Temps dans ce deuxième volet ensorcelant du dungeon crawler de type rogue-like multiprimé.",
-        "en": "Frayez-vous un chemin vers et au-delà des Enfers et affrontez le Titan du Temps dans ce deuxième volet ensorcelant du dungeon crawler de type rogue-like multiprimé."
+        "fr": "Incarnez Melinoë, princesse des Enfers, et utilisez la magie noire pour terrasser le Titan Chronos.",
+        "en": "Battle beyond the Underworld using dark sorcery to take on the Titan of Time in this bewitching roguelike dungeon crawler."
       },
       "composer": "Darren Korb"
     }
@@ -2526,16 +2537,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Neva",
     "releaseYear": 2024,
     "genre": [
-      "Action",
       "Aventure",
-      "Indépendant"
+      "Action",
+      "Platformer",
+      "Narratif"
     ],
     "artStyle": {
-      "fr": "Aquarelle numérique et aplats vectoriels poétiques",
-      "en": "Poetic digital watercolor & clean vector art"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Nomada Studio",
@@ -2550,8 +2562,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Découvrez le lien émouvant qui unit une jeune femme et un loup majestueux dans leur épopée palpitante à travers un monde mourant.",
-        "en": "Découvrez le lien émouvant qui unit une jeune femme et un loup majestueux dans leur épopée palpitante à travers un monde mourant."
+        "fr": "Découvrez le lien bouleversant unissant une jeune femme et un loup majestueux au fil d'un monde en décomposition.",
+        "en": "An emotionally-charged action adventure from the creators of GRIS, chronicling the bond between a woman and a majestic wolf."
       },
       "composer": "Berlinist"
     }
@@ -2561,16 +2573,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Mouthwashing",
     "releaseYear": 2024,
     "genre": [
-      "Aventure",
-      "Indépendant"
+      "Horreur",
+      "Narratif",
+      "Sci-Fi",
+      "Psychologique"
     ],
     "artStyle": {
-      "fr": "Rétro 3D low-poly PlayStation 1 / Dégradés sombres",
-      "en": "PS1 style low-poly retro 3D"
+      "fr": "3D Low-Poly / Rétro",
+      "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Première personne 3D (First-person)",
-      "en": "First-person 3D"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Wrong Organ",
     "steamUrl": "https://store.steampowered.com/app/2475490/",
@@ -2584,8 +2598,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Les cinq membres d'équipage du Tulpar se retrouvent coincés aux confins de l'espace, plongés dans un crépuscule perpétuel. Dieu les a abandonnés.",
-        "en": "Les cinq membres d'équipage du Tulpar se retrouvent coincés aux confins de l'espace, plongés dans un crépuscule perpétuel. Dieu les a abandonnés."
+        "fr": "Suivez l'agonie psychologique de cinq membres d'équipage d'un cargo spatial échoué au milieu du vide sidéral.",
+        "en": "A first-person psychological horror game following the stranded crew of a dying space freighter."
       },
       "composer": "Martin Kvale"
     }
@@ -2595,18 +2609,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Tactical Breach Wizards",
     "releaseYear": 2024,
     "genre": [
-      "Aventure",
-      "Indépendant",
-      "RPG",
-      "Stratégie"
+      "Stratégie",
+      "Tour par tour",
+      "Puzzle",
+      "Comédie"
     ],
     "artStyle": {
-      "fr": "3D Cel-shaded humoristique et bande dessinée",
-      "en": "Comic-book cel-shaded 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue Isométrique tactique (Turn-based)",
-      "en": "Tactical Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Suspicious Developments",
     "steamUrl": "https://store.steampowered.com/app/1043810/",
@@ -2620,8 +2634,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "In Tactical Breach Wizards, you lead a team of renegade wizards in kevlar through turn-based battles to unravel a modern conspiracy plot. Combine their unique spells in clever ways, or rewind time to try every crazy plan you can think of to punch a Traffic Warlock through a 4th story window.",
-        "en": "In Tactical Breach Wizards, you lead a team of renegade wizards in kevlar through turn-based battles to unravel a modern conspiracy plot. Combine their unique spells in clever ways, or rewind time to try every crazy plan you can think of to punch a Traffic Warlock through a 4th story window."
+        "fr": "Menez une équipe d'agents secrets mages en gilets pare-balles dans des missions tactiques au tour par tour hilarantes.",
+        "en": "Lead a team of renegade wizards in kevlar across puzzle-like turn-based tactical urban missions."
       },
       "composer": "Suspicious Developments"
     }
@@ -2631,16 +2645,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "1000xRESIST",
     "releaseYear": 2024,
     "genre": [
-      "Aventure",
-      "Indépendant"
+      "Narratif",
+      "Sci-Fi",
+      "Aventure"
     ],
     "artStyle": {
-      "fr": "3D Stylisée anime dystopique / Mise en scène théâtrale",
-      "en": "Dystopian cinematic anime 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Troisième personne 3D cinématographique",
-      "en": "Cinematic Third-person 3D"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "sunset visitor 斜陽過客",
     "steamUrl": "https://store.steampowered.com/app/1675830/",
@@ -2654,8 +2669,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "1000xRESIST est une aventure palpitante de science-fiction. Dans le futur, une maladie extraterrestre vous force à vivre sous terre. Vous êtes Qui-observe, au service de la MÈRE-DE-TOUTES, jusqu'au jour où vous apprenez un terrible secret qui va tout bouleverser.",
-        "en": "1000xRESIST est une aventure palpitante de science-fiction. Dans le futur, une maladie extraterrestre vous force à vivre sous terre. Vous êtes Qui-observe, au service de la MÈRE-DE-TOUTES, jusqu'au jour où vous apprenez un terrible secret qui va tout bouleverser."
+        "fr": "Revivez les mémoires séculaires de la Mère Suprême dans une aventure de science-fiction dystopique poignante.",
+        "en": "A thrilling sci-fi narrative adventure. You are an Iris, a clone sworn to serve the Allmother until a dark truth emerges."
       },
       "composer": "Anthony H. Fung"
     }
@@ -2665,17 +2680,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Arco",
     "releaseYear": 2024,
     "genre": [
+      "Stratégie",
       "Action",
-      "Indépendant",
-      "Stratégie"
+      "Western",
+      "Tactique"
     ],
     "artStyle": {
-      "fr": "Pixel Art miniature sublime et paysages panoramiques",
-      "en": "Breathtaking miniature pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue Isométrique du dessus simultanée",
-      "en": "Simultaneous Top-down Isometric"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Franek, Max Cahill, Bibiki, Fáyer",
     "steamUrl": "https://store.steampowered.com/app/2366970/",
@@ -2689,8 +2705,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Découvrez la beauté saisissante du monde d'Arco, un jeu d'action tactique unique en son genre dans lequel vos choix façonnent votre aventure. Trois récits sanguinaires et magiques, réunis par une même soif de vengeance.",
-        "en": "Découvrez la beauté saisissante du monde d'Arco, un jeu d'action tactique unique en son genre dans lequel vos choix façonnent votre aventure. Trois récits sanguinaires et magiques, réunis par une même soif de vengeance."
+        "fr": "Façonnez votre destin dans un western fantastique mésoaméricain grâce à un système de combat tactique simultané novateur.",
+        "en": "Enter the breathtaking world of Arco, a unique tactical action game where your decisions shape each story."
       },
       "composer": "José Ramón \"Fáyer\" García"
     }
@@ -2700,18 +2716,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Core Keeper",
     "releaseYear": 2024,
     "genre": [
-      "Action",
-      "Aventure",
-      "Indépendant",
-      "RPG",
-      "Simulation"
+      "Survie",
+      "Sandbox",
+      "Artisanat",
+      "Co-op"
     ],
     "artStyle": {
-      "fr": "Pixel Art lumineux avec éclairages dynamiques souterrains",
-      "en": "Vibrant underground pixel art with dynamic lighting"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "Pugstorm",
@@ -2726,8 +2741,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Explorez une caverne infinie pleine de créatures, d'objets et de ressources dans une aventure bac à sable pour 1 à 8 joueurs. Creusez, construisez, combattez, fabriquez et cultivez pour découvrir le mystère du Cœur.",
-        "en": "Explorez une caverne infinie pleine de créatures, d'objets et de ressources dans une aventure bac à sable pour 1 à 8 joueurs. Creusez, construisez, combattez, fabriquez et cultivez pour découvrir le mystère du Cœur."
+        "fr": "Explorez une caverne souterraine infinie, déterrez des reliques et affrontez des bêtes colossales en solo ou en coopération.",
+        "en": "Explore an endless subterranean cavern of creatures, relics and resources in a mining sandbox adventure."
       },
       "composer": "Jonathan Geer"
     }
@@ -2737,17 +2752,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Manor Lords",
     "releaseYear": 2024,
     "genre": [
-      "Simulation",
+      "Gestion",
       "Stratégie",
-      "Accès anticipé"
+      "Médiéval",
+      "Simulation"
     ],
     "artStyle": {
-      "fr": "3D Réaliste historique médiévale ultra-détaillée",
-      "en": "Hyper-detailed realistic medieval 3D"
+      "fr": "3D Réaliste",
+      "en": "Realistic 3D"
     },
     "camera": {
-      "fr": "Vue stratégique aérienne & troisième personne (Bird-eye / Third-person)",
-      "en": "Strategic Bird-eye / Third-person"
+      "fr": "Troisième personne",
+      "en": "Third-Person"
     },
     "developer": "Slavic Magic",
     "steamUrl": "https://store.steampowered.com/app/1363080/",
@@ -2761,10 +2777,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Manor Lords est un jeu de stratégie médiéval où vous construisez des villes, menez des combats tactiques et réalisez des simulations économiques et sociales complexes. Gérez vos terres comme un seigneur : au fil des saisons et de la météo, les villes se développent et déclinent.",
-        "en": "Manor Lords est un jeu de stratégie médiéval où vous construisez des villes, menez des combats tactiques et réalisez des simulations économiques et sociales complexes. Gérez vos terres comme un seigneur : au fil des saisons et de la météo, les villes se développent et déclinent."
+        "fr": "Bâtissez des villages médiévaux organiques et menez vos troupes dans des batailles tactiques à grande échelle.",
+        "en": "A medieval strategy game featuring in-depth city building, large-scale tactical battles, and complex economic simulation."
       },
-      "composer": "Isaac Noss & T中间"
+      "composer": "Christian Fernando Perucchi & Théophile Loaec"
     }
   },
   {
@@ -2772,16 +2788,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Fields of Mistria",
     "releaseYear": 2024,
     "genre": [
-      "Indépendant",
+      "Simulation",
       "RPG",
-      "Simulation"
+      "Farming",
+      "Cozy"
     ],
     "artStyle": {
-      "fr": "Pixel Art nostalgique anime des années 90 (Sailor Moon)",
-      "en": "Nostalgic 90s anime-inspired pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue du dessus 2D (Top-down)",
+      "fr": "Vue du dessus 2D",
       "en": "2D Top-down"
     },
     "developer": "NPC Studio",
@@ -2796,10 +2813,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Commencez une nouvelle vie ! Construisez la ferme de vos rêves tout en découvrant un monde aux innombrables possibilités. Magie, idylles et aventure vous attendent dans ce RPG de simulation de vie et de ferme au charme plein de nostalgie !",
-        "en": "Commencez une nouvelle vie ! Construisez la ferme de vos rêves tout en découvrant un monde aux innombrables possibilités. Magie, idylles et aventure vous attendent dans ce RPG de simulation de vie et de ferme au charme plein de nostalgie !"
+        "fr": "Restaurez une charmante bourgade pastorale inspirée des animes des années 90 à travers l'agriculture, la magie et la romance.",
+        "en": "Build the farm of your dreams as you restore a pastoral village to its former glory in this 90s-anime-inspired RPG."
       },
-      "composer": "Toby Fox & Friends"
+      "composer": "Joseph \"Tettix\" Garber"
     }
   },
   {
@@ -2807,19 +2824,20 @@ export const INDIE_GAMES: Game[] = [
     "title": "Cryptmaster",
     "releaseYear": 2024,
     "genre": [
-      "Aventure",
-      "Indépendant",
-      "RPG"
+      "Dungeon Crawler",
+      "RPG",
+      "Puzzle",
+      "Comédie"
     ],
     "artStyle": {
-      "fr": "Monochrome crayonné noir et blanc rétro dungeon crawler",
-      "en": "Monochrome sketchbook dungeon crawler aesthetic"
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
     },
     "camera": {
-      "fr": "Première personne 3D case par case (Grid-based Dungeon Crawler)",
-      "en": "First-person 3D grid dungeon crawler"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
-    "developer": "Paul Hart, Lee Williams, Akupara Games",
+    "developer": "Paul Hart & Lee Williams",
     "steamUrl": "https://store.steampowered.com/app/1885110/",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1885110/ss_89523b1b24301aaf8a886f2fa57db399f4b98c12.1920x1080.jpg?t=1786047657",
@@ -2831,8 +2849,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "EXPRIMEZ-VOUS dans ce jeu d'exploration de donjon insolite où les mots ont le pouvoir. Comblez les blancs à l'oral ou à l'écrit pour révéler des facultés perdues et résoudre des quêtes et des énigmes déconcertantes. Réussirez-vous à conquérir la crypte et percer le mystère de CRYPTMASTER ?",
-        "en": "EXPRIMEZ-VOUS dans ce jeu d'exploration de donjon insolite où les mots ont le pouvoir. Comblez les blancs à l'oral ou à l'écrit pour révéler des facultés perdues et résoudre des quêtes et des énigmes déconcertantes. Réussirez-vous à conquérir la crypte et percer le mystère de CRYPTMASTER ?"
+        "fr": "Dictez et tapez des mots magiques pour lancer des sorts et résoudre des énigmes dans un donjon ténébreux hilarant.",
+        "en": "SAY ANYTHING in this bizarre dungeon adventure where words control everything."
       },
       "composer": "Paul Hart"
     }
@@ -2842,16 +2860,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "MULLET MADJACK",
     "releaseYear": 2024,
     "genre": [
+      "Fast-FPS",
       "Action",
-      "Indépendant"
+      "Cyberpunk",
+      "Rétro"
     ],
     "artStyle": {
-      "fr": "Anime rétro cyberpunk VHS des années 80 / 90",
-      "en": "80s/90s retro cyberpunk anime aesthetic"
+      "fr": "3D Low-Poly / Rétro",
+      "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Première personne 3D Boomer Shooter survolté",
-      "en": "First-person 3D Boomer Shooter"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "HAMMER95",
     "steamUrl": "https://store.steampowered.com/app/2111190/",
@@ -2865,8 +2885,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "MULLET MADJACK est un FPS solo frénétique qui vous propulse directement dans un ANIME AUTHENTIQUE. Renforcez votre personnage et atteignez le dernier étage ; Battez votre meilleur temps ou réessayez.",
-        "en": "MULLET MADJACK est un FPS solo frénétique qui vous propulse directement dans un ANIME AUTHENTIQUE. Renforcez votre personnage et atteignez le dernier étage ; Battez votre meilleur temps ou réessayez."
+        "fr": "Un FPS ultra-nerveux inspiré des animes des années 90 où vous devez tuer un ennemi toutes les 10 secondes pour survivre.",
+        "en": "A fast-paced single-player FPS that puts you directly inside a classic 90s cyberpunk anime."
       },
       "composer": "HAMMER95"
     }
@@ -2876,16 +2896,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Anger Foot",
     "releaseYear": 2024,
     "genre": [
+      "Fast-FPS",
       "Action",
-      "Indépendant"
+      "Comédie"
     ],
     "artStyle": {
-      "fr": "3D Cartoon déjantée, fluo et hyper-saturée",
-      "en": "Hyper-saturated neon cartoon 3D"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Première personne 3D fast-FPS",
-      "en": "First-person 3D fast-FPS"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Free Lives",
     "steamUrl": "https://store.steampowered.com/app/1978590/",
@@ -2899,8 +2920,8 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Anger Foot est un FPS ultra-rapide dans lequel les seules choses plus dures que vos pieds sont les basses qui tabassent.",
-        "en": "Anger Foot est un FPS ultra-rapide dans lequel les seules choses plus dures que vos pieds sont les basses qui tabassent."
+        "fr": "Défouraillez et fracassez les portes à coups de pied dans un shoot'em up frénétique sur fond de basses survoltées.",
+        "en": "A lightning-fast hard bass blast of kicking down doors and kicking ass in the fever-dream city of Shit City."
       },
       "composer": "Free Lives Sound Team"
     }
@@ -2910,16 +2931,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "ANTONBLAST",
     "releaseYear": 2024,
     "genre": [
+      "Platformer",
       "Action",
-      "Aventure",
-      "Indépendant"
+      "Rétro",
+      "Destruction"
     ],
     "artStyle": {
-      "fr": "Pixel Art cartoonesque frénétique style Game Boy Advance / Wario Land",
-      "en": "Frenetic GBA/Wario Land cartoon pixel art"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D (Side-scroller)",
+      "fr": "Vue de côté 2D",
       "en": "2D Side-scroller"
     },
     "developer": "Summitsphere",
@@ -2934,15 +2956,15 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "ANTONBLAST is a fast-paced explosive action platformer that's all about destruction. Play as the enraged Dynamite Anton (or his cranked-out coworker Annie) and use your Mighty F’n Hammer to demolish bizarre worlds, tussle with screen-filling bosses, and steal your Spirits back from Satan!",
-        "en": "ANTONBLAST is a fast-paced explosive action platformer that's all about destruction. Play as the enraged Dynamite Anton (or his cranked-out coworker Annie) and use your Mighty F’n Hammer to demolish bizarre worlds, tussle with screen-filling bosses, and steal your Spirits back from Satan!"
+        "fr": "Démolissez des mondes survoltés armé de votre marteau géant pour récupérer vos esprits volés par Satan !",
+        "en": "An explosive action platformer all about destruction. Demolish bizarre worlds and steal your Spirits back from Satan!"
       },
       "composer": "Tony Grayson"
     }
   }
 ];
 
-// Helper deterministe pour obtenir le jeu du jour basé sur une graine temporelle "YYYY-MM-DD"
+// Helper déterministe pour obtenir le jeu du jour basé sur une graine temporelle "YYYY-MM-DD"
 export function getDailyGame(dateString: string, offset = 0): Game {
   let hash = 0;
   for (let i = 0; i < dateString.length; i++) {

@@ -15,6 +15,7 @@ import {
   Award,
   Trophy,
   Puzzle,
+  Swords,
   Lock,
   CheckCircle2,
 } from 'lucide-react';
@@ -50,6 +51,8 @@ const renderIcon = (iconName: string, isUnlocked: boolean) => {
       return <Trophy className={className} />;
     case 'Puzzle':
       return <Puzzle className={className} />;
+    case 'Swords':
+      return <Swords className={className} />;
     default:
       return <Sparkles className={className} />;
   }

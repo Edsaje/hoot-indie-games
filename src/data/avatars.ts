@@ -1,0 +1,68 @@
+import type { IndieAvatar } from '../types/user';
+
+export const INDIE_AVATARS: IndieAvatar[] = [
+  {
+    id: 'owl',
+    name: 'Hootie',
+    game: 'Hoot Mascot',
+    emoji: '🦉',
+    bgGradient: 'from-amber-600 to-amber-900',
+    quote: 'Le gardien des perles indépendantes.',
+  },
+  {
+    id: 'knight',
+    name: 'Le Chevalier',
+    game: 'Hollow Knight',
+    emoji: '🗡️',
+    bgGradient: 'from-slate-600 to-indigo-950',
+    quote: 'Aucune pensée pour briser sa volonté.',
+  },
+  {
+    id: 'madeline',
+    name: 'Madeline',
+    game: 'Celeste',
+    emoji: '🍓',
+    bgGradient: 'from-rose-600 to-purple-900',
+    quote: 'Respire profondément, tu peux gravir cette montagne.',
+  },
+  {
+    id: 'zagreus',
+    name: 'Zagreus',
+    game: 'Hades',
+    emoji: '🔥',
+    bgGradient: 'from-red-600 to-amber-950',
+    quote: 'Au nom de l’Hadès !',
+  },
+  {
+    id: 'lamb',
+    name: 'L’Agneau',
+    game: 'Cult of the Lamb',
+    emoji: '👑',
+    bgGradient: 'from-red-800 to-slate-950',
+    quote: 'Loué soit Celui qui attend.',
+  },
+  {
+    id: 'joker',
+    name: 'Jimbo le Joker',
+    game: 'Balatro',
+    emoji: '🃏',
+    bgGradient: 'from-blue-600 to-indigo-950',
+    quote: '+4 Mult pour chaque main jouée.',
+  },
+  {
+    id: 'cat',
+    name: 'Le Petit Félin',
+    game: 'Stray',
+    emoji: '🐱',
+    bgGradient: 'from-emerald-700 to-slate-900',
+    quote: 'Miaou dans la mégapole de néon.',
+  },
+  {
+    id: 'goose',
+    name: 'L’Oie Espiègle',
+    game: 'Untitled Goose Game',
+    emoji: '🪿',
+    bgGradient: 'from-amber-500 to-emerald-900',
+    quote: 'La paix n’a jamais été une option.',
+  },
+];

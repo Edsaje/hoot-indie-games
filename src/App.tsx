@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navbar } from './components/common/Navbar';
 import type { NavTab } from './components/common/Navbar';
@@ -7,14 +7,17 @@ import { StatsModal } from './components/common/StatsModal';
 import { OwlEasterEggModal } from './components/common/OwlEasterEggModal';
 import { AchievementsModal } from './components/common/AchievementsModal';
 import { CalendarArchiveModal } from './components/common/CalendarArchiveModal';
+import { ProfileModal } from './components/common/ProfileModal';
 import { FirefliesBackground } from './components/common/FirefliesBackground';
 import { ScreenleGame } from './components/screenle/ScreenleGame';
 import { IndledleGame } from './components/indledle/IndledleGame';
 import { LinkleGame } from './components/linkle/LinkleGame';
+import { VersusArena } from './components/versus/VersusArena';
 import { ToolboxHub } from './components/toolbox/ToolboxHub';
 import { TheRoostHub } from './components/roost/TheRoostHub';
 import { GameStatsProvider } from './context/GameStatsProvider';
 import { AchievementsProvider } from './context/AchievementsProvider';
+import { UserAccountProvider } from './context/UserAccountProvider';
 import { Calendar, RefreshCw, Archive } from 'lucide-react';
 import { soundFx } from './utils/audio';
 
@@ -28,12 +31,29 @@ const getTodayDateString = (): string => {
 
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [currentTab, setCurrentTab] = useState<NavTab>('screenle');
+  const [currentTab, setCurrentTab] = useState<NavTab>(() => {
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#versus')) {
+      return 'versus';
+    }
+    return 'screenle';
+  });
   const [currentDate, setCurrentDate] = useState<string>(getTodayDateString());
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
   const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
+  const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isEasterEggOpen, setIsEasterEggOpen] = useState<boolean>(false);
+
+  // Hash listener pour deep linking direct (#versus, #linkle)
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash.startsWith('#versus')) {
+        setCurrentTab('versus');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   const todayStr = getTodayDateString();
   const isArchiveMode = currentDate !== todayStr;
@@ -51,6 +71,7 @@ export const AppContent: React.FC = () => {
         onOpenStats={() => setIsStatsOpen(true)}
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         onOpenCalendar={() => setIsCalendarOpen(true)}
+        onOpenProfile={() => setIsProfileOpen(true)}
         onEasterEggTrigger={() => setIsEasterEggOpen(true)}
         currentDate={currentDate}
       />
@@ -100,6 +121,7 @@ export const AppContent: React.FC = () => {
         {currentTab === 'screenle' && <ScreenleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'indledle' && <IndledleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'linkle' && <LinkleGame key={currentDate} currentDate={currentDate} />}
+        {currentTab === 'versus' && <VersusArena />}
         {currentTab === 'toolbox' && <ToolboxHub />}
         {currentTab === 'roost' && <TheRoostHub />}
       </main>
@@ -127,6 +149,11 @@ export const AppContent: React.FC = () => {
         onSelectDate={(newDate) => setCurrentDate(newDate)}
       />
 
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+      />
+
       <OwlEasterEggModal
         isOpen={isEasterEggOpen}
         onClose={() => setIsEasterEggOpen(false)}
@@ -145,10 +172,12 @@ export const AppContent: React.FC = () => {
 
 export default function App() {
   return (
-    <GameStatsProvider>
-      <AchievementsProvider>
-        <AppContent />
-      </AchievementsProvider>
-    </GameStatsProvider>
+    <UserAccountProvider>
+      <GameStatsProvider>
+        <AchievementsProvider>
+          <AppContent />
+        </AchievementsProvider>
+      </GameStatsProvider>
+    </UserAccountProvider>
   );
 }
