@@ -68,6 +68,10 @@
       - Les mini-jeux quotidiens (Screenle, Indledle, Linkle, Profille) et les sprints Time Attack.
 24. **Amélioration Continue de Track.php :**
     - Enrichir notre API d'analytics souveraine [`public/api/track.php`](file:///public/api/track.php) et son dashboard d'administration : statistiques détaillées de rétention des séries (streaks), temps moyen passé par jeu, répartition des victoires/défaites, détection d'erreurs en production, optimisation des performances de stockage JSON et exports CSV/JSON.
+25. **Amélioration Continue de la Version Mobile du Site (Règle Mobile-First Invariable) :**
+    - Conception et optimisation de l'intégralité des interfaces, modales, grilles et jeux d'abord pour smartphone (360px - 430px).
+    - Élimination absolue de tout dépassement horizontal (`overflow-x: hidden`, marges et largeurs contraintes sans scroll latéral).
+    - Cibles tactiles d'au moins 44x44px pour un confort de jeu optimal au pouce et fluidité 60 FPS sans à-coups.
 
 ---
 
@@ -325,6 +329,12 @@
     - Optimisation de la gestion de concurrence et du verrouillage sur `stats.json` pour garantir une écriture fluide sous fort trafic.
     - Alertes automatiques en cas d'anomalies de requêtes ou tentatives de bruteforce sur l'espace d'administration.
     - Fonctions d'export direct des données analytiques en formats CSV et JSON.
+- [ ] **Amélioration Continue de la Version Mobile du Site (Mobile-First UX)** :
+  - Audit d'ergonomie et de réactivité sur l'ensemble des formats mobiles (360px à 430px : iPhone, Android, petits écrans).
+  - Optimisation des espacements et paddings pour maximiser la zone de jeu sans scroll intempestif.
+  - Cibles tactiles confortables au pouce (au moins 44x44px) sur tous les boutons d'action, filtres et claviers virtuels.
+  - Contrôle strict du zéro débordement horizontal sur l'ensemble des onglets (*Pépites*, *Mini-jeux*, *Arcade*, *Boîte à Outils*, *Le Perchoir*).
+  - Modales et dialogues plein écran adaptatifs (`max-h-[92vh] overflow-y-auto`) avec fermeture aisée à une main.
 
 ---
 

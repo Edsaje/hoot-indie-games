@@ -26,6 +26,7 @@ Hoot Indie Games est le sanctuaire web bilingue officiel dédié aux jeux vidéo
 - **Pas d'arrondis mous génériques** : Éviter les pilules géantes `rounded-full` sur les cartes de contenu. Privilégier des angles géométriques nets, précis et travaillés (`rounded-xl` à `rounded-2xl` max).
 - **Surfaces denses et lisibles** : Proscrire le faux glassmorphism laiteux ou illisible. Les contrastes doivent être élevés, les typographies nettes et les bordures ciselées au pixel près.
 - **Pas de surcharge d'emojis automatiques** : Laisser respirer l'interface, les icônes vectorielles SVG (Lucide) et les jaquettes authentiques.
+- **Conception Mobile-First Obligatoire** : L'ensemble du site doit impérativement être pensé et conçu pour smartphone d'abord (viewport 360px - 430px). Zéro débordement horizontal, cibles tactiles confortables au pouce (min 44x44px), modales plafonnées (`max-h-[92vh] overflow-y-auto`) et suppression des gestes parasites (`touch-none`, `select-none`).
 - **Easter Egg interactif** : L'icône de hibou dans la barre de navigation réagit au survol prolongé (>750ms) ou au double-clic : ses yeux s'allument en ambre vibrant avec pulsation continue (`owl-eye-pulsing`), un hululement Web Audio retentit et ouvre le modal secret du hibou.
 
 ---
@@ -268,5 +269,23 @@ Pour prévenir toute fausse déduction ou frustration dans Indledle :
 ## 13. Feuille de Route & Todolist Active
 
 Consulter impérativement le fichier [`TODOLIST.md`](file:///TODOLIST.md) à la racine du projet pour prendre connaissance des tâches en cours, décisions de l'utilisateur (renommage des modes, suggestion Steam, véritable multijoueur 1v1, onglet Arcade dédié, réhabilitation du Perchoir) et priorités de développement.
+
+---
+
+## 14. Règle Invariable : Conception Mobile-First & Ergonomie Smartphone
+
+1. **Priorité Smartphone Inconditionnelle** :
+   - Chaque nouvel écran, fonctionnalité, modale ou jeu doit être prototypé, implémenté et testé **d'abord sur smartphone (360px - 430px)** avant toute adaptation pour grands écrans.
+2. **Zéro Débordement Horizontal (No Horizontal Overflow)** :
+   - Interdiction de tout élément débordant (`max-w-full`, contrôle rigoureux des flexbox, des textes longs et des grilles).
+   - Les en-têtes et barres de navigation doivent rester compacts sans masquer l'accès à la connexion ni au profil.
+3. **Ergonomie Tactile & Cibles Confortables** :
+   - Cibles de clic/tap d'au moins 44x44px pour une manipulation aisée au pouce.
+   - Espacements adaptés pour éliminer les taps accidentels.
+4. **Contrôle Tactile des Jeux & Élimination de la Latence** :
+   - Règle `touch-none` et `select-none` sur les canvas de jeux et les manettes virtuelles.
+   - Prise en charge native du swipe, du glissement 1:1 et des touches virtuelles sans délai de 300ms.
+5. **Modales Plein-Écran & Défilement Interne** :
+   - Plafond `max-h-[92vh] overflow-y-auto` avec bouton de fermeture accessible immédiatement pour les pouces.
 
 
