@@ -153,8 +153,9 @@
   - Création de la bannière OpenGraph officielle en formats PNG raster et SVG vectoriel ([`public/og-banner.png`](file:///public/og-banner.png) & [`public/og-banner.svg`](file:///public/og-banner.svg), 1200x630) optimisée pour Discord, Twitter/X, LinkedIn, Facebook et WhatsApp.
   - Métadonnées complètes OpenGraph (`og:site_name`, `og:image`, `og:type`, `og:locale`, `og:url`) et Twitter Card (`summary_large_image`).
 - [x] **Données Structurées & Accessibilité Spiders** :
-  - Intégration du schéma JSON-LD Schema.org (`WebApplication`, `Organization`, `BreadcrumbList`) dans [`index.html`](file:///index.html).
-  - Contenu fallback `<noscript>` pour les moteurs de recherche et crawlers sans exécution JavaScript.
+  - Intégration du schéma JSON-LD Schema.org étendu : `WebApplication`, `Organization`, `BreadcrumbList`, `FAQPage` et `ItemList` contenant l'intégralité des 94 jeux indés sous format `VideoGame`.
+  - Script d'automatisation [`scripts/generateSeoIndex.ts`](file:///scripts/generateSeoIndex.ts) branché sur le cycle `npm run prebuild` : injecte automatiquement dans [`index.html`](file:///index.html) un balisage HTML sémantique complet (titres H1/H2/H3, catégories, fiches de jeux, studios, tags, liens Steam et FAQ) pré-rendu pour Googlebot et Bingbot.
+  - Optimisation serveur dans [`public/.htaccess`](file:///public/.htaccess) : redirection stricte HTTPS 301, compression Gzip/Deflate (`mod_deflate`) pour booster les Core Web Vitals Google et mise en cache longue durée des SVG et images.
   - Titres de pages dynamiques (`document.title`) et synchronisation de l'URL hash dans [`src/App.tsx`](file:///src/App.tsx) selon l'onglet actif et la langue.
 
 ---
