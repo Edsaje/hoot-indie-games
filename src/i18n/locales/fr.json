@@ -46,7 +46,10 @@
     "played": "Parties",
     "congratulations": "Félicitations !",
     "gameOver": "Partie terminée",
-    "theSecretGameWas": "Le jeu secret était :"
+    "theSecretGameWas": "Le jeu secret était :",
+    "streakBreakYesterday": "Fin de série : votre flamme s'est éteinte car le défi d'hier n'a pas été joué.",
+    "streakRescueAction": "⚡ Rattraper le jeu d'hier",
+    "streakRescuedSuccess": "🔥 Flamme préservée ! Défi d'hier réussi, votre série continue !"
   },
   "screenle": {
     "title": "Screenle",

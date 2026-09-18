@@ -25,16 +25,9 @@ import { GameStatsProvider } from './context/GameStatsProvider';
 import { AchievementsProvider } from './context/AchievementsProvider';
 import { UserAccountProvider } from './context/UserAccountProvider';
 import { SteamCatalogProvider } from './context/SteamCatalogProvider';
-import { Calendar, RefreshCw, Archive } from 'lucide-react';
+import { Calendar, RefreshCw, Archive, Flame } from 'lucide-react';
 import { soundFx } from './utils/audio';
-
-const getTodayDateString = (): string => {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+import { getTodayDateString, getYesterdayDateString, isDatePlayable } from './utils/streakManager';
 
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -162,6 +155,16 @@ export const AppContent: React.FC = () => {
   }, [currentTab]);
 
   const todayStr = getTodayDateString();
+  const yesterdayStr = getYesterdayDateString(todayStr);
+
+  // Assurer que la date sélectionnée reste jouable (aujourd'hui ou hier), sinon revenir à aujourd'hui
+  useEffect(() => {
+    if (!isDatePlayable(currentDate, todayStr)) {
+      setCurrentDate(todayStr);
+    }
+  }, [currentDate, todayStr]);
+
+  const isYesterdayMode = currentDate === yesterdayStr;
   const isArchiveMode = currentDate !== todayStr;
   const currentLang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
@@ -200,11 +203,16 @@ export const AppContent: React.FC = () => {
               <Archive className="w-3 h-3 text-slate-500 ml-1" />
             </button>
 
-            {isArchiveMode && (
+            {isYesterdayMode ? (
+              <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-bold uppercase tracking-wider animate-pulse">
+                <Flame className="w-3 h-3 text-amber-400 fill-amber-400" />
+                {currentLang === 'fr' ? 'Défi d’hier (Veille) • Flamme préservable' : 'Yesterday • Streak Rescue'}
+              </span>
+            ) : isArchiveMode ? (
               <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-bold uppercase tracking-wider">
                 {currentLang === 'fr' ? 'Mode Archive' : 'Archive Mode'}
               </span>
-            )}
+            ) : null}
           </div>
 
           {isArchiveMode && (
@@ -213,7 +221,7 @@ export const AppContent: React.FC = () => {
                 soundFx.playClick();
                 setCurrentDate(todayStr);
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 rounded-lg font-bold transition"
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 rounded-lg font-bold transition cursor-pointer"
               title="Revenir au jour courant"
             >
               <RefreshCw className="w-3 h-3" />
@@ -232,9 +240,27 @@ export const AppContent: React.FC = () => {
             onOpenArcade={handleOpenArcade}
           />
         )}
-        {currentTab === 'screenle' && <ScreenleGame key={currentDate} currentDate={currentDate} />}
-        {currentTab === 'indledle' && <IndledleGame key={currentDate} currentDate={currentDate} />}
-        {currentTab === 'linkle' && <LinkleGame key={currentDate} currentDate={currentDate} />}
+        {currentTab === 'screenle' && (
+          <ScreenleGame
+            key={currentDate}
+            currentDate={currentDate}
+            onSelectDate={(newDate) => setCurrentDate(newDate)}
+          />
+        )}
+        {currentTab === 'indledle' && (
+          <IndledleGame
+            key={currentDate}
+            currentDate={currentDate}
+            onSelectDate={(newDate) => setCurrentDate(newDate)}
+          />
+        )}
+        {currentTab === 'linkle' && (
+          <LinkleGame
+            key={currentDate}
+            currentDate={currentDate}
+            onSelectDate={(newDate) => setCurrentDate(newDate)}
+          />
+        )}
         {currentTab === 'versus' && <VersusArena />}
         {currentTab === 'arcade' && <ArcadeHallView onOpenGame={handleOpenArcade} />}
         {currentTab === 'timeattack' && <TimeAttackHub initialMode={timeAttackInitialMode} />}
@@ -263,7 +289,7 @@ export const AppContent: React.FC = () => {
         onClose={() => setIsCalendarOpen(false)}
         currentDate={currentDate}
         onSelectDate={(newDate) => {
-          if (newDate <= todayStr) {
+          if (isDatePlayable(newDate, todayStr)) {
             setCurrentDate(newDate);
           }
         }}

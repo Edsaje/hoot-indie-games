@@ -23,12 +23,14 @@ import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { downloadShareCard, type ShareCardData } from '../../utils/generateShareCard';
 import { ShareResultModal } from '../common/ShareResultModal';
+import { StreakNoticeBanner } from '../common/StreakNoticeBanner';
 import { CustomLinkleBuilder } from './CustomLinkleBuilder';
 import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { telemetry } from '../../services/telemetry';
 
 interface LinkleGameProps {
   currentDate: string;
+  onSelectDate?: (date: string) => void;
 }
 
 interface TileItem {
@@ -96,7 +98,7 @@ const decodePuzzleFromHash = (): DailyConnectionsPuzzle | null => {
   return null;
 };
 
-export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
+export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDate }) => {
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
   const { unlockAchievement } = useAchievements();
@@ -712,6 +714,14 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
           <p className="text-sm text-slate-300 mb-6">
             {isWon ? t('linkle.wonText') : t('linkle.lostText')}
           </p>
+
+          {/* Streak preservation / broken notice banner */}
+          <StreakNoticeBanner
+            mode="linkle"
+            currentDate={currentDate}
+            isWon={isWon}
+            onSelectDate={onSelectDate}
+          />
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button

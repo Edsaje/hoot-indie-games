@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Calendar, ChevronLeft, ChevronRight, X, Sparkles, Flame, Lock } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, X, Sparkles, Flame, Lock, Zap } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import {
+  getTodayDateString,
+  getYesterdayDateString,
+  isDateFuture,
+  isDatePastExpired,
+  getChallengeStatusForDate,
+} from '../../utils/streakManager';
 
 interface CalendarArchiveModalProps {
   isOpen: boolean;
@@ -9,35 +16,6 @@ interface CalendarArchiveModalProps {
   currentDate: string;
   onSelectDate: (date: string) => void;
 }
-
-type DayStatus = 'won' | 'lost' | 'unplayed';
-
-interface DateChallengeStatus {
-  screenle: DayStatus;
-  indledle: DayStatus;
-  linkle: DayStatus;
-}
-
-const getChallengeStatusForDate = (dateStr: string): DateChallengeStatus => {
-  const getStatus = (key: string): DayStatus => {
-    try {
-      const saved = localStorage.getItem(key);
-      if (!saved) return 'unplayed';
-      const parsed = JSON.parse(saved);
-      if (parsed.isWon) return 'won';
-      if (parsed.isCompleted) return 'lost';
-      return 'unplayed';
-    } catch {
-      return 'unplayed';
-    }
-  };
-
-  return {
-    screenle: getStatus(`screenle_state_${dateStr}`),
-    indledle: getStatus(`indledle_state_${dateStr}`),
-    linkle: getStatus(`linkle_state_${dateStr}`),
-  };
-};
 
 export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
   isOpen,
@@ -48,25 +26,27 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
-  // State for browsing months
+  const todayStr = getTodayDateString();
+  const yesterdayStr = getYesterdayDateString(todayStr);
+
+  const [todayYear, todayMonth] = todayStr.split('-').map(Number); // 1-indexed month
+  const [yesterdayYear, yesterdayMonth] = yesterdayStr.split('-').map(Number); // 1-indexed month
+
+  // State for browsing months (viewMonth is 0-indexed)
   const [viewYear, setViewYear] = useState(() => parseInt(currentDate.split('-')[0], 10));
-  const [viewMonth, setViewMonth] = useState(() => parseInt(currentDate.split('-')[1], 10) - 1); // 0-indexed
+  const [viewMonth, setViewMonth] = useState(() => parseInt(currentDate.split('-')[1], 10) - 1);
 
   if (!isOpen) return null;
 
-  const today = new Date();
-  const todayYear = today.getFullYear();
-  const todayMonth = today.getMonth(); // 0-indexed
-  const todayStr = (() => {
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  })();
+  // Month boundary checks
+  const isCurrentOrFutureMonth =
+    viewYear > todayYear || (viewYear === todayYear && viewMonth >= todayMonth - 1);
 
-  const isCurrentOrFutureMonth = viewYear > todayYear || (viewYear === todayYear && viewMonth >= todayMonth);
+  const isPastMonthLocked =
+    viewYear < yesterdayYear || (viewYear === yesterdayYear && viewMonth < yesterdayMonth - 1);
 
   const prevMonth = () => {
+    if (isPastMonthLocked) return;
     soundFx.playClick();
     if (viewMonth === 0) {
       setViewYear((y) => y - 1);
@@ -105,13 +85,11 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
 
   // Generate calendar days
   const firstDayOfMonth = new Date(viewYear, viewMonth, 1).getDay();
-  // Adjust so Monday is 0, Sunday is 6
   const startDay = (firstDayOfMonth + 6) % 7;
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
   const days: { dateStr: string; dayNum: number; isCurrentMonth: boolean }[] = [];
 
-  // Padding days for start
   for (let i = 0; i < startDay; i++) {
     days.push({ dateStr: '', dayNum: 0, isCurrentMonth: false });
   }
@@ -139,12 +117,13 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
             </div>
             <div>
               <h2 id="calendar-archive-title" className="text-lg font-black text-white flex items-center gap-2">
-                {currentLang === 'fr' ? 'Archives Quotidiennes' : 'Daily Archives'}
+                {currentLang === 'fr' ? 'Calendrier & Séries' : 'Calendar & Streaks'}
+                <Flame className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />
               </h2>
               <p className="text-xs text-slate-400">
                 {currentLang === 'fr'
-                  ? 'Rejouez les défis des jours précédents à tout moment.'
-                  : 'Replay past daily puzzles whenever you wish.'}
+                  ? 'Faites le jeu du jour ou celui de la veille pour préserver votre flamme de série.'
+                  : "Play today's puzzle or catch up on yesterday's to preserve your streak flame."}
               </p>
             </div>
           </div>
@@ -153,7 +132,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               soundFx.playClick();
               onClose();
             }}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -163,7 +142,13 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
         <div className="flex items-center justify-between py-4">
           <button
             onClick={prevMonth}
-            className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 transition"
+            disabled={isPastMonthLocked}
+            title={isPastMonthLocked ? (currentLang === 'fr' ? 'Mois antérieurs expirés' : 'Past months expired') : undefined}
+            className={`p-2 rounded-xl border transition ${
+              isPastMonthLocked
+                ? 'opacity-30 cursor-not-allowed bg-[#131a29]/40 border-slate-800 text-slate-600'
+                : 'bg-[#131a29] border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 cursor-pointer'
+            }`}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -198,8 +183,8 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               return <div key={`empty-${idx}`} className="h-14 rounded-lg bg-transparent" />;
             }
 
-            const isFuture = item.dateStr > todayStr;
-            if (isFuture) {
+            // Case 1: Future date (locked)
+            if (isDateFuture(item.dateStr, todayStr)) {
               return (
                 <div
                   key={item.dateStr}
@@ -219,10 +204,63 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               );
             }
 
+            // Case 2: Expired past date (> 1 day ago) (locked)
+            if (isDatePastExpired(item.dateStr, todayStr)) {
+              const pastStatus = getChallengeStatusForDate(item.dateStr);
+              return (
+                <div
+                  key={item.dateStr}
+                  title={
+                    currentLang === 'fr'
+                      ? `Défi du ${item.dateStr} expiré (seuls aujourd'hui et hier sont jouables pour préserver sa flamme)`
+                      : `Challenge from ${item.dateStr} expired (only today and yesterday are playable to preserve streaks)`
+                  }
+                  className="h-14 p-1 rounded-xl border border-slate-800/30 bg-[#090d16]/60 text-slate-600 flex flex-col items-center justify-between text-xs select-none cursor-not-allowed opacity-45"
+                >
+                  <div className="w-full flex items-center justify-between px-1">
+                    <span className="text-[11px] font-mono text-slate-500">{item.dayNum}</span>
+                    <Lock className="w-2.5 h-2.5 text-slate-600" />
+                  </div>
+                  <div className="flex items-center gap-1 pb-1">
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.screenle === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.screenle === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.indledle === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.indledle === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.linkle === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.linkle === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
+                  </div>
+                </div>
+              );
+            }
+
+            // Case 3: Playable date (Today or Yesterday!)
             const status = getChallengeStatusForDate(item.dateStr);
             const isSelected = item.dateStr === currentDate;
             const isToday = item.dateStr === todayStr;
+            const isYesterday = item.dateStr === yesterdayStr;
             const wonAll = status.screenle === 'won' && status.indledle === 'won' && status.linkle === 'won';
+            const hasUnplayed = status.screenle === 'unplayed' || status.indledle === 'unplayed' || status.linkle === 'unplayed';
 
             return (
               <button
@@ -232,22 +270,33 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                   onSelectDate(item.dateStr);
                   onClose();
                 }}
-                className={`h-14 p-1 rounded-xl border flex flex-col items-center justify-between text-xs transition relative ${
+                className={`h-14 p-1 rounded-xl border flex flex-col items-center justify-between text-xs transition relative cursor-pointer ${
                   isSelected
-                    ? 'border-amber-500 bg-amber-500/20 text-white font-black ring-1 ring-amber-500'
+                    ? 'border-amber-500 bg-amber-500/20 text-white font-black ring-2 ring-amber-500 shadow-md shadow-amber-500/20'
                     : isToday
-                    ? 'border-amber-500/50 bg-[#131a29] text-amber-300 font-bold'
-                    : 'border-[#1e293b] bg-[#131a29]/60 text-slate-300 hover:border-slate-600 hover:bg-[#1e293b]/50'
+                    ? 'border-amber-500/60 bg-[#131a29] text-amber-300 font-bold hover:border-amber-400'
+                    : isYesterday && hasUnplayed
+                    ? 'border-amber-400/50 bg-[#182030] text-amber-200 font-bold hover:border-amber-400 ring-1 ring-amber-500/30 animate-pulse'
+                    : 'border-[#1e293b] bg-[#131a29]/80 text-slate-200 hover:border-amber-500/40 hover:bg-[#1e293b]/60'
                 }`}
               >
                 <div className="w-full flex items-center justify-between px-1">
-                  <span className="text-[11px]">{item.dayNum}</span>
-                  {wonAll && <Flame className="w-3 h-3 text-amber-400 fill-amber-400" />}
+                  <span className="text-[11px] font-bold">{item.dayNum}</span>
+                  {wonAll ? (
+                    <Flame className="w-3 h-3 text-amber-400 fill-amber-400" />
+                  ) : isYesterday && hasUnplayed ? (
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-black" title="Rattrapage série">
+                      J-1
+                    </span>
+                  ) : isToday ? (
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-black">
+                      {currentLang === 'fr' ? 'Auj.' : 'Now'}
+                    </span>
+                  ) : null}
                 </div>
 
                 {/* Status dots for 3 daily games */}
                 <div className="flex items-center gap-1">
-                  {/* Screenle dot */}
                   <span
                     title="Screenle"
                     className={`w-1.5 h-1.5 rounded-full ${
@@ -258,7 +307,6 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                         : 'bg-slate-700'
                     }`}
                   />
-                  {/* Indledle dot */}
                   <span
                     title="Indledle"
                     className={`w-1.5 h-1.5 rounded-full ${
@@ -269,7 +317,6 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                         : 'bg-slate-700'
                     }`}
                   />
-                  {/* Linkle dot */}
                   <span
                     title="Linkle"
                     className={`w-1.5 h-1.5 rounded-full ${
@@ -286,8 +333,8 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
           })}
         </div>
 
-        {/* Legend */}
-        <div className="mt-4 pt-3 border-t border-[#1e293b] flex flex-wrap items-center justify-between text-[11px] text-slate-400">
+        {/* Legend and Action Shortcuts */}
+        <div className="mt-4 pt-3 border-t border-[#1e293b] flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -297,27 +344,39 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               <span className="w-2 h-2 rounded-full bg-rose-500" />
               {currentLang === 'fr' ? 'Échoué' : 'Lost'}
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-slate-700" />
-              {currentLang === 'fr' ? 'Non joué' : 'Unplayed'}
-            </span>
             <span className="flex items-center gap-1 text-slate-500">
               <Lock className="w-2.5 h-2.5" />
-              {currentLang === 'fr' ? 'Futur verrouillé' : 'Future locked'}
+              {currentLang === 'fr' ? 'Verrouillé (passé > 1j ou futur)' : 'Locked'}
             </span>
           </div>
 
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              onSelectDate(todayStr);
-              onClose();
-            }}
-            className="flex items-center gap-1 text-amber-400 hover:text-amber-300 font-bold transition"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            {t('common.today')}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                onSelectDate(yesterdayStr);
+                onClose();
+              }}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold transition cursor-pointer"
+              title="Jouer le défi d'hier"
+            >
+              <Zap className="w-3 h-3 text-amber-400" />
+              <span>{currentLang === 'fr' ? 'Veille (J-1)' : 'Yesterday'}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                onSelectDate(todayStr);
+                onClose();
+              }}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black transition cursor-pointer shadow-sm shadow-amber-500/20"
+              title="Revenir au jour courant"
+            >
+              <Sparkles className="w-3 h-3 text-slate-950" />
+              <span>{t('common.today')}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

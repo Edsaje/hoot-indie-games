@@ -16,6 +16,7 @@ import {
   Gamepad2,
   LogIn,
   Zap,
+  Flame,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
@@ -24,6 +25,7 @@ import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { telemetry } from '../../services/telemetry';
+import { getTodayDateString, getYesterdayDateString } from '../../utils/streakManager';
 
 export type NavTab =
   | 'gems'
@@ -65,6 +67,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
 
   const currentAvatar = INDIE_AVATARS.find((a) => a.id === profile.avatarId) || INDIE_AVATARS[0];
+  const todayStr = getTodayDateString();
+  const yesterdayStr = getYesterdayDateString(todayStr);
+  const isYesterday = currentDate === yesterdayStr;
 
   const handleTabSelect = (tab: NavTab) => {
     soundFx.playClick();
@@ -235,11 +240,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 onOpenCalendar();
               }}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 text-xs font-mono transition cursor-pointer"
-              title="Ouvrir les archives quotidiennes"
+              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-mono transition cursor-pointer ${
+                isYesterday
+                  ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25'
+                  : 'bg-[#131a29] border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40'
+              }`}
+              title={
+                isYesterday
+                  ? (i18n.language.startsWith('fr') ? "Défi d'hier (Veille) • Flamme préservable" : "Yesterday's puzzle • Streak rescue")
+                  : (i18n.language.startsWith('fr') ? "Calendrier quotidien (Aujourd'hui & Veille)" : "Daily calendar (Today & Yesterday)")
+              }
             >
-              <Calendar className="w-3.5 h-3.5 text-[#f59e0b]" />
-              {currentDate}
+              {isYesterday ? (
+                <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400 animate-pulse" />
+              ) : (
+                <Calendar className="w-3.5 h-3.5 text-[#f59e0b]" />
+              )}
+              <span>{currentDate}</span>
+              {isYesterday && (
+                <span className="text-[10px] font-black text-amber-300 px-1 py-0.2 rounded bg-amber-500/20">
+                  J-1
+                </span>
+              )}
             </button>
 
             {/* Achievements Button */}

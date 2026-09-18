@@ -81,6 +81,13 @@ export interface DailyGameSaveState {
   mistakesRemaining?: number;
 }
 
+export interface StreakBreakInfo {
+  date: string;
+  missedDate: string;
+  lostStreak: number;
+  canRescueYesterday: boolean;
+}
+
 export interface ModeStats {
   played: number;
   won: number;
@@ -88,6 +95,9 @@ export interface ModeStats {
   maxStreak: number;
   guessDistribution: Record<number, number>;
   lastPlayedDate?: string;
+  lastWonDate?: string;
+  activeStreakBreak?: StreakBreakInfo | null;
+  streakRescued?: boolean;
 }
 
 export interface OverallStats {

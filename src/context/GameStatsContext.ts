@@ -10,6 +10,7 @@ export interface GameStatsContextType {
     guessCount: number
   ) => void;
   resetStats: () => void;
+  dismissStreakBreak?: (mode: 'screenle' | 'indledle' | 'linkle') => void;
 }
 
 export const defaultModeStats: ModeStats = {

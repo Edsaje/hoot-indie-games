@@ -46,7 +46,10 @@
     "played": "Played",
     "congratulations": "Congratulations!",
     "gameOver": "Game Over",
-    "theSecretGameWas": "The secret game was:"
+    "theSecretGameWas": "The secret game was:",
+    "streakBreakYesterday": "Streak ended: your flame went out because yesterday's puzzle was missed.",
+    "streakRescueAction": "⚡ Play yesterday's puzzle",
+    "streakRescuedSuccess": "🔥 Flame preserved! Yesterday's puzzle completed, your streak continues!"
   },
   "screenle": {
     "title": "Screenle",

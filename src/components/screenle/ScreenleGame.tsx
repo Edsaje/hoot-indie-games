@@ -28,13 +28,15 @@ import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { downloadShareCard, type ShareCardData } from '../../utils/generateShareCard';
 import { ShareResultModal } from '../common/ShareResultModal';
+import { StreakNoticeBanner } from '../common/StreakNoticeBanner';
 import { telemetry } from '../../services/telemetry';
 
 interface ScreenleGameProps {
   currentDate: string;
+  onSelectDate?: (date: string) => void;
 }
 
-export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
+export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelectDate }) => {
   const { t, i18n } = useTranslation();
   const { isGameOwned } = useUserAccount();
   const { recordGameResult } = useGameStats();
@@ -551,6 +553,14 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
               )}
             </div>
           </div>
+
+          {/* Streak preservation / broken notice banner */}
+          <StreakNoticeBanner
+            mode="screenle"
+            currentDate={currentDate}
+            isWon={isWon}
+            onSelectDate={onSelectDate}
+          />
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             {secretGame.steamUrl && (

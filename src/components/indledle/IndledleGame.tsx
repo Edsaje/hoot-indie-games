@@ -25,13 +25,15 @@ import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { downloadShareCard, type ShareCardData } from '../../utils/generateShareCard';
 import { ShareResultModal } from '../common/ShareResultModal';
+import { StreakNoticeBanner } from '../common/StreakNoticeBanner';
 import { telemetry } from '../../services/telemetry';
 
 interface IndledleGameProps {
   currentDate: string;
+  onSelectDate?: (date: string) => void;
 }
 
-export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
+export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelectDate }) => {
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
   const { isGameOwned } = useUserAccount();
@@ -351,6 +353,14 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
               )}
             </div>
           </div>
+
+          {/* Streak preservation / broken notice banner */}
+          <StreakNoticeBanner
+            mode="indledle"
+            currentDate={currentDate}
+            isWon={isWon}
+            onSelectDate={onSelectDate}
+          />
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             {secretGame.steamUrl && (
