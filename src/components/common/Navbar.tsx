@@ -14,6 +14,7 @@ import {
   Calendar,
   Swords,
   Gamepad2,
+  LogIn,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
@@ -32,6 +33,7 @@ interface NavbarProps {
   onOpenAchievements: () => void;
   onOpenCalendar: () => void;
   onOpenProfile: () => void;
+  onOpenAuth: () => void;
   onEasterEggTrigger: () => void;
   currentDate: string;
 }
@@ -43,12 +45,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAchievements,
   onOpenCalendar,
   onOpenProfile,
+  onOpenAuth,
   onEasterEggTrigger,
   currentDate,
 }) => {
   const { t, i18n } = useTranslation();
   const { feathersCount, unlockAchievement } = useAchievements();
-  const { profile, isSteamConnected, steamAccount } = useUserAccount();
+  const { profile, isAuthenticated, isSteamConnected, steamAccount } = useUserAccount();
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
 
   const currentAvatar = INDIE_AVATARS.find((a) => a.id === profile.avatarId) || INDIE_AVATARS[0];
@@ -265,28 +268,47 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{i18n.language.startsWith('fr') ? 'FR' : 'EN'}</span>
             </button>
 
-            {/* User Profile Button */}
-            <button
-              onClick={() => {
-                soundFx.playClick();
-                onOpenProfile();
-              }}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#182133] transition group relative"
-              title={isSteamConnected ? `Profil (${steamAccount?.personaName} sur Steam)` : t('nav.profile')}
-              aria-label={t('nav.profile')}
-            >
-              <div className="relative flex items-center justify-center">
-                <span className="text-sm">{currentAvatar.emoji}</span>
-                {isSteamConnected && (
-                  <span className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-[#171a21] border border-cyan-400 flex items-center justify-center text-cyan-400 shadow-sm">
-                    <SteamIcon className="w-2.5 h-2.5" />
-                  </span>
-                )}
-              </div>
-              <span className="hidden xl:inline text-xs font-bold text-white max-w-[85px] truncate">
-                {profile.username}
-              </span>
-            </button>
+            {/* Sign In / Sign Up Button OR Authenticated User Profile */}
+            {!isAuthenticated ? (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenAuth();
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
+                title={i18n.language.startsWith('fr') ? 'Se connecter ou créer un compte' : 'Sign In or Sign Up'}
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline font-black">
+                  {i18n.language.startsWith('fr') ? 'Connexion / Inscription' : 'Sign In / Up'}
+                </span>
+                <span className="sm:hidden font-black">
+                  {i18n.language.startsWith('fr') ? 'Connexion' : 'Sign In'}
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenProfile();
+                }}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#182133] transition group relative cursor-pointer"
+                title={isSteamConnected ? `Profil (${steamAccount?.personaName} sur Steam)` : t('nav.profile')}
+                aria-label={t('nav.profile')}
+              >
+                <div className="relative flex items-center justify-center">
+                  <span className="text-sm">{currentAvatar.emoji}</span>
+                  {isSteamConnected && (
+                    <span className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-[#171a21] border border-cyan-400 flex items-center justify-center text-cyan-400 shadow-sm">
+                      <SteamIcon className="w-2.5 h-2.5" />
+                    </span>
+                  )}
+                </div>
+                <span className="hidden xl:inline text-xs font-bold text-white max-w-[85px] truncate">
+                  {profile.username}
+                </span>
+              </button>
+            )}
           </div>
         </div>
 

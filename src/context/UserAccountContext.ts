@@ -13,6 +13,7 @@ export interface UserAccountContextType {
   importSaveData: (jsonString: string) => { success: boolean; error?: string };
   loginWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUpWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   syncCloud: () => Promise<{ success: boolean; message: string }>;
 

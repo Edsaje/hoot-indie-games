@@ -44,7 +44,20 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     return getDefaultProfile();
   });
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.email || parsed.steam?.steamId || parsed.isCloudSynced) {
+          return true;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+    return false;
+  });
 
   // Sauvegarde locale automatique
   useEffect(() => {
@@ -240,6 +253,25 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     return { success: true };
   }, []);
 
+  const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
+    if (!supabase || !isSupabaseConfigured) {
+      return {
+        success: false,
+        error: 'La connexion Google nécessite la configuration Supabase (VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY).',
+      };
+    }
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+      },
+    });
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  }, []);
+
   const logout = useCallback(async () => {
     if (supabase && isSupabaseConfigured) {
       await supabase.auth.signOut();
@@ -248,6 +280,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     setProfile((prev) => ({
       ...prev,
       email: undefined,
+      steam: undefined,
       isCloudSynced: false,
     }));
   }, []);
@@ -405,6 +438,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           steam: steamInfo,
           username: prev.username === 'Hibou Mystère' ? details.personaName : prev.username,
         }));
+        setIsAuthenticated(true);
 
         return {
           success: true,
@@ -500,24 +534,27 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, [connectSteamByIdentifier]);
 
-  return (
-    <UserAccountContext.Provider
-      value={{
-        profile,
-        isAuthenticated,
-        isSupabaseActive: isSupabaseConfigured,
-        updateProfile,
-        setAvatar,
-        setUsername,
-        recordVersusResult,
-        exportSaveData,
-        importSaveData,
-        loginWithEmail,
-        signUpWithEmail,
-        logout,
-        syncCloud,
-        steamAccount: profile.steam,
-        isSteamConnected,
+    const isUserLoggedIn = isAuthenticated || Boolean(profile.steam?.steamId) || Boolean(profile.email);
+
+    return (
+      <UserAccountContext.Provider
+        value={{
+          profile,
+          isAuthenticated: isUserLoggedIn,
+          isSupabaseActive: isSupabaseConfigured,
+          updateProfile,
+          setAvatar,
+          setUsername,
+          recordVersusResult,
+          exportSaveData,
+          importSaveData,
+          loginWithEmail,
+          signUpWithEmail,
+          loginWithGoogle,
+          logout,
+          syncCloud,
+          steamAccount: profile.steam,
+          isSteamConnected,
         ownedAppIdsSet,
         connectSteamWithOpenId,
         connectSteamByIdentifier,

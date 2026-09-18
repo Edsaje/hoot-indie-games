@@ -8,6 +8,7 @@ import { OwlEasterEggModal } from './components/common/OwlEasterEggModal';
 import { AchievementsModal } from './components/common/AchievementsModal';
 import { CalendarArchiveModal } from './components/common/CalendarArchiveModal';
 import { ProfileModal } from './components/common/ProfileModal';
+import { AuthModal } from './components/common/AuthModal';
 import { FirefliesBackground } from './components/common/FirefliesBackground';
 import { GemExplorerHome } from './components/gems/GemExplorerHome';
 import { ScreenleGame } from './components/screenle/ScreenleGame';
@@ -52,6 +53,7 @@ export const AppContent: React.FC = () => {
   const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
+  const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [isEasterEggOpen, setIsEasterEggOpen] = useState<boolean>(false);
   const [isArcadeOpen, setIsArcadeOpen] = useState<boolean>(false);
   const [arcadeGame, setArcadeGame] = useState<ArcadeGameId>('snake');
@@ -146,6 +148,7 @@ export const AppContent: React.FC = () => {
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         onOpenCalendar={() => setIsCalendarOpen(true)}
         onOpenProfile={() => setIsProfileOpen(true)}
+        onOpenAuth={() => setIsAuthOpen(true)}
         onEasterEggTrigger={() => setIsEasterEggOpen(true)}
         currentDate={currentDate}
       />
@@ -238,6 +241,11 @@ export const AppContent: React.FC = () => {
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
+      />
+
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
       />
 
       <OwlEasterEggModal

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   XCircle,
   Share2,
-  Check,
   Feather,
   AlertTriangle,
   Download,
@@ -21,7 +20,8 @@ import { getDailyConnectionsPuzzle } from '../../data/connectionsPuzzles';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
-import { downloadShareCard } from '../../utils/generateShareCard';
+import { downloadShareCard, type ShareCardData } from '../../utils/generateShareCard';
+import { ShareResultModal } from '../common/ShareResultModal';
 import { CustomLinkleBuilder } from './CustomLinkleBuilder';
 import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { telemetry } from '../../services/telemetry';
@@ -104,6 +104,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
   const [customPuzzle, setCustomPuzzle] = useState<DailyConnectionsPuzzle | null>(() => decodePuzzleFromHash());
   const [isBuilderOpen, setIsBuilderOpen] = useState<boolean>(false);
   const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
   // Active puzzle is either custom or daily
   const puzzle = customPuzzle || getDailyConnectionsPuzzle(currentDate);
@@ -181,7 +182,6 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
   const [previousGuesses, setPreviousGuesses] = useState<string[][]>(savedState.previousGuesses);
 
   // Suivi télémétrie cookieless au lancement de Linkle
@@ -395,8 +395,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
     }
   };
 
-  const handleShare = () => {
-    soundFx.playClick();
+  const shareData: ShareCardData = useMemo(() => {
     const categoryDifficultyMap: Record<string, string> = {};
     puzzle.categories.forEach((cat) => {
       cat.items.forEach((item) => {
@@ -424,15 +423,18 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         .join('');
     });
 
-    const text = `🦉 Linkle #${isCustomMode ? 'Custom' : currentDate}\n${lines.join('\n')}\n🎮 https://hootindiegames.com`;
+    return {
+      gameMode: 'Linkle',
+      date: isCustomMode ? 'Custom' : currentDate,
+      isWon,
+      scoreText: isWon ? `4/4 Catégories résolues !` : `${solvedCategories.length}/4 Catégories`,
+      details: lines.length > 0 ? lines.slice(0, 4) : ['Défi terminé'],
+    };
+  }, [puzzle, previousGuesses, isCustomMode, currentDate, isWon, solvedCategories.length]);
 
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      })
-      .catch(() => {});
+  const handleShare = () => {
+    soundFx.playClick();
+    setIsShareModalOpen(true);
   };
 
   const handleDownloadCard = async () => {
@@ -713,19 +715,10 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-2 px-5 py-3 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer"
             >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  {t('common.copied')}
-                </>
-              ) : (
-                <>
-                  <Share2 className="w-4 h-4" />
-                  {t('common.share')}
-                </>
-              )}
+              <Share2 className="w-4 h-4" />
+              <span>{t('common.share')}</span>
             </button>
 
             <button
@@ -753,6 +746,13 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
           setIsWon(false);
           setPreviousGuesses([]);
         }}
+      />
+
+      {/* Zero-Spoil Social Share Modal */}
+      <ShareResultModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        data={shareData}
       />
     </div>
   );

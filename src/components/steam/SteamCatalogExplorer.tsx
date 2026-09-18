@@ -258,7 +258,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
               <Database className="w-4 h-4" />
-              Alimentation API Steam • 0 Hallucination
+              Alimentation API Steam • Données Officielles
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
               Catalogue Étendu de Jeux Indépendants
@@ -294,7 +294,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
               Suggérer une Pépite Indé pour le Catalogue Canonique
             </h3>
             <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              Vous connaissez un chef-d'œuvre indépendant injustement méconnu disponible sur Steam ? Suggérez-le ! Chaque jeu proposé est vérifié par nos veilleurs selon la Règle 0 Hallucination et intégré canoniquement lors de la prochaine ronde.
+              Vous connaissez un chef-d'œuvre indépendant injustement méconnu disponible sur Steam ? Suggérez-le ! Chaque jeu proposé est examiné et certifié avec ses données officielles Steam avant d'être intégré au sanctuaire.
             </p>
           </div>
           <span className="self-start px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold shrink-0">

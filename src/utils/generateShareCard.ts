@@ -92,7 +92,7 @@ export const generateShareCardDataUrl = async (data: ShareCardData): Promise<str
   // 7. Footer Attribution
   ctx.fillStyle = '#64748b';
   ctx.font = '16px ui-sans-serif, system-ui, sans-serif';
-  ctx.fillText('hootindie.games • Créé avec passion par Quentin Beaud (Hibouxe)', 100, 530);
+  ctx.fillText('https://hootindiegames.com • Le Sanctuaire des Jeux Indépendants', 100, 530);
 
   ctx.fillStyle = '#f59e0b';
   ctx.font = 'bold 16px ui-mono, monospace';
@@ -100,6 +100,12 @@ export const generateShareCardDataUrl = async (data: ShareCardData): Promise<str
   ctx.fillText('Rejoins le Perchoir 🪶', width - 100, 530);
 
   return canvas.toDataURL('image/png');
+};
+
+export const generateShareCardBlob = async (data: ShareCardData): Promise<Blob> => {
+  const dataUrl = await generateShareCardDataUrl(data);
+  const res = await fetch(dataUrl);
+  return res.blob();
 };
 
 export const downloadShareCard = async (data: ShareCardData, filename?: string) => {

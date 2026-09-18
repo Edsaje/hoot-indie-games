@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
 import {
@@ -11,7 +11,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Share2,
-  Check,
   ZoomIn,
   ZoomOut,
   Download,
@@ -26,7 +25,8 @@ import { useAchievements } from '../../context/useAchievements';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
-import { downloadShareCard } from '../../utils/generateShareCard';
+import { downloadShareCard, type ShareCardData } from '../../utils/generateShareCard';
+import { ShareResultModal } from '../common/ShareResultModal';
 import { telemetry } from '../../services/telemetry';
 
 interface ScreenleGameProps {
@@ -78,8 +78,8 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
   const [activeStageIndex, setActiveStageIndex] = useState<number>(savedState.activeStageIndex);
   const [isZoomedIn, setIsZoomedIn] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
   const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
   const [difficulty, setDifficulty] = useState<GameDifficulty>(() => {
     return (localStorage.getItem('screenle_difficulty') as GameDifficulty) || 'standard';
@@ -247,8 +247,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     }
   };
 
-  const handleShare = () => {
-    soundFx.playClick();
+  const shareData: ShareCardData = useMemo(() => {
     const squares = Array.from({ length: maxAttempts }, (_, i) => {
       if (i < guesses.length) {
         return guesses[i].id === secretGame.id ? '🟩' : '🟥';
@@ -256,14 +255,21 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       return '⬛';
     }).join('');
 
-    const text = `🦉 Screenle #${currentDate} (${difficulty.toUpperCase()}) - ${
-      isWon ? `${guesses.length}/${maxAttempts}` : `X/${maxAttempts}`
-    }\n${squares}\n🎮 Jouez sur Hoot Indie Games : https://hootindiegames.com`;
+    return {
+      gameMode: 'Screenle',
+      date: currentDate,
+      isWon,
+      scoreText: isWon ? `${guesses.length}/${maxAttempts} Essais` : `X/${maxAttempts} (Non trouvé)`,
+      details: [
+        `Niveau : ${difficulty.toUpperCase()}`,
+        `Grille : ${squares}`,
+      ],
+    };
+  }, [currentDate, isWon, guesses, maxAttempts, secretGame.id, difficulty]);
 
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }).catch(() => {});
+  const handleShare = () => {
+    soundFx.playClick();
+    setIsShareModalOpen(true);
   };
 
   // Zoom / crop styling based on stage & difficulty
@@ -567,17 +573,8 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
               onClick={handleShare}
               className="flex items-center gap-2 px-5 py-2.5 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer"
             >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  {t('common.copied')}
-                </>
-              ) : (
-                <>
-                  <Share2 className="w-4 h-4" />
-                  {t('common.share')}
-                </>
-              )}
+              <Share2 className="w-4 h-4" />
+              <span>{t('common.share')}</span>
             </button>
 
             <button
@@ -630,6 +627,13 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
           </div>
         </div>
       )}
+
+      {/* Zero-Spoil Social Share Modal */}
+      <ShareResultModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        data={shareData}
+      />
     </div>
   );
 };

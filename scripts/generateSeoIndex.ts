@@ -65,7 +65,7 @@ function buildFaqSchema() {
     },
     {
       q: "Comment découvrir de nouvelles pépites indépendantes méconnues ?",
-      a: "Hoot Indie Games propose un Explorateur de Pépites certifiées regroupant 94 pépites rigoureusement auditées selon la règle Zéro Hallucination (100% de données Steam réelles, avis extrêmement positifs et captures officielles). Vous pouvez également consulter notre Radar des sorties indépendantes 2025-2026 et synchroniser votre bibliothèque Steam pour identifier en un clic les perles que vous possédez déjà ou qu'il vous reste à explorer."
+      a: "Hoot Indie Games propose un Explorateur de Pépites certifiées regroupant 94 pépites rigoureusement auditées selon notre charte officielle de vérification (100% de données Steam réelles, avis extrêmement positifs et captures officielles). Vous pouvez également consulter notre Radar des sorties indépendantes 2025-2026 et synchroniser votre bibliothèque Steam pour identifier en un clic les perles que vous possédez déjà ou qu'il vous reste à explorer."
     },
     {
       q: "Qu'est-ce que Screenle, Indledle et Linkle sur Hoot Indie Games ?",
@@ -166,7 +166,7 @@ export function generateSeoIndexHtml(): string {
         '@type': 'ItemList',
         '@id': `${CANONICAL_DOMAIN}/#catalog`,
         name: 'Catalogue Officiel des 94 Pépites du Jeu Vidéo Indépendant',
-        description: 'Sélection certifiée Zéro Hallucination des plus grands chefs-d\'œuvre et découvertes de la scène indépendante PC & Steam.',
+        description: 'Sélection certifiée des plus grands chefs-d\'œuvre et découvertes de la scène indépendante PC & Steam.',
         numberOfItems: INDIE_GAMES.length,
         itemListElement: videoGameItems,
       },
@@ -264,7 +264,7 @@ export function generateSeoIndexHtml(): string {
             Loin des contraintes de rentabilité des superproductions AAA, les studios indépendants osent des mécaniques de jeu révolutionnaires, des narrations intimistes et bouleversantes, et des esthétiques artistiques artisanales inoubliables : du <strong>Pixel Art</strong> minutieux de <em>Celeste</em> et <em>Dead Cells</em> à la 3D contemplative d'<em>Outer Wilds</em>, en passant par le dessin à la main de <em>Hollow Knight</em> ou l'ingéniosité mathématique de <em>Balatro</em>.
           </p>
           <p style="line-height: 1.7; color: #cbd5e1; font-size: 1.05rem;">
-            Chez <strong>Hoot Indie Games</strong>, nous appliquons une <strong>charte stricte Zéro Hallucination</strong> : chaque jeu figurant dans notre sanctuaire est audité manuellement, certifié avec ses métadonnées Steam authentiques, ses captures d'écran en haute résolution et ses avis de joueurs vérifiés.
+            Chez <strong>Hoot Indie Games</strong>, nous appliquons une <strong>charte de sélection officielle et rigoureuse</strong> : chaque jeu figurant dans notre sanctuaire est audité manuellement, certifié avec ses métadonnées Steam authentiques, ses captures d'écran en haute résolution et ses avis de joueurs vérifiés.
           </p>
         </section>
 

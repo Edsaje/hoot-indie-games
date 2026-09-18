@@ -451,7 +451,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
               Catalogue des Pépites Certifiées
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Explorez nos {allPlayableGames.length} chefs-d'œuvre sélectionnés sans aucune hallucination
+              Explorez nos {allPlayableGames.length} chefs-d'œuvre sélectionnés et certifiés
             </p>
           </div>
 

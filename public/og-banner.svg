@@ -113,7 +113,7 @@
     <rect width="210" height="95" rx="12" fill="url(#badgeBg)" stroke="url(#badgeBorder)" stroke-width="1.5" />
     <text x="105" y="36" text-anchor="middle" font-size="24">🦉</text>
     <text x="105" y="62" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="14" fill="#f8fafc">94 PÉPITES</text>
-    <text x="105" y="80" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="11" fill="#94a3b8">Zéro Hallucination &amp; Steam</text>
+    <text x="105" y="80" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="11" fill="#94a3b8">Catalogue Certifié Steam</text>
   </g>
 
   <!-- Badge 2: Screenle & Indledle -->
