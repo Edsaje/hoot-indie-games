@@ -288,4 +288,34 @@ Consulter impérativement le fichier [`TODOLIST.md`](file:///TODOLIST.md) à la 
 5. **Modales Plein-Écran & Défilement Interne** :
    - Plafond `max-h-[92vh] overflow-y-auto` avec bouton de fermeture accessible immédiatement pour les pouces.
 
+---
+
+## 15. Règle Fondamentale : Cybersécurité, Intégrité & Protection Zéro-Fuite
+
+La sécurité du sanctuaire Hoot Indie Games est une exigence absolue et primordiale :
+
+1. **Intégrité Anti-Triche sur TOUS les Jeux (Anti-F12 & Zéro Fuite)** :
+   - **Protection Réseau (XHR / Fetch)** : Les réponses secrètes (titre du jeu, année, studio, catégories de Linkle, tags de Profille) ne doivent jamais transiter en clair dans les requêtes réseau ou être exposées dans le state global avant la fin de partie.
+   - **Protection du DOM & Attributs** : Aucun nom de jeu secret ne doit figurer dans les attributs HTML (`alt`, `title`, `data-*`, noms de classes ou identifiants DOM) tant que l'énigme n'est pas résolue.
+   - **Encapsulation Mémoire & Anti-F12** : Aucune variable sensible de jeu ou de score (`window.score`, `window.secretGame`) ne doit être rattachée à l'objet global `window`. Toutes les variables d'arcade, de time attack et de versus doivent être scellées dans des fermetures (closures) privées.
+   - **Anti-Tampering des Scores** : Contrôle de vraisemblance et validation cryptographique des scores avant envoi vers les sauvegardes ou classements (Leaderboards).
+
+2. **Sanitisation des Entrées & Prévention des Injections** :
+   - **XSS (Cross-Site Scripting)** : Neutralisation systématique de toute saisie utilisateur (pseudos, messages de duels, suggestions Steam) via encodage strict (`htmlspecialchars`, échappement React natif).
+   - **Validation des Identifiants** : Contrôle par regex stricte de tous les paramètres URL, identifiants numériques (`/^\d+$/`) et codes de salon (`/^HOOT-\d+$/`).
+   - **Interdiction du Code Dynamique** : Proscription absolue de `eval()`, `new Function()`, et `dangerouslySetInnerHTML` non audité.
+
+3. **Protection des Secrets & Clés d'API** :
+   - Aucune clé privée (`service_role`, mots de passe serveur/FTP, clés secrètes) ne doit être injectée dans le code source client ou committée dans le dépôt public.
+   - Les fichiers sensibles (`.secret`, `.admin_pass`, `.env`, `stats.json`, logs) doivent être hermétiquement verrouillés par [`public/api/.htaccess`](file:///public/api/.htaccess) pour interdire tout accès HTTP direct.
+
+4. **Résilience Serveur & Anti-Bruteforce** :
+   - Rate-limiting par IP sur les endpoints PHP (`track.php`, `suggest_game.php`).
+   - Écritures concurrentes atomiques avec verrouillage exclusif (`LOCK_EX`).
+   - Mots de passe administrateurs chiffrés en Bcrypt standard avec sel cryptographique fort.
+
+5. **Respect de la Vie Privée (RGPD & CNIL)** :
+   - Architecture 100% Cookieless (zéro cookie tiers traceur).
+   - Adresses IP systématiquement anonymisées par hachage SHA-256 avec sel quotidien tournant.
+
 

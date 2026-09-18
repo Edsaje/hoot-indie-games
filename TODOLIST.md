@@ -72,6 +72,9 @@
     - Conception et optimisation de l'intégralité des interfaces, modales, grilles et jeux d'abord pour smartphone (360px - 430px).
     - Élimination absolue de tout dépassement horizontal (`overflow-x: hidden`, marges et largeurs contraintes sans scroll latéral).
     - Cibles tactiles d'au moins 44x44px pour un confort de jeu optimal au pouce et fluidité 60 FPS sans à-coups.
+26. **Audit & Verrouillage Anti-Triche F12 sur TOUS nos Jeux :**
+    - Vérification rigoureuse et protection globale contre la triche via les DevTools (touche F12, console JavaScript, requêtes réseau, inspecteur DOM) dans absolument tous les jeux (*Screenle*, *Indledle*, *Linkle*, *Profille*, *Time Attack*, *Versus 1v1* et les 8 bornes d'*Arcade*).
+    - Aucun titre, studio, année, catégorie secrète ou score ne doit être divulgué en clair ou altérable par script client.
 
 ---
 
@@ -284,14 +287,21 @@
     - **Tri par avis & réputation** : % d'avis positifs Steam (Extrêmement positifs / Très positifs), nombre total d'avis.
     - **Tri par date de sortie** : Plus récents d'abord, classiques du jeu indé.
     - **Tri alphabétique** : A-Z, Z-A.
-- [ ] **Système Anti-Triche DevTools (F12) & Protection Réseau (Anti-Spoiler Avancé)** :
-  - **Obfuscation et masquage des réponses secrètes** :
-    - Ne jamais exposer le titre du jeu du jour, son ID ou son studio en clair dans les requêtes réseau (XHR/Fetch), le DOM ou le LocalStorage tant que la manche n'est pas achevée.
-    - Hachage cryptographique (ex: SHA-256 avec sel quotidien) ou token opaque pour vérifier la validité de la réponse côté client ou via un endpoint API sécurisé sans fuiter le nom du jeu.
-  - **Protection contre l'inspection réseau & DevTools** :
-    - Obfusquer les payloads JSON quotidiens (chiffrement symétrique léger ou encodage dynamique).
-    - Détection de l'ouverture de la console / DevTools (F12, Ctrl+Shift+I, menu clic droit "Inspecter").
-    - Réaction dissuasive et amicale : Avertissement humoristique du Grand-Duc (*"🦉 La Chouette veille au grain ! Aucun spoiler ne sera divulgué dans la console."*) et purge préventive des logs réseau sensibles.
+- [ ] **Audit & Verrouillage Anti-Triche DevTools (F12) sur TOUS nos Jeux** :
+  - **1. Mini-Jeux Quotidiens de Déduction** :
+    - *Screenle* : Vérifier que les noms de fichiers d'images CDN et attributs `alt` n'indiquent pas le titre du jeu mystère. Masquer l'objet de jeu complet avant la résolution.
+    - *Indledle* : Empêcher l'extraction du jeu cible depuis les props React, le state ou le bundle en mémoire. Hachage de la réponse du jour côté client ou validation opacifiée.
+    - *Linkle* : Vérifier que les catégories secrètes et la répartition des 16 tuiles ne sont pas lisibles dans le DOM ou les métadonnées d'images.
+    - *Profille* : S'assurer que l'année exacte, le studio et la liste des genres ne sont pas inspectables dans les composants React ou dans la console.
+  - **2. Modes Compétitifs & Chronométrés** :
+    - *Time Attack (Screenle, Indledle, Linkle Sprint)* : Protéger la file de questions et les réponses attendues pour éviter qu'un script console réponde instantanément. Sécurisation du timer et du multiplicateur de combo.
+    - *Versus 1v1 P2P* : Sécuriser les messages WebRTC échangés entre pairs pour qu'un client malveillant ne puisse pas intercepter l'ID du jeu ou simuler un faux score de victoire.
+  - **3. Salle d'Arcade (8 Bornes Rétro)** :
+    - Protéger les variables de score en mémoire JavaScript contre la modification triviale dans la console F12 (`window.score = 999999`).
+    - Encapsulation stricte des variables dans des closures privées non rattachées à `window`.
+    - Validation de cohérence des scores avant enregistrement local ou soumission au Leaderboard (vérification du ratio score/temps de jeu pour rejeter les valeurs aberrantes).
+  - **4. Dissuasion Active DevTools** :
+    - Détection de l'ouverture des DevTools (F12, Ctrl+Shift+I) avec message de dissuasion bienveillant du Hibou et purge des données sensibles en console.
 - [ ] **Section Dédiée 18+ (Jeux Indés Adultes) avec Contrôle d'Âge & Consentement Légal** :
   - **Étanchéité & Protection des Mineurs** : Exclusion stricte de tout contenu adulte du catalogue tout public, de l'Accueil et des défis quotidiens (Screenle, Indledle, Linkle).
   - **Barrière d'Âge Conforme (Age Gate)** : Modal d'avertissement explicite avec vérification de l'âge / déclaration légale de majorité et recueil du consentement éclairé en conformité avec les réglementations en vigueur.
