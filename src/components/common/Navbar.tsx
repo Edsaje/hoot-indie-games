@@ -92,8 +92,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#0b0f19]/90 backdrop-blur-md border-b border-[#1e293b] overflow-x-clip">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 w-full bg-[#0b0f19]/90 backdrop-blur-md border-b border-[#1e293b]">
+      <div className="w-full px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-2">
           {/* Brand & Owl Logo */}
           <div className="flex items-center gap-2.5 shrink-0">
@@ -256,7 +256,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <Calendar className="w-3.5 h-3.5 text-[#f59e0b]" />
               )}
-              <span>{currentDate}</span>
+              <span className="hidden 2xl:inline">{currentDate}</span>
               {isYesterday && (
                 <span className="text-[10px] font-black text-amber-300 px-1 py-0.2 rounded bg-amber-500/20">
                   J-1
