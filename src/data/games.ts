@@ -3303,6 +3303,38 @@ export const INDIE_GAMES: Game[] = [
         "en": "Smash your way through endless waves of enemies and grow absurdly powerful! Grab loot, level up, unlock characters and upgrade to create unique and crazy builds as you fend off hordes of creatures!"
       }
     }
+  },
+  {
+    "id": "drag-n-wash",
+    "title": "Drag'n Wash",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "Gator Dragon Games",
+    "steamUrl": "https://store.steampowered.com/app/4739660/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4739660/a5e5758e586579304fb384b19748a1a9cad523e7/ss_a5e5758e586579304fb384b19748a1a9cad523e7.1920x1080.jpg?t=1789341978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4739660/2ddd4ed56c784c9c1cce20464eb033682f17bfd9/ss_2ddd4ed56c784c9c1cce20464eb033682f17bfd9.1920x1080.jpg?t=1789341978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4739660/cd80d36a37c069add9ad451a4a62cd78e8258682/ss_cd80d36a37c069add9ad451a4a62cd78e8258682.1920x1080.jpg?t=1789341978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4739660/75d7c5192cdcbfcbe4b7d1cba8beb58fb5b444e6/ss_75d7c5192cdcbfcbe4b7d1cba8beb58fb5b444e6.1920x1080.jpg?t=1789341978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4739660/a971332a5c67b7839310c18bb0663e7abc736293/ss_a971332a5c67b7839310c18bb0663e7abc736293.1920x1080.jpg?t=1789341978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4739660/374b510b7ee74cff70cae6fef9dd915c681523c6/ss_374b510b7ee74cff70cae6fef9dd915c681523c6.1920x1080.jpg?t=1789341978"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Enjoy a narrative involving 3 male dragons. Wash them, chat with them, touch them, and more! A 3D dragon washing experience.",
+        "en": "Enjoy a narrative involving 3 male dragons. Wash them, chat with them, touch them, and more! A 3D dragon washing experience."
+      }
+    }
   }
 ];
 
