@@ -42,27 +42,56 @@ class SteamCatalogService {
 
   /**
    * Retourne la liste fusionnée de tous les jeux jouables :
-   * 83 jeux certifiés + jeux du catalogue Steam + jeux importés manuellement par l'utilisateur.
+   * Jeux certifiés Hoot Indie Games + catalogue Steam + imports personnalisés.
+   * Dédoublonnage strict par ID, Steam AppID et titre normalisé (ex: Shovel Knight, Disco Elysium).
    */
   public getAllPlayableGames(): Game[] {
     const custom = this.getUserCustomGames();
     const map = new Map<string, Game>();
+    const seenAppIds = new Set<string>();
+    const seenTitles = new Set<string>();
 
-    // 1. Ajouter d'abord les jeux certifiés "Hoot Indie Games"
-    for (const game of INDIE_GAMES) {
+    const extractAppId = (url?: string): string | null => {
+      if (!url) return null;
+      const m = url.match(/\/app\/(\d+)/);
+      return m ? m[1] : null;
+    };
+
+    const normalizeTitle = (t: string): string => {
+      return t
+        .toLowerCase()
+        .replace(/[:\-–—'’!?]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
+
+    const registerGame = (game: Game): boolean => {
+      const appId = extractAppId(game.steamUrl) || (game as SteamCatalogGame).steamAppId?.toString();
+      const normTitle = normalizeTitle(game.title);
+
+      if (map.has(game.id)) return false;
+      if (appId && seenAppIds.has(appId)) return false;
+      if (normTitle && seenTitles.has(normTitle)) return false;
+
       map.set(game.id, game);
+      if (appId) seenAppIds.add(appId);
+      if (normTitle) seenTitles.add(normTitle);
+      return true;
+    };
+
+    // 1. Ajouter d'abord les jeux certifiés "Hoot Indie Games" (priorité maximale)
+    for (const game of INDIE_GAMES) {
+      registerGame(game);
     }
 
     // 2. Ajouter les jeux du catalogue Steam
     for (const game of this.catalog) {
-      if (!map.has(game.id)) {
-        map.set(game.id, game);
-      }
+      registerGame(game);
     }
 
     // 3. Ajouter les imports personnalisés
     for (const game of custom) {
-      map.set(game.id, game);
+      registerGame(game);
     }
 
     return Array.from(map.values());

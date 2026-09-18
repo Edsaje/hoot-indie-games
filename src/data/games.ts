@@ -595,14 +595,14 @@ export const INDIE_GAMES: Game[] = [
       "en": "2D Side-scroller"
     },
     "developer": "The Game Kitchen",
-    "steamUrl": "https://store.steampowered.com/app/774360/Blasphemous/",
+    "steamUrl": "https://store.steampowered.com/app/774361/Blasphemous/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/774360/ss_a5a7dc788fc23f663fe57e937d7a5b3a3c1a8e1b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/774360/ss_89eb4257121287941011dcebbf7b8979e83e5a55.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/774360/ss_efb4592ca07b0493b86cb4886616a695e0c609df.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/774360/ss_6eaef7e98a1f76cf8b2b9f36f6d2f976a4dfc08b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/774360/ss_a7c8be21fb7a641a9cb3a59daebfb4c58cf35b44.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/774360/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_770720a3db9408ae7ae6625ba157bfb9195a3a68.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_b74f57919e88283fac75389e76ead2fed73997e5.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_bd57bcb1e9183cbea61339727a97bcc5206677b2.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_933510ac0fd13c6bd4ecc4c187e0506d520f2e70.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_957b6216519c614984ee71c6f6a524d75ea6353b.1920x1080.jpg",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_959ffc1230d2ca57e18a9c96f3c56f5643b5cce7.1920x1080.jpg"
     ],
     "hints": {
       "tagline": {

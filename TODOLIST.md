@@ -27,6 +27,20 @@
    - Injecter une ambiance botanique, forêt nocturne et végétale dans l'UI globale et particulièrement dans l'espace portfolio / Perchoir (feuillages discrets, tons vert mousse `#064e3b` / `#059669`, accents boisé/écorce, lianes subtiles, brume et lucioles).
 8. **Choix de Difficulté sur les Jeux Principaux :**
    - Proposer pour chaque jeu principal des modes de difficulté adaptés (ex: *Chouetteau / Détente*, *Hibou / Standard*, *Grand-Duc / Expert*) modulant le nombre d'essais, les indices dévoilés et les pénalités.
+9. **Mode Time Attack (Sprint Chronométré) :**
+   - Créer un mode de jeu rapide où le joueur doit identifier un maximum de jeux indés sous pression temporelle (ex: 60 ou 90 secondes) avec bonus de temps et classement.
+10. **Système d'Amis & Fonctionnalités Sociales :**
+    - Permettre l'ajout d'amis via code ou profil, affichage des statuts et comparaison des scores quotidiens.
+11. **Refonte & Remplacement de l'Expérience "Sign In / Sign Up" :**
+    - Simplifier l'accueil et le profil en remplaçant les flux d'inscription traditionnels lourds par une connexion Steam OpenID en 1 clic ou profil invité instantané.
+12. **Correction du Bug d'Image Blasphemous :**
+    - Corriger l'AppID 774361 et remplacer les URLs d'images 404 par les captures HD officielles Steam CDN.
+13. **Correction du Doublon Shovel Knight dans le Catalogue :**
+    - Dédoublonner de façon stricte par ID, Steam AppID et titre normalisé.
+14. **Agrandissement Continu de la Base de Données :**
+    - Augmenter le catalogue certifié vers plus de 150 pépites indés rigoureusement vérifiées (Règle Zéro Hallucination).
+15. **Révision de l'Idée de Difficulté des Jeux :**
+    - Réévaluer le système de difficulté pour garder le défi quotidien universel et équitable tout en offrant des options d'aide progressive.
 
 ---
 
@@ -160,9 +174,38 @@
 
 ---
 
-### 💡 11. Idées & Améliorations Futures
+### ⚡ 11. Nouveaux Chantiers & Directives Actives
+- [ ] **Mode Time Attack (Sprint Chronométré)** :
+  - Conception d'un mode de jeu arcade ultra-dynamique : reconnaître un maximum de jeux indés à la suite dans un compte à rebours (ex: 60s ou 90s).
+  - Multiplicateurs de score (combos de bonnes réponses consécutives) et pénalités de temps en cas d'erreur.
+  - Affichage et sauvegarde locale/cloud des records personnels.
+- [ ] **Système d'Amis & Fonctionnalités Sociales** :
+  - Ajout d'amis par code joueur unique (`HOOT-XXXX`) ou synchronisation de liste d'amis Steam.
+  - Visualisation des scores du jour des amis (Screenle, Indledle, Linkle) pour stimuler la compétition saine.
+  - Bouton d'invitation directe à un duel Versus 1v1 dans le salon d'un ami.
+- [ ] **Refonte & Remplacement de l'Expérience "Sign In / Sign Up"** :
+  - Remplacement des formulaires classiques d'inscription (e-mail/mot de passe) par une expérience sans friction :
+    1. **Connexion 1 clic Steam OpenID 2.0** : récupération automatique de l'avatar Steam, du pseudo et synchronisation instantanée de la bibliothèque de jeux.
+    2. **Profil local invité immédiat** : utilisation immédiate sans compte avec sauvegarde dans le LocalStorage et synchronisation cloud optionnelle.
+- [x] **Correction du Bug d'Image Blasphemous** :
+  - Identification et correction de l'erreur d'AppID Steam (passage de 774360 à l'officiel 774361).
+  - Remplacement de l'ensemble des 6 URLs de captures d'écran en erreur 404 par les captures HD officielles hébergées sur le CDN Steam (`shared.akamai.steamstatic.com`).
+- [x] **Correction du Doublon Shovel Knight dans le Catalogue** :
+  - Implémentation d'un algorithme de dédoublonnage strict dans [`src/services/steamCatalog.ts`](file:///src/services/steamCatalog.ts) croisant l'ID textuel, le Steam AppID (250760) et le titre normalisé.
+  - Élimination définitive des doublons de *Shovel Knight: Treasure Trove*, *Disco Elysium* et *Sea of Stars*.
+- [ ] **Agrandissement de la Base de Données de Jeux (Objectif 150+ Pépites)** :
+  - Intégration de nouvelles pépites cultes et plébiscitées par les joueurs (*Signalis*, *Inscryption*, *Braid*, *FEZ*, *Katana ZERO*, *Hyper Light Drifter*, *Slay the Princess*, *Dredge*, *Chained Echoes*, *Cocoon*, *Lethal Company*, *Manor Lords*).
+  - Respect strict de la règle Zéro Hallucination (données réelles certifiées Steam).
+- [ ] **Réévaluation de l'Idée de Difficulté des Jeux** :
+  - Étude du retour d'expérience sur les modes de difficulté : éviter de fragmenter les scores quotidiens de la communauté.
+  - Définir si le défi du jour doit rester universel et identique pour tous (garantie d'équité pour le partage de score) avec un système d'indices optionnels à la demande.
+
+---
+
+### 💡 12. Idées & Améliorations Futures
 - [ ] **Share Card personnalisée** (export d'image ou grille emoji pour Discord / Twitter / Bluesky).
 - [ ] **Support Manette (Gamepad API)** pour naviguer et jouer dans la Salle d'Arcade.
 - [ ] **Filtre "Indés Francophones"** dans le catalogue de jeux.
 - [ ] **Mode Blind Test Audio Indé** (reconnaître un jeu à sa musique culte).
+
 
