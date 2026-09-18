@@ -14,6 +14,7 @@ import {
   ZoomIn,
   ZoomOut,
   Download,
+  Zap,
 } from 'lucide-react';
 import type { Game } from '../../types/game';
 import { INDIE_GAMES, getDailyGame } from '../../data/games';
@@ -584,6 +585,20 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
             >
               <Download className="w-4 h-4 text-amber-400" />
               <span>{isDownloadingImage ? (lang === 'fr' ? 'Génération...' : 'Generating...') : (lang === 'fr' ? 'Télécharger la carte' : 'Download card image')}</span>
+            </button>
+          </div>
+
+          {/* Time Attack Gateway */}
+          <div className="mt-4 pt-4 border-t border-[#1e293b] flex items-center justify-center">
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                window.location.hash = '#timeattack=screenle';
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-black transition active:scale-95 cursor-pointer shadow-sm"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span>Envie d'un défi rapide ? Tentez le Screenle Sprint ⚡ (60s)</span>
             </button>
           </div>
         </div>

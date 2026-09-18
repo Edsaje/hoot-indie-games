@@ -1,5 +1,12 @@
 export interface ShareCardData {
-  gameMode: 'Screenle' | 'Indledle' | 'Linkle';
+  gameMode:
+    | 'Screenle'
+    | 'Indledle'
+    | 'Linkle'
+    | 'Screenle Sprint'
+    | 'Indledle Sprint'
+    | 'Linkle Sprint'
+    | string;
   date: string;
   isWon: boolean;
   scoreText: string; // e.g. "3/6 Essais" or "Sans faute !"

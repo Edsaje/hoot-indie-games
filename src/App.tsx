@@ -19,6 +19,8 @@ import { ToolboxHub } from './components/toolbox/ToolboxHub';
 import { TheRoostHub } from './components/roost/TheRoostHub';
 import { ArcadeHallView } from './components/arcade/ArcadeHallView';
 import { ArcadeModal, type ArcadeGameId } from './components/arcade/ArcadeModal';
+import { TimeAttackHub } from './components/timeattack/TimeAttackHub';
+import type { TimeAttackMode } from './types/timeAttack';
 import { GameStatsProvider } from './context/GameStatsProvider';
 import { AchievementsProvider } from './context/AchievementsProvider';
 import { UserAccountProvider } from './context/UserAccountProvider';
@@ -40,6 +42,7 @@ export const AppContent: React.FC = () => {
     if (typeof window !== 'undefined') {
       if (window.location.hash.startsWith('#versus')) return 'versus';
       if (window.location.hash.startsWith('#arcade')) return 'arcade';
+      if (window.location.hash.startsWith('#timeattack')) return 'timeattack';
       if (window.location.hash.startsWith('#screenle')) return 'screenle';
       if (window.location.hash.startsWith('#indledle')) return 'indledle';
       if (window.location.hash.startsWith('#linkle')) return 'linkle';
@@ -47,6 +50,15 @@ export const AppContent: React.FC = () => {
       if (window.location.hash.startsWith('#roost')) return 'roost';
     }
     return 'gems';
+  });
+  const [timeAttackInitialMode, setTimeAttackInitialMode] = useState<TimeAttackMode | undefined>(() => {
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#timeattack')) {
+      const match = window.location.hash.match(/#timeattack=([a-z]+)/);
+      if (match && ['screenle', 'indledle', 'linkle'].includes(match[1])) {
+        return match[1] as TimeAttackMode;
+      }
+    }
+    return undefined;
   });
   const [currentDate, setCurrentDate] = useState<string>(getTodayDateString());
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
@@ -63,7 +75,7 @@ export const AppContent: React.FC = () => {
     setIsArcadeOpen(true);
   };
 
-  // Hash listener pour deep linking direct (#screenle, #indledle, #linkle, #versus, #arcade, #toolbox, #roost, #gems)
+  // Hash listener pour deep linking direct (#screenle, #indledle, #linkle, #versus, #arcade, #timeattack, #toolbox, #roost, #gems)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.toLowerCase();
@@ -72,6 +84,13 @@ export const AppContent: React.FC = () => {
       else if (hash.startsWith('#linkle')) setCurrentTab('linkle');
       else if (hash.startsWith('#versus')) setCurrentTab('versus');
       else if (hash.startsWith('#arcade')) setCurrentTab('arcade');
+      else if (hash.startsWith('#timeattack')) {
+        setCurrentTab('timeattack');
+        const match = window.location.hash.match(/#timeattack=([a-z]+)/);
+        if (match && ['screenle', 'indledle', 'linkle'].includes(match[1])) {
+          setTimeAttackInitialMode(match[1] as TimeAttackMode);
+        }
+      }
       else if (hash.startsWith('#toolbox')) setCurrentTab('toolbox');
       else if (hash.startsWith('#roost')) setCurrentTab('roost');
       else if (hash.startsWith('#gems')) setCurrentTab('gems');
@@ -108,6 +127,10 @@ export const AppContent: React.FC = () => {
         fr: "Salle d'Arcade Rétro & Vectrex 1982 | Hoot Indie Games",
         en: 'Retro Arcade Hall & 1982 Vectrex | Hoot Indie Games',
       },
+      timeattack: {
+        fr: 'Time Attack ⚡ — Sprint Chronométré de Jeux Indés | Hoot Indie Games',
+        en: 'Time Attack ⚡ — Timed Indie Game Sprint | Hoot Indie Games',
+      },
       toolbox: {
         fr: 'Boîte à Outils & Radar Indé | Hoot Indie Games',
         en: 'Toolbox Hub & Indie Radar | Hoot Indie Games',
@@ -130,6 +153,13 @@ export const AppContent: React.FC = () => {
       }
     }
   }, [currentTab, i18n.language]);
+
+  // Remonter en haut de la page automatiquement à chaque changement d'onglet
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [currentTab]);
 
   const todayStr = getTodayDateString();
   const isArchiveMode = currentDate !== todayStr;
@@ -207,6 +237,7 @@ export const AppContent: React.FC = () => {
         {currentTab === 'linkle' && <LinkleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'versus' && <VersusArena />}
         {currentTab === 'arcade' && <ArcadeHallView onOpenGame={handleOpenArcade} />}
+        {currentTab === 'timeattack' && <TimeAttackHub initialMode={timeAttackInitialMode} />}
         {currentTab === 'toolbox' && <ToolboxHub />}
         {currentTab === 'roost' && <TheRoostHub onOpenArcade={handleOpenArcade} />}
       </main>

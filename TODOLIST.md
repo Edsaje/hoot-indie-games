@@ -208,10 +208,20 @@
 - [x] **Correction du Doublon Shovel Knight dans le Catalogue** :
   - Implémentation d'un algorithme de dédoublonnage strict dans [`src/services/steamCatalog.ts`](file:///src/services/steamCatalog.ts) croisant l'ID textuel, le Steam AppID (250760) et le titre normalisé.
   - Élimination définitive des doublons de *Shovel Knight: Treasure Trove*, *Disco Elysium* et *Sea of Stars*.
-- [ ] **Mode Time Attack (Sprint Chronométré)** :
-  - Conception d'un mode de jeu arcade ultra-dynamique : reconnaître un maximum de jeux indés à la suite dans un compte à rebours (ex: 60s ou 90s).
-  - Multiplicateurs de score (combos de bonnes réponses consécutives) et pénalités de temps en cas d'erreur.
-  - Affichage et sauvegarde locale/cloud des records personnels.
+- [x] **Mode Time Attack (Sprint Chronométré ⚡)** :
+  - **Hub Dédié & Onglet dans la Navbar** ([`src/components/timeattack/TimeAttackHub.tsx`](file:///src/components/timeattack/TimeAttackHub.tsx)) :
+    - Accès direct via l'onglet Time Attack (desktop & mobile) et deep-link `#timeattack`.
+    - Passerelles directes depuis les écrans de victoire des jeux quotidiens (*Screenle*, *Indledle*, *Linkle*).
+    - Remontée automatique en haut de page (`scrollTop = 0`) lors du changement d'onglet et de mode.
+  - **3 Disciplines Complètes (60s chacune)** :
+    1. 📸 **Screenle Sprint** ([`src/components/timeattack/ScreenleSprint.tsx`](file:///src/components/timeattack/ScreenleSprint.tsx)) : Reconnaissance visuelle en rafale à partir des captures officielles parmi 4 choix (touches clavier 1, 2, 3, 4 et Espace pour passer).
+    2. ⚖️ **Indledle Sprint** ([`src/components/timeattack/IndledleSprint.tsx`](file:///src/components/timeattack/IndledleSprint.tsx)) : Quiz déduction express sur les développeurs, années de sortie et genres.
+    3. 🧩 **Linkle Sprint** ([`src/components/timeattack/LinkleSprint.tsx`](file:///src/components/timeattack/LinkleSprint.tsx)) : Connexions thématiques ultra-rapides et détection d'intrus.
+  - **Mécaniques Arcade** :
+    - +100 pts x Combo et bonus de temps (+3s) par bonne réponse.
+    - Pénalité de temps (-5s) et remise à zéro du combo par erreur.
+    - Enregistrement des High Scores et combos records en local ([`src/utils/timeAttackStorage.ts`](file:///src/utils/timeAttackStorage.ts)).
+    - Cartes de partage zéro-spoil dédiées aux scores Time Attack.
 - [ ] **Système d'Amis & Fonctionnalités Sociales** :
   - Ajout d'amis par code joueur unique (`HOOT-XXXX`) ou synchronisation de liste d'amis Steam.
   - Visualisation des scores du jour des amis (Screenle, Indledle, Linkle) pour stimuler la compétition saine.

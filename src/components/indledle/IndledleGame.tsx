@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   XCircle,
   Download,
+  Zap,
 } from 'lucide-react';
 import type { Game } from '../../types/game';
 import { INDIE_GAMES, getDailyGame } from '../../data/games';
@@ -384,6 +385,20 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
             >
               <Download className="w-4 h-4 text-amber-400" />
               <span>{isDownloadingImage ? (lang === 'fr' ? 'Génération...' : 'Generating...') : (lang === 'fr' ? 'Télécharger la carte' : 'Download card image')}</span>
+            </button>
+          </div>
+
+          {/* Time Attack Gateway */}
+          <div className="mt-4 pt-4 border-t border-[#1e293b] flex items-center justify-center">
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                window.location.hash = '#timeattack=indledle';
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-black transition active:scale-95 cursor-pointer shadow-sm"
+            >
+              <Zap className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+              <span>Envie d'un quiz rapide ? Tentez l'Indledle Sprint ⚡ (60s)</span>
             </button>
           </div>
         </div>
