@@ -45,6 +45,14 @@
     - Créer une section dédiée et étanche pour les jeux indépendants réservés aux adultes (18+).
     - Intégrer un système rigoureux de contrôle d'âge (Age Gate), avertissement explicite de contenu et consentement éclairé conformément aux lois et réglementations en vigueur sur la protection des mineurs.
     - Isoler totalement ces contenus des défis quotidiens (Screenle, Indledle, Linkle) et de l'accueil public afin de garantir une expérience familiale et tout public par défaut.
+17. **Calendrier & Préservation de Flamme de Série (J et J-1) :**
+    - Restreindre l'accès du calendrier au jour même (J) et à la veille (J-1) pour préserver la série, avec verrouillage des jours plus anciens ("mais pas plus loin").
+    - Message explicatif en fin de partie si la série est brisée suite à un oubli d'un jour, avec bouton de rattrapage direct vers le défi de la veille.
+18. **Tri Avancé des Jeux Steam (Prix, Promotions, Notes, etc.) :**
+    - Enrichir l'Explorateur de Pépites et le Catalogue Steam avec des filtres et options de tri : par prix (croissant, décroissant, gratuits), par promotion en cours (% de solde Steam) et par évaluations positives / date de sortie.
+19. **Système Anti-Triche F12 & Inspection Réseau (Anti-Spoiler) :**
+    - Sécuriser les réponses des jeux quotidiens (Screenle, Indledle, Linkle) pour empêcher la triche via l'ouverture des DevTools (F12) et l'interception de requêtes réseau.
+    - Obfuscation et hashage des réponses / payloads réseau tant que la partie n'est pas terminée.
 
 ---
 
@@ -231,6 +239,25 @@
 - [ ] **Réévaluation de l'Idée de Difficulté des Jeux** :
   - Étude du retour d'expérience sur les modes de difficulté : éviter de fragmenter les scores quotidiens de la communauté.
   - Définir si le défi du jour doit rester universel et identique pour tous (garantie d'équité pour le partage de score) avec un système d'indices optionnels à la demande.
+- [x] **Gestion du Calendrier & Préservation de la Flamme de Série (J et J-1)** :
+  - **Restriction stricte du calendrier** : Accès limité au jour courant (J) et à la veille (J-1) pour préserver la série, verrouillage complet des jours antérieurs (`< J-1`) et futurs.
+  - **Sauvegarde et rattrapage de flamme** : Possibilité de compléter le défi de la veille pour reconnecter et restaurer sa série ininterrompue.
+  - **Bannière d'alerte en fin de partie** : Avertissement clair en cas de fin de série suite à un oubli d'un jour avec bouton interactif `[⚡ Rattraper le jeu d'hier (Veille)]`.
+- [ ] **Tri Avancé des Jeux Steam (Prix, Promotions, Évaluations, etc.)** :
+  - Intégrer dans l'Explorateur de Pépites et le Catalogue Steam des filtres et critères de tri avancés :
+    - **Tri par prix** : Gratuit / Free-to-play, Prix croissant (petits budgets), Prix décroissant.
+    - **Tri par promotion** : Jeux actuellement en solde sur Steam, tri par pourcentage de réduction décroissant (-50%, -75%, etc.).
+    - **Tri par avis & réputation** : % d'avis positifs Steam (Extrêmement positifs / Très positifs), nombre total d'avis.
+    - **Tri par date de sortie** : Plus récents d'abord, classiques du jeu indé.
+    - **Tri alphabétique** : A-Z, Z-A.
+- [ ] **Système Anti-Triche DevTools (F12) & Protection Réseau (Anti-Spoiler Avancé)** :
+  - **Obfuscation et masquage des réponses secrètes** :
+    - Ne jamais exposer le titre du jeu du jour, son ID ou son studio en clair dans les requêtes réseau (XHR/Fetch), le DOM ou le LocalStorage tant que la manche n'est pas achevée.
+    - Hachage cryptographique (ex: SHA-256 avec sel quotidien) ou token opaque pour vérifier la validité de la réponse côté client ou via un endpoint API sécurisé sans fuiter le nom du jeu.
+  - **Protection contre l'inspection réseau & DevTools** :
+    - Obfusquer les payloads JSON quotidiens (chiffrement symétrique léger ou encodage dynamique).
+    - Détection de l'ouverture de la console / DevTools (F12, Ctrl+Shift+I, menu clic droit "Inspecter").
+    - Réaction dissuasive et amicale : Avertissement humoristique du Grand-Duc (*"🦉 La Chouette veille au grain ! Aucun spoiler ne sera divulgué dans la console."*) et purge préventive des logs réseau sensibles.
 - [ ] **Section Dédiée 18+ (Jeux Indés Adultes) avec Contrôle d'Âge & Consentement Légal** :
   - **Étanchéité & Protection des Mineurs** : Exclusion stricte de tout contenu adulte du catalogue tout public, de l'Accueil et des défis quotidiens (Screenle, Indledle, Linkle).
   - **Barrière d'Âge Conforme (Age Gate)** : Modal d'avertissement explicite avec vérification de l'âge / déclaration légale de majorité et recueil du consentement éclairé en conformité avec les réglementations en vigueur.
