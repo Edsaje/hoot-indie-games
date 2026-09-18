@@ -16,7 +16,9 @@ import {
   ArrowDown,
   FileSearch,
   Check,
+  X,
   Layers,
+  Star,
 } from 'lucide-react';
 import { INDIE_GAMES, getDailyProfilleGame } from '../../data/games';
 import { soundFx } from '../../utils/audio';
@@ -43,6 +45,15 @@ interface SavedProfilleState {
   isWon: boolean;
   score: number;
 }
+
+// Helper to normalize studio names for tolerant matching (e.g. "Moon Studios" == "Moon Studios GmbH")
+const normalizeStudioName = (str: string): string => {
+  return str
+    .toLowerCase()
+    .replace(/\b(gmbh|inc\.?|llc|ltd\.?|corp\.?|co\.|studios?|games?|entertainment|interactive)\b/gi, '')
+    .replace(/[^a-z0-9]/gi, '')
+    .trim();
+};
 
 export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelectDate }) => {
   const { i18n } = useTranslation();
@@ -75,9 +86,9 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
       if (raw) {
         const parsed = JSON.parse(raw);
         return {
-          yearGuesses: parsed.yearGuesses || [],
-          devGuesses: parsed.devGuesses || [],
-          genreGuesses: parsed.genreGuesses || [],
+          yearGuesses: Array.isArray(parsed.yearGuesses) ? parsed.yearGuesses : [],
+          devGuesses: Array.isArray(parsed.devGuesses) ? parsed.devGuesses : [],
+          genreGuesses: Array.isArray(parsed.genreGuesses) ? parsed.genreGuesses : [],
           isYearSolved: Boolean(parsed.isYearSolved),
           isDevSolved: Boolean(parsed.isDevSolved),
           isGenreSolved: Boolean(parsed.isGenreSolved),
@@ -108,7 +119,9 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
 
   // Card 1: Year state
   const [yearGuesses, setYearGuesses] = useState<number[]>(savedState.yearGuesses);
-  const [inputYear, setInputYear] = useState<number>(2019);
+  const [inputYear, setInputYear] = useState<string>(() =>
+    savedState.yearGuesses.length > 0 ? String(savedState.yearGuesses[savedState.yearGuesses.length - 1]) : '2020'
+  );
   const [isYearSolved, setIsYearSolved] = useState<boolean>(savedState.isYearSolved);
 
   // Card 2: Developer state
@@ -260,8 +273,8 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     if (e) e.preventDefault();
     if (isYearExhausted || isCompleted) return;
 
-    const val = Number(inputYear);
-    if (!val || val < 1980 || val > 2030) return;
+    const val = parseInt(inputYear, 10);
+    if (isNaN(val) || val < 1980 || val > 2030) return;
     if (yearGuesses.includes(val)) return;
 
     soundFx.playClick();
@@ -294,7 +307,19 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     setInputDev('');
     setIsDevDropdownOpen(false);
 
-    const isMatch = trimmed.toLowerCase() === secretGame.developer.toLowerCase();
+    // Lenient matching: exact match OR normalized studio match (handles GmbH, Studios, LLC, etc.)
+    const secretDev = secretGame.developer;
+    const isDirectMatch = trimmed.toLowerCase() === secretDev.toLowerCase();
+    const isNormMatch =
+      normalizeStudioName(trimmed).length >= 3 &&
+      normalizeStudioName(trimmed) === normalizeStudioName(secretDev);
+    const isSubstringMatch =
+      trimmed.length >= 4 &&
+      (secretDev.toLowerCase().includes(trimmed.toLowerCase()) ||
+        trimmed.toLowerCase().includes(secretDev.toLowerCase()));
+
+    const isMatch = isDirectMatch || isNormMatch || isSubstringMatch;
+
     if (isMatch) {
       setIsDevSolved(true);
       soundFx.playChime();
@@ -325,19 +350,15 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     const newGuesses = [...genreGuesses, selectedGenres];
     setGenreGuesses(newGuesses);
 
-    // Check how many of the secret genres were found
     const targetGenresLower = secretGame.genre.map((g) => g.toLowerCase());
     const matchedCount = selectedGenres.filter((g) =>
       targetGenresLower.includes(g.toLowerCase())
     ).length;
 
-    // We consider it solved if all target genres are matched, or at least 2 matching genres found
-    const allFound =
-      targetGenresLower.every((tg) =>
-        newGuesses.flat().some((g) => g.toLowerCase() === tg)
-      ) || matchedCount >= Math.min(2, secretGame.genre.length);
+    // Solved if the player identified at least 1 matching genre from this title
+    const hasValidHit = matchedCount > 0;
 
-    if (allFound) {
+    if (hasValidHit) {
       setIsGenreSolved(true);
       soundFx.playChime();
       persistState({ genreGuesses: newGuesses, isGenreSolved: true });
@@ -348,21 +369,20 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     setSelectedGenres([]);
   };
 
-  // Share text generation
+  // Share text generation (clean, minimal emojis)
   const handleShare = () => {
     soundFx.playClick();
-    const yearIcon = isYearSolved ? '🟩' : '🟥';
-    const devIcon = isDevSolved ? '🟩' : '🟥';
-    const genreIcon = isGenreSolved ? '🟩' : '🟥';
-    const stars = '⭐'.repeat(score) + '☆'.repeat(3 - score);
+    const yearStatus = isYearSolved ? `Succes (${yearGuesses.length}/3)` : `Echec`;
+    const devStatus = isDevSolved ? `Succes (${devGuesses.length}/3)` : `Echec`;
+    const genreStatus = isGenreSolved ? `Succes (${genreGuesses.length}/3)` : `Echec`;
 
-    const text = `🦉 Hoot Indie Games — Profille #${currentDate}
-🎮 Fiche d'Identité : ${isCompleted ? secretGame.title : '???'}
-📅 Année : ${yearIcon} (${yearGuesses.length}/3)
-🏢 Studio : ${devIcon} (${devGuesses.length}/3)
-🎨 Genre : ${genreIcon} (${genreGuesses.length}/3)
-⭐ Score : ${stars} (${score}/3)
-🎮 https://hootindiegames.com/#profille`;
+    const text = `Hoot Indie Games — Profille #${currentDate}
+Dossier : ${isCompleted ? secretGame.title : '???'}
+Annee : ${yearStatus}
+Studio : ${devStatus}
+Style : ${genreStatus}
+Score : ${score}/3 etoiles
+https://hootindiegames.com/#profille`;
 
     navigator.clipboard
       .writeText(text)
@@ -375,10 +395,10 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
 
   // Filtered genres for picker
   const filteredGenresList = useMemo(() => {
-    if (!genreSearch.trim()) return allGenres.slice(0, 18);
-    return allGenres
-      .filter((g) => g.toLowerCase().includes(genreSearch.toLowerCase().trim()))
-      .slice(0, 18);
+    if (!genreSearch.trim()) return allGenres;
+    return allGenres.filter((g) =>
+      g.toLowerCase().includes(genreSearch.toLowerCase().trim())
+    );
   }, [allGenres, genreSearch]);
 
   const targetGenresLower = useMemo(
@@ -392,7 +412,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
       <div className="text-center mb-6">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold mb-2">
           <FileSearch className="w-3.5 h-3.5 text-amber-400" />
-          <span>{isFr ? "Fiche d'Identité • Nouveau jeu" : 'ID Card • New Game'}</span>
+          <span>{isFr ? "Fiche d'Identité" : 'Game ID Card'}</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-white tracking-wide flex items-center justify-center gap-2">
           <span>Profille</span>
@@ -402,23 +422,25 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
         </h1>
         <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto mt-1">
           {isFr
-            ? "Le nom du jeu et ses captures d'écran vous sont révélés. À vous d'identifier son année de sortie, son studio de développement et son genre !"
-            : 'The game title and official screenshots are revealed. Deducing the release year, developer studio, and game genre is up to you!'}
+            ? "Le titre du jeu et ses captures d'écran sont dévoilés. Retrouvez son année de sortie, son studio et son style de jeu."
+            : 'The game title and official screenshots are revealed. Deduce its release year, developer studio, and game genre.'}
         </p>
       </div>
 
-      {/* Secret Game Banner with Reveal Title */}
+      {/* Secret Game Title Banner (WITHOUT spoiler tagline) */}
       <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#131a29] via-[#1a233a] to-[#131a29] border border-amber-500/30 shadow-xl text-center relative overflow-hidden">
         <div className="relative z-10">
           <div className="text-[11px] uppercase tracking-widest text-amber-400 font-bold mb-1 flex items-center justify-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>{isFr ? 'Dossier Confidentiel' : 'Confidential Dossier'}</span>
+            <span>{isFr ? 'Dossier d’enquête' : 'Investigation File'}</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">
             {secretGame.title}
           </h2>
           <p className="text-xs text-slate-300 mt-1">
-            {isFr ? secretGame.hints.tagline.fr : secretGame.hints.tagline.en}
+            {isFr
+              ? "Observez les captures et complétez les 3 indices d'identité ci-dessous."
+              : 'Inspect the screenshots and solve the 3 identity criteria below.'}
           </p>
         </div>
       </div>
@@ -557,16 +579,17 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
                     <span className="font-mono text-sm">{y}</span>
                     {isMatch ? (
                       <span className="flex items-center gap-1 text-emerald-400 text-[11px]">
-                        <Check className="w-3.5 h-3.5" /> {isFr ? 'Exact !' : 'Exact!'}
+                        <Check className="w-3.5 h-3.5" />
+                        <span>{isFr ? 'Exact' : 'Exact'}</span>
                       </span>
                     ) : isHigher ? (
                       <span className="flex items-center gap-1 text-amber-300 text-[11px]">
-                        <ArrowUp className="w-3 h-3 text-amber-400" />
+                        <ArrowUp className="w-3.5 h-3.5 text-amber-400" />
                         <span>{isFr ? `Plus récent (+${diff})` : `Newer (+${diff})`}</span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-1 text-cyan-300 text-[11px]">
-                        <ArrowDown className="w-3 h-3 text-cyan-400" />
+                        <ArrowDown className="w-3.5 h-3.5 text-cyan-400" />
                         <span>{isFr ? `Plus ancien (-${diff})` : `Older (-${diff})`}</span>
                       </span>
                     )}
@@ -589,14 +612,18 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
               <div className="flex items-center gap-1">
                 <button
                   type="button"
-                  onClick={() => setInputYear((y) => Math.max(1990, y - 1))}
+                  onClick={() =>
+                    setInputYear((y) => String(Math.max(1990, (parseInt(y, 10) || 2020) - 1)))
+                  }
                   className="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition cursor-pointer"
                 >
                   -1
                 </button>
                 <button
                   type="button"
-                  onClick={() => setInputYear((y) => Math.max(1990, y - 5))}
+                  onClick={() =>
+                    setInputYear((y) => String(Math.max(1990, (parseInt(y, 10) || 2020) - 5)))
+                  }
                   className="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition cursor-pointer"
                 >
                   -5
@@ -606,19 +633,23 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
                   min={1990}
                   max={2030}
                   value={inputYear}
-                  onChange={(e) => setInputYear(Number(e.target.value))}
+                  onChange={(e) => setInputYear(e.target.value)}
                   className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-center font-mono text-white text-sm font-bold focus:outline-none focus:border-amber-500"
                 />
                 <button
                   type="button"
-                  onClick={() => setInputYear((y) => Math.min(2030, y + 1))}
+                  onClick={() =>
+                    setInputYear((y) => String(Math.min(2030, (parseInt(y, 10) || 2020) + 1)))
+                  }
                   className="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition cursor-pointer"
                 >
                   +1
                 </button>
                 <button
                   type="button"
-                  onClick={() => setInputYear((y) => Math.min(2030, y + 5))}
+                  onClick={() =>
+                    setInputYear((y) => String(Math.min(2030, (parseInt(y, 10) || 2020) + 5)))
+                  }
                   className="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition cursor-pointer"
                 >
                   +5
@@ -634,7 +665,10 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
           ) : (
             <div className="pt-2 border-t border-[#1e293b] text-center text-xs font-bold text-slate-400">
               {isYearSolved ? (
-                <span className="text-emerald-400">⭐ {isFr ? 'Point validé !' : 'Solved!'}</span>
+                <span className="text-emerald-400 flex items-center justify-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>{isFr ? 'Point validé' : 'Solved'}</span>
+                </span>
               ) : (
                 <span className="text-slate-500">{isFr ? 'Essais épuisés' : 'Attempts ended'}</span>
               )}
@@ -670,7 +704,11 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
             {/* Dev History */}
             <div className="space-y-1.5 mb-3 min-h-[70px]">
               {devGuesses.map((d, idx) => {
-                const isMatch = d.toLowerCase() === secretGame.developer.toLowerCase();
+                const isMatch =
+                  d.toLowerCase() === secretGame.developer.toLowerCase() ||
+                  (normalizeStudioName(d).length >= 3 &&
+                    normalizeStudioName(d) === normalizeStudioName(secretGame.developer));
+
                 return (
                   <div
                     key={idx}
@@ -683,11 +721,13 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
                     <span className="truncate max-w-[150px]">{d}</span>
                     {isMatch ? (
                       <span className="flex items-center gap-1 text-emerald-400 text-[11px] shrink-0">
-                        <Check className="w-3.5 h-3.5" /> {isFr ? 'Exact !' : 'Exact!'}
+                        <Check className="w-3.5 h-3.5" />
+                        <span>{isFr ? 'Exact' : 'Exact'}</span>
                       </span>
                     ) : (
-                      <span className="text-rose-400 text-[11px] shrink-0">
-                        {isFr ? 'Incorrect' : 'Wrong'}
+                      <span className="flex items-center gap-1 text-rose-400 text-[11px] shrink-0">
+                        <X className="w-3 h-3" />
+                        <span>{isFr ? 'Incorrect' : 'Wrong'}</span>
                       </span>
                     )}
                   </div>
@@ -716,9 +756,9 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs font-semibold focus:outline-none focus:border-amber-500"
                 />
 
-                {/* Suggestions Dropdown */}
+                {/* Suggestions Dropdown (Opens downwards cleanly) */}
                 {isDevDropdownOpen && devSuggestions.length > 0 && (
-                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-[#0b0f19] border border-[#1e293b] rounded-xl shadow-2xl max-h-36 overflow-y-auto z-20">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-[#0b0f19] border border-[#1e293b] rounded-xl shadow-2xl max-h-40 overflow-y-auto z-30">
                     {devSuggestions.map((item, idx) => (
                       <button
                         key={idx}
@@ -743,7 +783,10 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
           ) : (
             <div className="pt-2 border-t border-[#1e293b] text-center text-xs font-bold text-slate-400">
               {isDevSolved ? (
-                <span className="text-emerald-400">⭐ {isFr ? 'Point validé !' : 'Solved!'}</span>
+                <span className="text-emerald-400 flex items-center justify-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>{isFr ? 'Point validé' : 'Solved'}</span>
+                </span>
               ) : (
                 <span className="text-slate-500">{isFr ? 'Essais épuisés' : 'Attempts ended'}</span>
               )}
@@ -772,7 +815,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
 
             <p className="text-xs text-slate-400 mb-3">
               {isFr
-                ? `Sélectionnez jusqu'à 3 genres clés.`
+                ? 'Sélectionnez jusqu’à 3 genres clés.'
                 : 'Pick up to 3 matching genres.'}
             </p>
 
@@ -788,14 +831,18 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
                     return (
                       <span
                         key={g}
-                        className={`text-[10px] px-2 py-0.5 rounded-md font-bold ${
+                        className={`text-[10px] px-2 py-0.5 rounded-md font-bold flex items-center gap-1 ${
                           isTarget
                             ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                             : 'bg-slate-800 text-slate-400 line-through'
                         }`}
                       >
-                        {isTarget ? '✅ ' : '❌ '}
-                        {g}
+                        {isTarget ? (
+                          <Check className="w-3 h-3 text-emerald-400" />
+                        ) : (
+                          <X className="w-3 h-3 text-rose-400" />
+                        )}
+                        <span>{g}</span>
                       </span>
                     );
                   })}
@@ -833,7 +880,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
                 className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white text-[11px] focus:outline-none focus:border-amber-500"
               />
 
-              <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto no-scrollbar p-1 bg-slate-950/60 rounded-lg border border-slate-800">
+              <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto no-scrollbar p-1.5 bg-slate-950/60 rounded-lg border border-slate-800">
                 {filteredGenresList.map((genre) => {
                   const isSelected = selectedGenres.includes(genre);
                   return (
@@ -867,7 +914,10 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
           ) : (
             <div className="pt-2 border-t border-[#1e293b] text-center text-xs font-bold text-slate-400">
               {isGenreSolved ? (
-                <span className="text-emerald-400">⭐ {isFr ? 'Point validé !' : 'Solved!'}</span>
+                <span className="text-emerald-400 flex items-center justify-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>{isFr ? 'Point validé' : 'Solved'}</span>
+                </span>
               ) : (
                 <span className="text-slate-500">{isFr ? 'Essais épuisés' : 'Attempts ended'}</span>
               )}
@@ -882,21 +932,24 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
           <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#1e293b]">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-lg font-black text-white">
-                  {score === 3
-                    ? isFr
-                      ? '⭐ Enquête Parfaite !'
-                      : '⭐ Perfect Investigation!'
-                    : score >= 2
-                    ? isFr
-                      ? '🎉 Belle Déduction !'
-                      : '🎉 Great Deduction!'
-                    : isFr
-                    ? '📁 Dossier Clôturé'
-                    : '📁 Case Closed'}
+                <span className="text-lg font-black text-white flex items-center gap-1.5">
+                  <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                  <span>
+                    {score === 3
+                      ? isFr
+                        ? 'Enquête Parfaite'
+                        : 'Perfect Investigation'
+                      : score >= 2
+                      ? isFr
+                        ? 'Excellente Déduction'
+                        : 'Great Deduction'
+                      : isFr
+                      ? 'Dossier Clôturé'
+                      : 'Case Closed'}
+                  </span>
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-black">
-                  {score}/3 ⭐
+                  {score}/3
                 </span>
               </div>
               <p className="text-xs text-slate-300">
@@ -1010,7 +1063,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
               onClick={() => setIsZoomModalOpen(false)}
               className="absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-black/70 hover:bg-black text-white text-xs font-bold transition cursor-pointer"
             >
-              {isFr ? 'Fermer (Échap)' : 'Close (Esc)'}
+              {isFr ? 'Fermer' : 'Close'}
             </button>
           </div>
         </div>
@@ -1024,12 +1077,12 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
           gameMode: 'Profille',
           date: currentDate,
           isWon,
-          scoreText: `${score}/3 ⭐ (${isWon ? (isFr ? 'Succès' : 'Won') : isFr ? 'Échec' : 'Lost'})`,
+          scoreText: `${score}/3 (${isWon ? (isFr ? 'Succès' : 'Won') : isFr ? 'Échec' : 'Lost'})`,
           details: [
-            `📅 Année : ${isYearSolved ? '🟩 Exact' : '🟥 Échec'} (${yearGuesses.length}/3)`,
-            `🏢 Studio : ${isDevSolved ? '🟩 Exact' : '🟥 Échec'} (${devGuesses.length}/3)`,
-            `🎨 Style : ${isGenreSolved ? '🟩 Exact' : '🟥 Échec'} (${genreGuesses.length}/3)`,
-            `⭐ Score final : ${score}/3`,
+            `Année : ${isYearSolved ? 'Exact' : 'Non trouvé'} (${yearGuesses.length}/3)`,
+            `Studio : ${isDevSolved ? 'Exact' : 'Non trouvé'} (${devGuesses.length}/3)`,
+            `Style : ${isGenreSolved ? 'Exact' : 'Non trouvé'} (${genreGuesses.length}/3)`,
+            `Score final : ${score}/3`,
           ],
         }}
       />

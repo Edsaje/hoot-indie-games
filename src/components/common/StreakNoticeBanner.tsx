@@ -5,7 +5,7 @@ import { useGameStats } from '../../context/useGameStats';
 import { getTodayDateString, getYesterdayDateString, getChallengeStatusForDate } from '../../utils/streakManager';
 import { soundFx } from '../../utils/audio';
 
-import { type DailyGameMode } from '../../context/GameStatsContext';
+import { type DailyGameMode, defaultModeStats } from '../../context/GameStatsContext';
 
 interface StreakNoticeBannerProps {
   mode: DailyGameMode;
@@ -27,7 +27,7 @@ export const StreakNoticeBanner: React.FC<StreakNoticeBannerProps> = ({
   const todayStr = getTodayDateString();
   const yesterdayStr = getYesterdayDateString(todayStr);
 
-  const modeStats = stats[mode];
+  const modeStats = stats[mode] || defaultModeStats;
   const breakInfo = modeStats.activeStreakBreak;
   const isRescued = Boolean(modeStats.streakRescued) && currentDate === yesterdayStr && isWon;
 
@@ -45,7 +45,7 @@ export const StreakNoticeBanner: React.FC<StreakNoticeBannerProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <h4 className="text-sm font-black text-white flex items-center gap-1.5">
-                <span>{isFr ? '🔥 Flamme de série préservée !' : '🔥 Streak Flame Preserved!'}</span>
+                <span>{isFr ? 'Flamme de série préservée !' : 'Streak Flame Preserved!'}</span>
               </h4>
               <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black uppercase">
                 {modeStats.currentStreak} {isFr ? 'jours' : 'days'}
@@ -90,7 +90,7 @@ export const StreakNoticeBanner: React.FC<StreakNoticeBannerProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <h4 className="text-sm font-black text-amber-200">
-                {isFr ? "⚠️ Fin de série : oubli du défi d'hier" : "⚠️ Streak ended: yesterday was missed"}
+                {isFr ? "Fin de série : oubli du défi d'hier" : 'Streak ended: yesterday was missed'}
               </h4>
               <span className="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-bold">
                 {isFr ? `Série perdue : ${breakInfo.lostStreak} j` : `Lost streak: ${breakInfo.lostStreak} d`}
@@ -113,7 +113,7 @@ export const StreakNoticeBanner: React.FC<StreakNoticeBannerProps> = ({
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 text-xs font-black transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
               >
                 <Flame className="w-3.5 h-3.5 fill-slate-950" />
-                <span>{isFr ? "⚡ Rattraper le jeu d'hier (Veille)" : "⚡ Play yesterday's puzzle"}</span>
+                <span>{isFr ? "Rattraper le défi d'hier" : "Play yesterday's puzzle"}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}

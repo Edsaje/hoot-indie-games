@@ -4,7 +4,7 @@ import { X, Award, Flame, BarChart3, RotateCcw, Share2, Check } from 'lucide-rea
 import { useGameStats } from '../../context/useGameStats';
 import { soundFx } from '../../utils/audio';
 
-import { type DailyGameMode } from '../../context/GameStatsContext';
+import { type DailyGameMode, defaultOverallStats } from '../../context/GameStatsContext';
 
 interface StatsModalProps {
   isOpen: boolean;
@@ -20,7 +20,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
 
   if (!isOpen) return null;
 
-  const currentModeStats = stats[activeTab];
+  const currentModeStats = stats[activeTab] || defaultOverallStats[activeTab];
   const winRate = currentModeStats.played > 0
     ? Math.round((currentModeStats.won / currentModeStats.played) * 100)
     : 0;

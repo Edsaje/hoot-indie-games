@@ -17,7 +17,13 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     try {
       const saved = localStorage.getItem(STATS_STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved) as OverallStats;
+        const parsed = JSON.parse(saved);
+        return {
+          screenle: { ...defaultOverallStats.screenle, ...(parsed.screenle || {}) },
+          indledle: { ...defaultOverallStats.indledle, ...(parsed.indledle || {}) },
+          linkle: { ...defaultOverallStats.linkle, ...(parsed.linkle || {}) },
+          profille: { ...defaultOverallStats.profille, ...(parsed.profille || {}) },
+        };
       }
     } catch {
       // Fallback
@@ -40,7 +46,8 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     guessCount: number
   ) => {
     setStats((prev) => {
-      const modeStats = { ...prev[mode] };
+      const currentMode = prev[mode] || defaultOverallStats[mode];
+      const modeStats = { ...currentMode };
 
       // Prevent counting the same day twice for the same game
       if (modeStats.lastPlayedDate === dateStr) {
@@ -152,7 +159,7 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setStats((prev) => ({
       ...prev,
       [mode]: {
-        ...prev[mode],
+        ...(prev[mode] || defaultOverallStats[mode]),
         activeStreakBreak: null,
       },
     }));
