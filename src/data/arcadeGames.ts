@@ -62,6 +62,6 @@ export const ARCADE_GAMES: ArcadeGameMeta[] = [
     id: 'vectrex',
     name: 'Mine Storm 1982',
     icon: '⚡',
-    instructions: 'GAUCHE/DROITE pour pivoter, HAUT pour propulser l\'aéronef, ESPACE pour atomiser les mines.',
+    instructions: 'GAUCHE/DROITE pour pivoter, HAUT pour propulser l\'aéronef, ESPACE pour tirer, TOUCHE E pour fuir en Hyperdrive.',
   },
 ];

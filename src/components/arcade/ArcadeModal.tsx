@@ -298,7 +298,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
       };
 
-      intervalIdRef.current = window.setInterval(step, 145);
+      intervalIdRef.current = window.setInterval(step, 115);
     }
 
     // ==========================================
@@ -311,7 +311,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let rightY = 160;
       let leftScore = 0;
       let rightScore = 0;
-      let ball = { x: 200, y: 200, r: 7, vx: 2.8, vy: 1.6 };
+      let ball = { x: 200, y: 200, r: 7, vx: 4.4, vy: 2.2 };
       let gameActive = true;
       let started = false;
 
@@ -333,8 +333,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             soundFx.playClick();
           }
         } else {
-          if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']) && leftY > 0) leftY -= 4.8;
-          if (isKeyDown(['ArrowDown', 'KeyS']) && leftY < height - padH) leftY += 4.8;
+          if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']) && leftY > 0) leftY -= 5.4;
+          if (isKeyDown(['ArrowDown', 'KeyS']) && leftY < height - padH) leftY += 5.4;
         }
 
         // Launch ball on space or arrow press
@@ -345,7 +345,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
         if (started) {
           // Adaptive AI
-          const aiSpeed = 2.2 + leftScore * 0.12;
+          const aiSpeed = 3.6 + leftScore * 0.15;
           if (ball.y < rightY + padH / 2 - 5) rightY -= aiSpeed;
           else if (ball.y > rightY + padH / 2 + 5) rightY += aiSpeed;
           rightY = Math.max(0, Math.min(height - padH, rightY));
@@ -367,9 +367,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             ball.y <= leftY + padH &&
             ball.vx < 0
           ) {
-            ball.vx = Math.abs(ball.vx) * 1.02;
             const delta = (ball.y - (leftY + padH / 2)) / (padH / 2);
-            ball.vy = delta * 3.2;
+            ball.vy = delta * 4.2;
+            ball.vx = Math.min(7.2, Math.abs(ball.vx) + 0.18);
             ball.x = 25 + ball.r;
             addScore(1);
             soundFx.playChime();
@@ -383,9 +383,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             ball.y <= rightY + padH &&
             ball.vx > 0
           ) {
-            ball.vx = -Math.abs(ball.vx) * 1.02;
             const delta = (ball.y - (rightY + padH / 2)) / (padH / 2);
-            ball.vy = delta * 3.2;
+            ball.vy = delta * 4.2;
+            ball.vx = -Math.min(7.2, Math.abs(ball.vx) + 0.18);
             ball.x = width - 25 - ball.r;
             soundFx.playClick();
           }
@@ -398,12 +398,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
               triggerGameOver();
               return;
             }
-            ball = { x: 200, y: 200, r: 7, vx: 2.8, vy: (Math.random() - 0.5) * 3 };
+            ball = { x: 200, y: 200, r: 7, vx: 4.4, vy: (Math.random() - 0.5) * 3.5 };
             started = false;
           } else if (ball.x > width) {
             leftScore++;
             soundFx.playVictory();
-            ball = { x: 200, y: 200, r: 7, vx: -2.8, vy: (Math.random() - 0.5) * 3 };
+            ball = { x: 200, y: 200, r: 7, vx: -4.4, vy: (Math.random() - 0.5) * 3.5 };
             started = false;
           }
         }
@@ -462,7 +462,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const padW = 80;
       const padH = 10;
       let padX = width / 2 - padW / 2;
-      let ball = { x: 200, y: 350, r: 6, vx: 2.4, vy: -2.6 };
+      let ball = { x: 200, y: 350, r: 6, vx: 3.2, vy: -4.2 };
       let started = false;
       let gameActive = true;
 
@@ -492,8 +492,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         if (touchPosRef.current.active) {
           padX = Math.max(0, Math.min(width - padW, touchPosRef.current.x - padW / 2));
         } else {
-          if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && padX > 0) padX -= 4.8;
-          if (isKeyDown(['ArrowRight', 'KeyD']) && padX < width - padW) padX += 4.8;
+          if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && padX > 0) padX -= 5.4;
+          if (isKeyDown(['ArrowRight', 'KeyD']) && padX < width - padW) padX += 5.4;
         }
 
         if (!started) {
@@ -537,7 +537,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           ) {
             ball.vy = -Math.abs(ball.vy);
             const hit = (ball.x - (padX + padW / 2)) / (padW / 2);
-            ball.vx = hit * 3.2;
+            ball.vx = hit * 4.4;
             soundFx.playClick();
           }
 
@@ -556,6 +556,10 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
                 ) {
                   b.active = false;
                   ball.vy *= -1;
+                  // Authentic Atari speed acceleration on top layers
+                  if (r <= 1) {
+                    ball.vy = Math.sign(ball.vy) * Math.min(6.5, Math.abs(ball.vy) + 0.25);
+                  }
                   addScore(10);
                   soundFx.playChime();
                 }
@@ -623,7 +627,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     // 4. FLAPPY HIBOU
     // ==========================================
     else if (selectedGame === 'flappy') {
-      let bird = { y: 200, vy: 0, gravity: 0.22, jump: -4.4 };
+      let bird = { y: 200, vy: 0, gravity: 0.26, jump: -5.0 };
       interface Pipe {
         x: number;
         w: number;
@@ -660,7 +664,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
           // Spawn pipes
           if (frame % 115 === 0) {
-            const gap = 138;
+            const gap = 132;
             const top = Math.random() * (height - gap - 80) + 40;
             pipes.push({ x: width, w: 45, top, gap, passed: false });
           }
@@ -668,7 +672,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           // Move pipes & test collision
           for (let i = pipes.length - 1; i >= 0; i--) {
             const p = pipes[i];
-            p.x -= 1.6;
+            p.x -= 1.85;
 
             // Score point
             if (p.x + p.w < 60 && !p.passed) {
@@ -737,66 +741,181 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     // 5. HIBOU INVADERS
     // ==========================================
     else if (selectedGame === 'invaders') {
-      let playerX = 185;
+      let playerX = 200;
       interface Bullet {
+        x: number;
+        y: number;
+      }
+      interface AlienBomb {
         x: number;
         y: number;
       }
       interface Invader {
         x: number;
         y: number;
+        type: 'squid' | 'crab' | 'octopus';
+        points: number;
         alive: boolean;
-        icon: string;
       }
+      interface BunkerBlock {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        alive: boolean;
+      }
+
       let bullets: Bullet[] = [];
+      let alienBombs: AlienBomb[] = [];
       let invaders: Invader[] = [];
+      let bunkers: BunkerBlock[] = [];
       let shootTimer = 0;
+      let bombTimer = 0;
       let direction = 1;
       let gameActive = true;
       let started = false;
+      let marchTimer = 0;
+      let invaderFrame: 0 | 1 = 0;
+      let lives = 3;
+      let hitFlicker = 0;
 
-      for (let r = 0; r < 4; r++) {
-        for (let c = 0; c < 7; c++) {
-          invaders.push({
-            x: 40 + c * 45,
-            y: 40 + r * 35,
-            alive: true,
-            icon: r % 2 === 0 ? '👾' : '🛸',
-          });
+      // 3 Bunkers with 6 destructible blocks each
+      const initBunkers = () => {
+        bunkers = [];
+        const bunkerXs = [65, 190, 315];
+        for (const bx of bunkerXs) {
+          for (let r = 0; r < 2; r++) {
+            for (let c = 0; c < 3; c++) {
+              bunkers.push({
+                x: bx + c * 10,
+                y: 318 + r * 9,
+                w: 9,
+                h: 8,
+                alive: true,
+              });
+            }
+          }
         }
-      }
+      };
+
+      const initInvaders = (startY = 45) => {
+        invaders = [];
+        for (let r = 0; r < 4; r++) {
+          for (let c = 0; c < 7; c++) {
+            const type: 'squid' | 'crab' | 'octopus' =
+              r === 0 ? 'squid' : r < 3 ? 'crab' : 'octopus';
+            const points = r === 0 ? 30 : r < 3 ? 20 : 10;
+            invaders.push({
+              x: 40 + c * 46,
+              y: startY + r * 30,
+              type,
+              points,
+              alive: true,
+            });
+          }
+        }
+      };
+
+      initBunkers();
+      initInvaders(45);
 
       canvas.onclick = () => {
         started = true;
-        if (shootTimer <= 0) {
-          bullets.push({ x: playerX, y: height - 40 });
-          shootTimer = 18;
+        if (shootTimer <= 0 && bullets.length < 2) {
+          bullets.push({ x: playerX, y: height - 36 });
+          shootTimer = 16;
           soundFx.playClick();
+        }
+      };
+
+      // Draw pixel-matrix alien
+      const drawInvaderSprite = (inv: Invader, f: 0 | 1) => {
+        const ix = inv.x;
+        const iy = inv.y;
+
+        if (inv.type === 'squid') {
+          ctx.fillStyle = '#38bdf8';
+          ctx.fillRect(ix - 4, iy - 6, 8, 4);
+          ctx.fillRect(ix - 6, iy - 2, 12, 4);
+          ctx.fillRect(ix - 2, iy - 8, 4, 2);
+          if (f === 0) {
+            ctx.fillRect(ix - 6, iy + 2, 3, 4);
+            ctx.fillRect(ix + 3, iy + 2, 3, 4);
+          } else {
+            ctx.fillRect(ix - 4, iy + 2, 2, 5);
+            ctx.fillRect(ix + 2, iy + 2, 2, 5);
+          }
+          ctx.fillStyle = '#060f09';
+          ctx.fillRect(ix - 3, iy - 3, 2, 2);
+          ctx.fillRect(ix + 1, iy - 3, 2, 2);
+        } else if (inv.type === 'crab') {
+          ctx.fillStyle = '#f59e0b';
+          ctx.fillRect(ix - 7, iy - 4, 14, 6);
+          ctx.fillRect(ix - 5, iy - 7, 10, 3);
+          if (f === 0) {
+            ctx.fillRect(ix - 9, iy - 2, 3, 6);
+            ctx.fillRect(ix + 6, iy - 2, 3, 6);
+            ctx.fillRect(ix - 7, iy + 2, 3, 4);
+            ctx.fillRect(ix + 4, iy + 2, 3, 4);
+          } else {
+            ctx.fillRect(ix - 9, iy - 6, 3, 6);
+            ctx.fillRect(ix + 6, iy - 6, 3, 6);
+            ctx.fillRect(ix - 5, iy + 2, 2, 4);
+            ctx.fillRect(ix + 3, iy + 2, 2, 4);
+          }
+          ctx.fillStyle = '#060f09';
+          ctx.fillRect(ix - 4, iy - 3, 2, 2);
+          ctx.fillRect(ix + 2, iy - 3, 2, 2);
+        } else {
+          ctx.fillStyle = '#a855f7';
+          ctx.fillRect(ix - 7, iy - 6, 14, 6);
+          ctx.fillRect(ix - 9, iy - 3, 18, 5);
+          if (f === 0) {
+            ctx.fillRect(ix - 8, iy + 2, 3, 4);
+            ctx.fillRect(ix - 2, iy + 2, 4, 3);
+            ctx.fillRect(ix + 5, iy + 2, 3, 4);
+          } else {
+            ctx.fillRect(ix - 6, iy + 2, 3, 4);
+            ctx.fillRect(ix - 1, iy + 2, 2, 5);
+            ctx.fillRect(ix + 3, iy + 2, 3, 4);
+          }
+          ctx.fillStyle = '#060f09';
+          ctx.fillRect(ix - 4, iy - 3, 2, 2);
+          ctx.fillRect(ix + 2, iy - 3, 2, 2);
         }
       };
 
       const loop = () => {
         if (!gameActive) return;
         shootTimer--;
+        bombTimer--;
+        if (hitFlicker > 0) hitFlicker--;
 
         if (!started) {
           ctx.fillStyle = '#060f09';
           ctx.fillRect(0, 0, width, height);
 
-          // Player (Owl)
-          ctx.font = '28px Arial';
-          ctx.textAlign = 'center';
-          ctx.fillText('🦉', playerX, height - 20);
+          // Player Cannon
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(playerX - 13, height - 22, 26, 8);
+          ctx.fillRect(playerX - 8, height - 27, 16, 5);
+          ctx.fillRect(playerX - 2, height - 32, 4, 5);
+
+          // Draw Bunkers
+          ctx.fillStyle = '#10b981';
+          for (const b of bunkers) {
+            if (b.alive) ctx.fillRect(b.x, b.y, b.w, b.h);
+          }
 
           // Invaders
           for (const inv of invaders) {
-            ctx.fillText(inv.icon, inv.x, inv.y);
+            drawInvaderSprite(inv, 0);
           }
 
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
           ctx.font = 'bold 13px sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText('Appuyez sur ESPACE ou Clic pour attaquer', width / 2, height / 2 + 50);
+          ctx.fillText('Appuyez sur ESPACE ou Clic pour engager le combat', width / 2, height / 2 + 55);
           ctx.textAlign = 'left';
 
           if (isKeyDown(['Space', 'ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD', 'KeyQ'])) {
@@ -805,86 +924,176 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           return;
         }
 
+        // Cannon Movement
         if (touchPosRef.current.active) {
           const tx = touchPosRef.current.x;
-          if (Math.abs(playerX - tx) > 6) {
-            playerX += Math.sign(tx - playerX) * 4.2;
+          if (Math.abs(playerX - tx) > 5) {
+            playerX += Math.sign(tx - playerX) * 4.8;
             playerX = Math.max(20, Math.min(width - 20, playerX));
           }
         } else {
-          if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 3.8;
-          if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 3.8;
+          if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 4.4;
+          if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 4.4;
         }
 
-        if (isKeyDown(['Space']) && shootTimer <= 0) {
-          bullets.push({ x: playerX, y: height - 40 });
-          shootTimer = 18;
+        // Shooting
+        if (isKeyDown(['Space']) && shootTimer <= 0 && bullets.length < 2) {
+          bullets.push({ x: playerX, y: height - 36 });
+          shootTimer = 16;
           soundFx.playClick();
+        }
+
+        // Alien bombs dropping
+        const aliveInvaders = invaders.filter((i) => i.alive);
+        if (bombTimer <= 0 && aliveInvaders.length > 0) {
+          const randomAlien = aliveInvaders[Math.floor(Math.random() * aliveInvaders.length)];
+          alienBombs.push({ x: randomAlien.x, y: randomAlien.y + 10 });
+          bombTimer = Math.max(35, Math.floor(aliveInvaders.length * 2.2));
+        }
+
+        // Stepped Invader March (Authentic hardware rhythm)
+        marchTimer++;
+        const marchInterval = Math.max(4, Math.floor(aliveInvaders.length * 1.05));
+        if (marchTimer >= marchInterval && aliveInvaders.length > 0) {
+          marchTimer = 0;
+          invaderFrame = invaderFrame === 0 ? 1 : 0;
+
+          let hitWall = false;
+          for (const inv of aliveInvaders) {
+            if ((direction > 0 && inv.x >= width - 25) || (direction < 0 && inv.x <= 25)) {
+              hitWall = true;
+              break;
+            }
+          }
+
+          if (hitWall) {
+            direction *= -1;
+            for (const inv of aliveInvaders) {
+              inv.y += 12;
+              if (inv.y >= height - 45) {
+                gameActive = false;
+                triggerGameOver();
+                return;
+              }
+            }
+          } else {
+            for (const inv of aliveInvaders) {
+              inv.x += direction * 9;
+            }
+          }
         }
 
         ctx.fillStyle = '#060f09';
         ctx.fillRect(0, 0, width, height);
 
-        // Player (Owl)
-        ctx.font = '28px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('🦉', playerX, height - 20);
+        // Player Cannon
+        if (hitFlicker === 0 || Math.floor(hitFlicker / 4) % 2 === 0) {
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(playerX - 13, height - 22, 26, 8);
+          ctx.fillRect(playerX - 8, height - 27, 16, 5);
+          ctx.fillRect(playerX - 2, height - 32, 4, 5);
+        }
 
-        // Bullets
+        // Draw Bunkers
+        ctx.fillStyle = '#10b981';
+        for (const b of bunkers) {
+          if (b.alive) ctx.fillRect(b.x, b.y, b.w, b.h);
+        }
+
+        // Player Bullets
         ctx.fillStyle = '#f59e0b';
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 6;
         ctx.shadowColor = '#f59e0b';
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i];
-          b.y -= 5.2;
-          ctx.fillRect(b.x - 2, b.y, 4, 12);
+          b.y -= 7.0;
+          ctx.fillRect(b.x - 1.5, b.y, 3, 10);
+
+          // Bunker hit test
+          let bulletDestroyed = false;
+          for (const bk of bunkers) {
+            if (bk.alive && b.x >= bk.x && b.x <= bk.x + bk.w && b.y >= bk.y && b.y <= bk.y + bk.h) {
+              bk.alive = false;
+              bullets.splice(i, 1);
+              bulletDestroyed = true;
+              break;
+            }
+          }
+          if (bulletDestroyed) continue;
+
+          // Invader hit test
+          for (const inv of aliveInvaders) {
+            if (Math.abs(b.x - inv.x) < 14 && Math.abs(b.y - inv.y) < 12) {
+              inv.alive = false;
+              bullets.splice(i, 1);
+              addScore(inv.points);
+              soundFx.playChime();
+              bulletDestroyed = true;
+              break;
+            }
+          }
+          if (bulletDestroyed) continue;
+
           if (b.y < 0) bullets.splice(i, 1);
         }
         ctx.shadowBlur = 0;
 
-        let hitEdge = false;
-        let aliveCount = 0;
+        // Alien Bombs
+        ctx.fillStyle = '#ef4444';
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = '#ef4444';
+        for (let i = alienBombs.length - 1; i >= 0; i--) {
+          const bomb = alienBombs[i];
+          bomb.y += 3.6;
+          // Zig-zag missile shape
+          ctx.fillRect(bomb.x - 1.5, bomb.y, 3, 8);
 
-        for (const inv of invaders) {
-          if (!inv.alive) continue;
-          aliveCount++;
-          inv.x += direction * 0.36;
-          if (inv.x > width - 25 || inv.x < 25) hitEdge = true;
-
-          ctx.fillText(inv.icon, inv.x, inv.y);
-
-          // Hit test
-          for (let i = bullets.length - 1; i >= 0; i--) {
-            const b = bullets[i];
-            if (Math.abs(b.x - inv.x) < 16 && Math.abs(b.y - inv.y) < 16) {
-              inv.alive = false;
-              bullets.splice(i, 1);
-              addScore(10);
-              soundFx.playChime();
+          // Bunker hit
+          let bombDestroyed = false;
+          for (const bk of bunkers) {
+            if (bk.alive && bomb.x >= bk.x && bomb.x <= bk.x + bk.w && bomb.y >= bk.y && bomb.y <= bk.y + bk.h) {
+              bk.alive = false;
+              alienBombs.splice(i, 1);
+              bombDestroyed = true;
               break;
             }
           }
+          if (bombDestroyed) continue;
 
-          if (inv.y > height - 60) {
-            gameActive = false;
-            triggerGameOver();
-            return;
+          // Player cannon hit
+          if (Math.abs(bomb.x - playerX) < 14 && bomb.y >= height - 32 && bomb.y <= height - 12) {
+            alienBombs.splice(i, 1);
+            lives--;
+            hitFlicker = 30;
+            soundFx.playError();
+            if (lives <= 0) {
+              gameActive = false;
+              triggerGameOver();
+              return;
+            }
+            continue;
           }
+
+          if (bomb.y > height) alienBombs.splice(i, 1);
+        }
+        ctx.shadowBlur = 0;
+
+        // Draw Invaders
+        for (const inv of aliveInvaders) {
+          drawInvaderSprite(inv, invaderFrame);
         }
 
-        if (hitEdge) {
-          direction *= -1;
-          for (const inv of invaders) inv.y += 8;
-        }
+        // Lives and HUD
+        ctx.fillStyle = '#10b981';
+        ctx.font = 'bold 11px monospace';
+        ctx.fillText(`VIES: ${'▲ '.repeat(lives)}`, 15, height - 8);
 
-        // Wave cleared -> respawn stronger
-        if (aliveCount === 0) {
+        // Wave Cleared -> Respawn with speed increase
+        if (aliveInvaders.length === 0) {
           soundFx.playVictory();
-          addScore(100);
-          for (const inv of invaders) {
-            inv.alive = true;
-            inv.y = Math.max(40, inv.y - 50);
-          }
+          addScore(150);
+          initInvaders(Math.min(100, 45 + 15));
+          initBunkers();
         }
       };
 
@@ -895,7 +1104,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     // 6. FOREST RUN
     // ==========================================
     else if (selectedGame === 'run') {
-      let player = { y: 340, vy: 0, gravity: 0.42, jump: -8.2, onGround: true };
+      let player = { y: 340, vy: 0, gravity: 0.44, jump: -8.8, onGround: true };
       interface Obstacle {
         x: number;
         w: number;
@@ -976,7 +1185,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
 
         // Spawn obstacles
-        if (frame % 120 === 0 || (frame > 350 && Math.random() < 0.01 && frame % 40 !== 0)) {
+        if (frame % 110 === 0 || (frame > 350 && Math.random() < 0.012 && frame % 40 !== 0)) {
           obstacles.push({ x: width, w: 22, h: 32 });
         }
 
@@ -984,7 +1193,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         ctx.fillStyle = '#f59e0b';
         for (let i = obstacles.length - 1; i >= 0; i--) {
           const obs = obstacles[i];
-          obs.x -= 2.4 + scoreRef.current / 4000;
+          obs.x -= 3.5 + scoreRef.current / 2500;
           ctx.fillRect(obs.x, 355 - obs.h, obs.w, obs.h);
 
           // Hit test
@@ -1162,10 +1371,20 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     }
 
     // ==========================================
-    // 8. MINE STORM VECTREX REVIVAL (1982)
+    // 8. MINE STORM VECTREX REVIVAL (1982 AUTHENTIQUE)
     // ==========================================
     else if (selectedGame === 'vectrex') {
-      let ship = { x: 200, y: 200, vx: 0, vy: 0, angle: -Math.PI / 2 };
+      interface Mine {
+        id: number;
+        type: 'floating_large' | 'floating_small' | 'magnetic_large' | 'magnetic_small' | 'fireball_mine';
+        x: number;
+        y: number;
+        vx: number;
+        vy: number;
+        r: number;
+        angle: number;
+        rotSpeed: number;
+      }
       interface Laser {
         x: number;
         y: number;
@@ -1173,196 +1392,588 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         vy: number;
         life: number;
       }
-      interface Mine {
+      interface Fireball {
         x: number;
         y: number;
         vx: number;
         vy: number;
-        r: number;
+        life: number;
       }
+      interface VectorDebris {
+        x: number;
+        y: number;
+        vx: number;
+        vy: number;
+        len: number;
+        angle: number;
+        life: number;
+        maxLife: number;
+        color: string;
+      }
+
+      let nextMineId = 1;
+      let field = 1;
+      let lives = 3;
+      let escapesLeft = 3;
+      let fieldClearTimer = 0;
+      let escapeCooldown = 0;
+
+      let ship = {
+        x: 200,
+        y: 200,
+        vx: 0,
+        vy: 0,
+        angle: -Math.PI / 2,
+        isThrusting: false,
+      };
+
       let lasers: Laser[] = [];
+      let fireballs: Fireball[] = [];
+      let debris: VectorDebris[] = [];
       let mines: Mine[] = [];
       let shootTimer = 0;
+      let shieldTimer = 90; // 1.5s safe shield on spawn
       let gameActive = true;
-      let shieldTimer = 100; // ~1.6s safe spawn shield
 
-      // Safe spawn avoiding ship at center (200, 200)
-      const spawnMines = (count: number, baseSpeed: number) => {
+      // Spawn authentic vector line burst debris
+      const addVectorExplosion = (x: number, y: number, count: number, color = '#00ffcc') => {
         for (let i = 0; i < count; i++) {
+          const a = (i * Math.PI * 2) / count + (Math.random() - 0.5) * 0.4;
+          const spd = 1.2 + Math.random() * 2.8;
+          debris.push({
+            x,
+            y,
+            vx: Math.cos(a) * spd,
+            vy: Math.sin(a) * spd,
+            len: 5 + Math.random() * 8,
+            angle: a,
+            life: 28,
+            maxLife: 28,
+            color,
+          });
+        }
+      };
+
+      // Spawn mines for current field wave
+      const spawnFieldMines = (currentField: number) => {
+        mines = [];
+        fireballs = [];
+
+        // Count depends on wave
+        const floatingCount = Math.max(3, 4 + Math.floor((currentField - 1) * 0.8));
+        const magneticCount = currentField >= 2 ? Math.min(4, 1 + currentField) : 0;
+        const fireballCount = currentField >= 3 ? Math.min(3, currentField - 2) : 0;
+
+        const createMine = (type: Mine['type'], r: number, baseSpeed: number) => {
           let mx = 0;
           let my = 0;
           do {
             mx = Math.random() * width;
             my = Math.random() * height;
-          } while (Math.hypot(mx - 200, my - 200) < 110);
+          } while (Math.hypot(mx - ship.x, my - ship.y) < 100);
 
+          const a = Math.random() * Math.PI * 2;
           mines.push({
+            id: nextMineId++,
+            type,
             x: mx,
             y: my,
-            vx: (Math.random() - 0.5) * baseSpeed,
-            vy: (Math.random() - 0.5) * baseSpeed,
-            r: 16,
+            vx: Math.cos(a) * baseSpeed,
+            vy: Math.sin(a) * baseSpeed,
+            r,
+            angle: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.03,
           });
+        };
+
+        for (let i = 0; i < floatingCount; i++) createMine('floating_large', 16, 0.75);
+        for (let i = 0; i < magneticCount; i++) createMine('magnetic_large', 16, 0.65);
+        for (let i = 0; i < fireballCount; i++) createMine('fireball_mine', 16, 0.7);
+      };
+
+      spawnFieldMines(field);
+
+      // Escape / Hyperdrive (Button 4 / Key E)
+      const triggerHyperdrive = () => {
+        if (escapesLeft > 0 && escapeCooldown <= 0) {
+          escapesLeft--;
+          escapeCooldown = 35;
+          addVectorExplosion(ship.x, ship.y, 10, '#38bdf8');
+
+          // Find safe location
+          let nx = 0;
+          let ny = 0;
+          let attempts = 0;
+          do {
+            nx = 40 + Math.random() * (width - 80);
+            ny = 40 + Math.random() * (height - 80);
+            attempts++;
+          } while (attempts < 20 && mines.some((m) => Math.hypot(m.x - nx, m.y - ny) < 85));
+
+          ship.x = nx;
+          ship.y = ny;
+          ship.vx = 0;
+          ship.vy = 0;
+          shieldTimer = 60; // 1s safe shield after warp
+          addVectorExplosion(ship.x, ship.y, 8, '#00ffcc');
+          soundFx.playVictory();
         }
       };
 
-      spawnMines(5, 0.75);
-
-      canvas.onclick = () => {
+      // Firing laser bolt
+      const fireLaser = () => {
         if (shootTimer <= 0) {
+          const cos = Math.cos(ship.angle);
+          const sin = Math.sin(ship.angle);
           lasers.push({
-            x: ship.x,
-            y: ship.y,
-            vx: Math.cos(ship.angle) * 5.5 + ship.vx,
-            vy: Math.sin(ship.angle) * 5.5 + ship.vy,
-            life: 45,
+            x: ship.x + cos * 16,
+            y: ship.y + sin * 16,
+            vx: cos * 8.2 + ship.vx * 0.4,
+            vy: sin * 8.2 + ship.vy * 0.4,
+            life: 38,
           });
-          shootTimer = 15;
+          shootTimer = 14;
           soundFx.playClick();
         }
+      };
+
+      canvas.onclick = () => {
+        fireLaser();
       };
 
       const loop = () => {
         if (!gameActive) return;
         shootTimer--;
+        if (escapeCooldown > 0) escapeCooldown--;
+        if (shieldTimer > 0) shieldTimer--;
 
-        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ'])) ship.angle -= 0.048;
-        if (isKeyDown(['ArrowRight', 'KeyD'])) ship.angle += 0.048;
-        if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ'])) {
-          ship.vx += Math.cos(ship.angle) * 0.09;
-          ship.vy += Math.sin(ship.angle) * 0.09;
+        // Escape Key trigger
+        if (isKeyDown(['KeyE'])) {
+          triggerHyperdrive();
+          keysDownRef.current.delete('KeyE');
         }
 
-        // Friction & Move
-        ship.vx *= 0.972;
-        ship.vy *= 0.972;
+        // Steering
+        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ'])) ship.angle -= 0.052;
+        if (isKeyDown(['ArrowRight', 'KeyD'])) ship.angle += 0.052;
+
+        // Thrust
+        ship.isThrusting = isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']);
+        if (ship.isThrusting) {
+          ship.vx += Math.cos(ship.angle) * 0.12;
+          ship.vy += Math.sin(ship.angle) * 0.12;
+        }
+
+        // Damping and clamp
+        ship.vx *= 0.982;
+        ship.vy *= 0.982;
+        const currentSpeed = Math.hypot(ship.vx, ship.vy);
+        if (currentSpeed > 5.8) {
+          ship.vx = (ship.vx / currentSpeed) * 5.8;
+          ship.vy = (ship.vy / currentSpeed) * 5.8;
+        }
+
         ship.x += ship.vx;
         ship.y += ship.vy;
 
-        // Wrap boundaries
+        // Screen wrap
         if (ship.x < 0) ship.x = width;
         if (ship.x > width) ship.x = 0;
         if (ship.y < 0) ship.y = height;
         if (ship.y > height) ship.y = 0;
 
-        // Shoot laser
-        if (isKeyDown(['Space']) && shootTimer <= 0) {
-          lasers.push({
-            x: ship.x,
-            y: ship.y,
-            vx: Math.cos(ship.angle) * 5.5 + ship.vx,
-            vy: Math.sin(ship.angle) * 5.5 + ship.vy,
-            life: 45,
-          });
-          shootTimer = 15;
-          soundFx.playClick();
+        // Shoot on space
+        if (isKeyDown(['Space'])) {
+          fireLaser();
         }
 
-        ctx.fillStyle = '#05070a';
+        // Clear Screen with deep cathode black
+        ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
 
-        // Phosphor vector glow
-        ctx.shadowBlur = 10;
+        // Vector CRT bezel frame lines
+        ctx.strokeStyle = 'rgba(0, 255, 204, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(8, 8, width - 16, height - 16);
+
+        // Setup Phosphor Vector Glow
+        ctx.shadowBlur = 8;
         ctx.shadowColor = '#00ffcc';
         ctx.strokeStyle = '#00ffcc';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.8;
 
-        // Draw Ship
+        // Draw Player Ship (Authentic Vectrex needle arrowhead)
         ctx.save();
         ctx.translate(ship.x, ship.y);
         ctx.rotate(ship.angle);
         ctx.beginPath();
-        ctx.moveTo(15, 0);
-        ctx.lineTo(-12, -10);
-        ctx.lineTo(-6, 0);
-        ctx.lineTo(-12, 10);
+        ctx.moveTo(16, 0);       // Needle nose
+        ctx.lineTo(-11, -9);     // Left wingtip
+        ctx.lineTo(-4, 0);       // Rear center notch
+        ctx.lineTo(-11, 9);      // Right wingtip
         ctx.closePath();
         ctx.stroke();
-        ctx.restore();
 
-        // Draw Spawn Shield
-        if (shieldTimer > 0) {
-          shieldTimer--;
-          if (Math.floor(shieldTimer / 6) % 2 === 0) {
-            ctx.strokeStyle = '#00ffcc';
-            ctx.beginPath();
-            ctx.arc(ship.x, ship.y, 22, 0, Math.PI * 2);
-            ctx.stroke();
-          }
+        // Center spine vector line
+        ctx.beginPath();
+        ctx.moveTo(16, 0);
+        ctx.lineTo(-4, 0);
+        ctx.stroke();
+
+        // Thrust Jet Flame (Flickering vector line)
+        if (ship.isThrusting) {
+          ctx.strokeStyle = '#f59e0b';
+          ctx.shadowColor = '#f59e0b';
+          ctx.beginPath();
+          ctx.moveTo(-4, -3);
+          ctx.lineTo(-14 - Math.random() * 7, 0);
+          ctx.lineTo(-4, 3);
+          ctx.stroke();
+          ctx.strokeStyle = '#00ffcc';
+          ctx.shadowColor = '#00ffcc';
         }
 
+        // Draw Spawn / Warp Shield
+        if (shieldTimer > 0 && Math.floor(shieldTimer / 5) % 2 === 0) {
+          ctx.strokeStyle = '#38bdf8';
+          ctx.beginPath();
+          ctx.arc(0, 0, 22, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.strokeStyle = '#00ffcc';
+        }
+        ctx.restore();
+
         // Lasers
-        ctx.shadowColor = '#f59e0b';
-        ctx.strokeStyle = '#f59e0b';
+        ctx.strokeStyle = '#38bdf8';
+        ctx.shadowColor = '#38bdf8';
         for (let i = lasers.length - 1; i >= 0; i--) {
           const l = lasers[i];
           l.x += l.vx;
           l.y += l.vy;
           l.life--;
+
+          // Screen wrap
+          if (l.x < 0) l.x = width;
+          if (l.x > width) l.x = 0;
+          if (l.y < 0) l.y = height;
+          if (l.y > height) l.y = 0;
+
+          // Authentic vector line bolt
+          const boltAngle = Math.atan2(l.vy, l.vx);
           ctx.beginPath();
-          ctx.arc(l.x, l.y, 2, 0, Math.PI * 2);
+          ctx.moveTo(l.x, l.y);
+          ctx.lineTo(l.x - Math.cos(boltAngle) * 9, l.y - Math.sin(boltAngle) * 9);
           ctx.stroke();
+
           if (l.life <= 0) lasers.splice(i, 1);
         }
 
-        // Mines
-        ctx.shadowColor = '#ff0055';
-        ctx.strokeStyle = '#ff0055';
+        // Fireballs (launched by Fireball Mines)
+        ctx.strokeStyle = '#ef4444';
+        ctx.shadowColor = '#ef4444';
+        for (let i = fireballs.length - 1; i >= 0; i--) {
+          const fb = fireballs[i];
+          fb.x += fb.vx;
+          fb.y += fb.vy;
+          fb.life--;
+
+          ctx.beginPath();
+          ctx.arc(fb.x, fb.y, 4, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Hit ship
+          if (shieldTimer <= 0 && Math.hypot(ship.x - fb.x, ship.y - fb.y) < 14) {
+            addVectorExplosion(ship.x, ship.y, 14, '#ef4444');
+            soundFx.playError();
+            lives--;
+            if (lives <= 0) {
+              gameActive = false;
+              triggerGameOver();
+              return;
+            }
+            ship.x = 200;
+            ship.y = 200;
+            ship.vx = 0;
+            ship.vy = 0;
+            shieldTimer = 90;
+            fireballs.splice(i, 1);
+            continue;
+          }
+
+          if (fb.life <= 0 || fb.x < 0 || fb.x > width || fb.y < 0 || fb.y > height) {
+            fireballs.splice(i, 1);
+          }
+        }
+
+        // Mines Loop & Render
+        const newMines: Mine[] = [];
         for (let i = mines.length - 1; i >= 0; i--) {
           const m = mines[i];
+          m.angle += m.rotSpeed;
+
+          // Homing behavior for magnetic mines
+          if (m.type === 'magnetic_large' || m.type === 'magnetic_small') {
+            const dx = ship.x - m.x;
+            const dy = ship.y - m.y;
+            const angleToShip = Math.atan2(dy, dx);
+            const homingAcc = m.type === 'magnetic_small' ? 0.05 : 0.035;
+            m.vx += Math.cos(angleToShip) * homingAcc;
+            m.vy += Math.sin(angleToShip) * homingAcc;
+
+            const maxSpd = m.type === 'magnetic_small' ? 1.45 : 0.95;
+            const spd = Math.hypot(m.vx, m.vy);
+            if (spd > maxSpd) {
+              m.vx = (m.vx / spd) * maxSpd;
+              m.vy = (m.vy / spd) * maxSpd;
+            }
+          }
+
           m.x += m.vx;
           m.y += m.vy;
 
+          // Screen wrap
           if (m.x < 0) m.x = width;
           if (m.x > width) m.x = 0;
           if (m.y < 0) m.y = height;
           if (m.y > height) m.y = 0;
 
-          // Draw vector polygon mine
-          ctx.beginPath();
-          for (let j = 0; j < 8; j++) {
-            const rad = (j * Math.PI) / 4;
-            const dist = j % 2 === 0 ? m.r : m.r / 2;
-            const px = m.x + Math.cos(rad) * dist;
-            const py = m.y + Math.sin(rad) * dist;
-            if (j === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
-          }
-          ctx.closePath();
-          ctx.stroke();
+          // Draw authentic Mine Storm vector shapes
+          ctx.save();
+          ctx.translate(m.x, m.y);
+          ctx.rotate(m.angle);
 
-          // Hit test lasers
+          if (m.type === 'floating_large' || m.type === 'floating_small') {
+            // Floating Mine: 4-pointed vector diamond with crosshairs
+            ctx.strokeStyle = '#00ffcc';
+            ctx.shadowColor = '#00ffcc';
+            ctx.beginPath();
+            ctx.moveTo(0, -m.r);
+            ctx.lineTo(m.r, 0);
+            ctx.lineTo(0, m.r);
+            ctx.lineTo(-m.r, 0);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Internal Cross
+            ctx.beginPath();
+            ctx.moveTo(-m.r * 0.65, 0);
+            ctx.lineTo(m.r * 0.65, 0);
+            ctx.moveTo(0, -m.r * 0.65);
+            ctx.lineTo(0, m.r * 0.65);
+            ctx.stroke();
+          } else if (m.type === 'magnetic_large' || m.type === 'magnetic_small') {
+            // Magnetic Mine: Vector diamond with indented hooks
+            ctx.strokeStyle = '#f59e0b';
+            ctx.shadowColor = '#f59e0b';
+            ctx.beginPath();
+            ctx.moveTo(0, -m.r);
+            ctx.lineTo(m.r * 0.5, -m.r * 0.5);
+            ctx.lineTo(m.r, 0);
+            ctx.lineTo(m.r * 0.5, m.r * 0.5);
+            ctx.lineTo(0, m.r);
+            ctx.lineTo(-m.r * 0.5, m.r * 0.5);
+            ctx.lineTo(-m.r, 0);
+            ctx.lineTo(-m.r * 0.5, -m.r * 0.5);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Inner core
+            ctx.beginPath();
+            ctx.arc(0, 0, m.r * 0.35, 0, Math.PI * 2);
+            ctx.stroke();
+          } else {
+            // Fireball Mine: Pulsating star-diamond
+            ctx.strokeStyle = '#ef4444';
+            ctx.shadowColor = '#ef4444';
+            ctx.beginPath();
+            ctx.moveTo(0, -m.r);
+            ctx.lineTo(m.r * 0.4, -m.r * 0.4);
+            ctx.lineTo(m.r, 0);
+            ctx.lineTo(m.r * 0.4, m.r * 0.4);
+            ctx.lineTo(0, m.r);
+            ctx.lineTo(-m.r * 0.4, m.r * 0.4);
+            ctx.lineTo(-m.r, 0);
+            ctx.lineTo(-m.r * 0.4, -m.r * 0.4);
+            ctx.closePath();
+            ctx.stroke();
+          }
+          ctx.restore();
+
+          // Check hit with lasers
+          let mineHit = false;
           for (let li = lasers.length - 1; li >= 0; li--) {
             const l = lasers[li];
-            const dist = Math.hypot(l.x - m.x, l.y - m.y);
-            if (dist < m.r) {
-              soundFx.playChime();
-              addScore(25);
+            if (Math.hypot(l.x - m.x, l.y - m.y) < m.r + 3) {
               lasers.splice(li, 1);
-              mines.splice(i, 1);
+              mineHit = true;
               break;
             }
           }
 
-          // Hit test ship (only if shield expired)
-          if (shieldTimer <= 0) {
-            const shipDist = Math.hypot(ship.x - m.x, ship.y - m.y);
-            if (shipDist < m.r + 8) {
+          if (mineHit) {
+            soundFx.playChime();
+            addVectorExplosion(m.x, m.y, 8, m.type.includes('magnetic') ? '#f59e0b' : m.type === 'fireball_mine' ? '#ef4444' : '#00ffcc');
+
+            // Splitting logic (Authentic Mine Storm)
+            if (m.type === 'floating_large') {
+              addScore(25);
+              // Split into 2 small floating mines
+              newMines.push({
+                id: nextMineId++,
+                type: 'floating_small',
+                x: m.x + 8,
+                y: m.y + 8,
+                vx: m.vx * 1.3 + (Math.random() - 0.5) * 0.6,
+                vy: m.vy * 1.3 + (Math.random() - 0.5) * 0.6,
+                r: 9,
+                angle: m.angle,
+                rotSpeed: 0.05,
+              });
+              newMines.push({
+                id: nextMineId++,
+                type: 'floating_small',
+                x: m.x - 8,
+                y: m.y - 8,
+                vx: -m.vx * 1.3 + (Math.random() - 0.5) * 0.6,
+                vy: -m.vy * 1.3 + (Math.random() - 0.5) * 0.6,
+                r: 9,
+                angle: m.angle + Math.PI,
+                rotSpeed: -0.05,
+              });
+            } else if (m.type === 'floating_small') {
+              addScore(50);
+            } else if (m.type === 'magnetic_large') {
+              addScore(40);
+              // Split into 2 small magnetic mines
+              newMines.push({
+                id: nextMineId++,
+                type: 'magnetic_small',
+                x: m.x + 8,
+                y: m.y + 8,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                r: 9,
+                angle: m.angle,
+                rotSpeed: 0.06,
+              });
+              newMines.push({
+                id: nextMineId++,
+                type: 'magnetic_small',
+                x: m.x - 8,
+                y: m.y - 8,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                r: 9,
+                angle: m.angle + Math.PI,
+                rotSpeed: -0.06,
+              });
+            } else if (m.type === 'magnetic_small') {
+              addScore(80);
+            } else if (m.type === 'fireball_mine') {
+              addScore(75);
+              // Fireball project launched at ship!
+              const angleToShip = Math.atan2(ship.y - m.y, ship.x - m.x);
+              fireballs.push({
+                x: m.x,
+                y: m.y,
+                vx: Math.cos(angleToShip) * 3.8,
+                vy: Math.sin(angleToShip) * 3.8,
+                life: 90,
+              });
+            }
+
+            mines.splice(i, 1);
+            continue;
+          }
+
+          // Check hit with ship
+          if (shieldTimer <= 0 && Math.hypot(ship.x - m.x, ship.y - m.y) < m.r + 9) {
+            addVectorExplosion(ship.x, ship.y, 16, '#00ffcc');
+            soundFx.playError();
+            lives--;
+            if (lives <= 0) {
               gameActive = false;
               triggerGameOver();
               return;
             }
+            ship.x = 200;
+            ship.y = 200;
+            ship.vx = 0;
+            ship.vy = 0;
+            shieldTimer = 90;
+            break;
           }
         }
 
-        ctx.shadowBlur = 0;
+        mines.push(...newMines);
 
-        // Respawn wave
-        if (mines.length === 0) {
-          soundFx.playVictory();
-          addScore(100);
-          spawnMines(7, 0.95);
-          shieldTimer = 70;
+        // Vector line explosions (Debris)
+        for (let i = debris.length - 1; i >= 0; i--) {
+          const d = debris[i];
+          d.x += d.vx;
+          d.y += d.vy;
+          d.life--;
+
+          const alpha = d.life / d.maxLife;
+          ctx.strokeStyle = d.color;
+          ctx.shadowColor = d.color;
+          ctx.globalAlpha = alpha;
+          ctx.beginPath();
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x + Math.cos(d.angle) * (d.len * alpha), d.y + Math.sin(d.angle) * (d.len * alpha));
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+
+          if (d.life <= 0) debris.splice(i, 1);
+        }
+
+        // Vector CRT HUD (Score, Field, Escapes, Lives)
+        ctx.fillStyle = '#00ffcc';
+        ctx.shadowColor = '#00ffcc';
+        ctx.font = 'bold 12px monospace';
+        ctx.fillText(`FIELD ${field}`, 20, 26);
+        ctx.fillText(`FUITE: ${escapesLeft}`, width - 85, 26);
+
+        // Mini vector ship icons for remaining lives
+        for (let li = 0; li < lives; li++) {
+          ctx.save();
+          ctx.translate(25 + li * 16, height - 20);
+          ctx.rotate(-Math.PI / 2);
+          ctx.beginPath();
+          ctx.moveTo(8, 0);
+          ctx.lineTo(-6, -5);
+          ctx.lineTo(-2, 0);
+          ctx.lineTo(-6, 5);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Wave cleared check
+        if (mines.length === 0 && fireballs.length === 0) {
+          fieldClearTimer++;
+          ctx.fillStyle = '#00ffcc';
+          ctx.font = 'bold 18px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(`FIELD ${field} CLEARED!`, width / 2, height / 2);
+          ctx.textAlign = 'left';
+
+          if (fieldClearTimer === 1) {
+            soundFx.playVictory();
+            addScore(150 + field * 50);
+          }
+
+          if (fieldClearTimer > 75) {
+            fieldClearTimer = 0;
+            field++;
+            escapesLeft = 3; // Replenish escapes
+            shieldTimer = 90;
+            ship.x = 200;
+            ship.y = 200;
+            ship.vx = 0;
+            ship.vy = 0;
+            spawnFieldMines(field);
+          }
         }
       };
 
@@ -1380,7 +1991,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyE'].includes(e.code)) {
         e.preventDefault();
       }
       keysDownRef.current.add(e.code);
@@ -1719,8 +2330,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             </div>
           )}
 
-          {/* SNAKE, TETRIS, VECTREX: 4-Way D-Pad + Action */}
-          {['snake', 'tetris', 'vectrex'].includes(selectedGame) && (
+          {/* SNAKE, TETRIS: 4-Way D-Pad + Action */}
+          {['snake', 'tetris'].includes(selectedGame) && (
             <div className="flex items-center justify-center gap-5 mt-3 pt-3 border-t border-[#1e293b] w-full">
               <div className="grid grid-cols-3 gap-1.5">
                 <div />
@@ -1762,6 +2373,54 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
                 <span>ACTION</span>
                 <span className="text-[10px] font-medium opacity-75">(Espace)</span>
               </button>
+            </div>
+          )}
+
+          {/* VECTREX MINE STORM: Steering D-Pad + Thrust + Fire + Hyperdrive */}
+          {selectedGame === 'vectrex' && (
+            <div className="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-[#1e293b] w-full">
+              {/* Steering D-Pad */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  {...bindVirtualTouch('ArrowLeft')}
+                  className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-cyan-500 active:text-slate-950 touch-none select-none text-cyan-300 shadow"
+                  title="Pivoter à Gauche"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <button
+                  {...bindVirtualTouch('ArrowUp')}
+                  className="w-12 h-12 rounded-xl bg-slate-800 border border-cyan-500/40 flex items-center justify-center active:bg-cyan-500 active:text-slate-950 touch-none select-none text-cyan-300 shadow"
+                  title="Propulsion (Gaz)"
+                >
+                  <ArrowUp className="w-5 h-5" />
+                </button>
+                <button
+                  {...bindVirtualTouch('ArrowRight')}
+                  className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-cyan-500 active:text-slate-950 touch-none select-none text-cyan-300 shadow"
+                  title="Pivoter à Droite"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Action Buttons: Fire & Escape / Hyperdrive */}
+              <div className="flex items-center gap-2 flex-1">
+                <button
+                  {...bindVirtualTouch('KeyE')}
+                  className="flex-1 h-12 rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/50 text-cyan-300 font-black text-[11px] uppercase tracking-wider shadow active:scale-95 touch-none select-none cursor-pointer flex items-center justify-center gap-1"
+                  title="Fuite / Hyperdrive (Touche E)"
+                >
+                  ⚡ Fuite (E)
+                </button>
+                <button
+                  {...bindVirtualTouch('Space')}
+                  className="flex-1 h-12 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 active:scale-95 touch-none select-none cursor-pointer flex items-center justify-center gap-1"
+                  title="Tirer (Espace)"
+                >
+                  💥 Tirer
+                </button>
+              </div>
             </div>
           )}
         </div>

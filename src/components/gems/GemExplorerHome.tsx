@@ -36,8 +36,21 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   const { allPlayableGames } = useSteamCatalog();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
-  // The featured canonical daily gem
-  const dailyGem = getDailyGame(currentDate, 0);
+  // The featured canonical daily gem (guaranteed never to spoil Screenle (offset 0) or Indledle (offset 3))
+  const dailyGem = useMemo(() => {
+    const screenleGame = getDailyGame(currentDate, 0);
+    const indledleGame = getDailyGame(currentDate, 3);
+    let offset = 17;
+    let candidate = getDailyGame(currentDate, offset);
+    while (
+      (candidate.id === screenleGame.id || candidate.id === indledleGame.id) &&
+      offset < 100
+    ) {
+      offset += 5;
+      candidate = getDailyGame(currentDate, offset);
+    }
+    return candidate;
+  }, [currentDate]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
@@ -227,28 +240,20 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-3 border-t border-[#1e293b]">
-                {dailyGem.steamUrl && (
+              <div className="pt-3 border-t border-[#1e293b]">
+                {dailyGem.steamUrl ? (
                   <a
                     href={dailyGem.steamUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition"
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition shadow-md shadow-amber-500/20 active:scale-98"
                   >
-                    <span>Voir sur Steam</span>
-                    <ExternalLink className="w-3 h-3 text-slate-400" />
+                    <span>Découvrir sur Steam</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-950" />
                   </a>
+                ) : (
+                  <div className="w-full text-center text-xs text-slate-400 italic py-1">Pépite Quotidienne Certifiée</div>
                 )}
-                <button
-                  onClick={() => {
-                    soundFx.playClick();
-                    onNavigateTab('screenle');
-                  }}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition shadow-sm cursor-pointer"
-                >
-                  <Camera className="w-3.5 h-3.5" />
-                  <span>Deviner</span>
-                </button>
               </div>
             </div>
           </div>
@@ -535,32 +540,20 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                     </div>
 
                     {/* Action Bar */}
-                    <div className="flex items-center justify-between pt-3 border-t border-[#1e293b] gap-2">
+                    <div className="pt-3 border-t border-[#1e293b]">
                       {game.steamUrl ? (
                         <a
                           href={game.steamUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition"
+                          className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition border border-slate-700/50 hover:border-amber-500/40 shadow-sm"
                         >
-                          <span>Steam</span>
-                          <ExternalLink className="w-3 h-3 text-slate-400" />
+                          <span>Voir sur Steam</span>
+                          <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                         </a>
                       ) : (
-                        <div className="flex-1 text-[11px] text-slate-500 italic">Indé Certifié</div>
+                        <div className="w-full text-center text-[11px] text-slate-500 italic py-1">Pépite Certifiée</div>
                       )}
-
-                      <button
-                        onClick={() => {
-                          soundFx.playClick();
-                          onNavigateTab('screenle');
-                        }}
-                        className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition cursor-pointer"
-                        title="Reconnaître dans Screenle"
-                      >
-                        <Camera className="w-3 h-3" />
-                        <span>Deviner</span>
-                      </button>
                     </div>
                   </div>
                 </div>

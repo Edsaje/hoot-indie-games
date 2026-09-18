@@ -63,6 +63,16 @@ async function auditDatabase() {
       console.error(`❌ [Erreur SteamURL] ${game.title} : format URL invalide "${game.steamUrl}".`);
       errors++;
     }
+
+    // 8. Filtrage strict anti-contenu adulte / hentai / NSFW (professionnalisme du catalogue)
+    const adultBannedKeywords = ['hentai', 'sexual', 'nsfw', 'nudity', 'nudité', 'erotic', 'érotique', 'dating sim', 'waifu', 'compagne de bureau', 'porn'];
+    const lowerContent = (game.title + ' ' + game.genre.join(' ') + ' ' + (game.hints?.tagline?.fr || '') + ' ' + (game.hints?.tagline?.en || '')).toLowerCase();
+    for (const kw of adultBannedKeywords) {
+      if (lowerContent.includes(kw)) {
+        console.error(`❌ [Erreur Contenu Adulte] ${game.title} contient le mot-clé interdit "${kw}".`);
+        errors++;
+      }
+    }
   }
 
   console.log('----------------------------------------------------');

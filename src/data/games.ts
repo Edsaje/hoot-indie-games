@@ -2997,40 +2997,6 @@ export const INDIE_GAMES: Game[] = [
     }
   },
   {
-    "id": "ta-fiancee",
-    "title": "Ta fiancée",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure",
-      "Indépendant"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
-    },
-    "developer": "DigitalDream",
-    "steamUrl": "https://store.steampowered.com/app/4753760/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/23bb2f91caffe1fd1cade3d804af3915355d870a/ss_23bb2f91caffe1fd1cade3d804af3915355d870a.1920x1080.jpg?t=1789661941",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/4044e8c03ebac89d139dd672fe29eb883603965b/ss_4044e8c03ebac89d139dd672fe29eb883603965b.1920x1080.jpg?t=1789661941",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/39f38946dbb14974b399faa4ed42390617b19f40/ss_39f38946dbb14974b399faa4ed42390617b19f40.1920x1080.jpg?t=1789661941",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/18306662ee3be731702918be578be81dc63eba13/ss_18306662ee3be731702918be578be81dc63eba13.1920x1080.jpg?t=1789661941",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/300a0524e8005ccc158f2a121c3d1c38f25fe658/ss_300a0524e8005ccc158f2a121c3d1c38f25fe658.1920x1080.jpg?t=1789661941",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753760/911d0147101c56a58e682a4186db455388eafc04/ss_911d0147101c56a58e682a4186db455388eafc04.1920x1080.jpg?t=1789661941"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Une compagne de bureau tout-en-un avec avatar féminin élégant, outils de productivité, collection, évolution et écosystème animé. Personnalisez son apparence et ses tenues pendant qu'elle vous aide à surveiller le PC, planifier, gérer vos finances, écouter de la musique et bien plus.",
-        "en": "An all-in-one desktop companion with a stylish mature avatar, productivity tools, collection and growth features, and a lively desktop ecosystem. Customize her look and outfits while she helps with hardware monitoring, planning, finances, music, pets, desktop effects, and more."
-      },
-      "composer": "special presence on your PC"
-    }
-  },
-  {
     "id": "how-to-fish",
     "title": "How to Fish",
     "releaseYear": 2026,

@@ -14,6 +14,12 @@ import {
   AlertCircle,
   Radio,
   Bot,
+  Lock,
+  Mail,
+  Key,
+  Cloud,
+  ShieldCheck,
+  ArrowRight,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Peer, type DataConnection } from 'peerjs';
@@ -105,9 +111,68 @@ function getBotDecision(): { willGuess: boolean; delayMs: number } {
 }
 
 export const VersusArena: React.FC = () => {
-  const { profile, recordVersusResult } = useUserAccount();
+  const {
+    profile,
+    isAuthenticated,
+    loginWithEmail,
+    signUpWithEmail,
+    setUsername,
+    recordVersusResult,
+  } = useUserAccount();
   const { unlockAchievement } = useAchievements();
   const { allPlayableGames } = useSteamCatalog();
+
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
+  const [authUsername, setAuthUsername] = useState<string>(profile.username || '');
+  const [authEmail, setAuthEmail] = useState<string>('');
+  const [authPassword, setAuthPassword] = useState<string>('');
+  const [authLoading, setAuthLoading] = useState<boolean>(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const hasAccount = isAuthenticated || Boolean(profile.email) || profile.isCloudSynced;
+
+  const handleAccountSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!authEmail.trim() || !authPassword.trim()) {
+      setAuthError('Veuillez renseigner votre email et mot de passe.');
+      return;
+    }
+    if (authPassword.length < 6) {
+      setAuthError('Le mot de passe doit contenir au moins 6 caractères.');
+      return;
+    }
+    setAuthLoading(true);
+    setAuthError(null);
+
+    try {
+      if (authMode === 'signup') {
+        if (authUsername.trim()) {
+          setUsername(authUsername.trim());
+        }
+        const res = await signUpWithEmail(authEmail.trim(), authPassword);
+        setAuthLoading(false);
+        if (res.success) {
+          soundFx.playVictory();
+        } else {
+          soundFx.playError();
+          setAuthError(res.error || 'Erreur lors de la création du compte.');
+        }
+      } else {
+        const res = await loginWithEmail(authEmail.trim(), authPassword);
+        setAuthLoading(false);
+        if (res.success) {
+          soundFx.playVictory();
+        } else {
+          soundFx.playError();
+          setAuthError(res.error || 'Identifiants incorrects.');
+        }
+      }
+    } catch {
+      setAuthLoading(false);
+      soundFx.playError();
+      setAuthError('Une erreur inattendue est survenue.');
+    }
+  };
 
   const [phase, setPhase] = useState<VersusPhase>('lobby');
   const [roomCode, setRoomCode] = useState<string>('');
@@ -687,7 +752,152 @@ export const VersusArena: React.FC = () => {
         </div>
       )}
 
-      {/* LOBBY / CHOIX DU MODE */}
+      {/* COMPTE REQUIS POUR LE 1V1 */}
+      {!hasAccount ? (
+        <div className="max-w-xl mx-auto space-y-6 animate-in fade-in duration-300">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+              <Lock className="w-3.5 h-3.5 text-amber-400" />
+              <span>Compte Joueur Requis • Cloud Souverain</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              Accédez à l'Arène 1v1
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+              Pour défier vos amis en P2P WebRTC, affronter le Grand-Duc et sauvegarder votre cote ELO sur notre cloud souverain, connectez-vous ou créez votre compte joueur gratuit.
+            </p>
+          </div>
+
+          {/* Avantages du compte */}
+          <div className="grid grid-cols-3 gap-3 p-3 bg-[#131a29]/80 border border-[#1e293b] rounded-2xl text-center text-xs">
+            <div className="p-2 space-y-1">
+              <ShieldCheck className="w-5 h-5 mx-auto text-amber-400" />
+              <div className="font-bold text-white text-[11px]">Classement ELO</div>
+              <div className="text-[10px] text-slate-400">Progression garantie</div>
+            </div>
+            <div className="p-2 space-y-1">
+              <Cloud className="w-5 h-5 mx-auto text-emerald-400" />
+              <div className="font-bold text-white text-[11px]">Cloud Souverain</div>
+              <div className="text-[10px] text-slate-400">0 perte de données</div>
+            </div>
+            <div className="p-2 space-y-1">
+              <Swords className="w-5 h-5 mx-auto text-indigo-400" />
+              <div className="font-bold text-white text-[11px]">Duels P2P</div>
+              <div className="text-[10px] text-slate-400">Temps réel direct</div>
+            </div>
+          </div>
+
+          {/* Carte Formulaire */}
+          <div className="p-6 sm:p-8 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-amber-500/30 rounded-3xl shadow-2xl space-y-5">
+            {/* Toggle Tabs */}
+            <div className="flex p-1 bg-[#0b0f19] rounded-xl border border-[#1e293b]">
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  setAuthMode('signup');
+                  setAuthError(null);
+                }}
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${
+                  authMode === 'signup'
+                    ? 'bg-amber-500 text-slate-950 shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Créer un compte
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  setAuthMode('login');
+                  setAuthError(null);
+                }}
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${
+                  authMode === 'login'
+                    ? 'bg-amber-500 text-slate-950 shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Se connecter
+              </button>
+            </div>
+
+            {authError && (
+              <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl text-red-300 text-xs font-bold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+                <span>{authError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleAccountSubmit} className="space-y-4">
+              {authMode === 'signup' && (
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                    Pseudo en jeu
+                  </label>
+                  <input
+                    type="text"
+                    value={authUsername}
+                    onChange={(e) => setAuthUsername(e.target.value)}
+                    placeholder="Ex: Maître Du Hibou"
+                    required
+                    className="w-full px-4 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-600 focus:outline-none transition"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Adresse Email</span>
+                </label>
+                <input
+                  type="email"
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  placeholder="nom@exemple.com"
+                  required
+                  className="w-full px-4 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-600 focus:outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <Key className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Mot de passe (6 caractères min)</span>
+                </label>
+                <input
+                  type="password"
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  placeholder="••••••••"
+                  minLength={6}
+                  required
+                  className="w-full px-4 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-600 focus:outline-none transition"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+              >
+                {authLoading ? (
+                  <span>Chargement...</span>
+                ) : (
+                  <>
+                    <span>{authMode === 'signup' ? 'Valider et Entrer dans l\'Arène' : 'Connexion et Accès à l\'Arène'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* LOBBY / CHOIX DU MODE */}
       {phase === 'lobby' && (
         <div className="space-y-8">
           {/* Header */}
@@ -1195,6 +1405,8 @@ export const VersusArena: React.FC = () => {
           </div>
         </div>
       )}
+      </>
+    )}
     </div>
   );
 };
