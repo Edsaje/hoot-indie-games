@@ -92,32 +92,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#0b0f19]/90 backdrop-blur-md border-b border-[#1e293b]">
+    <header className="sticky top-0 z-40 w-full bg-[#0b0f19]/90 backdrop-blur-md border-b border-[#1e293b] overflow-x-clip">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-2">
           {/* Brand & Owl Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 shrink-0">
             <OwlLogo onEasterEggTrigger={onEasterEggTrigger} size="md" />
             <div
               className="cursor-pointer select-none"
               onClick={() => handleTabSelect('gems')}
             >
               <div className="flex items-center gap-2">
-                <span className="text-lg font-black text-white tracking-wider flex items-center gap-1">
+                <span className="text-base sm:text-lg font-black text-white tracking-wider flex items-center gap-1">
                   HOOT <span className="text-[#f59e0b]">INDIE</span> GAMES
                 </span>
               </div>
-              <p className="hidden md:block text-xs text-slate-300 font-normal leading-tight mt-0.5">
+              <p className="hidden 2xl:block text-[11px] text-slate-400 font-normal leading-tight mt-0.5">
                 {t('app.tagline')}
               </p>
             </div>
           </div>
 
           {/* Center Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#131a29] p-1.5 rounded-2xl border border-[#1e293b]">
+          <nav className="hidden xl:flex items-center gap-1 bg-[#131a29] p-1 rounded-2xl border border-[#1e293b] shrink-0">
             <button
               onClick={() => handleTabSelect('gems')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'gems'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -129,7 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabSelect('screenle')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'screenle'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -141,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabSelect('indledle')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'indledle'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -153,7 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabSelect('linkle')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'linkle'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -165,7 +165,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabSelect('timeattack')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'timeattack'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -173,14 +173,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Zap className="w-3.5 h-3.5 text-amber-400" />
               {t('nav.timeattack', 'Time Attack')}
-              <span className="text-[10px] font-black uppercase px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
+              <span className="hidden 2xl:inline text-[9px] font-black uppercase px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
                 Sprint
               </span>
             </button>
 
             <button
               onClick={() => handleTabSelect('versus')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'versus'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -188,14 +188,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Swords className="w-3.5 h-3.5" />
               {t('nav.versus')}
-              <span className="text-xs font-bold uppercase px-1.5 py-0.5 bg-amber-500/15 text-amber-400 rounded border border-amber-500/30">
+              <span className="hidden 2xl:inline text-[9px] font-bold uppercase px-1.5 py-0.2 bg-amber-500/15 text-amber-400 rounded border border-amber-500/30">
                 1v1
               </span>
             </button>
 
             <button
               onClick={() => handleTabSelect('arcade')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'arcade'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -209,7 +209,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabSelect('toolbox')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'toolbox'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -221,7 +221,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabSelect('roost')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentTab === 'roost'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -233,7 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Action Icons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Daily Date Button (Opens Calendar) */}
             <button
               onClick={() => {
@@ -322,15 +322,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   onOpenAuth();
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer shrink-0"
                 title={i18n.language.startsWith('fr') ? 'Se connecter ou créer un compte' : 'Sign In or Sign Up'}
               >
-                <LogIn className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline font-black">
-                  {i18n.language.startsWith('fr') ? 'Connexion / Inscription' : 'Sign In / Up'}
-                </span>
-                <span className="sm:hidden font-black">
+                <LogIn className="w-3.5 h-3.5 shrink-0" />
+                <span className="font-black whitespace-nowrap">
                   {i18n.language.startsWith('fr') ? 'Connexion' : 'Sign In'}
+                </span>
+                <span className="hidden 2xl:inline font-black whitespace-nowrap">
+                  {i18n.language.startsWith('fr') ? ' / Inscription' : ' / Up'}
                 </span>
               </button>
             ) : (
@@ -339,7 +339,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   onOpenProfile();
                 }}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#182133] transition group relative cursor-pointer"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#182133] transition group relative cursor-pointer shrink-0"
                 title={isSteamConnected ? `Profil (${steamAccount?.personaName} sur Steam)` : t('nav.profile')}
                 aria-label={t('nav.profile')}
               >
@@ -351,7 +351,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   )}
                 </div>
-                <span className="hidden xl:inline text-xs font-bold text-white max-w-[85px] truncate">
+                <span className="hidden sm:inline text-xs font-bold text-white max-w-[85px] truncate">
                   {profile.username}
                 </span>
               </button>
@@ -359,8 +359,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Mobile Sub-Navigation Bar */}
-        <div className="flex lg:hidden overflow-x-auto py-2 gap-1 border-t border-[#1e293b]/60 no-scrollbar">
+        {/* Mobile & Tablet Sub-Navigation Bar */}
+        <div className="flex xl:hidden overflow-x-auto py-2 gap-1 border-t border-[#1e293b]/60 no-scrollbar">
           {(
             [
               { id: 'gems', label: t('nav.gems'), icon: Compass },
