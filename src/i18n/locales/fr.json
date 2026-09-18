@@ -5,6 +5,7 @@
     "description": "Déductions quotidiennes, boîte à outils pour joueurs et créations d'Hibouxe."
   },
   "nav": {
+    "gems": "Pépites",
     "games": "Mini-Jeux",
     "screenle": "Screenle",
     "indledle": "Indledle",

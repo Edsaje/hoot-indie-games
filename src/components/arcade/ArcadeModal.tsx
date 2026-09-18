@@ -110,6 +110,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
   // Persistent inputs state (supports holding keys & touch)
   const keysDownRef = useRef<Set<string>>(new Set());
+  const touchPosRef = useRef<{ x: number; y: number; active: boolean }>({ x: 200, y: 200, active: false });
+  const touchStartPosRef = useRef<{ x: number; y: number }>({ x: 200, y: 200 });
   const scoreRef = useRef<number>(0);
   const highScoreRef = useRef<number>(highScore);
 
@@ -388,9 +390,17 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const loop = () => {
         if (!gameActive) return;
 
-        // Player controls
-        if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']) && leftY > 0) leftY -= 4.8;
-        if (isKeyDown(['ArrowDown', 'KeyS']) && leftY < height - padH) leftY += 4.8;
+        // Player controls (supports direct touch drag or virtual keys)
+        if (touchPosRef.current.active) {
+          leftY = Math.max(0, Math.min(height - padH, touchPosRef.current.y - padH / 2));
+          if (!started) {
+            started = true;
+            soundFx.playClick();
+          }
+        } else {
+          if (isKeyDown(['ArrowUp', 'KeyW', 'KeyZ']) && leftY > 0) leftY -= 4.8;
+          if (isKeyDown(['ArrowDown', 'KeyS']) && leftY < height - padH) leftY += 4.8;
+        }
 
         // Launch ball on space or arrow press
         if (!started && (isKeyDown(['Space', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyS']))) {
@@ -544,8 +554,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const loop = () => {
         if (!gameActive) return;
 
-        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && padX > 0) padX -= 4.8;
-        if (isKeyDown(['ArrowRight', 'KeyD']) && padX < width - padW) padX += 4.8;
+        if (touchPosRef.current.active) {
+          padX = Math.max(0, Math.min(width - padW, touchPosRef.current.x - padW / 2));
+        } else {
+          if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && padX > 0) padX -= 4.8;
+          if (isKeyDown(['ArrowRight', 'KeyD']) && padX < width - padW) padX += 4.8;
+        }
 
         if (!started) {
           ball.x = padX + padW / 2;
@@ -856,8 +870,16 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           return;
         }
 
-        if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 3.8;
-        if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 3.8;
+        if (touchPosRef.current.active) {
+          const tx = touchPosRef.current.x;
+          if (Math.abs(playerX - tx) > 6) {
+            playerX += Math.sign(tx - playerX) * 4.2;
+            playerX = Math.max(20, Math.min(width - 20, playerX));
+          }
+        } else {
+          if (isKeyDown(['ArrowLeft', 'KeyA', 'KeyQ']) && playerX > 20) playerX -= 3.8;
+          if (isKeyDown(['ArrowRight', 'KeyD']) && playerX < width - 20) playerX += 3.8;
+        }
 
         if (isKeyDown(['Space']) && shootTimer <= 0) {
           bullets.push({ x: playerX, y: height - 40 });
@@ -1459,11 +1481,90 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     window.dispatchEvent(new KeyboardEvent('keyup', { code, key: code, bubbles: true }));
   };
 
+  const bindVirtualTouch = (code: string) => ({
+    onTouchStart: (e: React.TouchEvent) => {
+      e.preventDefault();
+      handleVirtualPress(code);
+    },
+    onTouchEnd: (e: React.TouchEvent) => {
+      e.preventDefault();
+      handleVirtualRelease(code);
+    },
+    onTouchCancel: (e: React.TouchEvent) => {
+      e.preventDefault();
+      handleVirtualRelease(code);
+    },
+    onMouseDown: () => handleVirtualPress(code),
+    onMouseUp: () => handleVirtualRelease(code),
+    onMouseLeave: () => handleVirtualRelease(code),
+    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+  });
+
+  const getCanvasCoords = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 200, y: 200 };
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = 400 / rect.width;
+    const scaleY = 400 / rect.height;
+    return {
+      x: Math.max(0, Math.min(400, (clientX - rect.left) * scaleX)),
+      y: Math.max(0, Math.min(400, (clientY - rect.top) * scaleY)),
+    };
+  };
+
+  const handleCanvasTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    if (e.touches.length === 0) return;
+    const touch = e.touches[0];
+    const coords = getCanvasCoords(touch.clientX, touch.clientY);
+    touchStartPosRef.current = coords;
+    touchPosRef.current = { x: coords.x, y: coords.y, active: true };
+
+    if (['flappy', 'run', 'breakout', 'pong', 'invaders', 'vectrex'].includes(selectedGame)) {
+      handleVirtualPress('Space');
+      setTimeout(() => handleVirtualRelease('Space'), 60);
+    }
+  };
+
+  const handleCanvasTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    if (e.touches.length === 0) return;
+    const touch = e.touches[0];
+    const coords = getCanvasCoords(touch.clientX, touch.clientY);
+    touchPosRef.current = { x: coords.x, y: coords.y, active: true };
+  };
+
+  const handleCanvasTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    touchPosRef.current.active = false;
+    if (e.changedTouches.length === 0) return;
+    const touch = e.changedTouches[0];
+    const endCoords = getCanvasCoords(touch.clientX, touch.clientY);
+    const dx = endCoords.x - touchStartPosRef.current.x;
+    const dy = endCoords.y - touchStartPosRef.current.y;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist > 25) {
+      if (Math.abs(dx) > Math.abs(dy)) {
+        const code = dx > 0 ? 'ArrowRight' : 'ArrowLeft';
+        handleVirtualPress(code);
+        setTimeout(() => handleVirtualRelease(code), 60);
+      } else {
+        const code = dy > 0 ? 'ArrowDown' : 'ArrowUp';
+        handleVirtualPress(code);
+        setTimeout(() => handleVirtualRelease(code), 60);
+      }
+    } else if (selectedGame === 'tetris') {
+      handleVirtualPress('ArrowUp');
+      setTimeout(() => handleVirtualRelease('ArrowUp'), 60);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#131a29] border border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl text-slate-100 flex flex-col items-center overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-xl max-h-[94vh] overflow-y-auto bg-[#131a29] border border-amber-500/40 rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col items-center">
         {/* Modal Header */}
-        <div className="w-full flex items-center justify-between pb-3 border-b border-[#1e293b] mb-4">
+        <div className="w-full flex items-center justify-between pb-3 border-b border-[#1e293b] mb-3">
           <div className="flex items-center gap-2.5">
             <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
               <Gamepad2 className="w-5 h-5" />
@@ -1507,7 +1608,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         </div>
 
         {/* Game Tabs Selector */}
-        <div className="w-full flex items-center gap-1.5 overflow-x-auto pb-3 mb-4 scrollbar-thin scrollbar-thumb-amber-500/30">
+        <div className="w-full flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-thin scrollbar-thumb-amber-500/30">
           {ARCADE_GAMES.map((game) => {
             const active = selectedGame === game.id;
             return (
@@ -1517,7 +1618,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
                 className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                   active
                     ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 scale-105'
-                    : 'bg-[#131a29] text-slate-300 border border-[#1e293b] hover:border-amber-500/40 hover:text-white'
+                    : 'bg-[#0b0f19] text-slate-300 border border-[#1e293b] hover:border-amber-500/40 hover:text-white'
                 }`}
               >
                 <span>{game.icon}</span>
@@ -1528,7 +1629,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         </div>
 
         {/* Score & Controls Bar */}
-        <div className="w-full max-w-[400px] flex items-center justify-between px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl mb-3 text-xs">
+        <div className="w-full max-w-[380px] flex items-center justify-between px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl mb-3 text-xs">
           <div className="flex items-center gap-1.5 font-bold text-slate-200">
             <span>Score :</span>
             <span className="font-mono text-amber-400 text-sm font-black">{score}</span>
@@ -1550,11 +1651,15 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           </button>
         </div>
 
-        {/* Canvas Game Area */}
-        <div className="relative rounded-2xl overflow-hidden border-2 border-[#1e293b] bg-[#060f09] shadow-2xl">
+        {/* Canvas Game Area with Direct Touch / Swipe Support */}
+        <div className="relative w-full max-w-[320px] sm:max-w-[380px] aspect-square rounded-2xl overflow-hidden border-2 border-[#1e293b] bg-[#060f09] shadow-2xl flex items-center justify-center">
           <canvas
             ref={canvasRef}
-            className="block w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] cursor-pointer touch-none"
+            onTouchStart={handleCanvasTouchStart}
+            onTouchMove={handleCanvasTouchMove}
+            onTouchEnd={handleCanvasTouchEnd}
+            onTouchCancel={handleCanvasTouchEnd}
+            className="block w-full h-full cursor-pointer touch-none select-none"
           />
 
           {isGameOver && (
@@ -1578,63 +1683,152 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         </div>
 
         {/* Instructions */}
-        <p className="text-[11px] text-slate-400 text-center mt-3 max-w-[400px] leading-relaxed">
+        <p className="text-[11px] text-slate-400 text-center mt-2.5 max-w-[380px] leading-relaxed">
           <Sparkles className="w-3 h-3 text-amber-400 inline mr-1" />
           {currentGameMeta.instructions}
         </p>
 
-        {/* Virtual Arcade D-Pad Controls (Continuous Hold Support) */}
-        <div className="flex items-center justify-center gap-6 mt-4 pt-3 border-t border-[#1e293b] w-full max-w-[400px] select-none">
-          <div className="grid grid-cols-3 gap-1">
-            <div />
-            <button
-              onTouchStart={() => handleVirtualPress('ArrowUp')}
-              onTouchEnd={() => handleVirtualRelease('ArrowUp')}
-              onMouseDown={() => handleVirtualPress('ArrowUp')}
-              onMouseUp={() => handleVirtualRelease('ArrowUp')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
-            >
-              <ArrowUp className="w-4 h-4" />
-            </button>
-            <div />
-            <button
-              onTouchStart={() => handleVirtualPress('ArrowLeft')}
-              onTouchEnd={() => handleVirtualRelease('ArrowLeft')}
-              onMouseDown={() => handleVirtualPress('ArrowLeft')}
-              onMouseUp={() => handleVirtualRelease('ArrowLeft')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <button
-              onTouchStart={() => handleVirtualPress('ArrowDown')}
-              onTouchEnd={() => handleVirtualRelease('ArrowDown')}
-              onMouseDown={() => handleVirtualPress('ArrowDown')}
-              onMouseUp={() => handleVirtualRelease('ArrowDown')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
-            >
-              <ArrowDown className="w-4 h-4" />
-            </button>
-            <button
-              onTouchStart={() => handleVirtualPress('ArrowRight')}
-              onTouchEnd={() => handleVirtualRelease('ArrowRight')}
-              onMouseDown={() => handleVirtualPress('ArrowRight')}
-              onMouseUp={() => handleVirtualRelease('ArrowRight')}
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+        {/* Mobile-Optimized Adaptive Virtual Controls */}
+        <div className="w-full max-w-[380px] select-none">
+          {/* FLAPPY & RUN: Single Large Action Bar */}
+          {['flappy', 'run'].includes(selectedGame) && (
+            <div className="flex flex-col items-center gap-2 mt-3 pt-3 border-t border-[#1e293b] w-full">
+              <button
+                {...bindVirtualTouch('Space')}
+                className="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 active:scale-98 touch-none select-none cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>{selectedGame === 'flappy' ? '🪽 BATTRE DES AILES' : '⚡ SAUTER LE PIÈGE'}</span>
+                <span className="opacity-80 text-[10px]">(ou toucher l'écran)</span>
+              </button>
+            </div>
+          )}
 
-          <button
-            onTouchStart={() => handleVirtualPress('Space')}
-            onTouchEnd={() => handleVirtualRelease('Space')}
-            onMouseDown={() => handleVirtualPress('Space')}
-            onMouseUp={() => handleVirtualRelease('Space')}
-            className="px-6 py-4 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase shadow-lg shadow-amber-500/20 active:bg-amber-400 touch-none select-none cursor-pointer"
-          >
-            Action
-          </button>
+          {/* PONG: Vertical Controls + Touch Hint */}
+          {selectedGame === 'pong' && (
+            <div className="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-[#1e293b] w-full">
+              <div className="flex flex-col gap-2">
+                <button
+                  {...bindVirtualTouch('ArrowUp')}
+                  className="w-14 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200"
+                  title="Monter"
+                >
+                  <ArrowUp className="w-5 h-5" />
+                </button>
+                <button
+                  {...bindVirtualTouch('ArrowDown')}
+                  className="w-14 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200"
+                  title="Descendre"
+                >
+                  <ArrowDown className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="flex-1 text-center p-2.5 rounded-xl bg-[#0b0f19] border border-slate-800 text-[11px] text-slate-300 leading-snug">
+                👆 <strong>Contrôle tactile direct :</strong> glissez votre doigt verticalement sur l'écran pour bouger la raquette !
+              </div>
+            </div>
+          )}
+
+          {/* BREAKOUT: Left / Right + Launch Ball */}
+          {selectedGame === 'breakout' && (
+            <div className="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-[#1e293b] w-full">
+              <div className="flex items-center gap-2">
+                <button
+                  {...bindVirtualTouch('ArrowLeft')}
+                  className="w-13 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200"
+                  title="Gauche"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <button
+                  {...bindVirtualTouch('ArrowRight')}
+                  className="w-13 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200"
+                  title="Droite"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+              <button
+                {...bindVirtualTouch('Space')}
+                className="flex-1 h-12 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md shadow-amber-500/20 active:scale-95 touch-none select-none cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                Lancer la balle
+              </button>
+            </div>
+          )}
+
+          {/* INVADERS: Left / Right + Shoot */}
+          {selectedGame === 'invaders' && (
+            <div className="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-[#1e293b] w-full">
+              <div className="flex items-center gap-2">
+                <button
+                  {...bindVirtualTouch('ArrowLeft')}
+                  className="w-13 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200"
+                  title="Gauche"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <button
+                  {...bindVirtualTouch('ArrowRight')}
+                  className="w-13 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200"
+                  title="Droite"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+              <button
+                {...bindVirtualTouch('Space')}
+                className="flex-1 h-12 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md shadow-amber-500/20 active:scale-95 touch-none select-none cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                🚀 Tirer
+              </button>
+            </div>
+          )}
+
+          {/* SNAKE, TETRIS, VECTREX: 4-Way D-Pad + Action */}
+          {['snake', 'tetris', 'vectrex'].includes(selectedGame) && (
+            <div className="flex items-center justify-center gap-5 mt-3 pt-3 border-t border-[#1e293b] w-full">
+              <div className="grid grid-cols-3 gap-1.5">
+                <div />
+                <button
+                  {...bindVirtualTouch('ArrowUp')}
+                  className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200 shadow"
+                  title="Haut / Rotation"
+                >
+                  <ArrowUp className="w-5 h-5" />
+                </button>
+                <div />
+                <button
+                  {...bindVirtualTouch('ArrowLeft')}
+                  className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200 shadow"
+                  title="Gauche"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <button
+                  {...bindVirtualTouch('ArrowDown')}
+                  className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200 shadow"
+                  title="Bas"
+                >
+                  <ArrowDown className="w-5 h-5" />
+                </button>
+                <button
+                  {...bindVirtualTouch('ArrowRight')}
+                  className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center active:bg-amber-500 active:text-slate-950 touch-none select-none text-slate-200 shadow"
+                  title="Droite"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              <button
+                {...bindVirtualTouch('Space')}
+                className="px-6 h-23 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase shadow-lg shadow-amber-500/20 active:scale-95 touch-none select-none cursor-pointer flex flex-col items-center justify-center gap-1 leading-tight"
+              >
+                <span>ACTION</span>
+                <span className="text-[10px] font-medium opacity-75">(Espace)</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Compass,
   Volume2,
   VolumeX,
   BarChart3,
@@ -20,7 +21,7 @@ import { useUserAccount } from '../../context/useUserAccount';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { telemetry } from '../../services/telemetry';
 
-export type NavTab = 'screenle' | 'indledle' | 'linkle' | 'versus' | 'toolbox' | 'roost';
+export type NavTab = 'gems' | 'screenle' | 'indledle' | 'linkle' | 'versus' | 'toolbox' | 'roost';
 
 interface NavbarProps {
   currentTab: NavTab;
@@ -79,7 +80,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <OwlLogo onEasterEggTrigger={onEasterEggTrigger} size="md" />
             <div
               className="cursor-pointer select-none"
-              onClick={() => handleTabSelect('screenle')}
+              onClick={() => handleTabSelect('gems')}
             >
               <div className="flex items-center gap-2">
                 <span className="text-lg font-black text-white tracking-wider flex items-center gap-1">
@@ -94,6 +95,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Center Navigation Tabs */}
           <nav className="hidden lg:flex items-center gap-1 bg-[#131a29] p-1.5 rounded-2xl border border-[#1e293b]">
+            <button
+              onClick={() => handleTabSelect('gems')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                currentTab === 'gems'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              {t('nav.gems')}
+            </button>
+
             <button
               onClick={() => handleTabSelect('screenle')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
@@ -260,6 +273,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex lg:hidden overflow-x-auto py-2 gap-1 border-t border-[#1e293b]/60 no-scrollbar">
           {(
             [
+              { id: 'gems', label: t('nav.gems'), icon: Compass },
               { id: 'screenle', label: t('nav.screenle'), icon: Camera },
               { id: 'indledle', label: t('nav.indledle'), icon: Layers },
               { id: 'linkle', label: t('nav.linkle'), icon: Sparkles },

@@ -16,6 +16,7 @@ import {
 import type { Game } from '../../types/game';
 import { INDIE_GAMES, getDailyGame } from '../../data/games';
 import { GameSearchBar } from '../common/GameSearchBar';
+import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
@@ -64,8 +65,12 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
 
-  // Max attempts
-  const MAX_GUESSES = 8;
+  const [difficulty, setDifficulty] = useState<GameDifficulty>(() => {
+    return (localStorage.getItem('indledle_difficulty') as GameDifficulty) || 'standard';
+  });
+
+  // Max attempts: Novice (8), Standard (6), Expert (4)
+  const MAX_GUESSES = difficulty === 'novice' ? 8 : difficulty === 'expert' ? 4 : 6;
 
   const saveGameState = (newGuesses: Game[], completed: boolean, won: boolean) => {
     try {
@@ -104,8 +109,9 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
     telemetry.track('game', 'indledle_play', secretGame.title, undefined, {
       date: currentDate,
       alreadyCompleted: isCompleted,
+      difficulty,
     });
-  }, [currentDate, secretGame.title, isCompleted]);
+  }, [currentDate, secretGame.title, isCompleted, difficulty]);
 
   const handleGuess = (guessedGame: Game) => {
     if (isCompleted || guesses.some((g) => g.id === guessedGame.id)) return;
@@ -228,7 +234,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
           <Layers className="w-3.5 h-3.5" />
           Mode 2 • Comparaison de Traits
@@ -240,6 +246,16 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
           {t('indledle.subtitle')}
         </p>
       </div>
+
+      {/* Difficulty Selector */}
+      <DifficultySelector
+        difficulty={difficulty}
+        onSelect={(d) => {
+          setDifficulty(d);
+          localStorage.setItem('indledle_difficulty', d);
+        }}
+        disabled={isCompleted || guesses.length > 0}
+      />
 
       {/* Color Legend */}
       <div className="max-w-2xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-2xl p-3 mb-6 flex flex-wrap items-center justify-around gap-2 text-xs">
@@ -436,6 +452,11 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
                         )
                       )}
                     </div>
+                    {difficulty === 'novice' && !isMatchYear && Math.abs(guess.releaseYear - secretGame.releaseYear) <= 2 && (
+                      <span className="text-[10px] font-black text-amber-950 bg-amber-300 px-1 py-0.2 rounded mt-0.5 shadow-sm">
+                        ±2 ans
+                      </span>
+                    )}
                   </div>
 
                   {/* Genres */}

@@ -9,6 +9,7 @@ import { AchievementsModal } from './components/common/AchievementsModal';
 import { CalendarArchiveModal } from './components/common/CalendarArchiveModal';
 import { ProfileModal } from './components/common/ProfileModal';
 import { FirefliesBackground } from './components/common/FirefliesBackground';
+import { GemExplorerHome } from './components/gems/GemExplorerHome';
 import { ScreenleGame } from './components/screenle/ScreenleGame';
 import { IndledleGame } from './components/indledle/IndledleGame';
 import { LinkleGame } from './components/linkle/LinkleGame';
@@ -34,10 +35,15 @@ const getTodayDateString = (): string => {
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [currentTab, setCurrentTab] = useState<NavTab>(() => {
-    if (typeof window !== 'undefined' && window.location.hash.startsWith('#versus')) {
-      return 'versus';
+    if (typeof window !== 'undefined') {
+      if (window.location.hash.startsWith('#versus')) return 'versus';
+      if (window.location.hash.startsWith('#screenle')) return 'screenle';
+      if (window.location.hash.startsWith('#indledle')) return 'indledle';
+      if (window.location.hash.startsWith('#linkle')) return 'linkle';
+      if (window.location.hash.startsWith('#toolbox')) return 'toolbox';
+      if (window.location.hash.startsWith('#roost')) return 'roost';
     }
-    return 'screenle';
+    return 'gems';
   });
   const [currentDate, setCurrentDate] = useState<string>(getTodayDateString());
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
@@ -127,6 +133,13 @@ export const AppContent: React.FC = () => {
 
       {/* Main View Area */}
       <main className="flex-1 w-full relative z-10">
+        {currentTab === 'gems' && (
+          <GemExplorerHome
+            currentDate={currentDate}
+            onNavigateTab={setCurrentTab}
+            onOpenArcade={handleOpenArcade}
+          />
+        )}
         {currentTab === 'screenle' && <ScreenleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'indledle' && <IndledleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'linkle' && <LinkleGame key={currentDate} currentDate={currentDate} />}

@@ -23,6 +23,7 @@ import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { downloadShareCard } from '../../utils/generateShareCard';
 import { CustomLinkleBuilder } from './CustomLinkleBuilder';
+import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { telemetry } from '../../services/telemetry';
 
 interface LinkleGameProps {
@@ -133,10 +134,11 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         const remainingTiles = allItems.filter(
           (tile) => !solvedCats.some((c) => c.id === tile.categoryId)
         );
+        const defaultMistakes = (localStorage.getItem('linkle_difficulty') === 'novice' ? 6 : localStorage.getItem('linkle_difficulty') === 'expert' ? 1 : 4);
         return {
           tiles: remainingTiles,
           solvedCategories: solvedCats,
-          mistakesRemaining: parsed.mistakesRemaining ?? 4,
+          mistakesRemaining: parsed.mistakesRemaining ?? defaultMistakes,
           isCompleted: Boolean(parsed.isCompleted),
           isWon: Boolean(parsed.isWon),
           previousGuesses: (parsed.previousGuesses || []) as string[][],
@@ -146,16 +148,30 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
       // Fallback
     }
 
+    const defaultMistakes = (localStorage.getItem('linkle_difficulty') === 'novice' ? 6 : localStorage.getItem('linkle_difficulty') === 'expert' ? 1 : 4);
     const shuffled = deterministicShuffle(allItems, puzzle.date || currentDate);
     return {
       tiles: shuffled,
       solvedCategories: [] as ConnectionCategory[],
-      mistakesRemaining: 4,
+      mistakesRemaining: defaultMistakes,
       isCompleted: false,
       isWon: false,
       previousGuesses: [] as string[][],
     };
   })();
+
+  const [difficulty, setDifficulty] = useState<GameDifficulty>(() => {
+    return (localStorage.getItem('linkle_difficulty') as GameDifficulty) || 'standard';
+  });
+
+  const maxMistakes = difficulty === 'novice' ? 6 : difficulty === 'expert' ? 1 : 4;
+
+  const handleDifficultyChange = (d: GameDifficulty) => {
+    setDifficulty(d);
+    localStorage.setItem('linkle_difficulty', d);
+    const newMax = d === 'novice' ? 6 : d === 'expert' ? 1 : 4;
+    setMistakesRemaining(newMax);
+  };
 
   const [tiles, setTiles] = useState<TileItem[]>(savedState.tiles);
   const [selectedGameIds, setSelectedGameIds] = useState<string[]>([]);
@@ -174,8 +190,9 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
       isCustomMode,
       date: currentDate,
       alreadyCompleted: isCompleted,
+      difficulty,
     });
-  }, [puzzle.id, isCustomMode, currentDate, isCompleted]);
+  }, [puzzle.id, isCustomMode, currentDate, isCompleted, difficulty]);
 
   // Listen to hash changes for deep linking
   useEffect(() => {
@@ -537,11 +554,18 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate }) => {
         </p>
       </div>
 
+      {/* Difficulty Selector */}
+      <DifficultySelector
+        difficulty={difficulty}
+        onSelect={handleDifficultyChange}
+        disabled={isCompleted || previousGuesses.length > 0}
+      />
+
       {/* Mistakes Counter */}
       <div className="flex items-center justify-center gap-2 mb-6 text-sm font-semibold text-slate-300">
         <span>{t('linkle.mistakesRemaining')}</span>
         <div className="flex items-center gap-1.5">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: maxMistakes }).map((_, i) => (
             <span
               key={i}
               className={`inline-flex items-center justify-center w-5 h-5 rounded-full transition-all duration-300 ${

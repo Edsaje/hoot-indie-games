@@ -58,53 +58,51 @@
 ---
 
 ### 🌿 3. Direction Artistique "Nature Sylvestre & Organique"
-- [ ] **Ambiance forêt nocturne globale** :
-  - Enrichir le fond d'ambiance ([`src/components/common/FirefliesBackground.tsx`](file:///src/components/common/FirefliesBackground.tsx)) avec des silhouettes discrètes de canopée, branches d'arbres et brume forestière.
-  - Ajouter des accents naturels dans la palette Tailwind : vert mousse/émeraude (`#064e3b`, `#047857`), nuances bois/écorce feutré.
-- [ ] **Végétalisation & Identité du Perchoir (Portfolio)** :
-  - Donner au Perchoir l'aspect d'une cabane d'observation sylvestre authentique (cadres d'écorce discrète, feuilles, lianes et lanternes de lucioles).
+- [x] **Ambiance forêt nocturne globale** :
+  - Fond d'ambiance ([`src/components/common/FirefliesBackground.tsx`](file:///src/components/common/FirefliesBackground.tsx)) enrichi avec des silhouettes vectorielles de canopée, branches d'arbres, brume forestière et mélange de lucioles dorées (60%) et de spores végétales bioluminescentes vert émeraude (40%).
+  - Palette Tailwind et ambiance nocturne infusée de vert mousse/émeraude (`#064e3b`, `#047857`, `#059669`).
+- [x] **Végétalisation & Identité du Perchoir (Portfolio)** :
+  - Le Perchoir transformé en "Le Nichoir Sylvestre" ([`src/components/roost/TheRoostHub.tsx`](file:///src/components/roost/TheRoostHub.tsx)) : ambiance refuge des bois, badges botaniques, bordures émeraude subtiles et compétences axées sur le game design poétique et organique.
 
 ---
 
 ### 🌟 4. Accueil par Défaut : L'Explorateur de Pépites Indés
-- [ ] **Définir l'Explorateur de Pépites comme route par défaut** :
-  - Dans [`src/App.tsx`](file:///src/App.tsx), initialiser `currentTab` sur `'gems'` ou `'explore'` plutôt que `'screenle'`.
-- [ ] **Interface d'accueil immersive** :
-  - Section héro sylvestre avec la "Pépite du Jour" mise en vedette.
-  - Grille de découverte filtrable par ambiance, genre et temps de complétion.
-  - Raccourcis instantanés vers les 3 défis quotidiens et la salle d'arcade.
+- [x] **Définir l'Explorateur de Pépites comme route par défaut** :
+  - Dans [`src/App.tsx`](file:///src/App.tsx) et [`src/components/common/Navbar.tsx`](file:///src/components/common/Navbar.tsx), route par défaut `currentTab = 'gems'` avec redirection du logo brand vers l'accueil.
+- [x] **Interface d'accueil immersive ([`src/components/gems/GemExplorerHome.tsx`](file:///src/components/gems/GemExplorerHome.tsx))** :
+  - Section héro sylvestre avec la "Pépite du Jour" mise en vedette (image, studio, année, citations poétiques, lien Steam et devinette Screenle).
+  - Rampe de lancement instantanée vers les 4 activités (Screenle, Indledle, Linkle, Salle d'Arcade) avec badges d'état en direct ("Résolu").
+  - Catalogue complet des 93 pépites certifiées avec recherche instantanée, filtres par genres, tri par année et bouton roulette "Pépite au hasard" avec défilement fluide et mise en valeur dorée.
 
 ---
 
-### 🕹️ 5. Nouvel Onglet Dédié "Arcade" & Réparation Mobile
-- [ ] **Création de la vue Arcade dédiée** :
-  - Ajouter la route/onglet `arcade` dans [`src/components/common/Navbar.tsx`](file:///src/components/common/Navbar.tsx) et [`src/App.tsx`](file:///src/App.tsx).
-  - Retirer l'encart d'arcade du Perchoir.
-- [ ] **Réparation mobile prioritaire des 8 jeux d'arcade** :
-  - Résoudre les problèmes d'affichage et de réactivité sur smartphones.
-  - Empêcher le défilement de page pendant le jeu (`touch-action: none`, `preventDefault` sur les touch events).
-  - Intégrer un D-pad virtuel ergonomique et des boutons A/B confortables sur écran tactile.
-  - Adapter le scaling du canvas pour tous les ratios d'écran et pixel ratios (Retina / OLED).
-- [ ] **Équilibrage et vitesse des mini-jeux** :
-  - Valider que la boucle 60 FPS reste stable et calibrée sur tous les taux de rafraîchissement (60Hz, 120Hz, 144Hz).
-  - Gestion des high scores persistants par jeu.
+### 🕹️ 5. Salle d'Arcade : Réparation & Ergonomie Mobile
+- [x] **Réparation mobile prioritaire des 8 jeux d'arcade** ([`src/components/arcade/ArcadeModal.tsx`](file:///src/components/arcade/ArcadeModal.tsx)) :
+  - Résolution des touches virtuelles bloquées via `bindVirtualTouch` (`onTouchStart`, `onTouchEnd`, `onTouchCancel` avec `preventDefault`).
+  - Suppression totale du délai de 300ms et du défilement intempestif de la page (`touch-none`, `select-none`).
+  - Contrôle tactile direct sur le Canvas : glissement 1:1 pour les raquettes de Pong et Casse-Briques, tap instantané pour Flappy et Runner, détection de balayage (swipe) pour Snake et Tetris, déplacement orienté et tir pour Space Invaders.
+  - D-Pad et commandes virtuelles adaptatives par jeu (grands boutons d'action ergonomiques pour les pouces sur smartphone).
+  - Modal responsive avec `max-h-[94vh] overflow-y-auto` et canvas adaptatif pour éviter tout rognage sur petits écrans.
+- [x] **Équilibrage et vitesse des mini-jeux** :
+  - Boucle fixe 60 FPS immunisée contre les écrans 120Hz/144Hz.
+  - Sauvegarde locale des records (High Scores).
 
 ---
 
 ### 🎯 6. Choix de Difficulté sur les Jeux Principaux
-- [ ] **Sélecteur de difficulté pour chaque jeu** :
+- [x] **Sélecteur de difficulté unifié ([`src/components/common/DifficultySelector.tsx`](file:///src/components/common/DifficultySelector.tsx))** :
   - **Screenle** :
-    - *Chouetteau (Facile)* : Zoom initial moins agressif, 6 essais + indice textuel dès la 2e erreur.
-    - *Hibou (Standard)* : 6 étapes de zoom progressif classiques.
-    - *Grand-Duc (Expert)* : Zooms ultra-serrés, flou accru, aucun indice bonus.
+    - *Chouetteau (Détente)* 🐣 : Zoom initial doux (1.8x max), 6 essais, accroche textuelle débloquée dès le départ, compositeur à l'étape 2.
+    - *Hibou (Standard)* 🦉 : 6 étapes de zoom progressif classiques (3.2x -> 1.0x), indices à 2 et 3 essais.
+    - *Grand-Duc (Expert)* 🦅 : 5 essais max, hyper-zoom initial (4.8x), indices textuels et musicaux totalement masqués.
   - **Indledle** :
-    - *Facile* : 8 essais, marges d'années colorées (±3 ans), genres partiels indiqués.
-    - *Standard* : 6 essais classiques.
-    - *Expert* : 4 essais seulement, indications strictes.
+    - *Chouetteau (Détente)* 🐣 : 8 essais, badge d'indice de proximité d'année immédiat (`±2 ans`).
+    - *Hibou (Standard)* 🦉 : 6 essais classiques (format officiel).
+    - *Grand-Duc (Expert)* 🦅 : 4 essais seulement, élimination rapide.
   - **Linkle** :
-    - *Détente* : 6 erreurs tolérées, possibilité d'obtenir un indice de groupe.
-    - *Standard* : 4 erreurs autorisées.
-    - *Hardcore* : 1 seule erreur tolérée (mort subite).
+    - *Chouetteau (Détente)* 🐣 : 6 vies / erreurs autorisées (détente).
+    - *Hibou (Standard)* 🦉 : 4 erreurs autorisées (format officiel Connections).
+    - *Grand-Duc (Hardcore)* 🦅 : 1 seule erreur tolérée (la 2e erreur entraîne un Game Over immédiat).
 
 ---
 

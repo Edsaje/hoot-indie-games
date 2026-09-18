@@ -19,6 +19,7 @@ import {
 import type { Game } from '../../types/game';
 import { INDIE_GAMES, getDailyGame } from '../../data/games';
 import { GameSearchBar } from '../common/GameSearchBar';
+import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
@@ -77,6 +78,13 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
 
+  const [difficulty, setDifficulty] = useState<GameDifficulty>(() => {
+    return (localStorage.getItem('screenle_difficulty') as GameDifficulty) || 'standard';
+  });
+
+  const maxAttempts = difficulty === 'expert' ? 5 : 6;
+  const lastStageIndex = maxAttempts - 1;
+
   // Sync to local storage
   const saveGameState = (
     newGuesses: Game[],
@@ -119,12 +127,13 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     telemetry.track('game', 'screenle_play', secretGame.title, undefined, {
       date: currentDate,
       alreadyCompleted: isCompleted,
+      difficulty,
     });
-  }, [currentDate, secretGame.title, isCompleted]);
+  }, [currentDate, secretGame.title, isCompleted, difficulty]);
 
   const unlockedStagesCount = isCompleted
-    ? 6
-    : Math.min(6, guesses.length + 1);
+    ? maxAttempts
+    : Math.min(maxAttempts, guesses.length + 1);
 
   const handleGuess = (game: Game) => {
     if (isCompleted) return;
@@ -136,7 +145,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       // Won!
       setIsWon(true);
       setIsCompleted(true);
-      setActiveStageIndex(5);
+      setActiveStageIndex(lastStageIndex);
       saveGameState(newGuesses, true, true);
       recordGameResult('screenle', currentDate, true, newGuesses.length);
       unlockAchievement('first_flight');
@@ -147,6 +156,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       soundFx.playVictory();
       telemetry.track('game', 'screenle_win', secretGame.title, newGuesses.length, {
         attempts: newGuesses.length,
+        difficulty,
         game: secretGame.title,
       });
       confetti({
@@ -155,17 +165,18 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
         origin: { y: 0.6 },
         colors: ['#f59e0b', '#10b981', '#8b5cf6', '#3b82f6'],
       });
-    } else if (newGuesses.length >= 6) {
+    } else if (newGuesses.length >= maxAttempts) {
       // Lost
       setIsWon(false);
       setIsCompleted(true);
-      setActiveStageIndex(5);
+      setActiveStageIndex(lastStageIndex);
       saveGameState(newGuesses, true, false);
-      recordGameResult('screenle', currentDate, false, 6);
+      recordGameResult('screenle', currentDate, false, maxAttempts);
       unlockAchievement('first_flight');
       soundFx.playError();
-      telemetry.track('game', 'screenle_loss', secretGame.title, 6, {
-        attempts: 6,
+      telemetry.track('game', 'screenle_loss', secretGame.title, maxAttempts, {
+        attempts: maxAttempts,
+        difficulty,
         game: secretGame.title,
       });
     } else {
@@ -203,7 +214,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
   };
 
   const handleSkip = () => {
-    if (isCompleted || guesses.length >= 5) return;
+    if (isCompleted || guesses.length >= maxAttempts - 1) return;
     // Add a null/empty guess representation by passing a skip placeholder
     const dummySkipGame: Game = {
       id: `skipped-${guesses.length}`,
@@ -219,12 +230,12 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     const newGuesses = [...guesses, dummySkipGame];
     setGuesses(newGuesses);
 
-    if (newGuesses.length >= 6) {
+    if (newGuesses.length >= maxAttempts) {
       setIsWon(false);
       setIsCompleted(true);
-      setActiveStageIndex(5);
+      setActiveStageIndex(lastStageIndex);
       saveGameState(newGuesses, true, false);
-      recordGameResult('screenle', currentDate, false, 6);
+      recordGameResult('screenle', currentDate, false, maxAttempts);
       soundFx.playError();
     } else {
       setActiveStageIndex(newGuesses.length);
@@ -235,15 +246,15 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
 
   const handleShare = () => {
     soundFx.playClick();
-    const squares = Array.from({ length: 6 }, (_, i) => {
+    const squares = Array.from({ length: maxAttempts }, (_, i) => {
       if (i < guesses.length) {
         return guesses[i].id === secretGame.id ? '🟩' : '🟥';
       }
       return '⬛';
     }).join('');
 
-    const text = `🦉 Screenle #${currentDate} - ${
-      isWon ? `${guesses.length}/6` : 'X/6'
+    const text = `🦉 Screenle #${currentDate} (${difficulty.toUpperCase()}) - ${
+      isWon ? `${guesses.length}/${maxAttempts}` : `X/${maxAttempts}`
     }\n${squares}\n🎮 Jouez sur Hoot Indie Games : https://hootindiegames.com`;
 
     navigator.clipboard.writeText(text).then(() => {
@@ -252,15 +263,14 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     }).catch(() => {});
   };
 
-  // Zoom / crop styling based on stage
-  // Stage 0: 300% zoom on a crop
-  // Stage 1: 250%
-  // Stage 2: 200%
-  // Stage 3: 160%
-  // Stage 4: 120%
-  // Stage 5: 100% full view
-  const zoomScales = [3.2, 2.5, 2.0, 1.6, 1.25, 1.0];
+  // Zoom / crop styling based on stage & difficulty
+  const zoomScalesMap: Record<GameDifficulty, number[]> = {
+    novice: [1.8, 1.5, 1.3, 1.15, 1.05, 1.0],
+    standard: [3.2, 2.5, 2.0, 1.6, 1.25, 1.0],
+    expert: [4.8, 3.8, 2.8, 2.0, 1.3, 1.0],
+  };
   const zoomOrigins = ['center center', '25% 35%', '70% 60%', '30% 70%', '50% 40%', 'center center'];
+  const zoomScales = zoomScalesMap[difficulty];
   const currentScale = isCompleted && isWon ? 1.0 : zoomScales[activeStageIndex] || 1.0;
   const currentOrigin = zoomOrigins[activeStageIndex] || 'center center';
 
@@ -270,10 +280,20 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
     secretGame.screenshots[0] ||
     'https://images.unsplash.com/photo-1550745165-9bc0b252726f';
 
+  const isTaglineUnlocked =
+    isCompleted ||
+    difficulty === 'novice' ||
+    (difficulty === 'standard' && guesses.length >= 2);
+
+  const isComposerUnlocked =
+    isCompleted ||
+    (difficulty === 'novice' && guesses.length >= 2) ||
+    (difficulty === 'standard' && guesses.length >= 3);
+
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8 animate-in fade-in duration-300">
       {/* Game Mode Title & Subtitle */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
           <Eye className="w-3.5 h-3.5" />
           Mode 1 • Déduction Visuelle
@@ -286,9 +306,19 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
         </p>
       </div>
 
+      {/* Difficulty Selector */}
+      <DifficultySelector
+        difficulty={difficulty}
+        onSelect={(d) => {
+          setDifficulty(d);
+          localStorage.setItem('screenle_difficulty', d);
+        }}
+        disabled={isCompleted || guesses.length > 0}
+      />
+
       {/* Stage Navigation Pills */}
       <div className="flex items-center justify-center gap-2 mb-4">
-        {Array.from({ length: 6 }).map((_, i) => {
+        {Array.from({ length: maxAttempts }).map((_, i) => {
           const isUnlocked = i < unlockedStagesCount;
           const isActive = i === activeStageIndex;
           return (
@@ -382,9 +412,10 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
       {/* Bonus Hints Accordion / Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         {/* Tagline Clue (unlocked at 3 guesses or if completed) */}
+        {/* Tagline Clue */}
         <div
           className={`p-4 rounded-2xl border transition ${
-            guesses.length >= 2 || isCompleted
+            isTaglineUnlocked
               ? 'bg-[#131a29] border-[#1e293b] text-slate-200'
               : 'bg-[#131a29]/50 border border-dashed border-slate-700 text-slate-400'
           }`}
@@ -394,23 +425,25 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
             <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
               {t('screenle.taglineHint')}
             </span>
-            {guesses.length < 2 && !isCompleted && (
+            {!isTaglineUnlocked && !isCompleted && (
               <span className="text-xs ml-auto font-mono text-slate-400">
-                {t('screenle.unlockHintAt', { step: 3 })}
+                {difficulty === 'expert' ? (lang === 'fr' ? 'Masqué en Grand-Duc' : 'Hidden in Grand-Duc') : t('screenle.unlockHintAt', { step: 3 })}
               </span>
             )}
           </div>
           <p className="text-sm italic leading-relaxed text-slate-200">
-            {guesses.length >= 2 || isCompleted
+            {isTaglineUnlocked
               ? `"${secretGame.hints.tagline[lang]}"`
+              : difficulty === 'expert'
+              ? (lang === 'fr' ? 'Mode Grand-Duc : aucun indice textuel disponible.' : 'Grand-Duc Mode: no text clues available.')
               : (lang === 'fr' ? 'Verrouillé : faites au moins 2 propositions pour révéler cet indice.' : 'Locked: make at least 2 guesses to unlock.')}
           </p>
         </div>
 
-        {/* Composer Clue (unlocked at 4 guesses or if completed) */}
+        {/* Composer Clue */}
         <div
           className={`p-4 rounded-2xl border transition ${
-            guesses.length >= 3 || isCompleted
+            isComposerUnlocked
               ? 'bg-[#131a29] border-[#1e293b] text-slate-200'
               : 'bg-[#131a29]/50 border border-dashed border-slate-700 text-slate-400'
           }`}
@@ -420,15 +453,17 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
             <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
               {t('screenle.composerHint')}
             </span>
-            {guesses.length < 3 && !isCompleted && (
+            {!isComposerUnlocked && !isCompleted && (
               <span className="text-xs ml-auto font-mono text-slate-400">
-                {t('screenle.unlockHintAt', { step: 4 })}
+                {difficulty === 'expert' ? (lang === 'fr' ? 'Masqué en Grand-Duc' : 'Hidden in Grand-Duc') : t('screenle.unlockHintAt', { step: 4 })}
               </span>
             )}
           </div>
           <p className="text-sm leading-relaxed text-slate-200">
-            {guesses.length >= 3 || isCompleted
+            {isComposerUnlocked
               ? secretGame.hints.composer || (lang === 'fr' ? 'Compositeur indépendant' : 'Indie composer')
+              : difficulty === 'expert'
+              ? (lang === 'fr' ? 'Mode Grand-Duc : aucun indice musical disponible.' : 'Grand-Duc Mode: no audio clues available.')
               : (lang === 'fr' ? 'Verrouillé : faites au moins 3 propositions pour révéler le compositeur.' : 'Locked: make at least 3 guesses to unlock.')}
           </p>
         </div>
@@ -446,7 +481,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate }) => {
 
           <div className="flex items-center justify-between max-w-xl mx-auto px-2">
             <span className="text-xs text-slate-400">
-              {t('screenle.attemptsLeft', { count: 6 - guesses.length })}
+              {t('screenle.attemptsLeft', { count: maxAttempts - guesses.length })}
             </span>
             <button
               onClick={handleSkip}

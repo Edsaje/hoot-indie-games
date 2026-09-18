@@ -40,13 +40,24 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8 animate-in fade-in duration-300">
-      {/* Hero Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-[#131a29] border border-[#1e293b] p-8 sm:p-12 mb-10 shadow-xl">
+      {/* Hero Header - Nocturnal Woodland Roost Ambiance */}
+      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#061e16] via-[#111c2a] to-[#0c1624] border border-emerald-900/40 p-8 sm:p-12 mb-10 shadow-2xl">
+        {/* Soft emerald forest glow in background */}
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-emerald-800/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-emerald-950/30 blur-3xl pointer-events-none" />
+
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
-            <Feather className="w-3.5 h-3.5" />
-            {lang === 'fr' ? 'Portfolio & Projets Indés' : 'Portfolio & Indie Projects'}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase tracking-wider">
+              <span>🌿</span>
+              {lang === 'fr' ? 'Le Nichoir Sylvestre' : 'The Woodland Roost'}
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider">
+              <Feather className="w-3.5 h-3.5" />
+              {lang === 'fr' ? 'Portfolio & Projets Indés' : 'Portfolio & Indie Projects'}
+            </div>
           </div>
+
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
             {t('roost.title')}
           </h1>
@@ -93,12 +104,12 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
       </div>
 
       {/* Creator Profile Spotlight */}
-      <div className="bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 sm:p-8 mb-10 shadow-xl flex flex-col md:flex-row items-center gap-6">
+      <div className="bg-gradient-to-r from-[#0d1e18] via-[#131a29] to-[#131a29] border border-emerald-900/35 rounded-3xl p-6 sm:p-8 mb-10 shadow-xl flex flex-col md:flex-row items-center gap-6">
         <div className="relative shrink-0">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-amber-500/40 shadow-xl bg-slate-950/90 flex items-center justify-center p-3">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-emerald-500/40 shadow-xl bg-slate-950/90 flex items-center justify-center p-3">
             <OwlLogo size="lg" />
           </div>
-          <span className="absolute -bottom-2 -right-2 px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-xs font-bold uppercase tracking-wider shadow">
+          <span className="absolute -bottom-2 -right-2 px-2.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow">
             Auteur & Dev
           </span>
         </div>
@@ -106,8 +117,8 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
         <div className="flex-1 text-center md:text-left">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-1.5">
             <h2 className="text-xl font-black text-white">Quentin Beaud (Hibouxe / Edsaje)</h2>
-            <span className="text-xs px-2.5 py-0.5 rounded-md bg-slate-800 text-amber-400 font-bold border border-slate-700">
-              Fullstack & Game Dev
+            <span className="text-xs px-2.5 py-0.5 rounded-md bg-emerald-950 text-emerald-300 font-bold border border-emerald-800/60">
+              🌲 Fullstack & Game Dev
             </span>
           </div>
           <p className="text-sm text-slate-300 leading-relaxed mb-4">
@@ -115,10 +126,10 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
           </p>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs text-slate-300">
             <span className="font-semibold text-slate-400">Compétences clés :</span>
-            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">React & TypeScript</span>
-            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">Canvas 2D / Web Audio</span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#071610] border border-emerald-900/50 text-emerald-300 font-medium">React & TypeScript</span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#071610] border border-emerald-900/50 text-emerald-300 font-medium">Canvas 2D & Web Audio</span>
             <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">Java / C# Architecture</span>
-            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">Analyse Narrative & Game Design</span>
+            <span className="px-2.5 py-1 rounded-lg bg-[#0b0f19] border border-slate-800 font-medium">🌿 Game Design Poétique & Organique</span>
           </div>
         </div>
       </div>
