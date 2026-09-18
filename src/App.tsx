@@ -61,18 +61,73 @@ export const AppContent: React.FC = () => {
     setIsArcadeOpen(true);
   };
 
-  // Hash listener pour deep linking direct (#versus, #arcade, #linkle)
+  // Hash listener pour deep linking direct (#screenle, #indledle, #linkle, #versus, #arcade, #toolbox, #roost, #gems)
   useEffect(() => {
     const handleHashChange = () => {
-      if (window.location.hash.startsWith('#versus')) {
-        setCurrentTab('versus');
-      } else if (window.location.hash.startsWith('#arcade')) {
-        setCurrentTab('arcade');
-      }
+      const hash = window.location.hash.toLowerCase();
+      if (hash.startsWith('#screenle')) setCurrentTab('screenle');
+      else if (hash.startsWith('#indledle')) setCurrentTab('indledle');
+      else if (hash.startsWith('#linkle')) setCurrentTab('linkle');
+      else if (hash.startsWith('#versus')) setCurrentTab('versus');
+      else if (hash.startsWith('#arcade')) setCurrentTab('arcade');
+      else if (hash.startsWith('#toolbox')) setCurrentTab('toolbox');
+      else if (hash.startsWith('#roost')) setCurrentTab('roost');
+      else if (hash.startsWith('#gems')) setCurrentTab('gems');
     };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  // Synchronisation dynamique du titre du document et du hash pour le SEO et le partage
+  useEffect(() => {
+    const isFr = i18n.language.startsWith('fr');
+    const titles: Record<NavTab, { fr: string; en: string }> = {
+      gems: {
+        fr: 'Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants',
+        en: 'Hoot Indie Games | The Indie Video Game Sanctuary',
+      },
+      screenle: {
+        fr: "Screenle — Défi Quotidien par Capture d'Écran | Hoot Indie Games",
+        en: 'Screenle — Daily Screenshot Challenge | Hoot Indie Games',
+      },
+      indledle: {
+        fr: 'Indledle — Défi Quotidien de Déduction | Hoot Indie Games',
+        en: 'Indledle — Daily Indie Deduction Puzzle | Hoot Indie Games',
+      },
+      linkle: {
+        fr: 'Linkle — 16 Connexions Thématiques Secrètes | Hoot Indie Games',
+        en: 'Linkle — 16 Secret Thematic Connections | Hoot Indie Games',
+      },
+      versus: {
+        fr: 'Arène Versus 1v1 — Duels Multijoueurs en Direct | Hoot Indie Games',
+        en: '1v1 Versus Arena — Real-Time Multiplayer Duels | Hoot Indie Games',
+      },
+      arcade: {
+        fr: "Salle d'Arcade Rétro & Vectrex 1982 | Hoot Indie Games",
+        en: 'Retro Arcade Hall & 1982 Vectrex | Hoot Indie Games',
+      },
+      toolbox: {
+        fr: 'Boîte à Outils & Radar Indé | Hoot Indie Games',
+        en: 'Toolbox Hub & Indie Radar | Hoot Indie Games',
+      },
+      roost: {
+        fr: 'Le Perchoir Sylvestre — Portfolio & Projets | Hoot Indie Games',
+        en: 'The Roost — Portfolio & Indie Projects | Hoot Indie Games',
+      },
+    };
+
+    document.title = isFr ? titles[currentTab].fr : titles[currentTab].en;
+
+    // Met à jour le hash sans recharger la page
+    const targetHash = currentTab === 'gems' ? '' : `#${currentTab}`;
+    if (window.location.hash !== targetHash && !(currentTab === 'gems' && window.location.hash === '')) {
+      if (targetHash === '') {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      } else {
+        history.replaceState(null, '', targetHash);
+      }
+    }
+  }, [currentTab, i18n.language]);
 
   const todayStr = getTodayDateString();
   const isArchiveMode = currentDate !== todayStr;

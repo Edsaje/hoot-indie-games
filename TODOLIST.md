@@ -130,8 +130,38 @@
 
 ---
 
-### 💡 6. Idées & Améliorations Futures
+### ☁️ 9. Connexion Steam & Synchronisation de Bibliothèque
+- [x] **Authentification Steam OpenID 2.0 & Saisie de Profil** :
+  - Support de l'authentification officielle Valve via OpenID 2.0 ([`src/services/steamService.ts`](file:///src/services/steamService.ts)).
+  - Saisie directe par SteamID64 ou URL de profil communautaire avec extraction automatique d'identifiant.
+  - Sauvegarde locale et persistante dans le profil utilisateur ([`src/types/user.ts`](file:///src/types/user.ts)).
+- [x] **Synchronisation de Bibliothèque & Détection des Jeux Possédés** :
+  - Récupération de la liste des jeux possédés via l'API Steam Web avec stockage sécurisé de la clé d'API.
+  - Détection O(1) de possession de jeux (`isGameOwned`) sur l'ensemble des 94 pépites certifiées.
+  - Badges visuels interactifs *"Dans votre bibliothèque"* sur les fiches de jeux, la pépite du jour et les solutions Screenle / Indledle.
+  - Filtre à 3 états dans l'Explorateur (*Toutes / Dans ma bibliothèque / À découvrir*).
+  - Gestion manuelle souple (cochage direct dans la modale de profil) pour les joueurs ayant un profil Steam privé.
+
+---
+
+### 🔍 10. Référencement & Suite SEO Globale
+- [x] **Domaine Canonique & Directives d'Indexation** :
+  - Domaine canonique officiel strictement fixé sur `https://hootindiegames.com/`.
+  - Fichier [`public/robots.txt`](file:///public/robots.txt) déclarant les règles d'indexation et l'URL absolue du sitemap.
+  - Fichier [`public/sitemap.xml`](file:///public/sitemap.xml) indexant toutes les routes et deep-links (`#screenle`, `#indledle`, `#linkle`, `#versus`, `#arcade`, `#toolbox`, `#roost`) avec balises `xhtml:link` bilingues et fréquences de mise à jour.
+- [x] **Balises Sociales & Assets Graphiques Dédiés** :
+  - Création de la bannière OpenGraph officielle en formats PNG raster et SVG vectoriel ([`public/og-banner.png`](file:///public/og-banner.png) & [`public/og-banner.svg`](file:///public/og-banner.svg), 1200x630) optimisée pour Discord, Twitter/X, LinkedIn, Facebook et WhatsApp.
+  - Métadonnées complètes OpenGraph (`og:site_name`, `og:image`, `og:type`, `og:locale`, `og:url`) et Twitter Card (`summary_large_image`).
+- [x] **Données Structurées & Accessibilité Spiders** :
+  - Intégration du schéma JSON-LD Schema.org (`WebApplication`, `Organization`, `BreadcrumbList`) dans [`index.html`](file:///index.html).
+  - Contenu fallback `<noscript>` pour les moteurs de recherche et crawlers sans exécution JavaScript.
+  - Titres de pages dynamiques (`document.title`) et synchronisation de l'URL hash dans [`src/App.tsx`](file:///src/App.tsx) selon l'onglet actif et la langue.
+
+---
+
+### 💡 11. Idées & Améliorations Futures
 - [ ] **Share Card personnalisée** (export d'image ou grille emoji pour Discord / Twitter / Bluesky).
 - [ ] **Support Manette (Gamepad API)** pour naviguer et jouer dans la Salle d'Arcade.
 - [ ] **Filtre "Indés Francophones"** dans le catalogue de jeux.
 - [ ] **Mode Blind Test Audio Indé** (reconnaître un jeu à sa musique culte).
+

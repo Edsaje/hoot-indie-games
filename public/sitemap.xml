@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Page d'Accueil & Explorateur de Pépites Certifiées -->
+  <url>
+    <loc>https://hootindiegames.com/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://hootindiegames.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://hootindiegames.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hootindiegames.com/" />
+  </url>
+
+  <!-- Screenle : Défi Quotidien d'Identification par Capture d'Écran HD -->
+  <url>
+    <loc>https://hootindiegames.com/#screenle</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Indledle : Défi Quotidien de Déduction par Indices et Propriétés -->
+  <url>
+    <loc>https://hootindiegames.com/#indledle</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Linkle : Le Jeu des 16 Connexions Thématiques Secrètes -->
+  <url>
+    <loc>https://hootindiegames.com/#linkle</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Arène Versus 1v1 : Duels en Temps Réel entre Joueurs Indés -->
+  <url>
+    <loc>https://hootindiegames.com/#versus</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Salle d'Arcade Rétro : 8 Jeux Rétro Culte & Véritable Vectrex 1982 -->
+  <url>
+    <loc>https://hootindiegames.com/#arcade</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Boîte à Outils : Radar de Sorties & Outils Joueurs -->
+  <url>
+    <loc>https://hootindiegames.com/#toolbox</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Le Perchoir : Portfolio Créatif et Projets de Quentin Beaud (Hibouxe) -->
+  <url>
+    <loc>https://hootindiegames.com/#roost</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>

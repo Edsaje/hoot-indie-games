@@ -1,0 +1,14 @@
+# ==============================================================================
+# Robots.txt — Hoot Indie Games (https://hootindiegames.com)
+# Le Sanctuaire Officiel des Jeux Vidéo Indépendants & Pépites Certifiées
+# ==============================================================================
+
+User-agent: *
+Allow: /
+
+# Directives d'indexation
+Disallow: /api/
+Disallow: /data/
+
+# Déclaration du Sitemap XML officiel
+Sitemap: https://hootindiegames.com/sitemap.xml

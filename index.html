@@ -1,25 +1,157 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hoot Indie Games | Le Sanctuaire des Jeux Indépendants</title>
-    <meta name="description" content="Plateforme bilingue dédiée aux jeux vidéo indépendants : Screenle, Indledle, Linkle, boîte à outils pour joueurs et perchoir créatif signé Quentin Beaud (Hibouxe)." />
-    <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Indépendants" />
-    <meta property="og:description" content="Trois défis quotidiens (Screenle, Indledle, Linkle), boîte à outils indé et vitrine de créations par Quentin Beaud (Hibouxe)." />
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants</title>
+    <meta name="title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
+    <meta name="description" content="Plateforme de référence pour les passionnés de jeux vidéo indépendants : catalogue de 94 pépites certifiées Zéro Hallucination, 3 défis quotidiens (Screenle, Indledle, Linkle), arène 1v1 multijoueur P2P, véritable salle d'arcade rétro 1982 et synchronisation de bibliothèque Steam." />
+    <meta name="keywords" content="jeux indépendants, indie games, screenle, indledle, linkle, devinette jeu vidéo, steam, pépites indés, jeux rétro, vectrex, mine storm, quentin beaud, hibouxe" />
+    <meta name="author" content="Quentin Beaud (Hibouxe)" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Canonical URL & Multilingual Alternates -->
+    <link rel="canonical" href="https://hootindiegames.com/" />
+    <link rel="alternate" hreflang="fr" href="https://hootindiegames.com/" />
+    <link rel="alternate" hreflang="en" href="https://hootindiegames.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://hootindiegames.com/" />
+
+    <!-- Open Graph / Facebook / Discord -->
+    <meta property="og:site_name" content="Hoot Indie Games" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/favicon.svg" />
+    <meta property="og:url" content="https://hootindiegames.com/" />
+    <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
+    <meta property="og:description" content="Explorateur de 94 pépites certifiées, 3 défis quotidiens (Screenle, Indledle, Linkle), arène 1v1 multijoueur en temps réel et salle d'arcade rétro." />
+    <meta property="og:image" content="https://hootindiegames.com/og-banner.png" />
+    <meta property="og:image:secure_url" content="https://hootindiegames.com/og-banner.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter / X Cards -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Hoot Indie Games" />
-    <meta name="twitter:description" content="Défis quotidiens et boîte à outils pour les passionnés de jeux vidéo indépendants." />
+    <meta name="twitter:site" content="@Hibouxe" />
+    <meta name="twitter:creator" content="@Hibouxe" />
+    <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
+    <meta name="twitter:description" content="Catalogue certifié de 94 pépites indés, 3 défis quotidiens, arène Versus 1v1 en direct et salle d'arcade rétro." />
+    <meta name="twitter:image" content="https://hootindiegames.com/og-banner.png" />
+    <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants" />
+
+    <!-- Mobile & PWA Theme -->
     <meta name="theme-color" content="#0b0f19" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Structured Data (JSON-LD Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://hootindiegames.com/#webapp",
+          "name": "Hoot Indie Games",
+          "url": "https://hootindiegames.com/",
+          "description": "Plateforme bilingue de découverte et défis quotidiens autour du jeu vidéo indépendant : 94 pépites certifiées, devinettes Screenle & Indledle, connexions Linkle, duels multijoueurs Versus 1v1 et bornes rétro.",
+          "applicationCategory": "GameApplication",
+          "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
+          "inLanguage": ["fr", "en"],
+          "image": "https://hootindiegames.com/og-banner.png",
+          "author": {
+            "@type": "Person",
+            "name": "Quentin Beaud",
+            "alternateName": "Hibouxe",
+            "url": "https://quentinbeaud.com"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://hootindiegames.com/#organization",
+          "name": "Hoot Indie Games",
+          "url": "https://hootindiegames.com/",
+          "logo": "https://hootindiegames.com/favicon.svg",
+          "sameAs": [
+            "https://github.com/Edsaje/hoot-indie-games",
+            "https://youtube.com/@Hibouxe"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://hootindiegames.com/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Accueil & Pépites",
+              "item": "https://hootindiegames.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Screenle",
+              "item": "https://hootindiegames.com/#screenle"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Indledle",
+              "item": "https://hootindiegames.com/#indledle"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "Linkle",
+              "item": "https://hootindiegames.com/#linkle"
+            },
+            {
+              "@type": "ListItem",
+              "position": 5,
+              "name": "Versus 1v1",
+              "item": "https://hootindiegames.com/#versus"
+            },
+            {
+              "@type": "ListItem",
+              "position": 6,
+              "name": "Salle d'Arcade",
+              "item": "https://hootindiegames.com/#arcade"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
   <body class="bg-[#0b0f19] text-slate-100 antialiased">
+    <noscript>
+      <div style="max-width: 800px; margin: 2rem auto; padding: 2rem; background: #131a29; border: 1px solid #f59e0b; border-radius: 12px; color: #e2e8f0; font-family: sans-serif; line-height: 1.6;">
+        <h1 style="color: #f59e0b; font-size: 1.8rem; margin-top: 0;">🦉 Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants</h1>
+        <p>Bienvenue sur <strong>Hoot Indie Games</strong>, la plateforme consacrée à la mise en lumière des pépites du jeu vidéo indépendant.</p>
+        <h2>🎮 Au programme :</h2>
+        <ul>
+          <li><strong>Explorateur de 94 Pépites Certifiées :</strong> Fiches détaillées, captures HD et liens Steam vérifiés sans hallucination.</li>
+          <li><strong>Screenle :</strong> Le jeu quotidien d'identification d'un jeu indé à partir d'un zoom progressif de capture d'écran.</li>
+          <li><strong>Indledle :</strong> La devinette quotidienne par déduction d'attributs (année, genre, studio, style visuel, caméra).</li>
+          <li><strong>Linkle :</strong> Le défi des 16 connexions thématiques secrètes entre œuvres indépendantes.</li>
+          <li><strong>Arène Versus 1v1 :</strong> Duels multijoueurs P2P en temps réel via WebRTC.</li>
+          <li><strong>Salle d'Arcade Rétro :</strong> 8 jeux cultes jouables dont le véritable <em>Mine Storm</em> Vectrex 1982.</li>
+        </ul>
+        <p style="color: #94a3b8; font-size: 0.9rem;">Pour profiter de l'expérience interactive complète et des jeux en direct, veuillez activer JavaScript dans votre navigateur.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
