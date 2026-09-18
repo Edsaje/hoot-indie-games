@@ -382,7 +382,9 @@ export const AppContent: React.FC = () => {
                 <TimeAttackHub initialMode={timeAttackInitialMode} />
               )}
 
-              {activeMiniGame === 'versus' && <VersusArena />}
+              {activeMiniGame === 'versus' && (
+                <VersusArena onOpenAuth={() => setIsAuthOpen(true)} />
+              )}
             </div>
           </div>
         )}

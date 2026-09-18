@@ -565,7 +565,6 @@ https://hootindiegames.com/#profille`;
               {yearGuesses.map((y, idx) => {
                 const isMatch = y === secretGame.releaseYear;
                 const isHigher = y < secretGame.releaseYear; // Target is higher / more recent
-                const diff = Math.abs(secretGame.releaseYear - y);
 
                 return (
                   <div
@@ -585,12 +584,12 @@ https://hootindiegames.com/#profille`;
                     ) : isHigher ? (
                       <span className="flex items-center gap-1 text-amber-300 text-[11px]">
                         <ArrowUp className="w-3.5 h-3.5 text-amber-400" />
-                        <span>{isFr ? `Plus récent (+${diff})` : `Newer (+${diff})`}</span>
+                        <span>{isFr ? 'Plus récent' : 'Newer'}</span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-1 text-cyan-300 text-[11px]">
                         <ArrowDown className="w-3.5 h-3.5 text-cyan-400" />
-                        <span>{isFr ? `Plus ancien (-${diff})` : `Older (-${diff})`}</span>
+                        <span>{isFr ? 'Plus ancien' : 'Older'}</span>
                       </span>
                     )}
                   </div>

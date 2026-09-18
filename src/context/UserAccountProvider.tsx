@@ -255,10 +255,16 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     if (!supabase || !isSupabaseConfigured) {
-      return {
-        success: false,
-        error: 'La connexion Google nécessite la configuration Supabase (VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY).',
-      };
+      // Mode simulation hors-ligne / démonstration locale
+      const guestGoogleEmail = 'joueur.google@hoot.local';
+      setProfile((prev) => ({
+        ...prev,
+        email: guestGoogleEmail,
+        username: prev.username && prev.username !== 'Hibou Mystère' ? prev.username : 'Chouette Exploratrice',
+        isCloudSynced: false,
+      }));
+      setIsAuthenticated(true);
+      return { success: true };
     }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

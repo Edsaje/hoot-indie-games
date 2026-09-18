@@ -84,11 +84,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setErrorMessage(null);
     setIsLoading(true);
     const res = await loginWithGoogle();
-    if (!res.success) {
+    if (res.success) {
+      soundFx.playChime();
+      setSuccessMessage('Connexion Google réussie !');
+      setTimeout(() => {
+        onClose();
+      }, 800);
+    } else {
       soundFx.playError();
       setErrorMessage(res.error || 'Connexion Google indisponible.');
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   const handleSteamAuth = () => {
