@@ -19,6 +19,14 @@
 4. **Réhabilitation du Perchoir :**
    - Supprimer le remplissage générique ("full IA").
    - Intégrer de vraies informations sur Quentin Beaud (Hibouxe / Edsaje), ses vraies vidéos YouTube (@Hibouxe), ses vrais dépôts GitHub et ses projets réels.
+5. **Accueil par Défaut : L'Explorateur de Pépites Indés :**
+   - Remplacer l'atterrissage direct sur Screenle par un Accueil immersif centré sur l'Explorateur de Pépites (découverte de jeux indés méconnus, sélections thématiques, accès instantané aux défis quotidiens et au radar).
+6. **Réparation & Ergonomie Mobile des Jeux d'Arcade :**
+   - Résoudre les problèmes d'affichage et de contrôles tactiles sur smartphone pour les 8 mini-jeux d'arcade (D-pad virtuel réactif, prévention du scroll intempestif, ratio canvas adaptatif).
+7. **Direction Artistique Organique "Nature & Sylvestre" :**
+   - Injecter une ambiance botanique, forêt nocturne et végétale dans l'UI globale et particulièrement dans l'espace portfolio / Perchoir (feuillages discrets, tons vert mousse `#064e3b` / `#059669`, accents boisé/écorce, lianes subtiles, brume et lucioles).
+8. **Choix de Difficulté sur les Jeux Principaux :**
+   - Proposer pour chaque jeu principal des modes de difficulté adaptés (ex: *Chouetteau / Détente*, *Hibou / Standard*, *Grand-Duc / Expert*) modulant le nombre d'essais, les indices dévoilés et les pénalités.
 
 ---
 
@@ -49,20 +57,58 @@
 
 ---
 
-### 🕹️ 3. Nouvel Onglet Dédié "Arcade" & Finitions
-- [ ] **Création de la vue Arcade dédiée** :
-  - Ajouter la route/onglet `arcade` dans [`src/components/common/Navbar.tsx`](file:///src/components/common/Navbar.tsx) et [`src/App.tsx`](file:///src/App.tsx).
-  - Retirer l'encart d'arcade du Perchoir.
-- [ ] **Expérience plein écran & bornes d'arcade** :
-  - Page immersive avec sélecteur visuel des 8 jeux (Snake, Pong, Casse-Briques, Flappy Hibou, Invaders, Forest Run, Tetris, Mine Storm Vectrex).
-  - Gestion des high scores persistants par jeu.
-- [ ] **Équilibrage et vitesse des mini-jeux** :
-  - Valider que la boucle 60 FPS reste stable et calibrée à vitesse humaine sur tous les écrans (60Hz, 120Hz, 144Hz, mobile).
-  - Améliorer les contrôles tactiles sur smartphone.
+### 🌿 3. Direction Artistique "Nature Sylvestre & Organique"
+- [ ] **Ambiance forêt nocturne globale** :
+  - Enrichir le fond d'ambiance ([`src/components/common/FirefliesBackground.tsx`](file:///src/components/common/FirefliesBackground.tsx)) avec des silhouettes discrètes de canopée, branches d'arbres et brume forestière.
+  - Ajouter des accents naturels dans la palette Tailwind : vert mousse/émeraude (`#064e3b`, `#047857`), nuances bois/écorce feutré.
+- [ ] **Végétalisation & Identité du Perchoir (Portfolio)** :
+  - Donner au Perchoir l'aspect d'une cabane d'observation sylvestre authentique (cadres d'écorce discrète, feuilles, lianes et lanternes de lucioles).
 
 ---
 
-### 🦉 4. Réhabilitation de l'Onglet "Le Perchoir"
+### 🌟 4. Accueil par Défaut : L'Explorateur de Pépites Indés
+- [ ] **Définir l'Explorateur de Pépites comme route par défaut** :
+  - Dans [`src/App.tsx`](file:///src/App.tsx), initialiser `currentTab` sur `'gems'` ou `'explore'` plutôt que `'screenle'`.
+- [ ] **Interface d'accueil immersive** :
+  - Section héro sylvestre avec la "Pépite du Jour" mise en vedette.
+  - Grille de découverte filtrable par ambiance, genre et temps de complétion.
+  - Raccourcis instantanés vers les 3 défis quotidiens et la salle d'arcade.
+
+---
+
+### 🕹️ 5. Nouvel Onglet Dédié "Arcade" & Réparation Mobile
+- [ ] **Création de la vue Arcade dédiée** :
+  - Ajouter la route/onglet `arcade` dans [`src/components/common/Navbar.tsx`](file:///src/components/common/Navbar.tsx) et [`src/App.tsx`](file:///src/App.tsx).
+  - Retirer l'encart d'arcade du Perchoir.
+- [ ] **Réparation mobile prioritaire des 8 jeux d'arcade** :
+  - Résoudre les problèmes d'affichage et de réactivité sur smartphones.
+  - Empêcher le défilement de page pendant le jeu (`touch-action: none`, `preventDefault` sur les touch events).
+  - Intégrer un D-pad virtuel ergonomique et des boutons A/B confortables sur écran tactile.
+  - Adapter le scaling du canvas pour tous les ratios d'écran et pixel ratios (Retina / OLED).
+- [ ] **Équilibrage et vitesse des mini-jeux** :
+  - Valider que la boucle 60 FPS reste stable et calibrée sur tous les taux de rafraîchissement (60Hz, 120Hz, 144Hz).
+  - Gestion des high scores persistants par jeu.
+
+---
+
+### 🎯 6. Choix de Difficulté sur les Jeux Principaux
+- [ ] **Sélecteur de difficulté pour chaque jeu** :
+  - **Screenle** :
+    - *Chouetteau (Facile)* : Zoom initial moins agressif, 6 essais + indice textuel dès la 2e erreur.
+    - *Hibou (Standard)* : 6 étapes de zoom progressif classiques.
+    - *Grand-Duc (Expert)* : Zooms ultra-serrés, flou accru, aucun indice bonus.
+  - **Indledle** :
+    - *Facile* : 8 essais, marges d'années colorées (±3 ans), genres partiels indiqués.
+    - *Standard* : 6 essais classiques.
+    - *Expert* : 4 essais seulement, indications strictes.
+  - **Linkle** :
+    - *Détente* : 6 erreurs tolérées, possibilité d'obtenir un indice de groupe.
+    - *Standard* : 4 erreurs autorisées.
+    - *Hardcore* : 1 seule erreur tolérée (mort subite).
+
+---
+
+### 🦉 7. Réhabilitation de l'Onglet "Le Perchoir"
 - [ ] **Remplacement des textes génériques** :
   - Mettre à jour [`src/data/roostProjects.ts`](file:///src/data/roostProjects.ts) avec les vrais projets de Quentin Beaud.
   - Ajouter les véritables vidéos/essais de la chaîne YouTube **@Hibouxe**.
@@ -71,7 +117,7 @@
 
 ---
 
-### 🎮 5. Renommage des Modes Principaux & Suggestions Steam
+### 🎮 8. Renommage des Modes Principaux & Suggestions Steam
 - [ ] **Nouveaux noms des modes de jeu** :
   - Remplacer *Screenle*, *Indledle*, *Linkle*, *Versus* par les nouveaux intitulés choisis par l'utilisateur.
 - [ ] **Système de Suggestion de Jeu** :
