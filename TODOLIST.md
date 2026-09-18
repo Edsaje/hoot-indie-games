@@ -41,6 +41,10 @@
     - Augmenter le catalogue certifié vers plus de 150 pépites indés rigoureusement vérifiées (Règle Zéro Hallucination).
 15. **Révision de l'Idée de Difficulté des Jeux :**
     - Réévaluer le système de difficulté pour garder le défi quotidien universel et équitable tout en offrant des options d'aide progressive.
+16. **Section Dédiée 18+ (Jeux Indés Adultes & Conformité Légale) :**
+    - Créer une section dédiée et étanche pour les jeux indépendants réservés aux adultes (18+).
+    - Intégrer un système rigoureux de contrôle d'âge (Age Gate), avertissement explicite de contenu et consentement éclairé conformément aux lois et réglementations en vigueur sur la protection des mineurs.
+    - Isoler totalement ces contenus des défis quotidiens (Screenle, Indledle, Linkle) et de l'accueil public afin de garantir une expérience familiale et tout public par défaut.
 
 ---
 
@@ -217,6 +221,11 @@
 - [ ] **Réévaluation de l'Idée de Difficulté des Jeux** :
   - Étude du retour d'expérience sur les modes de difficulté : éviter de fragmenter les scores quotidiens de la communauté.
   - Définir si le défi du jour doit rester universel et identique pour tous (garantie d'équité pour le partage de score) avec un système d'indices optionnels à la demande.
+- [ ] **Section Dédiée 18+ (Jeux Indés Adultes) avec Contrôle d'Âge & Consentement Légal** :
+  - **Étanchéité & Protection des Mineurs** : Exclusion stricte de tout contenu adulte du catalogue tout public, de l'Accueil et des défis quotidiens (Screenle, Indledle, Linkle).
+  - **Barrière d'Âge Conforme (Age Gate)** : Modal d'avertissement explicite avec vérification de l'âge / déclaration légale de majorité et recueil du consentement éclairé en conformité avec les réglementations en vigueur.
+  - **Opt-in Persistant & Verrouillage** : Accès conditionnel débloqué uniquement après validation, désactivable à tout moment dans les préférences du profil.
+  - **Espace Dédié & Fiches Averties** : Espace isolé avec tags de contenus matures explicites, avertissements sensibles et redirections Steam officielles sous avertissement d'âge.
 
 ---
 
