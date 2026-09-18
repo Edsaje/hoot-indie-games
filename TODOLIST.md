@@ -58,6 +58,16 @@
     - La Navbar principale est désormais allégée à 5 onglets majeurs (*Pépites*, *Mini-jeux*, *Arcade*, *Boîte à Outils*, *Le Perchoir*), garantissant 0 dépassement sur desktop et une ergonomie 100% Mobile-First.
     - Ajout du nouveau mini-jeu quotidien **"Profille"** (*Fiche d'Identité Indé*) : le joueur dispose du titre et des captures officielles du jeu, et doit retrouver l'année de sortie, le studio de développement (autocomplétion sur 87 studios) et le style de jeu / genres (chips interactifs).
     - Hub central des Mini-jeux avec statuts des défis du jour, accès direct aux 6 disciplines et sous-navigation par pilules réactive.
+21. **Réfléchir à de Nouveaux Jeux Indés :**
+    - Conception et prototypage de nouveaux concepts originaux pour enrichir le hub des mini-jeux (ex: Blind Test OST/musique, Devdle/Studio Match, Tagdle, Silhouette/Pixel Quiz, Chrono-Timeline).
+22. **Mise à Jour Time Attack & Versus avec les Nouveaux Jeux :**
+    - Étendre les modes compétitifs (Time Attack et Versus 1v1) pour intégrer les mécaniques et questions de **Profille** (Sprint Profille : devinette express année/studio/genre) ainsi que les futurs nouveaux jeux.
+23. **Système de Leaderboard (Classement en Ligne) dans l'Arcade et les Mini-jeux :**
+    - Développer un classement compétitif souverain (quotidien, hebdomadaire, all-time) pour :
+      - Les 8 bornes de la Salle d'Arcade (High Scores avec pseudo, avatar, filtre amis).
+      - Les mini-jeux quotidiens (Screenle, Indledle, Linkle, Profille) et les sprints Time Attack.
+24. **Amélioration Continue de Track.php :**
+    - Enrichir notre API d'analytics souveraine [`public/api/track.php`](file:///public/api/track.php) et son dashboard d'administration : statistiques détaillées de rétention des séries (streaks), temps moyen passé par jeu, répartition des victoires/défaites, détection d'erreurs en production, optimisation des performances de stockage JSON et exports CSV/JSON.
 
 ---
 
@@ -268,6 +278,38 @@
   - **Barrière d'Âge Conforme (Age Gate)** : Modal d'avertissement explicite avec vérification de l'âge / déclaration légale de majorité et recueil du consentement éclairé en conformité avec les réglementations en vigueur.
   - **Opt-in Persistant & Verrouillage** : Accès conditionnel débloqué uniquement après validation, désactivable à tout moment dans les préférences du profil.
   - **Espace Dédié & Fiches Averties** : Espace isolé avec tags de contenus matures explicites, avertissements sensibles et redirections Steam officielles sous avertissement d'âge.
+- [ ] **Réflexion & Conception de Nouveaux Jeux Indés** :
+  - **Pistes & Concepts Originaux pour le Hub des Mini-Jeux** :
+    - *Blind Test OST Indé (Audioldle)* : Écouter un extrait de quelques secondes d'une bande-son emblématique (Hollow Knight, Celeste, Undertale, Hades, Dead Cells, Outer Wilds) et deviner le jeu ou le compositeur.
+    - *Chrono-Timeline (Frise Chronologique)* : Placer 4 ou 5 pépites indés dans leur ordre chronologique exact de sortie.
+    - *Pixel/Silhouette Challenge (Ombres & Silhouettes)* : Identifier un personnage, ennemi ou élément culte à partir de son ombre vectorielle ou d'un sprite dé-pixelisé progressivement.
+    - *Studiole / Devdle* : Associer les développeurs indépendants à leurs œuvres ou deviner le studio secret en fonction de sa filmographie vidéoludique.
+    - *Steam Review Déduction (La Bonne Critique)* : Deviner le jeu à partir d'une review Steam drôle, poétique ou marquante avec les mots-clés spoilants caviardés.
+- [ ] **Mise à Jour Time Attack & Versus avec les Nouveaux Jeux** :
+  - **Extension Time Attack (Nouveau Sprint Profille)** :
+    - Ajouter une 4e discipline *Profille Sprint* dans [`src/components/timeattack/TimeAttackHub.tsx`](file:///src/components/timeattack/TimeAttackHub.tsx) : deviner rapidement l'année, le développeur ou le genre d'un jeu affiché sous un compte à rebours de 60 secondes.
+    - Intégration dans le sélecteur de mode du Hub Time Attack et équilibrage du scoring (+100 pts x combo, bonus +3s, malus -5s).
+  - **Extension de l'Arène Versus 1v1** :
+    - Intégrer les questions Profille (développeur, année de sortie, genre) dans les manches de duel en direct WebRTC P2P.
+    - Variantes de match configurables par l'hôte : Mode Classique (Titres seuls), Mode Profille (Studio / Année), ou Mode Hybride Aléatoire.
+- [ ] **Système de Leaderboard (Classement en Ligne) dans l'Arcade et les Mini-jeux** :
+  - **Leaderboard Salle d'Arcade (8 Bornes)** :
+    - Stockage et synchronisation cloud/serveur des meilleurs scores sur les 8 bornes d'arcade (Flappy Hibou, Course Sylvestre, Snake, Pong, Tetris, Breakout, Space Invaders, Pac-Owl).
+    - Affichage d'un tableau d'honneur Top 10 avec pseudo, avatar, date du record et mise en avant du rang personnel du joueur.
+  - **Leaderboard Mini-jeux & Time Attack** :
+    - Classement Time Attack par discipline (Screenle Sprint, Indledle Sprint, Linkle Sprint, Profille Sprint).
+    - Classement quotidien des mini-jeux (vitesse de résolution et nombre d'essais pour Screenle, Indledle, Linkle, Profille).
+    - Classement ELO officiel pour l'Arène Versus 1v1 avec rangs et ligues compétitives.
+    - Sécurisation du backend contre la falsification et l'injection de faux scores.
+- [ ] **Amélioration & Optimisation de Track.php (Analytics & Admin)** :
+  - **Tableau de bord administrateur enrichi** ([`public/api/track.php`](file:///public/api/track.php)) :
+    - Visualisation claire de la fréquentation globale (visiteurs uniques, sessions, pages vues, répartition mobile vs desktop).
+    - Métriques d'engagement par jeu : taux de complétion quotidien et répartition de popularité (Screenle vs Indledle vs Linkle vs Profille vs Arcade).
+    - Suivi précis des séries et flammes : nombre de streaks actifs dans la communauté, taux d'utilisation du rattrapage de veille (J-1).
+  - **Cybersécurité & Robustesse Backend** :
+    - Optimisation de la gestion de concurrence et du verrouillage sur `stats.json` pour garantir une écriture fluide sous fort trafic.
+    - Alertes automatiques en cas d'anomalies de requêtes ou tentatives de bruteforce sur l'espace d'administration.
+    - Fonctions d'export direct des données analytiques en formats CSV et JSON.
 
 ---
 
