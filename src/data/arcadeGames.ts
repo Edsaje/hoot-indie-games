@@ -18,21 +18,21 @@ export interface ArcadeGameMeta {
 export const ARCADE_GAMES: ArcadeGameMeta[] = [
   {
     id: 'snake',
-    name: 'Snake Doré',
+    name: 'Snake',
     icon: '🐍',
-    instructions: 'Flèches directionnelles (ou ZQSD). Mange les lucioles sans heurter les murs ni ta queue !',
+    instructions: 'Flèches directionnelles (ou ZQSD). Mange les pastilles sans heurter les murs ni ta queue !',
   },
   {
     id: 'pong',
-    name: 'Pong Magique',
+    name: 'Pong',
     icon: '🏓',
-    instructions: 'Flèches HAUT / BAS pour bouger. ESPACE pour lancer la balle magique.',
+    instructions: 'Flèches HAUT / BAS pour bouger la raquette. ESPACE pour engager la balle.',
   },
   {
     id: 'breakout',
-    name: 'Casse-Briques',
+    name: 'Breakout',
     icon: '🧱',
-    instructions: 'Flèches GAUCHE / DROITE pour déplacer la barre. ESPACE pour lancer la bille.',
+    instructions: 'Flèches GAUCHE / DROITE pour déplacer la raquette. ESPACE pour lancer la bille.',
   },
   {
     id: 'flappy',
@@ -54,13 +54,13 @@ export const ARCADE_GAMES: ArcadeGameMeta[] = [
   },
   {
     id: 'tetris',
-    name: 'Tétris Sylvestre',
+    name: 'Tetris',
     icon: '🧩',
     instructions: 'GAUCHE/DROITE pour glisser, HAUT pour tourner le tétramino, BAS pour accélérer la chute.',
   },
   {
     id: 'vectrex',
-    name: 'Mine Storm 1982',
+    name: 'Mine Storm',
     icon: '⚡',
     instructions: 'GAUCHE/DROITE pour pivoter, HAUT pour propulser l\'aéronef, ESPACE pour tirer, TOUCHE E pour fuir en Hyperdrive.',
   },

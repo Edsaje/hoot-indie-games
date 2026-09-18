@@ -431,7 +431,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 Salle d'Arcade
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                Snake, Pong, Casse-Briques, Flappy, Invaders, Run, Tetris & Vectrex 1982.
+                Snake, Pong, Breakout, Flappy Hibou, Space Invaders, Course Sylvestre, Tetris &amp; Mine Storm.
               </p>
             </div>
             <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">

@@ -149,7 +149,7 @@ export const TheRoostHub: React.FC<TheRoostHubProps> = ({ onOpenArcade }) => {
               La Salle d'Arcade d'Hibouxe
             </h3>
             <p className="text-sm text-slate-300 mt-1 max-w-xl leading-relaxed">
-              Snake, Pong, Casse-Briques, Flappy Hibou, Invaders, Forest Run, Tetris et Mine Storm Vectrex 1982 : jouez directement dans le navigateur à 60 FPS constants sans quitter le site.
+              Snake, Pong, Breakout, Flappy Hibou, Space Invaders, Course Sylvestre, Tetris et Mine Storm : jouez directement dans le navigateur à 60 FPS constants sans quitter le site.
             </p>
           </div>
         </div>

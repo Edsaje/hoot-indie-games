@@ -137,8 +137,8 @@ export const ROOST_PROJECTS: RoostProject[] = [
       en: '8 retro arcade mini-games playable directly in the browser',
     },
     description: {
-      fr: 'Snake, Pong, Casse-Briques, Flappy Hibou, Invaders, Forest Run, Tetris et Mine Storm Vectrex 1982 : mini-jeux classiques calibrés à 60 FPS pour des parties immédiates.',
-      en: 'Snake, Pong, Breakout, Flappy Owl, Invaders, Forest Run, Tetris, and Mine Storm Vectrex: classic arcade game loops calibrated at 60 FPS.',
+      fr: 'Snake, Pong, Breakout, Flappy Hibou, Space Invaders, Course Sylvestre, Tetris et Mine Storm : mini-jeux classiques calibrés à 60 FPS pour des parties immédiates.',
+      en: 'Snake, Pong, Breakout, Flappy Owl, Space Invaders, Forest Run, Tetris, and Mine Storm: classic arcade game loops calibrated at 60 FPS.',
     },
     category: 'prototype',
     tags: ['Arcade', 'Canvas 2D', 'Retro Audio', 'Mobile Ready'],
