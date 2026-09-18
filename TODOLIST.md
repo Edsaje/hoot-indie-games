@@ -202,14 +202,29 @@
 ---
 
 ### ⚡ 11. Nouveaux Chantiers & Directives Actives
-- [ ] **Mode Time Attack (Sprint Chronométré)** :
-  - Conception d'un mode de jeu arcade ultra-dynamique : reconnaître un maximum de jeux indés à la suite dans un compte à rebours (ex: 60s ou 90s).
-  - Multiplicateurs de score (combos de bonnes réponses consécutives) et pénalités de temps en cas d'erreur.
-  - Affichage et sauvegarde locale/cloud des records personnels.
-- [ ] **Système d'Amis & Fonctionnalités Sociales** :
-  - Ajout d'amis par code joueur unique (`HOOT-XXXX`) ou synchronisation de liste d'amis Steam.
-  - Visualisation des scores du jour des amis (Screenle, Indledle, Linkle) pour stimuler la compétition saine.
-  - Bouton d'invitation directe à un duel Versus 1v1 dans le salon d'un ami.
+- [x] **Renommage Réaliste des Jeux d'Arcade (Noms Authentiques)** :
+  - Restauration des vrais noms historiques pour l'ensemble des bornes dans [`src/data/arcadeGames.ts`](file:///src/data/arcadeGames.ts) : *Snake*, *Pong*, *Breakout*, *Space Invaders*, *Tetris*, *Mine Storm*.
+  - Conservation des deux créations originales du sanctuaire : *Flappy Hibou* et *Course Sylvestre*.
+- [x] **Remontée Automatique en Haut de Page (Scroll Top on Tab Switch)** :
+  - Réinitialisation instantanée du défilement (`window.scrollTo({ top: 0, behavior: 'instant' })`) dans [`src/App.tsx`](file:///src/App.tsx) lors de tout changement d'onglet ou de sous-discipline.
+- [x] **Refonte Navigation Mobile-First ("Mini-jeux") & Hub Dédié** :
+  - Consolidation des 6 disciplines de déduction (*Screenle*, *Indledle*, *Linkle*, *Profille*, *Time Attack*, *Versus*) dans un onglet unique *"Mini-jeux"* (`minigames`) avec Hub central ([`src/components/minigames/MiniGamesHub.tsx`](file:///src/components/minigames/MiniGamesHub.tsx)) et navigation par pilules réactive ([`src/components/minigames/MiniGamesNav.tsx`](file:///src/components/minigames/MiniGamesNav.tsx)).
+  - Allègement de la Navbar à 5 onglets majeurs (*Pépites*, *Mini-jeux*, *Arcade*, *Boîte à Outils*, *Le Perchoir*), garantissant 0 dépassement sur écran mobile et desktop.
+- [x] **Nouveau Mini-Jeu Quotidien "Profille" (Fiche d'Identité Indé)** ([`src/components/profille/ProfilleGame.tsx`](file:///src/components/profille/ProfilleGame.tsx)) :
+  - Titre et captures révélés : le joueur doit déduire l'année de sortie, le studio de développement et le genre / style de jeu.
+  - Hydratation `localStorage` rétro-compatible sans crash pour les profils existants.
+  - Normalisation tolérante du studio (gestion des suffixes légaux `GmbH`, `LLC`, `Inc`, ponctuation et autocomplétion).
+  - Saisie de l'année fluide (correction du `0` bloquant).
+  - Validation équitable des tags de genre (validation dès qu'un tag clé correspond au genre du jeu).
+  - Zéro-spoil garanti : tagline masquée avant résolution et suppression des écarts arithmétiques mathématiques bruts (`+4`, `-X`).
+- [x] **Arène Versus 1v1 : Connexion & Création 1 Clic (Steam, Google, Profil Local)** ([`src/components/versus/VersusArena.tsx`](file:///src/components/versus/VersusArena.tsx)) :
+  - Intégration de l'authentification 1-clic Steam OpenID avec synchro de bibliothèque.
+  - Intégration de l'authentification 1-clic Google OAuth / Cloud souverain.
+  - Option *"Création Express 1 Clic (Profil Local)"* pour tester et jouer immédiatement sans mot de passe avec sauvegarde locale de la cote ELO.
+  - Champ de pseudo rapide modifiable en tête de formulaire.
+  - Badge de statut de connexion dans le lobby (Steam, Cloud, Local) et bouton pour changer de compte.
+- [x] **Nettoyage Visuel & Règle de Modération des Emojis** :
+  - Remplacement systématique des emojis texte bruts par des icônes vectorielles SVG Lucide épurées et adaptées au thème sombre (`<Flame>`, `<Check>`, `<X>`, `<AlertCircle>`, `<Star>`, `<Trophy>`, etc.).
 - [x] **Refonte & Remplacement de l'Expérience "Sign In / Sign Up"** :
   - Remplacement du profil invité par défaut en haut à droite par un bouton proéminent *"Connexion / Inscription"*.
   - Modal d'authentification complète ([`src/components/common/AuthModal.tsx`](file:///src/components/common/AuthModal.tsx)) :
