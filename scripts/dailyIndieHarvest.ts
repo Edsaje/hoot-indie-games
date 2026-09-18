@@ -25,13 +25,15 @@ const CONFIG = {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function slugify(text: string): string {
-  return text
+function slugify(text: string, fallbackId?: number): string {
+  const s = text
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+  if (s.length >= 2) return s;
+  return fallbackId ? `steam-${fallbackId}` : `indie-${Date.now()}`;
 }
 
 // Inférence de l'ArtStyle canonique strict
@@ -68,7 +70,7 @@ function inferCanonicalArtStyle(text: string, genres: string[]): { fr: string; e
 function inferCanonicalCamera(text: string, genres: string[]): { fr: string; en: string } {
   const lower = (text + ' ' + genres.join(' ')).toLowerCase();
 
-  if (lower.includes('first-person') || lower.includes('première personne') || lower.includes('fps') || lower.includes('vue subjective') || lower.includes('fpv') || lower.includes('conduire') || lower.includes('drive')) {
+  if (lower.includes('first-person') || lower.includes('first person') || lower.includes('première personne') || lower.includes('fps') || lower.includes('vue subjective') || lower.includes('fpv') || lower.includes('conduire') || lower.includes('drive')) {
     return { fr: 'Première personne', en: 'First-Person' };
   }
   if (lower.includes('isometric') || lower.includes('isométrique') || lower.includes('2.5d') || lower.includes('diablo-like') || lower.includes('arpg') || lower.includes('souls-like') || lower.includes('quarter view')) {
@@ -77,7 +79,7 @@ function inferCanonicalCamera(text: string, genres: string[]): { fr: string; en:
   if (lower.includes('top-down') || lower.includes('vue du dessus') || lower.includes('vue de dessus') || lower.includes('twin-stick') || lower.includes('vertical')) {
     return { fr: 'Vue du dessus 2D', en: '2D Top-down' };
   }
-  if (lower.includes('third-person') || lower.includes('troisième personne') || lower.includes('tps') || lower.includes('over-the-shoulder') || lower.includes('open world') || lower.includes('monde ouvert') || lower.includes('survie')) {
+  if (lower.includes('third-person') || lower.includes('third person') || lower.includes('troisième personne') || lower.includes('tps') || lower.includes('over-the-shoulder') || lower.includes('open world') || lower.includes('monde ouvert') || lower.includes('survie')) {
     return { fr: 'Troisième personne', en: 'Third-Person' };
   }
 
@@ -88,18 +90,74 @@ function inferCanonicalCamera(text: string, genres: string[]): { fr: string; en:
   return { fr: 'Vue de côté 2D', en: '2D Side-scroller' };
 }
 
-// Filtre strict anti-contenu adulte / NSFW / shovelware
+// Vérifie que le texte comporte des caractères latins lisibles
+function hasLatinLetters(text: string): boolean {
+  return /[a-zA-Z]/.test(text);
+}
+
+function isReadableLatinText(text: string): boolean {
+  if (!text || text.trim().length < 25) return false;
+  const latinMatches = text.match(/[a-zA-Z0-9\s.,'’!?éèêëàâîïôûùç-]/g);
+  return Boolean(latinMatches && latinMatches.length / text.length >= 0.55);
+}
+
+// Filtre strict anti-contenu adulte / NSFW / shovelware / drogues
 function isAdultOrInappropriate(details: SteamDetails): boolean {
   const text = (details.name + ' ' + details.short_description + ' ' + (details.detailed_description || '')).toLowerCase();
   const bannedKeywords = [
     'hentai', 'nsfw', 'adult only', 'nudity', 'nudité', 'sexual', 'sexe',
-    'erotic', 'érotique', 'porn', 'ntr', 'lust', 'waifu', 'dating sim 18+',
-    'unrated', 'co-eds', 'landlord', 'satisfy the lonely hearts'
+    'erotic', 'érotique', 'porn', 'ntr', 'lust', 'waifu', 'dating sim',
+    'unrated', 'co-eds', 'landlord', 'satisfy the lonely hearts', 'compagne de bureau',
+    'ecchi', 'sensual', 'furry', 'harem', 'weed', 'cannabis', 'marijuana', 'drug'
   ];
   for (const kw of bannedKeywords) {
     if (text.includes(kw)) return true;
   }
   return false;
+}
+
+// Validation d'audit interne stricte (Règle 0 Hallucination & Intégrité)
+function auditCandidateGame(game: Game): { valid: boolean; reason?: string } {
+  if (!game.id || typeof game.id !== 'string' || game.id.trim() === '') {
+    return { valid: false, reason: 'ID manquant ou invalide' };
+  }
+  if (!game.title || game.title.trim() === '') {
+    return { valid: false, reason: 'Titre manquant' };
+  }
+  if (!hasLatinLetters(game.title)) {
+    return { valid: false, reason: 'Le titre ne contient aucun caractère latin' };
+  }
+  if (typeof game.releaseYear !== 'number' || game.releaseYear < 2000 || game.releaseYear > 2026) {
+    return { valid: false, reason: `Année de sortie anormale (${game.releaseYear})` };
+  }
+  if (!game.developer || game.developer.trim() === '') {
+    return { valid: false, reason: 'Développeur manquant' };
+  }
+  const validArtStyles = ['Pixel Art', '2D Hand-drawn', 'Stylized 3D', 'Retro Low-poly 3D', 'Realistic 3D', 'Monochrome'];
+  const validCameras = ['2D Side-scroller', '2D Top-down', 'Isometric / 2.5D', 'First-Person', 'Third-Person'];
+  if (!validArtStyles.includes(game.artStyle.en)) {
+    return { valid: false, reason: `ArtStyle invalide: "${game.artStyle.en}"` };
+  }
+  if (!validCameras.includes(game.camera.en)) {
+    return { valid: false, reason: `Camera invalide: "${game.camera.en}"` };
+  }
+  if (!game.hints.tagline.fr || !game.hints.tagline.en) {
+    return { valid: false, reason: 'Tagline FR ou EN manquante' };
+  }
+  if (!Array.isArray(game.screenshots) || game.screenshots.length < 5) {
+    return { valid: false, reason: 'Moins de 5 screenshots' };
+  }
+  if (!game.steamUrl || !game.steamUrl.startsWith('https://store.steampowered.com/app/')) {
+    return { valid: false, reason: 'URL Steam invalide' };
+  }
+  const adultBannedKeywords = ['hentai', 'sexual', 'nsfw', 'nudity', 'nudité', 'erotic', 'érotique', 'dating sim', 'waifu', 'compagne de bureau', 'porn'];
+  const lowerContent = (game.title + ' ' + game.genre.join(' ') + ' ' + (game.hints?.tagline?.fr || '') + ' ' + (game.hints?.tagline?.en || '')).toLowerCase();
+  for (const kw of adultBannedKeywords) {
+    if (lowerContent.includes(kw)) {
+      return { valid: false, reason: `Contenu adulte interdit ("${kw}")` };
+    }
+  }
+  return { valid: true };
 }
 
 // Nettoyage des genres pour éliminer les étiquettes non pertinentes
@@ -141,8 +199,15 @@ function sanitizeGenres(steamGenres: Array<{ description: string }>, description
 
 // Extraction du nom de compositeur si mentionné dans la description
 function extractComposer(text: string): string | undefined {
-  const match = text.match(/(?:musique|soundtrack|bande[- ]originale|ost|composed by|composée par)\s*(?:de|by|par)?\s*:?\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)/i);
-  return match ? match[1].trim() : undefined;
+  const match = text.match(/(?:musique|soundtrack|bande[- ]originale|ost|composed by|composée par)\s*(?:de|by|par)?\s*:?\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)/);
+  if (!match) return undefined;
+  const candidate = match[1].trim();
+  const lower = candidate.toLowerCase();
+  const banned = ['my wife', 'dangerous areas', 'the developer', 'the team', 'various artists', 'various composers', 'sound design', 'original soundtrack'];
+  for (const b of banned) {
+    if (lower.includes(b)) return undefined;
+  }
+  return candidate;
 }
 
 // Vérification de la note et du volume d'avis Steam
@@ -318,7 +383,7 @@ async function syncUpcomingRadar(
       const detailsEn = await fetchGameDetails(appId, 'english');
       const taglineEn = detailsEn?.short_description || detailsFr.short_description;
 
-      const slug = upcoming.id || slugify(detailsFr.name);
+      const slug = upcoming.id || slugify(detailsFr.name, appId);
       const yearMatch = detailsFr.release_date?.date.match(/\d{4}/);
       const releaseYear = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear();
 
@@ -363,6 +428,13 @@ async function syncUpcomingRadar(
           ...(composer ? { composer } : {}),
         },
       };
+
+      const audit = auditCandidateGame(promotedGame);
+      if (!audit.valid) {
+        console.warn(`   ⚠️ [Promotion rejetée par l'audit] ${promotedGame.title}: ${audit.reason}`);
+        updatedUpcoming.push(upcoming);
+        continue;
+      }
 
       promotedGames.push(promotedGame);
       existingSlugs.add(slug);
@@ -438,6 +510,7 @@ async function refillUpcomingRadar(
       if (!detailsFr || detailsFr.type !== 'game') continue;
       if (!detailsFr.release_date?.coming_soon) continue;
       if (!detailsFr.header_image) continue;
+      if (!hasLatinLetters(detailsFr.name)) continue;
 
       const isIndie = detailsFr.genres?.some((g) =>
         ['indépendant', 'indie'].includes(g.description.toLowerCase())
@@ -448,12 +521,12 @@ async function refillUpcomingRadar(
 
       // Exclure les jeux F2P ou MMO
       const isF2P = detailsFr.genres?.some((g) =>
-        ['free to play', 'gratuit', 'mmo', 'massif'].includes(g.description.toLowerCase())
+        ['free to play', 'gratuit', 'mmo', 'massif', 'massivement multijoueur', 'massively multiplayer'].includes(g.description.toLowerCase())
       );
       if (isF2P) continue;
 
-      // Doit avoir une description cohérente
-      if (!detailsFr.short_description || detailsFr.short_description.length < 25) continue;
+      // Doit avoir une description cohérente en alphabet latin
+      if (!detailsFr.short_description || !isReadableLatinText(detailsFr.short_description)) continue;
 
       await delay(CONFIG.REQUEST_DELAY_MS);
       const detailsEn = await fetchGameDetails(appId, 'english');
@@ -463,8 +536,9 @@ async function refillUpcomingRadar(
         en: g,
       }));
 
+      const slug = slugify(detailsFr.name, appId);
       const newEntry: UpcomingGame = {
-        id: slugify(detailsFr.name),
+        id: slug,
         title: detailsFr.name,
         developer: detailsFr.developers?.join(', ') || 'Studio Indépendant',
         publisher: detailsFr.publishers?.join(', ') || detailsFr.developers?.join(', ') || 'Auto-édité',
@@ -616,11 +690,41 @@ export async function runDailyHarvest() {
     const detailsFr = await fetchGameDetails(appId, 'french');
     if (!detailsFr || detailsFr.type !== 'game') continue;
 
+    // 1. Exclure les jeux F2P ou MMO
+    if (detailsFr.is_free) {
+      console.log(`   ⛔ [Filtré F2P] ${detailsFr.name} est gratuit / free-to-play.`);
+      continue;
+    }
+
+    const isExcludedGenre = detailsFr.genres?.some((g) => {
+      const desc = g.description.toLowerCase();
+      return [
+        'free to play',
+        'gratuit',
+        'mmo',
+        'massif',
+        'massivement multijoueur',
+        'massively multiplayer',
+      ].includes(desc);
+    });
+    if (isExcludedGenre) {
+      console.log(`   ⛔ [Filtré Genre Exclu] ${detailsFr.name} (MMO / F2P).`);
+      continue;
+    }
+
+    // 2. Vérifier que le titre contient des caractères latins lisibles
+    if (!hasLatinLetters(detailsFr.name)) {
+      console.log(`   ⛔ [Filtré Titre Non-Latin] "${detailsFr.name}" ne comporte aucun caractère latin.`);
+      continue;
+    }
+
+    // 3. Vérifier que c'est bien un jeu indépendant
     const isIndie = detailsFr.genres?.some((g) =>
       ['indépendant', 'indie'].includes(g.description.toLowerCase())
     );
     if (!isIndie) continue;
 
+    // 4. Filtrer contenu adulte / NSFW
     if (isAdultOrInappropriate(detailsFr)) {
       console.log(`   ⛔ [Filtré Adulte] ${detailsFr.name} contient du contenu inapproprié.`);
       continue;
@@ -630,10 +734,17 @@ export async function runDailyHarvest() {
 
     await delay(CONFIG.REQUEST_DELAY_MS);
     const detailsEn = await fetchGameDetails(appId, 'english');
+
+    // 5. Doit avoir une description textuelle latine lisible (FR ou EN)
+    if (!isReadableLatinText(detailsFr.short_description) && !isReadableLatinText(detailsEn?.short_description || '')) {
+      console.log(`   ⛔ [Filtré Langue] ${detailsFr.name} n'a pas de description en alphabet latin.`);
+      continue;
+    }
+
     const taglineEn = detailsEn?.short_description || detailsFr.short_description;
 
-    const slug = slugify(detailsFr.name);
-    if (existingSlugs.has(slug)) continue;
+    const slug = slugify(detailsFr.name, appId);
+    if (!slug || existingSlugs.has(slug)) continue;
 
     const yearMatch = detailsFr.release_date?.date.match(/\d{4}/);
     const releaseYear = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear();
@@ -679,6 +790,12 @@ export async function runDailyHarvest() {
         ...(composer ? { composer } : {}),
       },
     };
+
+    const audit = auditCandidateGame(newGame);
+    if (!audit.valid) {
+      console.warn(`   ⚠️ [Candidat rejeté par l'audit] ${newGame.title}: ${audit.reason}`);
+      continue;
+    }
 
     console.log(`✅ [PÉPITE DÉTECTÉE] ${newGame.title} (${newGame.releaseYear})`);
     console.log(`   ★ Avis : ${reviewCheck.scoreDesc} (${Math.round(reviewCheck.positiveRatio * 100)}% positifs sur ${reviewCheck.totalReviews} avis)`);

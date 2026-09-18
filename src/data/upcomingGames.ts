@@ -330,8 +330,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "ION LANDS",
     "publisher": "505 Games",
     "expectedDate": {
-      "fr": "Automne 2026",
-      "en": "Fall 2026"
+      "fr": "29 sept. 2026",
+      "en": "29 sept. 2026"
     },
     "genres": [
       {

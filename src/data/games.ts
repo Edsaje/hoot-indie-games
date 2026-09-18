@@ -3269,7 +3269,39 @@ export const INDIE_GAMES: Game[] = [
         "fr": "Un tout nouveau jeu de survie multijoueur en monde ouvert où le but est de collectionner de mystérieuses créatures, les Pals, afin de les faire combattre, bâtir des structures, travailler dans les champs et faire tourner vos usines.",
         "en": "Fight, farm, build and work alongside mysterious creatures called &quot;Pals&quot; in this completely new multiplayer, open world survival and crafting game!"
       },
-      "composer": "dangerous areas"
+      "composer": "Tatsuya Yano"
+    }
+  },
+  {
+    "id": "megabonk",
+    "title": "Megabonk",
+    "releaseYear": 2025,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "vedinad",
+    "steamUrl": "https://store.steampowered.com/app/3405340/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405340/ce4d8d24a3731a91490ab92b8687f07314c600b9/ss_ce4d8d24a3731a91490ab92b8687f07314c600b9.1920x1080.jpg?t=1760445338",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405340/9ecc4f12f9031e38e546e80416c98eab310dea8b/ss_9ecc4f12f9031e38e546e80416c98eab310dea8b.1920x1080.jpg?t=1760445338",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405340/b1e906ba6bbac4b9017fb786a1b2d88ec3b41578/ss_b1e906ba6bbac4b9017fb786a1b2d88ec3b41578.1920x1080.jpg?t=1760445338",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405340/3cb8c4f7ded582a7a26f483de08bbd4f91eea2bc/ss_3cb8c4f7ded582a7a26f483de08bbd4f91eea2bc.1920x1080.jpg?t=1760445338",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405340/37fee9ad83231587004b29d0532b9309d1efd8df/ss_37fee9ad83231587004b29d0532b9309d1efd8df.1920x1080.jpg?t=1760445338",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405340/1d012ef02e5fbd1ed8245a62d60d620b25e84856/ss_1d012ef02e5fbd1ed8245a62d60d620b25e84856.1920x1080.jpg?t=1760445338"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Fracasse des vagues infinies d’ennemis et deviens surpuissant ! Récupère du loot, monte de niveau, débloque des persos et améliore tout pour créer des builds uniques et complètement fous en repoussant les hordes de créatures !",
+        "en": "Smash your way through endless waves of enemies and grow absurdly powerful! Grab loot, level up, unlock characters and upgrade to create unique and crazy builds as you fend off hordes of creatures!"
+      }
     }
   }
 ];

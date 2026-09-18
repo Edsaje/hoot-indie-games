@@ -17,6 +17,7 @@ jobs:
       - name: 📥 Récupération du code source
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: ⚙️ Configuration de l'environnement Node.js
@@ -45,6 +46,7 @@ jobs:
           if [ -n "$(git status --porcelain src/data/)" ]; then
             git add src/data/games.ts src/data/upcomingGames.ts
             git commit -m "chore(data): moissonnage nocturne et synchronisation du radar [skip ci]"
+            git pull --rebase origin main
             git push origin main
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
             echo "🎉 Base de données et Radar mis à jour et poussés sur GitHub avec succès !"
