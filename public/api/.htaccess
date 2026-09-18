@@ -1,5 +1,5 @@
 # Interdire l'accès direct aux fichiers sensibles
-<FilesMatch "(\.json|\.secret|\.admin_pass)$">
+<FilesMatch "(\.json|\.secret|\.admin_pass|\.log|\.env|\.bak)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

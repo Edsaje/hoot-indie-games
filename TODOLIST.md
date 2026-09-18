@@ -33,33 +33,35 @@
 ## 📋 Chantiers Prioritaires
 
 ### 🛡️ 1. Cybersécurité & Robustesse
-- [ ] **Audit XSS & injection d'URLs** :
-  - Sécuriser l'input d'import Steam (rejeter les protocoles `javascript:`, validation stricte des domaines autorisés et des AppIDs numériques).
-  - Nettoyer tout rendu HTML potentiel dans les champs dynamiques (taglines, descriptions).
-- [ ] **En-têtes HTTP de sécurité (.htaccess & serveur)** :
-  - Déployer les en-têtes recommandés : `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, CSP.
-  - Vérifier l'étanchéité de [`public/api/.htaccess`](file:///public/api/.htaccess) pour bloquer tout accès web direct aux fichiers `.json`, `.secret`, `.admin_pass`.
-- [ ] **Anti-Spoiler & Intégrité du jeu quotidien** :
-  - S'assurer que les solutions des défis quotidiens ne sont pas exposées en clair dans le DOM ou dans les balises d'attributs avant la fin de partie.
-- [ ] **Sanitisation & Clés Supabase** :
-  - S'assurer qu'aucune clé privée secrète (service role) n'est jamais exposée côté client Vite.
+- [x] **Audit XSS & injection d'URLs** :
+  - Validation stricte des AppIDs numériques Steam (`/^\d+$/`) et rejet de tout protocole non-HTTPS.
+  - Nettoyage et assainissement systématique des chaînes HTML (`strip_tags`, `htmlspecialchars`) dans les formulaires et les métadonnées.
+- [x] **En-têtes HTTP de sécurité (.htaccess & serveur)** :
+  - Déploiement des en-têtes HTTP stricts dans [`public/.htaccess`](file:///public/.htaccess) : `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`.
+  - Renforcement de [`public/api/.htaccess`](file:///public/api/.htaccess) interdisant tout accès web direct aux fichiers `.json`, `.secret`, `.admin_pass`, `.log`, `.env`, `.bak`.
+- [x] **Anti-Spoiler & Intégrité du jeu quotidien** :
+  - Les titres et réponses des défis Screenle, Indledle et Linkle ne sont plus exposés en clair dans les attributs du DOM (`alt`, `title`, data-attributes) tant que la manche n'est pas résolue ou perdue.
+- [x] **Sanitisation & Clés Supabase** :
+  - Aucune clé privée `service_role` n'est exposée ; client anonyme protégé par RLS.
 
 ---
 
 ### ⚔️ 2. Réparation et Vrai Multijoueur 1v1
-- [ ] **Remplacer la fausse simulation de salon** :
-  - Actuellement, le duel d'amis génère un code mais fait jouer contre un bot local (`Rival #CODE`).
-- [ ] **Implémenter une vraie synchronisation multijoueur** :
-  - Option WebRTC P2P (PeerJS) ou Supabase Realtime Channels (Broadcast + Presence).
-  - Les deux joueurs partagent le même salon, reçoivent la même image de jeu au même instant, et voient les propositions et pénalités de l'autre en direct.
-- [ ] **Labellisation honnête du mode solo** :
-  - Distinguer clairement le *"Duel 1v1 en direct"* (2 joueurs réels) du mode *"Entraînement contre le Grand-Duc (Chrono IA)"*.
+- [x] **Remplacement de la fausse simulation de salon** :
+  - Remplacement de la simulation locale par une véritable synchronisation multijoueur P2P WebRTC via `peerjs` (DataChannel direct de navigateur à navigateur).
+- [x] **Synchronisation multijoueur complète** ([`src/components/versus/VersusArena.tsx`](file:///src/components/versus/VersusArena.tsx)) :
+  - L'hôte génère un code de salon partageable (ex: `HOOT-842` / lien direct `#versus=HOOT-842`).
+  - L'invité rejoint le salon : handshake automatique, échange des profils (avatar, pseudo, ELO).
+  - L'hôte synchronise le compte à rebours 3-2-1, diffuse l'ID du jeu et le chrono.
+  - En direct : affichage des propositions manquées de l'adversaire (avec notification de pénalité de 3 secondes), détection immédiate de la bonne réponse, score en direct et célébration de victoire (best of 3).
+- [x] **Labellisation honnête du mode solo** :
+  - Mode solo clairement intitulé *"🦉 Entraînement Solo contre le Grand-Duc (Chrono IA)"* pour s'entraîner sans ambiguïté face à l'ordinateur.
 
 ---
 
 ### 🌿 3. Direction Artistique "Nature Sylvestre & Organique"
 - [x] **Ambiance forêt nocturne globale** :
-  - Fond d'ambiance ([`src/components/common/FirefliesBackground.tsx`](file:///src/components/common/FirefliesBackground.tsx)) enrichi avec des silhouettes vectorielles de canopée, branches d'arbres, brume forestière et mélange de lucioles dorées (60%) et de spores végétales bioluminescentes vert émeraude (40%).
+  - Fond d'ambiance ([`src/components/common/FirefliesBackground.tsx`](file:///src/components/common/FirefliesBackground.tsx)) enrichi avec silhouettes vectorielles de canopée, brume forestière et mélange de lucioles dorées (60%) et spores bioluminescentes vert émeraude (40%).
   - Palette Tailwind et ambiance nocturne infusée de vert mousse/émeraude (`#064e3b`, `#047857`, `#059669`).
 - [x] **Végétalisation & Identité du Perchoir (Portfolio)** :
   - Le Perchoir transformé en "Le Nichoir Sylvestre" ([`src/components/roost/TheRoostHub.tsx`](file:///src/components/roost/TheRoostHub.tsx)) : ambiance refuge des bois, badges botaniques, bordures émeraude subtiles et compétences axées sur le game design poétique et organique.
@@ -76,7 +78,10 @@
 
 ---
 
-### 🕹️ 5. Salle d'Arcade : Réparation & Ergonomie Mobile
+### 🕹️ 5. Salle d'Arcade : Onglet Dédié & Ergonomie Mobile
+- [x] **Onglet Dédié dans la Navbar** :
+  - Ajout de l'onglet `arcade` dans la Navbar principale (desktop & mobile) et deep-link `#arcade`.
+  - Vue complète de la salle d'arcade ([`src/components/arcade/ArcadeHallView.tsx`](file:///src/components/arcade/ArcadeHallView.tsx)) avec les 8 bornes, compteurs de records cumulés et fiches de jeu rétro.
 - [x] **Réparation mobile prioritaire des 8 jeux d'arcade** ([`src/components/arcade/ArcadeModal.tsx`](file:///src/components/arcade/ArcadeModal.tsx)) :
   - Résolution des touches virtuelles bloquées via `bindVirtualTouch` (`onTouchStart`, `onTouchEnd`, `onTouchCancel` avec `preventDefault`).
   - Suppression totale du délai de 300ms et du défilement intempestif de la page (`touch-none`, `select-none`).
@@ -107,20 +112,21 @@
 ---
 
 ### 🦉 7. Réhabilitation de l'Onglet "Le Perchoir"
-- [ ] **Remplacement des textes génériques** :
-  - Mettre à jour [`src/data/roostProjects.ts`](file:///src/data/roostProjects.ts) avec les vrais projets de Quentin Beaud.
-  - Ajouter les véritables vidéos/essais de la chaîne YouTube **@Hibouxe**.
-  - Intégrer les vrais liens de dépôts GitHub (@Edsaje).
-  - Rédiger une biographie d'auteur sincère et professionnelle.
+- [x] **Remplacement des textes génériques** :
+  - Mise à jour de [`src/data/roostProjects.ts`](file:///src/data/roostProjects.ts) avec les vrais projets de Quentin Beaud (Donjon de Naheulbeuk 2.0, Mine Storm Vectrex 1982, Hibou Clicker, La Forêt du Hibou).
+  - Vidéos et essais narratifs de la chaîne YouTube **@Hibouxe**.
+  - Liens authentiques vers les dépôts GitHub (@Edsaje) et le portfolio `quentinbeaud.com`.
+  - Biographie sincère et professionnelle du créateur.
 
 ---
 
-### 🎮 8. Renommage des Modes Principaux & Suggestions Steam
-- [ ] **Nouveaux noms des modes de jeu** :
-  - Remplacer *Screenle*, *Indledle*, *Linkle*, *Versus* par les nouveaux intitulés choisis par l'utilisateur.
-- [ ] **Système de Suggestion de Jeu** :
-  - Transformer le panneau d'import de [`src/components/steam/SteamCatalogExplorer.tsx`](file:///src/components/steam/SteamCatalogExplorer.tsx) en formulaire de proposition.
-  - Stocker la suggestion pour modération administrative (via webhook, API ou Supabase).
+### 🎮 8. Système de Suggestions Steam & Renommage des Modes
+- [x] **Système de Suggestion de Jeu Steam ("Suggérer un jeu")** :
+  - Remplacement du faux import direct par une interface de contribution communautaire dans [`src/components/steam/SteamCatalogExplorer.tsx`](file:///src/components/steam/SteamCatalogExplorer.tsx).
+  - Backend PHP sécurisé [`public/api/suggest_game.php`](file:///public/api/suggest_game.php) avec rate-limiting, assainissement XSS, détection des doublons et écriture atomique dans `public/api/suggestions.json`.
+  - Panneau d'administration intégré dans le tableau de bord de [`public/api/track.php`](file:///public/api/track.php) pour examiner, consulter et valider les suggestions de la communauté.
+- [ ] **Renommage thématique des modes de jeu** :
+  - Proposition de nouveaux noms évocateurs pour *Screenle*, *Indledle*, *Linkle*, *Versus* (ex: *L'Œil du Hibou*, *L'Écho des Pépites*, *Les Liens Sylvestres*, *Le Duel de la Canopée*), en attente de la validation finale du joueur.
 
 ---
 

@@ -11,8 +11,12 @@ import {
   Sparkles,
   Search,
   CheckCircle2,
+  AlertCircle,
+  Radio,
+  Bot,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { Peer, type DataConnection } from 'peerjs';
 import { INDIE_GAMES } from '../../data/games';
 import type { Game } from '../../types/game';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -22,7 +26,7 @@ import { INDIE_AVATARS } from '../../data/avatars';
 import { soundFx } from '../../utils/audio';
 import { telemetry } from '../../services/telemetry';
 
-type VersusPhase = 'lobby' | 'queueing' | 'countdown' | 'playing' | 'round_end' | 'match_end';
+type VersusPhase = 'lobby' | 'waiting_friend' | 'queueing' | 'countdown' | 'playing' | 'round_end' | 'match_end';
 
 interface OpponentData {
   id: string;
@@ -33,28 +37,53 @@ interface OpponentData {
   isBot?: boolean;
 }
 
+interface PeerMessage {
+  type:
+    | 'handshake'
+    | 'handshake_ack'
+    | 'start_countdown'
+    | 'round_start'
+    | 'guess_wrong'
+    | 'round_won'
+    | 'round_timeout'
+    | 'rematch_ready'
+    | 'player_left';
+  profile?: {
+    name: string;
+    avatarId: string;
+    elo: number;
+  };
+  gameId?: string;
+  roundNum?: number;
+  guessTitle?: string;
+  gameTitle?: string;
+  score?: number;
+}
+
+function generateRoomCode(): string {
+  return `HOOT-${Math.floor(100 + Math.random() * 900)}`;
+}
+
+function generatePeerId(): string {
+  return `peer_${Math.random().toString(36).substring(2, 7)}`;
+}
+
 const BOT_NAMES = [
+  'Grand-Duc de la Canopée',
+  'Chouette Harfang',
+  'Effraie des Ombres',
   'SilksongBeliever',
   'KnightOfHallownest',
   'CelesteSpeedrunner',
-  'HadesRebel',
   'BalatroAddict',
-  'DredgeCaptain',
-  'IndieGamer_FR',
-  'NocturneGamer',
 ];
-
-// Fonctions pures externes pour le matchmaking et la sélection
-function getWaitTime(): number {
-  return 1800 + Math.random() * 1500;
-}
 
 function getRandomBot(playerElo: number): OpponentData {
   const name = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
   const avatar = INDIE_AVATARS[Math.floor(Math.random() * INDIE_AVATARS.length)];
-  const elo = Math.max(800, playerElo + Math.floor((Math.random() - 0.5) * 120));
+  const elo = Math.max(800, playerElo + Math.floor((Math.random() - 0.5) * 80));
   return {
-    id: 'bot_' + Math.random().toString(36).substring(2, 7),
+    id: generatePeerId(),
     name,
     avatarId: avatar.id,
     elo,
@@ -70,19 +99,8 @@ function pickRandomGame(pool: Game[]): Game {
 
 function getBotDecision(): { willGuess: boolean; delayMs: number } {
   return {
-    willGuess: Math.random() < 0.75,
-    delayMs: (7 + Math.random() * 9) * 1000,
-  };
-}
-
-function createFriendOpponent(code: string): OpponentData {
-  return {
-    id: 'friend_' + Math.random().toString(36).substring(2, 7),
-    name: `Rival #${code.toUpperCase()}`,
-    avatarId: 'knight',
-    elo: 1020,
-    score: 0,
-    isBot: true,
+    willGuess: Math.random() < 0.72,
+    delayMs: (8 + Math.random() * 8) * 1000,
   };
 }
 
@@ -100,6 +118,8 @@ export const VersusArena: React.FC = () => {
     return '';
   });
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
+  const [connectionNotice, setConnectionNotice] = useState<string | null>(null);
+  const [opponentPenaltyNotice, setOpponentPenaltyNotice] = useState<string | null>(null);
 
   const gamePool = allPlayableGames.length > 0 ? allPlayableGames : INDIE_GAMES;
 
@@ -119,6 +139,15 @@ export const VersusArena: React.FC = () => {
   const [lockoutRemaining, setLockoutRemaining] = useState<number>(0);
   const [searchFocused, setSearchFocused] = useState<boolean>(false);
 
+  // PeerJS refs
+  const peerRef = useRef<Peer | null>(null);
+  const connRef = useRef<DataConnection | null>(null);
+  const isHostRef = useRef<boolean>(false);
+  const currentRoundGameRef = useRef<Game>(INDIE_GAMES[0]);
+  const playerScoreRef = useRef<number>(0);
+  const opponentScoreRef = useRef<number>(0);
+  const roundNumRef = useRef<number>(1);
+
   const roundTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lockoutTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -129,14 +158,20 @@ export const VersusArena: React.FC = () => {
     ? INDIE_AVATARS.find((a) => a.id === opponent.avatarId) || INDIE_AVATARS[1]
     : INDIE_AVATARS[1];
 
-  // Filtre de recherche de jeux pour le guess (parmi tout le catalogue Steam)
+  // Synchroniser les refs pour les callbacks WebRTC
+  useEffect(() => {
+    currentRoundGameRef.current = currentRoundGame;
+    playerScoreRef.current = playerScore;
+    opponentScoreRef.current = opponentScore;
+    roundNumRef.current = currentRoundNumber;
+  }, [currentRoundGame, playerScore, opponentScore, currentRoundNumber]);
+
   const filteredGames = guessQuery.trim().length > 0
     ? gamePool.filter((g) =>
         g.title.toLowerCase().includes(guessQuery.toLowerCase())
       ).slice(0, 6)
     : [];
 
-  // Fermer la liste de suggestions au clic extérieur
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
@@ -147,23 +182,254 @@ export const VersusArena: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Nettoyage des timers
   const clearAllTimers = () => {
     if (roundTimerRef.current) clearInterval(roundTimerRef.current);
     if (botTimerRef.current) clearTimeout(botTimerRef.current);
     if (lockoutTimerRef.current) clearInterval(lockoutTimerRef.current);
   };
 
+  const cleanupP2P = () => {
+    try {
+      if (connRef.current) {
+        connRef.current.close();
+        connRef.current = null;
+      }
+      if (peerRef.current) {
+        peerRef.current.destroy();
+        peerRef.current = null;
+      }
+    } catch {
+      // Ignorer
+    }
+    isHostRef.current = false;
+  };
+
   useEffect(() => {
-    return () => clearAllTimers();
+    return () => {
+      clearAllTimers();
+      cleanupP2P();
+    };
   }, []);
 
-  // Création d'un salon avec un ami
+  // Envoi d'un message WebRTC P2P sécurisé
+  const sendP2P = (msg: PeerMessage) => {
+    if (connRef.current && connRef.current.open) {
+      try {
+        connRef.current.send(msg);
+      } catch (err) {
+        console.warn('Erreur envoi WebRTC:', err);
+      }
+    }
+  };
+
+  // Traitement des messages WebRTC reçus
+  const handleP2PMessage = (msg: PeerMessage) => {
+    if (!msg || typeof msg !== 'object') return;
+
+    switch (msg.type) {
+      case 'handshake': {
+        // L'hôte reçoit la connexion de l'invité
+        if (msg.profile) {
+          setOpponent({
+            id: generatePeerId(),
+            name: msg.profile.name || 'Ami en ligne',
+            avatarId: msg.profile.avatarId || 'knight',
+            elo: msg.profile.elo || 1000,
+            score: 0,
+            isBot: false,
+          });
+          // Répondre avec les infos de l'hôte
+          sendP2P({
+            type: 'handshake_ack',
+            profile: {
+              name: profile.username,
+              avatarId: profile.avatarId,
+              elo: profile.versusStats.eloRating,
+            },
+          });
+          setConnectionNotice('Adversaire connecté ! Démarrage du duel...');
+          setTimeout(() => {
+            setConnectionNotice(null);
+            launchMatchP2P();
+          }, 1200);
+        }
+        break;
+      }
+
+      case 'handshake_ack': {
+        // L'invité reçoit la confirmation de l'hôte
+        if (msg.profile) {
+          setOpponent({
+            id: 'peer_host',
+            name: msg.profile.name || 'Hôte du Salon',
+            avatarId: msg.profile.avatarId || 'knight',
+            elo: msg.profile.elo || 1000,
+            score: 0,
+            isBot: false,
+          });
+          setConnectionNotice('Connexion établie avec l\'hôte !');
+          setTimeout(() => setConnectionNotice(null), 1500);
+        }
+        break;
+      }
+
+      case 'start_countdown': {
+        // L'invité reçoit le signal du compte à rebours
+        startCountdownScreen();
+        break;
+      }
+
+      case 'round_start': {
+        // L'invité reçoit le jeu exact du round
+        if (msg.gameId) {
+          const matched = gamePool.find((g) => g.id === msg.gameId) || gamePool[0];
+          setCurrentRoundGame(matched);
+          beginRoundExecution(msg.roundNum || 1, playerScoreRef.current, opponentScoreRef.current);
+        }
+        break;
+      }
+
+      case 'guess_wrong': {
+        // L'adversaire a fait une mauvaise réponse et est bloqué 3s
+        soundFx.playClick();
+        setOpponentPenaltyNotice(`⚡ Votre rival s'est trompé sur « ${msg.guessTitle || 'un jeu'} » ! (Bloqué 3s)`);
+        setTimeout(() => setOpponentPenaltyNotice(null), 3000);
+        break;
+      }
+
+      case 'round_won': {
+        // L'adversaire a trouvé la bonne réponse en premier !
+        clearAllTimers();
+        soundFx.playError();
+        const newScore = (msg.score !== undefined ? msg.score : opponentScoreRef.current + 1);
+        setOpponentScore(newScore);
+        setRoundWinner('opponent');
+        setPhase('round_end');
+
+        setTimeout(() => {
+          advanceRoundP2P(playerScoreRef.current, newScore, roundNumRef.current);
+        }, 2800);
+        break;
+      }
+
+      case 'round_timeout': {
+        // Temps écoulé reçu de l'hôte
+        clearAllTimers();
+        soundFx.playError();
+        setRoundWinner('draw');
+        setPhase('round_end');
+
+        setTimeout(() => {
+          advanceRoundP2P(playerScoreRef.current, opponentScoreRef.current, roundNumRef.current);
+        }, 2800);
+        break;
+      }
+
+      case 'player_left': {
+        setConnectionNotice('L\'adversaire a quitté la partie.');
+        break;
+      }
+    }
+  };
+
+  // Création d'un salon WebRTC P2P (Hôte)
   const handleCreateRoom = () => {
     soundFx.playClick();
-    const code = 'HOOT-' + Math.floor(100 + Math.random() * 900);
+    const code = generateRoomCode();
     setRoomCode(code);
-    window.location.hash = `versus=${code}`;
+    setPhase('waiting_friend');
+    setConnectionNotice(null);
+    try {
+      window.history.replaceState(null, '', `#versus=${code}`);
+    } catch {
+      // Ignorer
+    }
+
+    isHostRef.current = true;
+    const peerId = `hoot-arena-${code.toLowerCase()}`;
+
+    try {
+      const peer = new Peer(peerId, { debug: 0 });
+      peerRef.current = peer;
+
+      peer.on('open', () => {
+        // Prêt à recevoir une connexion
+      });
+
+      peer.on('connection', (conn) => {
+        connRef.current = conn;
+
+        conn.on('open', () => {
+          // Attendre le handshake du client
+        });
+
+        conn.on('data', (data) => {
+          handleP2PMessage(data as PeerMessage);
+        });
+
+        conn.on('close', () => {
+          setConnectionNotice('Adversaire déconnecté.');
+        });
+      });
+
+      peer.on('error', (err) => {
+        console.warn('Erreur PeerJS Hôte:', err);
+        setConnectionNotice('Le code était occupé ou indisponible, veuillez réessayer.');
+      });
+    } catch {
+      setConnectionNotice('Initialisation P2P impossible dans ce navigateur.');
+    }
+  };
+
+  // Rejoindre un salon WebRTC P2P (Invité)
+  const handleJoinRoom = () => {
+    if (!joinCodeInput.trim()) return;
+    soundFx.playClick();
+    cleanupP2P();
+
+    const cleanCode = joinCodeInput.trim().toUpperCase();
+    setRoomCode(cleanCode);
+    setConnectionNotice('Connexion au salon de votre ami...');
+    isHostRef.current = false;
+
+    const targetPeerId = `hoot-arena-${cleanCode.toLowerCase()}`;
+
+    try {
+      const peer = new Peer({ debug: 0 });
+      peerRef.current = peer;
+
+      peer.on('open', () => {
+        const conn = peer.connect(targetPeerId);
+        connRef.current = conn;
+
+        conn.on('open', () => {
+          // Envoyer notre handshake
+          conn.send({
+            type: 'handshake',
+            profile: {
+              name: profile.username,
+              avatarId: profile.avatarId,
+              elo: profile.versusStats.eloRating,
+            },
+          });
+        });
+
+        conn.on('data', (data) => {
+          handleP2PMessage(data as PeerMessage);
+        });
+
+        conn.on('close', () => {
+          setConnectionNotice('Le salon a été fermé par l\'hôte.');
+        });
+      });
+
+      peer.on('error', (err) => {
+        console.warn('Erreur PeerJS Invité:', err);
+        setConnectionNotice('Salon introuvable. Vérifiez que votre ami a bien créé le salon et que le code est exact.');
+      });
+    } catch {
+      setConnectionNotice('Erreur lors de la tentative de connexion.');
+    }
   };
 
   const handleCopyInvite = () => {
@@ -175,36 +441,33 @@ export const VersusArena: React.FC = () => {
     });
   };
 
-  // Lancement du Matchmaking Rapide
-  const handleStartQueue = () => {
+  // Lancement du duel P2P (déclenché par l'hôte après handshake)
+  const launchMatchP2P = () => {
+    sendP2P({ type: 'start_countdown' });
+    startCountdownScreen();
+  };
+
+  // Entraînement Solo honnête contre le bot IA du Grand-Duc
+  const handleStartSoloBot = () => {
     soundFx.playClick();
+    cleanupP2P();
     setPhase('queueing');
 
-    const waitTime = getWaitTime();
     setTimeout(() => {
       setOpponent(getRandomBot(profile.versusStats.eloRating));
-      startCountdown();
-    }, waitTime);
+      startCountdownScreen();
+    }, 1500);
   };
 
-  // Rejoindre un salon avec un ami
-  const handleJoinRoom = () => {
-    if (!joinCodeInput.trim()) return;
-    soundFx.playClick();
-
-    setOpponent(createFriendOpponent(joinCodeInput));
-    startCountdown();
-  };
-
-  // Compte à rebours avant le round 1
-  const startCountdown = () => {
+  // Compte à rebours 3-2-1
+  const startCountdownScreen = () => {
     setPhase('countdown');
     setCountdown(3);
     setPlayerScore(0);
     setOpponentScore(0);
     setCurrentRoundNumber(1);
 
-    telemetry.track('versus', 'versus_play', opponent?.name || 'Inconnu', undefined, {
+    telemetry.track('versus', 'versus_play', opponent?.name || 'Duel 1v1', undefined, {
       opponentElo: opponent?.elo || 1000,
       isBot: Boolean(opponent?.isBot),
     });
@@ -213,7 +476,13 @@ export const VersusArena: React.FC = () => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          startRound(1, 0, 0);
+          if (isHostRef.current || opponent?.isBot) {
+            // L'hôte choisit le jeu initial et lance le round
+            const game = pickRandomGame(gamePool);
+            setCurrentRoundGame(game);
+            sendP2P({ type: 'round_start', gameId: game.id, roundNum: 1 });
+            beginRoundExecution(1, 0, 0);
+          }
           return 0;
         }
         soundFx.playClick();
@@ -222,8 +491,12 @@ export const VersusArena: React.FC = () => {
     }, 1000);
   };
 
-  // Lancement d'une manche
-  const startRound = (roundNum: number, currentPScore: number, currentOScore: number) => {
+  // Début réel d'une manche
+  const beginRoundExecution = (
+    roundNum: number,
+    currentPScore: number,
+    currentOScore: number
+  ) => {
     clearAllTimers();
     setPhase('playing');
     setCurrentRoundNumber(roundNum);
@@ -231,29 +504,31 @@ export const VersusArena: React.FC = () => {
     setRoundWinner(null);
     setGuessQuery('');
     setIsLockedOut(false);
-
-    // Tirer un jeu indé aléatoire pour la manche
-    const randomGame = pickRandomGame(gamePool);
-    setCurrentRoundGame(randomGame);
+    setOpponentPenaltyNotice(null);
 
     // Timer du round
     roundTimerRef.current = setInterval(() => {
       setTimerSeconds((prev) => {
         if (prev <= 1) {
           clearInterval(roundTimerRef.current!);
-          handleRoundTimeout(currentPScore, currentOScore, roundNum);
+          if (isHostRef.current || opponent?.isBot) {
+            sendP2P({ type: 'round_timeout' });
+            handleRoundTimeout(currentPScore, currentOScore, roundNum);
+          }
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    // Comportement de l'adversaire (simulation de temps de réponse dynamique)
-    const bot = getBotDecision();
-    if (bot.willGuess) {
-      botTimerRef.current = setTimeout(() => {
-        handleOpponentCorrectGuess(currentPScore, currentOScore, roundNum);
-      }, bot.delayMs);
+    // Si on joue contre le bot IA, déclencher sa décision simulée
+    if (opponent?.isBot) {
+      const bot = getBotDecision();
+      if (bot.willGuess) {
+        botTimerRef.current = setTimeout(() => {
+          handleOpponentCorrectGuess(currentPScore, currentOScore, roundNum);
+        }, bot.delayMs);
+      }
     }
   };
 
@@ -264,11 +539,11 @@ export const VersusArena: React.FC = () => {
     setPhase('round_end');
 
     setTimeout(() => {
-      advanceRound(pScore, oScore, roundNum);
+      advanceRoundP2P(pScore, oScore, roundNum);
     }, 2800);
   };
 
-  // Victoire de manche par l'adversaire
+  // Victoire de manche par le bot IA
   const handleOpponentCorrectGuess = (pScore: number, oScore: number, roundNum: number) => {
     clearAllTimers();
     soundFx.playError();
@@ -278,7 +553,7 @@ export const VersusArena: React.FC = () => {
     setPhase('round_end');
 
     setTimeout(() => {
-      advanceRound(pScore, newOScore, roundNum);
+      advanceRoundP2P(pScore, newOScore, roundNum);
     }, 2800);
   };
 
@@ -305,14 +580,27 @@ export const VersusArena: React.FC = () => {
       setRoundWinner('player');
       setPhase('round_end');
 
+      // Notifier l'adversaire en WebRTC
+      sendP2P({
+        type: 'round_won',
+        score: newPScore,
+        gameTitle: currentRoundGame.title,
+      });
+
       setTimeout(() => {
-        advanceRound(newPScore, opponentScore, currentRoundNumber);
+        advanceRoundP2P(newPScore, opponentScore, currentRoundNumber);
       }, 2800);
     } else {
       // Mauvaise réponse : pénalité de blocage de 3s
       soundFx.playError();
       setIsLockedOut(true);
       setLockoutRemaining(3);
+
+      // Avertir l'adversaire de la pénalité
+      sendP2P({
+        type: 'guess_wrong',
+        guessTitle: game.title,
+      });
 
       let rem = 3;
       lockoutTimerRef.current = setInterval(() => {
@@ -327,12 +615,16 @@ export const VersusArena: React.FC = () => {
   };
 
   // Passage à la manche suivante ou fin de match
-  const advanceRound = (pScore: number, oScore: number, roundNum: number) => {
-    // Format Best of 3 : Premier à 2 points gagne
+  const advanceRoundP2P = (pScore: number, oScore: number, roundNum: number) => {
     if (pScore >= 2 || oScore >= 2 || roundNum >= 3) {
       endMatch(pScore, oScore);
     } else {
-      startRound(roundNum + 1, pScore, oScore);
+      if (isHostRef.current || opponent?.isBot) {
+        const nextGame = pickRandomGame(gamePool);
+        setCurrentRoundGame(nextGame);
+        sendP2P({ type: 'round_start', gameId: nextGame.id, roundNum: roundNum + 1 });
+        beginRoundExecution(roundNum + 1, pScore, oScore);
+      }
     }
   };
 
@@ -355,6 +647,7 @@ export const VersusArena: React.FC = () => {
       telemetry.track('versus', 'versus_win', opponent?.name || 'Inconnu', finalPScore, {
         finalScore: `${finalPScore}-${finalOScore}`,
         opponentElo: opponent?.elo || 1000,
+        isBot: Boolean(opponent?.isBot),
       });
     } else {
       soundFx.playError();
@@ -362,11 +655,12 @@ export const VersusArena: React.FC = () => {
       telemetry.track('versus', 'versus_loss', opponent?.name || 'Inconnu', finalPScore, {
         finalScore: `${finalPScore}-${finalOScore}`,
         opponentElo: opponent?.elo || 1000,
+        isBot: Boolean(opponent?.isBot),
       });
     }
   };
 
-  // Calcul du flou et du zoom selon le temps restant
+  // Calcul du flou progressif
   const getVisualClueStyles = () => {
     if (phase === 'round_end' || phase === 'match_end') {
       return { filter: 'blur(0px)', transform: 'scale(1)' };
@@ -385,24 +679,32 @@ export const VersusArena: React.FC = () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8 animate-in fade-in duration-300">
-      {/* Lobby / Matchmaking Selection */}
+      {/* Notifications bar */}
+      {connectionNotice && (
+        <div className="mb-6 p-4 rounded-2xl bg-[#131a29] border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-2.5 shadow-lg animate-in fade-in">
+          <AlertCircle className="w-4 h-4 shrink-0 text-amber-400" />
+          <span>{connectionNotice}</span>
+        </div>
+      )}
+
+      {/* LOBBY / CHOIX DU MODE */}
       {phase === 'lobby' && (
         <div className="space-y-8">
           {/* Header */}
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
               <Swords className="w-4 h-4" />
-              Mode Versus 1v1 • Screenle Sprint
+              Arène Multijoueur 1v1 • P2P WebRTC
             </div>
             <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
               Arène Face-à-Face
             </h1>
-            <p className="text-sm text-slate-400 mt-2 max-w-lg mx-auto">
-              Mesurez votre culture vidéoludique en direct contre un ami ou un joueur aléatoire. Première personne à 2 victoires de manche l'emporte !
+            <p className="text-sm text-slate-400 mt-2 max-w-lg mx-auto leading-relaxed">
+              Défiez un ami en direct via WebRTC sans latence ou entraînez vos réflexes solo contre le Grand-Duc. Première personne à 2 victoires l'emporte !
             </p>
           </div>
 
-          {/* User Versus Card Preview */}
+          {/* Profil Joueur ELO */}
           <div className="max-w-md mx-auto p-4 bg-[#131a29] border border-[#1e293b] rounded-2xl flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-3">
               <div
@@ -417,76 +719,39 @@ export const VersusArena: React.FC = () => {
             </div>
             <div className="text-right">
               <div className="text-[10px] uppercase font-bold text-slate-400">Votre Rang ELO</div>
-              <div className="text-lg font-black text-indigo-400">
+              <div className="text-lg font-black text-indigo-400 font-mono">
                 {profile.versusStats.eloRating}
               </div>
             </div>
           </div>
 
-          {/* 2 Modes Selection Cards */}
+          {/* Cartes des Modes */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {/* Mode 1: Matchmaking Aléatoire */}
-            <div className="p-6 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-[#1e293b] hover:border-amber-500/40 rounded-3xl shadow-xl flex flex-col justify-between transition-all group">
+            {/* Mode 1: Duel Réel entre Amis (WebRTC P2P) */}
+            <div className="p-6 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-amber-500/30 hover:border-amber-500/60 rounded-3xl shadow-xl flex flex-col justify-between transition-all group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-black text-white mb-1">
-                  Matchmaking Rapide
-                </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Affrontez un rival en ligne de niveau équivalent. Appariement instantané avec un joueur réel ou un champion simulé.
-                </p>
-              </div>
-
-              <div className="pt-6">
-                <button
-                  onClick={handleStartQueue}
-                  className="w-full py-3.5 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-amber-500/20 active:scale-95"
-                >
-                  <Zap className="w-4 h-4 fill-slate-950" />
-                  Lancer la Recherche
-                </button>
-              </div>
-            </div>
-
-            {/* Mode 2: Duel entre Amis */}
-            <div className="p-6 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-[#1e293b] hover:border-indigo-500/40 rounded-3xl shadow-xl flex flex-col justify-between transition-all group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mb-4">
                   <Users className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-black text-white mb-1">
-                  Duel entre Amis
-                </h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Créez une salle privée avec un code unique ou rejoignez l'invitation d'un proche.
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-xl font-black text-white">
+                    Duel 1v1 en Direct
+                  </h3>
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase tracking-wider border border-emerald-500/30">
+                    Vrai P2P
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed mb-4">
+                  Connexion WebRTC directe de navigateur à navigateur. Partagez un code ou le lien à un ami pour vous affronter sur les mêmes écrans en temps réel.
                 </p>
 
-                {roomCode ? (
-                  <div className="p-3 bg-[#0b0f19] border border-amber-500/40 rounded-xl space-y-2 mb-4">
-                    <div className="text-[11px] text-slate-400 font-medium">
-                      Code de votre salon :
-                    </div>
-                    <div className="text-xl font-black text-amber-400 tracking-wider font-mono">
-                      {roomCode}
-                    </div>
-                    <button
-                      onClick={handleCopyInvite}
-                      className="w-full py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
-                    >
-                      {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                      {copiedLink ? 'Lien copié !' : 'Copier le lien d’invitation'}
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={handleCreateRoom}
-                    className="w-full py-2.5 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-white font-bold text-xs border border-slate-700 mb-3 transition-colors"
-                  >
-                    Créer un Salon Privé
-                  </button>
-                )}
+                <button
+                  onClick={handleCreateRoom}
+                  className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/20 mb-3 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Radio className="w-4 h-4" />
+                  Créer un Salon Privé (Hôte)
+                </button>
 
                 <div className="flex gap-2">
                   <input
@@ -495,55 +760,122 @@ export const VersusArena: React.FC = () => {
                     onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                     placeholder="HOOT-..."
                     maxLength={10}
-                    className="flex-1 px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl text-xs font-mono font-bold text-white uppercase placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+                    className="flex-1 px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl text-xs font-mono font-bold text-white uppercase placeholder-slate-600 focus:outline-none focus:border-amber-500"
                   />
                   <button
                     onClick={handleJoinRoom}
                     disabled={!joinCodeInput.trim()}
-                    className="py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors disabled:opacity-40"
+                    className="py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors disabled:opacity-40 cursor-pointer"
                   >
                     Rejoindre
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* Mode 2: Entraînement Solo contre le Grand-Duc */}
+            <div className="p-6 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-[#1e293b] hover:border-indigo-500/40 rounded-3xl shadow-xl flex flex-col justify-between transition-all group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mb-4">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-xl font-black text-white">
+                    Entraînement Solo
+                  </h3>
+                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold uppercase tracking-wider border border-slate-700">
+                    Chrono IA
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Affrontez l'intelligence du Grand-Duc pour affûter vos réflexes de reconnaissance rapide sans attendre un adversaire humain.
+                </p>
+              </div>
+
+              <div className="pt-6">
+                <button
+                  onClick={handleStartSoloBot}
+                  className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all border border-slate-700 cursor-pointer active:scale-95"
+                >
+                  <Zap className="w-4 h-4 text-amber-400" />
+                  Défier le Grand-Duc en Solo
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Queueing / Searching Screen */}
-      {phase === 'queueing' && (
-        <div className="max-w-md mx-auto text-center py-16 px-4 bg-[#131a29] border border-[#1e293b] rounded-3xl shadow-2xl space-y-6">
-          <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-amber-500/20 animate-ping" />
-            <div className="w-20 h-20 rounded-full bg-amber-500/10 border-2 border-amber-500 flex items-center justify-center text-amber-400 shadow-xl">
-              <Swords className="w-10 h-10 animate-bounce" />
+      {/* EN ATTENTE D'UN AMI (HÔTE) */}
+      {phase === 'waiting_friend' && (
+        <div className="max-w-md mx-auto text-center py-12 px-6 bg-[#131a29] border border-amber-500/30 rounded-3xl shadow-2xl space-y-6 animate-in fade-in">
+          <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border-4 border-amber-500/30 animate-ping" />
+            <div className="w-16 h-16 rounded-full bg-amber-500/10 border-2 border-amber-500 flex items-center justify-center text-amber-400 shadow-xl">
+              <Radio className="w-8 h-8 animate-pulse" />
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-black text-white">Recherche d'un Adversaire...</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Recherche dans le Perchoir d'un joueur autour de {profile.versusStats.eloRating} ELO
+            <h3 className="text-xl font-black text-white">Salon Privé Ouvert</h3>
+            <p className="text-xs text-slate-300 mt-1">
+              Transmettez ce code à votre ami pour qu'il vous rejoigne en un clic.
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              clearAllTimers();
-              setPhase('lobby');
-            }}
-            className="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white text-xs font-bold transition-colors"
-          >
-            Annuler la recherche
-          </button>
+          <div className="p-4 bg-[#0b0f19] border border-amber-500/40 rounded-2xl space-y-3">
+            <div className="text-[11px] text-slate-400 uppercase font-bold tracking-wider">
+              Code du Salon :
+            </div>
+            <div className="text-2xl font-black text-amber-400 tracking-widest font-mono">
+              {roomCode}
+            </div>
+            <button
+              onClick={handleCopyInvite}
+              className="w-full py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            >
+              {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+              {copiedLink ? 'Lien copié dans le presse-papier !' : 'Copier le lien d\'invitation direct'}
+            </button>
+          </div>
+
+          <div className="flex gap-2 justify-center">
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                cleanupP2P();
+                setPhase('lobby');
+              }}
+              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-colors cursor-pointer"
+            >
+              Annuler et fermer le salon
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Countdown Screen */}
+      {/* RECHERCHE DU BOT SOLO */}
+      {phase === 'queueing' && (
+        <div className="max-w-md mx-auto text-center py-16 px-4 bg-[#131a29] border border-[#1e293b] rounded-3xl shadow-2xl space-y-6">
+          <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border-4 border-indigo-500/20 animate-ping" />
+            <div className="w-20 h-20 rounded-full bg-indigo-500/10 border-2 border-indigo-500 flex items-center justify-center text-indigo-400 shadow-xl">
+              <Bot className="w-10 h-10 animate-bounce" />
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-black text-white">Éveil du Grand-Duc...</h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Calibrage d'un défi chronométré adapté à vos {profile.versusStats.eloRating} ELO
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* COMPTE À REBOURS */}
       {phase === 'countdown' && opponent && (
-        <div className="max-w-md mx-auto text-center py-14 px-4 bg-[#131a29] border border-[#1e293b] rounded-3xl shadow-2xl space-y-6">
+        <div className="max-w-md mx-auto text-center py-14 px-4 bg-[#131a29] border border-amber-500/30 rounded-3xl shadow-2xl space-y-6">
           <div className="flex items-center justify-center gap-6">
             <div className="text-center">
               <div
@@ -566,21 +898,28 @@ export const VersusArena: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-6xl font-black text-amber-400 animate-pulse">
+          <div className="text-6xl font-black text-amber-400 animate-pulse font-mono">
             {countdown}
           </div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-300">
             Préparez vos claviers !
           </p>
         </div>
       )}
 
-      {/* Playing / Round End Screen */}
+      {/* EN JEU / FIN DE MANCHE */}
       {(phase === 'playing' || phase === 'round_end') && opponent && (
         <div className="space-y-4 max-w-3xl mx-auto">
-          {/* Header Scoreboard */}
+          {/* Alerte pénalité adversaire */}
+          {opponentPenaltyNotice && (
+            <div className="p-3 bg-indigo-950/60 border border-indigo-500/50 rounded-2xl text-center text-xs text-indigo-200 font-bold animate-in fade-in">
+              {opponentPenaltyNotice}
+            </div>
+          )}
+
+          {/* Tableau de score */}
           <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl flex items-center justify-between shadow-md">
-            {/* Player Side */}
+            {/* Côté Joueur */}
             <div className="flex items-center gap-3">
               <div
                 className={`w-10 h-10 rounded-xl bg-gradient-to-br ${playerAvatar.bgGradient} flex items-center justify-center text-xl shrink-0`}
@@ -602,7 +941,7 @@ export const VersusArena: React.FC = () => {
               </div>
             </div>
 
-            {/* Match State & Timer */}
+            {/* Timer central */}
             <div className="text-center">
               <div className="text-[10px] uppercase font-bold text-slate-400">
                 Manche {currentRoundNumber}/3
@@ -613,7 +952,7 @@ export const VersusArena: React.FC = () => {
               </div>
             </div>
 
-            {/* Opponent Side */}
+            {/* Côté Adversaire */}
             <div className="flex items-center gap-3 text-right">
               <div>
                 <div className="text-xs font-bold text-white leading-tight">
@@ -636,7 +975,7 @@ export const VersusArena: React.FC = () => {
             </div>
           </div>
 
-          {/* Screenshot Display Box */}
+          {/* Zone de l'image de jeu */}
           <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-[#1e293b] shadow-2xl flex items-center justify-center">
             <img
               src={currentRoundGame.screenshots[0] || currentRoundGame.screenshots[5]}
@@ -645,7 +984,7 @@ export const VersusArena: React.FC = () => {
               className="w-full h-full object-cover transition-all duration-700 select-none pointer-events-none"
             />
 
-            {/* Clues Overlays */}
+            {/* Indices progressifs */}
             <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
               <div className="px-3 py-1 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-700/60 text-xs font-semibold text-slate-300">
                 {timerSeconds <= 12 ? (
@@ -664,7 +1003,7 @@ export const VersusArena: React.FC = () => {
               </div>
             </div>
 
-            {/* Round Over Overlay */}
+            {/* Bilan de fin de manche */}
             {phase === 'round_end' && (
               <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-in fade-in">
                 {roundWinner === 'player' && (
@@ -704,7 +1043,7 @@ export const VersusArena: React.FC = () => {
             )}
           </div>
 
-          {/* Player Input Area */}
+          {/* Barre de devinette */}
           {phase === 'playing' && (
             <div className="relative" ref={searchContainerRef}>
               {isLockedOut ? (
@@ -729,14 +1068,13 @@ export const VersusArena: React.FC = () => {
                     />
                   </div>
 
-                  {/* Autocomplete Dropdown */}
                   {searchFocused && filteredGames.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 p-1.5 bg-[#0e1422] border border-[#1e293b] rounded-2xl shadow-2xl z-30 max-h-56 overflow-y-auto space-y-1">
                       {filteredGames.map((game) => (
                         <button
                           key={game.id}
                           onClick={() => handlePlayerGuess(game)}
-                          className="w-full p-2 rounded-xl flex items-center gap-3 hover:bg-amber-500/10 hover:border-amber-500/30 border border-transparent text-left transition-all group"
+                          className="w-full p-2 rounded-xl flex items-center gap-3 hover:bg-amber-500/10 hover:border-amber-500/30 border border-transparent text-left transition-all group cursor-pointer"
                         >
                           <img
                             src={game.screenshots[5] || game.screenshots[0]}
@@ -762,7 +1100,7 @@ export const VersusArena: React.FC = () => {
         </div>
       )}
 
-      {/* Match Over Modal */}
+      {/* FIN DE MATCH */}
       {phase === 'match_end' && opponent && (
         <div className="max-w-md mx-auto text-center py-10 px-6 bg-[#131a29] border border-[#1e293b] rounded-3xl shadow-2xl space-y-6">
           {playerScore > opponentScore ? (
@@ -833,9 +1171,13 @@ export const VersusArena: React.FC = () => {
             <button
               onClick={() => {
                 soundFx.playClick();
-                startCountdown();
+                if (opponent.isBot) {
+                  startCountdownScreen();
+                } else {
+                  launchMatchP2P();
+                }
               }}
-              className="flex-1 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition-colors shadow-md"
+              className="flex-1 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition-colors shadow-md cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
               Revanche
@@ -843,9 +1185,10 @@ export const VersusArena: React.FC = () => {
             <button
               onClick={() => {
                 soundFx.playClick();
+                cleanupP2P();
                 setPhase('lobby');
               }}
-              className="flex-1 py-3 px-4 rounded-2xl bg-[#0b0f19] border border-[#1e293b] hover:bg-slate-800 text-white font-bold text-xs transition-colors"
+              className="flex-1 py-3 px-4 rounded-2xl bg-[#0b0f19] border border-[#1e293b] hover:bg-slate-800 text-white font-bold text-xs transition-colors cursor-pointer"
             >
               Retour au Salon
             </button>

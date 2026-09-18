@@ -16,6 +16,7 @@ import { LinkleGame } from './components/linkle/LinkleGame';
 import { VersusArena } from './components/versus/VersusArena';
 import { ToolboxHub } from './components/toolbox/ToolboxHub';
 import { TheRoostHub } from './components/roost/TheRoostHub';
+import { ArcadeHallView } from './components/arcade/ArcadeHallView';
 import { ArcadeModal, type ArcadeGameId } from './components/arcade/ArcadeModal';
 import { GameStatsProvider } from './context/GameStatsProvider';
 import { AchievementsProvider } from './context/AchievementsProvider';
@@ -37,6 +38,7 @@ export const AppContent: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<NavTab>(() => {
     if (typeof window !== 'undefined') {
       if (window.location.hash.startsWith('#versus')) return 'versus';
+      if (window.location.hash.startsWith('#arcade')) return 'arcade';
       if (window.location.hash.startsWith('#screenle')) return 'screenle';
       if (window.location.hash.startsWith('#indledle')) return 'indledle';
       if (window.location.hash.startsWith('#linkle')) return 'linkle';
@@ -59,11 +61,13 @@ export const AppContent: React.FC = () => {
     setIsArcadeOpen(true);
   };
 
-  // Hash listener pour deep linking direct (#versus, #linkle)
+  // Hash listener pour deep linking direct (#versus, #arcade, #linkle)
   useEffect(() => {
     const handleHashChange = () => {
       if (window.location.hash.startsWith('#versus')) {
         setCurrentTab('versus');
+      } else if (window.location.hash.startsWith('#arcade')) {
+        setCurrentTab('arcade');
       }
     };
     window.addEventListener('hashchange', handleHashChange);
@@ -144,6 +148,7 @@ export const AppContent: React.FC = () => {
         {currentTab === 'indledle' && <IndledleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'linkle' && <LinkleGame key={currentDate} currentDate={currentDate} />}
         {currentTab === 'versus' && <VersusArena />}
+        {currentTab === 'arcade' && <ArcadeHallView onOpenGame={handleOpenArcade} />}
         {currentTab === 'toolbox' && <ToolboxHub />}
         {currentTab === 'roost' && <TheRoostHub onOpenArcade={handleOpenArcade} />}
       </main>

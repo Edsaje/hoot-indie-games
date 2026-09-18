@@ -36,8 +36,9 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
   const [selectedGameForModal, setSelectedGameForModal] = useState<Game | null>(null);
   const [modalActiveScreenshot, setModalActiveScreenshot] = useState<number>(0);
 
-  // Formulaire d'import direct Steam
+  // Formulaire de suggestion de pépite indé Steam
   const [importInput, setImportInput] = useState('');
+  const [userComment, setUserComment] = useState('');
   const [isImporting, setIsImporting] = useState(false);
   const [importMessage, setImportMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -177,18 +178,62 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
       };
 
       addCustomGame(newGame);
+
+      // Transmission au backend pour modération administrative
+      try {
+        const backendRes = await fetch('/api/suggest_game.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            appId,
+            title,
+            developer,
+            releaseYear,
+            genres,
+            comment: userComment.trim(),
+          }),
+        });
+
+        if (backendRes.status === 409) {
+          const resJson = await backendRes.json();
+          soundFx.playVictory();
+          setImportMessage({
+            type: 'success',
+            text: resJson.message || `Ce jeu (« ${title} ») a déjà été proposé et est en cours d'examen par les veilleurs !`,
+          });
+          setImportInput('');
+          setUserComment('');
+          return;
+        }
+
+        if (backendRes.ok) {
+          const resJson = await backendRes.json();
+          soundFx.playVictory();
+          setImportMessage({
+            type: 'success',
+            text: resJson.message || `Merci ! Votre suggestion pour « ${title} » a été transmise aux veilleurs du Nichoir.`,
+          });
+          setImportInput('');
+          setUserComment('');
+          return;
+        }
+      } catch {
+        // En cas d'indisponibilité de l'API locale ou PHP hors-ligne
+      }
+
       soundFx.playVictory();
       setImportMessage({
         type: 'success',
-        text: `Succès ! "${title}" (${releaseYear}) a été importé et est désormais jouable sur tout le site !`,
+        text: `Proposition enregistrée ! « ${title} » (${releaseYear}) a été transmis aux veilleurs et ajouté à votre session locale pour test.`,
       });
       setImportInput('');
+      setUserComment('');
     } catch (err: unknown) {
       soundFx.playError();
       const errorMsg = err instanceof Error ? err.message : 'Erreur de connexion Steam.';
       setImportMessage({
         type: 'error',
-        text: `Échec de l'import : ${errorMsg}`,
+        text: `Échec de l'analyse : ${errorMsg}`,
       });
     } finally {
       setIsImporting(false);
@@ -240,43 +285,61 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
         </div>
       </div>
 
-      {/* Formulaire d'Import Direct Steam */}
-      <div className="p-5 bg-[#131a29] border border-[#1e293b] rounded-3xl shadow-xl">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-2">
-          <PlusCircle className="w-4 h-4 text-amber-400" />
-          Importer n'importe quel Jeu Indé Steam (en direct)
-        </h3>
-        <p className="text-xs text-slate-400 mb-4">
-          Collez une URL de magasin Steam (ex: <code className="text-amber-300 font-mono">https://store.steampowered.com/app/1145360/Hades/</code>) ou un AppID pour récupérer instantanément ses visuels officiels et l'ajouter à vos jeux.
-        </p>
+      {/* Formulaire de Suggestion de Pépite Indé */}
+      <div className="p-6 bg-gradient-to-br from-[#131a29] to-[#0f172a] border border-amber-500/30 rounded-3xl shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
+          <div>
+            <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
+              <PlusCircle className="w-4 h-4 text-amber-400" />
+              Suggérer une Pépite Indé pour le Catalogue Canonique
+            </h3>
+            <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Vous connaissez un chef-d'œuvre indépendant injustement méconnu disponible sur Steam ? Suggérez-le ! Chaque jeu proposé est vérifié par nos veilleurs selon la Règle 0 Hallucination et intégré canoniquement lors de la prochaine ronde.
+            </p>
+          </div>
+          <span className="self-start px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold shrink-0">
+            🦉 Examen des Veilleurs
+          </span>
+        </div>
 
-        <form onSubmit={handleDirectImport} className="flex flex-col sm:flex-row gap-2">
+        <form onSubmit={handleDirectImport} className="space-y-2.5">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              value={importInput}
+              onChange={(e) => setImportInput(e.target.value)}
+              placeholder="URL de la page Steam Store ou AppID (ex: 1145360)..."
+              className="flex-1 px-4 py-2.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+            />
+            <button
+              type="submit"
+              disabled={isImporting || !importInput.trim()}
+              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-xs font-bold transition flex items-center justify-center gap-2 shrink-0 cursor-pointer shadow-md shadow-amber-500/20 active:scale-95"
+            >
+              <Download className="w-4 h-4" />
+              <span>{isImporting ? 'Examen Steam...' : 'Proposer cette pépite'}</span>
+            </button>
+          </div>
+
           <input
             type="text"
-            value={importInput}
-            onChange={(e) => setImportInput(e.target.value)}
-            placeholder="URL Steam Store ou AppID (ex: 1145360)..."
-            className="flex-1 px-4 py-2.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+            value={userComment}
+            onChange={(e) => setUserComment(e.target.value)}
+            placeholder="Pourquoi cette pépite mérite d'être mise en avant ? (direction artistique, musique, gameplay innovant... - facultatif)"
+            maxLength={300}
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-200 text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50"
           />
-          <button
-            type="submit"
-            disabled={isImporting || !importInput.trim()}
-            className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-xs font-bold transition flex items-center justify-center gap-2 shrink-0 cursor-pointer"
-          >
-            <Download className="w-4 h-4" />
-            <span>{isImporting ? 'Interrogation Steam...' : 'Certifier & Importer'}</span>
-          </button>
         </form>
 
         {importMessage && (
           <div
             className={`mt-3 p-3 rounded-xl text-xs font-semibold flex items-center gap-2 ${
               importMessage.type === 'success'
-                ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-                : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
+                ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-300'
+                : 'bg-rose-500/15 border border-rose-500/40 text-rose-300'
             }`}
           >
-            {importMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <X className="w-4 h-4 shrink-0" />}
+            {importMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" /> : <X className="w-4 h-4 shrink-0 text-rose-400" />}
             <span>{importMessage.text}</span>
           </div>
         )}

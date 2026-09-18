@@ -577,6 +577,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || isset($_POST['admin_login']) || isse
                                     <td style="color: var(--text-muted);"><?= htmlspecialchars($act['ref'] ?? 'Direct') ?></td>
                                     <td style="color: var(--text-muted);"><?= htmlspecialchars($act['device'] ?? 'desktop') ?></td>
                                 </tr>
+            <!-- SUGGESTIONS DE JEUX DE LA COMMUNAUTÉ -->
+            <?php
+            $communitySuggestions = [];
+            $sugFile = __DIR__ . '/suggestions.json';
+            if (file_exists($sugFile)) {
+                $communitySuggestions = json_decode(@file_get_contents($sugFile), true) ?: [];
+            }
+            ?>
+            <h2 class="section-title">💡 Suggestions de Jeux de la Communauté (<?= count($communitySuggestions) ?>)</h2>
+            <div class="card" style="margin-bottom: 2rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>AppID</th>
+                            <th>Titre du Jeu</th>
+                            <th>Studio</th>
+                            <th>Année</th>
+                            <th>Genres</th>
+                            <th>Commentaire joueur</th>
+                            <th>Lien Steam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($communitySuggestions)): ?>
+                            <tr><td colspan="8" style="color: var(--text-muted); padding: 1.2rem;">Aucune suggestion soumise pour le moment. Les suggestions envoyées depuis le site apparaîtront ici.</td></tr>
+                        <?php else: ?>
+                            <?php foreach (array_reverse($communitySuggestions) as $sug): ?>
+                                <tr>
+                                    <td style="color: var(--text-muted); font-size: 0.8rem; white-space: nowrap;"><?= htmlspecialchars($sug['submittedAt'] ?? '') ?></td>
+                                    <td><code style="color: #f59e0b; font-weight: bold;"><?= htmlspecialchars((string)($sug['appId'] ?? '')) ?></code></td>
+                                    <td style="font-weight: 700; color: #fff;"><?= htmlspecialchars($sug['title'] ?? '') ?></td>
+                                    <td style="color: #94a3b8;"><?= htmlspecialchars($sug['developer'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars((string)($sug['releaseYear'] ?? '')) ?></td>
+                                    <td style="font-size: 0.82rem; color: #34d399;"><?= htmlspecialchars(implode(', ', $sug['genres'] ?? [])) ?></td>
+                                    <td style="font-size: 0.82rem; color: #cbd5e1; max-width: 280px; word-break: break-word;"><?= htmlspecialchars($sug['comment'] ?? '—') ?></td>
+                                    <td>
+                                        <?php if (!empty($sug['appId'])): ?>
+                                            <a href="https://store.steampowered.com/app/<?= (int)$sug['appId'] ?>/" target="_blank" rel="noopener noreferrer" style="color: #60a5fa; text-decoration: underline; font-weight: 600;">Steam ↗</a>
+                                        <?php else: ?>—<?php endif; ?>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>

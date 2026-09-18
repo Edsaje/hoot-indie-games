@@ -13,6 +13,7 @@ import {
   Wrench,
   Calendar,
   Swords,
+  Gamepad2,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { soundFx } from '../../utils/audio';
@@ -21,7 +22,7 @@ import { useUserAccount } from '../../context/useUserAccount';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { telemetry } from '../../services/telemetry';
 
-export type NavTab = 'gems' | 'screenle' | 'indledle' | 'linkle' | 'versus' | 'toolbox' | 'roost';
+export type NavTab = 'gems' | 'screenle' | 'indledle' | 'linkle' | 'versus' | 'arcade' | 'toolbox' | 'roost';
 
 interface NavbarProps {
   currentTab: NavTab;
@@ -158,6 +159,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </button>
 
+            <button
+              onClick={() => handleTabSelect('arcade')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                currentTab === 'arcade'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Gamepad2 className="w-3.5 h-3.5" />
+              {t('nav.arcade')}
+            </button>
+
             <div className="h-4 w-px bg-slate-700 mx-1" />
 
             <button
@@ -278,6 +291,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               { id: 'indledle', label: t('nav.indledle'), icon: Layers },
               { id: 'linkle', label: t('nav.linkle'), icon: Sparkles },
               { id: 'versus', label: t('nav.versus'), icon: Swords },
+              { id: 'arcade', label: t('nav.arcade'), icon: Gamepad2 },
               { id: 'toolbox', label: t('nav.toolbox'), icon: Wrench },
               { id: 'roost', label: t('nav.roost'), icon: Feather },
             ] as const

@@ -14,74 +14,9 @@ import {
   Gamepad2,
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import { ARCADE_GAMES, type ArcadeGameId, type ArcadeGameMeta } from '../../data/arcadeGames';
+export type { ArcadeGameId, ArcadeGameMeta };
 
-export type ArcadeGameId =
-  | 'snake'
-  | 'pong'
-  | 'breakout'
-  | 'flappy'
-  | 'invaders'
-  | 'run'
-  | 'tetris'
-  | 'vectrex';
-
-interface ArcadeGameMeta {
-  id: ArcadeGameId;
-  name: string;
-  icon: string;
-  instructions: string;
-}
-
-const ARCADE_GAMES: ArcadeGameMeta[] = [
-  {
-    id: 'snake',
-    name: 'Snake Doré',
-    icon: '🐍',
-    instructions: 'Flèches directionnelles (ou ZQSD). Mange les lucioles sans heurter les murs ni ta queue !',
-  },
-  {
-    id: 'pong',
-    name: 'Pong Magique',
-    icon: '🏓',
-    instructions: 'Flèches HAUT / BAS pour bouger. ESPACE pour lancer la balle magique.',
-  },
-  {
-    id: 'breakout',
-    name: 'Casse-Briques',
-    icon: '🧱',
-    instructions: 'Flèches GAUCHE / DROITE pour déplacer la barre. ESPACE pour lancer la bille.',
-  },
-  {
-    id: 'flappy',
-    name: 'Flappy Hibou',
-    icon: '🦉',
-    instructions: 'ESPACE, HAUT ou Clic pour faire battre les ailes du hibou et franchir les colonnes.',
-  },
-  {
-    id: 'invaders',
-    name: 'Hibou Invaders',
-    icon: '🚀',
-    instructions: 'Flèches GAUCHE / DROITE pour bouger. ESPACE pour tirer des salves laser dorées.',
-  },
-  {
-    id: 'run',
-    name: 'Forest Run',
-    icon: '🦘',
-    instructions: 'ESPACE, HAUT ou Clic pour sauter par-dessus les ronces et obstacles de la sylve.',
-  },
-  {
-    id: 'tetris',
-    name: 'Tetris Mystique',
-    icon: '🧩',
-    instructions: 'Flèches GAUCHE/DROITE pour bouger, HAUT pour faire pivoter, BAS pour accélérer.',
-  },
-  {
-    id: 'vectrex',
-    name: 'Mine Storm Vectrex',
-    icon: '⚡',
-    instructions: 'Flèches GAUCHE/DROITE pour pivoter, HAUT pour propulser le vaisseau, ESPACE pour tirer.',
-  },
-];
 
 interface ArcadeModalProps {
   isOpen: boolean;
