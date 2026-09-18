@@ -102,6 +102,18 @@
     "wonText": "Well done! You found all the categories!",
     "lostText": "Out of attempts! Here are the revealed secret categories:"
   },
+  "profille": {
+    "title": "Profille",
+    "subtitle": "Indie Game ID Card: deduce the release year, developer studio, and game genre",
+    "confidentialFile": "Confidential Dossier",
+    "attemptsLeft": "Attempt {{current}} of {{max}}",
+    "releaseYear": "Release Year",
+    "developer": "Studio / Developer",
+    "genre": "Style & Genres",
+    "submit": "Submit",
+    "wonText": "Congratulations! You solved the indie ID card!",
+    "lostText": "Dossier closed! Come back tomorrow for a new game!"
+  },
   "toolbox": {
     "title": "Indie Gamer Toolbox",
     "subtitle": "Interactive utilities to plan, budget, and uncover your next indie favorites",

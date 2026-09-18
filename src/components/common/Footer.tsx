@@ -13,7 +13,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [clickCount, setClickCount] = useState(0);
 
   const handleFooterOwlClick = () => {
@@ -86,6 +86,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
             <ul className="space-y-2 text-xs">
               <li>
                 <button
+                  onClick={() => onSelectTab('minigames')}
+                  className="hover:text-amber-400 text-amber-300 font-semibold transition"
+                >
+                  {i18n.language.startsWith('fr') ? 'Hub des 6 Mini-jeux' : '6 Mini-games Hub'}
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onSelectTab('screenle')}
                   className="hover:text-amber-400 text-slate-300 transition"
                 >
@@ -105,7 +113,29 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   onClick={() => onSelectTab('linkle')}
                   className="hover:text-amber-400 text-slate-300 transition"
                 >
-                  Mode 3 : Linkle (Connections)
+                  Mode 3 : Linkle
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectTab('profille')}
+                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1.5"
+                >
+                  <span>Mode 4 : Profille</span>
+                  <span className="text-[10px] font-black uppercase px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/40">
+                    {i18n.language.startsWith('fr') ? 'Nouveau' : 'New'}
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectTab('timeattack')}
+                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1.5"
+                >
+                  <span>Mode 5 : Time Attack</span>
+                  <span className="text-[10px] font-bold uppercase px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
+                    Sprint
+                  </span>
                 </button>
               </li>
               <li>
@@ -113,8 +143,8 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   onClick={() => onSelectTab('versus')}
                   className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1.5"
                 >
-                  <span>Mode 4 : Versus 1v1</span>
-                  <span className="text-xs font-bold uppercase px-1.5 py-0.5 bg-amber-500/15 text-amber-400 rounded border border-amber-500/30">
+                  <span>Mode 6 : Versus 1v1</span>
+                  <span className="text-[10px] font-bold uppercase px-1.5 py-0.2 bg-rose-500/20 text-rose-300 rounded border border-rose-500/30">
                     Live
                   </span>
                 </button>

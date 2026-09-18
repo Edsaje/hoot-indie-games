@@ -1,16 +1,18 @@
 import { createContext } from 'react';
 import type { ModeStats, OverallStats } from '../types/game';
 
+export type DailyGameMode = 'screenle' | 'indledle' | 'linkle' | 'profille';
+
 export interface GameStatsContextType {
   stats: OverallStats;
   recordGameResult: (
-    mode: 'screenle' | 'indledle' | 'linkle',
+    mode: DailyGameMode,
     dateStr: string,
     isWon: boolean,
     guessCount: number
   ) => void;
   resetStats: () => void;
-  dismissStreakBreak?: (mode: 'screenle' | 'indledle' | 'linkle') => void;
+  dismissStreakBreak?: (mode: DailyGameMode) => void;
 }
 
 export const defaultModeStats: ModeStats = {
@@ -25,6 +27,7 @@ export const defaultOverallStats: OverallStats = {
   screenle: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } },
   indledle: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 } },
   linkle: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0 } },
+  profille: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0 } },
 };
 
 export const STATS_STORAGE_KEY = 'hoot_indie_stats_v1';

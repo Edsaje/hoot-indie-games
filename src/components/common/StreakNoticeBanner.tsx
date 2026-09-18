@@ -5,8 +5,10 @@ import { useGameStats } from '../../context/useGameStats';
 import { getTodayDateString, getYesterdayDateString, getChallengeStatusForDate } from '../../utils/streakManager';
 import { soundFx } from '../../utils/audio';
 
+import { type DailyGameMode } from '../../context/GameStatsContext';
+
 interface StreakNoticeBannerProps {
-  mode: 'screenle' | 'indledle' | 'linkle';
+  mode: DailyGameMode;
   currentDate: string;
   isWon: boolean;
   onSelectDate?: (date: string) => void;

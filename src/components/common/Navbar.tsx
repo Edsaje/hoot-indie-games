@@ -6,17 +6,13 @@ import {
   VolumeX,
   BarChart3,
   Globe,
-  Camera,
-  Layers,
-  Sparkles,
   Feather,
   Wrench,
   Calendar,
-  Swords,
   Gamepad2,
   LogIn,
-  Zap,
   Flame,
+  Puzzle,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
@@ -29,9 +25,11 @@ import { getTodayDateString, getYesterdayDateString } from '../../utils/streakMa
 
 export type NavTab =
   | 'gems'
+  | 'minigames'
   | 'screenle'
   | 'indledle'
   | 'linkle'
+  | 'profille'
   | 'versus'
   | 'arcade'
   | 'timeattack'
@@ -77,6 +75,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     onTabChange(tab);
   };
 
+  const isMinigamesActive =
+    currentTab === 'minigames' ||
+    ['screenle', 'indledle', 'linkle', 'profille', 'timeattack', 'versus'].includes(currentTab);
+
   const toggleSound = () => {
     const next = soundFx.toggleSound();
     setSoundEnabled(next);
@@ -113,13 +115,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Center Navigation Tabs */}
-          <nav className="hidden xl:flex items-center gap-1 bg-[#131a29] p-1 rounded-2xl border border-[#1e293b] shrink-0">
+          {/* Center Navigation Tabs (Consolidated 5 tabs, Mobile-First & No Overflow) */}
+          <nav className="hidden lg:flex items-center gap-1 bg-[#131a29] p-1 rounded-2xl border border-[#1e293b] shrink-0">
+            {/* 1. Pépites */}
             <button
               onClick={() => handleTabSelect('gems')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 currentTab === 'gems'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
@@ -127,77 +130,34 @@ export const Navbar: React.FC<NavbarProps> = ({
               {t('nav.gems')}
             </button>
 
+            {/* 2. Mini-jeux (Consolidated Screenle, Indledle, Linkle, Profille, Time Attack, Versus) */}
             <button
-              onClick={() => handleTabSelect('screenle')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                currentTab === 'screenle'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+              onClick={() => handleTabSelect('minigames')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                isMinigamesActive
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              <Camera className="w-3.5 h-3.5" />
-              {t('nav.screenle')}
-            </button>
-
-            <button
-              onClick={() => handleTabSelect('indledle')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                currentTab === 'indledle'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              {t('nav.indledle')}
-            </button>
-
-            <button
-              onClick={() => handleTabSelect('linkle')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                currentTab === 'linkle'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              {t('nav.linkle')}
-            </button>
-
-            <button
-              onClick={() => handleTabSelect('timeattack')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                currentTab === 'timeattack'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              {t('nav.timeattack', 'Time Attack')}
-              <span className="hidden 2xl:inline text-[9px] font-black uppercase px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
-                Sprint
+              <Puzzle className="w-3.5 h-3.5" />
+              <span>{t('nav.games', 'Mini-Jeux')}</span>
+              <span
+                className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded border ${
+                  isMinigamesActive
+                    ? 'bg-slate-950/20 text-slate-950 border-slate-950/30'
+                    : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                }`}
+              >
+                6
               </span>
             </button>
 
-            <button
-              onClick={() => handleTabSelect('versus')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                currentTab === 'versus'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Swords className="w-3.5 h-3.5" />
-              {t('nav.versus')}
-              <span className="hidden 2xl:inline text-[9px] font-bold uppercase px-1.5 py-0.2 bg-amber-500/15 text-amber-400 rounded border border-amber-500/30">
-                1v1
-              </span>
-            </button>
-
+            {/* 3. Arcade */}
             <button
               onClick={() => handleTabSelect('arcade')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 currentTab === 'arcade'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
@@ -207,11 +167,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <div className="h-4 w-px bg-slate-700 mx-1" />
 
+            {/* 4. Boîte à Outils */}
             <button
               onClick={() => handleTabSelect('toolbox')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 currentTab === 'toolbox'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
@@ -219,11 +180,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               {t('nav.toolbox')}
             </button>
 
+            {/* 5. Le Perchoir */}
             <button
               onClick={() => handleTabSelect('roost')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 currentTab === 'roost'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
@@ -359,35 +321,43 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Mobile & Tablet Sub-Navigation Bar */}
-        <div className="flex xl:hidden overflow-x-auto py-2 gap-1 border-t border-[#1e293b]/60 no-scrollbar">
+        {/* Mobile & Tablet Sub-Navigation Bar (Consolidated 5 tabs, Mobile-First) */}
+        <div className="flex lg:hidden overflow-x-auto py-2 gap-1.5 border-t border-[#1e293b]/60 no-scrollbar justify-between">
           {(
             [
               { id: 'gems', label: t('nav.gems'), icon: Compass },
-              { id: 'screenle', label: t('nav.screenle'), icon: Camera },
-              { id: 'indledle', label: t('nav.indledle'), icon: Layers },
-              { id: 'linkle', label: t('nav.linkle'), icon: Sparkles },
-              { id: 'timeattack', label: t('nav.timeattack', 'Time Attack'), icon: Zap },
-              { id: 'versus', label: t('nav.versus'), icon: Swords },
+              { id: 'minigames', label: t('nav.games', 'Mini-Jeux'), icon: Puzzle, badge: '6' },
               { id: 'arcade', label: t('nav.arcade'), icon: Gamepad2 },
               { id: 'toolbox', label: t('nav.toolbox'), icon: Wrench },
               { id: 'roost', label: t('nav.roost'), icon: Feather },
             ] as const
           ).map((item) => {
             const Icon = item.icon;
-            const active = currentTab === item.id;
+            const active =
+              item.id === 'minigames' ? isMinigamesActive : currentTab === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => handleTabSelect(item.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition ${
+                className={`flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition cursor-pointer flex-1 ${
                   active
-                    ? 'bg-[#f59e0b] text-slate-950 font-black'
-                    : 'bg-[#131a29] text-slate-300 border border-[#1e293b]'
+                    ? 'bg-[#f59e0b] text-slate-950 font-black shadow-md shadow-amber-500/20'
+                    : 'bg-[#131a29] text-slate-300 border border-[#1e293b] hover:text-white'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                {item.label}
+                <Icon className="w-3.5 h-3.5 shrink-0" />
+                <span>{item.label}</span>
+                {'badge' in item && item.badge && (
+                  <span
+                    className={`text-[9px] font-black uppercase px-1 rounded ${
+                      active
+                        ? 'bg-slate-950/20 text-slate-950'
+                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}

@@ -102,6 +102,18 @@
     "wonText": "Bravo ! Toutes les catégories ont été trouvées !",
     "lostText": "Les 4 erreurs sont épuisées. Voici les catégories révélées :"
   },
+  "profille": {
+    "title": "Profille",
+    "subtitle": "Fiche d'identité secrète : retrouvez l'année de sortie, le studio et le style de jeu",
+    "confidentialFile": "Dossier Confidentiel",
+    "attemptsLeft": "Tentative {{current}} sur {{max}}",
+    "releaseYear": "Année de sortie",
+    "developer": "Studio / Développeur",
+    "genre": "Style de jeu & Genres",
+    "submit": "Valider",
+    "wonText": "Bravo ! Vous avez résolu la fiche d'identité du jeu !",
+    "lostText": "Dossier clos ! Retentez votre chance demain pour un nouveau jeu !"
+  },
   "toolbox": {
     "title": "Boîte à Outils du Joueur Indé",
     "subtitle": "Utilitaires interactifs pour planifier, budgétiser et découvrir vos futurs jeux",

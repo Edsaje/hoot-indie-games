@@ -4,6 +4,7 @@ import {
   GameStatsContext,
   defaultOverallStats,
   STATS_STORAGE_KEY,
+  type DailyGameMode,
 } from './GameStatsContext';
 import {
   getTodayDateString,
@@ -33,7 +34,7 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [stats]);
 
   const recordGameResult = (
-    mode: 'screenle' | 'indledle' | 'linkle',
+    mode: DailyGameMode,
     dateStr: string,
     isWon: boolean,
     guessCount: number
@@ -147,7 +148,7 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     });
   };
 
-  const dismissStreakBreak = (mode: 'screenle' | 'indledle' | 'linkle') => {
+  const dismissStreakBreak = (mode: DailyGameMode) => {
     setStats((prev) => ({
       ...prev,
       [mode]: {

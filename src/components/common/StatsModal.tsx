@@ -4,16 +4,18 @@ import { X, Award, Flame, BarChart3, RotateCcw, Share2, Check } from 'lucide-rea
 import { useGameStats } from '../../context/useGameStats';
 import { soundFx } from '../../utils/audio';
 
+import { type DailyGameMode } from '../../context/GameStatsContext';
+
 interface StatsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialTab?: 'screenle' | 'indledle' | 'linkle';
+  initialTab?: DailyGameMode;
 }
 
 export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initialTab = 'screenle' }) => {
   const { t } = useTranslation();
   const { stats, resetStats } = useGameStats();
-  const [activeTab, setActiveTab] = useState<'screenle' | 'indledle' | 'linkle'>(initialTab);
+  const [activeTab, setActiveTab] = useState<DailyGameMode>(initialTab);
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
@@ -65,15 +67,15 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
         </div>
 
         {/* Tabs for each mode */}
-        <div className="grid grid-cols-3 gap-1 bg-[#0b0f19] p-1 rounded-xl border border-[#1e293b] mb-6">
-          {(['screenle', 'indledle', 'linkle'] as const).map((tab) => (
+        <div className="grid grid-cols-4 gap-1 bg-[#0b0f19] p-1 rounded-xl border border-[#1e293b] mb-6">
+          {(['screenle', 'indledle', 'linkle', 'profille'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => {
                 soundFx.playClick();
                 setActiveTab(tab);
               }}
-              className={`py-1.5 text-sm font-semibold rounded-lg capitalize transition-all ${
+              className={`py-1.5 text-xs sm:text-sm font-semibold rounded-lg capitalize transition-all ${
                 activeTab === tab
                   ? 'bg-[#1e293b] text-[#f59e0b] shadow'
                   : 'text-slate-400 hover:text-slate-200'

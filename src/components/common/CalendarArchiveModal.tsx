@@ -249,6 +249,15 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                           : 'bg-slate-800'
                       }`}
                     />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.profille === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.profille === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
                   </div>
                 </div>
               );
@@ -259,8 +268,16 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
             const isSelected = item.dateStr === currentDate;
             const isToday = item.dateStr === todayStr;
             const isYesterday = item.dateStr === yesterdayStr;
-            const wonAll = status.screenle === 'won' && status.indledle === 'won' && status.linkle === 'won';
-            const hasUnplayed = status.screenle === 'unplayed' || status.indledle === 'unplayed' || status.linkle === 'unplayed';
+            const wonAll =
+              status.screenle === 'won' &&
+              status.indledle === 'won' &&
+              status.linkle === 'won' &&
+              status.profille === 'won';
+            const hasUnplayed =
+              status.screenle === 'unplayed' ||
+              status.indledle === 'unplayed' ||
+              status.linkle === 'unplayed' ||
+              status.profille === 'unplayed';
 
             return (
               <button
@@ -295,7 +312,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                   ) : null}
                 </div>
 
-                {/* Status dots for 3 daily games */}
+                {/* Status dots for 4 daily games */}
                 <div className="flex items-center gap-1">
                   <span
                     title="Screenle"
@@ -323,6 +340,16 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                       status.linkle === 'won'
                         ? 'bg-emerald-400'
                         : status.linkle === 'lost'
+                        ? 'bg-rose-500'
+                        : 'bg-slate-700'
+                    }`}
+                  />
+                  <span
+                    title="Profille"
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      status.profille === 'won'
+                        ? 'bg-emerald-400'
+                        : status.profille === 'lost'
                         ? 'bg-rose-500'
                         : 'bg-slate-700'
                     }`}

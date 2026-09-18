@@ -3348,3 +3348,16 @@ export function getDailyGame(dateString: string, offset = 0): Game {
   const index = Math.abs(hash + offset) % INDIE_GAMES.length;
   return INDIE_GAMES[index];
 }
+
+// Helper déterministe pour obtenir le jeu du jour pour Profille (sans collision avec Screenle ni Indledle)
+export function getDailyProfilleGame(dateString: string): Game {
+  const g0 = getDailyGame(dateString, 0);
+  const g3 = getDailyGame(dateString, 3);
+  let offset = 7;
+  let candidate = getDailyGame(dateString, offset);
+  while ((candidate.id === g0.id || candidate.id === g3.id) && offset < 50) {
+    offset++;
+    candidate = getDailyGame(dateString, offset);
+  }
+  return candidate;
+}

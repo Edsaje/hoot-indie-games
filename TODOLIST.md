@@ -53,6 +53,11 @@
 19. **Système Anti-Triche F12 & Inspection Réseau (Anti-Spoiler) :**
     - Sécuriser les réponses des jeux quotidiens (Screenle, Indledle, Linkle) pour empêcher la triche via l'ouverture des DevTools (F12) et l'interception de requêtes réseau.
     - Obfuscation et hashage des réponses / payloads réseau tant que la partie n'est pas terminée.
+20. **Refonte Navigation Mobile-First ("Mini-jeux") & Nouveau Jeu "Profille" :**
+    - Consolidation des modes de déduction (Screenle, Indledle, Linkle, Time Attack, Versus) au sein d'un onglet unique "Mini-jeux" (`minigames`) dans la barre de navigation.
+    - La Navbar principale est désormais allégée à 5 onglets majeurs (*Pépites*, *Mini-jeux*, *Arcade*, *Boîte à Outils*, *Le Perchoir*), garantissant 0 dépassement sur desktop et une ergonomie 100% Mobile-First.
+    - Ajout du nouveau mini-jeu quotidien **"Profille"** (*Fiche d'Identité Indé*) : le joueur dispose du titre et des captures officielles du jeu, et doit retrouver l'année de sortie, le studio de développement (autocomplétion sur 87 studios) et le style de jeu / genres (chips interactifs).
+    - Hub central des Mini-jeux avec statuts des défis du jour, accès direct aux 6 disciplines et sous-navigation par pilules réactive.
 
 ---
 
