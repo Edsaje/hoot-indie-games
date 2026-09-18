@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -15,9 +15,20 @@ import {
   Sparkles,
   Edit2,
   Check,
+  RefreshCw,
+  Key,
+  ExternalLink,
+  Search,
+  CheckSquare,
+  Square,
+  Library,
+  Gamepad2,
 } from 'lucide-react';
+import { SteamIcon } from './SteamIcon';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useAchievements } from '../../context/useAchievements';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
+import { parseAppIdsFromInput } from '../../services/steamService';
 import { INDIE_AVATARS } from '../../data/avatars';
 import type { IndieAvatarId } from '../../types/user';
 import { soundFx } from '../../utils/audio';
@@ -39,11 +50,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
     signUpWithEmail,
     logout,
     syncCloud,
+    steamAccount,
+    isSteamConnected,
+    connectSteamWithOpenId,
+    connectSteamByIdentifier,
+    syncSteamLibrary,
+    disconnectSteam,
+    toggleGameOwned,
+    isGameOwned,
+    setManualOwnedGames,
   } = useUserAccount();
 
   const { feathersCount, unlockedIds, allAchievements } = useAchievements();
+  const { allPlayableGames } = useSteamCatalog();
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'cloud'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'steam' | 'cloud'>('profile');
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(profile.username);
   const [emailInput, setEmailInput] = useState('');
@@ -52,6 +73,31 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Steam state
+  const [steamInput, setSteamInput] = useState('');
+  const [steamApiKeyInput, setSteamApiKeyInput] = useState(steamAccount?.apiKey || '');
+  const [steamImportText, setSteamImportText] = useState('');
+  const [showImportBox, setShowImportBox] = useState(false);
+  const [showApiKeyBox, setShowApiKeyBox] = useState(false);
+  const [isSteamLoading, setIsSteamLoading] = useState(false);
+  const [steamStatus, setSteamStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [steamSearchQuery, setSteamSearchQuery] = useState('');
+
+  const ownedGemsCount = useMemo(() => {
+    return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
+  }, [allPlayableGames, isGameOwned]);
+
+  const filteredPlayableForSteam = useMemo(() => {
+    if (!steamSearchQuery.trim()) return allPlayableGames;
+    const q = steamSearchQuery.toLowerCase().trim();
+    return allPlayableGames.filter(
+      (g) =>
+        g.title.toLowerCase().includes(q) ||
+        g.developer.toLowerCase().includes(q) ||
+        g.genre.some((gen) => gen.toLowerCase().includes(q))
+    );
+  }, [allPlayableGames, steamSearchQuery]);
 
   if (!isOpen) return null;
 
@@ -136,6 +182,63 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
     setSyncStatus(res.message);
   };
 
+  const handleSteamOpenId = () => {
+    soundFx.playClick();
+    connectSteamWithOpenId();
+  };
+
+  const handleConnectSteamById = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!steamInput.trim()) return;
+    soundFx.playClick();
+    setIsSteamLoading(true);
+    setSteamStatus(null);
+    const res = await connectSteamByIdentifier(steamInput, steamApiKeyInput || undefined);
+    setIsSteamLoading(false);
+    if (res.success) {
+      soundFx.playVictory();
+      setSteamStatus({ type: 'success', message: res.message || 'Compte Steam lié avec succès !' });
+      setSteamInput('');
+    } else {
+      soundFx.playError();
+      setSteamStatus({ type: 'error', message: res.message || 'Erreur lors de la liaison.' });
+    }
+  };
+
+  const handleSyncLibrary = async () => {
+    soundFx.playClick();
+    setIsSteamLoading(true);
+    setSteamStatus(null);
+    const res = await syncSteamLibrary(steamApiKeyInput || undefined);
+    setIsSteamLoading(false);
+    if (res.success) {
+      soundFx.playVictory();
+      setSteamStatus({ type: 'success', message: res.message || 'Bibliothèque synchronisée !' });
+    } else {
+      soundFx.playError();
+      setSteamStatus({ type: 'error', message: res.message || 'Échec de synchronisation.' });
+    }
+  };
+
+  const handleImportAppIds = () => {
+    soundFx.playClick();
+    const appIds = parseAppIdsFromInput(steamImportText);
+    if (appIds.length === 0) {
+      setSteamStatus({ type: 'error', message: 'Aucun AppID Steam valide détecté dans votre saisie.' });
+      return;
+    }
+    const current = new Set(steamAccount?.ownedAppIds || []);
+    appIds.forEach((id) => current.add(id));
+    setManualOwnedGames(Array.from(current));
+    soundFx.playVictory();
+    setSteamStatus({
+      type: 'success',
+      message: `${appIds.length} jeux ajoutés à votre bibliothèque possédée !`,
+    });
+    setSteamImportText('');
+    setShowImportBox(false);
+  };
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
@@ -156,7 +259,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   Profil du Joueur
                 </h2>
                 <p className="text-xs text-slate-400">
-                  Personnalisez votre avatar et synchronisez votre progression
+                  Personnalisez votre avatar et synchronisez votre bibliothèque Steam
                 </p>
               </div>
             </div>
@@ -190,6 +293,23 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
             <button
               onClick={() => {
                 soundFx.playClick();
+                setActiveTab('steam');
+              }}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 relative ${
+                activeTab === 'steam'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <SteamIcon className="w-4 h-4" />
+              Steam & Jeux
+              {isSteamConnected && (
+                <span className="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-slate-900" />
+              )}
+            </button>
+            <button
+              onClick={() => {
+                soundFx.playClick();
                 setActiveTab('cloud');
               }}
               className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
@@ -199,7 +319,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
               }`}
             >
               <Cloud className="w-4 h-4" />
-              Compte & Sauvegarde
+              Sauvegarde
             </button>
           </div>
 
@@ -346,6 +466,353 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                       {profile.versusStats.bestStreak}
                     </div>
                     <div className="text-[10px] font-semibold text-slate-400">Meilleure Série</div>
+                  </div>
+                </div>
+              </>
+            ) : activeTab === 'steam' ? (
+              <>
+                {/* Steam Tab Body */}
+                <div className="space-y-5">
+                  {/* Status Banner / Card */}
+                  {isSteamConnected && steamAccount ? (
+                    <div className="p-4 bg-gradient-to-br from-[#101c2b] via-[#132236] to-[#0c1624] border border-cyan-500/30 rounded-2xl shadow-xl space-y-4">
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className="relative">
+                            <img
+                              src={steamAccount.avatarUrl || 'https://avatars.fastly.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg'}
+                              alt={steamAccount.personaName}
+                              className="w-14 h-14 rounded-2xl border-2 border-cyan-400 shadow-md object-cover bg-slate-900"
+                            />
+                            <div className="absolute -bottom-1 -right-1 p-1 bg-[#171a21] rounded-full border border-cyan-500/50 text-cyan-400">
+                              <SteamIcon className="w-3.5 h-3.5" />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-base font-black text-white">{steamAccount.personaName}</h3>
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" />
+                                Synchronisé
+                              </span>
+                            </div>
+                            <div className="text-xs text-slate-400 font-mono mt-0.5">
+                              SteamID: {steamAccount.steamId}
+                            </div>
+                            {steamAccount.profileUrl && (
+                              <a
+                                href={steamAccount.profileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[11px] text-cyan-400 hover:underline inline-flex items-center gap-1 mt-1"
+                              >
+                                <span>Voir le profil Steam</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            soundFx.playClick();
+                            disconnectSteam();
+                          }}
+                          className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition flex items-center gap-1.5 self-end sm:self-auto"
+                        >
+                          <LogOut className="w-3.5 h-3.5" />
+                          Déconnecter
+                        </button>
+                      </div>
+
+                      {/* Stats Grid */}
+                      <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-cyan-500/20">
+                        <div className="p-2.5 bg-[#0b121e] rounded-xl text-center border border-cyan-900/40">
+                          <div className="text-[10px] font-bold uppercase text-slate-400">Jeux Steam</div>
+                          <div className="text-sm font-black text-white">{steamAccount.gamesCount}</div>
+                        </div>
+                        <div className="p-2.5 bg-[#0b121e] rounded-xl text-center border border-cyan-900/40">
+                          <div className="text-[10px] font-bold uppercase text-cyan-300">Pépites Possédées</div>
+                          <div className="text-sm font-black text-cyan-400">{ownedGemsCount} / {allPlayableGames.length}</div>
+                        </div>
+                        <div className="p-2.5 bg-[#0b121e] rounded-xl text-center border border-cyan-900/40">
+                          <div className="text-[10px] font-bold uppercase text-amber-300">Complétion Hoot</div>
+                          <div className="text-sm font-black text-amber-400">{Math.round((ownedGemsCount / allPlayableGames.length) * 100)}%</div>
+                        </div>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-[11px] text-slate-400 font-medium">
+                          <span>Progression catalogue certifié</span>
+                          <span className="font-mono text-cyan-400">{ownedGemsCount} sur {allPlayableGames.length} pépites</span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden border border-slate-800">
+                          <div
+                            className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-500"
+                            style={{ width: `${Math.min(100, Math.round((ownedGemsCount / allPlayableGames.length) * 100))}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Quick Sync & Options Bar */}
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <button
+                          onClick={handleSyncLibrary}
+                          disabled={isSteamLoading}
+                          className="flex-1 py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition shadow-md disabled:opacity-50"
+                        >
+                          <RefreshCw className={`w-3.5 h-3.5 ${isSteamLoading ? 'animate-spin' : ''}`} />
+                          Actualiser la bibliothèque
+                        </button>
+                        <button
+                          onClick={() => setShowImportBox(!showImportBox)}
+                          className="py-2 px-3 rounded-xl bg-[#0b121e] border border-cyan-500/30 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5"
+                        >
+                          <Library className="w-3.5 h-3.5 text-cyan-400" />
+                          Importer des AppIDs
+                        </button>
+                        <button
+                          onClick={() => setShowApiKeyBox(!showApiKeyBox)}
+                          className="py-2 px-3 rounded-xl bg-[#0b121e] border border-cyan-500/30 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5"
+                        >
+                          <Key className="w-3.5 h-3.5 text-amber-400" />
+                          Clé API
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Not Connected View */
+                    <div className="p-5 bg-gradient-to-br from-[#101c2b] via-[#132236] to-[#0c1624] border border-cyan-500/30 rounded-2xl shadow-xl space-y-4 text-center sm:text-left">
+                      <div className="flex flex-col sm:flex-row items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-[#171a21] border-2 border-cyan-500/40 text-cyan-400 flex items-center justify-center shadow-lg shrink-0">
+                          <SteamIcon className="w-8 h-8" />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-black text-white">
+                            Associez votre Compte Steam
+                          </h3>
+                          <p className="text-xs text-slate-300 leading-relaxed mt-1">
+                            Connectez votre profil pour identifier d'un coup d'œil les pépites indépendantes que vous possédez déjà dans votre ludothèque, filtrer les jeux à découvrir et enrichir votre expérience de jeu !
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Official Sign in through Steam button */}
+                      <div className="pt-2">
+                        <button
+                          onClick={handleSteamOpenId}
+                          className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#171a21] via-[#1b2838] to-[#2a475e] hover:from-[#1b2838] hover:to-[#171a21] border border-cyan-500/50 hover:border-cyan-400 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-3 shadow-lg hover:shadow-cyan-500/20 transition-all cursor-pointer"
+                        >
+                          <SteamIcon className="w-5 h-5 text-cyan-400" />
+                          <span>Se connecter via Steam (Officiel & Sécurisé)</span>
+                        </button>
+                        <p className="text-[11px] text-slate-400 text-center mt-1.5">
+                          Authentification officielle Valve. Votre mot de passe reste strictement confidentiel sur Steam.
+                        </p>
+                      </div>
+
+                      {/* Direct ID Link Alternative */}
+                      <div className="relative my-3">
+                        <div className="absolute inset-0 flex items-center">
+                          <div className="w-full border-t border-slate-700/60" />
+                        </div>
+                        <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-400">
+                          <span className="bg-[#132236] px-3">Ou liaison par SteamID / URL</span>
+                        </div>
+                      </div>
+
+                      <form onSubmit={handleConnectSteamById} className="space-y-2">
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={steamInput}
+                            onChange={(e) => setSteamInput(e.target.value)}
+                            placeholder="SteamID64 (ex: 76561198...) ou pseudo Steam"
+                            className="flex-1 px-3 py-2 bg-[#0b1019] border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                          />
+                          <button
+                            type="submit"
+                            disabled={isSteamLoading || !steamInput.trim()}
+                            className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs transition disabled:opacity-50 shrink-0"
+                          >
+                            {isSteamLoading ? 'Connexion...' : 'Lier'}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  )}
+
+                  {/* Feedback Status Alert */}
+                  {steamStatus && (
+                    <div
+                      className={`flex items-center gap-2 text-xs p-3 rounded-xl border ${
+                        steamStatus.type === 'success'
+                          ? 'text-emerald-300 bg-emerald-950/40 border-emerald-900/50'
+                          : 'text-rose-300 bg-rose-950/40 border-rose-900/50'
+                      }`}
+                    >
+                      {steamStatus.type === 'success' ? (
+                        <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                      ) : (
+                        <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                      )}
+                      <span>{steamStatus.message}</span>
+                    </div>
+                  )}
+
+                  {/* Collapsible API Key Box */}
+                  {showApiKeyBox && (
+                    <div className="p-3.5 bg-[#0e1726] border border-cyan-900/50 rounded-2xl space-y-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <Key className="w-3.5 h-3.5 text-amber-400" />
+                          Clé API Steam Web (Optionnel)
+                        </span>
+                        <a
+                          href="https://steamcommunity.com/dev/apikey"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+                        >
+                          <span>Obtenir gratuitement ma clé</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                      <p className="text-[11px] text-slate-400">
+                        Permet la synchronisation automatique directe de votre catalogue Steam complet. La clé est stockée uniquement en local dans votre navigateur.
+                      </p>
+                      <div className="flex gap-2 pt-1">
+                        <input
+                          type="password"
+                          value={steamApiKeyInput}
+                          onChange={(e) => setSteamApiKeyInput(e.target.value)}
+                          placeholder="Ex: A1B2C3D4E5F6..."
+                          className="flex-1 px-3 py-1.5 bg-[#090e18] border border-slate-700 rounded-lg text-xs text-white font-mono placeholder-slate-600 focus:outline-none focus:border-cyan-400"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleSyncLibrary}
+                          disabled={isSteamLoading}
+                          className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs"
+                        >
+                          Sauvegarder & Synchroniser
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Collapsible AppIDs Import Box */}
+                  {showImportBox && (
+                    <div className="p-3.5 bg-[#0e1726] border border-cyan-900/50 rounded-2xl space-y-2 text-xs">
+                      <span className="font-bold text-white flex items-center gap-1.5">
+                        <Library className="w-3.5 h-3.5 text-cyan-400" />
+                        Coller une liste d'AppIDs ou export Steam
+                      </span>
+                      <p className="text-[11px] text-slate-400">
+                        Collez des identifiants numériques, des URLs Steam Store ou un tableau JSON (ex: [1145360, 268910, 504230]) :
+                      </p>
+                      <textarea
+                        value={steamImportText}
+                        onChange={(e) => setSteamImportText(e.target.value)}
+                        placeholder="Collez ici vos AppIDs ou URLs de jeux possédés..."
+                        rows={3}
+                        className="w-full p-2.5 bg-[#090e18] border border-slate-700 rounded-xl text-xs text-white font-mono placeholder-slate-600 focus:outline-none focus:border-cyan-400"
+                      />
+                      <div className="flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setShowImportBox(false)}
+                          className="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white"
+                        >
+                          Annuler
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleImportAppIds}
+                          className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs"
+                        >
+                          Importer
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Certified Gems Checklist */}
+                  <div className="p-4 bg-[#131a29] border border-[#1e293b] rounded-2xl space-y-3">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <div>
+                        <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                          <Gamepad2 className="w-4 h-4 text-cyan-400" />
+                          Vos Pépites Certifiées ({ownedGemsCount}/{allPlayableGames.length})
+                        </h4>
+                        <p className="text-[11px] text-slate-400">
+                          Cochez ou décochez les pépites pour ajuster manuellement vos possessions
+                        </p>
+                      </div>
+
+                      {/* Search in games list */}
+                      <div className="relative w-full sm:w-48">
+                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          value={steamSearchQuery}
+                          onChange={(e) => setSteamSearchQuery(e.target.value)}
+                          placeholder="Rechercher..."
+                          className="w-full pl-8 pr-2.5 py-1 bg-[#0b0f19] border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="max-h-56 overflow-y-auto space-y-1 pr-1 custom-scrollbar divide-y divide-slate-800/50">
+                      {filteredPlayableForSteam.map((game) => {
+                        const owned = isGameOwned(game.steamUrl);
+                        return (
+                          <div
+                            key={game.id}
+                            onClick={() => {
+                              soundFx.playClick();
+                              toggleGameOwned(game.steamUrl);
+                            }}
+                            className={`flex items-center justify-between p-2 rounded-xl cursor-pointer transition ${
+                              owned
+                                ? 'bg-cyan-950/20 text-white'
+                                : 'hover:bg-slate-800/40 text-slate-300'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <button
+                                type="button"
+                                className="text-cyan-400 shrink-0"
+                              >
+                                {owned ? (
+                                  <CheckSquare className="w-4 h-4 text-cyan-400" />
+                                ) : (
+                                  <Square className="w-4 h-4 text-slate-600" />
+                                )}
+                              </button>
+                              <div className="min-w-0">
+                                <div className="text-xs font-bold truncate flex items-center gap-1.5">
+                                  <span>{game.title}</span>
+                                  <span className="text-[10px] text-slate-500 font-mono">
+                                    ({game.releaseYear})
+                                  </span>
+                                </div>
+                                <div className="text-[10px] text-slate-400 truncate">
+                                  {game.developer}
+                                </div>
+                              </div>
+                            </div>
+
+                            {owned && (
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0 ml-2">
+                                Possédé
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </>

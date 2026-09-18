@@ -21,6 +21,8 @@ import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
+import { useUserAccount } from '../../context/useUserAccount';
+import { SteamIcon } from '../common/SteamIcon';
 import { downloadShareCard } from '../../utils/generateShareCard';
 import { telemetry } from '../../services/telemetry';
 
@@ -31,6 +33,7 @@ interface IndledleGameProps {
 export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
+  const { isGameOwned } = useUserAccount();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
   // Offset 1 to have a distinct game from Screenle if desired, or same
@@ -334,6 +337,12 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
               <div className="text-xs text-slate-300 mt-0.5">
                 {secretGame.releaseYear} • {secretGame.developer} • {secretGame.genre.join(', ')}
               </div>
+              {isGameOwned(secretGame.steamUrl) && (
+                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-[11px] font-bold">
+                  <SteamIcon className="w-3 h-3 text-cyan-400" />
+                  <span>Dans votre bibliothèque Steam !</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -343,10 +352,15 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate }) => {
                 href={secretGame.steamUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-xl transition"
+                className={`flex items-center gap-2 px-5 py-2.5 font-bold text-sm rounded-xl transition ${
+                  isGameOwned(secretGame.steamUrl)
+                    ? 'bg-cyan-950/80 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-500/50 shadow-md shadow-cyan-500/10'
+                    : 'bg-slate-800 hover:bg-slate-700 text-white'
+                }`}
               >
-                {t('common.viewOnSteam')}
-                <ExternalLink className="w-4 h-4" />
+                <SteamIcon className="w-4 h-4 text-cyan-400" />
+                <span>{isGameOwned(secretGame.steamUrl) ? 'Dans votre bibliothèque Steam' : t('common.viewOnSteam')}</span>
+                <ExternalLink className="w-4 h-4 opacity-70" />
               </a>
             )}
 

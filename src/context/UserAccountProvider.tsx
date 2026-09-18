@@ -1,7 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import type { UserProfile, IndieAvatarId, AccountSaveData } from '../types/user';
+import type { UserProfile, IndieAvatarId, AccountSaveData, SteamAccountInfo } from '../types/user';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
+import {
+  buildSteamOpenIdUrl,
+  extractSteamIdFromOpenId,
+  getAppIdFromSteamUrl,
+  resolveSteamAccount,
+  fetchSteamOwnedGames,
+} from '../services/steamService';
 import { UserAccountContext } from './UserAccountContext';
 
 const STORAGE_KEY = 'hoot_user_profile_v1';
@@ -275,6 +282,224 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, [profile]);
 
+  // =============================================================
+  // INTÉGRATION STEAM & SYNCHRONISATION DE LA BIBLIOTHÈQUE
+  // =============================================================
+  const isSteamConnected = Boolean(profile.steam?.steamId);
+  const ownedAppIdsSet = useMemo(
+    () => new Set<number>(profile.steam?.ownedAppIds || []),
+    [profile.steam?.ownedAppIds]
+  );
+
+  const isGameOwned = useCallback(
+    (steamUrlOrAppId?: string | number | null): boolean => {
+      if (!steamUrlOrAppId) return false;
+      if (typeof steamUrlOrAppId === 'number') {
+        return ownedAppIdsSet.has(steamUrlOrAppId);
+      }
+      const appId = getAppIdFromSteamUrl(steamUrlOrAppId);
+      return appId ? ownedAppIdsSet.has(appId) : false;
+    },
+    [ownedAppIdsSet]
+  );
+
+  const toggleGameOwned = useCallback((steamUrlOrAppId?: string | number | null) => {
+    if (!steamUrlOrAppId) return;
+    const appId =
+      typeof steamUrlOrAppId === 'number'
+        ? steamUrlOrAppId
+        : getAppIdFromSteamUrl(steamUrlOrAppId);
+    if (!appId) return;
+
+    setProfile((prev) => {
+      const currentSteam: SteamAccountInfo = prev.steam || {
+        steamId: 'local_steam_' + Math.random().toString(36).slice(2, 8),
+        personaName: prev.username,
+        profileUrl: '',
+        lastSyncedAt: new Date().toISOString(),
+        ownedAppIds: [],
+        gamesCount: 0,
+      };
+
+      const set = new Set(currentSteam.ownedAppIds);
+      if (set.has(appId)) {
+        set.delete(appId);
+      } else {
+        set.add(appId);
+      }
+
+      const newOwned = Array.from(set);
+      return {
+        ...prev,
+        steam: {
+          ...currentSteam,
+          ownedAppIds: newOwned,
+          gamesCount: Math.max(currentSteam.gamesCount, newOwned.length),
+          lastSyncedAt: new Date().toISOString(),
+        },
+      };
+    });
+  }, []);
+
+  const setManualOwnedGames = useCallback((appIds: number[]) => {
+    setProfile((prev) => {
+      const currentSteam: SteamAccountInfo = prev.steam || {
+        steamId: 'local_steam_' + Math.random().toString(36).slice(2, 8),
+        personaName: prev.username,
+        profileUrl: '',
+        lastSyncedAt: new Date().toISOString(),
+        ownedAppIds: [],
+        gamesCount: 0,
+      };
+      return {
+        ...prev,
+        steam: {
+          ...currentSteam,
+          ownedAppIds: appIds,
+          gamesCount: Math.max(currentSteam.gamesCount, appIds.length),
+          lastSyncedAt: new Date().toISOString(),
+        },
+      };
+    });
+  }, []);
+
+  const connectSteamWithOpenId = useCallback(() => {
+    const url = buildSteamOpenIdUrl();
+    if (url) {
+      window.location.href = url;
+    }
+  }, []);
+
+  const connectSteamByIdentifier = useCallback(
+    async (
+      identifier: string,
+      apiKey?: string
+    ): Promise<{ success: boolean; message?: string }> => {
+      try {
+        const details = await resolveSteamAccount(identifier);
+        let ownedAppIds: number[] = profile.steam?.ownedAppIds || [];
+        let gamesCount = profile.steam?.gamesCount || ownedAppIds.length;
+
+        const keyToUse = apiKey || profile.steam?.apiKey;
+        if (keyToUse) {
+          const syncRes = await fetchSteamOwnedGames(details.steamId, keyToUse);
+          if (syncRes.success) {
+            ownedAppIds = syncRes.ownedAppIds;
+            gamesCount = syncRes.totalCount;
+          }
+        }
+
+        const steamInfo: SteamAccountInfo = {
+          steamId: details.steamId,
+          personaName: details.personaName,
+          profileUrl: details.profileUrl,
+          avatarUrl: details.avatarUrl,
+          lastSyncedAt: new Date().toISOString(),
+          ownedAppIds,
+          gamesCount,
+          apiKey: keyToUse,
+        };
+
+        setProfile((prev) => ({
+          ...prev,
+          steam: steamInfo,
+          username: prev.username === 'Hibou Mystère' ? details.personaName : prev.username,
+        }));
+
+        return {
+          success: true,
+          message: `Compte Steam "${details.personaName}" lié avec succès ! (${ownedAppIds.length} jeux synchronisés)`,
+        };
+      } catch (err: any) {
+        return {
+          success: false,
+          message: err.message || 'Échec de liaison du compte Steam.',
+        };
+      }
+    },
+    [profile.steam]
+  );
+
+  const syncSteamLibrary = useCallback(
+    async (
+      customApiKey?: string
+    ): Promise<{ success: boolean; count?: number; message?: string }> => {
+      if (!profile.steam?.steamId) {
+        return { success: false, message: 'Aucun compte Steam lié.' };
+      }
+
+      const key = customApiKey || profile.steam.apiKey;
+      const res = await fetchSteamOwnedGames(profile.steam.steamId, key);
+
+      if (res.success) {
+        setProfile((prev) => {
+          if (!prev.steam) return prev;
+          return {
+            ...prev,
+            steam: {
+              ...prev.steam,
+              ownedAppIds: res.ownedAppIds,
+              gamesCount: res.totalCount,
+              lastSyncedAt: new Date().toISOString(),
+              apiKey: key || prev.steam.apiKey,
+            },
+          };
+        });
+        return { success: true, count: res.ownedAppIds.length, message: res.message };
+      }
+
+      return {
+        success: false,
+        count: 0,
+        message: res.message || 'Erreur lors de la synchronisation de la bibliothèque.',
+      };
+    },
+    [profile.steam]
+  );
+
+  const disconnectSteam = useCallback(() => {
+    setProfile((prev) => ({
+      ...prev,
+      steam: undefined,
+    }));
+  }, []);
+
+  // Écoute automatique du retour d'authentification Steam OpenID
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const searchParams = new URLSearchParams(window.location.search);
+    const isSteamAuth = searchParams.get('steam_auth');
+
+    if (isSteamAuth) {
+      const steamId = extractSteamIdFromOpenId(searchParams);
+      if (steamId) {
+        connectSteamByIdentifier(steamId);
+      }
+
+      // Nettoyage de l'URL pour une expérience propre
+      const cleanUrl = new URL(window.location.href);
+      const steamParams = [
+        'steam_auth',
+        'openid.ns',
+        'openid.mode',
+        'openid.op_endpoint',
+        'openid.claimed_id',
+        'openid.identity',
+        'openid.return_to',
+        'openid.response_nonce',
+        'openid.assoc_handle',
+        'openid.signed',
+        'openid.sig',
+      ];
+      steamParams.forEach((p) => cleanUrl.searchParams.delete(p));
+      window.history.replaceState(
+        {},
+        document.title,
+        cleanUrl.pathname + (cleanUrl.search ? cleanUrl.search : '') + cleanUrl.hash
+      );
+    }
+  }, [connectSteamByIdentifier]);
+
   return (
     <UserAccountContext.Provider
       value={{
@@ -291,6 +516,16 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         signUpWithEmail,
         logout,
         syncCloud,
+        steamAccount: profile.steam,
+        isSteamConnected,
+        ownedAppIdsSet,
+        connectSteamWithOpenId,
+        connectSteamByIdentifier,
+        syncSteamLibrary,
+        setManualOwnedGames,
+        toggleGameOwned,
+        isGameOwned,
+        disconnectSteam,
       }}
     >
       {children}

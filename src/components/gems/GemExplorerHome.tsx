@@ -13,9 +13,12 @@ import {
   ArrowRight,
   Search,
   Filter,
+  Check,
 } from 'lucide-react';
 import { getDailyGame } from '../../data/games';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
+import { useUserAccount } from '../../context/useUserAccount';
+import { SteamIcon } from '../common/SteamIcon';
 import { soundFx } from '../../utils/audio';
 import type { NavTab } from '../common/Navbar';
 import type { ArcadeGameId } from '../arcade/ArcadeModal';
@@ -34,6 +37,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 }) => {
   const { i18n } = useTranslation();
   const { allPlayableGames } = useSteamCatalog();
+  const { isGameOwned, isSteamConnected, toggleGameOwned } = useUserAccount();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
   // The featured canonical daily gem (guaranteed never to spoil Screenle (offset 0) or Indledle (offset 3))
@@ -54,10 +58,15 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
+  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned' | 'unowned'>('all');
   const [sortBy, setSortBy] = useState<'yearDesc' | 'yearAsc' | 'titleAsc'>('yearDesc');
   const [highlightedGameId, setHighlightedGameId] = useState<string | null>(null);
 
   const catalogGridRef = useRef<HTMLDivElement | null>(null);
+
+  const ownedCount = useMemo(() => {
+    return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
+  }, [allPlayableGames, isGameOwned]);
 
   // Check today's game completion status from localStorage
   const dailyStatus = useMemo(() => {
@@ -101,7 +110,12 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
       const matchesGenre = selectedGenre === 'all' || g.genre.includes(selectedGenre);
 
-      return matchesSearch && matchesGenre;
+      const matchesOwnership =
+        ownershipFilter === 'all' ||
+        (ownershipFilter === 'owned' && isGameOwned(g.steamUrl)) ||
+        (ownershipFilter === 'unowned' && !isGameOwned(g.steamUrl));
+
+      return matchesSearch && matchesGenre && matchesOwnership;
     });
 
     list = [...list].sort((a, b) => {
@@ -111,7 +125,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     });
 
     return list;
-  }, [allPlayableGames, searchQuery, selectedGenre, sortBy]);
+  }, [allPlayableGames, searchQuery, selectedGenre, ownershipFilter, sortBy, isGameOwned]);
 
   // Roulette: Randomly pick a gem and scroll to it
   const handleRandomPick = () => {
@@ -218,6 +232,12 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
               </div>
 
               <div>
+                {isGameOwned(dailyGem.steamUrl) && (
+                  <div className="mb-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold shadow-md">
+                    <SteamIcon className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Déjà dans votre bibliothèque Steam !</span>
+                  </div>
+                )}
                 <h3 className="text-xl font-black text-white group-hover:text-amber-400 transition mb-1">
                   {dailyGem.title}
                 </h3>
@@ -472,6 +492,19 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
               </select>
             </div>
 
+            {/* Ownership Filter */}
+            {isSteamConnected && (
+              <select
+                value={ownershipFilter}
+                onChange={(e) => setOwnershipFilter(e.target.value as 'all' | 'owned' | 'unowned')}
+                className="bg-[#0b0f19] border border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-cyan-300 font-bold focus:outline-none cursor-pointer"
+              >
+                <option value="all" className="bg-[#131a29] text-white">Toutes les pépites ({allPlayableGames.length})</option>
+                <option value="owned" className="bg-[#131a29] text-cyan-400">🎮 Dans ma bibliothèque ({ownedCount})</option>
+                <option value="unowned" className="bg-[#131a29] text-emerald-400">✨ À découvrir ({allPlayableGames.length - ownedCount})</option>
+              </select>
+            )}
+
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'yearDesc' | 'yearAsc' | 'titleAsc')}
@@ -488,6 +521,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredGems.map((game) => {
             const isHighlighted = highlightedGameId === game.id;
+            const owned = isGameOwned(game.steamUrl);
             return (
               <div
                 key={game.id}
@@ -495,6 +529,8 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 className={`bg-[#131a29] border rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group flex flex-col justify-between ${
                   isHighlighted
                     ? 'border-amber-400 ring-4 ring-amber-500/40 scale-102 bg-[#182338]'
+                    : owned
+                    ? 'border-cyan-900/50 hover:border-cyan-400/60 hover:shadow-2xl'
                     : 'border-[#1e293b] hover:border-amber-500/40 hover:shadow-2xl'
                 }`}
               >
@@ -507,6 +543,15 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#131a29] via-transparent to-transparent opacity-60" />
+
+                  {/* Badge Possédé sur Steam */}
+                  {owned && (
+                    <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-[#0e1726]/90 backdrop-blur-md border border-cyan-500/50 text-cyan-300 text-[11px] font-black flex items-center gap-1.5 shadow-lg">
+                      <SteamIcon className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>Possédé</span>
+                    </div>
+                  )}
+
                   <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-lg bg-black/80 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-white/10">
                     {game.releaseYear}
                   </div>
@@ -515,8 +560,8 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 {/* Content */}
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mb-0.5">
-                      {game.title}
+                    <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mb-0.5 flex items-center justify-between">
+                      <span>{game.title}</span>
                     </h3>
                     <div className="text-xs text-slate-400 font-medium mb-2.5">
                       {game.developer}
@@ -540,19 +585,43 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                     </div>
 
                     {/* Action Bar */}
-                    <div className="pt-3 border-t border-[#1e293b]">
+                    <div className="pt-3 border-t border-[#1e293b] flex items-center gap-2">
                       {game.steamUrl ? (
                         <a
                           href={game.steamUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition border border-slate-700/50 hover:border-amber-500/40 shadow-sm"
+                          className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition border shadow-sm ${
+                            owned
+                              ? 'bg-cyan-950/50 hover:bg-cyan-900/60 text-cyan-300 border-cyan-500/40 hover:border-cyan-400'
+                              : 'bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border-slate-700/50 hover:border-amber-500/40'
+                          }`}
                         >
-                          <span>Voir sur Steam</span>
-                          <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                          <SteamIcon className={`w-3.5 h-3.5 ${owned ? 'text-cyan-400' : 'text-slate-400'}`} />
+                          <span>{owned ? 'Dans votre bibliothèque' : 'Voir sur Steam'}</span>
+                          <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                         </a>
                       ) : (
                         <div className="w-full text-center text-[11px] text-slate-500 italic py-1">Pépite Certifiée</div>
+                      )}
+
+                      {/* Bouton de bascule rapide possédé */}
+                      {isSteamConnected && game.steamUrl && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            soundFx.playClick();
+                            toggleGameOwned(game.steamUrl);
+                          }}
+                          title={owned ? 'Marqué comme possédé (Cliquer pour retirer)' : 'Marquer comme possédé sur Steam'}
+                          className={`p-2 rounded-xl border transition ${
+                            owned
+                              ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40 hover:bg-cyan-500/30'
+                              : 'bg-slate-800/80 text-slate-500 hover:text-slate-300 border-slate-700 hover:border-slate-600'
+                          }`}
+                        >
+                          <Check className="w-4 h-4" />
+                        </button>
                       )}
                     </div>
                   </div>

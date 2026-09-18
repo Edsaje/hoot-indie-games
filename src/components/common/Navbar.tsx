@@ -16,6 +16,7 @@ import {
   Gamepad2,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
+import { SteamIcon } from './SteamIcon';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -47,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { feathersCount, unlockAchievement } = useAchievements();
-  const { profile } = useUserAccount();
+  const { profile, isSteamConnected, steamAccount } = useUserAccount();
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
 
   const currentAvatar = INDIE_AVATARS.find((a) => a.id === profile.avatarId) || INDIE_AVATARS[0];
@@ -270,11 +271,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 onOpenProfile();
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#182133] transition group"
-              title={t('nav.profile')}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#182133] transition group relative"
+              title={isSteamConnected ? `Profil (${steamAccount?.personaName} sur Steam)` : t('nav.profile')}
               aria-label={t('nav.profile')}
             >
-              <span className="text-sm">{currentAvatar.emoji}</span>
+              <div className="relative flex items-center justify-center">
+                <span className="text-sm">{currentAvatar.emoji}</span>
+                {isSteamConnected && (
+                  <span className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-[#171a21] border border-cyan-400 flex items-center justify-center text-cyan-400 shadow-sm">
+                    <SteamIcon className="w-2.5 h-2.5" />
+                  </span>
+                )}
+              </div>
               <span className="hidden xl:inline text-xs font-bold text-white max-w-[85px] truncate">
                 {profile.username}
               </span>

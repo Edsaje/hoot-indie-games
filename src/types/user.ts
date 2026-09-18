@@ -17,6 +17,17 @@ export interface IndieAvatar {
   quote: string;
 }
 
+export interface SteamAccountInfo {
+  steamId: string;
+  personaName: string;
+  profileUrl: string;
+  avatarUrl?: string;
+  lastSyncedAt: string;
+  ownedAppIds: number[];
+  gamesCount: number;
+  apiKey?: string;
+}
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -25,6 +36,7 @@ export interface UserProfile {
   createdAt: string;
   isCloudSynced: boolean;
   email?: string;
+  steam?: SteamAccountInfo;
   versusStats: {
     matchesPlayed: number;
     matchesWon: number;

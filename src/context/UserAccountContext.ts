@@ -15,6 +15,18 @@ export interface UserAccountContextType {
   signUpWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   syncCloud: () => Promise<{ success: boolean; message: string }>;
+
+  // Intégration Steam & Bibliothèque
+  steamAccount?: import('../types/user').SteamAccountInfo;
+  isSteamConnected: boolean;
+  ownedAppIdsSet: Set<number>;
+  connectSteamWithOpenId: () => void;
+  connectSteamByIdentifier: (identifier: string, apiKey?: string) => Promise<{ success: boolean; message?: string }>;
+  syncSteamLibrary: (apiKey?: string) => Promise<{ success: boolean; count?: number; message?: string }>;
+  setManualOwnedGames: (appIds: number[]) => void;
+  toggleGameOwned: (steamUrlOrAppId?: string | number | null) => void;
+  isGameOwned: (steamUrlOrAppId?: string | number | null) => boolean;
+  disconnectSteam: () => void;
 }
 
 export const UserAccountContext = createContext<UserAccountContextType | null>(null);
