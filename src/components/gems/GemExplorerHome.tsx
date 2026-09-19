@@ -21,12 +21,20 @@ import {
   Music,
   Zap,
   Swords,
+  Tag,
+  Star,
+  Flame,
+  RotateCcw,
+  X,
+  ArrowUpDown,
 } from 'lucide-react';
 import { getDailyGame } from '../../data/games';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { soundFx } from '../../utils/audio';
+import { getSteamStoreData } from '../../data/steamStoreData';
+import { getAppIdFromSteamUrl } from '../../services/steamService';
 import { getChallengeStatusForDate } from '../../utils/streakManager';
 import type { NavTab } from '../common/Navbar';
 import type { ArcadeGameId } from '../arcade/ArcadeModal';
@@ -67,7 +75,19 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned' | 'unowned'>('all');
-  const [sortBy, setSortBy] = useState<'yearDesc' | 'yearAsc' | 'titleAsc'>('yearDesc');
+  const [priceFilter, setPriceFilter] = useState<'all' | 'sale' | 'free' | 'under10' | 'under20' | '20plus'>('all');
+  const [ratingFilter, setRatingFilter] = useState<'all' | 'overwhelming' | 'very_positive' | 'positive'>('all');
+  const [sortBy, setSortBy] = useState<
+    | 'yearDesc'
+    | 'yearAsc'
+    | 'priceAsc'
+    | 'priceDesc'
+    | 'discountDesc'
+    | 'ratingDesc'
+    | 'reviewsCountDesc'
+    | 'titleAsc'
+    | 'titleDesc'
+  >('yearDesc');
   const [highlightedGameId, setHighlightedGameId] = useState<string | null>(null);
 
   const catalogGridRef = useRef<HTMLDivElement | null>(null);
@@ -88,6 +108,35 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     return Array.from(set).sort();
   }, [allPlayableGames]);
 
+  // Active non-default filters count
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (searchQuery.trim()) count++;
+    if (selectedGenre !== 'all') count++;
+    if (ownershipFilter !== 'all') count++;
+    if (priceFilter !== 'all') count++;
+    if (ratingFilter !== 'all') count++;
+    if (sortBy !== 'yearDesc') count++;
+    return count;
+  }, [searchQuery, selectedGenre, ownershipFilter, priceFilter, ratingFilter, sortBy]);
+
+  const handleResetFilters = () => {
+    soundFx.playClick();
+    setSearchQuery('');
+    setSelectedGenre('all');
+    setOwnershipFilter('all');
+    setPriceFilter('all');
+    setRatingFilter('all');
+    setSortBy('yearDesc');
+  };
+
+  // Helper for human-readable review counts (544k, 1.2M, etc.)
+  const formatReviewCount = (n: number) => {
+    if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+    if (n >= 1000) return `${Math.round(n / 1000)}k`;
+    return String(n);
+  };
+
   // Filtered and sorted gems catalog
   const filteredGems = useMemo(() => {
     let list = allPlayableGames.filter((g) => {
@@ -97,7 +146,9 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
         g.title.toLowerCase().includes(q) ||
         g.developer.toLowerCase().includes(q) ||
         g.genre.some((gen) => gen.toLowerCase().includes(q)) ||
-        String(g.releaseYear).includes(q);
+        String(g.releaseYear).includes(q) ||
+        g.hints.tagline.fr.toLowerCase().includes(q) ||
+        g.hints.tagline.en.toLowerCase().includes(q);
 
       const matchesGenre = selectedGenre === 'all' || g.genre.includes(selectedGenre);
 
@@ -106,17 +157,107 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
         (ownershipFilter === 'owned' && isGameOwned(g.steamUrl)) ||
         (ownershipFilter === 'unowned' && !isGameOwned(g.steamUrl));
 
-      return matchesSearch && matchesGenre && matchesOwnership;
+      const appId = getAppIdFromSteamUrl(g.steamUrl);
+      const storeData = getSteamStoreData(appId);
+
+      // Price & Sale filter
+      let matchesPrice = true;
+      if (priceFilter === 'sale') {
+        matchesPrice = Boolean(storeData && storeData.discountPercent > 0);
+      } else if (priceFilter === 'free') {
+        matchesPrice = Boolean(storeData && (storeData.isFree || storeData.finalPriceCents === 0));
+      } else if (priceFilter === 'under10') {
+        matchesPrice = Boolean(
+          storeData &&
+          !storeData.isFree &&
+          storeData.finalPriceCents > 0 &&
+          storeData.finalPriceCents <= 1000
+        );
+      } else if (priceFilter === 'under20') {
+        matchesPrice = Boolean(
+          storeData &&
+          !storeData.isFree &&
+          storeData.finalPriceCents > 0 &&
+          storeData.finalPriceCents <= 2000
+        );
+      } else if (priceFilter === '20plus') {
+        matchesPrice = Boolean(storeData && storeData.finalPriceCents > 2000);
+      }
+
+      // Review Rating filter
+      let matchesRating = true;
+      if (ratingFilter === 'overwhelming') {
+        matchesRating = Boolean(storeData && storeData.positivePercent >= 95);
+      } else if (ratingFilter === 'very_positive') {
+        matchesRating = Boolean(storeData && storeData.positivePercent >= 85);
+      } else if (ratingFilter === 'positive') {
+        matchesRating = Boolean(storeData && storeData.positivePercent >= 80);
+      }
+
+      return matchesSearch && matchesGenre && matchesOwnership && matchesPrice && matchesRating;
     });
 
     list = [...list].sort((a, b) => {
-      if (sortBy === 'yearDesc') return b.releaseYear - a.releaseYear;
-      if (sortBy === 'yearAsc') return a.releaseYear - b.releaseYear;
-      return a.title.localeCompare(b.title);
+      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl));
+      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl));
+
+      switch (sortBy) {
+        case 'yearDesc':
+          return b.releaseYear !== a.releaseYear
+            ? b.releaseYear - a.releaseYear
+            : a.title.localeCompare(b.title);
+
+        case 'yearAsc':
+          return a.releaseYear !== b.releaseYear
+            ? a.releaseYear - b.releaseYear
+            : a.title.localeCompare(b.title);
+
+        case 'priceAsc': {
+          const priceA = storeA?.isFree ? 0 : (storeA?.finalPriceCents ?? 99999);
+          const priceB = storeB?.isFree ? 0 : (storeB?.finalPriceCents ?? 99999);
+          if (priceA !== priceB) return priceA - priceB;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'priceDesc': {
+          const priceA = storeA?.isFree ? 0 : (storeA?.finalPriceCents ?? 0);
+          const priceB = storeB?.isFree ? 0 : (storeB?.finalPriceCents ?? 0);
+          if (priceA !== priceB) return priceB - priceA;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'discountDesc': {
+          const discA = storeA?.discountPercent || 0;
+          const discB = storeB?.discountPercent || 0;
+          if (discB !== discA) return discB - discA;
+          return (storeB?.positivePercent || 0) - (storeA?.positivePercent || 0);
+        }
+
+        case 'ratingDesc': {
+          const rateA = storeA?.positivePercent || 0;
+          const rateB = storeB?.positivePercent || 0;
+          if (rateB !== rateA) return rateB - rateA;
+          return (storeB?.totalReviews || 0) - (storeA?.totalReviews || 0);
+        }
+
+        case 'reviewsCountDesc': {
+          const countA = storeA?.totalReviews || 0;
+          const countB = storeB?.totalReviews || 0;
+          if (countB !== countA) return countB - countA;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'titleDesc':
+          return b.title.localeCompare(a.title);
+
+        case 'titleAsc':
+        default:
+          return a.title.localeCompare(b.title);
+      }
     });
 
     return list;
-  }, [allPlayableGames, searchQuery, selectedGenre, ownershipFilter, sortBy, isGameOwned]);
+  }, [allPlayableGames, searchQuery, selectedGenre, ownershipFilter, priceFilter, ratingFilter, sortBy, isGameOwned]);
 
   // Roulette: Randomly pick a gem and scroll to it
   const handleRandomPick = () => {
@@ -725,42 +866,63 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
           <div>
             <h2 className="text-2xl font-black text-white flex items-center gap-2">
               <Compass className="w-6 h-6 text-amber-400" />
-              Catalogue des Pépites Certifiées
+              <span>{lang === 'fr' ? 'Catalogue des Pépites Certifiées' : 'Certified Indie Gems Catalog'}</span>
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Explorez nos {allPlayableGames.length} chefs-d'œuvre sélectionnés et certifiés
+              {lang === 'fr'
+                ? `Explorez nos ${allPlayableGames.length} chefs-d'œuvre sélectionnés et certifiés Steam`
+                : `Explore our ${allPlayableGames.length} certified curated Steam indie masterpieces`}
             </p>
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto">
-            <span className="px-3 py-1 rounded-xl bg-[#131a29] border border-[#1e293b] text-xs font-mono text-amber-400 font-bold">
-              {filteredGems.length} affichée(s)
+            <span className="px-3 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] text-xs font-mono text-amber-400 font-bold shadow-sm">
+              {filteredGems.length} / {allPlayableGames.length} {lang === 'fr' ? 'pépite(s)' : 'gem(s)'}
             </span>
           </div>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="bg-[#131a29] border border-[#1e293b] rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-center gap-3 shadow-lg">
-          <div className="relative flex-1 w-full">
+        <div className="bg-[#131a29] border border-[#1e293b] rounded-2xl p-4 sm:p-5 mb-4 shadow-xl space-y-3.5">
+          {/* Row 1: Search Query */}
+          <div className="relative w-full">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Rechercher par titre, studio, genre..."
-              className="w-full pl-10 pr-4 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition"
+              placeholder={
+                lang === 'fr'
+                  ? 'Rechercher par titre, studio, genre, année...'
+                  : 'Search by title, developer, genre, year...'
+              }
+              className="w-full pl-10 pr-10 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition shadow-inner"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white rounded-md transition"
+                title={lang === 'fr' ? 'Effacer la recherche' : 'Clear search'}
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-slate-300 w-full sm:w-auto">
-              <Filter className="w-3.5 h-3.5 text-slate-400" />
+          {/* Row 2: Multi-criteria Select Controls */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+            {/* 1. Genre Select */}
+            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-slate-300">
+              <Filter className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <select
                 value={selectedGenre}
                 onChange={(e) => setSelectedGenre(e.target.value)}
-                className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer"
+                className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#131a29]">Tous les genres</option>
+                <option value="all" className="bg-[#131a29]">
+                  {lang === 'fr' ? 'Tous les genres' : 'All genres'}
+                </option>
                 {allGenresList.map((genre) => (
                   <option key={genre} value={genre} className="bg-[#131a29]">
                     {genre}
@@ -769,36 +931,250 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
               </select>
             </div>
 
-            {/* Ownership Filter */}
+            {/* 2. Price & Promotion Select */}
+            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-slate-300">
+              <Tag className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <select
+                value={priceFilter}
+                onChange={(e) => setPriceFilter(e.target.value as any)}
+                className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer w-full"
+              >
+                <option value="all" className="bg-[#131a29]">
+                  {lang === 'fr' ? 'Tous les prix' : 'All prices'}
+                </option>
+                <option value="sale" className="bg-[#131a29] text-emerald-400 font-bold">
+                  {lang === 'fr' ? '🏷️ En promotion / Soldes' : '🏷️ On Sale / Discounted'}
+                </option>
+                <option value="free" className="bg-[#131a29] text-cyan-300 font-bold">
+                  {lang === 'fr' ? '🆓 Gratuits / Free-to-play' : '🆓 Free to play'}
+                </option>
+                <option value="under10" className="bg-[#131a29]">
+                  {lang === 'fr' ? '💸 Moins de 10 €' : '💸 Under 10 €'}
+                </option>
+                <option value="under20" className="bg-[#131a29]">
+                  {lang === 'fr' ? '💳 Moins de 20 €' : '💳 Under 20 €'}
+                </option>
+                <option value="20plus" className="bg-[#131a29]">
+                  {lang === 'fr' ? '💎 20 € et plus' : '💎 20 € and more'}
+                </option>
+              </select>
+            </div>
+
+            {/* 3. Steam Reviews Select */}
+            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-slate-300">
+              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
+              <select
+                value={ratingFilter}
+                onChange={(e) => setRatingFilter(e.target.value as any)}
+                className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer w-full"
+              >
+                <option value="all" className="bg-[#131a29]">
+                  {lang === 'fr' ? 'Toutes les évaluations' : 'All review scores'}
+                </option>
+                <option value="overwhelming" className="bg-[#131a29] text-amber-300 font-bold">
+                  {lang === 'fr' ? '🌟 Extrêmement positifs (≥ 95%)' : '🌟 Overwhelmingly Positive (≥ 95%)'}
+                </option>
+                <option value="very_positive" className="bg-[#131a29]">
+                  {lang === 'fr' ? '⭐ Très positifs et + (≥ 85%)' : '⭐ Very Positive & up (≥ 85%)'}
+                </option>
+                <option value="positive" className="bg-[#131a29]">
+                  {lang === 'fr' ? '👍 Positifs (≥ 80%)' : '👍 Positive (≥ 80%)'}
+                </option>
+              </select>
+            </div>
+
+            {/* 4. Advanced Sorting Select */}
+            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-slate-300">
+              <ArrowUpDown className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer w-full"
+              >
+                <option value="yearDesc" className="bg-[#131a29]">
+                  {lang === 'fr' ? '📅 Date : Plus récents' : '📅 Date: Newest first'}
+                </option>
+                <option value="yearAsc" className="bg-[#131a29]">
+                  {lang === 'fr' ? '⏳ Date : Classiques (Anciens)' : '⏳ Date: Classic indies'}
+                </option>
+                <option value="discountDesc" className="bg-[#131a29] text-emerald-400 font-bold">
+                  {lang === 'fr' ? '🔥 Meilleures réductions (% solde)' : '🔥 Biggest discounts (%)'}
+                </option>
+                <option value="priceAsc" className="bg-[#131a29]">
+                  {lang === 'fr' ? '💸 Prix : Moins chers (Petits budgets)' : '💸 Price: Lowest first'}
+                </option>
+                <option value="priceDesc" className="bg-[#131a29]">
+                  {lang === 'fr' ? '💎 Prix : Plus chers d’abord' : '💎 Price: Highest first'}
+                </option>
+                <option value="ratingDesc" className="bg-[#131a29] text-amber-300 font-bold">
+                  {lang === 'fr' ? '⭐ Meilleures évaluations (% avis)' : '⭐ Best reviews rating (%)'}
+                </option>
+                <option value="reviewsCountDesc" className="bg-[#131a29]">
+                  {lang === 'fr' ? '👥 Nombre d’avis (Popularité)' : '👥 Total reviews count'}
+                </option>
+                <option value="titleAsc" className="bg-[#131a29]">
+                  {lang === 'fr' ? '🔤 Titre (A → Z)' : '🔤 Title (A → Z)'}
+                </option>
+                <option value="titleDesc" className="bg-[#131a29]">
+                  {lang === 'fr' ? '🔤 Titre (Z → A)' : '🔤 Title (Z → A)'}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          {/* Row 3: Ownership filter (if Steam connected) & Quick Filter Chips */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#1e293b]/70">
             {isSteamConnected && (
               <select
                 value={ownershipFilter}
                 onChange={(e) => setOwnershipFilter(e.target.value as 'all' | 'owned' | 'unowned')}
-                className="bg-[#0b0f19] border border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-cyan-300 font-bold focus:outline-none cursor-pointer"
+                className="bg-[#0b0f19] border border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs text-cyan-300 font-bold focus:outline-none cursor-pointer"
               >
-                <option value="all" className="bg-[#131a29] text-white">Toutes les pépites ({allPlayableGames.length})</option>
-                <option value="owned" className="bg-[#131a29] text-cyan-400">🎮 Dans ma bibliothèque ({ownedCount})</option>
-                <option value="unowned" className="bg-[#131a29] text-emerald-400">✨ À découvrir ({allPlayableGames.length - ownedCount})</option>
+                <option value="all" className="bg-[#131a29] text-white">
+                  {lang === 'fr' ? `Toutes les pépites (${allPlayableGames.length})` : `All gems (${allPlayableGames.length})`}
+                </option>
+                <option value="owned" className="bg-[#131a29] text-cyan-400">
+                  {lang === 'fr' ? `🎮 Dans ma bibliothèque (${ownedCount})` : `🎮 In my library (${ownedCount})`}
+                </option>
+                <option value="unowned" className="bg-[#131a29] text-emerald-400">
+                  {lang === 'fr' ? `✨ À découvrir (${allPlayableGames.length - ownedCount})` : `✨ To discover (${allPlayableGames.length - ownedCount})`}
+                </option>
               </select>
             )}
 
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'yearDesc' | 'yearAsc' | 'titleAsc')}
-              className="bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none cursor-pointer"
+            {/* Quick Pill 1: On Sale */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setPriceFilter(priceFilter === 'sale' ? 'all' : 'sale');
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                priceFilter === 'sale'
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 shadow-sm shadow-emerald-500/20'
+                  : 'bg-[#0b0f19] text-slate-400 hover:text-emerald-300 border-[#1e293b] hover:border-emerald-500/40'
+              }`}
             >
-              <option value="yearDesc" className="bg-[#131a29]">Plus récents</option>
-              <option value="yearAsc" className="bg-[#131a29]">Plus anciens</option>
-              <option value="titleAsc" className="bg-[#131a29]">Titre (A-Z)</option>
-            </select>
+              <Flame className="w-3.5 h-3.5 text-emerald-400" />
+              <span>{lang === 'fr' ? 'En solde' : 'On sale'}</span>
+            </button>
+
+            {/* Quick Pill 2: Under 10€ */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setPriceFilter(priceFilter === 'under10' ? 'all' : 'under10');
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                priceFilter === 'under10'
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-sm shadow-amber-500/20'
+                  : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b] hover:border-amber-500/40'
+              }`}
+            >
+              <span>💸</span>
+              <span>&lt; 10 €</span>
+            </button>
+
+            {/* Quick Pill 3: Free */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setPriceFilter(priceFilter === 'free' ? 'all' : 'free');
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                priceFilter === 'free'
+                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/60 shadow-sm shadow-cyan-500/20'
+                  : 'bg-[#0b0f19] text-slate-400 hover:text-cyan-300 border-[#1e293b] hover:border-cyan-500/40'
+              }`}
+            >
+              <span>🆓</span>
+              <span>{lang === 'fr' ? 'Gratuits' : 'Free'}</span>
+            </button>
+
+            {/* Quick Pill 4: Overwhelmingly Positive */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setRatingFilter(ratingFilter === 'overwhelming' ? 'all' : 'overwhelming');
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                ratingFilter === 'overwhelming'
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-sm shadow-amber-500/20'
+                  : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b] hover:border-amber-500/40'
+              }`}
+            >
+              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+              <span>{lang === 'fr' ? 'Top Avis (≥ 95%)' : 'Top Rated (≥ 95%)'}</span>
+            </button>
+
+            {/* Quick Pill 5: Most Popular */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setSortBy(sortBy === 'reviewsCountDesc' ? 'yearDesc' : 'reviewsCountDesc');
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                sortBy === 'reviewsCountDesc'
+                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/60 shadow-sm shadow-purple-500/20'
+                  : 'bg-[#0b0f19] text-slate-400 hover:text-purple-300 border-[#1e293b] hover:border-purple-500/40'
+              }`}
+            >
+              <span>👥</span>
+              <span>{lang === 'fr' ? 'Populaires' : 'Most Popular'}</span>
+            </button>
+
+            {/* Reset filters button (if any active) */}
+            {activeFiltersCount > 0 && (
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                className="ml-auto inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-bold transition cursor-pointer"
+                title={lang === 'fr' ? 'Réinitialiser tous les filtres' : 'Reset all filters'}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>{lang === 'fr' ? `Réinitialiser (${activeFiltersCount})` : `Reset (${activeFiltersCount})`}</span>
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Empty State when no games match */}
+        {filteredGems.length === 0 && (
+          <div className="p-8 sm:p-12 text-center rounded-3xl bg-[#131a29] border border-[#1e293b] shadow-xl my-8 max-w-lg mx-auto">
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto mb-4">
+              <Search className="w-7 h-7" />
+            </div>
+            <h3 className="text-lg font-black text-white mb-2">
+              {lang === 'fr' ? 'Aucune pépite trouvée' : 'No indie gems found'}
+            </h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-5">
+              {lang === 'fr'
+                ? 'Aucun jeu ne correspond à l’ensemble de vos filtres actuels. Essayez d’ajuster vos critères de prix, de note ou de genre.'
+                : 'No games match all your selected filters. Try broadening your price, rating, or genre criteria.'}
+            </p>
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition cursor-pointer shadow-lg shadow-amber-500/20"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>{lang === 'fr' ? 'Réinitialiser tous les filtres' : 'Reset all filters'}</span>
+            </button>
+          </div>
+        )}
 
         {/* Gems Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredGems.map((game) => {
             const isHighlighted = highlightedGameId === game.id;
             const owned = isGameOwned(game.steamUrl);
+            const appId = getAppIdFromSteamUrl(game.steamUrl);
+            const storeData = getSteamStoreData(appId);
+
             return (
               <div
                 key={game.id}
@@ -811,7 +1187,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                     : 'border-[#1e293b] hover:border-amber-500/40 hover:shadow-2xl'
                 }`}
               >
-                {/* Thumbnail */}
+                {/* Thumbnail & Badges */}
                 <div className="relative aspect-video overflow-hidden bg-slate-950">
                   <img
                     src={game.screenshots[5] || game.screenshots[0]}
@@ -821,16 +1197,46 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#131a29] via-transparent to-transparent opacity-60" />
 
-                  {/* Badge Possédé sur Steam */}
-                  {owned && (
-                    <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-[#0e1726]/90 backdrop-blur-md border border-cyan-500/50 text-cyan-300 text-[11px] font-black flex items-center gap-1.5 shadow-lg">
-                      <SteamIcon className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Possédé</span>
-                    </div>
-                  )}
+                  {/* Top-Left Badges: Owned & Discount */}
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                    {owned && (
+                      <div className="px-2.5 py-1 rounded-lg bg-[#0e1726]/90 backdrop-blur-md border border-cyan-500/50 text-cyan-300 text-[11px] font-black flex items-center gap-1.5 shadow-lg">
+                        <SteamIcon className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>{lang === 'fr' ? 'Possédé' : 'Owned'}</span>
+                      </div>
+                    )}
+                    {storeData && storeData.discountPercent > 0 && (
+                      <div className="px-2 py-0.5 rounded-lg bg-emerald-500 text-black font-black text-xs shadow-lg flex items-center gap-1">
+                        <Flame className="w-3 h-3 fill-black" />
+                        <span>-{storeData.discountPercent}%</span>
+                      </div>
+                    )}
+                  </div>
 
-                  <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-lg bg-black/80 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-white/10">
-                    {game.releaseYear}
+                  {/* Top-Right Badges: Price & Release Year */}
+                  <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+                    {storeData ? (
+                      storeData.discountPercent > 0 ? (
+                        <div className="px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-xs font-mono font-bold text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shadow-md">
+                          <span className="line-through text-slate-500 text-[10px]">
+                            {storeData.formattedInitialPrice}
+                          </span>
+                          <span>{storeData.formattedFinalPrice}</span>
+                        </div>
+                      ) : storeData.isFree ? (
+                        <div className="px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-xs font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
+                          {lang === 'fr' ? 'Gratuit' : 'Free'}
+                        </div>
+                      ) : (
+                        <div className="px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-xs font-mono font-bold text-slate-200 border border-white/10 shadow-md">
+                          {storeData.formattedFinalPrice}
+                        </div>
+                      )
+                    ) : null}
+
+                    <div className="px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-white/10 shadow-md">
+                      {game.releaseYear}
+                    </div>
                   </div>
                 </div>
 
@@ -840,9 +1246,23 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                     <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mb-0.5 flex items-center justify-between">
                       <span>{game.title}</span>
                     </h3>
-                    <div className="text-xs text-slate-400 font-medium mb-2.5">
+                    <div className="text-xs text-slate-400 font-medium mb-2">
                       {game.developer}
                     </div>
+
+                    {/* Steam Reviews Score Pill */}
+                    {storeData && storeData.totalReviews > 0 && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-950/40 border border-sky-500/30 text-sky-300 text-[11px] font-bold font-mono">
+                          <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                          <span>{storeData.positivePercent}%</span>
+                        </span>
+                        <span className="text-[11px] text-slate-400 truncate">
+                          {storeData.reviewScoreDesc[lang]} · {formatReviewCount(storeData.totalReviews)} {lang === 'fr' ? 'avis' : 'reviews'}
+                        </span>
+                      </div>
+                    )}
+
                     <p className="text-xs text-slate-300 italic mb-4 line-clamp-2 leading-relaxed">
                       "{game.hints.tagline[lang]}"
                     </p>
@@ -871,12 +1291,26 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                           className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition border shadow-sm ${
                             owned
                               ? 'bg-cyan-950/50 hover:bg-cyan-900/60 text-cyan-300 border-cyan-500/40 hover:border-cyan-400'
+                              : storeData && storeData.discountPercent > 0
+                              ? 'bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 border-emerald-500/40 hover:border-emerald-400'
                               : 'bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border-slate-700/50 hover:border-amber-500/40'
                           }`}
                         >
                           <SteamIcon className={`w-3.5 h-3.5 ${owned ? 'text-cyan-400' : 'text-slate-400'}`} />
-                          <span>{owned ? 'Dans votre bibliothèque' : 'Voir sur Steam'}</span>
-                          <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                          <span className="truncate">
+                            {owned
+                              ? lang === 'fr'
+                                ? 'Dans votre bibliothèque'
+                                : 'In your library'
+                              : storeData && storeData.discountPercent > 0
+                              ? `${lang === 'fr' ? 'Sur Steam' : 'On Steam'} · ${storeData.formattedFinalPrice} (-${storeData.discountPercent}%)`
+                              : storeData
+                              ? `${lang === 'fr' ? 'Sur Steam' : 'On Steam'} · ${storeData.formattedFinalPrice}`
+                              : lang === 'fr'
+                              ? 'Voir sur Steam'
+                              : 'View on Steam'}
+                          </span>
+                          <ExternalLink className="w-3.5 h-3.5 opacity-60 shrink-0" />
                         </a>
                       ) : (
                         <div className="w-full text-center text-[11px] text-slate-500 italic py-1">Pépite Certifiée</div>
@@ -890,8 +1324,16 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                             soundFx.playClick();
                             toggleGameOwned(game.steamUrl);
                           }}
-                          title={owned ? 'Marqué comme possédé (Cliquer pour retirer)' : 'Marquer comme possédé sur Steam'}
-                          className={`p-2 rounded-xl border transition ${
+                          title={
+                            owned
+                              ? lang === 'fr'
+                                ? 'Marqué comme possédé (Cliquer pour retirer)'
+                                : 'Marked as owned (Click to unmark)'
+                              : lang === 'fr'
+                              ? 'Marquer comme possédé sur Steam'
+                              : 'Mark as owned on Steam'
+                          }
+                          className={`p-2 rounded-xl border transition cursor-pointer ${
                             owned
                               ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40 hover:bg-cyan-500/30'
                               : 'bg-slate-800/80 text-slate-500 hover:text-slate-300 border-slate-700 hover:border-slate-600'

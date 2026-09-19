@@ -12,11 +12,15 @@ import {
   ChevronLeft,
   ChevronRight,
   Trash2,
+  Star,
+  RotateCcw,
 } from 'lucide-react';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import type { Game } from '../../types/game';
 import type { SteamCatalogGame } from '../../services/steamCatalog';
 import { soundFx } from '../../utils/audio';
+import { getSteamStoreData } from '../../data/steamStoreData';
+import { getAppIdFromSteamUrl } from '../../services/steamService';
 
 interface SteamCatalogExplorerProps {
   onSelectGameForIndledle?: (game: Game) => void;
@@ -33,6 +37,19 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [selectedArtStyle, setSelectedArtStyle] = useState<string>('all');
   const [selectedCamera, setSelectedCamera] = useState<string>('all');
+  const [priceFilter, setPriceFilter] = useState<'all' | 'sale' | 'free' | 'under10' | 'under20' | '20plus'>('all');
+  const [ratingFilter, setRatingFilter] = useState<'all' | 'overwhelming' | 'very_positive' | 'positive'>('all');
+  const [sortBy, setSortBy] = useState<
+    | 'yearDesc'
+    | 'yearAsc'
+    | 'priceAsc'
+    | 'priceDesc'
+    | 'discountDesc'
+    | 'ratingDesc'
+    | 'reviewsCountDesc'
+    | 'titleAsc'
+    | 'titleDesc'
+  >('yearDesc');
   const [selectedGameForModal, setSelectedGameForModal] = useState<Game | null>(null);
   const [modalActiveScreenshot, setModalActiveScreenshot] = useState<number>(0);
 
@@ -49,9 +66,32 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
     return entries.slice(0, 14).map(([name]) => name);
   }, [stats.genresCount]);
 
-  // Filtrage des jeux
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (searchQuery.trim()) count++;
+    if (selectedGenre !== 'all') count++;
+    if (selectedArtStyle !== 'all') count++;
+    if (selectedCamera !== 'all') count++;
+    if (priceFilter !== 'all') count++;
+    if (ratingFilter !== 'all') count++;
+    if (sortBy !== 'yearDesc') count++;
+    return count;
+  }, [searchQuery, selectedGenre, selectedArtStyle, selectedCamera, priceFilter, ratingFilter, sortBy]);
+
+  const handleResetFilters = () => {
+    soundFx.playClick();
+    setSearchQuery('');
+    setSelectedGenre('all');
+    setSelectedArtStyle('all');
+    setSelectedCamera('all');
+    setPriceFilter('all');
+    setRatingFilter('all');
+    setSortBy('yearDesc');
+  };
+
+  // Filtrage et tri avancé des jeux
   const filteredGames = useMemo(() => {
-    return allPlayableGames.filter((game) => {
+    let list = allPlayableGames.filter((game) => {
       // Filtre texte
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -79,9 +119,99 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
         return false;
       }
 
+      const appId = getAppIdFromSteamUrl(game.steamUrl);
+      const storeData = getSteamStoreData(appId);
+
+      // Filtre Prix & Soldes
+      if (priceFilter === 'sale') {
+        if (!storeData || storeData.discountPercent <= 0) return false;
+      } else if (priceFilter === 'free') {
+        if (!storeData || (!storeData.isFree && storeData.finalPriceCents > 0)) return false;
+      } else if (priceFilter === 'under10') {
+        if (!storeData || storeData.isFree || storeData.finalPriceCents <= 0 || storeData.finalPriceCents > 1000) {
+          return false;
+        }
+      } else if (priceFilter === 'under20') {
+        if (!storeData || storeData.isFree || storeData.finalPriceCents <= 0 || storeData.finalPriceCents > 2000) {
+          return false;
+        }
+      } else if (priceFilter === '20plus') {
+        if (!storeData || storeData.finalPriceCents <= 2000) return false;
+      }
+
+      // Filtre Avis
+      if (ratingFilter === 'overwhelming') {
+        if (!storeData || storeData.positivePercent < 95) return false;
+      } else if (ratingFilter === 'very_positive') {
+        if (!storeData || storeData.positivePercent < 85) return false;
+      } else if (ratingFilter === 'positive') {
+        if (!storeData || storeData.positivePercent < 80) return false;
+      }
+
       return true;
     });
-  }, [allPlayableGames, searchQuery, selectedGenre, selectedArtStyle, selectedCamera]);
+
+    list = [...list].sort((a, b) => {
+      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl));
+      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl));
+
+      switch (sortBy) {
+        case 'yearDesc':
+          return b.releaseYear !== a.releaseYear
+            ? b.releaseYear - a.releaseYear
+            : a.title.localeCompare(b.title);
+
+        case 'yearAsc':
+          return a.releaseYear !== b.releaseYear
+            ? a.releaseYear - b.releaseYear
+            : a.title.localeCompare(b.title);
+
+        case 'priceAsc': {
+          const priceA = storeA?.isFree ? 0 : (storeA?.finalPriceCents ?? 99999);
+          const priceB = storeB?.isFree ? 0 : (storeB?.finalPriceCents ?? 99999);
+          if (priceA !== priceB) return priceA - priceB;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'priceDesc': {
+          const priceA = storeA?.isFree ? 0 : (storeA?.finalPriceCents ?? 0);
+          const priceB = storeB?.isFree ? 0 : (storeB?.finalPriceCents ?? 0);
+          if (priceA !== priceB) return priceB - priceA;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'discountDesc': {
+          const discA = storeA?.discountPercent || 0;
+          const discB = storeB?.discountPercent || 0;
+          if (discB !== discA) return discB - discA;
+          return (storeB?.positivePercent || 0) - (storeA?.positivePercent || 0);
+        }
+
+        case 'ratingDesc': {
+          const rateA = storeA?.positivePercent || 0;
+          const rateB = storeB?.positivePercent || 0;
+          if (rateB !== rateA) return rateB - rateA;
+          return (storeB?.totalReviews || 0) - (storeA?.totalReviews || 0);
+        }
+
+        case 'reviewsCountDesc': {
+          const countA = storeA?.totalReviews || 0;
+          const countB = storeB?.totalReviews || 0;
+          if (countB !== countA) return countB - countA;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'titleDesc':
+          return b.title.localeCompare(a.title);
+
+        case 'titleAsc':
+        default:
+          return a.title.localeCompare(b.title);
+      }
+    });
+
+    return list;
+  }, [allPlayableGames, searchQuery, selectedGenre, selectedArtStyle, selectedCamera, priceFilter, ratingFilter, sortBy]);
 
   // Import direct d'un jeu Steam par AppID ou URL
   const handleDirectImport = async (e: React.FormEvent) => {
@@ -347,15 +477,15 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
 
       {/* Barres de Recherche & Filtres */}
       <div className="space-y-4">
-        <div className="flex flex-col md:flex-row gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Recherche texte */}
-          <div className="relative flex-1">
+          <div className="relative sm:col-span-2 lg:col-span-2">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Rechercher par titre, studio, tag ou synopsis..."
+              placeholder={lang === 'fr' ? 'Rechercher par titre, studio, tag ou synopsis...' : 'Search by title, developer, tag...'}
               className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
             />
             {searchQuery && (
@@ -368,18 +498,63 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             )}
           </div>
 
+          {/* Filtre Prix & Soldes */}
+          <select
+            value={priceFilter}
+            onChange={(e) => setPriceFilter(e.target.value as any)}
+            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="all">{lang === 'fr' ? 'Tous les prix' : 'All prices'}</option>
+            <option value="sale" className="text-emerald-400 font-bold">{lang === 'fr' ? '🏷️ En promotion / Solde' : '🏷️ On Sale'}</option>
+            <option value="free" className="text-cyan-300 font-bold">{lang === 'fr' ? '🆓 Gratuits' : '🆓 Free'}</option>
+            <option value="under10">{lang === 'fr' ? '💸 Moins de 10 €' : '💸 Under 10 €'}</option>
+            <option value="under20">{lang === 'fr' ? '💳 Moins de 20 €' : '💳 Under 20 €'}</option>
+            <option value="20plus">{lang === 'fr' ? '💎 20 € et plus' : '💎 20 € and more'}</option>
+          </select>
+
+          {/* Filtre Avis Steam */}
+          <select
+            value={ratingFilter}
+            onChange={(e) => setRatingFilter(e.target.value as any)}
+            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="all">{lang === 'fr' ? 'Toutes les notes' : 'All reviews'}</option>
+            <option value="overwhelming" className="text-amber-300 font-bold">{lang === 'fr' ? '🌟 Extrêmement positifs (≥95%)' : '🌟 Overwhelmingly Positive (≥95%)'}</option>
+            <option value="very_positive">{lang === 'fr' ? '⭐ Très positifs (≥85%)' : '⭐ Very Positive (≥85%)'}</option>
+            <option value="positive">{lang === 'fr' ? '👍 Positifs (≥80%)' : '👍 Positive (≥80%)'}</option>
+          </select>
+
+          {/* Tri Avancé */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="yearDesc">{lang === 'fr' ? '📅 Plus récents' : '📅 Newest first'}</option>
+            <option value="yearAsc">{lang === 'fr' ? '⏳ Classiques (Anciens)' : '⏳ Oldest first'}</option>
+            <option value="discountDesc" className="text-emerald-400 font-bold">{lang === 'fr' ? '🔥 Meilleures réductions (%)' : '🔥 Biggest discount (%)'}</option>
+            <option value="priceAsc">{lang === 'fr' ? '💸 Prix croissant' : '💸 Price: Low to High'}</option>
+            <option value="priceDesc">{lang === 'fr' ? '💎 Prix décroissant' : '💎 Price: High to Low'}</option>
+            <option value="ratingDesc" className="text-amber-300 font-bold">{lang === 'fr' ? '⭐ Meilleures évaluations' : '⭐ Highest Rated'}</option>
+            <option value="reviewsCountDesc">{lang === 'fr' ? '👥 Popularité (Avis)' : '👥 Total reviews'}</option>
+            <option value="titleAsc">{lang === 'fr' ? '🔤 Titre (A → Z)' : '🔤 Title (A → Z)'}</option>
+          </select>
+        </div>
+
+        {/* Ligne 2 : ArtStyle & Caméra */}
+        <div className="flex flex-wrap items-center gap-2">
           {/* Filtre ArtStyle */}
           <select
             value={selectedArtStyle}
             onChange={(e) => setSelectedArtStyle(e.target.value)}
-            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500"
+            className="px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
           >
-            <option value="all">Tous les styles artistiques</option>
+            <option value="all">{lang === 'fr' ? 'Tous les styles artistiques' : 'All art styles'}</option>
             <option value="Pixel Art">Pixel Art</option>
-            <option value="2D Hand-drawn">2D Dessiné à la main</option>
-            <option value="Stylized 3D">3D Stylisé</option>
-            <option value="Retro Low-poly 3D">3D Rétro Low-poly</option>
-            <option value="Realistic 3D">3D Réaliste</option>
+            <option value="2D Hand-drawn">{lang === 'fr' ? '2D Dessiné à la main' : '2D Hand-drawn'}</option>
+            <option value="Stylized 3D">{lang === 'fr' ? '3D Stylisé' : 'Stylized 3D'}</option>
+            <option value="Retro Low-poly 3D">{lang === 'fr' ? '3D Rétro Low-poly' : 'Retro Low-poly 3D'}</option>
+            <option value="Realistic 3D">{lang === 'fr' ? '3D Réaliste' : 'Realistic 3D'}</option>
             <option value="Monochrome">Monochrome</option>
           </select>
 
@@ -387,15 +562,63 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
           <select
             value={selectedCamera}
             onChange={(e) => setSelectedCamera(e.target.value)}
-            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500"
+            className="px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
           >
-            <option value="all">Toutes les caméras</option>
-            <option value="2D Side-scroller">Vue de côté 2D</option>
-            <option value="2D Top-down">Vue de dessus 2D</option>
-            <option value="Isometric / 2.5D">Isométrique / 2.5D</option>
-            <option value="First-Person">Première personne (FPS)</option>
-            <option value="Third-Person">Troisième personne 3D</option>
+            <option value="all">{lang === 'fr' ? 'Toutes les caméras' : 'All cameras'}</option>
+            <option value="2D Side-scroller">{lang === 'fr' ? 'Vue de côté 2D' : '2D Side-scroller'}</option>
+            <option value="2D Top-down">{lang === 'fr' ? 'Vue de dessus 2D' : '2D Top-down'}</option>
+            <option value="Isometric / 2.5D">{lang === 'fr' ? 'Isométrique / 2.5D' : 'Isometric / 2.5D'}</option>
+            <option value="First-Person">{lang === 'fr' ? 'Première personne (FPS)' : 'First-Person'}</option>
+            <option value="Third-Person">{lang === 'fr' ? 'Troisième personne 3D' : 'Third-Person'}</option>
           </select>
+
+          {/* Quick pills */}
+          <button
+            type="button"
+            onClick={() => setPriceFilter(priceFilter === 'sale' ? 'all' : 'sale')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${
+              priceFilter === 'sale'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-emerald-300 border-[#1e293b]'
+            }`}
+          >
+            🏷️ {lang === 'fr' ? 'En solde' : 'On sale'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setPriceFilter(priceFilter === 'under10' ? 'all' : 'under10')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${
+              priceFilter === 'under10'
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/60'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b]'
+            }`}
+          >
+            💸 &lt; 10 €
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setRatingFilter(ratingFilter === 'overwhelming' ? 'all' : 'overwhelming')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${
+              ratingFilter === 'overwhelming'
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/60'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b]'
+            }`}
+          >
+            🌟 Top Avis (≥ 95%)
+          </button>
+
+          {activeFiltersCount > 0 && (
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="ml-auto inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-bold transition cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>{lang === 'fr' ? `Réinitialiser (${activeFiltersCount})` : `Reset (${activeFiltersCount})`}</span>
+            </button>
+          )}
         </div>
 
         {/* Badges de genres rapides */}
@@ -430,13 +653,15 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
       <div>
         <div className="flex items-center justify-between mb-3 text-xs text-slate-400 font-semibold">
           <span>{filteredGames.length} jeux trouvés</span>
-          <span>Résolution native Steam CDN</span>
+          <span>Données officielles Valve &amp; Steam Store</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredGames.slice(0, 48).map((game) => {
             const steamGame = game as SteamCatalogGame;
             const coverUrl = steamGame.headerImage || game.screenshots[game.screenshots.length - 1];
+            const appId = getAppIdFromSteamUrl(game.steamUrl) || steamGame.steamAppId;
+            const storeData = getSteamStoreData(appId);
 
             return (
               <div
@@ -453,9 +678,25 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                       loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <span className="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-slate-950/90 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-slate-700">
-                      {game.releaseYear}
-                    </span>
+
+                    {/* Badge Année & Prix */}
+                    <div className="absolute top-2 right-2 flex items-center gap-1">
+                      {storeData && storeData.discountPercent > 0 ? (
+                        <span className="px-2 py-0.5 rounded-lg bg-emerald-500 text-black font-black text-xs shadow-md">
+                          -{storeData.discountPercent}%
+                        </span>
+                      ) : null}
+                      <span className="px-2.5 py-1 rounded-lg bg-slate-950/90 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-slate-700">
+                        {game.releaseYear}
+                      </span>
+                    </div>
+
+                    {storeData && (
+                      <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-[11px] font-mono font-bold text-slate-200 border border-white/10">
+                        {storeData.formattedFinalPrice}
+                      </div>
+                    )}
+
                     {steamGame.isCustomImport && (
                       <span className="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-emerald-500 text-xs font-bold uppercase text-slate-950">
                         Import Direct
@@ -470,6 +711,15 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                   <p className="text-xs text-slate-300 line-clamp-1 mt-0.5">
                     {game.developer}
                   </p>
+
+                  {/* Note Steam */}
+                  {storeData && storeData.totalReviews > 0 && (
+                    <div className="flex items-center gap-1.5 mt-1.5 text-xs text-sky-400">
+                      <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                      <span className="font-bold font-mono">{storeData.positivePercent}%</span>
+                      <span className="text-slate-500 text-[11px]">({storeData.reviewScoreDesc[lang]})</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Badges styles & caméras */}
@@ -575,6 +825,41 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
 
             {/* Description & Caractéristiques */}
             <div className="p-4 bg-[#0b0f19] border border-[#1e293b] rounded-2xl space-y-3">
+              {(() => {
+                const modalAppId = getAppIdFromSteamUrl(selectedGameForModal.steamUrl) || (selectedGameForModal as SteamCatalogGame).steamAppId;
+                const modalStore = getSteamStoreData(modalAppId);
+                if (!modalStore) return null;
+                return (
+                  <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#131a29] border border-[#1e293b]">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-400 font-bold uppercase">{lang === 'fr' ? 'Prix Steam :' : 'Steam Price:'}</span>
+                      {modalStore.discountPercent > 0 ? (
+                        <div className="flex items-center gap-1.5">
+                          <span className="line-through text-slate-500 text-xs">{modalStore.formattedInitialPrice}</span>
+                          <span className="text-emerald-400 font-black text-sm">{modalStore.formattedFinalPrice}</span>
+                          <span className="px-2 py-0.5 rounded bg-emerald-500 text-black font-black text-xs">-{modalStore.discountPercent}%</span>
+                        </div>
+                      ) : modalStore.isFree ? (
+                        <span className="text-cyan-300 font-black text-sm">{lang === 'fr' ? 'Gratuit' : 'Free'}</span>
+                      ) : (
+                        <span className="text-white font-black text-sm">{modalStore.formattedFinalPrice}</span>
+                      )}
+                    </div>
+
+                    {modalStore.totalReviews > 0 && (
+                      <div className="flex items-center gap-1.5 text-xs">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-950/50 border border-sky-500/40 text-sky-300 font-mono font-bold">
+                          <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                          <span>{modalStore.positivePercent}%</span>
+                        </span>
+                        <span className="text-slate-300 font-semibold">{modalStore.reviewScoreDesc[lang]}</span>
+                        <span className="text-slate-500">({modalStore.totalReviews.toLocaleString()} avis)</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
               <p className="text-xs text-slate-300 italic leading-relaxed">
                 « {selectedGameForModal.hints.tagline[lang]} »
               </p>
@@ -611,7 +896,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                   className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition"
                 >
                   <ExternalLink className="w-4 h-4 text-amber-400" />
-                  <span>Voir la page Magasin Steam</span>
+                  <span>{lang === 'fr' ? 'Voir la page Magasin Steam' : 'View on Steam Store'}</span>
                 </a>
               ) : (
                 <div />

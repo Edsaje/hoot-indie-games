@@ -48,8 +48,14 @@
 17. **Calendrier & Préservation de Flamme de Série (J et J-1) :**
     - Restreindre l'accès du calendrier au jour même (J) et à la veille (J-1) pour préserver la série, avec verrouillage des jours plus anciens ("mais pas plus loin").
     - Message explicatif en fin de partie si la série est brisée suite à un oubli d'un jour, avec bouton de rattrapage direct vers le défi de la veille.
-18. **Tri Avancé des Jeux Steam (Prix, Promotions, Notes, etc.) :**
-    - Enrichir l'Explorateur de Pépites et le Catalogue Steam avec des filtres et options de tri : par prix (croissant, décroissant, gratuits), par promotion en cours (% de solde Steam) et par évaluations positives / date de sortie.
+18. **Tri Avancé des Jeux Steam (Prix, Promotions, Notes, etc.) (100% Déployé) :**
+    - Données officielles certifiées moissonnées pour les 147 pépites via l'API Steam Store (`src/data/steamStoreData.ts` & `scripts/syncSteamStoreData.ts`) : prix exacts en euros, statut gratuit, réductions en cours (-X%), volume total d'avis et taux de critiques positives.
+    - Filtres multi-critères réactifs dans l'Explorateur de Pépites (`GemExplorerHome.tsx`) et le Catalogue Steam (`SteamCatalogExplorer.tsx`) :
+      - **Filtre Prix & Soldes** : Tous les prix, En promotion / En solde 🏷️, Gratuits 🆓, Moins de 10 € 💸, Moins de 20 € 💳, 20 € et plus 💎.
+      - **Filtre Évaluations Steam** : Toutes les notes, Extrêmement positifs (≥ 95%) 🌟, Très positifs et + (≥ 85%) ⭐, Positifs (≥ 80%) 👍.
+      - **Tri Avancé** : Plus récents 📅, Classiques anciens ⏳, Meilleures réductions 🔥, Prix croissant 💸, Prix décroissant 💎, Meilleures évaluations ⭐, Nombre d'avis / Popularité 👥, Titre (A → Z), Titre (Z → A).
+      - **Pilules de filtrage rapide en 1 clic** (En solde, < 10 €, Gratuits, Top Avis, Populaires) avec compteur dynamique et bouton de réinitialisation instantané.
+      - **Affichage enrichi sur chaque carte de pépite** : pastille de solde `-XX%` animée, prix barré / prix final, badge d'évaluations Steam avec taux de recommandation et volume total d'avis.
 19. **Système Anti-Triche F12 & Inspection Réseau (Anti-Spoiler) :**
     - Sécuriser les réponses des jeux quotidiens (Screenle, Indledle, Linkle) pour empêcher la triche via l'ouverture des DevTools (F12) et l'interception de requêtes réseau.
     - Obfuscation et hashage des réponses / payloads réseau tant que la partie n'est pas terminée.
@@ -339,13 +345,13 @@
   - **Restriction stricte du calendrier** : Accès limité au jour courant (J) et à la veille (J-1) pour préserver la série, verrouillage complet des jours antérieurs (`< J-1`) et futurs.
   - **Sauvegarde et rattrapage de flamme** : Possibilité de compléter le défi de la veille pour reconnecter et restaurer sa série ininterrompue.
   - **Bannière d'alerte en fin de partie** : Avertissement clair en cas de fin de série suite à un oubli d'un jour avec bouton interactif `[⚡ Rattraper le jeu d'hier (Veille)]`.
-- [ ] **Tri Avancé des Jeux Steam (Prix, Promotions, Évaluations, etc.)** :
-  - Intégrer dans l'Explorateur de Pépites et le Catalogue Steam des filtres et critères de tri avancés :
-    - **Tri par prix** : Gratuit / Free-to-play, Prix croissant (petits budgets), Prix décroissant.
-    - **Tri par promotion** : Jeux actuellement en solde sur Steam, tri par pourcentage de réduction décroissant (-50%, -75%, etc.).
-    - **Tri par avis & réputation** : % d'avis positifs Steam (Extrêmement positifs / Très positifs), nombre total d'avis.
-    - **Tri par date de sortie** : Plus récents d'abord, classiques du jeu indé.
-    - **Tri alphabétique** : A-Z, Z-A.
+- [x] **Tri Avancé des Jeux Steam (Prix, Promotions, Évaluations, etc.)** :
+  - Intégration dans l'Explorateur de Pépites (`GemExplorerHome.tsx`) et le Catalogue Steam (`SteamCatalogExplorer.tsx`) :
+    - **Tri multi-critères** : Plus récents 📅, Classiques du jeu indé ⏳, Meilleures réductions en solde 🔥, Prix croissant (Petits budgets) 💸, Prix décroissant 💎, Meilleures évaluations (% avis) ⭐, Nombre d'avis (Popularité) 👥, Tri alphabétique (A-Z, Z-A).
+    - **Filtres de prix & soldes** : Gratuits / Free-to-play 🆓, En promotion / Soldes Steam 🏷️, Moins de 10 € 💸, Moins de 20 € 💳, 20 € et plus 💎.
+    - **Filtres d'évaluations Steam** : Extrêmement positifs (≥ 95%) 🌟, Très positifs (≥ 85%) ⭐, Positifs (≥ 80%) 👍.
+    - **Pilules de filtrage 1-clic & Réinitialisation** : 5 badges dynamiques + bouton de reset complet avec compteur de filtres actifs.
+    - **Base de données certifiée Valve** : Moissonnage automatisé pour les 147 pépites (`src/data/steamStoreData.ts` & `scripts/syncSteamStoreData.ts`) avec affichage des prix réels, réductions `-XX%`, notes et volume d'avis sur chaque carte.
 - [ ] **Audit & Verrouillage Anti-Triche DevTools (F12) sur TOUS nos Jeux** :
   - **1. Mini-Jeux Quotidiens de Déduction** :
     - *Screenle* : Vérifier que les noms de fichiers d'images CDN et attributs `alt` n'indiquent pas le titre du jeu mystère. Masquer l'objet de jeu complet avant la résolution.
