@@ -34,7 +34,7 @@ export async function createVersusRoom(
   roomCode: string,
   profile: VersusPlayerProfile
 ): Promise<{ success: boolean; roomCode: string; playerId: string; message?: string }> {
-  const res = await fetch(API_ENDPOINT, {
+  const res = await fetch(`${API_ENDPOINT}?action=create_room`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -64,7 +64,7 @@ export async function joinVersusRoom(
   profile: VersusPlayerProfile,
   existingPlayerId?: string
 ): Promise<{ success: boolean; roomCode: string; playerId: string; opponent?: any; message?: string }> {
-  const res = await fetch(API_ENDPOINT, {
+  const res = await fetch(`${API_ENDPOINT}?action=join_room`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -96,7 +96,7 @@ export async function sendVersusMessage(
   message: any
 ): Promise<boolean> {
   try {
-    const res = await fetch(API_ENDPOINT, {
+    const res = await fetch(`${API_ENDPOINT}?action=send_message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -123,7 +123,7 @@ export async function pollVersusEvents(
   playerId: string,
   lastMessageId: number
 ): Promise<VersusPollResponse> {
-  const res = await fetch(API_ENDPOINT, {
+  const res = await fetch(`${API_ENDPOINT}?action=poll_events`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -162,7 +162,7 @@ export async function pollVersusEvents(
  */
 export async function leaveVersusRoom(roomCode: string, playerId: string): Promise<void> {
   try {
-    await fetch(API_ENDPOINT, {
+    await fetch(`${API_ENDPOINT}?action=leave_room`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
