@@ -12,6 +12,7 @@ import {
   Music,
   Zap,
   Swords,
+  HelpCircle,
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { getChallengeStatusForDate } from '../../utils/streakManager';
@@ -27,7 +28,8 @@ export type MiniGameSubTab =
   | 'review'
   | 'blindtest'
   | 'timeattack'
-  | 'versus';
+  | 'versus'
+  | 'quiz';
 
 interface MiniGamesNavProps {
   activeSubTab: MiniGameSubTab;
@@ -140,6 +142,13 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
       badge: 'Live',
       badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
     },
+    {
+      id: 'quiz',
+      label: isFr ? 'Quiz Indé' : 'Indie Quiz',
+      icon: HelpCircle,
+      badge: isFr ? '76 Q.' : '76 Q.',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    },
   ];
 
   return (
@@ -173,7 +182,7 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
                   : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
               }`}
             >
-              10
+              11
             </span>
           </button>
 

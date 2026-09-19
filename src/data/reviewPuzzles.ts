@@ -37,7 +37,7 @@ interface CuratedReview {
 // Collection de vraies critiques Steam authentiques et emblématiques avec caviardage
 const CURATED_REVIEWS: CuratedReview[] = [
   {
-    gameId: 'hollow_knight',
+    gameId: 'hollow-knight',
     author: 'GeoCollector_42',
     hoursPlayed: 142.6,
     reviewDate: '12 mars 2020',
@@ -57,7 +57,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "This game teaches you that dying is a normal part of learning. By my 500th death on chapter 7, ████████ made me a philosopher.",
   },
   {
-    gameId: 'outer_wilds',
+    gameId: 'outer-wilds',
     author: 'BanjoNomad',
     hoursPlayed: 41.2,
     reviewDate: '24 novembre 2020',
@@ -77,7 +77,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "I beat my father at the top of the ██████████, and he told me to clean my room before dying in the █████. The soundtrack is divine.",
   },
   {
-    gameId: 'slay_the_spire',
+    gameId: 'slay-the-spire',
     author: 'IroncladMain',
     hoursPlayed: 320.8,
     reviewDate: '15 janvier 2022',
@@ -87,7 +87,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "I spent 40 hours perfecting an invincible ██████ deck just to get obliterated on turn 2 by a giant heart. Starting another run immediately.",
   },
   {
-    gameId: 'dead_cells',
+    gameId: 'dead-cells',
     author: 'PanMaster',
     hoursPlayed: 215.3,
     reviewDate: '9 août 2020',
@@ -107,7 +107,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "I've never played █████ in my life, but this game stole 80 hours of sleep. When the x100 mult chains with a polychrome █████, your brain melts.",
   },
   {
-    gameId: 'sea_of_stars',
+    gameId: 'sea-of-stars',
     author: 'NostalgiaGamer',
     hoursPlayed: 52.1,
     reviewDate: '12 septembre 2023',
@@ -137,7 +137,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "I thought I was buying a relaxing survival game. 20 minutes later, a 50-meter █████████ ate my submersible in total darkness.",
   },
   {
-    gameId: 'disco_elysium',
+    gameId: 'disco-elysium',
     author: 'TequilaSunset',
     hoursPlayed: 74.3,
     reviewDate: '19 novembre 2020',
@@ -147,7 +147,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "You are an amnesiac detective in the city of ████████ talking to your own necktie and debating politics with a mailbox. Absolute masterpiece.",
   },
   {
-    gameId: 'return_of_the_obra_dinn',
+    gameId: 'return-of-the-obra-dinn',
     author: 'InsuranceClerk',
     hoursPlayed: 16.5,
     reviewDate: '10 décembre 2018',
@@ -157,7 +157,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "A magic watch freezing the moment of death, a maritime insurance log, and 60 crewmates to identify on the ████ ████. Lucas Pope is a genius.",
   },
   {
-    gameId: 'chants_of_sennaar',
+    gameId: 'chants-of-sennaar',
     author: 'TowerLinguist',
     hoursPlayed: 14.8,
     reviewDate: '20 octobre 2023',
@@ -167,7 +167,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "Deciphering 5 forgotten dialects just by watching gestures and signs across the █████. The semiotic puzzle work is astonishing.",
   },
   {
-    gameId: 'dave_the_diver',
+    gameId: 'dave-the-diver',
     author: 'SushiHarpoon',
     hoursPlayed: 62.4,
     reviewDate: '14 juillet 2023',
@@ -177,7 +177,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "I just wanted to spear two fish in the morning. 40 hours in, I manage a world-class sushi bar with Bancho and explore a bottomless Blue Hole.",
   },
   {
-    gameId: 'pizza_tower',
+    gameId: 'pizza-tower',
     author: 'PeppinoSpeedrun',
     hoursPlayed: 45.2,
     reviewDate: '18 février 2023',
@@ -187,7 +187,7 @@ const CURATED_REVIEWS: CuratedReview[] = [
     redactedEn: "This game feels like drinking 12 espressos while watching a 90s cartoon on fast forward. ███████ runs faster than the wind.",
   },
   {
-    gameId: 'stardew_valley',
+    gameId: 'stardew-valley',
     author: 'JunimoWhisperer',
     hoursPlayed: 410.2,
     reviewDate: '23 août 2021',

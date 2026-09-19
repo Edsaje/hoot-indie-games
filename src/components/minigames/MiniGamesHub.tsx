@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Trophy,
+  HelpCircle,
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
@@ -30,7 +31,8 @@ export type MiniGameId =
   | 'review'
   | 'blindtest'
   | 'timeattack'
-  | 'versus';
+  | 'versus'
+  | 'quiz';
 
 interface MiniGamesHubProps {
   onSelectGame: (gameId: MiniGameId) => void;
@@ -188,6 +190,19 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
       accentColor: 'from-rose-600/20 to-red-500/20 border-rose-500/30 text-rose-400',
       badgeText: 'Live 1v1',
       badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+      isDaily: false,
+    },
+    {
+      id: 'quiz',
+      title: isFr ? 'Quiz Indé' : 'Indie Quiz',
+      subtitle: isFr ? 'Culture & Savoir Indé' : 'Indie Trivia & Lore',
+      description: isFr
+        ? 'Testez votre culture avec plus de 75 questions aléatoires sur les chefs-d’œuvre, studios, musiques et secrets !'
+        : 'Test your indie trivia with 75+ randomized questions covering masterworks, creators, soundtracks, and secrets!',
+      icon: HelpCircle,
+      accentColor: 'from-amber-600/20 to-yellow-500/20 border-amber-500/30 text-amber-400',
+      badgeText: isFr ? '76 Questions' : '76 Questions',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
       isDaily: false,
     },
   ];

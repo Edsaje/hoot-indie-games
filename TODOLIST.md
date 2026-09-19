@@ -442,6 +442,20 @@
   - **Synchronisation SEO, PWA & UI** :
     - Mise à jour dynamique de tous les compteurs : `scripts/generateSeoIndex.ts`, `public/manifest.webmanifest`, `public/og-banner.svg`, `src/i18n/locales/fr.json`, `src/i18n/locales/en.json`, et `src/components/versus/VersusArena.tsx`.
     - Pré-rendu complet de l'encyclopédie HTML dans `index.html` pour les robots Googlebot/Bingbot avec microdonnées Schema.org `VideoGame`, `ItemList` et `FAQPage`.
+- [x] **Émancipation du Quiz Indé (Mini-Jeu Autonome & Banque Massive de 76 Questions Aléatoires)** :
+  - **Retrait de la Boîte à Outils** : `ToolboxHub` recentré sur les utilitaires purs (Roulette, Backlog, Budget, Pépites, Radar 2025-2026, Sync Steam).
+  - **Banque Massive de 76 Questions Aléatoires** dans [`src/data/quizQuestions.ts`](file:///src/data/quizQuestions.ts) bilingues (FR/EN) sur 6 catégories (Lore, OST, Gameplay, Créateurs, Trivia, Sorties), rigoureusement vérifiées et enrichies d'explications et d'anecdotes historiques.
+  - **Composant Dédié [`src/components/quiz/IndieQuizGame.tsx`](file:///src/components/quiz/IndieQuizGame.tsx)** :
+    - 3 modes de jeu : *Standard (10 Questions)*, *Survie (3 Vies - Mort Subite)*, *Infini (Entraînement)*.
+    - Mélange aléatoire dynamique (Fisher-Yates) à chaque partie + permutation des 4 options pour une imprévisibilité totale.
+    - Filtre thématique interactif (Mix aléatoire, Lore, Musiques, Gameplay, Créateurs, Trivia).
+    - Ergonomie clavier (touches 1, 2, 3, 4 et Espace/Entrée).
+    - Système de combo, streak, high score local, et carte de partage emoji HD.
+  - **Navigation & Écosystème** :
+    - Intégré dans [`MiniGamesNav.tsx`](file:///src/components/minigames/MiniGamesNav.tsx) (compteur mis à jour à 11 mini-jeux) et [`MiniGamesHub.tsx`](file:///src/components/minigames/MiniGamesHub.tsx).
+    - Support deep-link direct `#quiz` dans [`src/App.tsx`](file:///src/App.tsx).
+    - Normalisation des identifiants dans [`reviewPuzzles.ts`](file:///src/data/reviewPuzzles.ts) et [`blindtestPuzzles.ts`](file:///src/data/blindtestPuzzles.ts) pour un couplage 100% parfait avec le catalogue de 147 jeux.
+
 
 ---
 

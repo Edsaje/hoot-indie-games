@@ -6,12 +6,9 @@ import {
   Clock,
   PiggyBank,
   Compass,
-  HelpCircle,
   ExternalLink,
   RotateCw,
   Calendar,
-  CheckCircle2,
-  XCircle,
   Flame,
   Database,
 } from 'lucide-react';
@@ -21,7 +18,7 @@ import { SteamCatalogExplorer } from '../steam/SteamCatalogExplorer';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 
-type ToolboxTab = 'roulette' | 'backlog' | 'budget' | 'gems' | 'quiz' | 'radar' | 'steam';
+type ToolboxTab = 'roulette' | 'backlog' | 'budget' | 'gems' | 'radar' | 'steam';
 
 interface GameBacklogInfo {
   id: string;
@@ -77,54 +74,6 @@ const SALE_GAMES: SaleGameItem[] = [
   { id: 'balatro', title: 'Balatro', normalPrice: 13.99, salePrice: 12.59, discount: 10, hours: 40, score: 98 },
 ];
 
-const QUIZ_QUESTIONS = [
-  {
-    id: 1,
-    questionFr: "Dans quel jeu explorez-vous un système solaire réinitialisé toutes les 22 minutes par l'explosion d'une supernova ?",
-    questionEn: "In which game do you explore a planetary solar system resetting every 22 minutes due to a supernova?",
-    options: ["Subnautica", "Outer Wilds", "No Man's Sky", "Signalis"],
-    correctAnswer: 1,
-    explanationFr: "Outer Wilds, créé par Mobius Digital, vous fait vivre une boucle temporelle de 22 minutes rythmée par le banjo d'Andrew Prahlow.",
-    explanationEn: "Outer Wilds by Mobius Digital features a brilliant 22-minute cosmic time loop punctuated by Andrew Prahlow's iconic banjo.",
-  },
-  {
-    id: 2,
-    questionFr: "Quel compositeur de génie a créé l'intégralité de la bande originale d'Undertale tout en développant le jeu ?",
-    questionEn: "Which solo creator composed the entire iconic soundtrack of Undertale while developing the game?",
-    options: ["Lena Raine", "Toby Fox", "Darren Korb", "Christopher Larkin"],
-    correctAnswer: 1,
-    explanationFr: "Toby Fox a composé tous les thèmes inoubliables d'Undertale, dont Megalovania et Hopes and Dreams !",
-    explanationEn: "Toby Fox composed every unforgettable Undertale track, including Megalovania and Hopes and Dreams!",
-  },
-  {
-    id: 3,
-    questionFr: "Dans Tunic, quel artefact central reconstituez-vous page par page tout au long de l'aventure ?",
-    questionEn: "In Tunic, what core artifact do you reconstruct page by page throughout your adventure?",
-    options: ["Un grimoire magique", "Le livret d'instructions rétro du jeu", "La carte de l'archipel", "Un journal de bord pirate"],
-    correctAnswer: 1,
-    explanationFr: "Le joueur reconstitue le manuel de jeu papier rétro façon NES, regorgeant d'illustrations et de codes secrets indéchiffrables au départ.",
-    explanationEn: "Players piece together an authentic retro NES-style printed instruction manual filled with hidden cryptic puzzles.",
-  },
-  {
-    id: 4,
-    questionFr: "Combien d'années de développement solo ont été nécessaires à Eric Barone (ConcernedApe) pour créer Stardew Valley ?",
-    questionEn: "How many years of dedicated solo development did Eric Barone spend creating Stardew Valley?",
-    options: ["2 ans", "4 ans et demi", "7 ans", "1 an"],
-    correctAnswer: 1,
-    explanationFr: "Eric Barone a travaillé seul pendant 4 ans et demi, codant, dessinant le pixel art et composant les musiques jusqu'à la sortie en 2016.",
-    explanationEn: "Eric Barone spent 4.5 years working 10+ hours a day alone on code, art, and music before releasing the gem in 2016.",
-  },
-  {
-    id: 5,
-    questionFr: "Dans Balatro, quel type d'objet modifie drastiquement les règles et déclenche des multiplicateurs exponentiels ?",
-    questionEn: "In Balatro, which cards drastically break the traditional poker rules with wild multipliers?",
-    options: ["Les Jokers", "Les Cartes Tarot", "Les Sceaux d'or", "Les Vouchers célestes"],
-    correctAnswer: 0,
-    explanationFr: "Les Jokers (150+ différents) constituent le cœur du deckbuilding de Balatro, octroyant des jetons et multiplicateurs démentiels !",
-    explanationEn: "Jokers (150+ unique cards) drive Balatro's addictive synergy combinations and stratospheric score explosions!",
-  },
-];
-
 export const ToolboxHub: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { unlockAchievement } = useAchievements();
@@ -153,12 +102,6 @@ export const ToolboxHub: React.FC = () => {
   // --- Gems Filter State ---
   const [gemSearch, setGemSearch] = useState<string>('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
-
-  // --- Quiz State ---
-  const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [quizScore, setQuizScore] = useState<number>(0);
-  const [showQuizExplanation, setShowQuizExplanation] = useState<boolean>(false);
 
   // Spin Roulette Handler
   const handleSpinRoulette = () => {
@@ -251,31 +194,6 @@ export const ToolboxHub: React.FC = () => {
     soundFx.playChime();
   };
 
-  // Quiz Answer Handler
-  const handleQuizAnswer = (optionIdx: number) => {
-    if (showQuizExplanation) return;
-    setSelectedOption(optionIdx);
-    setShowQuizExplanation(true);
-    if (optionIdx === QUIZ_QUESTIONS[currentQuestionIdx].correctAnswer) {
-      setQuizScore((prev) => prev + 1);
-      soundFx.playChime();
-    } else {
-      soundFx.playError();
-    }
-  };
-
-  const nextQuizQuestion = () => {
-    soundFx.playClick();
-    setSelectedOption(null);
-    setShowQuizExplanation(false);
-    if (currentQuestionIdx < QUIZ_QUESTIONS.length - 1) {
-      setCurrentQuestionIdx((prev) => prev + 1);
-    } else {
-      setCurrentQuestionIdx(0);
-      setQuizScore(0);
-    }
-  };
-
   // Filtered Gems
   const allGenresList = Array.from(
     new Set(INDIE_GAMES.flatMap((g) => g.genre))
@@ -315,7 +233,6 @@ export const ToolboxHub: React.FC = () => {
             { id: 'backlog', label: t('toolbox.tabs.backlog'), icon: Clock },
             { id: 'budget', label: t('toolbox.tabs.budget'), icon: PiggyBank },
             { id: 'gems', label: t('toolbox.tabs.gems'), icon: Compass },
-            { id: 'quiz', label: t('toolbox.tabs.quiz'), icon: HelpCircle },
             { id: 'radar', label: lang === 'fr' ? 'Radar Sorties' : 'Upcoming Radar', icon: Flame },
             { id: 'steam', label: lang === 'fr' ? 'Catalogue Steam' : 'Steam Catalog', icon: Database },
           ] as const
@@ -748,88 +665,7 @@ export const ToolboxHub: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 5: INDIE LORE & TRIVIA QUIZ */}
-      {activeTab === 'quiz' && (
-        <div className="max-w-2xl mx-auto bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 sm:p-8 shadow-2xl">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs uppercase font-bold text-amber-400 tracking-wider">
-              {t('toolbox.quiz.question', {
-                current: currentQuestionIdx + 1,
-                total: QUIZ_QUESTIONS.length,
-              })}
-            </span>
-            <span className="text-xs font-mono font-bold text-slate-300 bg-[#0b0f19] px-2.5 py-1 rounded-lg border border-[#1e293b]">
-              {t('toolbox.quiz.score', {
-                score: quizScore,
-                total: QUIZ_QUESTIONS.length,
-              })}
-            </span>
-          </div>
-
-          <h3 className="text-lg font-black text-white mb-6 leading-relaxed">
-            {lang === 'fr'
-              ? QUIZ_QUESTIONS[currentQuestionIdx].questionFr
-              : QUIZ_QUESTIONS[currentQuestionIdx].questionEn}
-          </h3>
-
-          <div className="space-y-3 mb-6">
-            {QUIZ_QUESTIONS[currentQuestionIdx].options.map((opt, idx) => {
-              const isSelected = selectedOption === idx;
-              const isCorrect = idx === QUIZ_QUESTIONS[currentQuestionIdx].correctAnswer;
-
-              let btnStyle = 'bg-[#0b0f19] border-[#1e293b] text-slate-300 hover:border-slate-600';
-              if (showQuizExplanation) {
-                if (isCorrect) {
-                  btnStyle = 'bg-emerald-950/60 border-emerald-500 text-emerald-300 font-bold';
-                } else if (isSelected) {
-                  btnStyle = 'bg-red-950/60 border-red-500 text-red-300';
-                }
-              }
-
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleQuizAnswer(idx)}
-                  disabled={showQuizExplanation}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all text-sm flex items-center justify-between ${btnStyle}`}
-                >
-                  <span>{opt}</span>
-                  {showQuizExplanation && isCorrect && (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                  )}
-                  {showQuizExplanation && isSelected && !isCorrect && (
-                    <XCircle className="w-5 h-5 text-red-400 shrink-0" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {showQuizExplanation && (
-            <div className="p-4 rounded-2xl bg-[#0b0f19] border border-amber-500/30 mb-6 text-xs text-slate-300 leading-relaxed animate-in fade-in duration-200">
-              <span className="font-bold text-[#f59e0b] block mb-1">
-                {t('toolbox.quiz.explanation')}
-              </span>
-              {lang === 'fr'
-                ? QUIZ_QUESTIONS[currentQuestionIdx].explanationFr
-                : QUIZ_QUESTIONS[currentQuestionIdx].explanationEn}
-            </div>
-          )}
-
-          {showQuizExplanation && (
-            <button
-              onClick={nextQuizQuestion}
-              className="w-full py-3 bg-[#f59e0b] hover:bg-amber-400 text-slate-950 font-black text-sm rounded-2xl transition shadow-lg shadow-amber-500/20 active:scale-95"
-            >
-              {currentQuestionIdx < QUIZ_QUESTIONS.length - 1
-                ? t('toolbox.quiz.next')
-                : t('toolbox.quiz.restart')}
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* TAB 6: RADAR SORTIES INDÉES */}
+      {/* TAB 5: RADAR SORTIES INDÉES */}
       {activeTab === 'radar' && (
         <div className="space-y-6 max-w-5xl mx-auto animate-in fade-in duration-300">
           <div className="bg-[#131a29] border border-[#1e293b] rounded-2xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">

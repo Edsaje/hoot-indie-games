@@ -19,6 +19,7 @@ import { ChronoGame } from './components/chrono/ChronoGame';
 import { PixelGame } from './components/pixel/PixelGame';
 import { ReviewGame } from './components/review/ReviewGame';
 import { BlindTestGame } from './components/blindtest/BlindTestGame';
+import { IndieQuizGame } from './components/quiz/IndieQuizGame';
 import { MiniGamesHub } from './components/minigames/MiniGamesHub';
 import { MiniGamesNav, type MiniGameSubTab } from './components/minigames/MiniGamesNav';
 import { VersusArena } from './components/versus/VersusArena';
@@ -188,6 +189,9 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#versus')) {
         setCurrentTab('minigames');
         setActiveMiniGame('versus');
+      } else if (hash.startsWith('#quiz') || hash.startsWith('#quizz')) {
+        setCurrentTab('minigames');
+        setActiveMiniGame('quiz');
       } else if (hash.startsWith('#arcade')) {
         setCurrentTab('arcade');
       } else if (hash.startsWith('#toolbox')) {
@@ -266,6 +270,10 @@ export const AppContent: React.FC = () => {
         versus: {
           fr: 'Arène Versus 1v1 — Duels Multijoueurs en Direct | Hoot Indie Games',
           en: '1v1 Versus Arena — Real-Time Multiplayer Duels | Hoot Indie Games',
+        },
+        quiz: {
+          fr: 'Quiz Indé — Grand Quiz Culture & Savoir Indé | Hoot Indie Games',
+          en: 'Indie Quiz — Video Game Trivia & Lore | Hoot Indie Games',
         },
       };
       pageTitle = isFr ? minigameTitles[activeMiniGame].fr : minigameTitles[activeMiniGame].en;
@@ -488,6 +496,10 @@ export const AppContent: React.FC = () => {
 
               {activeMiniGame === 'versus' && (
                 <VersusArena onOpenAuth={() => setIsAuthOpen(true)} />
+              )}
+
+              {activeMiniGame === 'quiz' && (
+                <IndieQuizGame />
               )}
             </div>
           </div>

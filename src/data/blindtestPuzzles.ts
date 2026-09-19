@@ -225,7 +225,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'hollow_knight',
+    gameId: 'hollow-knight',
     trackTitle: 'Dirtmouth (Town Theme)',
     composer: 'Christopher Larkin',
     instrument: 'piano',
@@ -274,7 +274,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'outer_wilds',
+    gameId: 'outer-wilds',
     trackTitle: 'Timber Hearth',
     composer: 'Andrew Prahlow',
     instrument: 'guitar',
@@ -325,7 +325,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'shovel_knight',
+    gameId: 'shovel-knight',
     trackTitle: 'Strike the Earth!',
     composer: 'Jake Kaufman (virt)',
     instrument: 'chiptune',
@@ -391,7 +391,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'hotline_miami',
+    gameId: 'hotline-miami',
     trackTitle: 'Hydrogen',
     composer: 'M|O|O|N',
     instrument: 'synth',
@@ -513,7 +513,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'stardew_valley',
+    gameId: 'stardew-valley',
     trackTitle: 'Overture & Spring',
     composer: 'ConcernedApe',
     instrument: 'bell',
@@ -624,7 +624,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'sea_of_stars',
+    gameId: 'sea-of-stars',
     trackTitle: 'Mountain Trail',
     composer: 'Eric W. Brown',
     instrument: 'synth',
@@ -722,7 +722,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'slay_the_spire',
+    gameId: 'slay-the-spire',
     trackTitle: 'The Spire (Exordium Theme)',
     composer: 'Clark Aboud',
     instrument: 'synth',
@@ -783,7 +783,7 @@ const CURATED_OSTS: CuratedOST[] = [
     ],
   },
   {
-    gameId: 'dead_cells',
+    gameId: 'dead-cells',
     trackTitle: "Prisoner's Awakening",
     composer: 'Yoann Laulan',
     instrument: 'guitar',
