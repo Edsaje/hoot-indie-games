@@ -27,6 +27,7 @@ dist-ssr
 public/api/*.json
 public/api/.secret
 public/api/.admin_pass
+public/api/.steam_key
 public/api/*.log
 .env
 .env.*

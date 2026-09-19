@@ -23,6 +23,7 @@ import {
   Search,
   Lock,
   ArrowUpRight,
+  Key,
 } from 'lucide-react';
 import {
   fetchAdminOverview,
@@ -32,6 +33,10 @@ import {
   ADMIN_STEAM_ID,
   type AdminOverviewPayload,
 } from '../../services/adminService';
+import {
+  fetchSteamProxyStatus,
+  saveMasterSteamApiKey,
+} from '../../services/steamService';
 import { useUserAccount } from '../../context/useUserAccount';
 import { soundFx } from '../../utils/audio';
 
@@ -60,18 +65,49 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   const [confirmDeleteSuggestion, setConfirmDeleteSuggestion] = useState<string | null>(null);
   const [confirmResetStats, setConfirmResetStats] = useState<boolean>(false);
 
+  // Clé Maîtresse Steam (Proxy Souverain Méthode 1)
+  const [steamMasterStatus, setSteamMasterStatus] = useState<{ hasMasterKey: boolean; maskedKey?: string } | null>(null);
+  const [adminMasterKeyInput, setAdminMasterKeyInput] = useState('');
+  const [isSavingKey, setIsSavingKey] = useState(false);
+
   const loadData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetchAdminOverview(currentSteamId);
+      const [res, steamStatus] = await Promise.all([
+        fetchAdminOverview(currentSteamId),
+        fetchSteamProxyStatus().catch(() => ({ success: false, hasMasterKey: false })),
+      ]);
       setData(res);
+      if (steamStatus && typeof steamStatus.hasMasterKey === 'boolean') {
+        setSteamMasterStatus(steamStatus);
+      }
     } catch (err: any) {
       setError(err.message || 'Impossible de joindre le serveur de télémétrie.');
     } finally {
       setIsLoading(false);
     }
   }, [currentSteamId]);
+
+  const handleSaveMasterKeyFromAdmin = async () => {
+    if (!adminMasterKeyInput.trim()) return;
+    soundFx.playClick();
+    setIsSavingKey(true);
+    try {
+      const res = await saveMasterSteamApiKey(adminMasterKeyInput, currentSteamId);
+      if (res.success) {
+        showNotice('success', res.message);
+        setSteamMasterStatus({ hasMasterKey: true, maskedKey: res.maskedKey });
+        setAdminMasterKeyInput('');
+      } else {
+        showNotice('error', res.message || 'Échec de l\'enregistrement de la clé.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de l\'enregistrement.');
+    } finally {
+      setIsSavingKey(false);
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -921,6 +957,54 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             <CheckCircle2 className="w-3 h-3" /> 19 classements actifs
                           </div>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Clé Maîtresse Steam (Proxy Souverain Méthode 1) */}
+                    <div className="p-4 rounded-2xl bg-[#0c1220] border border-cyan-500/25 space-y-3.5">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                          <Key className="w-4 h-4 text-cyan-400" />
+                          <span>Clé API Steam Maîtresse du Site (Proxy Souverain Méthode 1)</span>
+                        </h3>
+
+                        {steamMasterStatus?.hasMasterKey ? (
+                          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                            Active : {steamMasterStatus.maskedKey || 'Configurée'}
+                          </span>
+                        ) : (
+                          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                            Non configurée sur le serveur
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        Cette clé est conservée de façon confidentielle sur le serveur OVHcloud dans <code>public/api/.steam_key</code> (protégée par <code>.htaccess</code> et <code>.gitignore</code>). Elle permet à tous les visiteurs du site de synchroniser automatiquement leurs jeux Steam en un clic, sans devoir générer de clé API eux-mêmes et sans restriction CORS.
+                      </p>
+
+                      <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                        <input
+                          type="password"
+                          value={adminMasterKeyInput}
+                          onChange={(e) => setAdminMasterKeyInput(e.target.value)}
+                          placeholder="Collez ici votre clé API Steam Web (ex: 32 caractères hexadécimaux)..."
+                          className="flex-1 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                        />
+                        <button
+                          onClick={handleSaveMasterKeyFromAdmin}
+                          disabled={isSavingKey || !adminMasterKeyInput.trim()}
+                          className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-slate-950 font-black text-xs transition disabled:opacity-50 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-md shadow-cyan-500/20"
+                        >
+                          {isSavingKey ? (
+                            <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Key className="w-3.5 h-3.5" />
+                          )}
+                          <span>Enregistrer la Clé Maîtresse</span>
+                        </button>
                       </div>
                     </div>
 

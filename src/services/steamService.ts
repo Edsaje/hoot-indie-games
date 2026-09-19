@@ -17,8 +17,54 @@ export interface SteamSyncResult {
   success: boolean;
   ownedAppIds: number[];
   totalCount: number;
+  player?: {
+    personaName?: string;
+    avatarUrl?: string;
+    profileUrl?: string;
+  };
   error?: string;
   message?: string;
+}
+
+/**
+ * Récupère le statut de la clé API Steam Maîtresse sur le serveur souverain
+ */
+export async function fetchSteamProxyStatus(): Promise<{
+  success: boolean;
+  hasMasterKey: boolean;
+  maskedKey?: string;
+}> {
+  try {
+    const res = await fetch('/api/steam_games.php?action=status');
+    if (!res.ok) return { success: false, hasMasterKey: false };
+    return await res.json();
+  } catch {
+    return { success: false, hasMasterKey: false };
+  }
+}
+
+/**
+ * Enregistre la Clé API Steam Maîtresse sur le serveur (Action réservée à l'administrateur)
+ */
+export async function saveMasterSteamApiKey(
+  apiKey: string,
+  adminSteamId: string
+): Promise<{ success: boolean; message: string; maskedKey?: string }> {
+  try {
+    const formData = new FormData();
+    formData.append('action', 'set_master_key');
+    formData.append('apiKey', apiKey.trim());
+    formData.append('adminSteamId', adminSteamId.trim());
+
+    const res = await fetch('/api/steam_games.php', {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    return { success: false, message: err.message || 'Erreur réseau lors de la sauvegarde.' };
+  }
 }
 
 /**
@@ -112,7 +158,7 @@ export async function resolveSteamAccount(identifier: string): Promise<SteamProf
       steamId,
       personaName: `Joueur Steam #${steamId.slice(-4)}`,
       profileUrl: `https://steamcommunity.com/profiles/${steamId}`,
-      avatarUrl: 'https://avatars.fastly.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg', // Avatar Steam par défaut
+      avatarUrl: 'https://avatars.fastly.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg',
     };
   }
 
@@ -134,72 +180,81 @@ export async function resolveSteamAccount(identifier: string): Promise<SteamProf
 }
 
 /**
- * Récupère la liste des jeux possédés sur Steam via l'API Web Steam
+ * Récupère la liste des jeux possédés sur Steam via le proxy souverain Hoot (/api/steam_games.php)
+ * Contourne les erreurs de CORS des navigateurs (évite NetworkError) et utilise la Clé Maîtresse Steam du site
  */
 export async function fetchSteamOwnedGames(
   steamId: string,
-  apiKey?: string
+  apiKey?: string,
+  refresh = false
 ): Promise<SteamSyncResult> {
-  const key = apiKey || (import.meta.env.VITE_STEAM_API_KEY as string) || '';
-
-  if (!key) {
+  if (!steamId || !steamId.trim()) {
     return {
       success: false,
       ownedAppIds: [],
       totalCount: 0,
-      error: 'NO_API_KEY',
-      message: 'Aucune clé API Steam Web fournie.',
+      error: 'NO_STEAM_ID',
+      message: 'Aucun identifiant Steam fourni.',
     };
   }
 
+  const cleanSteamId = steamId.trim();
+  const params = new URLSearchParams();
+  params.set('steamId', cleanSteamId);
+  if (apiKey && apiKey.trim()) {
+    params.set('apiKey', apiKey.trim());
+  }
+  if (refresh) {
+    params.set('refresh', '1');
+  }
+
   try {
-    // Utilisation d'un endpoint proxy ou direct
-    const isDev = import.meta.env.DEV;
-    const baseUrl = isDev
-      ? `/api/steam-proxy/IPlayerService/GetOwnedGames/v0001/`
-      : `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`;
+    const url = `/api/steam_games.php?${params.toString()}`;
+    const res = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+      },
+    });
 
-    const url = `${baseUrl}?key=${encodeURIComponent(key)}&steamid=${encodeURIComponent(steamId)}&format=json&include_appinfo=1`;
-
-    const res = await fetch(url);
     if (!res.ok) {
       if (res.status === 403) {
-        throw new Error('Clé API Steam invalide ou profil Steam privé (la bibliothèque doit être réglée sur "Publique").');
+        return {
+          success: false,
+          ownedAppIds: [],
+          totalCount: 0,
+          error: 'FORBIDDEN',
+          message: 'Accès refusé par Steam ou profil privé.',
+        };
       }
-      throw new Error(`Erreur Steam API HTTP ${res.status}`);
+      throw new Error(`Erreur proxy HTTP ${res.status}`);
     }
 
     const data = await res.json();
-    const games = data?.response?.games;
-
-    if (!Array.isArray(games)) {
-      // Peut survenir si la bibliothèque est privée
+    if (!data.success) {
       return {
         success: false,
         ownedAppIds: [],
         totalCount: 0,
-        error: 'PRIVATE_PROFILE',
-        message: 'La bibliothèque de ce compte Steam est configurée en "Privé" dans les paramètres de confidentialité Steam.',
+        error: data.error || 'SYNC_FAILED',
+        message: data.message || 'Impossible de synchroniser les jeux Steam.',
       };
     }
 
-    const ownedAppIds = games
-      .map((g: { appid: number }) => g.appid)
-      .filter((id): id is number => typeof id === 'number' && id > 0);
-
+    const ownedAppIds: number[] = Array.isArray(data.ownedAppIds) ? data.ownedAppIds : [];
     return {
       success: true,
       ownedAppIds,
-      totalCount: data.response.game_count || ownedAppIds.length,
-      message: `${ownedAppIds.length} jeux trouvés dans votre bibliothèque Steam !`,
+      totalCount: data.count || ownedAppIds.length,
+      player: data.player,
+      message: data.message || `${ownedAppIds.length} jeux trouvés dans votre bibliothèque Steam !`,
     };
   } catch (err: any) {
     return {
       success: false,
       ownedAppIds: [],
       totalCount: 0,
-      error: 'FETCH_ERROR',
-      message: err.message || 'Impossible de contacter l\'API Steam.',
+      error: 'NETWORK_ERROR',
+      message: err.message || 'Impossible de contacter le serveur Hoot pour la synchronisation Steam.',
     };
   }
 }

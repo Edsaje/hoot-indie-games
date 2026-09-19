@@ -472,12 +472,24 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         let gamesCount = profile.steam?.gamesCount || ownedAppIds.length;
 
         const keyToUse = apiKey || profile.steam?.apiKey;
-        if (keyToUse) {
-          const syncRes = await fetchSteamOwnedGames(details.steamId, keyToUse);
-          if (syncRes.success) {
-            ownedAppIds = syncRes.ownedAppIds;
-            gamesCount = syncRes.totalCount;
+        // Appel au proxy souverain Hoot (utilise la Clé Maîtresse si keyToUse est absent)
+        const syncRes = await fetchSteamOwnedGames(details.steamId, keyToUse);
+        let syncNotice = '';
+        if (syncRes.success) {
+          ownedAppIds = syncRes.ownedAppIds;
+          gamesCount = syncRes.totalCount;
+          if (syncRes.player?.personaName) {
+            details.personaName = syncRes.player.personaName;
           }
+          if (syncRes.player?.avatarUrl) {
+            details.avatarUrl = syncRes.player.avatarUrl;
+          }
+          if (syncRes.player?.profileUrl) {
+            details.profileUrl = syncRes.player.profileUrl;
+          }
+          syncNotice = ` (${ownedAppIds.length} jeux synchronisés)`;
+        } else if (syncRes.error === 'PRIVATE_LIBRARY') {
+          syncNotice = ' (Note : bibliothèque Steam configurée en Privé)';
         }
 
         const steamInfo: SteamAccountInfo = {
@@ -503,7 +515,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
         return {
           success: true,
-          message: `Compte Steam "${details.personaName}" lié avec succès ! (${ownedAppIds.length} jeux synchronisés)`,
+          message: `Compte Steam "${details.personaName}" lié avec succès !${syncNotice}`,
         };
       } catch (err: any) {
         return {
@@ -524,7 +536,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       }
 
       const key = customApiKey || profile.steam.apiKey;
-      const res = await fetchSteamOwnedGames(profile.steam.steamId, key);
+      const res = await fetchSteamOwnedGames(profile.steam.steamId, key, true);
 
       if (res.success) {
         setProfile((prev) => {
@@ -533,6 +545,9 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
             ...prev,
             steam: {
               ...prev.steam,
+              personaName: res.player?.personaName || prev.steam.personaName,
+              avatarUrl: res.player?.avatarUrl || prev.steam.avatarUrl,
+              profileUrl: res.player?.profileUrl || prev.steam.profileUrl,
               ownedAppIds: res.ownedAppIds,
               gamesCount: res.totalCount,
               lastSyncedAt: new Date().toISOString(),

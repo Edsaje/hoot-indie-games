@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -29,7 +29,11 @@ import { SteamIcon } from './SteamIcon';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useAchievements } from '../../context/useAchievements';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
-import { parseAppIdsFromInput } from '../../services/steamService';
+import {
+  parseAppIdsFromInput,
+  fetchSteamProxyStatus,
+  saveMasterSteamApiKey,
+} from '../../services/steamService';
 import { INDIE_AVATARS } from '../../data/avatars';
 import type { IndieAvatarId } from '../../types/user';
 import { soundFx } from '../../utils/audio';
@@ -93,6 +97,20 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [isSteamLoading, setIsSteamLoading] = useState(false);
   const [steamStatus, setSteamStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [steamSearchQuery, setSteamSearchQuery] = useState('');
+  const [masterKeyInput, setMasterKeyInput] = useState('');
+  const [hasMasterKey, setHasMasterKey] = useState<boolean | null>(null);
+  const [maskedMasterKey, setMaskedMasterKey] = useState<string>('');
+
+  useEffect(() => {
+    if (isOpen && activeTab === 'steam') {
+      fetchSteamProxyStatus().then((res) => {
+        if (res.success) {
+          setHasMasterKey(res.hasMasterKey);
+          if (res.maskedKey) setMaskedMasterKey(res.maskedKey);
+        }
+      });
+    }
+  }, [isOpen, activeTab]);
 
   const ownedGemsCount = useMemo(() => {
     return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
@@ -236,6 +254,26 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     } else {
       soundFx.playError();
       setSteamStatus({ type: 'error', message: res.message || 'Échec de synchronisation.' });
+    }
+  };
+
+  const handleSaveMasterKey = async () => {
+    if (!masterKeyInput.trim()) return;
+    soundFx.playClick();
+    setIsSteamLoading(true);
+    setSteamStatus(null);
+    const res = await saveMasterSteamApiKey(masterKeyInput, ADMIN_STEAM_ID);
+    setIsSteamLoading(false);
+    if (res.success) {
+      soundFx.playVictory();
+      setHasMasterKey(true);
+      if (res.maskedKey) setMaskedMasterKey(res.maskedKey);
+      setSteamStatus({ type: 'success', message: res.message });
+      setMasterKeyInput('');
+      await syncSteamLibrary();
+    } else {
+      soundFx.playError();
+      setSteamStatus({ type: 'error', message: res.message });
     }
   };
 
@@ -688,6 +726,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                           <SteamIcon className="w-8 h-8" />
                         </div>
                         <div>
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[11px] font-bold mb-1.5">
+                            <Sparkles className="w-3 h-3 text-cyan-400" />
+                            <span>Synchronisation 100% Automatique sans clé API</span>
+                          </div>
                           <h3 className="text-base font-black text-white">
                             Associez votre Compte Steam
                           </h3>
@@ -762,7 +804,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
                   {/* Collapsible API Key Box */}
                   {showApiKeyBox && (
-                    <div className="p-3.5 bg-[#0e1726] border border-cyan-900/50 rounded-2xl space-y-2 text-xs">
+                    <div className="p-3.5 bg-[#0e1726] border border-cyan-900/50 rounded-2xl space-y-3 text-xs">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-white flex items-center gap-1.5">
                           <Key className="w-3.5 h-3.5 text-amber-400" />
@@ -774,13 +816,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                           rel="noopener noreferrer"
                           className="text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
                         >
-                          <span>Obtenir gratuitement ma clé</span>
+                          <span>Obtenir ma clé Steam</span>
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       </div>
-                      <p className="text-[11px] text-slate-400">
-                        Permet la synchronisation automatique directe de votre catalogue Steam complet. La clé est stockée uniquement en local dans votre navigateur.
-                      </p>
+                      <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-slate-300 text-[11px] leading-relaxed">
+                        ✨ <strong>Bonne nouvelle :</strong> Grâce à notre Proxy Souverain Hoot (Méthode 1), vous n'avez pas besoin de créer de clé API personnelle pour synchroniser vos jeux ! Si vous souhaitez néanmoins surcharger la configuration avec votre propre clé, vous pouvez la renseigner ici :
+                      </div>
                       <div className="flex gap-2 pt-1">
                         <input
                           type="password"
@@ -798,6 +840,47 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                           Sauvegarder & Synchroniser
                         </button>
                       </div>
+
+                      {/* Section Administrateur : Définition de la Clé Maîtresse Souveraine */}
+                      {isAdmin && (
+                        <div className="p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-slate-900 border border-amber-500/35 space-y-2.5 mt-2">
+                          <div className="flex items-center justify-between">
+                            <span className="font-black text-amber-300 flex items-center gap-1.5">
+                              <Crown className="w-4 h-4 text-amber-400" />
+                              Clé API Steam Maîtresse du Site (Admin)
+                            </span>
+                            {hasMasterKey ? (
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                Active : {maskedMasterKey || 'Configurée'}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                Non configurée sur le serveur
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Enregistrez ici votre clé Steam Web API dans le fichier sécurisé <code>.steam_key</code> du serveur. Elle sera automatiquement utilisée pour tous les visiteurs du site, leur évitant d'avoir à créer une clé API.
+                          </p>
+                          <div className="flex gap-2">
+                            <input
+                              type="password"
+                              value={masterKeyInput}
+                              onChange={(e) => setMasterKeyInput(e.target.value)}
+                              placeholder="Collez votre clé Steam Web API (32 caractères)..."
+                              className="flex-1 px-3 py-1.5 bg-[#090e18] border border-amber-500/40 rounded-lg text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleSaveMasterKey}
+                              disabled={isSteamLoading || !masterKeyInput.trim()}
+                              className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shrink-0 disabled:opacity-50 cursor-pointer shadow-md"
+                            >
+                              {isSteamLoading ? 'Enregistrement...' : 'Définir Clé Maîtresse'}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
 
