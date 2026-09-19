@@ -67,6 +67,7 @@ export interface DateChallengeStatus {
   indledle: DayPlayStatus;
   linkle: DayPlayStatus;
   profille: DayPlayStatus;
+  chrono: DayPlayStatus;
 }
 
 export const getChallengeStatusForDate = (dateStr: string): DateChallengeStatus => {
@@ -89,5 +90,6 @@ export const getChallengeStatusForDate = (dateStr: string): DateChallengeStatus 
     indledle: getStatus(`indledle_state_${dateStr}`),
     linkle: getStatus(`linkle_state_${dateStr}`),
     profille: getStatus(`profille_state_${dateStr}`),
+    chrono: getStatus(`chrono_state_${dateStr}`),
   };
 };

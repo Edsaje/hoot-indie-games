@@ -31,6 +31,7 @@ export type NavTab =
   | 'indledle'
   | 'linkle'
   | 'profille'
+  | 'chrono'
   | 'versus'
   | 'arcade'
   | 'timeattack'
@@ -80,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const isMinigamesActive =
     currentTab === 'minigames' ||
-    ['screenle', 'indledle', 'linkle', 'profille', 'timeattack', 'versus'].includes(currentTab);
+    ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'timeattack', 'versus'].includes(currentTab);
 
   const toggleSound = () => {
     const next = soundFx.toggleSound();
@@ -133,7 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {t('nav.gems')}
             </button>
 
-            {/* 2. Mini-jeux (Consolidated Screenle, Indledle, Linkle, Profille, Time Attack, Versus) */}
+            {/* 2. Mini-jeux (Consolidated Screenle, Indledle, Linkle, Profille, Chrono, Time Attack, Versus) */}
             <button
               onClick={() => handleTabSelect('minigames')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -151,7 +152,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
                 }`}
               >
-                6
+                7
               </span>
             </button>
 
@@ -344,7 +345,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {(
             [
               { id: 'gems', label: t('nav.gems'), icon: Compass },
-              { id: 'minigames', label: t('nav.games', 'Mini-Jeux'), icon: Puzzle, badge: '6' },
+              { id: 'minigames', label: t('nav.games', 'Mini-Jeux'), icon: Puzzle, badge: '7' },
               { id: 'arcade', label: t('nav.arcade'), icon: Gamepad2 },
               { id: 'toolbox', label: t('nav.toolbox'), icon: Wrench },
               { id: 'roost', label: t('nav.roost'), icon: Feather },

@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import type { ModeStats, OverallStats } from '../types/game';
 
-export type DailyGameMode = 'screenle' | 'indledle' | 'linkle' | 'profille';
+export type DailyGameMode = 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono';
 
 export interface GameStatsContextType {
   stats: OverallStats;
@@ -28,6 +28,7 @@ export const defaultOverallStats: OverallStats = {
   indledle: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 } },
   linkle: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0 } },
   profille: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0 } },
+  chrono: { ...defaultModeStats, guessDistribution: { 1: 0, 2: 0, 3: 0 } },
 };
 
 export const STATS_STORAGE_KEY = 'hoot_indie_stats_v1';

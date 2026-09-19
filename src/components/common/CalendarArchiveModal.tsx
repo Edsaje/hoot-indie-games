@@ -258,6 +258,15 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                           : 'bg-slate-800'
                       }`}
                     />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.chrono === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.chrono === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
                   </div>
                 </div>
               );
@@ -272,12 +281,14 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               status.screenle === 'won' &&
               status.indledle === 'won' &&
               status.linkle === 'won' &&
-              status.profille === 'won';
+              status.profille === 'won' &&
+              status.chrono === 'won';
             const hasUnplayed =
               status.screenle === 'unplayed' ||
               status.indledle === 'unplayed' ||
               status.linkle === 'unplayed' ||
-              status.profille === 'unplayed';
+              status.profille === 'unplayed' ||
+              status.chrono === 'unplayed';
 
             return (
               <button
@@ -312,8 +323,8 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                   ) : null}
                 </div>
 
-                {/* Status dots for 4 daily games */}
-                <div className="flex items-center gap-1">
+                {/* Status dots for 5 daily games */}
+                <div className="flex items-center gap-0.5">
                   <span
                     title="Screenle"
                     className={`w-1.5 h-1.5 rounded-full ${
@@ -350,6 +361,16 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                       status.profille === 'won'
                         ? 'bg-emerald-400'
                         : status.profille === 'lost'
+                        ? 'bg-rose-500'
+                        : 'bg-slate-700'
+                    }`}
+                  />
+                  <span
+                    title="Chrono"
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      status.chrono === 'won'
+                        ? 'bg-emerald-400'
+                        : status.chrono === 'lost'
                         ? 'bg-rose-500'
                         : 'bg-slate-700'
                     }`}

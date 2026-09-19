@@ -317,13 +317,18 @@
   - **Barrière d'Âge Conforme (Age Gate)** : Modal d'avertissement explicite avec vérification de l'âge / déclaration légale de majorité et recueil du consentement éclairé en conformité avec les réglementations en vigueur.
   - **Opt-in Persistant & Verrouillage** : Accès conditionnel débloqué uniquement après validation, désactivable à tout moment dans les préférences du profil.
   - **Espace Dédié & Fiches Averties** : Espace isolé avec tags de contenus matures explicites, avertissements sensibles et redirections Steam officielles sous avertissement d'âge.
-- [ ] **Réflexion & Conception de Nouveaux Jeux Indés** :
-  - **Pistes & Concepts Originaux pour le Hub des Mini-Jeux** :
-    - *Blind Test OST Indé (Audioldle)* : Écouter un extrait de quelques secondes d'une bande-son emblématique (Hollow Knight, Celeste, Undertale, Hades, Dead Cells, Outer Wilds) et deviner le jeu ou le compositeur.
-    - *Chrono-Timeline (Frise Chronologique)* : Placer 4 ou 5 pépites indés dans leur ordre chronologique exact de sortie.
-    - *Pixel/Silhouette Challenge (Ombres & Silhouettes)* : Identifier un personnage, ennemi ou élément culte à partir de son ombre vectorielle ou d'un sprite dé-pixelisé progressivement.
-    - *Studiole / Devdle* : Associer les développeurs indépendants à leurs œuvres ou deviner le studio secret en fonction de sa filmographie vidéoludique.
-    - *Steam Review Déduction (La Bonne Critique)* : Deviner le jeu à partir d'une review Steam drôle, poétique ou marquante avec les mots-clés spoilants caviardés.
+- [ ] **Déploiement des 4 Nouveaux Mini-Jeux Originaux** :
+  - [x] **1. Chrono-Timeline (Frise Chronologique Indé — "Chrono" / "Timeline")** ([`src/components/chrono/ChronoGame.tsx`](file:///src/components/chrono/ChronoGame.tsx), [`src/data/chronoPuzzles.ts`](file:///src/data/chronoPuzzles.ts)) :
+    - Défi quotidien où le joueur commence avec un jeu ancre déjà positionné sur une frise temporelle verticale fluide (passé vers futur, haut en bas).
+    - 4 pépites indés mystères à insérer l'une après l'autre à leur emplacement chronologique exact via des boutons de fente réactifs (`[+ Placer avant X]`, `[+ Entre X et Y]`, `[+ Placer après Y]`).
+    - Gestion robuste des jeux sortis la même année (placement avant ou après considéré comme valide).
+    - Système de 3 vies avec cœurs dorés et secousse d'erreur visuelle et sonore.
+    - Mode d'entraînement infini (parties aléatoires illimitées) avec bascule instantanée.
+    - Protection de la série quotidienne (streaks), bannière de rattrapage veille J-1, cartes de partage zéro-spoil HD et graphique de distribution communautaire par niveau de cœurs restants (`❤️❤️❤️`, `❤️❤️`, `❤️`, `❌ Échec`).
+    - Pleine intégration dans la Navbar, le Hub des Mini-jeux (7 disciplines), les statistiques globales, le calendrier d'archives et le routage URL (`#chrono`, `#timeline`).
+  - [ ] **2. Pixel & Silhouette Challenge (Ombre & Dé-pixellisation progressive)**
+  - [ ] **3. Steam Review Déduction (La Bonne Critique Caviardée)**
+  - [ ] **4. Blind Test OST Indé (Audioldle)**
 - [ ] **Mise à Jour Time Attack & Versus avec les Nouveaux Jeux** :
   - [x] **Extension Time Attack (Nouveau Sprint Profil)** :
     - Ajout de la 4e discipline *Sprint Profil* dans [`src/components/timeattack/ProfilleSprint.tsx`](file:///src/components/timeattack/ProfilleSprint.tsx) : deviner express l'année de sortie, le studio de développement ou les genres d'un jeu culte avec raccourcis clavier 1 à 4 et captures Steam officielles.

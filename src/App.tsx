@@ -15,6 +15,7 @@ import { ScreenleGame } from './components/screenle/ScreenleGame';
 import { IndledleGame } from './components/indledle/IndledleGame';
 import { LinkleGame } from './components/linkle/LinkleGame';
 import { ProfilleGame } from './components/profille/ProfilleGame';
+import { ChronoGame } from './components/chrono/ChronoGame';
 import { MiniGamesHub } from './components/minigames/MiniGamesHub';
 import { MiniGamesNav, type MiniGameSubTab } from './components/minigames/MiniGamesNav';
 import { VersusArena } from './components/versus/VersusArena';
@@ -38,7 +39,7 @@ import { getTodayDateString, getYesterdayDateString, isDatePlayable } from './ut
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
 
-  // Mini-game sub-tab state (Hub or one of the 6 disciplines)
+  // Mini-game sub-tab state (Hub or one of the 7 disciplines)
   const [activeMiniGame, setActiveMiniGame] = useState<MiniGameSubTab>(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase();
@@ -46,6 +47,7 @@ export const AppContent: React.FC = () => {
       if (hash.startsWith('#indledle')) return 'indledle';
       if (hash.startsWith('#linkle')) return 'linkle';
       if (hash.startsWith('#profille')) return 'profille';
+      if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) return 'chrono';
       if (hash.startsWith('#timeattack')) return 'timeattack';
       if (hash.startsWith('#versus')) return 'versus';
     }
@@ -62,6 +64,8 @@ export const AppContent: React.FC = () => {
         hash.startsWith('#indledle') ||
         hash.startsWith('#linkle') ||
         hash.startsWith('#profille') ||
+        hash.startsWith('#chrono') ||
+        hash.startsWith('#timeline') ||
         hash.startsWith('#timeattack') ||
         hash.startsWith('#versus')
       ) {
@@ -117,7 +121,7 @@ export const AppContent: React.FC = () => {
   const handleTabChange = (tab: NavTab) => {
     if (
       tab === 'minigames' ||
-      ['screenle', 'indledle', 'linkle', 'profille', 'timeattack', 'versus'].includes(tab)
+      ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'timeattack', 'versus'].includes(tab)
     ) {
       setCurrentTab('minigames');
       if (tab === 'minigames') {
@@ -130,7 +134,7 @@ export const AppContent: React.FC = () => {
     }
   };
 
-  // Hash listener for direct deep linking (#minigames, #screenle, #indledle, #linkle, #profille, #timeattack, #versus, #arcade, #toolbox, #roost, #gems)
+  // Hash listener for direct deep linking (#minigames, #screenle, #indledle, #linkle, #profille, #chrono, #timeattack, #versus, #arcade, #toolbox, #roost, #gems)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.toLowerCase();
@@ -149,6 +153,9 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#profille')) {
         setCurrentTab('minigames');
         setActiveMiniGame('profille');
+      } else if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) {
+        setCurrentTab('minigames');
+        setActiveMiniGame('chrono');
       } else if (hash.startsWith('#timeattack')) {
         setCurrentTab('minigames');
         setActiveMiniGame('timeattack');
@@ -213,6 +220,10 @@ export const AppContent: React.FC = () => {
         profille: {
           fr: "Profille — Fiche d'Identité du Jeu Indé | Hoot Indie Games",
           en: 'Profille — Indie Game ID Card Puzzle | Hoot Indie Games',
+        },
+        chrono: {
+          fr: 'Chrono — Frise Chronologique de Jeux Indés | Hoot Indie Games',
+          en: 'Timeline — Daily Indie Chronology Puzzle | Hoot Indie Games',
         },
         timeattack: {
           fr: 'Time Attack ⚡ — Sprint Chronométré de Jeux Indés | Hoot Indie Games',
@@ -402,6 +413,14 @@ export const AppContent: React.FC = () => {
                 />
               )}
 
+              {activeMiniGame === 'chrono' && (
+                <ChronoGame
+                  key={currentDate}
+                  currentDate={currentDate}
+                  onSelectDate={(newDate) => setCurrentDate(newDate)}
+                />
+              )}
+
               {activeMiniGame === 'timeattack' && (
                 <TimeAttackHub
                   initialMode={timeAttackInitialMode}
@@ -432,7 +451,7 @@ export const AppContent: React.FC = () => {
         onClose={() => setIsStatsOpen(false)}
         initialTab={
           currentTab === 'minigames' &&
-          ['screenle', 'indledle', 'linkle', 'profille'].includes(activeMiniGame)
+          ['screenle', 'indledle', 'linkle', 'profille', 'chrono'].includes(activeMiniGame)
             ? (activeMiniGame as DailyGameMode)
             : 'screenle'
         }

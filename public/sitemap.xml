@@ -31,7 +31,23 @@
   <!-- Linkle : Le Jeu des 16 Connexions Thématiques Secrètes -->
   <url>
     <loc>https://hootindiegames.com/#linkle</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Profille : Fiche d'Identité du Jeu Indé (Année, Studio, Genre) -->
+  <url>
+    <loc>https://hootindiegames.com/#profille</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Chrono : Frise Chronologique Quotidienne du Jeu Vidéo Indépendant -->
+  <url>
+    <loc>https://hootindiegames.com/#chrono</loc>
+    <lastmod>2026-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>

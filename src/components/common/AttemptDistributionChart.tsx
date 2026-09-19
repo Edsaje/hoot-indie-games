@@ -5,7 +5,7 @@ import { BarChart3, Users, Flame, CheckCircle2, XCircle } from 'lucide-react';
 import { fetchCommunityStats, type CommunityDistributionData } from '../../services/leaderboardService';
 
 interface AttemptDistributionChartProps {
-  game: 'screenle' | 'indledle' | 'linkle' | 'profille';
+  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono';
   date: string;
   playerAttempts?: number;
   isWon?: boolean;
@@ -57,6 +57,14 @@ export const AttemptDistributionChart: React.FC<AttemptDistributionChartProps> =
         { key: 'fail', label: '0/3', isFail: true },
       ];
     }
+    if (game === 'chrono') {
+      return [
+        { key: '3', label: lang === 'fr' ? '❤️❤️❤️' : '❤️❤️❤️' },
+        { key: '2', label: lang === 'fr' ? '❤️❤️' : '❤️❤️' },
+        { key: '1', label: lang === 'fr' ? '❤️' : '❤️' },
+        { key: 'fail', label: lang === 'fr' ? '❌ Échec' : '❌ Fail', isFail: true },
+      ];
+    }
     // Screenle & Indledle
     return [
       { key: '1', label: '1' },
@@ -93,8 +101,8 @@ export const AttemptDistributionChart: React.FC<AttemptDistributionChartProps> =
       } else {
         const attemptNum = parseInt(k, 10);
         const playerNum = parseInt(playerKey, 10);
-        if (game === 'profille') {
-          // In profille, more is better (3 is better than 2)
+        if (game === 'profille' || game === 'chrono') {
+          // In profille and chrono, more is better (3 is better than 2)
           if (attemptNum < playerNum) playersWithWorseScore += count;
         } else {
           // In others, fewer attempts is better (2 is better than 4)
@@ -133,7 +141,7 @@ export const AttemptDistributionChart: React.FC<AttemptDistributionChartProps> =
               {lang === 'fr' ? 'Moyenne' : 'Average'}
             </div>
             <div className="text-xs font-mono font-black text-amber-400">
-              {data.averageAttempts} {game === 'profille' ? 'pts' : (lang === 'fr' ? 'essais' : 'tries')}
+              {data.averageAttempts} {game === 'profille' ? 'pts' : game === 'chrono' ? (lang === 'fr' ? 'vies' : 'lives') : (lang === 'fr' ? 'essais' : 'tries')}
             </div>
           </div>
         )}

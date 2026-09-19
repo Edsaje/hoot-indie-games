@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $statsFile = __DIR__ . '/community_stats.json';
 $rateLimitFile = __DIR__ . '/community_stats_ratelimit.json';
-$validGames = ['screenle', 'indledle', 'linkle', 'profille'];
+$validGames = ['screenle', 'indledle', 'linkle', 'profille', 'chrono'];
 
 // Récupération IP client
 function getClientIp() {
@@ -126,6 +126,16 @@ function getBaselineDistribution($game, $dateStr) {
             '2' => 48 + (($hash * 3) % 8),
             '1' => 22 + (($hash * 5) % 6),
             'fail' => 7 + (($hash * 2) % 3),
+        ];
+    }
+
+    if ($game === 'chrono') {
+        // Chrono : Vies restantes (3, 2, 1) ou fail
+        return [
+            '3' => 46 + ($hash % 9),
+            '2' => 52 + (($hash * 3) % 11),
+            '1' => 24 + (($hash * 5) % 6),
+            'fail' => 12 + (($hash * 2) % 4),
         ];
     }
 

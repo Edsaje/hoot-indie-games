@@ -5,6 +5,7 @@ import {
   Layers,
   Sparkles,
   FileSearch,
+  History,
   Zap,
   Swords,
   Flame,
@@ -21,6 +22,7 @@ export type MiniGameId =
   | 'indledle'
   | 'linkle'
   | 'profille'
+  | 'chrono'
   | 'timeattack'
   | 'versus';
 
@@ -50,7 +52,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     badgeText?: string;
     badgeColor?: string;
     isDaily: boolean;
-    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille';
+    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono';
   }[] = [
     {
       id: 'screenle',
@@ -97,10 +99,22 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
         : 'The title and screenshots are revealed: identify the release year, developer studio, and game style!',
       icon: FileSearch,
       accentColor: 'from-emerald-600/20 to-teal-500/20 border-emerald-500/30 text-emerald-400',
-      badgeText: isFr ? 'Nouveau !' : 'New!',
-      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
       isDaily: true,
       dailyKey: 'profille',
+    },
+    {
+      id: 'chrono',
+      title: isFr ? 'Chrono' : 'Timeline',
+      subtitle: isFr ? 'Frise chronologique indé' : 'Indie Chronological Timeline',
+      description: isFr
+        ? "Replacez 4 jeux indés mystères à leur date exacte sur la frise chronologique sans épuiser vos 3 cœurs !"
+        : 'Slot 4 mystery indie games into their exact release date order on the timeline without losing your 3 hearts!',
+      icon: History,
+      accentColor: 'from-amber-600/20 to-yellow-500/20 border-yellow-500/30 text-yellow-400',
+      badgeText: isFr ? 'Nouveau !' : 'New!',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+      isDaily: true,
+      dailyKey: 'chrono',
     },
     {
       id: 'timeattack',
@@ -143,8 +157,8 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
         </h1>
         <p className="text-sm text-slate-300 max-w-2xl mx-auto mt-2 leading-relaxed">
           {isFr
-            ? '6 disciplines pour tester votre culture des jeux vidéo indépendants. Résolvez les énigmes quotidiennes pour faire grandir vos séries ou lancez des parties rapides !'
-            : '6 distinct disciplines to test your indie game mastery. Solve daily puzzles to nurture your streaks or jump into rapid-fire sprints!'}
+            ? '7 disciplines pour tester votre culture des jeux vidéo indépendants. Résolvez les énigmes quotidiennes pour faire grandir vos séries ou lancez des parties rapides !'
+            : '7 distinct disciplines to test your indie game mastery. Solve daily puzzles to nurture your streaks or jump into rapid-fire sprints!'}
         </p>
       </div>
 
