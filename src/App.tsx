@@ -24,6 +24,7 @@ import { MiniGamesHub } from './components/minigames/MiniGamesHub';
 import { MiniGamesNav, type MiniGameSubTab } from './components/minigames/MiniGamesNav';
 import { VersusArena } from './components/versus/VersusArena';
 import { ToolboxHub } from './components/toolbox/ToolboxHub';
+import { SteamCatalogExplorer } from './components/steam/SteamCatalogExplorer';
 import { TheRoostHub } from './components/roost/TheRoostHub';
 import { ArcadeHallView } from './components/arcade/ArcadeHallView';
 import { ArcadeModal, type ArcadeGameId } from './components/arcade/ArcadeModal';
@@ -86,6 +87,7 @@ export const AppContent: React.FC = () => {
       ) {
         return 'minigames';
       }
+      if (hash.startsWith('#catalog') || hash.startsWith('#steam')) return 'catalog';
       if (hash.startsWith('#arcade')) return 'arcade';
       if (hash.startsWith('#toolbox')) return 'toolbox';
       if (hash.startsWith('#roost')) return 'roost';
@@ -196,6 +198,8 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#quiz') || hash.startsWith('#quizz')) {
         setCurrentTab('minigames');
         setActiveMiniGame('quiz');
+      } else if (hash.startsWith('#catalog') || hash.startsWith('#steam')) {
+        setCurrentTab('catalog');
       } else if (hash.startsWith('#arcade')) {
         setCurrentTab('arcade');
       } else if (hash.startsWith('#toolbox')) {
@@ -282,6 +286,11 @@ export const AppContent: React.FC = () => {
       };
       pageTitle = isFr ? minigameTitles[activeMiniGame].fr : minigameTitles[activeMiniGame].en;
       targetHash = activeMiniGame === 'hub' ? '#minigames' : `#${activeMiniGame}`;
+    } else if (currentTab === 'catalog') {
+      pageTitle = isFr
+        ? 'Catalogue Steam Indé — Bibliothèque Étendue & Découvertes | Hoot Indie Games'
+        : 'Indie Steam Catalog — Extended Library & Discoveries | Hoot Indie Games';
+      targetHash = '#catalog';
     } else if (currentTab === 'arcade') {
       pageTitle = isFr
         ? "Salle d'Arcade Rétro & Vectrex 1982 | Hoot Indie Games"
@@ -510,6 +519,11 @@ export const AppContent: React.FC = () => {
           </div>
         )}
 
+        {currentTab === 'catalog' && (
+          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 animate-in fade-in duration-300">
+            <SteamCatalogExplorer />
+          </div>
+        )}
         {currentTab === 'arcade' && (
           <ArcadeHallView
             onOpenGame={handleOpenArcade}

@@ -27,9 +27,9 @@ import {
   RotateCcw,
   X,
   ArrowUpDown,
+  Database,
 } from 'lucide-react';
-import { getDailyGame } from '../../data/games';
-import { useSteamCatalog } from '../../context/useSteamCatalog';
+import { getDailyGame, INDIE_GAMES } from '../../data/games';
 import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { soundFx } from '../../utils/audio';
@@ -52,7 +52,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   onOpenArcade,
 }) => {
   const { i18n } = useTranslation();
-  const { allPlayableGames } = useSteamCatalog();
+  const curatedGems = INDIE_GAMES;
   const { isGameOwned, isSteamConnected, toggleGameOwned } = useUserAccount();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
@@ -93,8 +93,8 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   const catalogGridRef = useRef<HTMLDivElement | null>(null);
 
   const ownedCount = useMemo(() => {
-    return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
-  }, [allPlayableGames, isGameOwned]);
+    return curatedGems.filter((g) => isGameOwned(g.steamUrl)).length;
+  }, [curatedGems, isGameOwned]);
 
   // Check today's game completion status for all 8 daily disciplines
   const dailyStatus = useMemo(() => {
@@ -104,9 +104,9 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   // Extract unique genres across all games
   const allGenresList = useMemo(() => {
     const set = new Set<string>();
-    allPlayableGames.forEach((g) => g.genre.forEach((genre) => set.add(genre)));
+    curatedGems.forEach((g) => g.genre.forEach((genre) => set.add(genre)));
     return Array.from(set).sort();
-  }, [allPlayableGames]);
+  }, [curatedGems]);
 
   // Active non-default filters count
   const activeFiltersCount = useMemo(() => {
@@ -139,7 +139,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
   // Filtered and sorted gems catalog
   const filteredGems = useMemo(() => {
-    let list = allPlayableGames.filter((g) => {
+    let list = curatedGems.filter((g) => {
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch =
         !q ||
@@ -257,14 +257,14 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     });
 
     return list;
-  }, [allPlayableGames, searchQuery, selectedGenre, ownershipFilter, priceFilter, ratingFilter, sortBy, isGameOwned]);
+  }, [curatedGems, searchQuery, selectedGenre, ownershipFilter, priceFilter, ratingFilter, sortBy, isGameOwned]);
 
   // Roulette: Randomly pick a gem and scroll to it
   const handleRandomPick = () => {
     soundFx.playClick();
-    if (allPlayableGames.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * allPlayableGames.length);
-    const chosen = allPlayableGames[randomIndex];
+    if (curatedGems.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * curatedGems.length);
+    const chosen = curatedGems[randomIndex];
 
     setSearchQuery('');
     setSelectedGenre('all');
@@ -860,6 +860,40 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
         </div>
       </div>
 
+      {/* Discovery Banner for Extended Steam Catalog */}
+      <div className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-[#131a29] to-indigo-950/50 border border-blue-500/30 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-blue-500/20 border border-blue-500/40 text-blue-400 flex items-center justify-center shrink-0 shadow">
+            <Database className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm sm:text-base font-black text-white">
+                {lang === 'fr' ? 'À la recherche de plus de découvertes indés ?' : 'Looking for more indie discoveries?'}
+              </h3>
+              <span className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-[10px] font-black uppercase">
+                {lang === 'fr' ? 'Onglet Dédié' : 'Dedicated Tab'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+              {lang === 'fr'
+                ? 'Explorez notre grand Catalogue Steam avec des centaines de jeux indés (y compris émergents ou aux avis variés), des filtres par angle de caméra / style artistique, et forgez votre propre avis !'
+                : 'Explore our extensive Steam Catalog featuring hundreds of indie games with diverse review scores, camera & art filters, and form your own opinion!'}
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            soundFx.playClick();
+            onNavigateTab('catalog');
+          }}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-lg shadow-blue-500/25 active:scale-95 shrink-0 cursor-pointer"
+        >
+          <span>{lang === 'fr' ? 'Explorer le Catalogue Steam' : 'Explore Steam Catalog'}</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
       {/* Catalog Section Header & Search/Filters */}
       <div ref={catalogGridRef} className="pt-4 mb-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
@@ -870,14 +904,14 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
             </h2>
             <p className="text-xs text-slate-400 mt-1">
               {lang === 'fr'
-                ? `Explorez nos ${allPlayableGames.length} chefs-d'œuvre sélectionnés et certifiés Steam`
-                : `Explore our ${allPlayableGames.length} certified curated Steam indie masterpieces`}
+                ? `Explorez nos ${curatedGems.length} chefs-d'œuvre sélectionnés et certifiés Steam`
+                : `Explore our ${curatedGems.length} certified curated Steam indie masterpieces`}
             </p>
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto">
             <span className="px-3 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] text-xs font-mono text-amber-400 font-bold shadow-sm">
-              {filteredGems.length} / {allPlayableGames.length} {lang === 'fr' ? 'pépite(s)' : 'gem(s)'}
+              {filteredGems.length} / {curatedGems.length} {lang === 'fr' ? 'pépite(s)' : 'gem(s)'}
             </span>
           </div>
         </div>
@@ -1031,13 +1065,13 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 className="bg-[#0b0f19] border border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs text-cyan-300 font-bold focus:outline-none cursor-pointer"
               >
                 <option value="all" className="bg-[#131a29] text-white">
-                  {lang === 'fr' ? `Toutes les pépites (${allPlayableGames.length})` : `All gems (${allPlayableGames.length})`}
+                  {lang === 'fr' ? `Toutes les pépites (${curatedGems.length})` : `All gems (${curatedGems.length})`}
                 </option>
                 <option value="owned" className="bg-[#131a29] text-cyan-400">
                   {lang === 'fr' ? `🎮 Dans ma bibliothèque (${ownedCount})` : `🎮 In my library (${ownedCount})`}
                 </option>
                 <option value="unowned" className="bg-[#131a29] text-emerald-400">
-                  {lang === 'fr' ? `✨ À découvrir (${allPlayableGames.length - ownedCount})` : `✨ To discover (${allPlayableGames.length - ownedCount})`}
+                  {lang === 'fr' ? `✨ À découvrir (${curatedGems.length - ownedCount})` : `✨ To discover (${curatedGems.length - ownedCount})`}
                 </option>
               </select>
             )}

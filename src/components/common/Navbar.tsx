@@ -15,6 +15,7 @@ import {
   Puzzle,
   Trophy,
   Crown,
+  Database,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
@@ -27,6 +28,7 @@ import { getTodayDateString, getYesterdayDateString } from '../../utils/streakMa
 
 export type NavTab =
   | 'gems'
+  | 'catalog'
   | 'minigames'
   | 'screenle'
   | 'indledle'
@@ -140,7 +142,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               {t('nav.gems')}
             </button>
 
-            {/* 2. Mini-jeux (Consolidated Screenle, Indledle, Linkle, Profille, Chrono, Time Attack, Versus) */}
+            {/* 2. Catalogue */}
+            <button
+              onClick={() => handleTabSelect('catalog')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                currentTab === 'catalog'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Database className="w-3.5 h-3.5" />
+              {t('nav.catalog', 'Catalogue')}
+            </button>
+
+            {/* 3. Mini-jeux (Consolidated Screenle, Indledle, Linkle, Profille, Chrono, Time Attack, Versus) */}
             <button
               onClick={() => handleTabSelect('minigames')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -366,11 +381,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Mobile & Tablet Sub-Navigation Bar (Consolidated 5 tabs, Mobile-First) */}
+        {/* Mobile & Tablet Sub-Navigation Bar (Consolidated 6 tabs, Mobile-First) */}
         <div className="flex lg:hidden overflow-x-auto py-2 gap-1.5 border-t border-[#1e293b]/60 no-scrollbar justify-between">
           {(
             [
               { id: 'gems', label: t('nav.gems'), icon: Compass },
+              { id: 'catalog', label: t('nav.catalog', 'Catalogue'), icon: Database },
               { id: 'minigames', label: t('nav.games', 'Mini-Jeux'), icon: Puzzle, badge: '10' },
               { id: 'arcade', label: t('nav.arcade'), icon: Gamepad2 },
               { id: 'toolbox', label: t('nav.toolbox'), icon: Wrench },

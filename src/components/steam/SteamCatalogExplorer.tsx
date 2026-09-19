@@ -38,7 +38,9 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
   const [selectedArtStyle, setSelectedArtStyle] = useState<string>('all');
   const [selectedCamera, setSelectedCamera] = useState<string>('all');
   const [priceFilter, setPriceFilter] = useState<'all' | 'sale' | 'free' | 'under10' | 'under20' | '20plus'>('all');
-  const [ratingFilter, setRatingFilter] = useState<'all' | 'overwhelming' | 'very_positive' | 'positive'>('all');
+  const [ratingFilter, setRatingFilter] = useState<
+    'all' | 'overwhelming' | 'very_positive' | 'positive' | 'mostly_positive' | 'mixed'
+  >('all');
   const [sortBy, setSortBy] = useState<
     | 'yearDesc'
     | 'yearAsc'
@@ -146,6 +148,10 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
         if (!storeData || storeData.positivePercent < 85) return false;
       } else if (ratingFilter === 'positive') {
         if (!storeData || storeData.positivePercent < 80) return false;
+      } else if (ratingFilter === 'mostly_positive') {
+        if (!storeData || storeData.positivePercent < 70) return false;
+      } else if (ratingFilter === 'mixed') {
+        if (!storeData || storeData.positivePercent >= 70) return false;
       }
 
       return true;
@@ -518,10 +524,12 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             onChange={(e) => setRatingFilter(e.target.value as any)}
             className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
           >
-            <option value="all">{lang === 'fr' ? 'Toutes les notes' : 'All reviews'}</option>
+            <option value="all">{lang === 'fr' ? 'Toutes les notes (dont avis mixtes)' : 'All reviews (incl. mixed)'}</option>
             <option value="overwhelming" className="text-amber-300 font-bold">{lang === 'fr' ? '🌟 Extrêmement positifs (≥95%)' : '🌟 Overwhelmingly Positive (≥95%)'}</option>
             <option value="very_positive">{lang === 'fr' ? '⭐ Très positifs (≥85%)' : '⭐ Very Positive (≥85%)'}</option>
             <option value="positive">{lang === 'fr' ? '👍 Positifs (≥80%)' : '👍 Positive (≥80%)'}</option>
+            <option value="mostly_positive">{lang === 'fr' ? '🙂 Plutôt positifs (≥70%)' : '🙂 Mostly Positive (≥70%)'}</option>
+            <option value="mixed" className="text-amber-200">{lang === 'fr' ? '⚖️ Avis variables / Mixtes (<70%)' : '⚖️ Mixed Reviews (<70%)'}</option>
           </select>
 
           {/* Tri Avancé */}

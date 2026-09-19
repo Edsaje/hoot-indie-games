@@ -14,11 +14,11 @@ import { UPCOMING_INDIE_GAMES, type UpcomingGame } from '../src/data/upcomingGam
  *    stricts de qualité (Règle 0 Hallucination, avis positifs > 80%, captures HD certifiées).
  */
 
-// Configuration des seuils de qualité
+// Configuration des seuils de qualité (critères assouplis pour enrichir le catalogue)
 const CONFIG = {
-  MIN_REVIEWS: 15,          // Minimum d'avis pour éliminer les prototypes / shovelware
-  MIN_POSITIVE_RATIO: 0.80, // Minimum 80% d'avis positifs
-  MAX_NEW_GAMES_PER_DAY: 3, // Nombre maximum de pépites ajoutées par jour pour préserver la curation
+  MIN_REVIEWS: 5,          // Minimum d'avis assoupli pour accueillir davantage d'indés émergents
+  MIN_POSITIVE_RATIO: 0.60, // Minimum 60% d'avis positifs (inclut les avis plutôt positifs & mixtes encourageants)
+  MAX_NEW_GAMES_PER_DAY: 5, // Nombre de jeux par moisson
   TARGET_RADAR_COUNT: 9,    // Nombre cible de jeux à venir dans le Radar
   REQUEST_DELAY_MS: 350,    // Délai poli entre requêtes Steam API
 };
