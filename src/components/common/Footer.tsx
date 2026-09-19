@@ -81,15 +81,15 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
           {/* Col 2: Mini-Jeux */}
           <div>
             <h4 className="text-xs font-black uppercase text-white tracking-widest mb-3">
-              {t('nav.games')}
+              {i18n.language.startsWith('fr') ? 'Mini-Jeux Indés (10)' : 'Indie Mini-Games (10)'}
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-1.5 text-xs">
               <li>
                 <button
                   onClick={() => onSelectTab('minigames')}
-                  className="hover:text-amber-400 text-amber-300 font-semibold transition"
+                  className="hover:text-amber-400 text-amber-300 font-bold transition flex items-center gap-1"
                 >
-                  {i18n.language.startsWith('fr') ? 'Hub des 6 Mini-jeux' : '6 Mini-games Hub'}
+                  <span>{i18n.language.startsWith('fr') ? '✦ Hub des 10 Mini-jeux' : '✦ 10 Mini-games Hub'}</span>
                 </button>
               </li>
               <li>
@@ -97,7 +97,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   onClick={() => onSelectTab('screenle')}
                   className="hover:text-amber-400 text-slate-300 transition"
                 >
-                  Mode 1 : Screenle
+                  1. {i18n.language.startsWith('fr') ? 'Capture (Screenle)' : 'Framed (Screenle)'}
                 </button>
               </li>
               <li>
@@ -105,7 +105,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   onClick={() => onSelectTab('indledle')}
                   className="hover:text-amber-400 text-slate-300 transition"
                 >
-                  Mode 2 : Indledle
+                  2. Classic (Indledle)
                 </button>
               </li>
               <li>
@@ -113,39 +113,66 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                   onClick={() => onSelectTab('linkle')}
                   className="hover:text-amber-400 text-slate-300 transition"
                 >
-                  Mode 3 : Linkle
+                  3. {i18n.language.startsWith('fr') ? 'Connexions (Linkle)' : 'Connections (Linkle)'}
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onSelectTab('profille')}
-                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1.5"
+                  className="hover:text-amber-400 text-slate-300 transition"
                 >
-                  <span>Mode 4 : Profille</span>
-                  <span className="text-[10px] font-black uppercase px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/40">
-                    {i18n.language.startsWith('fr') ? 'Nouveau' : 'New'}
-                  </span>
+                  4. {i18n.language.startsWith('fr') ? 'Profil (Profille)' : 'Profile (Profille)'}
                 </button>
               </li>
               <li>
+                <button
+                  onClick={() => onSelectTab('chrono')}
+                  className="hover:text-amber-400 text-slate-300 transition"
+                >
+                  5. {i18n.language.startsWith('fr') ? 'Chrono (Timeline)' : 'Timeline (Chrono)'}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectTab('pixel')}
+                  className="hover:text-amber-400 text-slate-300 transition"
+                >
+                  6. Pixel & Silhouette
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectTab('review')}
+                  className="hover:text-amber-400 text-slate-300 transition"
+                >
+                  7. {i18n.language.startsWith('fr') ? 'Critique Steam (Review)' : 'Steam Review'}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectTab('blindtest')}
+                  className="hover:text-amber-400 text-slate-300 transition"
+                >
+                  8. Blind Test OST
+                </button>
+              </li>
+              <li className="pt-1 flex items-center gap-2">
                 <button
                   onClick={() => onSelectTab('timeattack')}
-                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1.5"
+                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1"
                 >
-                  <span>Mode 5 : Time Attack</span>
-                  <span className="text-[10px] font-bold uppercase px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
-                    Sprint
+                  <span>9. Time Attack</span>
+                  <span className="text-[9px] font-bold uppercase px-1 py-0.2 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
+                    ⚡
                   </span>
                 </button>
-              </li>
-              <li>
                 <button
                   onClick={() => onSelectTab('versus')}
-                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1.5"
+                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1"
                 >
-                  <span>Mode 6 : Versus 1v1</span>
-                  <span className="text-[10px] font-bold uppercase px-1.5 py-0.2 bg-rose-500/20 text-rose-300 rounded border border-rose-500/30">
-                    Live
+                  <span>10. {i18n.language.startsWith('fr') ? 'Duel 1v1' : '1v1 Duel'}</span>
+                  <span className="text-[9px] font-bold uppercase px-1 py-0.2 bg-rose-500/20 text-rose-300 rounded border border-rose-500/30">
+                    ⚔️
                   </span>
                 </button>
               </li>

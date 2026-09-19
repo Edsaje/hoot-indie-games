@@ -224,9 +224,13 @@
   - Conservation des deux créations originales du sanctuaire : *Flappy Hibou* et *Course Sylvestre*.
 - [x] **Remontée Automatique en Haut de Page (Scroll Top on Tab Switch)** :
   - Réinitialisation instantanée du défilement (`window.scrollTo({ top: 0, behavior: 'instant' })`) dans [`src/App.tsx`](file:///src/App.tsx) lors de tout changement d'onglet ou de sous-discipline.
-- [x] **Refonte Navigation Mobile-First ("Mini-jeux") & Hub Dédié** :
-  - Consolidation des 6 disciplines de déduction (*Screenle*, *Indledle*, *Linkle*, *Profille*, *Time Attack*, *Versus*) dans un onglet unique *"Mini-jeux"* (`minigames`) avec Hub central ([`src/components/minigames/MiniGamesHub.tsx`](file:///src/components/minigames/MiniGamesHub.tsx)) et navigation par pilules réactive ([`src/components/minigames/MiniGamesNav.tsx`](file:///src/components/minigames/MiniGamesNav.tsx)).
-  - Allègement de la Navbar à 5 onglets majeurs (*Pépites*, *Mini-jeux*, *Arcade*, *Boîte à Outils*, *Le Perchoir*), garantissant 0 dépassement sur écran mobile et desktop.
+- [x] **Refonte Navigation Mobile-First ("Mini-jeux"), Hub Dédié & Navigation Multi-Étages (10 Mini-Jeux)** :
+  - Organisation en 2 étages lisibles dans [`src/components/minigames/MiniGamesNav.tsx`](file:///src/components/minigames/MiniGamesNav.tsx) :
+    1. **Étage 1 (Hub & Compétitif)** : Bouton proéminent *"Hub des Mini-Jeux"* (retour direct 1-clic) + *Time Attack ⚡* + *Duel 1v1 ⚔️*.
+    2. **Étage 2 (8 Défis Quotidiens)** : *Capture*, *Classic*, *Connexions*, *Profil*, *Chrono*, *Pixel*, *Critique*, *Blind Test* avec pastilles de victoires vertes et 0 scroll horizontal masqué (100% visible sur mobile et desktop).
+  - Hub central exhaustif ([`src/components/minigames/MiniGamesHub.tsx`](file:///src/components/minigames/MiniGamesHub.tsx)) référençant les 10 disciplines avec cartes interactives.
+  - Bas de page complet ([`src/components/common/Footer.tsx`](file:///src/components/common/Footer.tsx)) listant l'intégralité des 10 mini-jeux avec navigation directe.
+  - Allègement de la Navbar à 5 onglets majeurs (*Pépites*, *Mini-jeux (badge 10)*, *Arcade*, *Boîte à Outils*, *Le Perchoir*).
 - [x] **Nouveau Mini-Jeu Quotidien "Profille" (Fiche d'Identité Indé)** ([`src/components/profille/ProfilleGame.tsx`](file:///src/components/profille/ProfilleGame.tsx)) :
   - Titre et captures révélés : le joueur doit déduire l'année de sortie, le studio de développement et le genre / style de jeu.
   - Hydratation `localStorage` rétro-compatible sans crash pour les profils existants.
@@ -347,9 +351,9 @@
     - Recherche prédictive tolérante, modale de partage zéro-spoil, préservation de flamme J / J-1 et graphique de distribution communautaire.
   - [x] **4. Blind Test OST Indé (Quiz Musical Synthétisé — "Blind Test" / "OST")** ([`src/components/blindtest/BlindTestGame.tsx`](file:///src/components/blindtest/BlindTestGame.tsx), [`src/data/blindtestPuzzles.ts`](file:///src/data/blindtestPuzzles.ts)) :
     - Format type "Heardle" avec lecteur audio interactif et synthétiseur procédural Web Audio API 100% autonome et hors-ligne (0 risque de 404, 0 problème CORS, 0 claim de copyright externe).
-    - Mélodies cultes transcrites en notes de fréquences (Megalovania, Celeste First Steps, Hollow Knight Dirtmouth, Outer Wilds Timber Hearth, Shovel Knight Strike the Earth, Hotline Miami Hydrogen, etc.).
-    - Visualiseur spectral en barres de fréquences dynamiques synchronisé via `AnalyserNode` en temps réel.
-    - Paliers d'écoute débloqués à chaque essai : 1.5s, 3.0s, 6.0s, 11.0s et 18.0s, complétés par des indices sur le compositeur et l'ambiance.
+    - Mélodies cultes transcrites en arrangements complets de 18-20 secondes (Megalovania, Celeste First Steps, Hollow Knight Dirtmouth, Outer Wilds Timber Hearth, Shovel Knight Strike the Earth, Hotline Miami Hydrogen, Hades, Stardew Valley, Balatro, Sea of Stars, Gris, Slay the Spire, Cuphead, Dead Cells, Tunic, etc.).
+    - Correction audio garantie : boucle de lecture continue (`while (noteTime < startTime + playDuration)`) garantissant que la musique joue jusqu'au bout exact du palier débloqué (1.5s, 3.0s, 6.0s, 11.0s, 18.0s) sans coupure prématurée à 3s, avec enrichissement de sous-harmoniques de basse sur les boucles suivantes.
+    - Barre de progression segmentée avec zone débloquée lumineuse, curseur temps réel et visualiseur spectral animé via `AnalyserNode`.
     - Recherche prédictive, modale de résultats avec carte de partage zéro-spoil HD, préservation de série (streaks) et graphique de répartition communautaire.
 - [ ] **Mise à Jour Time Attack & Versus avec les Nouveaux Jeux** :
   - [x] **Extension Time Attack (Nouveau Sprint Profil)** :

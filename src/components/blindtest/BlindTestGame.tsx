@@ -218,17 +218,23 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
     const melody = puzzle.audioConfig.melody;
     const instrument = puzzle.audioConfig.instrument;
     const nodes: { stop: () => void }[] = [];
+    const playDuration = maxAllowedDuration;
 
-    for (const item of melody) {
-      const freq = noteToFrequency(item.note, item.octave);
+    // Planifier les notes en boucle continue jusqu'à couvrir l'intégralité du palier débloqué
+    let noteIdx = 0;
+    while (noteTime < startTime + playDuration && melody.length > 0) {
+      const item = melody[noteIdx % melody.length];
+      const loopPass = Math.floor(noteIdx / melody.length);
       const dur = item.duration;
+      const freq = noteToFrequency(item.note, item.octave);
 
-      // Ne planifier que si dans la limite débloquée
-      if (noteTime - startTime + dur > maxAllowedDuration + 0.1) {
-        break;
-      }
+      const timeLeft = (startTime + playDuration) - noteTime;
+      if (timeLeft <= 0.02) break;
+
+      const effectiveDur = Math.min(dur, timeLeft);
 
       if (freq > 0) {
+        // Oscillateur mélodique principal (Lead)
         const osc = ctx.createOscillator();
         const noteGain = ctx.createGain();
 
@@ -249,27 +255,46 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
         osc.frequency.setValueAtTime(freq, noteTime);
 
-        // Enveloppe ADSR dynamique
+        // Enveloppe ADSR dynamique adaptée à la durée effective
+        const attackTime = Math.min(0.04, effectiveDur * 0.2);
         noteGain.gain.setValueAtTime(0.001, noteTime);
-        noteGain.gain.linearRampToValueAtTime(0.3, noteTime + 0.03);
-        noteGain.gain.exponentialRampToValueAtTime(0.001, noteTime + dur);
+        noteGain.gain.linearRampToValueAtTime(0.28, noteTime + attackTime);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, noteTime + effectiveDur);
 
         osc.connect(noteGain);
         noteGain.connect(masterGain);
 
         osc.start(noteTime);
-        osc.stop(noteTime + dur);
-
+        osc.stop(noteTime + effectiveDur);
         nodes.push(osc);
+
+        // Enrichissement harmonique sur les boucles suivantes (paliers 6s, 11s, 18s)
+        if (loopPass > 0 && freq > 65) {
+          const subOsc = ctx.createOscillator();
+          const subGain = ctx.createGain();
+          subOsc.type = instrument === 'chiptune' ? 'triangle' : 'sine';
+          subOsc.frequency.setValueAtTime(freq / 2, noteTime);
+
+          subGain.gain.setValueAtTime(0.001, noteTime);
+          subGain.gain.linearRampToValueAtTime(0.12, noteTime + attackTime);
+          subGain.gain.exponentialRampToValueAtTime(0.001, noteTime + effectiveDur);
+
+          subOsc.connect(subGain);
+          subGain.connect(masterGain);
+
+          subOsc.start(noteTime);
+          subOsc.stop(noteTime + effectiveDur);
+          nodes.push(subOsc);
+        }
       }
 
       noteTime += dur;
+      noteIdx++;
     }
 
     activeNodesRef.current = nodes;
     setIsPlaying(true);
 
-    const playDuration = Math.min(maxAllowedDuration, noteTime - startTime);
     const startRealTime = performance.now();
 
     // Boucle d'animation pour l'égaliseur et la barre de progression
@@ -280,8 +305,8 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
         return;
       }
 
-      setPlaybackSeconds(Number(elapsed.toFixed(1)));
-      setPlaybackProgress(Math.min(1, elapsed / maxAllowedDuration));
+      setPlaybackSeconds(Number(Math.min(elapsed, playDuration).toFixed(1)));
+      setPlaybackProgress(Math.min(1, elapsed / 18.0));
 
       if (analyserRef.current) {
         const data = new Uint8Array(analyserRef.current.frequencyBinCount);
@@ -297,7 +322,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
     playbackTimeoutRef.current = setTimeout(() => {
       stopAudio();
-    }, playDuration * 1000 + 100);
+    }, playDuration * 1000 + 80);
   };
 
   // Télémétrie
@@ -596,10 +621,16 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
           {/* Barre de Progression Segmentée Heardle-Style */}
           <div className="w-full max-w-md space-y-1.5">
             <div className="relative w-full h-3 bg-[#0a0715] rounded-full overflow-hidden border border-purple-500/30 p-0.5">
+              {/* Zone débloquée du palier courant */}
+              <div
+                className="absolute top-0.5 bottom-0.5 left-0.5 bg-purple-500/25 rounded-full pointer-events-none transition-all duration-300"
+                style={{ width: `${Math.min(100, (maxAllowedDuration / 18.0) * 100)}%` }}
+              />
+
               {/* Remplissage de lecture active */}
               <div
-                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 rounded-full transition-all duration-75"
-                style={{ width: `${playbackProgress * 100}%` }}
+                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 rounded-full transition-all duration-75 relative z-10"
+                style={{ width: `${Math.min(100, playbackProgress * 100)}%` }}
               />
 
               {/* Lignes de découpe des paliers d'écoute */}
@@ -608,7 +639,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                 return (
                   <div
                     key={i}
-                    className="absolute top-0 bottom-0 w-0.5 bg-slate-700/80 pointer-events-none"
+                    className="absolute top-0 bottom-0 w-0.5 bg-slate-700/80 pointer-events-none z-20"
                     style={{ left: `${leftPct}%` }}
                   />
                 );
