@@ -69,6 +69,8 @@ export interface DateChallengeStatus {
   profille: DayPlayStatus;
   chrono: DayPlayStatus;
   pixel: DayPlayStatus;
+  review: DayPlayStatus;
+  blindtest: DayPlayStatus;
 }
 
 export const getChallengeStatusForDate = (dateStr: string): DateChallengeStatus => {
@@ -93,5 +95,7 @@ export const getChallengeStatusForDate = (dateStr: string): DateChallengeStatus 
     profille: getStatus(`profille_state_${dateStr}`),
     chrono: getStatus(`chrono_state_${dateStr}`),
     pixel: getStatus(`pixel_state_${dateStr}`),
+    review: getStatus(`review_state_${dateStr}`),
+    blindtest: getStatus(`blindtest_state_${dateStr}`),
   };
 };

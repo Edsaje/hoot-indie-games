@@ -67,21 +67,21 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
         </div>
 
         {/* Tabs for each mode */}
-        <div className="grid grid-cols-6 gap-1 bg-[#0b0f19] p-1 rounded-xl border border-[#1e293b] mb-6">
-          {(['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel'] as const).map((tab) => (
+        <div className="grid grid-cols-7 gap-1 bg-[#0b0f19] p-1 rounded-xl border border-[#1e293b] mb-6">
+          {(['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => {
                 soundFx.playClick();
                 setActiveTab(tab);
               }}
-              className={`py-1.5 text-[10px] sm:text-xs font-semibold rounded-lg capitalize transition-all ${
+              className={`py-1.5 text-[9px] sm:text-[11px] font-semibold rounded-lg capitalize transition-all ${
                 activeTab === tab
                   ? 'bg-[#1e293b] text-[#f59e0b] shadow'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              {tab === 'pixel' ? 'Pixel' : t('nav.' + tab)}
+              {tab === 'pixel' ? 'Pixel' : tab === 'review' ? 'Review' : t('nav.' + tab)}
             </button>
           ))}
         </div>

@@ -276,6 +276,15 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                           : 'bg-slate-800'
                       }`}
                     />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.review === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.review === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
                   </div>
                 </div>
               );
@@ -292,14 +301,16 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               status.linkle === 'won' &&
               status.profille === 'won' &&
               status.chrono === 'won' &&
-              status.pixel === 'won';
+              status.pixel === 'won' &&
+              status.review === 'won';
             const hasUnplayed =
               status.screenle === 'unplayed' ||
               status.indledle === 'unplayed' ||
               status.linkle === 'unplayed' ||
               status.profille === 'unplayed' ||
               status.chrono === 'unplayed' ||
-              status.pixel === 'unplayed';
+              status.pixel === 'unplayed' ||
+              status.review === 'unplayed';
 
             return (
               <button
@@ -392,6 +403,16 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                       status.pixel === 'won'
                         ? 'bg-emerald-400'
                         : status.pixel === 'lost'
+                        ? 'bg-rose-500'
+                        : 'bg-slate-700'
+                    }`}
+                  />
+                  <span
+                    title="Review"
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      status.review === 'won'
+                        ? 'bg-emerald-400'
+                        : status.review === 'lost'
                         ? 'bg-rose-500'
                         : 'bg-slate-700'
                     }`}

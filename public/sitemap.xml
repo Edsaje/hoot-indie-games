@@ -60,6 +60,14 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- Steam Review : Déduction de Critiques Caviardées -->
+  <url>
+    <loc>https://hootindiegames.com/#review</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Arène Versus 1v1 : Duels en Temps Réel entre Joueurs Indés -->
   <url>
     <loc>https://hootindiegames.com/#versus</loc>

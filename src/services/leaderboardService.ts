@@ -19,7 +19,7 @@ export interface LeaderboardEntry {
 }
 
 export interface CommunityDistributionData {
-  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel';
+  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review' | 'blindtest';
   date: string;
   total: number;
   distribution: Record<string, number>;
@@ -198,7 +198,7 @@ export async function submitLeaderboardScore(
  * Récupère la distribution des essais de la communauté pour le jeu quotidien du jour
  */
 export async function fetchCommunityStats(
-  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel',
+  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review' | 'blindtest',
   dateStr: string
 ): Promise<CommunityDistributionData> {
   try {
@@ -230,7 +230,7 @@ export async function fetchCommunityStats(
  * Enregistre la résolution d'une partie quotidienne pour alimenter le graphique communautaire
  */
 export async function recordDailyCommunityCompletion(
-  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel',
+  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review' | 'blindtest',
   dateStr: string,
   won: boolean,
   attempts: number
@@ -274,7 +274,7 @@ export async function recordDailyCommunityCompletion(
 // -------------------------------------------------------------
 
 function generateBaselineDistribution(
-  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel',
+  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review' | 'blindtest',
   dateStr: string
 ): CommunityDistributionData {
   let hash = 0;
@@ -306,7 +306,7 @@ function generateBaselineDistribution(
       '1': 24 + ((hash * 5) % 6),
       fail: 8 + ((hash * 2) % 4),
     };
-  } else if (game === 'pixel') {
+  } else if (game === 'pixel' || game === 'review' || game === 'blindtest') {
     dist = {
       '1': 10 + (hash % 6),
       '2': 32 + ((hash * 2) % 9),

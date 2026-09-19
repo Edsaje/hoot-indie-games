@@ -7,6 +7,7 @@ import {
   FileSearch,
   History,
   Sliders,
+  MessageSquareQuote,
   Zap,
   Swords,
   Flame,
@@ -25,6 +26,7 @@ export type MiniGameId =
   | 'profille'
   | 'chrono'
   | 'pixel'
+  | 'review'
   | 'timeattack'
   | 'versus';
 
@@ -54,7 +56,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     badgeText?: string;
     badgeColor?: string;
     isDaily: boolean;
-    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel';
+    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review';
   }[] = [
     {
       id: 'screenle',
@@ -131,6 +133,20 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
       badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
       isDaily: true,
       dailyKey: 'pixel',
+    },
+    {
+      id: 'review',
+      title: isFr ? 'Critique Steam' : 'Steam Review',
+      subtitle: isFr ? 'Critique de joueur caviardée' : 'Redacted user review',
+      description: isFr
+        ? "Retrouvez le jeu mystère à partir d'un authentique avis de joueur Steam dont les mots-clés sont caviardés !"
+        : 'Identify the mystery game from an authentic Steam user review with redacted spoiler terms!',
+      icon: MessageSquareQuote,
+      accentColor: 'from-sky-600/20 to-blue-500/20 border-sky-500/30 text-sky-400',
+      badgeText: isFr ? 'Nouveau !' : 'New!',
+      badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
+      isDaily: true,
+      dailyKey: 'review',
     },
     {
       id: 'timeattack',

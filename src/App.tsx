@@ -17,6 +17,7 @@ import { LinkleGame } from './components/linkle/LinkleGame';
 import { ProfilleGame } from './components/profille/ProfilleGame';
 import { ChronoGame } from './components/chrono/ChronoGame';
 import { PixelGame } from './components/pixel/PixelGame';
+import { ReviewGame } from './components/review/ReviewGame';
 import { MiniGamesHub } from './components/minigames/MiniGamesHub';
 import { MiniGamesNav, type MiniGameSubTab } from './components/minigames/MiniGamesNav';
 import { VersusArena } from './components/versus/VersusArena';
@@ -50,6 +51,7 @@ export const AppContent: React.FC = () => {
       if (hash.startsWith('#profille')) return 'profille';
       if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) return 'chrono';
       if (hash.startsWith('#pixel') || hash.startsWith('#silhouette')) return 'pixel';
+      if (hash.startsWith('#review') || hash.startsWith('#critique')) return 'review';
       if (hash.startsWith('#timeattack')) return 'timeattack';
       if (hash.startsWith('#versus')) return 'versus';
     }
@@ -70,6 +72,8 @@ export const AppContent: React.FC = () => {
         hash.startsWith('#timeline') ||
         hash.startsWith('#pixel') ||
         hash.startsWith('#silhouette') ||
+        hash.startsWith('#review') ||
+        hash.startsWith('#critique') ||
         hash.startsWith('#timeattack') ||
         hash.startsWith('#versus')
       ) {
@@ -125,7 +129,7 @@ export const AppContent: React.FC = () => {
   const handleTabChange = (tab: NavTab) => {
     if (
       tab === 'minigames' ||
-      ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'timeattack', 'versus'].includes(tab)
+      ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'timeattack', 'versus'].includes(tab)
     ) {
       setCurrentTab('minigames');
       if (tab === 'minigames') {
@@ -138,7 +142,7 @@ export const AppContent: React.FC = () => {
     }
   };
 
-  // Hash listener for direct deep linking (#minigames, #screenle, #indledle, #linkle, #profille, #chrono, #timeattack, #versus, #arcade, #toolbox, #roost, #gems)
+  // Hash listener for direct deep linking (#minigames, #screenle, #indledle, #linkle, #profille, #chrono, #pixel, #review, #timeattack, #versus, #arcade, #toolbox, #roost, #gems)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.toLowerCase();
@@ -163,6 +167,9 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#pixel') || hash.startsWith('#silhouette')) {
         setCurrentTab('minigames');
         setActiveMiniGame('pixel');
+      } else if (hash.startsWith('#review') || hash.startsWith('#critique')) {
+        setCurrentTab('minigames');
+        setActiveMiniGame('review');
       } else if (hash.startsWith('#timeattack')) {
         setCurrentTab('minigames');
         setActiveMiniGame('timeattack');
@@ -209,8 +216,8 @@ export const AppContent: React.FC = () => {
     } else if (currentTab === 'minigames') {
       const minigameTitles: Record<MiniGameSubTab, { fr: string; en: string }> = {
         hub: {
-          fr: 'Mini-Jeux Indés — 7 Défis & Énigmes Quotidiennes | Hoot Indie Games',
-          en: 'Indie Mini-Games — 7 Challenges & Daily Puzzles | Hoot Indie Games',
+          fr: 'Mini-Jeux Indés — 8 Défis & Énigmes Quotidiennes | Hoot Indie Games',
+          en: 'Indie Mini-Games — 8 Challenges & Daily Puzzles | Hoot Indie Games',
         },
         screenle: {
           fr: "Screenle — Défi Quotidien par Capture d'Écran | Hoot Indie Games",
@@ -235,6 +242,10 @@ export const AppContent: React.FC = () => {
         pixel: {
           fr: 'Pixel & Silhouette — Dé-pixellisation de Jeux Indés | Hoot Indie Games',
           en: 'Pixel & Silhouette — Daily Indie De-pixelation | Hoot Indie Games',
+        },
+        review: {
+          fr: 'Critique Steam — Déduction de Critiques Caviardées | Hoot Indie Games',
+          en: 'Steam Review — Redacted User Review Deduction | Hoot Indie Games',
         },
         timeattack: {
           fr: 'Time Attack ⚡ — Sprint Chronométré de Jeux Indés | Hoot Indie Games',
@@ -434,6 +445,14 @@ export const AppContent: React.FC = () => {
 
               {activeMiniGame === 'pixel' && (
                 <PixelGame
+                  key={currentDate}
+                  currentDate={currentDate}
+                  onSelectDate={(newDate) => setCurrentDate(newDate)}
+                />
+              )}
+
+              {activeMiniGame === 'review' && (
+                <ReviewGame
                   key={currentDate}
                   currentDate={currentDate}
                   onSelectDate={(newDate) => setCurrentDate(newDate)}
