@@ -75,7 +75,7 @@ export const AppContent: React.FC = () => {
   const [timeAttackInitialMode, setTimeAttackInitialMode] = useState<TimeAttackMode | undefined>(() => {
     if (typeof window !== 'undefined' && window.location.hash.startsWith('#timeattack')) {
       const match = window.location.hash.match(/#timeattack=([a-z]+)/);
-      if (match && ['screenle', 'indledle', 'linkle'].includes(match[1])) {
+      if (match && ['screenle', 'indledle', 'linkle', 'profille'].includes(match[1])) {
         return match[1] as TimeAttackMode;
       }
     }
@@ -137,7 +137,7 @@ export const AppContent: React.FC = () => {
         setCurrentTab('minigames');
         setActiveMiniGame('timeattack');
         const match = window.location.hash.match(/#timeattack=([a-z]+)/);
-        if (match && ['screenle', 'indledle', 'linkle'].includes(match[1])) {
+        if (match && ['screenle', 'indledle', 'linkle', 'profille'].includes(match[1])) {
           setTimeAttackInitialMode(match[1] as TimeAttackMode);
         }
       } else if (hash.startsWith('#versus')) {

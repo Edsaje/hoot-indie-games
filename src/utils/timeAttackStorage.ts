@@ -6,6 +6,7 @@ const defaultStats: TimeAttackGlobalStats = {
   screenle: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
   indledle: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
   linkle: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
+  profille: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
 };
 
 export function getTimeAttackStats(): TimeAttackGlobalStats {
@@ -18,6 +19,7 @@ export function getTimeAttackStats(): TimeAttackGlobalStats {
       screenle: { ...defaultStats.screenle, ...parsed.screenle },
       indledle: { ...defaultStats.indledle, ...parsed.indledle },
       linkle: { ...defaultStats.linkle, ...parsed.linkle },
+      profille: { ...defaultStats.profille, ...parsed.profille },
     };
   } catch {
     return defaultStats;

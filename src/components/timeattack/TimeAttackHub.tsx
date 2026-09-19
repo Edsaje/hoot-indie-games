@@ -11,6 +11,7 @@ import {
   Flame,
   ArrowRight,
   Target,
+  FileSearch,
 } from 'lucide-react';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
@@ -19,6 +20,7 @@ import type { TimeAttackMode } from '../../types/timeAttack';
 import { ScreenleSprint } from './ScreenleSprint';
 import { IndledleSprint } from './IndledleSprint';
 import { LinkleSprint } from './LinkleSprint';
+import { ProfilleSprint } from './ProfilleSprint';
 
 interface TimeAttackHubProps {
   initialMode?: TimeAttackMode;
@@ -70,10 +72,14 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
     return <LinkleSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
   }
 
+  if (activeMode === 'profille') {
+    return <ProfilleSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+  }
+
   const totalAnswered =
-    stats.screenle.totalAnswered + stats.indledle.totalAnswered + stats.linkle.totalAnswered;
+    stats.screenle.totalAnswered + stats.indledle.totalAnswered + stats.linkle.totalAnswered + stats.profille.totalAnswered;
   const totalGamesPlayed =
-    stats.screenle.gamesPlayed + stats.indledle.gamesPlayed + stats.linkle.gamesPlayed;
+    stats.screenle.gamesPlayed + stats.indledle.gamesPlayed + stats.linkle.gamesPlayed + stats.profille.gamesPlayed;
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8 animate-in fade-in duration-300">
@@ -93,7 +99,7 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
       </div>
 
       {/* Global Quick Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
         <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md">
           <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
             <Trophy className="w-5 h-5" />
@@ -130,17 +136,33 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
 
         <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md">
           <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+            <FileSearch className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-[10px] uppercase font-bold text-slate-400">
+              {lang === 'fr' ? 'Record Profil' : 'Profile Record'}
+            </div>
+            <div className="text-lg font-black text-white font-mono">{stats.profille.highScore} pts</div>
+          </div>
+        </div>
+
+        <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md">
+          <div className="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
             <Timer className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-bold text-slate-400">Pépites trouvées</div>
-            <div className="text-lg font-black text-white font-mono">{totalAnswered} ({totalGamesPlayed} sprints)</div>
+            <div className="text-[10px] uppercase font-bold text-slate-400">
+              {lang === 'fr' ? 'Pépites trouvées' : 'Gems Found'}
+            </div>
+            <div className="text-lg font-black text-white font-mono">
+              {totalAnswered} <span className="text-xs text-slate-400 font-normal">({totalGamesPlayed} sprints)</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 3 Game Mode Selection Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      {/* 4 Game Mode Selection Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {/* Card 1: Screenle Sprint */}
         <motion.div
           whileHover={{ y: -4 }}
@@ -164,13 +186,15 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
               <span>{lang === 'fr' ? 'Sprint Capture' : 'Framed Sprint'}</span>
             </h2>
             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-              Reconnaissance visuelle ultra-rapide. Identifiez le jeu à partir d'une capture d'écran parmi 4 propositions avec les touches 1 à 4.
+              {lang === 'fr'
+                ? "Reconnaissance visuelle ultra-rapide. Identifiez le jeu à partir d'une capture d'écran parmi 4 propositions avec les touches 1 à 4."
+                : "Ultra-fast visual recognition. Identify the game from a screenshot among 4 choices using keys 1 to 4."}
             </p>
           </div>
 
           <div>
             <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl mb-4 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Meilleur record :</span>
+              <span className="text-slate-400">{lang === 'fr' ? 'Meilleur record :' : 'Best Record:'}</span>
               <span className="font-mono font-black text-amber-400">{stats.screenle.highScore} pts</span>
             </div>
 
@@ -178,7 +202,7 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
               onClick={() => handleLaunchMode('screenle')}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
             >
-              <span>Lancer le Sprint</span>
+              <span>{lang === 'fr' ? 'Lancer le Sprint' : 'Start Sprint'}</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>
@@ -207,13 +231,15 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
               <span>{lang === 'fr' ? 'Sprint Classic' : 'Classic Sprint'}</span>
             </h2>
             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-              Quiz express sur l'encyclopédie des pépites. Déduisez en un éclair les années de sortie, les développeurs et les genres majeurs.
+              {lang === 'fr'
+                ? "Quiz express sur l'encyclopédie des pépites. Déduisez en un éclair les années de sortie, les développeurs et les genres majeurs."
+                : "Express quiz on indie classics. Deduce release years, developers, and genres in the blink of an eye."}
             </p>
           </div>
 
           <div>
             <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl mb-4 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Meilleur record :</span>
+              <span className="text-slate-400">{lang === 'fr' ? 'Meilleur record :' : 'Best Record:'}</span>
               <span className="font-mono font-black text-emerald-400">{stats.indledle.highScore} pts</span>
             </div>
 
@@ -221,7 +247,7 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
               onClick={() => handleLaunchMode('indledle')}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm transition shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer"
             >
-              <span>Lancer le Sprint</span>
+              <span>{lang === 'fr' ? 'Lancer le Sprint' : 'Start Sprint'}</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>
@@ -250,13 +276,15 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
               <span>{lang === 'fr' ? 'Sprint Connexions' : 'Connections Sprint'}</span>
             </h2>
             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-              Connexions thématiques en rafale. Trouvez le jeu qui correspond à un thème clé ou repérez l'intrus avant la sonnerie du chrono.
+              {lang === 'fr'
+                ? "Connexions thématiques en rafale. Trouvez le jeu qui correspond à un thème clé ou repérez l'intrus avant la sonnerie du chrono."
+                : "Rapid-fire thematic connections. Find the indie gem matching a theme or spot the odd one out before time runs out."}
             </p>
           </div>
 
           <div>
             <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl mb-4 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Meilleur record :</span>
+              <span className="text-slate-400">{lang === 'fr' ? 'Meilleur record :' : 'Best Record:'}</span>
               <span className="font-mono font-black text-sky-400">{stats.linkle.highScore} pts</span>
             </div>
 
@@ -264,7 +292,52 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
               onClick={() => handleLaunchMode('linkle')}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-slate-950 font-black text-sm transition shadow-md shadow-sky-500/20 active:scale-95 cursor-pointer"
             >
-              <span>Lancer le Sprint</span>
+              <span>{lang === 'fr' ? 'Lancer le Sprint' : 'Start Sprint'}</span>
+              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Card 4: Profille Sprint */}
+        <motion.div
+          whileHover={{ y: -4 }}
+          transition={{ duration: 0.2 }}
+          className="relative bg-[#0f172a] border border-[#1e293b] hover:border-purple-500/50 rounded-3xl p-6 flex flex-col justify-between shadow-xl transition group overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition pointer-events-none" />
+
+          <div>
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                <FileSearch className="w-6 h-6" />
+              </div>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 font-mono text-xs font-bold">
+                <Timer className="w-3.5 h-3.5 text-purple-400" />
+                <span>60s</span>
+              </div>
+            </div>
+
+            <h2 className="text-xl font-black text-white tracking-tight mb-2 flex items-center gap-2">
+              <span>{lang === 'fr' ? 'Sprint Profil' : 'Profile Sprint'}</span>
+            </h2>
+            <p className="text-xs text-slate-400 mb-6 leading-relaxed">
+              {lang === 'fr'
+                ? "Quiz déduction d'identité express. Retrouvez en un éclair l'année, le studio ou le genre d'un jeu culte avec les touches 1 à 4."
+                : "Express identity deduction quiz. Guess the release year, studio, or genre of an indie gem in a flash with keys 1 to 4."}
+            </p>
+          </div>
+
+          <div>
+            <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl mb-4 flex items-center justify-between text-xs">
+              <span className="text-slate-400">{lang === 'fr' ? 'Meilleur record :' : 'Best Record:'}</span>
+              <span className="font-mono font-black text-purple-400">{stats.profille.highScore} pts</span>
+            </div>
+
+            <button
+              onClick={() => handleLaunchMode('profille')}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black text-sm transition shadow-md shadow-purple-500/20 active:scale-95 cursor-pointer"
+            >
+              <span>{lang === 'fr' ? 'Lancer le Sprint' : 'Start Sprint'}</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>

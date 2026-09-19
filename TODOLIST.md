@@ -325,9 +325,9 @@
     - *Studiole / Devdle* : Associer les développeurs indépendants à leurs œuvres ou deviner le studio secret en fonction de sa filmographie vidéoludique.
     - *Steam Review Déduction (La Bonne Critique)* : Deviner le jeu à partir d'une review Steam drôle, poétique ou marquante avec les mots-clés spoilants caviardés.
 - [ ] **Mise à Jour Time Attack & Versus avec les Nouveaux Jeux** :
-  - **Extension Time Attack (Nouveau Sprint Profille)** :
-    - Ajouter une 4e discipline *Profille Sprint* dans [`src/components/timeattack/TimeAttackHub.tsx`](file:///src/components/timeattack/TimeAttackHub.tsx) : deviner rapidement l'année, le développeur ou le genre d'un jeu affiché sous un compte à rebours de 60 secondes.
-    - Intégration dans le sélecteur de mode du Hub Time Attack et équilibrage du scoring (+100 pts x combo, bonus +3s, malus -5s).
+  - [x] **Extension Time Attack (Nouveau Sprint Profil)** :
+    - Ajout de la 4e discipline *Sprint Profil* dans [`src/components/timeattack/ProfilleSprint.tsx`](file:///src/components/timeattack/ProfilleSprint.tsx) : deviner express l'année de sortie, le studio de développement ou les genres d'un jeu culte avec raccourcis clavier 1 à 4 et captures Steam officielles.
+    - Intégration complète dans le sélecteur du Hub Time Attack ([`src/components/timeattack/TimeAttackHub.tsx`](file:///src/components/timeattack/TimeAttackHub.tsx)) avec 4 cartes réactives, 5 compteurs de records, support deep-link `#timeattack=profille`, scoring combo (+100 pts x combo, bonus +3s, malus -5s) et modale de partage.
   - **Extension de l'Arène Versus 1v1** :
     - Intégrer les questions Profille (développeur, année de sortie, genre) dans les manches de duel en direct WebRTC P2P.
     - Variantes de match configurables par l'hôte : Mode Classique (Titres seuls), Mode Profille (Studio / Année), ou Mode Hybride Aléatoire.
