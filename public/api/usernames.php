@@ -114,40 +114,74 @@ function loadUsernamesData($file) {
                 'steamId' => ADMIN_STEAM_ID,
                 'userId' => 'admin_hibouxe',
                 'claimedAt' => '2026-01-01T00:00:00Z',
-                'isAdminReserved' => true
+                'role' => 'admin',
+                'status' => 'active',
+                'customTitle' => '👑 Créateur du Site',
+                'isAdminReserved' => true,
+                'isAdmin' => true
             ],
             'edsaje' => [
                 'displayName' => 'Edsaje',
                 'steamId' => ADMIN_STEAM_ID,
                 'userId' => 'admin_edsaje',
                 'claimedAt' => '2026-01-01T00:00:00Z',
-                'isAdminReserved' => true
+                'role' => 'admin',
+                'status' => 'active',
+                'customTitle' => '👑 Créateur du Site',
+                'isAdminReserved' => true,
+                'isAdmin' => true
             ]
         ],
         'userToName' => [
-            ADMIN_STEAM_ID => 'hibouxe'
-        ]
+            ADMIN_STEAM_ID => 'hibouxe',
+            'steam_' . ADMIN_STEAM_ID => 'hibouxe'
+        ],
+        'forbiddenNames' => ['hibouxe', 'edsaje'],
+        'bannedUsers' => []
     ];
 
-    if (!file_exists($file)) {
+    if (empty($file)) {
+        return $default;
+    }
+
+    if (!file_exists($file) || filesize($file) === 0) {
         @file_put_contents($file, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         return $default;
     }
 
     $raw = @file_get_contents($file);
-    if (!$raw) return $default;
-
-    $data = json_decode($raw, true);
-    if (!is_array($data) || !isset($data['usernames'])) {
+    if (!$raw) {
+        @file_put_contents($file, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         return $default;
     }
 
+    $data = json_decode($raw, true);
+    if (!is_array($data) || !isset($data['usernames']) || !is_array($data['usernames'])) {
+        @file_put_contents($file, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        return $default;
+    }
+
+    $dirty = false;
     // Assurer la présence des réservations créateur
     if (!isset($data['usernames']['hibouxe'])) {
         $data['usernames']['hibouxe'] = $default['usernames']['hibouxe'];
+        $dirty = true;
     }
     if (!isset($data['usernames']['edsaje'])) {
         $data['usernames']['edsaje'] = $default['usernames']['edsaje'];
+        $dirty = true;
+    }
+    if (!isset($data['forbiddenNames']) || !is_array($data['forbiddenNames'])) {
+        $data['forbiddenNames'] = ['hibouxe', 'edsaje'];
+        $dirty = true;
+    }
+    if (!isset($data['bannedUsers']) || !is_array($data['bannedUsers'])) {
+        $data['bannedUsers'] = [];
+        $dirty = true;
+    }
+
+    if ($dirty) {
+        @file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
     }
 
     return $data;
@@ -163,13 +197,25 @@ if (!checkUsernamesRateLimit($rateLimitFile, $clientIp)) {
 $method = $_SERVER['REQUEST_METHOD'];
 
 // -------------------------------------------------------------
-// 1. GET : VÉRIFIER LA DISPONIBILITÉ D'UN PSEUDO
+// 1. GET : VÉRIFIER LA DISPONIBILITÉ OU LISTER LES PSEUDOS
 // -------------------------------------------------------------
 if ($method === 'GET') {
     $action = trim($_GET['action'] ?? 'check');
     $rawName = trim($_GET['username'] ?? '');
     $userId = trim($_GET['userId'] ?? '');
     $steamId = trim($_GET['steamId'] ?? '');
+
+    // Action d'administration : lister l'ensemble des comptes enregistrés
+    if ($action === 'list' && strval($steamId) === ADMIN_STEAM_ID) {
+        $db = loadUsernamesData($storageFile);
+        echo json_encode([
+            'success' => true,
+            'usernames' => $db['usernames'] ?? [],
+            'forbiddenNames' => $db['forbiddenNames'] ?? [],
+            'bannedUsers' => $db['bannedUsers'] ?? []
+        ]);
+        exit;
+    }
 
     if (empty($rawName)) {
         http_response_code(400);
@@ -293,10 +339,17 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes
-    if (!preg_match('/^[\p{L}\p{N}\s_\'#.-]+$/u', $cleanDisplay)) {
+    // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes et ponctuation gamer
+    if (!preg_match('/^[\p{L}\p{N}\s_\'#.\-\[\]\(\)\|\!\?\*\~\^\:\@]+$/u', $cleanDisplay)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'invalid_characters', 'message' => 'Caractères spéciaux non autorisés dans le pseudonyme.']);
+        exit;
+    }
+
+    $normalized = normalizeUsername($cleanDisplay);
+    if (empty($normalized)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'invalid_normalized', 'message' => 'Pseudonyme invalide après normalisation.']);
         exit;
     }
 
@@ -336,7 +389,7 @@ if ($method === 'POST') {
     $content = $size > 0 ? fread($fp, $size) : '';
     $db = json_decode($content, true);
 
-    if (!is_array($db) || !isset($db['usernames'])) {
+    if (!is_array($db) || !isset($db['usernames']) || empty($db['usernames'])) {
         $db = loadUsernamesData('');
     }
 
@@ -374,17 +427,28 @@ if ($method === 'POST') {
         }
     }
 
-    // Enregistrer le nouveau pseudo
+    // Enregistrer le nouveau pseudo avec l'ensemble des métadonnées requises
     $nowIso = date('c');
+    $isAdmin = (strval($steamId) === ADMIN_STEAM_ID);
     $db['usernames'][$normalized] = [
         'displayName' => $cleanDisplay,
         'userId' => $userId,
-        'steamId' => $steamId,
+        'steamId' => !empty($steamId) ? strval($steamId) : null,
         'claimedAt' => $claimed['claimedAt'] ?? $nowIso,
         'updatedAt' => $nowIso,
-        'isAdmin' => (strval($steamId) === ADMIN_STEAM_ID)
+        'lastSeenAt' => $nowIso,
+        'role' => $isAdmin ? 'admin' : ($claimed['role'] ?? 'user'),
+        'status' => $claimed['status'] ?? 'active',
+        'customTitle' => $isAdmin ? '👑 Créateur du Site' : ($claimed['customTitle'] ?? ''),
+        'note' => $claimed['note'] ?? '',
+        'isAdminReserved' => $isAdmin || !empty($claimed['isAdminReserved']),
+        'isAdmin' => $isAdmin
     ];
     $db['userToName'][$identKey] = $normalized;
+    if (!empty($steamId)) {
+        $db['userToName'][strval($steamId)] = $normalized;
+        $db['userToName']['steam_' . strval($steamId)] = $normalized;
+    }
 
     // Réécriture atomique
     ftruncate($fp, 0);
@@ -399,7 +463,7 @@ if ($method === 'POST') {
         'username' => $cleanDisplay,
         'normalized' => $normalized,
         'message' => 'Pseudonyme validé et enregistré avec succès !',
-        'isAdmin' => (strval($steamId) === ADMIN_STEAM_ID)
+        'isAdmin' => $isAdmin
     ]);
     exit;
 }

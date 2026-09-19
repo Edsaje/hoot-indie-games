@@ -116,6 +116,83 @@ function normalizeUsernameAdmin($name) {
     return preg_replace('/[^a-z0-9]/', '', $clean);
 }
 
+// Chargement et réparation / initialisation robuste de la base des utilisateurs
+function loadAndEnsureUsernamesDb($uFile) {
+    $default = [
+        'usernames' => [
+            'hibouxe' => [
+                'displayName' => 'Hibouxe',
+                'steamId' => ADMIN_STEAM_ID,
+                'userId' => 'admin_hibouxe',
+                'claimedAt' => '2026-01-01T00:00:00Z',
+                'role' => 'admin',
+                'status' => 'active',
+                'customTitle' => '👑 Créateur du Site',
+                'isAdminReserved' => true,
+                'isAdmin' => true
+            ],
+            'edsaje' => [
+                'displayName' => 'Edsaje',
+                'steamId' => ADMIN_STEAM_ID,
+                'userId' => 'admin_edsaje',
+                'claimedAt' => '2026-01-01T00:00:00Z',
+                'role' => 'admin',
+                'status' => 'active',
+                'customTitle' => '👑 Créateur du Site',
+                'isAdminReserved' => true,
+                'isAdmin' => true
+            ]
+        ],
+        'userToName' => [
+            ADMIN_STEAM_ID => 'hibouxe',
+            'steam_' . ADMIN_STEAM_ID => 'hibouxe'
+        ],
+        'forbiddenNames' => ['hibouxe', 'edsaje'],
+        'bannedUsers' => []
+    ];
+
+    if (!file_exists($uFile) || filesize($uFile) === 0) {
+        @file_put_contents($uFile, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        return $default;
+    }
+
+    $raw = @file_get_contents($uFile);
+    if (!$raw) {
+        @file_put_contents($uFile, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        return $default;
+    }
+
+    $data = json_decode($raw, true);
+    if (!is_array($data) || !isset($data['usernames']) || !is_array($data['usernames'])) {
+        @file_put_contents($uFile, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        return $default;
+    }
+
+    $dirty = false;
+    if (!isset($data['usernames']['hibouxe'])) {
+        $data['usernames']['hibouxe'] = $default['usernames']['hibouxe'];
+        $dirty = true;
+    }
+    if (!isset($data['usernames']['edsaje'])) {
+        $data['usernames']['edsaje'] = $default['usernames']['edsaje'];
+        $dirty = true;
+    }
+    if (!isset($data['forbiddenNames']) || !is_array($data['forbiddenNames'])) {
+        $data['forbiddenNames'] = ['hibouxe', 'edsaje'];
+        $dirty = true;
+    }
+    if (!isset($data['bannedUsers']) || !is_array($data['bannedUsers'])) {
+        $data['bannedUsers'] = [];
+        $dirty = true;
+    }
+
+    if ($dirty) {
+        @file_put_contents($uFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
+    return $data;
+}
+
 // Rate-limiting par IP : max 120 requêtes / min
 function checkTrackRateLimit($ip, $file) {
     $now = time();
@@ -443,18 +520,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         $uFile = __DIR__ . '/registered_usernames.json';
-        if (file_exists($uFile)) {
-            $uData = json_decode(@file_get_contents($uFile), true) ?: [];
-            if (isset($uData['usernames'][$target])) {
-                $steamIdAssociated = $uData['usernames'][$target]['steamId'] ?? null;
-                unset($uData['usernames'][$target]);
-                if ($steamIdAssociated && isset($uData['userToName'][$steamIdAssociated])) {
-                    unset($uData['userToName'][$steamIdAssociated]);
-                }
-                @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-                echo json_encode(['success' => true, 'message' => "Le pseudonyme « {$target} » a été libéré avec succès."]);
-                exit;
+        $uData = loadAndEnsureUsernamesDb($uFile);
+        if (isset($uData['usernames'][$target])) {
+            $steamIdAssociated = $uData['usernames'][$target]['steamId'] ?? null;
+            unset($uData['usernames'][$target]);
+            if ($steamIdAssociated && isset($uData['userToName'][$steamIdAssociated])) {
+                unset($uData['userToName'][$steamIdAssociated]);
             }
+            if ($steamIdAssociated && isset($uData['userToName']['steam_' . $steamIdAssociated])) {
+                unset($uData['userToName']['steam_' . $steamIdAssociated]);
+            }
+            @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            echo json_encode(['success' => true, 'message' => "Le pseudonyme « {$target} » a été libéré avec succès."]);
+            exit;
         }
         echo json_encode(['success' => false, 'message' => 'Pseudonyme non trouvé.']);
         exit;
@@ -476,7 +554,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         $uFile = __DIR__ . '/registered_usernames.json';
-        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+        $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (!isset($uData['usernames'][$target])) {
             http_response_code(404);
@@ -577,7 +655,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         $uFile = __DIR__ . '/registered_usernames.json';
-        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+        $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (!isset($uData['usernames'][$target])) {
             http_response_code(404);
@@ -652,7 +730,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         $subaction = trim($_POST['subaction'] ?? $_GET['subaction'] ?? 'list');
         $rawWord = trim($_POST['word'] ?? $_GET['word'] ?? '');
         $uFile = __DIR__ . '/registered_usernames.json';
-        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+        $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (!isset($uData['forbiddenNames']) || !is_array($uData['forbiddenNames'])) {
             $uData['forbiddenNames'] = ['hibouxe', 'edsaje'];
@@ -718,7 +796,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         $uFile = __DIR__ . '/registered_usernames.json';
-        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+        $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (isset($uData['usernames'][$norm])) {
             http_response_code(400);
@@ -841,48 +919,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
         // Chargement des pseudonymes enregistrés
         $uFile = __DIR__ . '/registered_usernames.json';
-        $usernamesData = [
-            'total' => 0,
-            'list' => [],
-            'forbiddenNames' => ['hibouxe', 'edsaje'],
-            'bannedCount' => 0
-        ];
-        if (file_exists($uFile)) {
-            $uRaw = @file_get_contents($uFile);
-            if ($uRaw) {
-                $uDec = json_decode($uRaw, true);
-                if (isset($uDec['usernames']) && is_array($uDec['usernames'])) {
-                    $uList = [];
-                    $bannedCount = 0;
-                    foreach ($uDec['usernames'] as $k => $u) {
-                        $isBanned = ($u['status'] ?? '') === 'banned';
-                        if ($isBanned) $bannedCount++;
-                        $isCreator = ($k === 'hibouxe' || $k === 'edsaje' || ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
-                        $uList[] = [
-                            'normalized' => $k,
-                            'displayName' => $u['displayName'] ?? $k,
-                            'steamId' => $u['steamId'] ?? null,
-                            'userId' => $u['userId'] ?? null,
-                            'claimedAt' => $u['claimedAt'] ?? '',
-                            'lastSeenAt' => $u['lastSeenAt'] ?? '',
-                            'role' => $u['role'] ?? ($isCreator ? 'admin' : 'user'),
-                            'status' => $u['status'] ?? 'active',
-                            'customTitle' => $u['customTitle'] ?? '',
-                            'note' => $u['note'] ?? '',
-                            'isAdminReserved' => !empty($u['isAdminReserved']) || $isCreator,
-                        ];
-                    }
-                    $customForbidden = isset($uDec['forbiddenNames']) && is_array($uDec['forbiddenNames']) ? $uDec['forbiddenNames'] : [];
-                    $allForbidden = array_values(array_unique(array_merge(['hibouxe', 'edsaje'], $customForbidden)));
-                    $usernamesData = [
-                        'total' => count($uList),
-                        'list' => $uList,
-                        'forbiddenNames' => $allForbidden,
-                        'bannedCount' => $bannedCount
-                    ];
-                }
-            }
+        $uDec = loadAndEnsureUsernamesDb($uFile);
+        $uList = [];
+        $bannedCount = 0;
+        foreach ($uDec['usernames'] as $k => $u) {
+            $isBanned = ($u['status'] ?? '') === 'banned';
+            if ($isBanned) $bannedCount++;
+            $isCreator = ($k === 'hibouxe' || $k === 'edsaje' || ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
+            $uList[] = [
+                'normalized' => $k,
+                'displayName' => $u['displayName'] ?? $k,
+                'steamId' => $u['steamId'] ?? null,
+                'userId' => $u['userId'] ?? null,
+                'claimedAt' => $u['claimedAt'] ?? '',
+                'lastSeenAt' => $u['lastSeenAt'] ?? '',
+                'role' => $u['role'] ?? ($isCreator ? 'admin' : 'user'),
+                'status' => $u['status'] ?? 'active',
+                'customTitle' => $u['customTitle'] ?? '',
+                'note' => $u['note'] ?? '',
+                'isAdminReserved' => !empty($u['isAdminReserved']) || $isCreator,
+            ];
         }
+        $customForbidden = isset($uDec['forbiddenNames']) && is_array($uDec['forbiddenNames']) ? $uDec['forbiddenNames'] : [];
+        $allForbidden = array_values(array_unique(array_merge(['hibouxe', 'edsaje'], $customForbidden)));
+        $usernamesData = [
+            'total' => count($uList),
+            'list' => $uList,
+            'forbiddenNames' => $allForbidden,
+            'bannedCount' => $bannedCount
+        ];
 
         // Chargement des suggestions de jeux
         $sFile = __DIR__ . '/suggestions.json';
@@ -1153,14 +1218,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
             <!-- GESTION DES UTILISATEURS & PSEUDONYMES -->
             <?php
-            $registeredUsersList = [];
             $uDbFile = __DIR__ . '/registered_usernames.json';
-            if (file_exists($uDbFile)) {
-                $uDbData = json_decode(@file_get_contents($uDbFile), true) ?: [];
-                if (!empty($uDbData['usernames']) && is_array($uDbData['usernames'])) {
-                    $registeredUsersList = $uDbData['usernames'];
-                }
-            }
+            $uDbData = loadAndEnsureUsernamesDb($uDbFile);
+            $registeredUsersList = $uDbData['usernames'] ?? [];
             ?>
             <h2 class="section-title">👥 Gestion des Utilisateurs & Pseudos (<?= count($registeredUsersList) ?>)</h2>
             <div class="card" style="margin-bottom: 2rem;">

@@ -73,8 +73,8 @@ export function validateUsernameFormat(
     };
   }
 
-  // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes, hashtags
-  const validCharsRegex = /^[\p{L}\p{N}\s_'#.-]+$/u;
+  // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes, hashtags, ponctuation gamer
+  const validCharsRegex = /^[\p{L}\p{N}\s_'#.\-[\]()|!?*~^:@]+$/u;
   if (!validCharsRegex.test(trimmed)) {
     return {
       valid: false,
@@ -83,6 +83,20 @@ export function validateUsernameFormat(
   }
 
   return { valid: true };
+}
+
+/**
+ * Nettoie doucement un pseudonyme (ex: provenant de Steam ou Google)
+ * pour en retirer d'éventuels caractères incompatibles ou tags invalides.
+ */
+export function cleanDisplayName(name: string): string {
+  if (!name) return '';
+  let cleaned = name.replace(/<[^>]*>/g, '').replace(/[\x00-\x1F\x7F]/g, '').trim();
+  cleaned = cleaned.replace(/[^\p{L}\p{N}\s_'#.\-[\]()|!?*~^:@]/gu, '');
+  cleaned = cleaned.trim();
+  if (cleaned.length < 2) return '';
+  if (cleaned.length > 24) return cleaned.slice(0, 24).trim();
+  return cleaned;
 }
 
 /**
@@ -138,12 +152,18 @@ export async function claimUsernameOnServer(
   userId: string,
   steamId?: string
 ): Promise<{ success: boolean; username?: string; message: string }> {
-  const localCheck = validateUsernameFormat(username, steamId);
+  let targetName = username.trim();
+  const localCheck = validateUsernameFormat(targetName, steamId);
   if (!localCheck.valid) {
-    return {
-      success: false,
-      message: localCheck.error || 'Pseudonyme non valide.',
-    };
+    const sanitized = cleanDisplayName(targetName);
+    if (sanitized && validateUsernameFormat(sanitized, steamId).valid) {
+      targetName = sanitized;
+    } else {
+      return {
+        success: false,
+        message: localCheck.error || 'Pseudonyme non valide.',
+      };
+    }
   }
 
   try {
@@ -152,7 +172,7 @@ export async function claimUsernameOnServer(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'claim',
-        username: username.trim(),
+        username: targetName,
         userId,
         steamId: steamId || '',
       }),
@@ -162,7 +182,7 @@ export async function claimUsernameOnServer(
     if (res.ok && data.success) {
       return {
         success: true,
-        username: data.username || username.trim(),
+        username: data.username || targetName,
         message: data.message || 'Pseudonyme réservé avec succès !',
       };
     } else {
@@ -175,7 +195,7 @@ export async function claimUsernameOnServer(
     // Si l'environnement n'exécute pas PHP (mode simulation locale vite)
     return {
       success: true,
-      username: username.trim(),
+      username: targetName,
       message: 'Pseudonyme enregistré localement.',
     };
   }

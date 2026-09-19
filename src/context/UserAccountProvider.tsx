@@ -130,6 +130,32 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, [profile.steam?.steamId, profile.isAdmin, profile.role]);
 
+  // Synchronisation et déclaration automatique de l'identité du joueur sur le serveur souverain
+  useEffect(() => {
+    const steamId = profile.steam?.steamId;
+    const email = profile.email;
+    const hasCustomName = profile.username && profile.username !== 'Hibou Mystère';
+
+    // N'enregistrer que si l'utilisateur a une identité réelle (Steam, Email ou pseudo personnalisé)
+    if (!steamId && !email && !hasCustomName) {
+      return;
+    }
+
+    const desiredName =
+      (profile.steam?.personaName && profile.steam.personaName !== 'Hibou Mystère')
+        ? profile.steam.personaName
+        : (hasCustomName ? profile.username : (steamId ? `Joueur Steam #${steamId.slice(-4)}` : null));
+
+    if (!desiredName) return;
+
+    // Déclencher l'enregistrement atomique auprès de l'API /api/usernames.php
+    const timer = setTimeout(() => {
+      claimUsernameOnServer(desiredName, profile.id, steamId).catch(() => {});
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [profile.steam?.steamId, profile.steam?.personaName, profile.username, profile.email, profile.id]);
+
   const updateProfile = useCallback((fields: Partial<UserProfile>) => {
     setProfile((prev) => ({ ...prev, ...fields }));
   }, []);
@@ -235,15 +261,17 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
   }, []);
 
   const loginWithEmail = useCallback(async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+    const defaultName = email.split('@')[0];
     if (!supabase || !isSupabaseConfigured) {
       // Mode simulation hors-ligne
       setProfile((prev) => ({
         ...prev,
         email,
-        username: email.split('@')[0],
+        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
         isCloudSynced: false,
       }));
       setIsAuthenticated(true);
+      claimUsernameOnServer(defaultName, profile.id, profile.steam?.steamId).catch(() => {});
       return { success: true };
     }
 
@@ -263,22 +291,26 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         ...prev,
         id: authUser.id,
         email: authUser.email ?? undefined,
+        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
         isCloudSynced: true,
       }));
+      claimUsernameOnServer(defaultName, authUser.id, profile.steam?.steamId).catch(() => {});
     }
 
     return { success: true };
-  }, []);
+  }, [profile.id, profile.steam?.steamId]);
 
   const signUpWithEmail = useCallback(async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+    const defaultName = email.split('@')[0];
     if (!supabase || !isSupabaseConfigured) {
       setProfile((prev) => ({
         ...prev,
         email,
-        username: email.split('@')[0],
+        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
         isCloudSynced: false,
       }));
       setIsAuthenticated(true);
+      claimUsernameOnServer(defaultName, profile.id, profile.steam?.steamId).catch(() => {});
       return { success: true };
     }
 
@@ -298,24 +330,28 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         ...prev,
         id: authUser.id,
         email: authUser.email ?? undefined,
+        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
         isCloudSynced: true,
       }));
+      claimUsernameOnServer(defaultName, authUser.id, profile.steam?.steamId).catch(() => {});
     }
 
     return { success: true };
-  }, []);
+  }, [profile.id, profile.steam?.steamId]);
 
   const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     if (!supabase || !isSupabaseConfigured) {
       // Mode simulation hors-ligne / démonstration locale
       const guestGoogleEmail = 'joueur.google@hoot.local';
+      const chosenName = profile.username && profile.username !== 'Hibou Mystère' ? profile.username : 'Chouette Exploratrice';
       setProfile((prev) => ({
         ...prev,
         email: guestGoogleEmail,
-        username: prev.username && prev.username !== 'Hibou Mystère' ? prev.username : 'Chouette Exploratrice',
+        username: chosenName,
         isCloudSynced: false,
       }));
       setIsAuthenticated(true);
+      claimUsernameOnServer(chosenName, profile.id, profile.steam?.steamId).catch(() => {});
       return { success: true };
     }
     const { error } = await supabase.auth.signInWithOAuth({
@@ -328,7 +364,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       return { success: false, error: error.message };
     }
     return { success: true };
-  }, []);
+  }, [profile.id, profile.username, profile.steam?.steamId]);
 
   const logout = useCallback(async () => {
     if (supabase && isSupabaseConfigured) {
@@ -504,14 +540,20 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         };
 
         const isOfficialAdmin = details.steamId === ADMIN_STEAM_ID;
-        setProfile((prev) => ({
-          ...prev,
-          steam: steamInfo,
-          isAdmin: isOfficialAdmin ? true : prev.isAdmin,
-          role: isOfficialAdmin ? 'admin' : prev.role,
-          username: prev.username === 'Hibou Mystère' ? details.personaName : prev.username,
-        }));
+        setProfile((prev) => {
+          const targetUsername = prev.username === 'Hibou Mystère' ? details.personaName : prev.username;
+          return {
+            ...prev,
+            steam: steamInfo,
+            isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+            role: isOfficialAdmin ? 'admin' : prev.role,
+            username: targetUsername,
+          };
+        });
         setIsAuthenticated(true);
+
+        // Enregistrement automatique sur le serveur souverain
+        claimUsernameOnServer(details.personaName, profile.id, details.steamId).catch(() => {});
 
         return {
           success: true,
@@ -524,7 +566,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         };
       }
     },
-    [profile.steam]
+    [profile.id, profile.steam]
   );
 
   const syncSteamLibrary = useCallback(
