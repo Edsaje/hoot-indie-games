@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $statsFile = __DIR__ . '/stats.json';
 $rateLimitFile = __DIR__ . '/track_rate_limits.json';
+$secretFile = __DIR__ . '/.secret';
 const ADMIN_STEAM_ID = '76561198035270542';
 
 // Génération d'octets aléatoires sécurisés
@@ -825,6 +826,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                     <td style="color: var(--text-muted);"><?= htmlspecialchars($act['ref'] ?? 'Direct') ?></td>
                                     <td style="color: var(--text-muted);"><?= htmlspecialchars($act['device'] ?? 'desktop') ?></td>
                                 </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
             <!-- SUGGESTIONS DE JEUX DE LA COMMUNAUTÉ -->
             <?php
             $communitySuggestions = [];
