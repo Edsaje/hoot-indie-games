@@ -358,8 +358,10 @@
 
 ### 💡 12. Idées & Améliorations Futures
 - [x] **Share Card personnalisée** (export d'image et grille emoji pour Twitter, Facebook, WhatsApp, Instagram).
+- [x] **Guide Stratégique Monétisation & Visibilité** : Consulter [`MONETIZATION_AND_GROWTH.md`](file:///MONETIZATION_AND_GROWTH.md) pour les détails sur les régies éthiques, Google AdSense (`ads.txt`), l'affiliation Humble/GOG, et les leviers d'acquisition (streamers Twitch, Reddit, YouTube @Hibouxe, Itch.io).
 - [ ] **Support Manette (Gamepad API)** pour naviguer et jouer dans la Salle d'Arcade.
 - [ ] **Filtre "Indés Francophones"** dans le catalogue de jeux.
 - [ ] **Mode Blind Test Audio Indé** (reconnaître un jeu à sa musique culte).
+
 
 
