@@ -74,7 +74,7 @@ export function validateUsernameFormat(
   }
 
   // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes, hashtags
-  const validCharsRegex = /^[\p{L}\p{N}\s_\-\'.#]+$/u;
+  const validCharsRegex = /^[\p{L}\p{N}\s_'#.-]+$/u;
   if (!validCharsRegex.test(trimmed)) {
     return {
       valid: false,

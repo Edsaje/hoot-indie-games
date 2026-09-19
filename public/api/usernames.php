@@ -278,7 +278,7 @@ if ($method === 'POST') {
     }
 
     // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes
-    if (!preg_match('/^[\p{L}\p{N}\s_\-\'.#]+$/u', $cleanDisplay)) {
+    if (!preg_match('/^[\p{L}\p{N}\s_\'#.-]+$/u', $cleanDisplay)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'invalid_characters', 'message' => 'Caractères spéciaux non autorisés dans le pseudonyme.']);
         exit;

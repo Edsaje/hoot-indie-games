@@ -350,9 +350,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   )}
                 </div>
-                <span className="hidden sm:inline text-xs font-bold text-white max-w-[95px] truncate flex items-center gap-1">
-                  {profile.username}
-                  {isAdmin && <Crown className="w-3 h-3 text-amber-400 shrink-0 inline ml-0.5" />}
+                <span className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-white max-w-[95px]">
+                  <span className="truncate">{profile.username}</span>
+                  {isAdmin && <Crown className="w-3 h-3 text-amber-400 shrink-0 ml-0.5" />}
                 </span>
               </button>
             )}
