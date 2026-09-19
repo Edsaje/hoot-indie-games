@@ -106,6 +106,7 @@ export interface OverallStats {
   linkle: ModeStats;
   profille: ModeStats;
   chrono: ModeStats;
+  pixel: ModeStats;
 }
 
 export interface RoostProject {

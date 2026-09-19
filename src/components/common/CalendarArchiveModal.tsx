@@ -267,6 +267,15 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                           : 'bg-slate-800'
                       }`}
                     />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.pixel === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.pixel === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
                   </div>
                 </div>
               );
@@ -282,13 +291,15 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               status.indledle === 'won' &&
               status.linkle === 'won' &&
               status.profille === 'won' &&
-              status.chrono === 'won';
+              status.chrono === 'won' &&
+              status.pixel === 'won';
             const hasUnplayed =
               status.screenle === 'unplayed' ||
               status.indledle === 'unplayed' ||
               status.linkle === 'unplayed' ||
               status.profille === 'unplayed' ||
-              status.chrono === 'unplayed';
+              status.chrono === 'unplayed' ||
+              status.pixel === 'unplayed';
 
             return (
               <button
@@ -323,7 +334,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                   ) : null}
                 </div>
 
-                {/* Status dots for 5 daily games */}
+                {/* Status dots for daily games */}
                 <div className="flex items-center gap-0.5">
                   <span
                     title="Screenle"
@@ -371,6 +382,16 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                       status.chrono === 'won'
                         ? 'bg-emerald-400'
                         : status.chrono === 'lost'
+                        ? 'bg-rose-500'
+                        : 'bg-slate-700'
+                    }`}
+                  />
+                  <span
+                    title="Pixel"
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      status.pixel === 'won'
+                        ? 'bg-emerald-400'
+                        : status.pixel === 'lost'
                         ? 'bg-rose-500'
                         : 'bg-slate-700'
                     }`}

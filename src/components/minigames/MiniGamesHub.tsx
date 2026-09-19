@@ -6,6 +6,7 @@ import {
   Sparkles,
   FileSearch,
   History,
+  Sliders,
   Zap,
   Swords,
   Flame,
@@ -23,6 +24,7 @@ export type MiniGameId =
   | 'linkle'
   | 'profille'
   | 'chrono'
+  | 'pixel'
   | 'timeattack'
   | 'versus';
 
@@ -52,7 +54,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     badgeText?: string;
     badgeColor?: string;
     isDaily: boolean;
-    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono';
+    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel';
   }[] = [
     {
       id: 'screenle',
@@ -115,6 +117,20 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
       isDaily: true,
       dailyKey: 'chrono',
+    },
+    {
+      id: 'pixel',
+      title: 'Pixel & Silhouette',
+      subtitle: isFr ? 'Dé-pixellisation & ombre' : 'De-pixelation & shadow',
+      description: isFr
+        ? 'Identifiez la pépite indé en 5 essais grâce à la mosaïque progressive et aux indices débloqués !'
+        : 'Identify the indie gem in 5 guesses through progressive mosaic resolution and unlocked clues!',
+      icon: Sliders,
+      accentColor: 'from-cyan-600/20 to-blue-500/20 border-cyan-500/30 text-cyan-400',
+      badgeText: isFr ? 'Nouveau !' : 'New!',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+      isDaily: true,
+      dailyKey: 'pixel',
     },
     {
       id: 'timeattack',

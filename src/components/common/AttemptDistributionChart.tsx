@@ -5,7 +5,7 @@ import { BarChart3, Users, Flame, CheckCircle2, XCircle } from 'lucide-react';
 import { fetchCommunityStats, type CommunityDistributionData } from '../../services/leaderboardService';
 
 interface AttemptDistributionChartProps {
-  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono';
+  game: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel';
   date: string;
   playerAttempts?: number;
   isWon?: boolean;
@@ -62,6 +62,16 @@ export const AttemptDistributionChart: React.FC<AttemptDistributionChartProps> =
         { key: '3', label: lang === 'fr' ? '❤️❤️❤️' : '❤️❤️❤️' },
         { key: '2', label: lang === 'fr' ? '❤️❤️' : '❤️❤️' },
         { key: '1', label: lang === 'fr' ? '❤️' : '❤️' },
+        { key: 'fail', label: lang === 'fr' ? '❌ Échec' : '❌ Fail', isFail: true },
+      ];
+    }
+    if (game === 'pixel') {
+      return [
+        { key: '1', label: '1' },
+        { key: '2', label: '2' },
+        { key: '3', label: '3' },
+        { key: '4', label: '4' },
+        { key: '5', label: '5' },
         { key: 'fail', label: lang === 'fr' ? '❌ Échec' : '❌ Fail', isFail: true },
       ];
     }

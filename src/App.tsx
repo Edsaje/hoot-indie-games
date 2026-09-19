@@ -16,6 +16,7 @@ import { IndledleGame } from './components/indledle/IndledleGame';
 import { LinkleGame } from './components/linkle/LinkleGame';
 import { ProfilleGame } from './components/profille/ProfilleGame';
 import { ChronoGame } from './components/chrono/ChronoGame';
+import { PixelGame } from './components/pixel/PixelGame';
 import { MiniGamesHub } from './components/minigames/MiniGamesHub';
 import { MiniGamesNav, type MiniGameSubTab } from './components/minigames/MiniGamesNav';
 import { VersusArena } from './components/versus/VersusArena';
@@ -48,6 +49,7 @@ export const AppContent: React.FC = () => {
       if (hash.startsWith('#linkle')) return 'linkle';
       if (hash.startsWith('#profille')) return 'profille';
       if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) return 'chrono';
+      if (hash.startsWith('#pixel') || hash.startsWith('#silhouette')) return 'pixel';
       if (hash.startsWith('#timeattack')) return 'timeattack';
       if (hash.startsWith('#versus')) return 'versus';
     }
@@ -66,6 +68,8 @@ export const AppContent: React.FC = () => {
         hash.startsWith('#profille') ||
         hash.startsWith('#chrono') ||
         hash.startsWith('#timeline') ||
+        hash.startsWith('#pixel') ||
+        hash.startsWith('#silhouette') ||
         hash.startsWith('#timeattack') ||
         hash.startsWith('#versus')
       ) {
@@ -121,7 +125,7 @@ export const AppContent: React.FC = () => {
   const handleTabChange = (tab: NavTab) => {
     if (
       tab === 'minigames' ||
-      ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'timeattack', 'versus'].includes(tab)
+      ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'timeattack', 'versus'].includes(tab)
     ) {
       setCurrentTab('minigames');
       if (tab === 'minigames') {
@@ -156,6 +160,9 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) {
         setCurrentTab('minigames');
         setActiveMiniGame('chrono');
+      } else if (hash.startsWith('#pixel') || hash.startsWith('#silhouette')) {
+        setCurrentTab('minigames');
+        setActiveMiniGame('pixel');
       } else if (hash.startsWith('#timeattack')) {
         setCurrentTab('minigames');
         setActiveMiniGame('timeattack');
@@ -202,8 +209,8 @@ export const AppContent: React.FC = () => {
     } else if (currentTab === 'minigames') {
       const minigameTitles: Record<MiniGameSubTab, { fr: string; en: string }> = {
         hub: {
-          fr: 'Mini-Jeux Indés — 6 Défis & Énigmes Quotidiennes | Hoot Indie Games',
-          en: 'Indie Mini-Games — 6 Challenges & Daily Puzzles | Hoot Indie Games',
+          fr: 'Mini-Jeux Indés — 7 Défis & Énigmes Quotidiennes | Hoot Indie Games',
+          en: 'Indie Mini-Games — 7 Challenges & Daily Puzzles | Hoot Indie Games',
         },
         screenle: {
           fr: "Screenle — Défi Quotidien par Capture d'Écran | Hoot Indie Games",
@@ -224,6 +231,10 @@ export const AppContent: React.FC = () => {
         chrono: {
           fr: 'Chrono — Frise Chronologique de Jeux Indés | Hoot Indie Games',
           en: 'Timeline — Daily Indie Chronology Puzzle | Hoot Indie Games',
+        },
+        pixel: {
+          fr: 'Pixel & Silhouette — Dé-pixellisation de Jeux Indés | Hoot Indie Games',
+          en: 'Pixel & Silhouette — Daily Indie De-pixelation | Hoot Indie Games',
         },
         timeattack: {
           fr: 'Time Attack ⚡ — Sprint Chronométré de Jeux Indés | Hoot Indie Games',
@@ -415,6 +426,14 @@ export const AppContent: React.FC = () => {
 
               {activeMiniGame === 'chrono' && (
                 <ChronoGame
+                  key={currentDate}
+                  currentDate={currentDate}
+                  onSelectDate={(newDate) => setCurrentDate(newDate)}
+                />
+              )}
+
+              {activeMiniGame === 'pixel' && (
+                <PixelGame
                   key={currentDate}
                   currentDate={currentDate}
                   onSelectDate={(newDate) => setCurrentDate(newDate)}

@@ -7,6 +7,7 @@ import {
   Sparkles,
   FileSearch,
   History,
+  Sliders,
   Zap,
   Swords,
 } from 'lucide-react';
@@ -20,6 +21,7 @@ export type MiniGameSubTab =
   | 'linkle'
   | 'profille'
   | 'chrono'
+  | 'pixel'
   | 'timeattack'
   | 'versus';
 
@@ -45,7 +47,7 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
     badge?: string;
     badgeColor?: string;
     showDailyDot?: boolean;
-    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono';
+    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel';
   }[] = [
     {
       id: 'hub',
@@ -88,6 +90,15 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
       showDailyDot: true,
       dailyKey: 'chrono',
+    },
+    {
+      id: 'pixel',
+      label: 'Pixel',
+      icon: Sliders,
+      badge: isFr ? 'Nouveau' : 'New',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+      showDailyDot: true,
+      dailyKey: 'pixel',
     },
     {
       id: 'timeattack',

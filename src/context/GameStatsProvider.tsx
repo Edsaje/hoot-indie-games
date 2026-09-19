@@ -25,6 +25,7 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           linkle: { ...defaultOverallStats.linkle, ...(parsed.linkle || {}) },
           profille: { ...defaultOverallStats.profille, ...(parsed.profille || {}) },
           chrono: { ...defaultOverallStats.chrono, ...(parsed.chrono || {}) },
+          pixel: { ...defaultOverallStats.pixel, ...(parsed.pixel || {}) },
         };
       }
     } catch {
