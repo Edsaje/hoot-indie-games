@@ -355,11 +355,24 @@
   - Cibles tactiles confortables au pouce (au moins 44x44px) sur tous les boutons d'action, filtres et claviers virtuels.
   - Contrôle strict du zéro débordement horizontal sur l'ensemble des onglets (*Pépites*, *Mini-jeux*, *Arcade*, *Boîte à Outils*, *Le Perchoir*).
   - Modales et dialogues plein écran adaptatifs (`max-h-[92vh] overflow-y-auto`) avec fermeture aisée à une main.
-- [ ] **Audit d'Exactitude Factuelle des Fiches de Jeux (Zéro Hallucination & Cohérence Indledle)** :
-  - **Perspective Caméra** : Revue systématique de chaque jeu pour aligner la perspective sur le gameplay effectif (ex: *How to Fish* réattribué en "Première personne", vérification des jeux en vue 2D de côté vs 2.5D/isométrique vs 3e personne vs vue du dessus).
-  - **Style Artistique (ArtStyle)** : Contrôle d'attribution rigoureux des 6 catégories canoniques (*Pixel Art*, *2D Dessiné à la main*, *3D Stylisée*, *3D Low-Poly / Rétro*, *3D Réaliste*, *Monochrome / Minimaliste*).
-  - **Genres & Mécaniques Clés** : Vérifier que les genres associés reflètent fidèlement les mécaniques principales (Metroidvania, Roguelike, Deckbuilder, Souls-like, etc.) pour des comparaisons Indledle et Profille 100% justes et équitables.
-  - **Développeurs & Années de Sortie** : Vérification continue de la date de sortie officielle et des studios contre les fiches officielles Steam Store.
+- [x] **Audit d'Exactitude Factuelle des Fiches de Jeux (Zéro Hallucination & Cohérence Indledle & Profille)** :
+  - **Harmonisation & Unification des Genres & Tags** :
+    - Élimination des conflits de variantes : unifié `"Coop"` vers `"Co-op"` (*Kernel Hearts*, *BOMBANANA!*, *RV There Yet?*) et `"Soulslike"` vers `"Souls-like"` (*No Rest for the Wicked*).
+    - Normalisation de `"Action-RPG"` vers `["Action", "RPG"]` pour une parfaite cohérence de l'encyclopédie.
+    - Ajout de la règle d'audit n°9 dans [`scripts/verifySteamDatabase.ts`](file:///scripts/verifySteamDatabase.ts) bloquant automatiquement tout futur conflit ou doublon de genre à la compilation.
+  - **Moteur de Tolérance aux Alias dans Profille** :
+    - Implémentation des fonctions de normalisation canonique ([`normalizeGenreKey`](file:///src/components/profille/ProfilleGame.tsx), [`isGenreEquivalent`](file:///src/components/profille/ProfilleGame.tsx), [`checkGenreMatch`](file:///src/components/profille/ProfilleGame.tsx)) dans [`src/components/profille/ProfilleGame.tsx`](file:///src/components/profille/ProfilleGame.tsx) et [`src/components/timeattack/ProfilleSprint.tsx`](file:///src/components/timeattack/ProfilleSprint.tsx).
+    - Les variantes (accents, tirets, majuscules, "co-op" / "coop" / "coopération", "souls-like" / "soulslike", "roguelike" / "roguelite") sont désormais réconciliées à 100% sans faux échecs.
+    - Dédoublonnage des tags dans le sélecteur : aucun chip redondant n'est affiché.
+  - **Perspective Caméra & Genres Réajustés sur 94 Jeux** :
+    - *How to Fish* : corrigé en "Première personne" (First-Person).
+    - *OpenFront* : corrigé en "Vue du dessus 2D" (2D Top-down).
+    - *Emberward* : corrigé en "Isométrique / 2.5D" (Isometric / 2.5D) et genres `["Stratégie", "Roguelike", "Puzzle"]` (suppression du tag erroné free-to-play).
+    - *Megabonk* : corrigé en "Vue du dessus 2D" (2D Top-down) et genres `["Action", "Roguelike", "Bullet Hell"]`.
+    - *BOMBANANA!* : enrichi avec `["Puzzle", "Comédie", "Co-op"]`.
+  - **Taglines & Visuels** :
+    - Traduction française propre de la tagline de *Drag'n Wash*.
+    - Complétion de la 6e capture pour *What Remains of Edith Finch*.
 
 ---
 

@@ -75,6 +75,20 @@ async function auditDatabase() {
     }
   }
 
+  // 9. Vérification globale de cohérence des genres (interdit les variantes type "co-op" vs "coop")
+  const normalizedGenres = new Map<string, string>();
+  for (const game of INDIE_GAMES) {
+    for (const g of game.genre) {
+      const norm = g.toLowerCase().replace(/[-_ \/]/g, '').trim();
+      if (normalizedGenres.has(norm) && normalizedGenres.get(norm) !== g) {
+        console.error(`❌ [Erreur Conflit Genre] Le genre "${g}" (${game.title}) est en conflit avec la variante existante "${normalizedGenres.get(norm)}".`);
+        errors++;
+      } else {
+        normalizedGenres.set(norm, g);
+      }
+    }
+  }
+
   console.log('----------------------------------------------------');
   if (warnings.length > 0) {
     console.log(`Avertissements (${warnings.length}) :`);

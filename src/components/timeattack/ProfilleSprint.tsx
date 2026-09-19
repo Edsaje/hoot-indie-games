@@ -22,6 +22,7 @@ import { recordTimeAttackResult, getTimeAttackStats } from '../../utils/timeAtta
 import { ShareResultModal } from '../common/ShareResultModal';
 import type { ShareCardData } from '../../utils/generateShareCard';
 import { useTranslation } from 'react-i18next';
+import { checkGenreMatch } from '../profille/ProfilleGame';
 
 interface ProfilleSprintProps {
   games: Game[];
@@ -145,7 +146,7 @@ export const ProfilleSprint: React.FC<ProfilleSprintProps> = ({ games, onBackToH
 
     // category === 'genre'
     const correctChoice = game.genre[0] || 'Aventure';
-    const allGenres = Array.from(new Set(games.flatMap((g) => g.genre).filter((gen) => !game.genre.includes(gen))));
+    const allGenres = Array.from(new Set(games.flatMap((g) => g.genre).filter((gen) => !checkGenreMatch(gen, game.genre))));
     const decoyGenres = allGenres.sort(() => Math.random() - 0.5).slice(0, 3);
 
     const choices = [correctChoice, ...decoyGenres].sort(() => Math.random() - 0.5);

@@ -55,6 +55,32 @@ const normalizeStudioName = (str: string): string => {
     .trim();
 };
 
+/**
+ * Normalisation robuste des genres pour éliminer la ponctuation, les tirets, les espaces et la casse.
+ * Réconcilie aussi les variantes courantes (ex: 'coop', 'co-op', 'coopération' -> 'coop').
+ */
+export function normalizeGenreKey(genre: string): string {
+  const norm = genre
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[-_ \/]/g, '')
+    .trim();
+
+  if (norm === 'coop' || norm === 'cooperation' || norm === 'cooperatif') return 'coop';
+  if (norm === 'soulslike') return 'soulslike';
+  if (norm === 'roguelike' || norm === 'roguelite') return 'roguelike';
+  return norm;
+}
+
+export function isGenreEquivalent(genreA: string, genreB: string): boolean {
+  return normalizeGenreKey(genreA) === normalizeGenreKey(genreB);
+}
+
+export function checkGenreMatch(guess: string, targetGenres: string[]): boolean {
+  return targetGenres.some((t) => isGenreEquivalent(t, guess));
+}
+
 export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelectDate }) => {
   const { i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
@@ -72,7 +98,16 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
   }, []);
 
   const allGenres = useMemo(() => {
-    return Array.from(new Set(INDIE_GAMES.flatMap((g) => g.genre))).sort((a, b) =>
+    const map = new Map<string, string>();
+    for (const g of INDIE_GAMES) {
+      for (const gen of g.genre) {
+        const key = normalizeGenreKey(gen);
+        if (!map.has(key)) {
+          map.set(key, gen);
+        }
+      }
+    }
+    return Array.from(map.values()).sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: 'base' })
     );
   }, []);
@@ -350,9 +385,8 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     const newGuesses = [...genreGuesses, selectedGenres];
     setGenreGuesses(newGuesses);
 
-    const targetGenresLower = secretGame.genre.map((g) => g.toLowerCase());
     const matchedCount = selectedGenres.filter((g) =>
-      targetGenresLower.includes(g.toLowerCase())
+      checkGenreMatch(g, secretGame.genre)
     ).length;
 
     // Solved if the player identified at least 1 matching genre from this title
@@ -400,11 +434,6 @@ https://hootindiegames.com/#profille`;
       g.toLowerCase().includes(genreSearch.toLowerCase().trim())
     );
   }, [allGenres, genreSearch]);
-
-  const targetGenresLower = useMemo(
-    () => secretGame.genre.map((g) => g.toLowerCase()),
-    [secretGame.genre]
-  );
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6">
@@ -826,7 +855,7 @@ https://hootindiegames.com/#profille`;
                   className="flex flex-wrap items-center gap-1 p-1.5 rounded-xl bg-slate-900 border border-slate-800"
                 >
                   {guessArr.map((g) => {
-                    const isTarget = targetGenresLower.includes(g.toLowerCase());
+                    const isTarget = checkGenreMatch(g, secretGame.genre);
                     return (
                       <span
                         key={g}

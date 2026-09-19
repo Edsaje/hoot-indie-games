@@ -1808,7 +1808,8 @@ export const INDIE_GAMES: Game[] = [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_b33a742463deb8564a382e1744febceaa91a5bab.1920x1080.jpg?t=1785424558",
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_cc50bb10f1858d16a4df684f4dd264bda5d432ba.1920x1080.jpg?t=1785424558",
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_77ebb61562a25dbcd0c4cc1c5090b76a76a055b2.1920x1080.jpg?t=1785424558",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_7a68ff5a7b3e6c85ab89f9bbf549a0232281bd19.1920x1080.jpg?t=1785424558"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_7a68ff5a7b3e6c85ab89f9bbf549a0232281bd19.1920x1080.jpg?t=1785424558",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/header.jpg"
     ],
     "hints": {
       "tagline": {
@@ -2968,16 +2969,16 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2026,
     "genre": [
       "Stratégie",
-      "Free-to-play",
-      "Roguelike"
+      "Roguelike",
+      "Puzzle"
     ],
     "artStyle": {
       "fr": "Pixel Art",
       "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "Refic Games",
     "steamUrl": "https://store.steampowered.com/app/2459550/",
@@ -3009,8 +3010,8 @@ export const INDIE_GAMES: Game[] = [
       "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Dazed Games",
     "steamUrl": "https://store.steampowered.com/app/4001890/",
@@ -3073,7 +3074,7 @@ export const INDIE_GAMES: Game[] = [
       "Action",
       "RPG",
       "Roguelike",
-      "Coop"
+      "Co-op"
     ],
     "artStyle": {
       "fr": "Pixel Art",
@@ -3113,8 +3114,8 @@ export const INDIE_GAMES: Game[] = [
       "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "OpenFront Inc, Evan Pellegrini",
     "steamUrl": "https://store.steampowered.com/app/3560670/",
@@ -3138,7 +3139,9 @@ export const INDIE_GAMES: Game[] = [
     "title": "BOMBANANA!",
     "releaseYear": 2026,
     "genre": [
-      "Coop"
+      "Puzzle",
+      "Comédie",
+      "Co-op"
     ],
     "artStyle": {
       "fr": "Pixel Art",
@@ -3170,8 +3173,9 @@ export const INDIE_GAMES: Game[] = [
     "title": "No Rest for the Wicked",
     "releaseYear": 2024,
     "genre": [
-      "Action-RPG",
-      "Soulslike",
+      "Action",
+      "RPG",
+      "Souls-like",
       "Dark Fantasy",
       "Aventure"
     ],
@@ -3208,7 +3212,7 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Action",
       "Aventure",
-      "Coop"
+      "Co-op"
     ],
     "artStyle": {
       "fr": "3D Rétro Low-poly",
@@ -3277,15 +3281,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Megabonk",
     "releaseYear": 2025,
     "genre": [
-      "Action"
+      "Action",
+      "Roguelike",
+      "Bullet Hell"
     ],
     "artStyle": {
       "fr": "Pixel Art",
       "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "vedinad",
     "steamUrl": "https://store.steampowered.com/app/3405340/",
@@ -3331,7 +3337,7 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "Enjoy a narrative involving 3 male dragons. Wash them, chat with them, touch them, and more! A 3D dragon washing experience.",
+        "fr": "Vivez une expérience narrative auprès de 3 dragons. Lavez-les, discutez avec eux et découvrez leurs secrets dans cette simulation 3D insolite.",
         "en": "Enjoy a narrative involving 3 male dragons. Wash them, chat with them, touch them, and more! A 3D dragon washing experience."
       }
     }
