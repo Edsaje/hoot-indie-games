@@ -103,6 +103,14 @@
     - **Contenu Pré-rendu Sémantique Crawlers (`#seo-crawler-container`)** : Articles sémantiques complets avec balises `<header>`, `<main>`, `<section>` et `<article>` pour les 8 disciplines de déduction, le Time Attack, l'arène Versus 1v1, les 8 bornes d'arcade et le catalogue thématisé.
     - **Sitemap XML & PWA Manifest** : Ajout de `#minigames` et `#timeattack` dans [`public/sitemap.xml`](file:///public/sitemap.xml) avec `lastmod: 2026-09-19`, mise à jour de la description dans [`public/manifest.webmanifest`](file:///public/manifest.webmanifest) et rafraîchissement de [`public/og-banner.svg`](file:///public/og-banner.svg).
     - **Accueil & Descriptions UI** : Hero et lanceur de jeux dans [`GemExplorerHome.tsx`](file:///src/components/gems/GemExplorerHome.tsx) valorisant les 8 disciplines, le suivi du statut de victoire du jour (`dailyStatus`) et un bandeau compétitif (Time Attack / Versus / Arcade).
+29. **Extraction du Quiz Indé vers les Mini-Jeux & Expansion Massive (180 Questions Aléatoires) :**
+    - Suppression du Quiz de la Boîte à Outils (`ToolboxHub.tsx`) pour lui redonner son statut à part entière de jeu culturel.
+    - Création du composant dédié [`IndieQuizGame.tsx`](file:///src/components/quiz/IndieQuizGame.tsx) intégré au Hub des Mini-Jeux et à la sous-navigation avec lien profond `#quiz`.
+    - 3 modes de jeu complets : 10 Questions (Standard), Survie (3 Vies), et Entraînement Infini sans fin.
+    - Filtre par catégorie : Histoire & Lore, Bandes-son (OST), Gameplay, Créateurs & Studios, Trivia & Records.
+    - Base de données bilingue (FR/EN) massivement enrichie à **180 questions vérifiées** (0 hallucination) tirées au sort avec mélange dynamique des 4 propositions (Fisher-Yates).
+    - Raccourcis clavier [1] [2] [3] [4] et [Espace], explications détaillées "Le Saviez-vous ?" et cartes interactives vers la fiche Steam officielle pour les 169 pépites associées.
+    - Badges dynamiques synchronisés dans le Hub et la barre d'onglets (`180 Questions` / `180 Q.`).
 
 ---
 

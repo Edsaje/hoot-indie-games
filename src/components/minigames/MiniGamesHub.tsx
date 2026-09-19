@@ -20,6 +20,7 @@ import {
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { getChallengeStatusForDate, getTodayDateString } from '../../utils/streakManager';
+import { QUIZ_QUESTIONS } from '../../data/quizQuestions';
 
 export type MiniGameId =
   | 'screenle'
@@ -197,11 +198,11 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
       title: isFr ? 'Quiz Indé' : 'Indie Quiz',
       subtitle: isFr ? 'Culture & Savoir Indé' : 'Indie Trivia & Lore',
       description: isFr
-        ? 'Testez votre culture avec plus de 75 questions aléatoires sur les chefs-d’œuvre, studios, musiques et secrets !'
-        : 'Test your indie trivia with 75+ randomized questions covering masterworks, creators, soundtracks, and secrets!',
+        ? `Testez votre culture avec ${QUIZ_QUESTIONS.length} questions aléatoires sur les chefs-d'œuvre, studios, musiques et secrets !`
+        : `Test your indie trivia with ${QUIZ_QUESTIONS.length} randomized questions covering masterworks, creators, soundtracks, and secrets!`,
       icon: HelpCircle,
       accentColor: 'from-amber-600/20 to-yellow-500/20 border-amber-500/30 text-amber-400',
-      badgeText: isFr ? '76 Questions' : '76 Questions',
+      badgeText: `${QUIZ_QUESTIONS.length} Questions`,
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
       isDaily: false,
     },

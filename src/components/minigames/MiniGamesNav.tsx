@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { getChallengeStatusForDate } from '../../utils/streakManager';
+import { QUIZ_QUESTIONS } from '../../data/quizQuestions';
 
 export type MiniGameSubTab =
   | 'hub'
@@ -146,7 +147,7 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
       id: 'quiz',
       label: isFr ? 'Quiz Indé' : 'Indie Quiz',
       icon: HelpCircle,
-      badge: isFr ? '76 Q.' : '76 Q.',
+      badge: `${QUIZ_QUESTIONS.length} Q.`,
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
     },
   ];
