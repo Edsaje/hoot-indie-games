@@ -7,10 +7,11 @@
   "nav": {
     "gems": "Gems",
     "games": "Mini-Games",
-    "screenle": "Screenle",
-    "indledle": "Indledle",
-    "linkle": "Linkle",
-    "versus": "1v1 Versus",
+    "screenle": "Framed",
+    "indledle": "Classic",
+    "linkle": "Connections",
+    "profille": "Profile",
+    "versus": "1v1 Duel",
     "arcade": "Arcade",
     "timeattack": "Time Attack",
     "toolbox": "Toolbox",
@@ -52,7 +53,7 @@
     "streakRescuedSuccess": "🔥 Flame preserved! Yesterday's puzzle completed, your streak continues!"
   },
   "screenle": {
-    "title": "Screenle",
+    "title": "Framed",
     "subtitle": "Guess the daily indie game from progressive screenshot stages",
     "stage": "Visual clue {{current}} of {{total}}",
     "searchPlaceholder": "Search for an indie game...",
@@ -67,7 +68,7 @@
     "lostText": "Game over! Check back tomorrow for a brand new challenge!"
   },
   "indledle": {
-    "title": "Indledle",
+    "title": "Classic",
     "subtitle": "Compare characteristics to pinpoint the mystery indie game",
     "searchPlaceholder": "Type a game title...",
     "attempts": "Guesses: {{count}} / {{max}}",
@@ -87,7 +88,7 @@
     "lostText": "Out of guesses. A new indie puzzle will be ready tomorrow!"
   },
   "linkle": {
-    "title": "Linkle (Connections)",
+    "title": "Connections",
     "subtitle": "Group 16 indie games into 4 secret categories of 4 items",
     "mistakesRemaining": "Mistakes remaining:",
     "oneAway": "Close! 3 out of 4 games share a category!",
@@ -103,7 +104,7 @@
     "lostText": "Out of attempts! Here are the revealed secret categories:"
   },
   "profille": {
-    "title": "Profille",
+    "title": "Profile",
     "subtitle": "Indie Game ID Card: deduce the release year, developer studio, and game genre",
     "confidentialFile": "Confidential Dossier",
     "attemptsLeft": "Attempt {{current}} of {{max}}",

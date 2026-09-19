@@ -81,7 +81,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              {tab}
+              {t('nav.' + tab)}
             </button>
           ))}
         </div>

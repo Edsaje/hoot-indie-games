@@ -548,7 +548,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
             title="Créer votre propre Linkle"
           >
             <PlusCircle className="w-3.5 h-3.5 text-amber-400" />
-            <span>{lang === 'fr' ? 'Créer un Linkle' : 'Create Linkle'}</span>
+            <span>{lang === 'fr' ? 'Créer une grille' : 'Create Grid'}</span>
           </button>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">

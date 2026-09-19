@@ -205,7 +205,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
         return `${idx + 1}. ${isHit ? '🟩' : '⬛'} ${g.title}`;
       });
       await downloadShareCard({
-        gameMode: 'Screenle',
+        gameMode: t('screenle.title'),
         date: currentDate,
         isWon,
         scoreText: isWon ? `${guesses.length}/6 tentatives` : 'Défi non résolu',
@@ -259,7 +259,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
     }).join('');
 
     return {
-      gameMode: 'Screenle',
+      gameMode: t('screenle.title'),
       date: currentDate,
       isWon,
       scoreText: isWon ? `${guesses.length}/${maxAttempts} Essais` : `X/${maxAttempts} (Non trouvé)`,

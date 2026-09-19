@@ -415,7 +415,7 @@ https://hootindiegames.com/#profille`;
           <span>{isFr ? "Fiche d'Identité" : 'Game ID Card'}</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-white tracking-wide flex items-center justify-center gap-2">
-          <span>Profille</span>
+          <span>{isFr ? 'Profil' : 'Profile'}</span>
           <span className="text-xs font-black uppercase px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
             {isFr ? 'Dossier Indé' : 'Indie File'}
           </span>

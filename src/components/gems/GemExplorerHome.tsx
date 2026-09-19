@@ -324,7 +324,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 )}
               </div>
               <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mb-1">
-                Screenle
+                {lang === 'fr' ? 'Capture' : 'Framed'}
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
                 Devinez le jeu secret à travers 6 captures d'écran zoomées progressives.
@@ -361,7 +361,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 )}
               </div>
               <h3 className="text-lg font-black text-white group-hover:text-emerald-400 transition mb-1">
-                Indledle
+                Classic
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
                 Comparez l'année, les genres, le style artistique, la caméra et le studio.
@@ -398,7 +398,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 )}
               </div>
               <h3 className="text-lg font-black text-white group-hover:text-purple-400 transition mb-1">
-                Linkle
+                {lang === 'fr' ? 'Connexions' : 'Connections'}
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
                 Regroupez 16 jeux par 4 catégories thématiques secrètes.

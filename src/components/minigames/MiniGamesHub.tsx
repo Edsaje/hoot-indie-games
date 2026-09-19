@@ -54,7 +54,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
   }[] = [
     {
       id: 'screenle',
-      title: 'Screenle',
+      title: isFr ? 'Capture' : 'Framed',
       subtitle: isFr ? 'Déduction visuelle progressive' : 'Progressive visual deduction',
       description: isFr
         ? "Identifiez le jeu indé du jour à travers 6 captures d'écran et zooms progressifs."
@@ -66,10 +66,10 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     },
     {
       id: 'indledle',
-      title: 'Indledle',
+      title: 'Classic',
       subtitle: isFr ? 'Wordle indé complet' : 'Complete Indie Wordle',
       description: isFr
-        ? "Deduisez le jeu secret en comparant l'année, le studio, les genres, l'angle de caméra et l'art."
+        ? "Déduisez le jeu secret en comparant l'année, le studio, les genres, l'angle de caméra et l'art."
         : 'Deduce the secret game comparing year, studio, genres, camera perspective, and art style.',
       icon: Layers,
       accentColor: 'from-amber-600/20 to-orange-500/20 border-amber-500/30 text-amber-400',
@@ -78,7 +78,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     },
     {
       id: 'linkle',
-      title: 'Linkle',
+      title: isFr ? 'Connexions' : 'Connections',
       subtitle: isFr ? '16 Connexions thématiques' : '16 Thematic Connections',
       description: isFr
         ? 'Regroupez 16 jeux indés par 4 groupes secrets partageant un point commun astucieux.'
@@ -90,7 +90,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     },
     {
       id: 'profille',
-      title: 'Profille',
+      title: isFr ? 'Profil' : 'Profile',
       subtitle: isFr ? "Fiche d'identité secrète" : 'Secret Game ID Card',
       description: isFr
         ? "Le titre et les captures sont révélés : retrouvez l'année de sortie, le studio et le style de jeu !"
@@ -117,7 +117,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     },
     {
       id: 'versus',
-      title: 'Versus 1v1',
+      title: isFr ? 'Duel 1v1' : '1v1 Duel',
       subtitle: isFr ? 'Arène multijoueur en temps réel' : 'Real-Time Multiplayer Arena',
       description: isFr
         ? 'Défiez vos amis ou des joueurs en ligne dans des duels de culture indé en direct.'

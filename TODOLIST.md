@@ -176,8 +176,15 @@
   - Remplacement du faux import direct par une interface de contribution communautaire dans [`src/components/steam/SteamCatalogExplorer.tsx`](file:///src/components/steam/SteamCatalogExplorer.tsx).
   - Backend PHP sécurisé [`public/api/suggest_game.php`](file:///public/api/suggest_game.php) avec rate-limiting, assainissement XSS, détection des doublons et écriture atomique dans `public/api/suggestions.json`.
   - Panneau d'administration intégré dans le tableau de bord de [`public/api/track.php`](file:///public/api/track.php) pour examiner, consulter et valider les suggestions de la communauté.
-- [ ] **Renommage thématique des modes de jeu** :
-  - Proposition de nouveaux noms évocateurs pour *Screenle*, *Indledle*, *Linkle*, *Versus* (ex: *L'Œil du Hibou*, *L'Écho des Pépites*, *Les Liens Sylvestres*, *Le Duel de la Canopée*), en attente de la validation finale du joueur.
+- [x] **Renommage classique des modes de jeu** :
+  - Harmonisation avec les appellations de référence du genre :
+    - *Screenle* ➔ **Capture** (FR) / **Framed** (EN)
+    - *Indledle* ➔ **Classic** (bilingue)
+    - *Linkle* ➔ **Connexions** (FR) / **Connections** (EN)
+    - *Profille* ➔ **Profil** (FR) / **Profile** (EN)
+    - *Versus 1v1* ➔ **Duel 1v1** (FR) / **1v1 Duel** (EN)
+    - *Time Attack* ➔ **Time Attack** (bilingue)
+  - Pris en compte dans toute l'interface, les sous-menus, l'accueil, les fiches, les statistiques et le partage de résultats.
 
 ---
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
   Timer,
@@ -24,6 +25,8 @@ interface TimeAttackHubProps {
 }
 
 export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => {
+  const { i18n } = useTranslation();
+  const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
   const { allPlayableGames } = useSteamCatalog();
   const [activeMode, setActiveMode] = useState<TimeAttackMode | null>(initialMode || null);
   const [stats, setStats] = useState(getTimeAttackStats());
@@ -96,7 +99,9 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
             <Trophy className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-bold text-slate-400">Record Screenle</div>
+            <div className="text-[10px] uppercase font-bold text-slate-400">
+              {lang === 'fr' ? 'Record Capture' : 'Framed Record'}
+            </div>
             <div className="text-lg font-black text-white font-mono">{stats.screenle.highScore} pts</div>
           </div>
         </div>
@@ -106,7 +111,7 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
             <Target className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-bold text-slate-400">Record Indledle</div>
+            <div className="text-[10px] uppercase font-bold text-slate-400">Record Classic</div>
             <div className="text-lg font-black text-white font-mono">{stats.indledle.highScore} pts</div>
           </div>
         </div>
@@ -116,7 +121,9 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
             <Flame className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-bold text-slate-400">Record Linkle</div>
+            <div className="text-[10px] uppercase font-bold text-slate-400">
+              {lang === 'fr' ? 'Record Connexions' : 'Connections Record'}
+            </div>
             <div className="text-lg font-black text-white font-mono">{stats.linkle.highScore} pts</div>
           </div>
         </div>
@@ -154,7 +161,7 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
             </div>
 
             <h2 className="text-xl font-black text-white tracking-tight mb-2 flex items-center gap-2">
-              <span>Screenle Sprint</span>
+              <span>{lang === 'fr' ? 'Sprint Capture' : 'Framed Sprint'}</span>
             </h2>
             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
               Reconnaissance visuelle ultra-rapide. Identifiez le jeu à partir d'une capture d'écran parmi 4 propositions avec les touches 1 à 4.
@@ -197,7 +204,7 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
             </div>
 
             <h2 className="text-xl font-black text-white tracking-tight mb-2 flex items-center gap-2">
-              <span>Indledle Sprint</span>
+              <span>{lang === 'fr' ? 'Sprint Classic' : 'Classic Sprint'}</span>
             </h2>
             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
               Quiz express sur l'encyclopédie des pépites. Déduisez en un éclair les années de sortie, les développeurs et les genres majeurs.
@@ -240,7 +247,7 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
             </div>
 
             <h2 className="text-xl font-black text-white tracking-tight mb-2 flex items-center gap-2">
-              <span>Linkle Sprint</span>
+              <span>{lang === 'fr' ? 'Sprint Connexions' : 'Connections Sprint'}</span>
             </h2>
             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
               Connexions thématiques en rafale. Trouvez le jeu qui correspond à un thème clé ou repérez l'intrus avant la sonnerie du chrono.

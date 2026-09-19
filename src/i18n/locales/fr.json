@@ -7,10 +7,11 @@
   "nav": {
     "gems": "Pépites",
     "games": "Mini-Jeux",
-    "screenle": "Screenle",
-    "indledle": "Indledle",
-    "linkle": "Linkle",
-    "versus": "Versus 1v1",
+    "screenle": "Capture",
+    "indledle": "Classic",
+    "linkle": "Connexions",
+    "profille": "Profil",
+    "versus": "Duel 1v1",
     "arcade": "Arcade",
     "timeattack": "Time Attack",
     "toolbox": "Boîte à Outils",
@@ -52,7 +53,7 @@
     "streakRescuedSuccess": "🔥 Flamme préservée ! Défi d'hier réussi, votre série continue !"
   },
   "screenle": {
-    "title": "Screenle",
+    "title": "Capture",
     "subtitle": "Devinez le jeu indé du jour grâce à des captures d'écran progressives",
     "stage": "Indice visuel {{current}} sur {{total}}",
     "searchPlaceholder": "Rechercher un jeu indé...",
@@ -67,7 +68,7 @@
     "lostText": "Dommage ! Retentez votre chance demain pour un nouveau défi !"
   },
   "indledle": {
-    "title": "Indledle",
+    "title": "Classic",
     "subtitle": "Comparez les caractéristiques pour retrouver le jeu indépendant mystère",
     "searchPlaceholder": "Tapez le titre d'un jeu...",
     "attempts": "Essais effectués : {{count}} / {{max}}",
@@ -87,7 +88,7 @@
     "lostText": "Vous n'avez plus d'essais. Rendez-vous demain pour une nouvelle grille !"
   },
   "linkle": {
-    "title": "Linkle (Connections)",
+    "title": "Connexions",
     "subtitle": "Regroupez les 16 jeux en 4 catégories secrètes de 4 éléments",
     "mistakesRemaining": "Erreurs restantes :",
     "oneAway": "Tout près ! 3 jeux sur 4 partagent une même catégorie !",
@@ -103,7 +104,7 @@
     "lostText": "Les 4 erreurs sont épuisées. Voici les catégories révélées :"
   },
   "profille": {
-    "title": "Profille",
+    "title": "Profil",
     "subtitle": "Fiche d'identité secrète : retrouvez l'année de sortie, le studio et le style de jeu",
     "confidentialFile": "Dossier Confidentiel",
     "attemptsLeft": "Tentative {{current}} sur {{max}}",

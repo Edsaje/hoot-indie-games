@@ -195,7 +195,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
         });
 
       await downloadShareCard({
-        gameMode: 'Indledle',
+        gameMode: t('indledle.title'),
         date: currentDate,
         isWon,
         scoreText: isWon ? `${guesses.length}/8 essais` : 'Défi non résolu',
@@ -229,7 +229,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
       });
 
     return {
-      gameMode: 'Indledle',
+      gameMode: t('indledle.title'),
       date: currentDate,
       isWon,
       scoreText: isWon ? `${guesses.length}/${MAX_GUESSES} Essais` : `Échec (${MAX_GUESSES} essais)`,
