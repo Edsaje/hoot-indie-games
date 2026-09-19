@@ -325,7 +325,7 @@
   - **Barrière d'Âge Conforme (Age Gate)** : Modal d'avertissement explicite avec vérification de l'âge / déclaration légale de majorité et recueil du consentement éclairé en conformité avec les réglementations en vigueur.
   - **Opt-in Persistant & Verrouillage** : Accès conditionnel débloqué uniquement après validation, désactivable à tout moment dans les préférences du profil.
   - **Espace Dédié & Fiches Averties** : Espace isolé avec tags de contenus matures explicites, avertissements sensibles et redirections Steam officielles sous avertissement d'âge.
-- [ ] **Déploiement des 4 Nouveaux Mini-Jeux Originaux** :
+- [x] **Déploiement des 4 Nouveaux Mini-Jeux Originaux (8 Disciplines au Total)** :
   - [x] **1. Chrono-Timeline (Frise Chronologique Indé — "Chrono" / "Timeline")** ([`src/components/chrono/ChronoGame.tsx`](file:///src/components/chrono/ChronoGame.tsx), [`src/data/chronoPuzzles.ts`](file:///src/data/chronoPuzzles.ts)) :
     - Défi quotidien où le joueur commence avec un jeu ancre déjà positionné sur une frise temporelle verticale fluide (passé vers futur, haut en bas).
     - 4 pépites indés mystères à insérer l'une après l'autre à leur emplacement chronologique exact via des boutons de fente réactifs (`[+ Placer avant X]`, `[+ Entre X et Y]`, `[+ Placer après Y]`).
@@ -333,10 +333,24 @@
     - Système de 3 vies avec cœurs dorés et secousse d'erreur visuelle et sonore.
     - Mode d'entraînement infini (parties aléatoires illimitées) avec bascule instantanée.
     - Protection de la série quotidienne (streaks), bannière de rattrapage veille J-1, cartes de partage zéro-spoil HD et graphique de distribution communautaire par niveau de cœurs restants (`❤️❤️❤️`, `❤️❤️`, `❤️`, `❌ Échec`).
-    - Pleine intégration dans la Navbar, le Hub des Mini-jeux (7 disciplines), les statistiques globales, le calendrier d'archives et le routage URL (`#chrono`, `#timeline`).
-  - [ ] **2. Pixel & Silhouette Challenge (Ombre & Dé-pixellisation progressive)**
-  - [ ] **3. Steam Review Déduction (La Bonne Critique Caviardée)**
-  - [ ] **4. Blind Test OST Indé (Audioldle)**
+    - Pleine intégration dans la Navbar, le Hub des Mini-jeux (8 disciplines), les statistiques globales, le calendrier d'archives et le routage URL (`#chrono`, `#timeline`).
+  - [x] **2. Pixel & Silhouette Challenge (Ombre & Dé-pixellisation progressive — "Pixel")** ([`src/components/pixel/PixelGame.tsx`](file:///src/components/pixel/PixelGame.tsx), [`src/data/pixelPuzzles.ts`](file:///src/data/pixelPuzzles.ts)) :
+    - Défi quotidien de reconnaissance visuelle avec canevas dynamique `<canvas>` sous-échantillonné en temps réel (résolutions de 12px à 192px sur 5 paliers).
+    - Bouton bascule dynamique d'Ombre / Silhouette pour corser le jeu ou trouver l'ambiance pure des formes.
+    - 5 indices progressifs (année de sortie, studio créateur, tags de gameplay, accroche officielle et compositeur).
+    - Autocomplétion intelligente sur les 94 pépites du sanctuaire avec gestion d'erreurs, animation de secousse et confetti de victoire.
+    - Mode entraînement illimité, sauvegarde locale, streak J et J-1, cartes de partage zéro-spoil HD et graphique de distribution communautaire.
+  - [x] **3. Steam Review Déduction (La Bonne Critique Caviardée — "Critique" / "Review")** ([`src/components/review/ReviewGame.tsx`](file:///src/components/review/ReviewGame.tsx), [`src/data/reviewPuzzles.ts`](file:///src/data/reviewPuzzles.ts)) :
+    - Énigme quotidienne basée sur des critiques d'utilisateurs Steam authentiques et iconiques avec caviardage dynamique des spoilers (`████`).
+    - Base de données dédiée de 40+ critiques cultes rédigées + générateur procédural universel pour l'ensemble des 94 jeux indés.
+    - Interface Steam authentique (badge pouce bleu, heures de jeu, avis humoristiques et poignants) et 5 indices textuels progressifs.
+    - Recherche prédictive tolérante, modale de partage zéro-spoil, préservation de flamme J / J-1 et graphique de distribution communautaire.
+  - [x] **4. Blind Test OST Indé (Quiz Musical Synthétisé — "Blind Test" / "OST")** ([`src/components/blindtest/BlindTestGame.tsx`](file:///src/components/blindtest/BlindTestGame.tsx), [`src/data/blindtestPuzzles.ts`](file:///src/data/blindtestPuzzles.ts)) :
+    - Format type "Heardle" avec lecteur audio interactif et synthétiseur procédural Web Audio API 100% autonome et hors-ligne (0 risque de 404, 0 problème CORS, 0 claim de copyright externe).
+    - Mélodies cultes transcrites en notes de fréquences (Megalovania, Celeste First Steps, Hollow Knight Dirtmouth, Outer Wilds Timber Hearth, Shovel Knight Strike the Earth, Hotline Miami Hydrogen, etc.).
+    - Visualiseur spectral en barres de fréquences dynamiques synchronisé via `AnalyserNode` en temps réel.
+    - Paliers d'écoute débloqués à chaque essai : 1.5s, 3.0s, 6.0s, 11.0s et 18.0s, complétés par des indices sur le compositeur et l'ambiance.
+    - Recherche prédictive, modale de résultats avec carte de partage zéro-spoil HD, préservation de série (streaks) et graphique de répartition communautaire.
 - [ ] **Mise à Jour Time Attack & Versus avec les Nouveaux Jeux** :
   - [x] **Extension Time Attack (Nouveau Sprint Profil)** :
     - Ajout de la 4e discipline *Sprint Profil* dans [`src/components/timeattack/ProfilleSprint.tsx`](file:///src/components/timeattack/ProfilleSprint.tsx) : deviner express l'année de sortie, le studio de développement ou les genres d'un jeu culte avec raccourcis clavier 1 à 4 et captures Steam officielles.
@@ -398,7 +412,7 @@
 - [x] **Guide Stratégique Monétisation & Visibilité** : Consulter [`MONETIZATION_AND_GROWTH.md`](file:///MONETIZATION_AND_GROWTH.md) pour les détails sur les régies éthiques, Google AdSense (`ads.txt`), l'affiliation Humble/GOG, et les leviers d'acquisition (streamers Twitch, Reddit, YouTube @Hibouxe, Itch.io).
 - [ ] **Support Manette (Gamepad API)** pour naviguer et jouer dans la Salle d'Arcade.
 - [ ] **Filtre "Indés Francophones"** dans le catalogue de jeux.
-- [ ] **Mode Blind Test Audio Indé** (reconnaître un jeu à sa musique culte).
+- [x] **Mode Blind Test Audio Indé** (reconnaître un jeu à sa musique culte — Synthétiseur Web Audio 100% hors-ligne & visualiseur spectral).
 
 
 

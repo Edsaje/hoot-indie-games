@@ -8,6 +8,7 @@ import {
   History,
   Sliders,
   MessageSquareQuote,
+  Music,
   Zap,
   Swords,
   Flame,
@@ -27,6 +28,7 @@ export type MiniGameId =
   | 'chrono'
   | 'pixel'
   | 'review'
+  | 'blindtest'
   | 'timeattack'
   | 'versus';
 
@@ -56,7 +58,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
     badgeText?: string;
     badgeColor?: string;
     isDaily: boolean;
-    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review';
+    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review' | 'blindtest';
   }[] = [
     {
       id: 'screenle',
@@ -147,6 +149,20 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
       badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
       isDaily: true,
       dailyKey: 'review',
+    },
+    {
+      id: 'blindtest',
+      title: isFr ? 'Blind Test OST' : 'Indie Blind Test',
+      subtitle: isFr ? 'Reconnaissance musicale Heardle' : 'Heardle-style music quiz',
+      description: isFr
+        ? "Écoutez les extraits de bandes-son cultes et devinez la pépite indé en moins de 18 secondes d'écoute !"
+        : 'Listen to iconic soundtrack excerpts and guess the indie gem in under 18 seconds of listening!',
+      icon: Music,
+      accentColor: 'from-purple-600/20 to-pink-500/20 border-purple-500/30 text-purple-400',
+      badgeText: isFr ? 'Nouveau !' : 'New!',
+      badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+      isDaily: true,
+      dailyKey: 'blindtest',
     },
     {
       id: 'timeattack',

@@ -9,6 +9,7 @@ import {
   History,
   Sliders,
   MessageSquareQuote,
+  Music,
   Zap,
   Swords,
 } from 'lucide-react';
@@ -24,6 +25,7 @@ export type MiniGameSubTab =
   | 'chrono'
   | 'pixel'
   | 'review'
+  | 'blindtest'
   | 'timeattack'
   | 'versus';
 
@@ -49,7 +51,7 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
     badge?: string;
     badgeColor?: string;
     showDailyDot?: boolean;
-    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review';
+    dailyKey?: 'screenle' | 'indledle' | 'linkle' | 'profille' | 'chrono' | 'pixel' | 'review' | 'blindtest';
   }[] = [
     {
       id: 'hub',
@@ -110,6 +112,15 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
       badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
       showDailyDot: true,
       dailyKey: 'review',
+    },
+    {
+      id: 'blindtest',
+      label: 'Blind Test',
+      icon: Music,
+      badge: isFr ? 'Nouveau' : 'New',
+      badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+      showDailyDot: true,
+      dailyKey: 'blindtest',
     },
     {
       id: 'timeattack',

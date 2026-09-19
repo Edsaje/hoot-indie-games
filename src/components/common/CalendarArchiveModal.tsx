@@ -285,6 +285,15 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                           : 'bg-slate-800'
                       }`}
                     />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        pastStatus.blindtest === 'won'
+                          ? 'bg-emerald-600/70'
+                          : pastStatus.blindtest === 'lost'
+                          ? 'bg-rose-600/70'
+                          : 'bg-slate-800'
+                      }`}
+                    />
                   </div>
                 </div>
               );
@@ -302,7 +311,8 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               status.profille === 'won' &&
               status.chrono === 'won' &&
               status.pixel === 'won' &&
-              status.review === 'won';
+              status.review === 'won' &&
+              status.blindtest === 'won';
             const hasUnplayed =
               status.screenle === 'unplayed' ||
               status.indledle === 'unplayed' ||
@@ -310,7 +320,8 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               status.profille === 'unplayed' ||
               status.chrono === 'unplayed' ||
               status.pixel === 'unplayed' ||
-              status.review === 'unplayed';
+              status.review === 'unplayed' ||
+              status.blindtest === 'unplayed';
 
             return (
               <button
@@ -413,6 +424,16 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                       status.review === 'won'
                         ? 'bg-emerald-400'
                         : status.review === 'lost'
+                        ? 'bg-rose-500'
+                        : 'bg-slate-700'
+                    }`}
+                  />
+                  <span
+                    title="Blind Test"
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      status.blindtest === 'won'
+                        ? 'bg-emerald-400'
+                        : status.blindtest === 'lost'
                         ? 'bg-rose-500'
                         : 'bg-slate-700'
                     }`}

@@ -18,6 +18,7 @@ import { ProfilleGame } from './components/profille/ProfilleGame';
 import { ChronoGame } from './components/chrono/ChronoGame';
 import { PixelGame } from './components/pixel/PixelGame';
 import { ReviewGame } from './components/review/ReviewGame';
+import { BlindTestGame } from './components/blindtest/BlindTestGame';
 import { MiniGamesHub } from './components/minigames/MiniGamesHub';
 import { MiniGamesNav, type MiniGameSubTab } from './components/minigames/MiniGamesNav';
 import { VersusArena } from './components/versus/VersusArena';
@@ -52,6 +53,7 @@ export const AppContent: React.FC = () => {
       if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) return 'chrono';
       if (hash.startsWith('#pixel') || hash.startsWith('#silhouette')) return 'pixel';
       if (hash.startsWith('#review') || hash.startsWith('#critique')) return 'review';
+      if (hash.startsWith('#blindtest') || hash.startsWith('#audioldle') || hash.startsWith('#ost')) return 'blindtest';
       if (hash.startsWith('#timeattack')) return 'timeattack';
       if (hash.startsWith('#versus')) return 'versus';
     }
@@ -74,6 +76,9 @@ export const AppContent: React.FC = () => {
         hash.startsWith('#silhouette') ||
         hash.startsWith('#review') ||
         hash.startsWith('#critique') ||
+        hash.startsWith('#blindtest') ||
+        hash.startsWith('#audioldle') ||
+        hash.startsWith('#ost') ||
         hash.startsWith('#timeattack') ||
         hash.startsWith('#versus')
       ) {
@@ -129,7 +134,7 @@ export const AppContent: React.FC = () => {
   const handleTabChange = (tab: NavTab) => {
     if (
       tab === 'minigames' ||
-      ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'timeattack', 'versus'].includes(tab)
+      ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest', 'timeattack', 'versus'].includes(tab)
     ) {
       setCurrentTab('minigames');
       if (tab === 'minigames') {
@@ -142,7 +147,7 @@ export const AppContent: React.FC = () => {
     }
   };
 
-  // Hash listener for direct deep linking (#minigames, #screenle, #indledle, #linkle, #profille, #chrono, #pixel, #review, #timeattack, #versus, #arcade, #toolbox, #roost, #gems)
+  // Hash listener for direct deep linking (#minigames, #screenle, #indledle, #linkle, #profille, #chrono, #pixel, #review, #blindtest, #timeattack, #versus, #arcade, #toolbox, #roost, #gems)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.toLowerCase();
@@ -170,6 +175,9 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#review') || hash.startsWith('#critique')) {
         setCurrentTab('minigames');
         setActiveMiniGame('review');
+      } else if (hash.startsWith('#blindtest') || hash.startsWith('#audioldle') || hash.startsWith('#ost')) {
+        setCurrentTab('minigames');
+        setActiveMiniGame('blindtest');
       } else if (hash.startsWith('#timeattack')) {
         setCurrentTab('minigames');
         setActiveMiniGame('timeattack');
@@ -216,8 +224,8 @@ export const AppContent: React.FC = () => {
     } else if (currentTab === 'minigames') {
       const minigameTitles: Record<MiniGameSubTab, { fr: string; en: string }> = {
         hub: {
-          fr: 'Mini-Jeux Indés — 8 Défis & Énigmes Quotidiennes | Hoot Indie Games',
-          en: 'Indie Mini-Games — 8 Challenges & Daily Puzzles | Hoot Indie Games',
+          fr: 'Mini-Jeux Indés — 9 Défis & Énigmes Quotidiennes | Hoot Indie Games',
+          en: 'Indie Mini-Games — 9 Challenges & Daily Puzzles | Hoot Indie Games',
         },
         screenle: {
           fr: "Screenle — Défi Quotidien par Capture d'Écran | Hoot Indie Games",
@@ -246,6 +254,10 @@ export const AppContent: React.FC = () => {
         review: {
           fr: 'Critique Steam — Déduction de Critiques Caviardées | Hoot Indie Games',
           en: 'Steam Review — Redacted User Review Deduction | Hoot Indie Games',
+        },
+        blindtest: {
+          fr: 'Blind Test OST — Quiz Musical de Jeux Indés | Hoot Indie Games',
+          en: 'Indie OST Blind Test — Music Soundtrack Quiz | Hoot Indie Games',
         },
         timeattack: {
           fr: 'Time Attack ⚡ — Sprint Chronométré de Jeux Indés | Hoot Indie Games',
@@ -459,6 +471,14 @@ export const AppContent: React.FC = () => {
                 />
               )}
 
+              {activeMiniGame === 'blindtest' && (
+                <BlindTestGame
+                  key={currentDate}
+                  currentDate={currentDate}
+                  onSelectDate={(newDate) => setCurrentDate(newDate)}
+                />
+              )}
+
               {activeMiniGame === 'timeattack' && (
                 <TimeAttackHub
                   initialMode={timeAttackInitialMode}
@@ -489,7 +509,7 @@ export const AppContent: React.FC = () => {
         onClose={() => setIsStatsOpen(false)}
         initialTab={
           currentTab === 'minigames' &&
-          ['screenle', 'indledle', 'linkle', 'profille', 'chrono'].includes(activeMiniGame)
+          ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'].includes(activeMiniGame)
             ? (activeMiniGame as DailyGameMode)
             : 'screenle'
         }
