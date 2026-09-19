@@ -28,12 +28,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Team Cherry",
     "steamUrl": "https://store.steampowered.com/app/367520/Hollow_Knight/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/ss_868f763f9104fa2e558832a8dd936cb077e685f0.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/ss_9107ffdc69c3a30c52eb4be1c6cc8c4b794fbd81.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/ss_e1e5b8d2bbfa8d4389069d3e8a4a58eb6b7858c2.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/ss_a43e49df9c9164287c2b3dc10b1069b22a0bb8ad.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/ss_96eef667a4216e4fae7592cf1eef4f954316d5ba.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_5384f9f8b96a0b9934b2bc35a4058376211636d2.1920x1080.jpg?t=1776125684",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_d5b6edd94e77ba6db31c44d8a3c09d807ab27751.1920x1080.jpg?t=1776125684",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_a81e4231cc8d55f58b51a4a938898af46503cae5.1920x1080.jpg?t=1776125684",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_62e10cf506d461e11e050457b08aa0e2a1c078d0.1920x1080.jpg?t=1776125684",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_bd76bd88bc5334ee56ae3d5f0d8dec4455e8e3b8.1920x1080.jpg?t=1776125684",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_33a645903d6dd9beec39f272a3daf57174a6cc26.1920x1080.jpg?t=1776125684"
     ],
     "hints": {
       "tagline": {
@@ -63,12 +63,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Maddy Makes Games",
     "steamUrl": "https://store.steampowered.com/app/504230/Celeste/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/ss_fa73b438258296eb4cbb7928e3b08e2ecadba9ee.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/ss_ef79ee5e11400d7fb4936d93e87fc4dcad30d5b4.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/ss_d36bfa5880d75c3dbb90875e54d89617255169a8.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/ss_89ca05256e2eb9b6cebcda7c29ae82136a546ce3.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/ss_598007ae08f237bfb1cf8f600f723650170a417a.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_1ad297c2044cdcf450ee83e56350cafb590da755.1920x1080.jpg?t=1714089525",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_03bfe6bd5ddac7f747c8d2aa1a4f82cfd53c6dcb.1920x1080.jpg?t=1714089525",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_4b0f0222341b64a37114033aca9994551f27c161.1920x1080.jpg?t=1714089525",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_1012b11ad364ad6c138a25a654108de28de56c5f.1920x1080.jpg?t=1714089525",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_832ef0f27c3d6efdaa4b5d1cc896dce0999bc9e8.1920x1080.jpg?t=1714089525",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_1098b655a622720cfd549b104736a4eca8948100.1920x1080.jpg?t=1714089525"
     ],
     "hints": {
       "tagline": {
@@ -99,12 +99,11 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Mobius Digital",
     "steamUrl": "https://store.steampowered.com/app/753640/Outer_Wilds/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/753640/ss_4996fbcefcfa11b069d511516e87754eb5e7096e.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/753640/ss_c7c4904eb12d46e01a884ec8136ff9c3a372eb06.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/753640/ss_e1e12ea993f39a7970d49479b007887aa85467ef.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/753640/ss_a1e5052994474775e5331ae0a0f67caae0d8ebf9.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/753640/ss_694cf6e1d51c4a4e12c1c6e1c79caadbe92e1069.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/753640/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/753640/ss_ec95a283483f0438be40d033f08b9d956e748d54.1920x1080.jpg?t=1785424341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/753640/ss_09f0fa8d9b8d7da1408cf4e03303d896cbd9be18.1920x1080.jpg?t=1785424341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/753640/ss_c624a6b8edca0d451605592edd927dbcc14917a8.1920x1080.jpg?t=1785424341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/753640/ss_8683942f8d09eec32daeebe94867287424968f97.1920x1080.jpg?t=1785424341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/753640/ss_fe4a6504c49efa6e7cb9ecda7aeddb6f7451a2cc.1920x1080.jpg?t=1785424341"
     ],
     "hints": {
       "tagline": {
@@ -135,12 +134,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Supergiant Games",
     "steamUrl": "https://store.steampowered.com/app/1145360/Hades/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/ss_493c0fec44a30e84b54e3d368e7ec89f41df5bc2.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/ss_7be9719eb79bb410b0a562ef674a22ad3fb936d6.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/ss_ff68ce49ea3aa5a1a1f044bbd2df807353f47e30.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/ss_09904323672ea4fc69317d722dbfc05d0458b297.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_c0fed447426b69981cf1721756acf75369801b31.1920x1080.jpg?t=1758127023",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_8a9f0953e8a014bd3df2789c2835cb787cd3764d.1920x1080.jpg?t=1758127023",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_68300459a8c3daacb2ec687adcdbf4442fcc4f47.1920x1080.jpg?t=1758127023",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_bcb499a0dd001f4101823f99ec5094d2872ba6ee.1920x1080.jpg?t=1758127023",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_8e07e477fa7ff2f88c8984bc89b9652a655da0e9.1920x1080.jpg?t=1758127023",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_34e6660705cfe47d2b2f95189c37f7cb77f75ca6.1920x1080.jpg?t=1758127023"
     ],
     "hints": {
       "tagline": {
@@ -171,12 +170,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Motion Twin",
     "steamUrl": "https://store.steampowered.com/app/588650/Dead_Cells/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/588650/ss_055fa053267d643d9c72f7ad4bc81d68377cb761.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/588650/ss_0d10c1f54cfebbeeaaeae2bf80b2a59a7fdbdbf0.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/588650/ss_5d6dafc02187b5bccecf6b509d3c52e46b328131.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/588650/ss_b831fa4358a9e64e5256e6bf4ea69a1ff099eaee.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/588650/ss_d44e5fae5ffeb68e1a1796d1354bb4a6433e387f.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/588650/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_ac28000ade40cc2fe5c128f32ac98ba33c008a7a.1920x1080.jpg?t=1779086887",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_7bde51ea6c8f6289e85ea1d8c1c941e1f8bfee91.1920x1080.jpg?t=1779086887",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_e87e72a247918d8493892e035d5e1b4b84470d2f.1920x1080.jpg?t=1779086887",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_a099416b9f3e09d47c42f87667e6ad6f394ba652.1920x1080.jpg?t=1779086887",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_a8b0439ad7750cab1bdec86ecef0daa280e9f93f.1920x1080.jpg?t=1779086887",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_21c61aca6a66745a2abb3f72b93553398fc7fe32.1920x1080.jpg?t=1779086887"
     ],
     "hints": {
       "tagline": {
@@ -207,12 +206,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "tobyfox",
     "steamUrl": "https://store.steampowered.com/app/391540/Undertale/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/391540/ss_75e8d890cf2c68a4b3d7967b66a50e932bce37bb.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/391540/ss_f8a00259f51fc8931168ad08c5c7d1e07b587cf5.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/391540/ss_91e0a297926e85501ae13768d60124caae4b29bb.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/391540/ss_5bbd5668ef19c3514a6026a798993f3c3065da4a.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/391540/ss_c7df0e02ebbe7f67724a7ba31379f8feef7eb3d0.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/391540/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_6ded97a2c98473ac1e8a2b3c1419d93fb31b1186.1920x1080.jpg?t=1757349115",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_b9018c41cea2bdfb150609bedfca99b16a5af02a.1920x1080.jpg?t=1757349115",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_b9ec4c53a8ed37f764649c970757c0a1f4948ec1.1920x1080.jpg?t=1757349115",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_edab41f7c9fa287b0d90ebfa3b9219fec6e1b3ed.1920x1080.jpg?t=1757349115",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_a11393d4b437ca75c10521f6baf53fbba9006f0f.1920x1080.jpg?t=1757349115",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_85d6f0db4b5d6207534120c4b51e37dfd2f8dd83.1920x1080.jpg?t=1757349115"
     ],
     "hints": {
       "tagline": {
@@ -242,12 +241,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Mega Crit Games",
     "steamUrl": "https://store.steampowered.com/app/646570/Slay_the_Spire/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/646570/ss_5f58c70e01764619d8544d6dbdb91c953ae2ea70.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/646570/ss_20b5e396ba2f58be6107b7b134d1cfcfc8c50533.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/646570/ss_49fc8466b03ebc3b6f29420790e6677f5f4ef035.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/646570/ss_56cb6715fbc74d812c3f05ad42caeb1aa37ebfd5.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/646570/ss_602b9e658ecdd3552097e3a9686007b8b42247bc.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/646570/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/646570/ss_c171816f7ecd35b5b46d2fa27532f4c5b8ca3cc5.1920x1080.jpg?t=1774015376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/646570/ss_01aa3e7759e457bfbf2422f31c325d7b3ba8a6eb.1920x1080.jpg?t=1774015376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/646570/ss_b757436d08ba08292796bfed9c60e7cc99d5f2c3.1920x1080.jpg?t=1774015376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/646570/ss_1299d7fe55771cf564848c5046fbef7936178440.1920x1080.jpg?t=1774015376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/646570/ss_8af73365121b1b1e2d8004fca2cbffb9b9f6d7a5.1920x1080.jpg?t=1774015376",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/646570/ss_5b2b32f09da5a5bed99d5c5168b50fd681a4690c.1920x1080.jpg?t=1774015376"
     ],
     "hints": {
       "tagline": {
@@ -278,12 +277,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Andrew Shouldice",
     "steamUrl": "https://store.steampowered.com/app/553420/TUNIC/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/553420/ss_37a1f592477383a18a54d6fc48bc9614f85e49cf.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/553420/ss_16ca74378f8ff4b830d93be7839ec9bce768656d.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/553420/ss_1c6cb9916ec0e0c03b1236fb6552431fa1a2c3a5.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/553420/ss_2c0d8328bf5858cfd7be875e533c3f9154f24f5c.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/553420/ss_19139589d825dd67746fa0d15197f805a5a1e2f9.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/553420/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553420/ss_9c0184ba83022786f74f4a70ebae5c47d2a3c35c.1920x1080.jpg?t=1783359656",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553420/ss_5fc49d3c5fa34b0d0e6b6a5621f9062bec7ac4d7.1920x1080.jpg?t=1783359656",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553420/ss_04ac7db623d3e88751134eb87f5c465c392fa108.1920x1080.jpg?t=1783359656",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553420/ss_cce46eba03270e47fab2f955ec148c43f71fdb49.1920x1080.jpg?t=1783359656",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553420/ss_a19c43feb20d7c6aeda4e0bf6abb6e9ca10c3974.1920x1080.jpg?t=1783359656",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553420/ss_37434cb739e8b0690f939840bf6a0167141e2929.1920x1080.jpg?t=1783359656"
     ],
     "hints": {
       "tagline": {
@@ -313,12 +312,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Studio MDHR",
     "steamUrl": "https://store.steampowered.com/app/268910/Cuphead/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/268910/ss_911ce20f864e2621748259d81d2db40ec0a0ba61.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/268910/ss_b8fc17b439c3c1ca75635c15ee4e366b595b1e06.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/268910/ss_f8bfad73ae2c4bb47f9a8cb40428c946e382d6c1.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/268910/ss_544e3cb41b9d4f9bf34fca240f2f3e8271e16c90.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/268910/ss_4905a8f0a0e5b9826f5d5351e3c233cba799c922.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/268910/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_e3096a5555cb77d88db165c83d5ef3a24af1354a.1920x1080.jpg?t=1709068852",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_615455299355eaf552c638c7ea5b24a8b46e02dd.1920x1080.jpg?t=1709068852",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_483fb089be0093beeef03525276803a9ca4f66a1.1920x1080.jpg?t=1709068852",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_48477e4a865827aa0be6a44f00944d8d2a3e5eb9.1920x1080.jpg?t=1709068852",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_380296effbf1073bbedfd480e50cf246eb542b66.1920x1080.jpg?t=1709068852",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_aefad3850c3bc04000cbe0d620bea6807e0a0331.1920x1080.jpg?t=1709068852"
     ],
     "hints": {
       "tagline": {
@@ -348,12 +347,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "ZA/UM",
     "steamUrl": "https://store.steampowered.com/app/632470/Disco_Elysium/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/ss_b83141103fdf56f9166da2018ea69894e6cb9515.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/ss_c5d9a9cbba05e83ec6c2b1e8471c26c117d69b92.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/ss_07981b2a95c967675fa8ea97a9f95f417f7b309e.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/ss_26e7a6b0c20a48d88fa7b2cb1e3dc32d84422e86.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/ss_9fe811807d885a53930b8c634047d13b418a0a65.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632470/ss_b3694e99ffdb686d1bbbbe16a540d3d2ccd509c4.1920x1080.jpg?t=1780913406",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632470/ss_9125a718ee9ba85386ae5d4eb820f3266073fc97.1920x1080.jpg?t=1780913406",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632470/ss_4f5fdc3cf42feca8dafb1f7d2910ef96e62708a2.1920x1080.jpg?t=1780913406",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632470/ss_fc6969799ebf19fd2a2c8a986c9419e053606a17.1920x1080.jpg?t=1780913406",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632470/ss_dec29c440fab2f7817d68c1380c019290eb1755e.1920x1080.jpg?t=1780913406",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632470/ss_ab38615b3a1d0d4309f06772db4bd9db5c250ef7.1920x1080.jpg?t=1780913406"
     ],
     "hints": {
       "tagline": {
@@ -384,12 +383,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Daniel Mullins Games",
     "steamUrl": "https://store.steampowered.com/app/1092790/Inscryption/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1092790/ss_868b4226ba5cb830c2c31e9c20aa19aa36a7ea4b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1092790/ss_d7d6f54c9f131da4a0375a02568ea4cefb1b83df.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1092790/ss_752a78122d250325066dc10ae950a7b4f2c9ef89.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1092790/ss_f6efd55737dc1e8284534e62dc6990d0b7d7aa79.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1092790/ss_2644ff7284b395d985a97bc8a7cf282b0d771037.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1092790/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_0191a69b0e94a9a7784f5b81e27f06379910645a.1920x1080.jpg?t=1777572925",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_3b714682e9e0a214df1630a234e9f6764528eece.1920x1080.jpg?t=1777572925",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_7bfe728822807d232398df1cb1a5d64addd3d8fb.1920x1080.jpg?t=1777572925",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_79a146c36a3f0b728a8e0085327cec8c7fba82d6.1920x1080.jpg?t=1777572925",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_738220c84b63522c4ca8c77fbff1ddb252ea0fe9.1920x1080.jpg?t=1777572925",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_e3338b329e4d92b56121f2e849486ee805a56169.1920x1080.jpg?t=1777572925"
     ],
     "hints": {
       "tagline": {
@@ -420,12 +419,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "ConcernedApe",
     "steamUrl": "https://store.steampowered.com/app/413150/Stardew_Valley/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/ss_37a91689dfbbba16dfaa0d226a27e02e23075677.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/ss_8217bb3a0b5f13d806d20875c75bf69f104d49d9.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/ss_df94d216fe0290b2b8006bf203ea5ebba285746b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/ss_89daecf701c385566ee2682df6a0b7692e105e4b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/ss_6dc03fce5fe283f6f1680abcf4ebc3d790d96525.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_b887651a93b0525739049eb4194f633de2df75be.1920x1080.jpg?t=1786554168",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_9ac899fe2cda15d48b0549bba77ef8c4a090a71c.1920x1080.jpg?t=1786554168",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_4fa0866709ede3753fdf2745349b528d5e8c4054.1920x1080.jpg?t=1786554168",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_d836f0a5b0447fb6a2bdb0a6ac5f954949d3c41e.1920x1080.jpg?t=1786554168",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_10628b4a811c0a925a1433d4323f78c7017dbbe4.1920x1080.jpg?t=1786554168",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_6422d297347258086b389e3d5d9c0e0c698312e4.1920x1080.jpg?t=1786554168"
     ],
     "hints": {
       "tagline": {
@@ -456,12 +455,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Unknown Worlds Entertainment",
     "steamUrl": "https://store.steampowered.com/app/264710/Subnautica/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/ss_3a6a9be59e9a4bb3c1ae110b6562ba76579b12a8.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/ss_752a1baefc4ca1fc746f33c06d814c8d5045ea7c.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/ss_4955b41cf434e7f8b965c71d9d83d1fe5ee36b28.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/ss_34f6e4a2e5c8e3ca91094ea8e7b16524ca9ebbf7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/ss_efb4592ca07b0493b86cb4886616a695e0c609df.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_e182b6b20bb797500f9f63c561586d920d44e37c.1920x1080.jpg?t=1777456112",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_970a13f246e33e0df26d93baf9f8e975732adb4b.1920x1080.jpg?t=1777456112",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_5f2f2ea498cdc632cbffd6cf37c1a09670eb3272.1920x1080.jpg?t=1777456112",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_cebc378d2f7bc78978c21db4e3c5e12ccd067349.1920x1080.jpg?t=1777456112",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_0ace7f8b4350b8fbdd16345a76bc30545256e918.1920x1080.jpg?t=1777456112",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_f0eeabe108c2bc2b3e370b9828fb280035b50db2.1920x1080.jpg?t=1777456112"
     ],
     "hints": {
       "tagline": {
@@ -491,12 +490,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "LocalThunk",
     "steamUrl": "https://store.steampowered.com/app/2379780/Balatro/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2379780/ss_5d774f9d2d8cb30bf04f7cbe8078ef3a4b64f9ef.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2379780/ss_9c8ca17945d81cb4e4fce5ad9fa345cbbeabf0c3.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2379780/ss_e15112cb927bb8cffaf21cbbd42531e2840ff636.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2379780/ss_963b652bb113f3dbcb9cbb5aa3f350c39f0469b8.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2379780/ss_9b96eb9753c15aa1f9dbb900eb4d7d9e87595309.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2379780/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/96208723dbedef49d71bf1b0a74aee1689018c50/ss_96208723dbedef49d71bf1b0a74aee1689018c50.1920x1080.jpg?t=1788961800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_4862112e5030f74a5818cd4c31347d699ac5adf3.1920x1080.jpg?t=1788961800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_3be65a7dd3be072d567e11883d208861a7e959fa.1920x1080.jpg?t=1788961800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_e32ac94d7d1d6be7dd015d78f2b52aeb4cc282ed.1920x1080.jpg?t=1788961800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_b8455573ec1fd2c9412f22bd8df05f2d8027a95b.1920x1080.jpg?t=1788961800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_075cb45cbfa97d8139fb11f21667d6e35f908640.1920x1080.jpg?t=1788961800"
     ],
     "hints": {
       "tagline": {
@@ -526,12 +525,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Shared Memory",
     "steamUrl": "https://store.steampowered.com/app/813230/ANIMAL_WELL/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/813230/ss_a5957d19e0a29486c738e4a9081e4b9bbd05fe31.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/813230/ss_493f06e90299f1165319f71c4cce8f0c976f3f01.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/813230/ss_93beab90c563e46c764a8eb9c661ef4b8981f4a9.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/813230/ss_2d95a56763aa875f564f8ca8be114e9f78eaecb4.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/813230/ss_81e18bc2536b068e8e77519ff09c06634d0b04c8.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/813230/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813230/ss_87a9f2941e114a2bb834db6350ccbedc1ade794d.1920x1080.jpg?t=1788379439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813230/ss_ca955f6bb4f0c164dcffa59082ae985fb530582a.1920x1080.jpg?t=1788379439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813230/ss_6c242925256158897426f3e90e7e8a8f8f0bbee9.1920x1080.jpg?t=1788379439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813230/ss_f9f088275737d81e0eb998e0c076282c5c1955c3.1920x1080.jpg?t=1788379439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813230/ss_e8450943c2393103ef5e51d9c968c3ae1a610a55.1920x1080.jpg?t=1788379439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813230/ss_8773f0939bfd96fe25fbb7395bbae3d725044b12.1920x1080.jpg?t=1788379439"
     ],
     "hints": {
       "tagline": {
@@ -561,12 +560,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Sabotage Studio",
     "steamUrl": "https://store.steampowered.com/app/1244090/Sea_of_Stars/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1244090/ss_5a49ca8cbf7f87178051755ee0a82b95b866c1f1.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1244090/ss_e95267be85aeef3294314e30018f6d6c62c26f0c.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1244090/ss_8716bceb7f14b6fc70c1cb336183ef999b70b55a.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1244090/ss_75e21fbfaebfe7876a3d93b39fbfa7f2ef8bc164.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1244090/ss_40cfebce1c56f8f172551cf18b5cf3c95a09289d.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1244090/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_f756ff477590284c7192ffcef99237de056e4aeb.1920x1080.jpg?t=1780931183",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_c250a7fd789b3cbab5ca8e99e3530cf933656ad1.1920x1080.jpg?t=1780931183",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_889d4ddea7d0884d9d370dd280878570824e68fe.1920x1080.jpg?t=1780931183",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_cb9259d083c9d42db9b1f1197e030f8f85d42198.1920x1080.jpg?t=1780931183",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_e7ac3a6e5ebe5f4561fc46d116c33678cf4ba811.1920x1080.jpg?t=1780931183",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_3fe41c00a7122c63aa05b4ea331c6f995e356788.1920x1080.jpg?t=1780931183"
     ],
     "hints": {
       "tagline": {
@@ -597,12 +596,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "The Game Kitchen",
     "steamUrl": "https://store.steampowered.com/app/774361/Blasphemous/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_770720a3db9408ae7ae6625ba157bfb9195a3a68.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_b74f57919e88283fac75389e76ead2fed73997e5.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_bd57bcb1e9183cbea61339727a97bcc5206677b2.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_933510ac0fd13c6bd4ecc4c187e0506d520f2e70.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_957b6216519c614984ee71c6f6a524d75ea6353b.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_959ffc1230d2ca57e18a9c96f3c56f5643b5cce7.1920x1080.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_770720a3db9408ae7ae6625ba157bfb9195a3a68.1920x1080.jpg?t=1780479368",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_b74f57919e88283fac75389e76ead2fed73997e5.1920x1080.jpg?t=1780479368",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_bd57bcb1e9183cbea61339727a97bcc5206677b2.1920x1080.jpg?t=1780479368",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_933510ac0fd13c6bd4ecc4c187e0506d520f2e70.1920x1080.jpg?t=1780479368",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_957b6216519c614984ee71c6f6a524d75ea6353b.1920x1080.jpg?t=1780479368",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_959ffc1230d2ca57e18a9c96f3c56f5643b5cce7.1920x1080.jpg?t=1780479368"
     ],
     "hints": {
       "tagline": {
@@ -632,12 +631,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Moon Studios",
     "steamUrl": "https://store.steampowered.com/app/387290/Ori_and_the_Blind_Forest_Definitive_Edition/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/387290/ss_81b37651a7b4578b5e525ae7d9d832448378c74d.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/387290/ss_91e0a297926e85501ae13768d60124caae4b29bb.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/387290/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/387290/ss_37a91689dfbbba16dfaa0d226a27e02e23075677.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/387290/ss_07981b2a95c967675fa8ea97a9f95f417f7b309e.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/387290/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/387290/ss_304ededbbfd607cb37e708cd83e7160c7d840863.1920x1080.jpg?t=1701967651",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/387290/ss_68ae1c1b4ff550c6e436e0b45419a03ee9581386.1920x1080.jpg?t=1701967651",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/387290/ss_c1a7eb159190ffc77af529ea99ae81365c354312.1920x1080.jpg?t=1701967651",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/387290/ss_2916ec51b4970fc661cd820e42a7057d595a2c68.1920x1080.jpg?t=1701967651",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/387290/ss_38320eca2cbcae2ade9c18ba56aa9b4ecc2cae50.1920x1080.jpg?t=1701967651",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/387290/ss_56f57022e1e0e8666a9fd141fe0933c1e8b36137.1920x1080.jpg?t=1701967651"
     ],
     "hints": {
       "tagline": {
@@ -668,12 +667,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "rose-engine",
     "steamUrl": "https://store.steampowered.com/app/1262350/SIGNALIS/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1262350/ss_94229415c1e34df4e67277eefce2632b85fa1b66.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1262350/ss_ea4ea25d886fa31eeabac6504a75aa882c943806.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1262350/ss_2a5aa44ff7fc3f0bc333c1f24d777651a5e1ae77.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1262350/ss_69e4c1945f44e1837fcfc258d4a960fb5ce110c7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1262350/ss_754bf28488e17812ec56fb2b4923f66ccefa935f.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1262350/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1262350/ss_a2603694154878b8260c1dd498a06168cad012a4.1920x1080.jpg?t=1773697315",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1262350/ss_9d602346170b19121e4baec94f5fab54cc43637c.1920x1080.jpg?t=1773697315",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1262350/ss_dc87789ecfa2f83dd58ac778866fbf7fdc1ec99a.1920x1080.jpg?t=1773697315",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1262350/ss_bb676746c44db01c2bd7ca78616032984f958106.1920x1080.jpg?t=1773697315",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1262350/ss_4ec0c13288054a99bc3987680a914ccda834e7f6.1920x1080.jpg?t=1773697315",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1262350/ss_f7eb1a1944c4c9d3142bedb800ad3a43a6f82a60.1920x1080.jpg?t=1773697315"
     ],
     "hints": {
       "tagline": {
@@ -704,12 +703,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "MINTROCKET",
     "steamUrl": "https://store.steampowered.com/app/1868140/DAVE_THE_DIVER/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1868140/ss_f8f10640df483aa3ae1908bf41164ebfeefcfd61.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1868140/ss_d497c366ff5bc4e5ba8489cf3066367332f1465e.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1868140/ss_31c81ef447ff7a8848d5b8ff303ef252f4a47683.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1868140/ss_4955b41cf434e7f8b965c71d9d83d1fe5ee36b28.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1868140/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1868140/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1868140/ss_7c86a17d545b6260ecdcfdd62622e49dcc9011bd.1920x1080.jpg?t=1789456375",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1868140/ss_783e1f6c2d4c358fb494d055c47c0e888922abd5.1920x1080.jpg?t=1789456375",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1868140/ss_6eac5a3b59e181d1ffa26757b041be521bfe1779.1920x1080.jpg?t=1789456375",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1868140/ss_bc9150385c6fcd41ac7195be36597469f54a792c.1920x1080.jpg?t=1789456375",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1868140/ss_3a459e9ea8b54c3864379fcad38bff3ae7fe4e8c.1920x1080.jpg?t=1789456375",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1868140/ss_92a713e2f0ce374a446367c57f962ef942b2c173.1920x1080.jpg?t=1789456375"
     ],
     "hints": {
       "tagline": {
@@ -740,12 +739,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Red Candle Games",
     "steamUrl": "https://store.steampowered.com/app/1809540/Nine_Sols/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_868b4226ba5cb830c2c31e9c20aa19aa36a7ea4b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_752a78122d250325066dc10ae950a7b4f2c9ef89.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_5d774f9d2d8cb30bf04f7cbe8078ef3a4b64f9ef.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/ss_493c0fec44a30e84b54e3d368e7ec89f41df5bc2.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1809540/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1809540/ss_514e766f27fcfccf375c85a842099d53e9542258.1920x1080.jpg?t=1782464830",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1809540/ss_a48f85ae073148d13332b1a7741a764a046f83be.1920x1080.jpg?t=1782464830",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1809540/ss_75017574e6cac5233b32492509fe47825dc530bf.1920x1080.jpg?t=1782464830",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1809540/ss_bf5096e3682d7d2fb1d3fa7cccb5398fb934144a.1920x1080.jpg?t=1782464830",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1809540/ss_4be552cc9f6b03f0918e55b17145d3f5cbd36065.1920x1080.jpg?t=1782464830",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1809540/ss_628bc8052f48cd68ae42e4b54c3a9af97f560c06.1920x1080.jpg?t=1782464830"
     ],
     "hints": {
       "tagline": {
@@ -776,12 +775,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "SFB Games",
     "steamUrl": "https://store.steampowered.com/app/1996010/Crow_Country/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_94229415c1e34df4e67277eefce2632b85fa1b66.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_ea4ea25d886fa31eeabac6504a75aa882c943806.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_868f763f9104fa2e558832a8dd936cb077e685f0.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_2a5aa44ff7fc3f0bc333c1f24d777651a5e1ae77.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/ss_69e4c1945f44e1837fcfc258d4a960fb5ce110c7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1996010/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996010/ss_70a23ec71b5d6775264d14c0560fd59b05d073e4.1920x1080.jpg?t=1784319079",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996010/ss_2ea75bced43507f9f35c833ed308fbd51cb426fb.1920x1080.jpg?t=1784319079",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996010/ss_68a24dd60730d5112cd7a7f1c68b77ed464d7729.1920x1080.jpg?t=1784319079",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996010/ss_64602ca091b765de074fc5106db2daca034a1d00.1920x1080.jpg?t=1784319079",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996010/ss_1c6d4ffb6329a19701038fa87706c7266e7d3cfa.1920x1080.jpg?t=1784319079",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996010/ss_b7c8066257201011d2e283c8796d386436007e3b.1920x1080.jpg?t=1784319079"
     ],
     "hints": {
       "tagline": {
@@ -811,12 +810,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Tour De Pizza",
     "steamUrl": "https://store.steampowered.com/app/2231450/Pizza_Tower/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_b8fc17b439c3c1ca75635c15ee4e366b595b1e06.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_911ce20f864e2621748259d81d2db40ec0a0ba61.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_f8bfad73ae2c4bb47f9a8cb40428c946e382d6c1.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_544e3cb41b9d4f9bf34fca240f2f3e8271e16c90.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/ss_4905a8f0a0e5b9826f5d5351e3c233cba799c922.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/2231450/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2231450/ss_3e70c43ffd6f492f6e4dce7965499d41fad47052.1920x1080.jpg?t=1732516978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2231450/ss_e165922b81019058ca5b3b61b9e1d7141731a59c.1920x1080.jpg?t=1732516978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2231450/ss_67981a8a9103f19f661ad983481e9f7a55f52302.1920x1080.jpg?t=1732516978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2231450/ss_809837af19c71d183c4f67f08916cacf10f384e7.1920x1080.jpg?t=1732516978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2231450/ss_b1a38d0541d2428c9864e30071625cb5472c32da.1920x1080.jpg?t=1732516978",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2231450/ss_367286326c9a6ba91d4b2f08d0ca5fd1a47f2455.1920x1080.jpg?t=1732516978"
     ],
     "hints": {
       "tagline": {
@@ -847,12 +846,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Ironwood Studios",
     "steamUrl": "https://store.steampowered.com/app/1458140/Pacific_Drive/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_4996fbcefcfa11b069d511516e87754eb5e7096e.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_c7c4904eb12d46e01a884ec8136ff9c3a372eb06.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_e1e12ea993f39a7970d49479b007887aa85467ef.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_a1e5052994474775e5331ae0a0f67caae0d8ebf9.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/ss_694cf6e1d51c4a4e12c1c6e1c79caadbe92e1069.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1458140/ss_a753a13813556eb20e02763e82877485dac848ab.1920x1080.jpg?t=1788198836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1458140/ss_7dfb1b9087a859b49debadb941269f971b212277.1920x1080.jpg?t=1788198836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1458140/ss_930c6e45bb3ea4510af967f94650007ea9b73383.1920x1080.jpg?t=1788198836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1458140/ss_d3a7abac1b8cc4a09aff0ff023998c6aa0404c3c.1920x1080.jpg?t=1788198836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1458140/ss_95e6fcee0a43efdc430e01c9660b3ab2b61658bc.1920x1080.jpg?t=1788198836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1458140/ss_1b7b6b59d66bc85538302850b873eb2797f33205.1920x1080.jpg?t=1788198836"
     ],
     "hints": {
       "tagline": {
@@ -883,12 +882,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Askiisoft",
     "steamUrl": "https://store.steampowered.com/app/460950/Katana_ZERO/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_055fa053267d643d9c72f7ad4bc81d68377cb761.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_0d10c1f54cfebbeeaaeae2bf80b2a59a7fdbdbf0.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_5d6dafc02187b5bccecf6b509d3c52e46b328131.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_b831fa4358a9e64e5256e6bf4ea69a1ff099eaee.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/460950/ss_d44e5fae5ffeb68e1a1796d1354bb4a6433e387f.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/460950/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460950/ss_c269a57182b021d2aac2bb8d42421d0ef301360d.1920x1080.jpg?t=1761066027",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460950/ss_d4f8ef350ac44c096f8137208c381cac31e68242.1920x1080.jpg?t=1761066027",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460950/ss_fce2aae6d24fbca70a8196e04f66c51d49a353b0.1920x1080.jpg?t=1761066027",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460950/ss_9c5b43f5a2ab00b35857b8ccb0c4a24a9755091f.1920x1080.jpg?t=1761066027",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460950/ss_88140bc0e7d761fc4f998aa6c0850aad4d53cd3b.1920x1080.jpg?t=1761066027",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460950/ss_0c7402fc60b0863fa2b9187a4db5aba86d3f7eaa.1920x1080.jpg?t=1761066027"
     ],
     "hints": {
       "tagline": {
@@ -918,12 +917,11 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Dennaton Games",
     "steamUrl": "https://store.steampowered.com/app/219150/Hotline_Miami/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_75e8d890cf2c68a4b3d7967b66a50e932bce37bb.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_f8a00259f51fc8931168ad08c5c7d1e07b587cf5.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_91e0a297926e85501ae13768d60124caae4b29bb.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_5bbd5668ef19c3514a6026a798993f3c3065da4a.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/219150/ss_c7df0e02ebbe7f67724a7ba31379f8feef7eb3d0.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/219150/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219150/ss_263387d83df0626c58a484baa8f78f9394074b76.1920x1080.jpg?t=1785434922",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219150/ss_bdf28f59652e53e725d96d94cdc8db97fc277cf2.1920x1080.jpg?t=1785434922",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219150/ss_a868b45895c06a2e45a6f6a8646c4574b0157525.1920x1080.jpg?t=1785434922",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219150/ss_a2aa276b25345368d00338cfe54ebbcfa0c60168.1920x1080.jpg?t=1785434922",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219150/ss_75386edf15a48d844dc28ffdc61eb5c458d68533.1920x1080.jpg?t=1785434922"
     ],
     "hints": {
       "tagline": {
@@ -954,12 +952,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Black Salt Games",
     "steamUrl": "https://store.steampowered.com/app/1562430/DREDGE/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_37a1f592477383a18a54d6fc48bc9614f85e49cf.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_16ca74378f8ff4b830d93be7839ec9bce768656d.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_1c6cb9916ec0e0c03b1236fb6552431fa1a2c3a5.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_2c0d8328bf5858cfd7be875e533c3f9154f24f5c.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/ss_19139589d825dd67746fa0d15197f805a5a1e2f9.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1562430/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562430/ss_70f88014423ed93eaa111c0d0daca2c500f76908.1920x1080.jpg?t=1780479732",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562430/ss_d4d4b14c5cd071307e27b4e9737f23f28b096248.1920x1080.jpg?t=1780479732",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562430/ss_9529104cde1af2ffbb715cab42bbb3012fb9b7d8.1920x1080.jpg?t=1780479732",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562430/ss_b60f2ff50997c5da29fcd783770053263aac26c0.1920x1080.jpg?t=1780479732",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562430/ss_e964290b6a6a6941e299ba5be00fd3d98aec6d06.1920x1080.jpg?t=1780479732",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562430/ss_87d0d9ba6e7851a07778ac696d56af8e0ab71a21.1920x1080.jpg?t=1780479732"
     ],
     "hints": {
       "tagline": {
@@ -989,12 +987,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Rundisc",
     "steamUrl": "https://store.steampowered.com/app/1931770/Chants_of_Sennaar/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_5a49ca8cbf7f87178051755ee0a82b95b866c1f1.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_e95267be85aeef3294314e30018f6d6c62c26f0c.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_8716bceb7f14b6fc70c1cb336183ef999b70b55a.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_75e21fbfaebfe7876a3d93b39fbfa7f2ef8bc164.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/ss_40cfebce1c56f8f172551cf18b5cf3c95a09289d.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1931770/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1931770/ss_0461966d2cf288b631165c5e1e00399483bb52c7.1920x1080.jpg?t=1774006124",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1931770/ss_0c7b55a542bab74ccb3bbab18346c0f68296ebf4.1920x1080.jpg?t=1774006124",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1931770/ss_adcaa7de0b90bc02a927ec7119f889a0834e8484.1920x1080.jpg?t=1774006124",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1931770/ss_d194cfba045634d86c99aec5ed7ecbf7270cb8a2.1920x1080.jpg?t=1774006124",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1931770/ss_8315f825c350f04faba1cba86835d8fbb445191d.1920x1080.jpg?t=1774006124",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1931770/ss_d3bbb61945d1fdbb2cc54bd09e80d691bd0c8afc.1920x1080.jpg?t=1774006124"
     ],
     "hints": {
       "tagline": {
@@ -1024,12 +1022,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "adamgryu",
     "steamUrl": "https://store.steampowered.com/app/1055540/A_Short_Hike/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_37a91689dfbbba16dfaa0d226a27e02e23075677.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_8217bb3a0b5f13d806d20875c75bf69f104d49d9.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_df94d216fe0290b2b8006bf203ea5ebba285746b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_89daecf701c385566ee2682df6a0b7692e105e4b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/ss_6dc03fce5fe283f6f1680abcf4ebc3d790d96525.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1055540/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/ss_f2123fea859e299736a3e99d130238c784d53e75.1920x1080.jpg?t=1777758958",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/ss_0e864bf975bb71f238de6861fc8fd3d6ed6e4ce8.1920x1080.jpg?t=1777758958",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/ss_a22817e259c4220cad0c25db315f417b6d3641b8.1920x1080.jpg?t=1777758958",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/ss_c9c8a8e6062511c5ae9259c68c66754cd09ae971.1920x1080.jpg?t=1777758958",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/ss_4c7c9650606ac7b451f8d2e5b71b503649e43edc.1920x1080.jpg?t=1777758958",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/ss_783252636e3a44ff5ba636d817c462358933ba89.1920x1080.jpg?t=1777758958"
     ],
     "hints": {
       "tagline": {
@@ -1059,12 +1057,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Polytron Corporation",
     "steamUrl": "https://store.steampowered.com/app/224760/FEZ/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_fa73b438258296eb4cbb7928e3b08e2ecadba9ee.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_ef79ee5e11400d7fb4936d93e87fc4dcad30d5b4.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_d36bfa5880d75c3dbb90875e54d89617255169a8.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_89ca05256e2eb9b6cebcda7c29ae82136a546ce3.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/224760/ss_598007ae08f237bfb1cf8f600f723650170a417a.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/224760/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/224760/ss_f9ecd9ef063e380c38350bf97a234ac8fb20e738.1920x1080.jpg?t=1572375251",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/224760/ss_38a73fa1ebe9fcf4f7c8ee3b80e5de067a6e8897.1920x1080.jpg?t=1572375251",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/224760/ss_a187b036f7bf387b9d2137403d915320bef7c55b.1920x1080.jpg?t=1572375251",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/224760/ss_b6f3865dd7d626e8b6ec5c2df3c7c5f1fc8ce12f.1920x1080.jpg?t=1572375251",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/224760/ss_9636de102a517bc272e66acc525179cd34be9a1b.1920x1080.jpg?t=1572375251",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/224760/ss_c433accea78008474b03f027bc4aacec765f968f.1920x1080.jpg?t=1572375251"
     ],
     "hints": {
       "tagline": {
@@ -1094,12 +1092,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Nomada Studio",
     "steamUrl": "https://store.steampowered.com/app/683320/GRIS/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_81b37651a7b4578b5e525ae7d9d832448378c74d.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_91e0a297926e85501ae13768d60124caae4b29bb.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_37a91689dfbbba16dfaa0d226a27e02e23075677.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/683320/ss_07981b2a95c967675fa8ea97a9f95f417f7b309e.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/683320/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/683320/ss_4fa618f5a2141d48a05716d43598a260235b0aaa.1920x1080.jpg?t=1759429603",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/683320/ss_a155ad5423e11e3e764a1a270dcf4f30323f0a35.1920x1080.jpg?t=1759429603",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/683320/ss_62883bfa8a341db3f9c5c03768f5c14f938fe8fc.1920x1080.jpg?t=1759429603",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/683320/ss_9c717701f0a67af52d227f69001e1415c932ae60.1920x1080.jpg?t=1759429603",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/683320/ss_5d1782d0ec36f4ca8b5ffc96a3cc5e255f5ac502.1920x1080.jpg?t=1759429603",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/683320/ss_973175ba1865c5716c5f37588d00ac135b7d34ba.1920x1080.jpg?t=1759429603"
     ],
     "hints": {
       "tagline": {
@@ -1130,12 +1128,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Red Hook Studios",
     "steamUrl": "https://store.steampowered.com/app/262060/Darkest_Dungeon/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_a5a7dc788fc23f663fe57e937d7a5b3a3c1a8e1b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_89eb4257121287941011dcebbf7b8979e83e5a55.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_efb4592ca07b0493b86cb4886616a695e0c609df.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_6eaef7e98a1f76cf8b2b9f36f6d2f976a4dfc08b.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/262060/ss_a7c8be21fb7a641a9cb3a59daebfb4c58cf35b44.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/262060/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/262060/ss_04572edc979601b038756f87861c6f8c6c337806.1920x1080.jpg?t=1789168187",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/262060/ss_799c78932c87f2be0cbd45dd1b80ebd0a355e575.1920x1080.jpg?t=1789168187",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/262060/ss_a967c2d7344433cdf72a53ef1922586b0d7cce69.1920x1080.jpg?t=1789168187",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/262060/ss_c9d41e74d574f6fa9bf53c0cf74f8430c2072cc2.1920x1080.jpg?t=1789168187",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/262060/ss_b78c562dc67379f42691dcc8522b40d5385bb32e.1920x1080.jpg?t=1789168187",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/262060/ss_ac1f594bf8128e376ca95ff266d400d404b639bf.1920x1080.jpg?t=1789168187"
     ],
     "hints": {
       "tagline": {
@@ -1165,12 +1163,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Dimfrost Studios",
     "steamUrl": "https://store.steampowered.com/app/1623940/Bramble_The_Mountain_King/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_164b36fa33c2a9ec6ca495d4d39f4ad164e26ee7.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_493c0fec44a30e84b54e3d368e7ec89f41df5bc2.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_7be9719eb79bb410b0a562ef674a22ad3fb936d6.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_ff68ce49ea3aa5a1a1f044bbd2df807353f47e30.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/ss_09904323672ea4fc69317d722dbfc05d0458b297.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/1623940/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623940/ss_5f7e80cd42199d60c1b1fdb3d67a39a1e76d5b4c.1920x1080.jpg?t=1787164429",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623940/ss_b22e285d4e478ed12633610b8e9caeb28c8d1a07.1920x1080.jpg?t=1787164429",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623940/ss_b8b6546a5038ce007f0e8400ce6a49469cf898c0.1920x1080.jpg?t=1787164429",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623940/ss_bed248c06cbd7800a83136884f2263a11c4af89e.1920x1080.jpg?t=1787164429",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623940/ss_669e1c472823c64995e0ae7318453d579f507a88.1920x1080.jpg?t=1787164429",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623940/ss_cbd57d7325ad610b1b2f6ca3ef903b5e02144f2a.1920x1080.jpg?t=1787164429"
     ],
     "hints": {
       "tagline": {
@@ -1200,12 +1198,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Thomas Happ Games LLC",
     "steamUrl": "https://store.steampowered.com/app/332200/Axiom_Verge/",
     "screenshots": [
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_868f763f9104fa2e558832a8dd936cb077e685f0.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_9107ffdc69c3a30c52eb4be1c6cc8c4b794fbd81.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_e1e5b8d2bbfa8d4389069d3e8a4a58eb6b7858c2.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_a43e49df9c9164287c2b3dc10b1069b22a0bb8ad.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/332200/ss_96eef667a4216e4fae7592cf1eef4f954316d5ba.1920x1080.jpg",
-      "https://cdn.cloudflare.steamstatic.com/steam/apps/332200/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/332200/ss_978607583bf147d520f488bb9acdb1c00ea3349b.1920x1080.jpg?t=1645563574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/332200/ss_6fa9f9993bd867660e70f42f4e37f66c1359feb1.1920x1080.jpg?t=1645563574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/332200/ss_8c53e6096552ecc60f875f6d4bdf3d60215f8ad5.1920x1080.jpg?t=1645563574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/332200/ss_1f481f0be3273cc9dca73a054e4745740cefda59.1920x1080.jpg?t=1645563574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/332200/ss_4aaaa46e1448faa76504c80bc2622fa57dc0aaff.1920x1080.jpg?t=1645563574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/332200/ss_967afb29b7e117b08b931c850251daba3da86df9.1920x1080.jpg?t=1645563574"
     ],
     "hints": {
       "tagline": {
@@ -1808,8 +1806,7 @@ export const INDIE_GAMES: Game[] = [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_b33a742463deb8564a382e1744febceaa91a5bab.1920x1080.jpg?t=1785424558",
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_cc50bb10f1858d16a4df684f4dd264bda5d432ba.1920x1080.jpg?t=1785424558",
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_77ebb61562a25dbcd0c4cc1c5090b76a76a055b2.1920x1080.jpg?t=1785424558",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_7a68ff5a7b3e6c85ab89f9bbf549a0232281bd19.1920x1080.jpg?t=1785424558",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_7a68ff5a7b3e6c85ab89f9bbf549a0232281bd19.1920x1080.jpg?t=1785424558"
     ],
     "hints": {
       "tagline": {
@@ -2769,12 +2766,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Slavic Magic",
     "steamUrl": "https://store.steampowered.com/app/1363080/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/bffe9f34abaae09855becd6e8ca2ddb9065b2ebb/ss_bffe9f34abaae09855becd6e8ca2ddb9065b2ebb.1920x1080.jpg?t=1787906126",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/2a8486cf95c15af440a4857d6021bb15c057416c/ss_2a8486cf95c15af440a4857d6021bb15c057416c.1920x1080.jpg?t=1787906126",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/e96c54a784a4fa874beb1c21ce0e34ada8eb932f/ss_e96c54a784a4fa874beb1c21ce0e34ada8eb932f.1920x1080.jpg?t=1787906126",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/5111f429dfbd8b65611e0e322dc90f470d015dca/ss_5111f429dfbd8b65611e0e322dc90f470d015dca.1920x1080.jpg?t=1787906126",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/541dce83a952beb779f2221cb107c6557f192439/ss_541dce83a952beb779f2221cb107c6557f192439.1920x1080.jpg?t=1787906126",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/ce313af5e85391c7ebee3b654a35a7ab78a1fe38/ss_ce313af5e85391c7ebee3b654a35a7ab78a1fe38.1920x1080.jpg?t=1787906126"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/bffe9f34abaae09855becd6e8ca2ddb9065b2ebb/ss_bffe9f34abaae09855becd6e8ca2ddb9065b2ebb.1920x1080.jpg?t=1789670136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/2a8486cf95c15af440a4857d6021bb15c057416c/ss_2a8486cf95c15af440a4857d6021bb15c057416c.1920x1080.jpg?t=1789670136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/e96c54a784a4fa874beb1c21ce0e34ada8eb932f/ss_e96c54a784a4fa874beb1c21ce0e34ada8eb932f.1920x1080.jpg?t=1789670136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/5111f429dfbd8b65611e0e322dc90f470d015dca/ss_5111f429dfbd8b65611e0e322dc90f470d015dca.1920x1080.jpg?t=1789670136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/541dce83a952beb779f2221cb107c6557f192439/ss_541dce83a952beb779f2221cb107c6557f192439.1920x1080.jpg?t=1789670136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1363080/ce313af5e85391c7ebee3b654a35a7ab78a1fe38/ss_ce313af5e85391c7ebee3b654a35a7ab78a1fe38.1920x1080.jpg?t=1789670136"
     ],
     "hints": {
       "tagline": {
@@ -2983,12 +2980,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Refic Games",
     "steamUrl": "https://store.steampowered.com/app/2459550/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/80b9f622576d1c9ccfef45c57f1504378215c90d/ss_80b9f622576d1c9ccfef45c57f1504378215c90d.1920x1080.jpg?t=1789657527",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/ss_4861d31990950a67a1797beadecb90b1cd79e22c.1920x1080.jpg?t=1789657527",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/8011ef6ab4cfa1679bb3ded1e990f58e325ffdeb/ss_8011ef6ab4cfa1679bb3ded1e990f58e325ffdeb.1920x1080.jpg?t=1789657527",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/28bd980ebd627c40fa6ad2e4fa2af2a7471543d0/ss_28bd980ebd627c40fa6ad2e4fa2af2a7471543d0.1920x1080.jpg?t=1789657527",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/ss_1e69187064214f0881242624f2833a9bb909179f.1920x1080.jpg?t=1789657527",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/1f08326bcf6cf6f85e95fd63e8a2780266c80e06/ss_1f08326bcf6cf6f85e95fd63e8a2780266c80e06.1920x1080.jpg?t=1789657527"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/80b9f622576d1c9ccfef45c57f1504378215c90d/ss_80b9f622576d1c9ccfef45c57f1504378215c90d.1920x1080.jpg?t=1789814007",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/ss_4861d31990950a67a1797beadecb90b1cd79e22c.1920x1080.jpg?t=1789814007",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/8011ef6ab4cfa1679bb3ded1e990f58e325ffdeb/ss_8011ef6ab4cfa1679bb3ded1e990f58e325ffdeb.1920x1080.jpg?t=1789814007",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/28bd980ebd627c40fa6ad2e4fa2af2a7471543d0/ss_28bd980ebd627c40fa6ad2e4fa2af2a7471543d0.1920x1080.jpg?t=1789814007",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/ss_1e69187064214f0881242624f2833a9bb909179f.1920x1080.jpg?t=1789814007",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2459550/1f08326bcf6cf6f85e95fd63e8a2780266c80e06/ss_1f08326bcf6cf6f85e95fd63e8a2780266c80e06.1920x1080.jpg?t=1789814007"
     ],
     "hints": {
       "tagline": {
@@ -3051,12 +3048,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Team Cherry",
     "steamUrl": "https://store.steampowered.com/app/1030300/Hollow_Knight_Silksong/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d1a893ec6357b347a55ed929833ba793b57a79d2/ss_d1a893ec6357b347a55ed929833ba793b57a79d2.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/856e33e755a0b9a785c645d116036516ea08812b/ss_856e33e755a0b9a785c645d116036516ea08812b.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478/ss_8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d907d0cc2b10b5ea4788b8d502cc27787d520c1d/ss_d907d0cc2b10b5ea4788b8d502cc27787d520c1d.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/1b93e8131cb6f4bd9e3791a606d0da8f9ee78276/ss_1b93e8131cb6f4bd9e3791a606d0da8f9ee78276.1920x1080.jpg",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/header.jpg"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/26950369fe4b03c2268620eb9815c8a246aa0b06/ss_26950369fe4b03c2268620eb9815c8a246aa0b06.1920x1080.jpg?t=1776125736",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/09ccaa6c16f158f9df8298feb5d196098506a028/ss_09ccaa6c16f158f9df8298feb5d196098506a028.1920x1080.jpg?t=1776125736",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d1a893ec6357b347a55ed929833ba793b57a79d2/ss_d1a893ec6357b347a55ed929833ba793b57a79d2.1920x1080.jpg?t=1776125736",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/856e33e755a0b9a785c645d116036516ea08812b/ss_856e33e755a0b9a785c645d116036516ea08812b.1920x1080.jpg?t=1776125736",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478/ss_8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478.1920x1080.jpg?t=1776125736",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d907d0cc2b10b5ea4788b8d502cc27787d520c1d/ss_d907d0cc2b10b5ea4788b8d502cc27787d520c1d.1920x1080.jpg?t=1776125736"
     ],
     "hints": {
       "tagline": {
@@ -3087,12 +3084,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Ephemera Games",
     "steamUrl": "https://store.steampowered.com/app/2902170/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/8ee81da0a56173915f4a1555fdb60d94e7858d34/ss_8ee81da0a56173915f4a1555fdb60d94e7858d34.1920x1080.jpg?t=1789664735",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/88078553b7fdd46bf11f0bcc1c435c0780e3a199/ss_88078553b7fdd46bf11f0bcc1c435c0780e3a199.1920x1080.jpg?t=1789664735",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/674a81ec253e5753f3df34b628bc8479ad0e1d2d/ss_674a81ec253e5753f3df34b628bc8479ad0e1d2d.1920x1080.jpg?t=1789664735",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/0edb6ca2e74c29ac41cd96308c0fc8d0d132fdd7/ss_0edb6ca2e74c29ac41cd96308c0fc8d0d132fdd7.1920x1080.jpg?t=1789664735",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/a7410d408fbbb0ea6cb91100314b3b7a26d054cc/ss_a7410d408fbbb0ea6cb91100314b3b7a26d054cc.1920x1080.jpg?t=1789664735",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/ss_2ddb69c6d0d4b3b45b5afe7d2909c113ce7c57b3.1920x1080.jpg?t=1789664735"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/8ee81da0a56173915f4a1555fdb60d94e7858d34/ss_8ee81da0a56173915f4a1555fdb60d94e7858d34.1920x1080.jpg?t=1789680826",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/88078553b7fdd46bf11f0bcc1c435c0780e3a199/ss_88078553b7fdd46bf11f0bcc1c435c0780e3a199.1920x1080.jpg?t=1789680826",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/674a81ec253e5753f3df34b628bc8479ad0e1d2d/ss_674a81ec253e5753f3df34b628bc8479ad0e1d2d.1920x1080.jpg?t=1789680826",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/0edb6ca2e74c29ac41cd96308c0fc8d0d132fdd7/ss_0edb6ca2e74c29ac41cd96308c0fc8d0d132fdd7.1920x1080.jpg?t=1789680826",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/a7410d408fbbb0ea6cb91100314b3b7a26d054cc/ss_a7410d408fbbb0ea6cb91100314b3b7a26d054cc.1920x1080.jpg?t=1789680826",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2902170/ss_2ddb69c6d0d4b3b45b5afe7d2909c113ce7c57b3.1920x1080.jpg?t=1789680826"
     ],
     "hints": {
       "tagline": {
@@ -3120,12 +3117,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "OpenFront Inc, Evan Pellegrini",
     "steamUrl": "https://store.steampowered.com/app/3560670/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/e4bb7a01224734f6393a5b2ed182a58487ab7071/ss_e4bb7a01224734f6393a5b2ed182a58487ab7071.1920x1080.jpg?t=1789647376",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789647376",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a66ab60ca56f5942913e14566e21bedb7f5a5a07/ss_a66ab60ca56f5942913e14566e21bedb7f5a5a07.1920x1080.jpg?t=1789647376",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/578a0bf1e70bc6dad974c310f0841e8f4bbfb15e/ss_578a0bf1e70bc6dad974c310f0841e8f4bbfb15e.1920x1080.jpg?t=1789647376",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789647376",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/388957578e4ef7bdfd2382f13cbbc01d40dd3f89/ss_388957578e4ef7bdfd2382f13cbbc01d40dd3f89.1920x1080.jpg?t=1789647376"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/e4bb7a01224734f6393a5b2ed182a58487ab7071/ss_e4bb7a01224734f6393a5b2ed182a58487ab7071.1920x1080.jpg?t=1789729231",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789729231",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a66ab60ca56f5942913e14566e21bedb7f5a5a07/ss_a66ab60ca56f5942913e14566e21bedb7f5a5a07.1920x1080.jpg?t=1789729231",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/578a0bf1e70bc6dad974c310f0841e8f4bbfb15e/ss_578a0bf1e70bc6dad974c310f0841e8f4bbfb15e.1920x1080.jpg?t=1789729231",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789729231",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/388957578e4ef7bdfd2382f13cbbc01d40dd3f89/ss_388957578e4ef7bdfd2382f13cbbc01d40dd3f89.1920x1080.jpg?t=1789729231"
     ],
     "hints": {
       "tagline": {
@@ -3154,12 +3151,12 @@ export const INDIE_GAMES: Game[] = [
     "developer": "Lefto Studio",
     "steamUrl": "https://store.steampowered.com/app/4656000/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/429d033410531fc2ec6ba0cd24956868beaff095/ss_429d033410531fc2ec6ba0cd24956868beaff095.1920x1080.jpg?t=1789051356",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/e476a3ed312794922d58c9553130922acc7f393d/ss_e476a3ed312794922d58c9553130922acc7f393d.1920x1080.jpg?t=1789051356",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/88b677bb5d6ec91c12ad8bfbdcc5faf3ff15a044/ss_88b677bb5d6ec91c12ad8bfbdcc5faf3ff15a044.1920x1080.jpg?t=1789051356",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/edb04b7f1714524fc59691ad0368492488e317cc/ss_edb04b7f1714524fc59691ad0368492488e317cc.1920x1080.jpg?t=1789051356",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/5564e2b1729232a6c4f9cdc190b5d10f0afc4946/ss_5564e2b1729232a6c4f9cdc190b5d10f0afc4946.1920x1080.jpg?t=1789051356",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/c1063e896d08eaa213aa43498a1a9ac7e9c481d6/ss_c1063e896d08eaa213aa43498a1a9ac7e9c481d6.1920x1080.jpg?t=1789051356"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/429d033410531fc2ec6ba0cd24956868beaff095/ss_429d033410531fc2ec6ba0cd24956868beaff095.1920x1080.jpg?t=1789738286",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/e476a3ed312794922d58c9553130922acc7f393d/ss_e476a3ed312794922d58c9553130922acc7f393d.1920x1080.jpg?t=1789738286",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/88b677bb5d6ec91c12ad8bfbdcc5faf3ff15a044/ss_88b677bb5d6ec91c12ad8bfbdcc5faf3ff15a044.1920x1080.jpg?t=1789738286",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/edb04b7f1714524fc59691ad0368492488e317cc/ss_edb04b7f1714524fc59691ad0368492488e317cc.1920x1080.jpg?t=1789738286",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/5564e2b1729232a6c4f9cdc190b5d10f0afc4946/ss_5564e2b1729232a6c4f9cdc190b5d10f0afc4946.1920x1080.jpg?t=1789738286",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4656000/c1063e896d08eaa213aa43498a1a9ac7e9c481d6/ss_c1063e896d08eaa213aa43498a1a9ac7e9c481d6.1920x1080.jpg?t=1789738286"
     ],
     "hints": {
       "tagline": {

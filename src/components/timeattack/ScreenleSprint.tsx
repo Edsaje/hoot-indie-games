@@ -43,6 +43,7 @@ export const ScreenleSprint: React.FC<ScreenleSprintProps> = ({ games, onBackToH
   const [totalCount, setTotalCount] = useState<number>(0);
 
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [imageLoading, setImageLoading] = useState<boolean>(true);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [floatingTimeText, setFloatingTimeText] = useState<{ id: number; text: string; color: string } | null>(null);
@@ -179,6 +180,7 @@ export const ScreenleSprint: React.FC<ScreenleSprintProps> = ({ games, onBackToH
       setTimeout(() => {
         setSelectedChoiceId(null);
         setFeedback(null);
+        setImageLoading(true);
         const nextQ = generateQuestion();
         setCurrentQuestion(nextQ);
       }, 350);
@@ -193,6 +195,7 @@ export const ScreenleSprint: React.FC<ScreenleSprintProps> = ({ games, onBackToH
       setTimeout(() => {
         setSelectedChoiceId(null);
         setFeedback(null);
+        setImageLoading(true);
         const nextQ = generateQuestion();
         setCurrentQuestion(nextQ);
       }, 550);
@@ -207,6 +210,7 @@ export const ScreenleSprint: React.FC<ScreenleSprintProps> = ({ games, onBackToH
     setTimeLeft((prev) => Math.max(0, prev - 2));
     triggerFloatingText('-2s', 'text-amber-400');
 
+    setImageLoading(true);
     const nextQ = generateQuestion();
     setCurrentQuestion(nextQ);
   }, [gameState, currentQuestion, selectedChoiceId, generateQuestion]);
@@ -364,10 +368,35 @@ export const ScreenleSprint: React.FC<ScreenleSprintProps> = ({ games, onBackToH
                 : 'border-[#1e293b]'
             }`}
           >
+            {/* Loading spinner overlay */}
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 z-10">
+                <div className="w-8 h-8 rounded-full border-2 border-amber-500/20 border-t-amber-400 animate-spin" />
+              </div>
+            )}
+
             <img
+              key={currentQuestion.screenshotUrl}
               src={currentQuestion.screenshotUrl}
               alt="Capture Indie mystère"
-              className="w-full h-full object-cover select-none pointer-events-none"
+              onLoad={() => setImageLoading(false)}
+              onError={(e) => {
+                setImageLoading(false);
+                const target = e.currentTarget;
+                const game = currentQuestion.correctGame;
+                const match = game.steamUrl?.match(/app\/(\d+)/);
+                const appId = match ? match[1] : '';
+                const fallbackHeader = appId
+                  ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
+                  : '';
+                const alt = game.screenshots.find((s: string) => s !== target.src) || fallbackHeader;
+                if (alt && target.src !== alt) {
+                  target.src = alt;
+                }
+              }}
+              className={`w-full h-full object-cover select-none pointer-events-none transition-opacity duration-200 ${
+                imageLoading ? 'opacity-0' : 'opacity-100'
+              }`}
             />
 
             {/* Overlay hint if available */}

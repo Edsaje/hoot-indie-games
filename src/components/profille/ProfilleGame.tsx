@@ -499,6 +499,18 @@ https://hootindiegames.com/#profille`;
           <img
             src={secretGame.screenshots[activeImageIndex] || secretGame.screenshots[0]}
             alt={`${secretGame.title} screenshot ${activeImageIndex + 1}`}
+            onError={(e) => {
+              const target = e.currentTarget;
+              const match = secretGame.steamUrl?.match(/app\/(\d+)/);
+              const appId = match ? match[1] : '';
+              const fallbackHeader = appId
+                ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
+                : '';
+              const alt = secretGame.screenshots.find((s: string) => s !== target.src) || fallbackHeader;
+              if (alt && target.src !== alt) {
+                target.src = alt;
+              }
+            }}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
             loading="eager"
           />
@@ -546,6 +558,17 @@ https://hootindiegames.com/#profille`;
               <img
                 src={src}
                 alt={`Thumbnail ${idx + 1}`}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const match = secretGame.steamUrl?.match(/app\/(\d+)/);
+                  const appId = match ? match[1] : '';
+                  const fallbackHeader = appId
+                    ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
+                    : '';
+                  if (fallbackHeader && target.src !== fallbackHeader) {
+                    target.src = fallbackHeader;
+                  }
+                }}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />

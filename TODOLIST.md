@@ -263,6 +263,14 @@
 - [x] **Correction du Doublon Shovel Knight dans le Catalogue** :
   - Implémentation d'un algorithme de dédoublonnage strict dans [`src/services/steamCatalog.ts`](file:///src/services/steamCatalog.ts) croisant l'ID textuel, le Steam AppID (250760) et le titre normalisé.
   - Élimination définitive des doublons de *Shovel Knight: Treasure Trove*, *Disco Elysium* et *Sea of Stars*.
+- [x] **Audit Global & Résolution Définitive des Images Cassées (100% des 561 URLs Certifiées)** :
+  - Identification de 165 URLs de captures Steam en 404 dans la base de données (hachages obsolètes ou dupliqués entre AppIDs).
+  - Synchronisation automatisée intégrale via l'API officielle Steam Store ([`scripts/syncSteamScreenshots.ts`](file:///scripts/syncSteamScreenshots.ts)) pour les 94 pépites du sanctuaire : extraction des URLs directes haute définition sur le CDN Akamai officiel de Valve (`shared.akamai.steamstatic.com`).
+  - Audit automatisé de l'ensemble des 561 images ([`scripts/auditImages.ts`](file:///scripts/auditImages.ts)) confirmant **0 URL cassée (100% statut 200/206)**.
+  - Renforcement défensif de tous les composants de jeu (*Screenle Sprint*, *Screenle*, *Chrono*, *Profille*) :
+    1. Handler `onError` intelligent basculant automatiquement vers une autre capture valide ou le header officiel Steam.
+    2. Spinner de chargement fluide et transition d'opacité éliminant tout clignotement ou espace vide.
+    3. Validation stricte HTTPS des captures ajoutée au script de vérification continue [`scripts/verifySteamDatabase.ts`](file:///scripts/verifySteamDatabase.ts).
 - [x] **Mode Time Attack (Sprint Chronométré ⚡)** :
   - **Hub Dédié & Onglet dans la Navbar** ([`src/components/timeattack/TimeAttackHub.tsx`](file:///src/components/timeattack/TimeAttackHub.tsx)) :
     - Accès direct via l'onglet Time Attack (desktop & mobile) et deep-link `#timeattack`.

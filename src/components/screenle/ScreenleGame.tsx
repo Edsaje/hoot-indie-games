@@ -366,6 +366,18 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
           <img
             src={currentScreenshotUrl}
             alt={`Screenle Indice ${activeStageIndex + 1}`}
+            onError={(e) => {
+              const target = e.currentTarget;
+              const match = secretGame.steamUrl?.match(/app\/(\d+)/);
+              const appId = match ? match[1] : '';
+              const fallbackHeader = appId
+                ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
+                : '';
+              const alt = secretGame.screenshots.find((s: string) => s !== target.src) || fallbackHeader;
+              if (alt && target.src !== alt) {
+                target.src = alt;
+              }
+            }}
             className="w-full h-full object-cover transition-all duration-700 ease-out select-none pointer-events-none"
             style={{
               transform: isZoomedIn ? `scale(${currentScale * 1.5})` : `scale(${currentScale})`,

@@ -57,6 +57,12 @@ async function auditDatabase() {
     if (!Array.isArray(game.screenshots) || game.screenshots.length < 5) {
       warnings.push(`⚠️ [Avertissement Visuels] ${game.title} : moins de 5 screenshots.`);
     }
+    for (const sUrl of game.screenshots || []) {
+      if (typeof sUrl !== 'string' || !sUrl.startsWith('https://')) {
+        console.error(`❌ [Erreur Screenshot] ${game.title} : URL screenshot invalide "${sUrl}".`);
+        errors++;
+      }
+    }
 
     // 7. Vérification URL Steam officielle
     if (game.steamUrl && !game.steamUrl.startsWith('https://store.steampowered.com/app/')) {

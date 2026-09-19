@@ -412,6 +412,18 @@ export const ChronoGame: React.FC<ChronoGameProps> = ({ currentDate, onSelectDat
               <img
                 src={currentCard.screenshots[0] || currentCard.screenshots[1]}
                 alt={currentCard.title}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const match = currentCard.steamUrl?.match(/app\/(\d+)/);
+                  const appId = match ? match[1] : '';
+                  const fallbackHeader = appId
+                    ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
+                    : '';
+                  const alt = currentCard.screenshots.find((s: string) => s !== target.src) || fallbackHeader;
+                  if (alt && target.src !== alt) {
+                    target.src = alt;
+                  }
+                }}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -506,6 +518,18 @@ export const ChronoGame: React.FC<ChronoGameProps> = ({ currentDate, onSelectDat
                     <img
                       src={item.game.screenshots[0] || item.game.screenshots[1]}
                       alt={item.game.title}
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        const match = item.game.steamUrl?.match(/app\/(\d+)/);
+                        const appId = match ? match[1] : '';
+                        const fallbackHeader = appId
+                          ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
+                          : '';
+                        const alt = item.game.screenshots.find((s: string) => s !== target.src) || fallbackHeader;
+                        if (alt && target.src !== alt) {
+                          target.src = alt;
+                        }
+                      }}
                       className="w-16 sm:w-20 aspect-video object-cover rounded-lg border border-slate-800 shrink-0"
                     />
                     <div className="min-w-0">
