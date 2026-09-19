@@ -2138,7 +2138,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
                         setSearchFocused(true);
                       }}
                       onFocus={() => setSearchFocused(true)}
-                      placeholder="Ou tapez n'importe quel titre du catalogue (94 pépites)..."
+                      placeholder={`Ou tapez n'importe quel titre du catalogue (${INDIE_GAMES.length} pépites)...`}
                       className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none font-medium"
                     />
                   </div>

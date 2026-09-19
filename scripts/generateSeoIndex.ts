@@ -65,7 +65,7 @@ function buildFaqSchema() {
     },
     {
       q: "Comment découvrir de nouvelles pépites indépendantes méconnues ?",
-      a: "Hoot Indie Games propose un Explorateur de Pépites certifiées regroupant 94 pépites rigoureusement auditées selon notre charte officielle de vérification (100% de données Steam réelles, avis extrêmement positifs et captures officielles). Vous pouvez également consulter notre Radar des sorties indépendantes 2025-2026 et synchroniser votre bibliothèque Steam pour identifier en un clic les perles que vous possédez déjà ou qu'il vous reste à explorer."
+      a: `Hoot Indie Games propose un Explorateur de Pépites certifiées regroupant ${INDIE_GAMES.length} pépites rigoureusement auditées selon notre charte officielle de vérification (100% de données Steam réelles, avis extrêmement positifs et captures officielles). Vous pouvez également consulter notre Radar des sorties indépendantes 2025-2026 et synchroniser votre bibliothèque Steam pour identifier en un clic les perles que vous possédez déjà ou qu'il vous reste à explorer.`
     },
     {
       q: "Quels sont les 8 défis quotidiens gratuits de déduction sur Hoot Indie Games ?",
@@ -147,7 +147,7 @@ export function generateSeoIndexHtml(): string {
         ],
         url: `${CANONICAL_DOMAIN}/`,
         description:
-          'Le Sanctuaire des Jeux Vidéo Indépendants : catalogue certifié de 94 pépites Steam, 8 défis quotidiens de déduction, sprints Time Attack, duels multijoueurs 1v1 et salle d\'arcade rétro.',
+          `Le Sanctuaire des Jeux Vidéo Indépendants : catalogue certifié de ${INDIE_GAMES.length} pépites Steam, 8 défis quotidiens de déduction, sprints Time Attack, duels multijoueurs 1v1 et salle d\'arcade rétro.`,
         publisher: {
           '@type': 'Person',
           name: 'Quentin Beaud',
@@ -186,7 +186,7 @@ export function generateSeoIndexHtml(): string {
           '8 Défis Quotidiens de Déduction Indé (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST)',
           '8 Modes Sprints Time Attack avec records millisecondes',
           'Arène de Duels 1v1 en Temps Réel P2P WebRTC avec Tournoi Décathlon Indé',
-          'Catalogue Certifié de 94 Pépites du Jeu Vidéo Indépendant avec métadonnées Steam',
+          `Catalogue Certifié de ${INDIE_GAMES.length} Pépites du Jeu Vidéo Indépendant avec métadonnées Steam`,
           'Synchronisation Officielle de Bibliothèque Steam (OpenID / SteamID)',
           'Véritable Salle d\'Arcade Rétro 8 Jeux incluant Mine Storm Vectrex 1982',
         ],
@@ -217,7 +217,7 @@ export function generateSeoIndexHtml(): string {
             '@type': 'SiteNavigationElement',
             position: 1,
             name: 'Pépites Certifiées',
-            description: 'Catalogue officiel des 94 meilleures pépites du jeu vidéo indépendant certifiées Steam.',
+            description: `Catalogue officiel des ${INDIE_GAMES.length} meilleures pépites du jeu vidéo indépendant certifiées Steam.`,
             url: `${CANONICAL_DOMAIN}/#gems`,
           },
           {
@@ -323,7 +323,7 @@ export function generateSeoIndexHtml(): string {
       {
         '@type': 'ItemList',
         '@id': `${CANONICAL_DOMAIN}/#catalog`,
-        name: 'Catalogue Officiel des 94 Pépites du Jeu Vidéo Indépendant',
+        name: `Catalogue Officiel des ${INDIE_GAMES.length} Pépites du Jeu Vidéo Indépendant`,
         description: 'Sélection certifiée des plus grands chefs-d\'œuvre et découvertes de la scène indépendante PC & Steam.',
         numberOfItems: INDIE_GAMES.length,
         itemListElement: videoGameItems,
@@ -571,7 +571,7 @@ export function generateSeoIndexHtml(): string {
           <a href="#toolbox" style="color: #38bdf8; font-weight: 600;">Explorer la Boîte à Outils &amp; le Radar →</a>
         </section>
 
-        <!-- Section 6 : Le Grand Catalogue des 94 Pépites -->
+        <!-- Section 6 : Le Grand Catalogue des ${INDIE_GAMES.length} Pépites -->
         <section id="catalogue-pepites" style="margin-bottom: 3.5rem;">
           <h2 style="color: #38bdf8; font-size: 1.8rem; margin-bottom: 0.5rem;">
             📚 Le Catalogue de Référence des ${INDIE_GAMES.length} Meilleures Pépites du Jeu Vidéo Indépendant
@@ -628,7 +628,7 @@ export function generateSeoIndexHtml(): string {
     <!-- Primary SEO Meta Tags -->
     <title>Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants</title>
     <meta name="title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
-    <meta name="description" content="Le sanctuaire du jeu vidéo indé : 94 pépites certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test...), Time Attack, duels 1v1 et arcade rétro." />
+    <meta name="description" content="Le sanctuaire du jeu vidéo indé : ${INDIE_GAMES.length} pépites certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test...), Time Attack, duels 1v1 et arcade rétro." />
     <meta name="keywords" content="jeux vidéo indépendants, jeux indés, indie games, meilleurs jeux vidéo indés, pépites jeux indés, catalogue steam indé, screenle, indledle, linkle, profille, chrono timeline, quiz pixel art, devinette avis steam, blind test ost jeu video, time attack sprint, duel versus 1v1 jeu indé, hollow knight, outer wilds, celeste, hades, balatro, quentin beaud, hibouxe, arcade rétro vectrex" />
     <meta name="author" content="Quentin Beaud (Hibouxe)" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -644,7 +644,7 @@ export function generateSeoIndexHtml(): string {
     <meta property="og:type" content="website" />
     <meta property="og:url" content="${CANONICAL_DOMAIN}/" />
     <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
-    <meta property="og:description" content="Explorez 94 chefs-d'œuvre indépendants certifiés Steam, 8 défis quotidiens gratuits (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST), sprints Time Attack, arène de duels 1v1 et salle d'arcade rétro." />
+    <meta property="og:description" content="Explorez ${INDIE_GAMES.length} chefs-d'œuvre indépendants certifiés Steam, 8 défis quotidiens gratuits (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST), sprints Time Attack, arène de duels 1v1 et salle d'arcade rétro." />
     <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png" />
     <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png" />
     <meta property="og:image:type" content="image/png" />
@@ -659,7 +659,7 @@ export function generateSeoIndexHtml(): string {
     <meta name="twitter:site" content="@Hibouxe" />
     <meta name="twitter:creator" content="@Hibouxe" />
     <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
-    <meta name="twitter:description" content="94 pépites indés certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), sprints Time Attack, duels 1v1 P2P et salle d'arcade rétro." />
+    <meta name="twitter:description" content="${INDIE_GAMES.length} pépites indés certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), sprints Time Attack, duels 1v1 P2P et salle d'arcade rétro." />
     <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png" />
     <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants" />
 
