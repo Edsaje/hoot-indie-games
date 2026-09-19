@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Sovereign API data files (stored on OVHcloud server only, never in Git)
+public/api/*.json
+public/api/.secret
+public/api/.admin_pass
+public/api/*.log
+.env
+.env.*
+*.bak
+

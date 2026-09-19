@@ -357,16 +357,33 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
             )}
 
             {error && !data && (
-              <div className="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-center space-y-3">
-                <AlertTriangle className="w-8 h-8 text-red-400 mx-auto" />
-                <h3 className="text-sm font-bold text-white">Impossible de charger le tableau de bord</h3>
-                <p className="text-xs text-slate-400">{error}</p>
-                <button
-                  onClick={loadData}
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition cursor-pointer"
-                >
-                  Réessayer
-                </button>
+              <div className="p-8 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-center space-y-4 max-w-md mx-auto my-8">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-lg">
+                  <Crown className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Validation Administrateur Steam Requise</h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    {error.includes('unauthorized') || error.includes('401')
+                      ? 'Pour des raisons de cybersécurité, l\'accès aux métriques et à la modération requiert une session Steam validée par Valve.'
+                      : error}
+                  </p>
+                </div>
+                <div className="flex items-center justify-center gap-2.5 flex-wrap pt-2">
+                  <a
+                    href="/api/track.php"
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition inline-flex items-center gap-2 shadow-md shadow-amber-500/20"
+                  >
+                    <Crown className="w-4 h-4" />
+                    <span>Activer ma Session Steam</span>
+                  </a>
+                  <button
+                    onClick={loadData}
+                    className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition cursor-pointer"
+                  >
+                    Réessayer
+                  </button>
+                </div>
               </div>
             )}
 

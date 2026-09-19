@@ -317,21 +317,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     }
 
-    // B. VÉRIFICATION DE SESSION ET AUTHENTIFICATION ADMIN
-    $paramSteamId = trim($_GET['steamId'] ?? $_POST['steamId'] ?? '');
+    // B. VÉRIFICATION STRICTE DE SESSION ADMIN (STEAM OPENID SOUVERAIN)
     $isJsonReq = (isset($_GET['format']) && $_GET['format'] === 'json') ||
                  (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
                  (isset($_GET['action']) && in_array($_GET['action'], ['admin_overview', 'delete_username', 'delete_suggestion', 'reset_stats']));
-
-    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-    $host = $_SERVER['HTTP_HOST'] ?? '';
-    $secFetchSite = $_SERVER['HTTP_SEC_FETCH_SITE'] ?? '';
-    $isSameOrigin = empty($origin) || (strpos($origin, $host) !== false) || (strpos($origin, 'localhost') !== false) || ($secFetchSite === 'same-origin');
-
-    if ($paramSteamId === ADMIN_STEAM_ID && $isSameOrigin) {
-        $_SESSION['admin_auth'] = true;
-        $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
-    }
 
     $isAuth = !empty($_SESSION['admin_auth']) && (strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID);
 
