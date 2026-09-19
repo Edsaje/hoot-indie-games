@@ -142,7 +142,7 @@
 
 ### ⚔️ 2. Réparation et Vrai Multijoueur 1v1
 - [x] **Remplacement de la fausse simulation de salon** :
-  - Remplacement de la simulation locale par une véritable synchronisation multijoueur P2P WebRTC via `peerjs` (DataChannel direct de navigateur à navigateur).
+  - Synchronisation multijoueur temps réel via le relais serveur souverain OVHcloud (`public/api/versus_room.php`) garantissant zéro popup de permission réseau local dans les navigateurs, compatibilité totale VPN/mobile et allégement du bundle JS de 85 Ko.
 - [x] **Synchronisation multijoueur complète** ([`src/components/versus/VersusArena.tsx`](file:///src/components/versus/VersusArena.tsx)) :
   - L'hôte génère un code de salon partageable (ex: `HOOT-842` / lien direct `#versus=HOOT-842`).
   - L'invité rejoint le salon : handshake automatique, échange des profils (avatar, pseudo, ELO).

@@ -808,7 +808,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                   <Swords className="w-5 h-5" />
                 </div>
                 <span className="px-2.5 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-black uppercase tracking-wider">
-                  P2P WebRTC
+                  1v1 Direct
                 </span>
               </div>
               <h3 className="text-lg font-black text-white group-hover:text-rose-400 transition mb-1">

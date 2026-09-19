@@ -36,7 +36,13 @@ import {
   ThumbsUp,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { Peer, type DataConnection } from 'peerjs';
+import {
+  createVersusRoom,
+  joinVersusRoom,
+  sendVersusMessage,
+  pollVersusEvents,
+  leaveVersusRoom,
+} from '../../services/versusRelayService';
 import { INDIE_GAMES } from '../../data/games';
 import type { Game } from '../../types/game';
 import type { VersusDiscipline } from '../../types/versus';
@@ -505,9 +511,11 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     };
   }, [currentRoundDiscipline, currentRoundGame, pixelResolution, phase]);
 
-  // PeerJS refs
-  const peerRef = useRef<Peer | null>(null);
-  const connRef = useRef<DataConnection | null>(null);
+  // Références Relais Souverain Multijoueur
+  const relayPlayerIdRef = useRef<string>('');
+  const relayRoomCodeRef = useRef<string>('');
+  const relayLastMsgIdRef = useRef<number>(0);
+  const relayPollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isHostRef = useRef<boolean>(false);
   const currentRoundGameRef = useRef<Game>(INDIE_GAMES[0]);
   const playerScoreRef = useRef<number>(0);
@@ -524,7 +532,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     ? INDIE_AVATARS.find((a) => a.id === opponent.avatarId) || INDIE_AVATARS[1]
     : INDIE_AVATARS[1];
 
-  // Synchroniser les refs pour les callbacks WebRTC
+  // Synchroniser les refs pour les événements en temps réel
   useEffect(() => {
     currentRoundGameRef.current = currentRoundGame;
     playerScoreRef.current = playerScore;
@@ -557,18 +565,16 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
 
   const cleanupP2P = () => {
     stopVersusAudio();
-    try {
-      if (connRef.current) {
-        connRef.current.close();
-        connRef.current = null;
-      }
-      if (peerRef.current) {
-        peerRef.current.destroy();
-        peerRef.current = null;
-      }
-    } catch {
-      // Ignorer
+    if (relayPollTimerRef.current) {
+      clearInterval(relayPollTimerRef.current);
+      relayPollTimerRef.current = null;
     }
+    if (relayRoomCodeRef.current && relayPlayerIdRef.current) {
+      leaveVersusRoom(relayRoomCodeRef.current, relayPlayerIdRef.current);
+    }
+    relayRoomCodeRef.current = '';
+    relayPlayerIdRef.current = '';
+    relayLastMsgIdRef.current = 0;
     isHostRef.current = false;
   };
 
@@ -579,15 +585,44 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     };
   }, []);
 
-  // Envoi d'un message WebRTC P2P sécurisé
+  // Envoi d'un message via le relais souverain OVHcloud (0 popup)
   const sendP2P = (msg: PeerMessage) => {
-    if (connRef.current && connRef.current.open) {
-      try {
-        connRef.current.send(msg);
-      } catch (err) {
-        console.warn('Erreur envoi WebRTC:', err);
-      }
+    if (relayRoomCodeRef.current && relayPlayerIdRef.current) {
+      sendVersusMessage(relayRoomCodeRef.current, relayPlayerIdRef.current, msg);
     }
+  };
+
+  // Polling réactif en direct pour recevoir les coups de l'adversaire
+  const startRelayPolling = (code: string, pId: string) => {
+    if (relayPollTimerRef.current) {
+      clearInterval(relayPollTimerRef.current);
+      relayPollTimerRef.current = null;
+    }
+
+    relayPollTimerRef.current = setInterval(async () => {
+      if (!relayRoomCodeRef.current || !relayPlayerIdRef.current) return;
+      try {
+        const res = await pollVersusEvents(code, pId, relayLastMsgIdRef.current);
+        if (!res.success) {
+          if (res.roomClosed) {
+            setConnectionNotice('Le salon a été fermé par l\'hôte.');
+            cleanupP2P();
+          }
+          return;
+        }
+
+        relayLastMsgIdRef.current = res.lastMessageId;
+
+        // Traitement de chaque message reçu de l'adversaire
+        if (res.events && res.events.length > 0) {
+          for (const ev of res.events) {
+            handleP2PMessage(ev as PeerMessage);
+          }
+        }
+      } catch {
+        // Ignorer les micro-coupures réseau
+      }
+    }, 350);
   };
 
   // Traitement des messages WebRTC reçus
@@ -719,13 +754,14 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     }
   };
 
-  // Création d'un salon WebRTC P2P (Hôte)
-  const handleCreateRoom = () => {
+  // Création d'un salon multijoueur souverain (Hôte)
+  const handleCreateRoom = async () => {
     soundFx.playClick();
+    cleanupP2P();
     const code = generateRoomCode();
     setRoomCode(code);
     setPhase('waiting_friend');
-    setConnectionNotice(null);
+    setConnectionNotice('Création du salon sur le relais souverain...');
     try {
       window.history.replaceState(null, '', `#versus=${code}`);
     } catch {
@@ -733,43 +769,25 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     }
 
     isHostRef.current = true;
-    const peerId = `hoot-arena-${code.toLowerCase()}`;
+    relayRoomCodeRef.current = code;
 
     try {
-      const peer = new Peer(peerId, { debug: 0 });
-      peerRef.current = peer;
-
-      peer.on('open', () => {
-        // Prêt à recevoir une connexion
+      const res = await createVersusRoom(code, {
+        name: profile.username,
+        avatarId: profile.avatarId,
+        elo: profile.versusStats.eloRating,
       });
 
-      peer.on('connection', (conn) => {
-        connRef.current = conn;
-
-        conn.on('open', () => {
-          // Attendre le handshake du client
-        });
-
-        conn.on('data', (data) => {
-          handleP2PMessage(data as PeerMessage);
-        });
-
-        conn.on('close', () => {
-          setConnectionNotice('Adversaire déconnecté.');
-        });
-      });
-
-      peer.on('error', (err) => {
-        console.warn('Erreur PeerJS Hôte:', err);
-        setConnectionNotice('Le code était occupé ou indisponible, veuillez réessayer.');
-      });
-    } catch {
-      setConnectionNotice('Initialisation P2P impossible dans ce navigateur.');
+      relayPlayerIdRef.current = res.playerId;
+      setConnectionNotice(null);
+      startRelayPolling(code, res.playerId);
+    } catch (err: any) {
+      setConnectionNotice(err.message || 'Impossible de créer le salon souverain.');
     }
   };
 
-  // Rejoindre un salon WebRTC P2P (Invité)
-  const handleJoinRoom = () => {
+  // Rejoindre un salon multijoueur souverain (Invité)
+  const handleJoinRoom = async () => {
     if (!joinCodeInput.trim()) return;
     soundFx.playClick();
     cleanupP2P();
@@ -778,44 +796,32 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     setRoomCode(cleanCode);
     setConnectionNotice('Connexion au salon de votre ami...');
     isHostRef.current = false;
-
-    const targetPeerId = `hoot-arena-${cleanCode.toLowerCase()}`;
+    relayRoomCodeRef.current = cleanCode;
 
     try {
-      const peer = new Peer({ debug: 0 });
-      peerRef.current = peer;
-
-      peer.on('open', () => {
-        const conn = peer.connect(targetPeerId);
-        connRef.current = conn;
-
-        conn.on('open', () => {
-          // Envoyer notre handshake
-          conn.send({
-            type: 'handshake',
-            profile: {
-              name: profile.username,
-              avatarId: profile.avatarId,
-              elo: profile.versusStats.eloRating,
-            },
-          });
-        });
-
-        conn.on('data', (data) => {
-          handleP2PMessage(data as PeerMessage);
-        });
-
-        conn.on('close', () => {
-          setConnectionNotice('Le salon a été fermé par l\'hôte.');
-        });
+      const res = await joinVersusRoom(cleanCode, {
+        name: profile.username,
+        avatarId: profile.avatarId,
+        elo: profile.versusStats.eloRating,
       });
 
-      peer.on('error', (err) => {
-        console.warn('Erreur PeerJS Invité:', err);
-        setConnectionNotice('Salon introuvable. Vérifiez que votre ami a bien créé le salon et que le code est exact.');
-      });
-    } catch {
-      setConnectionNotice('Erreur lors de la tentative de connexion.');
+      relayPlayerIdRef.current = res.playerId;
+
+      if (res.opponent) {
+        setOpponent({
+          id: res.opponent.id || 'host_player',
+          name: res.opponent.name || 'Hôte du Salon',
+          avatarId: res.opponent.avatarId || 'knight',
+          elo: res.opponent.elo || 1000,
+          score: 0,
+          isBot: false,
+        });
+        setConnectionNotice('Connecté ! En attente du lancement par l\'hôte...');
+      }
+
+      startRelayPolling(cleanCode, res.playerId);
+    } catch (err: any) {
+      setConnectionNotice(err.message || 'Salon introuvable. Vérifiez que votre ami a bien créé le salon et que le code est exact.');
     }
   };
 
@@ -1393,7 +1399,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
               Accédez à l'Arène 1v1
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-              Pour défier vos amis en P2P WebRTC, affronter le Grand-Duc et sauvegarder votre cote ELO sur notre cloud souverain, connectez-vous ou créez votre compte joueur gratuit.
+              Pour défier vos amis en direct, affronter le Grand-Duc et sauvegarder votre cote ELO sur notre cloud souverain, connectez-vous ou créez votre compte joueur gratuit.
             </p>
           </div>
 
@@ -1649,13 +1655,13 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
               <Swords className="w-4 h-4" />
-              Arène Multijoueur 1v1 • P2P WebRTC
+              Arène Multijoueur 1v1 • Relais Souverain (0 Popup)
             </div>
             <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
               Arène Face-à-Face
             </h1>
             <p className="text-sm text-slate-400 mt-2 max-w-lg mx-auto leading-relaxed">
-              Défiez un ami en direct via WebRTC sans latence ou entraînez vos réflexes solo contre le Grand-Duc. Première personne à 2 victoires l'emporte !
+              Défiez un ami en direct sur notre relais souverain sécurisé ou entraînez vos réflexes solo contre le Grand-Duc. Première personne à 2 victoires l'emporte !
             </p>
           </div>
 
@@ -1769,7 +1775,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
 
           {/* Cartes des Modes */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {/* Mode 1: Duel Réel entre Amis (WebRTC P2P) */}
+            {/* Mode 1: Duel Réel entre Amis (Relais Souverain) */}
             <div className="p-6 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-amber-500/30 hover:border-amber-500/60 rounded-3xl shadow-xl flex flex-col justify-between transition-all group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mb-4">
@@ -1780,11 +1786,11 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
                     Duel 1v1 en Direct
                   </h3>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase tracking-wider border border-emerald-500/30">
-                    Vrai P2P
+                    0 Popup
                   </span>
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                  Connexion WebRTC directe de navigateur à navigateur. Partagez un code ou le lien à un ami pour vous affronter sur les mêmes écrans en temps réel.
+                  Connexion sécurisée via notre relais souverain OVHcloud. Aucun popup de réseau local, zéro configuration. Partagez un code ou le lien à un ami pour vous affronter en temps réel.
                 </p>
 
                 <button
