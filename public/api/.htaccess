@@ -8,3 +8,10 @@
         Deny from all
     </IfModule>
 </FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^tracker/?$ track.php [L,QSA]
+    RewriteRule ^track/?$ track.php [L,QSA]
+</IfModule>
+

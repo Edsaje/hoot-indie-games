@@ -6,6 +6,10 @@
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+  # Règles de compatibilité pour l'API et le tracker
+  RewriteRule ^api/tracker/?$ api/track.php [L,QSA]
+  RewriteRule ^api/track/?$ api/track.php [L,QSA]
+
   # Redirection SPA standard vers index.html
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
