@@ -24,14 +24,29 @@ import {
   Lock,
   ArrowUpRight,
   Key,
+  Shield,
+  UserPlus,
+  Edit3,
+  Ban,
+  Eraser,
+  Tag,
+  FileText,
+  Star,
+  Check,
 } from 'lucide-react';
 import {
   fetchAdminOverview,
   deleteRegisteredUsername,
   deleteCommunitySuggestion,
   resetServerStats,
+  editAdminUser,
+  toggleBanAdminUser,
+  purgeUserLeaderboardScores,
+  manageForbiddenNames,
+  createAdminUser,
   ADMIN_STEAM_ID,
   type AdminOverviewPayload,
+  type AdminUsernameEntry,
 } from '../../services/adminService';
 import {
   fetchSteamProxyStatus,
@@ -57,8 +72,36 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   const [error, setError] = useState<string | null>(null);
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  // Filtre de recherche pour les pseudonymes
+  // Filtres et gestion des utilisateurs
   const [usernameFilter, setUsernameFilter] = useState<string>('');
+  const [userStatusFilter, setUserStatusFilter] = useState<'all' | 'steam' | 'staff' | 'banned'>('all');
+
+  // Modale d'édition utilisateur
+  const [editingUser, setEditingUser] = useState<AdminUsernameEntry | null>(null);
+  const [editDisplayName, setEditDisplayName] = useState<string>('');
+  const [editRole, setEditRole] = useState<'admin' | 'vip' | 'user'>('user');
+  const [editStatus, setEditStatus] = useState<'active' | 'banned'>('active');
+  const [editCustomTitle, setEditCustomTitle] = useState<string>('');
+  const [editNote, setEditNote] = useState<string>('');
+  const [isSavingUser, setIsSavingUser] = useState<boolean>(false);
+
+  // Modale de création / réservation utilisateur
+  const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
+  const [createUsername, setCreateUsername] = useState<string>('');
+  const [createSteamId, setCreateSteamId] = useState<string>('');
+  const [createRole, setCreateRole] = useState<'admin' | 'vip' | 'user'>('user');
+  const [createCustomTitle, setCreateCustomTitle] = useState<string>('');
+  const [createNote, setCreateNote] = useState<string>('');
+  const [isCreatingUser, setIsCreatingUser] = useState<boolean>(false);
+
+  // Modale de gestion de la blacklist des pseudos
+  const [isBlacklistOpen, setIsBlacklistOpen] = useState<boolean>(false);
+  const [newForbiddenWord, setNewForbiddenWord] = useState<string>('');
+  const [isUpdatingBlacklist, setIsUpdatingBlacklist] = useState<boolean>(false);
+
+  // Confirmation de purge des scores
+  const [purgingUser, setPurgingUser] = useState<AdminUsernameEntry | null>(null);
+  const [isPurgingScores, setIsPurgingScores] = useState<boolean>(false);
 
   // Confirmation de suppression
   const [confirmDeleteUsername, setConfirmDeleteUsername] = useState<string | null>(null);
@@ -152,6 +195,161 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     }
   };
 
+  // Ouvrir l'édition d'un utilisateur
+  const handleOpenEditUser = (u: AdminUsernameEntry) => {
+    soundFx.playClick();
+    setEditingUser(u);
+    setEditDisplayName(u.displayName);
+    setEditRole(u.role || 'user');
+    setEditStatus(u.status || 'active');
+    setEditCustomTitle(u.customTitle || '');
+    setEditNote(u.note || '');
+  };
+
+  // Enregistrer l'édition d'un utilisateur
+  const handleSaveUserEdit = async () => {
+    if (!editingUser) return;
+    soundFx.playClick();
+    setIsSavingUser(true);
+    try {
+      const res = await editAdminUser(
+        editingUser.normalized,
+        {
+          displayName: editDisplayName.trim(),
+          role: editRole,
+          status: editStatus,
+          customTitle: editCustomTitle.trim(),
+          note: editNote.trim(),
+        },
+        currentSteamId
+      );
+      if (res.success) {
+        showNotice('success', res.message);
+        setEditingUser(null);
+        await loadData();
+      } else {
+        showNotice('error', res.message || 'Échec de la modification.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de la mise à jour.');
+    } finally {
+      setIsSavingUser(false);
+    }
+  };
+
+  // Basculer le ban d'un utilisateur
+  const handleToggleBan = async (u: AdminUsernameEntry) => {
+    soundFx.playClick();
+    const isCurrentlyBanned = u.status === 'banned';
+    try {
+      const res = await toggleBanAdminUser(u.normalized, !isCurrentlyBanned, currentSteamId);
+      if (res.success) {
+        showNotice('success', res.message);
+        await loadData();
+      } else {
+        showNotice('error', res.message || 'Impossible de modifier le statut.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de l\'opération.');
+    }
+  };
+
+  // Purger les scores d'un utilisateur
+  const handleConfirmPurgeScores = async () => {
+    if (!purgingUser) return;
+    soundFx.playClick();
+    setIsPurgingScores(true);
+    try {
+      const res = await purgeUserLeaderboardScores(purgingUser.displayName, currentSteamId);
+      if (res.success) {
+        showNotice('success', res.message);
+        setPurgingUser(null);
+        await loadData();
+      } else {
+        showNotice('error', res.message || 'Échec de la purge.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de la purge.');
+    } finally {
+      setIsPurgingScores(false);
+    }
+  };
+
+  // Créer / réserver un utilisateur
+  const handleCreateUser = async () => {
+    if (!createUsername.trim()) return;
+    soundFx.playClick();
+    setIsCreatingUser(true);
+    try {
+      const res = await createAdminUser(
+        {
+          username: createUsername.trim(),
+          targetSteamId: createSteamId.trim() || undefined,
+          role: createRole,
+          customTitle: createCustomTitle.trim() || undefined,
+          note: createNote.trim() || undefined,
+        },
+        currentSteamId
+      );
+      if (res.success) {
+        showNotice('success', res.message);
+        setIsCreateUserOpen(false);
+        setCreateUsername('');
+        setCreateSteamId('');
+        setCreateRole('user');
+        setCreateCustomTitle('');
+        setCreateNote('');
+        await loadData();
+      } else {
+        showNotice('error', res.message || 'Échec de la réservation.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de la création.');
+    } finally {
+      setIsCreatingUser(false);
+    }
+  };
+
+  // Ajouter un terme à la blacklist
+  const handleAddForbiddenWord = async () => {
+    if (!newForbiddenWord.trim()) return;
+    soundFx.playClick();
+    setIsUpdatingBlacklist(true);
+    try {
+      const res = await manageForbiddenNames('add', newForbiddenWord.trim(), currentSteamId);
+      if (res.success) {
+        showNotice('success', res.message || 'Mot ajouté à la blacklist.');
+        setNewForbiddenWord('');
+        await loadData();
+      } else {
+        showNotice('error', 'Impossible d\'ajouter ce mot.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau.');
+    } finally {
+      setIsUpdatingBlacklist(false);
+    }
+  };
+
+  // Retirer un terme de la blacklist
+  const handleRemoveForbiddenWord = async (word: string) => {
+    soundFx.playClick();
+    setIsUpdatingBlacklist(true);
+    try {
+      const res = await manageForbiddenNames('remove', word, currentSteamId);
+      if (res.success) {
+        showNotice('success', res.message || 'Mot retiré de la blacklist.');
+        await loadData();
+      } else {
+        showNotice('error', 'Impossible de retirer ce mot.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau.');
+    } finally {
+      setIsUpdatingBlacklist(false);
+    }
+  };
+
   // Suppression d'une suggestion
   const handleDeleteSuggestion = async (id: string) => {
     soundFx.playClick();
@@ -200,18 +398,32 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     showNotice('success', 'Sauvegarde JSON téléchargée avec succès !');
   };
 
-  // Liste filtrée des pseudonymes
+  // Liste filtrée des pseudonymes avec filtres de statut / rôle
   const filteredUsernames = useMemo(() => {
     if (!data?.usernames?.list) return [];
-    if (!usernameFilter.trim()) return data.usernames.list;
-    const q = usernameFilter.toLowerCase();
-    return data.usernames.list.filter(
+    let list = data.usernames.list;
+
+    // Filtre par catégorie
+    if (userStatusFilter === 'steam') {
+      list = list.filter((u) => !!u.steamId);
+    } else if (userStatusFilter === 'staff') {
+      list = list.filter((u) => u.role === 'admin' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje');
+    } else if (userStatusFilter === 'banned') {
+      list = list.filter((u) => u.status === 'banned');
+    }
+
+    // Filtre textuel
+    if (!usernameFilter.trim()) return list;
+    const q = usernameFilter.toLowerCase().trim();
+    return list.filter(
       (u) =>
         u.displayName.toLowerCase().includes(q) ||
         u.normalized.toLowerCase().includes(q) ||
-        (u.steamId && u.steamId.includes(q))
+        (u.steamId && u.steamId.toLowerCase().includes(q)) ||
+        (u.customTitle && u.customTitle.toLowerCase().includes(q)) ||
+        (u.note && u.note.toLowerCase().includes(q))
     );
-  }, [data?.usernames?.list, usernameFilter]);
+  }, [data?.usernames?.list, usernameFilter, userStatusFilter]);
 
   if (!isOpen) return null;
 
@@ -685,111 +897,373 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                 )}
 
                 {/* ------------------------------------------------------------- */}
-                {/* ONGLET 3 : GESTION DES PSEUDONYMES                            */}
+                {/* ONGLET 3 : GESTION DES PSEUDONYMES & UTILISATEURS             */}
                 {/* ------------------------------------------------------------- */}
                 {activeTab === 'usernames' && (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between gap-3 flex-wrap">
-                      <div className="relative flex-1 min-w-[240px]">
+                  <div className="space-y-5">
+                    {/* 5 KPIs Métriques Clés Utilisateurs */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {/* 1. Total Joueurs */}
+                      <div className="p-3.5 rounded-2xl bg-[#0c1220] border border-white/5 space-y-1">
+                        <div className="flex items-center justify-between text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
+                          <span>Total Pseudos</span>
+                          <Users className="w-3.5 h-3.5 text-cyan-400" />
+                        </div>
+                        <div className="text-xl font-black text-white font-mono">
+                          {data.usernames?.total || data.usernames?.list?.length || 0}
+                        </div>
+                        <div className="text-[10px] text-cyan-300">Identités enregistrées</div>
+                      </div>
+
+                      {/* 2. Comptes Steam Liés */}
+                      <div className="p-3.5 rounded-2xl bg-[#0c1220] border border-white/5 space-y-1">
+                        <div className="flex items-center justify-between text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
+                          <span>Steam Liés</span>
+                          <Globe className="w-3.5 h-3.5 text-blue-400" />
+                        </div>
+                        <div className="text-xl font-black text-blue-300 font-mono">
+                          {data.usernames?.list?.filter((u) => !!u.steamId).length || 0}
+                        </div>
+                        <div className="text-[10px] text-blue-400">Authentification Valve</div>
+                      </div>
+
+                      {/* 3. VIP & Staff */}
+                      <div className="p-3.5 rounded-2xl bg-[#0c1220] border border-white/5 space-y-1">
+                        <div className="flex items-center justify-between text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
+                          <span>Staff & VIP</span>
+                          <Star className="w-3.5 h-3.5 text-amber-400" />
+                        </div>
+                        <div className="text-xl font-black text-amber-300 font-mono">
+                          {data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0}
+                        </div>
+                        <div className="text-[10px] text-amber-400">Rôles privilégiés</div>
+                      </div>
+
+                      {/* 4. Bannis */}
+                      <div className="p-3.5 rounded-2xl bg-[#0c1220] border border-white/5 space-y-1">
+                        <div className="flex items-center justify-between text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
+                          <span>Suspendus / Bannis</span>
+                          <Ban className="w-3.5 h-3.5 text-red-400" />
+                        </div>
+                        <div className="text-xl font-black text-red-300 font-mono">
+                          {data.usernames?.bannedCount ?? (data.usernames?.list?.filter((u) => u.status === 'banned').length || 0)}
+                        </div>
+                        <div className="text-[10px] text-red-400">Bloqués de scores</div>
+                      </div>
+
+                      {/* 5. Blacklist */}
+                      <div className="p-3.5 rounded-2xl bg-[#0c1220] border border-white/5 space-y-1">
+                        <div className="flex items-center justify-between text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
+                          <span>Blacklist</span>
+                          <Shield className="w-3.5 h-3.5 text-purple-400" />
+                        </div>
+                        <div className="text-xl font-black text-purple-300 font-mono">
+                          {data.usernames?.forbiddenNames?.length || 2}
+                        </div>
+                        <div className="text-[10px] text-purple-400">Mots interdits actifs</div>
+                      </div>
+                    </div>
+
+                    {/* Barre de Filtres et d'Actions Rapides */}
+                    <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-[#0c1220] p-3 rounded-2xl border border-white/5">
+                      {/* Recherche textuelle */}
+                      <div className="relative flex-1 min-w-[200px]">
                         <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={usernameFilter}
                           onChange={(e) => setUsernameFilter(e.target.value)}
-                          placeholder="Rechercher un pseudonyme ou un Steam ID..."
-                          className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                          placeholder="Rechercher par nom, slug, Steam ID, titre ou note..."
+                          className="w-full pl-9 pr-8 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
                         />
+                        {usernameFilter && (
+                          <button
+                            onClick={() => setUsernameFilter('')}
+                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
+                          >
+                            ✕
+                          </button>
+                        )}
                       </div>
 
-                      <span className="text-xs font-bold text-slate-400">
-                        {filteredUsernames.length} / {data.usernames?.total || 0} pseudos enregistrés
-                      </span>
+                      {/* Filtres par catégorie */}
+                      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+                        {[
+                          { id: 'all', label: 'Tous', count: data.usernames?.list?.length || 0 },
+                          { id: 'steam', label: 'Steam', count: data.usernames?.list?.filter((u) => !!u.steamId).length || 0 },
+                          { id: 'staff', label: 'Staff / VIP', count: data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0 },
+                          { id: 'banned', label: 'Bannis', count: data.usernames?.list?.filter((u) => u.status === 'banned').length || 0 },
+                        ].map((f) => {
+                          const isSelected = userStatusFilter === f.id;
+                          return (
+                            <button
+                              key={f.id}
+                              onClick={() => {
+                                soundFx.playClick();
+                                setUserStatusFilter(f.id as any);
+                              }}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                                isSelected
+                                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                                  : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                              }`}
+                            >
+                              <span>{f.label}</span>
+                              <span className="text-[10px] opacity-75 font-mono">({f.count})</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Boutons d'Action Admin */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => {
+                            soundFx.playClick();
+                            setIsCreateUserOpen(true);
+                          }}
+                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-cyan-500/20 cursor-pointer"
+                        >
+                          <UserPlus className="w-3.5 h-3.5" />
+                          <span>+ Réserver un Joueur</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            soundFx.playClick();
+                            setIsBlacklistOpen(true);
+                          }}
+                          className="px-3.5 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <Shield className="w-3.5 h-3.5" />
+                          <span>Blacklist Pseudos</span>
+                        </button>
+                      </div>
                     </div>
 
+                    {/* Table des Utilisateurs */}
                     <div className="rounded-2xl bg-[#0c1220] border border-white/5 overflow-hidden">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-white/5 bg-white/[0.02] text-slate-400 uppercase font-semibold text-[10px] tracking-wider">
-                            <th className="p-3">Pseudonyme</th>
-                            <th className="p-3 hidden sm:table-cell">Steam ID / Compte</th>
-                            <th className="p-3 hidden md:table-cell">Date de Réservation</th>
-                            <th className="p-3 text-right">Statut & Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                          {filteredUsernames.length === 0 ? (
-                            <tr>
-                              <td colSpan={4} className="p-8 text-center text-slate-500">
-                                Aucun pseudonyme ne correspond à votre recherche.
-                              </td>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs border-collapse">
+                          <thead>
+                            <tr className="border-b border-white/5 bg-white/[0.02] text-slate-400 uppercase font-semibold text-[10px] tracking-wider">
+                              <th className="p-3">Joueur / Identité</th>
+                              <th className="p-3 hidden sm:table-cell">Compte Steam</th>
+                              <th className="p-3">Rôle & Statut</th>
+                              <th className="p-3 hidden lg:table-cell">Note Admin</th>
+                              <th className="p-3 hidden md:table-cell">Inscription</th>
+                              <th className="p-3 text-right">Actions</th>
                             </tr>
-                          ) : (
-                            filteredUsernames.map((u) => {
-                              const isReserved = u.isAdminReserved || u.normalized === 'hibouxe' || u.normalized === 'edsaje';
-                              const isCurrentAdmin = u.steamId === ADMIN_STEAM_ID;
-                              return (
-                                <tr key={u.normalized} className="hover:bg-white/[0.02] transition">
-                                  <td className="p-3">
-                                    <div className="flex items-center gap-2">
-                                      <span className="font-bold text-white">{u.displayName}</span>
-                                      {isReserved && (
-                                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
-                                          <Crown className="w-2.5 h-2.5" /> Créateur
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="text-[10px] text-slate-500 font-mono sm:hidden">
-                                      {u.steamId ? `Steam: ${u.steamId}` : u.userId || 'Local'}
-                                    </div>
-                                  </td>
-                                  <td className="p-3 hidden sm:table-cell font-mono text-slate-400 text-[11px]">
-                                    {u.steamId ? (
-                                      <span className="text-cyan-300 flex items-center gap-1">
-                                        Steam: {u.steamId} {isCurrentAdmin && '👑'}
-                                      </span>
-                                    ) : (
-                                      <span className="text-slate-500">{u.userId || 'Local'}</span>
-                                    )}
-                                  </td>
-                                  <td className="p-3 hidden md:table-cell text-slate-400 text-[11px]">
-                                    {u.claimedAt ? new Date(u.claimedAt).toLocaleDateString() : 'N/A'}
-                                  </td>
-                                  <td className="p-3 text-right">
-                                    {isReserved ? (
-                                      <span className="text-[11px] font-bold text-amber-400/80">
-                                        Inaliénable 🔒
-                                      </span>
-                                    ) : confirmDeleteUsername === u.normalized ? (
-                                      <div className="flex items-center justify-end gap-1.5">
-                                        <button
-                                          onClick={() => handleDeleteUsername(u.normalized)}
-                                          className="px-2 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold transition cursor-pointer"
+                          </thead>
+                          <tbody className="divide-y divide-white/5">
+                            {filteredUsernames.length === 0 ? (
+                              <tr>
+                                <td colSpan={6} className="p-8 text-center text-slate-500">
+                                  Aucun utilisateur ne correspond à vos critères de recherche.
+                                </td>
+                              </tr>
+                            ) : (
+                              filteredUsernames.map((u) => {
+                                const isCreator = u.normalized === 'hibouxe' || u.normalized === 'edsaje';
+                                const isCurrentAdmin = u.steamId === ADMIN_STEAM_ID;
+                                const isBanned = u.status === 'banned';
+                                const role = u.role || (isCreator ? 'admin' : 'user');
+
+                                return (
+                                  <tr key={u.normalized} className="hover:bg-white/[0.02] transition">
+                                    {/* Colonne 1: Identité */}
+                                    <td className="p-3">
+                                      <div className="flex items-center gap-2.5">
+                                        <div
+                                          className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs shrink-0 ${
+                                            isCreator
+                                              ? 'bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20'
+                                              : role === 'admin'
+                                              ? 'bg-purple-500/30 text-purple-300 border border-purple-500/40'
+                                              : role === 'vip'
+                                              ? 'bg-amber-500/30 text-amber-300 border border-amber-500/40'
+                                              : 'bg-white/10 text-slate-300'
+                                          }`}
                                         >
-                                          Confirmer
-                                        </button>
-                                        <button
-                                          onClick={() => setConfirmDeleteUsername(null)}
-                                          className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 text-[10px] transition cursor-pointer"
-                                        >
-                                          Annuler
-                                        </button>
+                                          {isCreator ? (
+                                            <Crown className="w-4 h-4" />
+                                          ) : role === 'vip' ? (
+                                            <Star className="w-4 h-4" />
+                                          ) : (
+                                            u.displayName.slice(0, 1).toUpperCase()
+                                          )}
+                                        </div>
+
+                                        <div className="min-w-0">
+                                          <div className="flex items-center gap-1.5 flex-wrap">
+                                            <span className={`font-bold ${isBanned ? 'text-red-400 line-through' : 'text-white'}`}>
+                                              {u.displayName}
+                                            </span>
+                                            {isCreator && (
+                                              <span className="text-[10px] font-black px-1.5 py-0.2 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-0.5">
+                                                <Crown className="w-2.5 h-2.5" /> Créateur
+                                              </span>
+                                            )}
+                                            {u.customTitle && (
+                                              <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded-md bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 truncate max-w-[140px]">
+                                                ✨ {u.customTitle}
+                                              </span>
+                                            )}
+                                          </div>
+                                          <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5">
+                                            <span>@{u.normalized}</span>
+                                            {u.isAdminReserved && !isCreator && (
+                                              <span className="text-amber-400/80">• Réservé admin</span>
+                                            )}
+                                          </div>
+                                        </div>
                                       </div>
-                                    ) : (
-                                      <button
-                                        onClick={() => setConfirmDeleteUsername(u.normalized)}
-                                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition cursor-pointer"
-                                        title="Libérer / Supprimer ce pseudonyme"
-                                      >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                      </button>
-                                    )}
-                                  </td>
-                                </tr>
-                              );
-                            })
-                          )}
-                        </tbody>
-                      </table>
+                                    </td>
+
+                                    {/* Colonne 2: Steam */}
+                                    <td className="p-3 hidden sm:table-cell font-mono text-[11px]">
+                                      {u.steamId ? (
+                                        <a
+                                          href={`https://steamcommunity.com/profiles/${u.steamId}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 hover:underline transition"
+                                          title="Voir le profil Steam Community"
+                                        >
+                                          <span>{u.steamId}</span>
+                                          <ExternalLink className="w-3 h-3 shrink-0" />
+                                        </a>
+                                      ) : (
+                                        <span className="text-slate-500 text-[10px]">Local / Sans Steam</span>
+                                      )}
+                                    </td>
+
+                                    {/* Colonne 3: Rôle & Statut */}
+                                    <td className="p-3">
+                                      <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                                        <span
+                                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 w-fit ${
+                                            role === 'admin'
+                                              ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                                              : role === 'vip'
+                                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                                              : 'bg-slate-500/20 text-slate-300 border border-slate-500/30'
+                                          }`}
+                                        >
+                                          {role === 'admin' ? 'Admin' : role === 'vip' ? 'VIP' : 'Joueur'}
+                                        </span>
+
+                                        <span
+                                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 w-fit ${
+                                            isBanned
+                                              ? 'bg-red-500/20 text-red-300 border border-red-500/40 font-black'
+                                              : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                                          }`}
+                                        >
+                                          {isBanned ? '🚫 Banni' : '✓ Actif'}
+                                        </span>
+                                      </div>
+                                    </td>
+
+                                    {/* Colonne 4: Note Admin Privée */}
+                                    <td className="p-3 hidden lg:table-cell text-[11px] text-slate-400">
+                                      {u.note ? (
+                                        <div className="flex items-center gap-1 text-slate-300 max-w-xs truncate" title={u.note}>
+                                          <FileText className="w-3 h-3 text-amber-400 shrink-0" />
+                                          <span className="truncate italic">« {u.note} »</span>
+                                        </div>
+                                      ) : (
+                                        <span className="text-slate-600 text-[10px]">—</span>
+                                      )}
+                                    </td>
+
+                                    {/* Colonne 5: Date Inscription */}
+                                    <td className="p-3 hidden md:table-cell text-slate-400 text-[11px]">
+                                      <div>{u.claimedAt ? new Date(u.claimedAt).toLocaleDateString() : 'N/A'}</div>
+                                      {u.lastSeenAt && (
+                                        <div className="text-[10px] text-slate-500">
+                                          Vu : {new Date(u.lastSeenAt).toLocaleDateString()}
+                                        </div>
+                                      )}
+                                    </td>
+
+                                    {/* Colonne 6: Actions */}
+                                    <td className="p-3 text-right">
+                                      <div className="flex items-center justify-end gap-1">
+                                        {/* Bouton Éditer */}
+                                        <button
+                                          onClick={() => handleOpenEditUser(u)}
+                                          className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition cursor-pointer"
+                                          title="Modifier le joueur (Pseudo, rôle, titre, note)"
+                                        >
+                                          <Edit3 className="w-3.5 h-3.5" />
+                                        </button>
+
+                                        {/* Bouton Bannir / Débannir */}
+                                        {!isCreator && !isCurrentAdmin && (
+                                          <button
+                                            onClick={() => handleToggleBan(u)}
+                                            className={`p-1.5 rounded-lg transition cursor-pointer ${
+                                              isBanned
+                                                ? 'text-emerald-400 hover:bg-emerald-500/10'
+                                                : 'text-slate-400 hover:text-red-400 hover:bg-red-500/10'
+                                            }`}
+                                            title={isBanned ? 'Réactiver le joueur' : 'Bannir / suspendre le joueur'}
+                                          >
+                                            <Ban className="w-3.5 h-3.5" />
+                                          </button>
+                                        )}
+
+                                        {/* Bouton Purger Scores */}
+                                        <button
+                                          onClick={() => {
+                                            soundFx.playClick();
+                                            setPurgingUser(u);
+                                          }}
+                                          className="p-1.5 rounded-lg text-slate-400 hover:text-orange-400 hover:bg-orange-500/10 transition cursor-pointer"
+                                          title="Purger tous les scores Leaderboard de ce joueur"
+                                        >
+                                          <Eraser className="w-3.5 h-3.5" />
+                                        </button>
+
+                                        {/* Bouton Supprimer / Libérer */}
+                                        {isCreator || isCurrentAdmin ? (
+                                          <span className="p-1.5 text-slate-600 cursor-not-allowed" title="Compte inaliénable">
+                                            🔒
+                                          </span>
+                                        ) : confirmDeleteUsername === u.normalized ? (
+                                          <div className="flex items-center gap-1">
+                                            <button
+                                              onClick={() => handleDeleteUsername(u.normalized)}
+                                              className="px-2 py-0.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold cursor-pointer"
+                                            >
+                                              Oui
+                                            </button>
+                                            <button
+                                              onClick={() => setConfirmDeleteUsername(null)}
+                                              className="px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 text-[10px] cursor-pointer"
+                                            >
+                                              Non
+                                            </button>
+                                          </div>
+                                        ) : (
+                                          <button
+                                            onClick={() => setConfirmDeleteUsername(u.normalized)}
+                                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition cursor-pointer"
+                                            title="Libérer / Supprimer cette réservation"
+                                          >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                          </button>
+                                        )}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1065,6 +1539,505 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
               </>
             )}
           </div>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE 1 : ÉDITION D'UTILISATEUR                             */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {editingUser && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setEditingUser(null)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-lg bg-[#0d1424] border border-amber-500/30 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                        <Edit3 className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-black text-white">Modifier le Joueur</h3>
+                        <p className="text-xs text-slate-400 font-mono">@{editingUser.normalized}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setEditingUser(null)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-3.5 text-xs">
+                    {/* Nom d'affichage */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Pseudonyme Affiché <span className="text-slate-500 font-normal">(2 à 24 caractères)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editDisplayName}
+                        onChange={(e) => setEditDisplayName(e.target.value)}
+                        maxLength={24}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400"
+                      />
+                      {editDisplayName.trim().toLowerCase() !== editingUser.normalized && (
+                        <p className="text-[10px] text-amber-400 mt-1">
+                          ⚠️ Modifier le nom migrera automatiquement l'enregistrement tout en conservant le lien Steam.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Rôle */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1.5">Rôle & Privilèges</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {(['user', 'vip', 'admin'] as const).map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            onClick={() => setEditRole(r)}
+                            className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                              editRole === r
+                                ? r === 'admin'
+                                ? 'bg-purple-500/20 text-purple-300 border-purple-500/50'
+                                : r === 'vip'
+                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+                                : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
+                                : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+                            }`}
+                          >
+                            {r === 'admin' && <Crown className="w-3.5 h-3.5" />}
+                            {r === 'vip' && <Star className="w-3.5 h-3.5" />}
+                            <span>{r === 'admin' ? 'Admin' : r === 'vip' ? 'VIP' : 'Joueur'}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Statut */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1.5">Statut du Compte</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditStatus('active')}
+                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                            editStatus === 'active'
+                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                              : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+                          }`}
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Actif (Autorisé)</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setEditStatus('banned')}
+                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                            editStatus === 'banned'
+                              ? 'bg-red-500/20 text-red-300 border-red-500/50'
+                              : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+                          }`}
+                        >
+                          <Ban className="w-3.5 h-3.5" />
+                          <span>Banni / Suspendu</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Titre Personnalisé */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Titre Personnalisé <span className="text-slate-500 font-normal">(Affiché à côté du pseudo)</span>
+                      </label>
+                      <div className="relative">
+                        <Tag className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          value={editCustomTitle}
+                          onChange={(e) => setEditCustomTitle(e.target.value)}
+                          placeholder="ex: Maître du Pixel, Hibou Alpha..."
+                          maxLength={32}
+                          className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Note interne privée */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Note Privée Administrateur <span className="text-slate-500 font-normal">(Invisible pour les visiteurs)</span>
+                      </label>
+                      <textarea
+                        value={editNote}
+                        onChange={(e) => setEditNote(e.target.value)}
+                        placeholder="Commentaire ou motif de surveillance..."
+                        rows={2}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Boutons d'action */}
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setEditingUser(null)}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleSaveUserEdit}
+                      disabled={isSavingUser || !editDisplayName.trim()}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isSavingUser ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                      <span>Enregistrer</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE 2 : CRÉATION / RÉSERVATION MANUELLE                   */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {isCreateUserOpen && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsCreateUserOpen(false)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-lg bg-[#0d1424] border border-cyan-500/30 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+                        <UserPlus className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-black text-white">Réserver un Pseudo Joueur</h3>
+                        <p className="text-xs text-slate-400">Création manuelle d'identité par l'administrateur</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setIsCreateUserOpen(false)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-3.5 text-xs">
+                    {/* Pseudonyme */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Pseudonyme <span className="text-cyan-400">*</span> <span className="text-slate-500 font-normal">(2 à 24 caractères)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={createUsername}
+                        onChange={(e) => setCreateUsername(e.target.value)}
+                        placeholder="ex: PixelMaster..."
+                        maxLength={24}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-cyan-400"
+                      />
+                    </div>
+
+                    {/* Steam ID 64 */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Steam ID 64 <span className="text-slate-500 font-normal">(Optionnel, 17 chiffres)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={createSteamId}
+                        onChange={(e) => setCreateSteamId(e.target.value)}
+                        placeholder="ex: 76561198035270542..."
+                        maxLength={25}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-mono focus:outline-none focus:border-cyan-400"
+                      />
+                    </div>
+
+                    {/* Rôle */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1.5">Rôle initial</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {(['user', 'vip', 'admin'] as const).map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            onClick={() => setCreateRole(r)}
+                            className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                              createRole === r
+                                ? r === 'admin'
+                                ? 'bg-purple-500/20 text-purple-300 border-purple-500/50'
+                                : r === 'vip'
+                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+                                : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
+                                : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+                            }`}
+                          >
+                            {r === 'admin' && <Crown className="w-3.5 h-3.5" />}
+                            {r === 'vip' && <Star className="w-3.5 h-3.5" />}
+                            <span>{r === 'admin' ? 'Admin' : r === 'vip' ? 'VIP' : 'Joueur'}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Titre Personnalisé */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Titre Personnalisé <span className="text-slate-500 font-normal">(Optionnel)</span>
+                      </label>
+                      <div className="relative">
+                        <Tag className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          value={createCustomTitle}
+                          onChange={(e) => setCreateCustomTitle(e.target.value)}
+                          placeholder="ex: Ami du Studio, Vainqueur Tournoi..."
+                          maxLength={32}
+                          className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-cyan-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Note */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Note Privée Administrateur <span className="text-slate-500 font-normal">(Optionnel)</span>
+                      </label>
+                      <textarea
+                        value={createNote}
+                        onChange={(e) => setCreateNote(e.target.value)}
+                        placeholder="Commentaire de création..."
+                        rows={2}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400 resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Boutons d'action */}
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setIsCreateUserOpen(false)}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleCreateUser}
+                      disabled={isCreatingUser || !createUsername.trim()}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-cyan-500/20 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isCreatingUser ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <UserPlus className="w-3.5 h-3.5" />}
+                      <span>Créer et Réserver</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE 3 : GESTION DE LA BLACKLIST DES PSEUDOS               */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {isBlacklistOpen && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsBlacklistOpen(false)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-lg bg-[#0d1424] border border-purple-500/30 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
+                        <Shield className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-black text-white">Blacklist des Pseudos</h3>
+                        <p className="text-xs text-slate-400">Termes et mots interdits à la réservation</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setIsBlacklistOpen(false)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 text-xs">
+                    <p className="text-slate-300 leading-relaxed">
+                      Les termes figurant dans cette liste sont automatiquement rejetés lors de la tentative de réservation de pseudonyme sur le site.
+                    </p>
+
+                    {/* Formulaire d'ajout */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newForbiddenWord}
+                        onChange={(e) => setNewForbiddenWord(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleAddForbiddenWord();
+                        }}
+                        placeholder="Ajouter un terme interdit (ex: vulgarité, usurpation)..."
+                        className="flex-1 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-purple-400"
+                      />
+                      <button
+                        onClick={handleAddForbiddenWord}
+                        disabled={isUpdatingBlacklist || !newForbiddenWord.trim()}
+                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white font-bold text-xs transition disabled:opacity-50 cursor-pointer shrink-0"
+                      >
+                        Ajouter
+                      </button>
+                    </div>
+
+                    {/* Liste des termes */}
+                    <div className="space-y-2">
+                      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                        Termes actuellement bloqués ({data?.usernames?.forbiddenNames?.length || 2})
+                      </div>
+                      <div className="flex flex-wrap gap-2 max-h-52 overflow-y-auto p-3 rounded-xl bg-black/30 border border-white/5">
+                        {(data?.usernames?.forbiddenNames || ['hibouxe', 'edsaje']).map((word) => {
+                          const isProtected = word === 'hibouxe' || word === 'edsaje';
+                          return (
+                            <span
+                              key={word}
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold ${
+                                isProtected
+                                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                                  : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                              }`}
+                            >
+                              {isProtected && <Lock className="w-3 h-3 text-amber-400" />}
+                              <span>{word}</span>
+                              {!isProtected && (
+                                <button
+                                  onClick={() => handleRemoveForbiddenWord(word)}
+                                  className="ml-1 text-purple-400 hover:text-red-400 cursor-pointer"
+                                  title="Supprimer de la blacklist"
+                                >
+                                  ✕
+                                </button>
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-3 border-t border-white/10">
+                    <button
+                      onClick={() => setIsBlacklistOpen(false)}
+                      className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold transition cursor-pointer"
+                    >
+                      Fermer
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE 4 : CONFIRMATION DE PURGE DES SCORES                  */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {purgingUser && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setPurgingUser(null)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-md bg-[#0d1424] border border-orange-500/40 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10"
+                >
+                  <div className="flex items-center gap-3 text-orange-400">
+                    <div className="w-10 h-10 rounded-2xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+                      <Eraser className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-white">Purger les Scores ?</h3>
+                      <p className="text-xs text-orange-400 font-bold">{purgingUser.displayName}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Cette action va scanner l'ensemble des classements du serveur (Indledle, Screenle, Linkle, Snake, Flappy, Pong...) et <strong>supprimer définitivement tous les scores</strong> enregistrés sous le pseudonyme « <span className="text-white font-bold">{purgingUser.displayName}</span> ».
+                  </p>
+
+                  <div className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-[11px] text-orange-300">
+                    ⚠️ Cette opération est irréversible et recommandée en cas de triche ou de score anormal.
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setPurgingUser(null)}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleConfirmPurgeScores}
+                      disabled={isPurgingScores}
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-orange-500/20 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isPurgingScores ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                      <span>Purger Définitivement</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </AnimatePresence>

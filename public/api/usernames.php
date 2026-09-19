@@ -92,12 +92,13 @@ function normalizeUsername($name) {
 }
 
 // Vérifie si un pseudo est interdit (sauf pour l'administrateur Steam officiel)
-function isNameForbidden($normalized, $steamId) {
+function isNameForbidden($normalized, $steamId, $customForbidden = []) {
     if (strval($steamId) === ADMIN_STEAM_ID) {
         return false;
     }
-    foreach (FORBIDDEN_NORMALIZED_NAMES as $forbidden) {
-        if ($normalized === $forbidden || strpos($normalized, $forbidden) !== false) {
+    $allForbidden = array_unique(array_merge(FORBIDDEN_NORMALIZED_NAMES, $customForbidden));
+    foreach ($allForbidden as $forbidden) {
+        if (!empty($forbidden) && ($normalized === $forbidden || strpos($normalized, $forbidden) !== false)) {
             return true;
         }
     }
@@ -192,18 +193,33 @@ if ($method === 'GET') {
 
     $normalized = normalizeUsername($cleanDisplay);
 
-    // Vérification noms interdits (Hibouxe / Edsaje)
-    if (isNameForbidden($normalized, $steamId)) {
+    $db = loadUsernamesData($storageFile);
+
+    // Vérification compte banni
+    if (!empty($db['bannedUsers'])) {
+        if ((!empty($steamId) && in_array($steamId, $db['bannedUsers'])) ||
+            (!empty($userId) && in_array($userId, $db['bannedUsers']))) {
+            echo json_encode([
+                'success' => true,
+                'available' => false,
+                'reason' => 'banned',
+                'message' => 'Ce compte est suspendu par la modération.'
+            ]);
+            exit;
+        }
+    }
+
+    $customForbidden = $db['forbiddenNames'] ?? [];
+    if (isNameForbidden($normalized, $steamId, $customForbidden)) {
         echo json_encode([
             'success' => true,
             'available' => false,
             'reason' => 'forbidden',
-            'message' => 'Les pseudonymes "Hibouxe" et "Edsaje" sont strictement réservés au créateur du site.'
+            'message' => 'Ce pseudonyme fait partie des termes protégés ou réservés.'
         ]);
         exit;
     }
 
-    $db = loadUsernamesData($storageFile);
     $claimed = $db['usernames'][$normalized] ?? null;
 
     if ($claimed) {
@@ -284,15 +300,26 @@ if ($method === 'POST') {
         exit;
     }
 
-    $normalized = normalizeUsername($cleanDisplay);
+    $preDb = loadUsernamesData($storageFile);
 
-    // Vérification des noms interdits
-    if (isNameForbidden($normalized, $steamId)) {
+    // Vérification compte banni
+    if (!empty($preDb['bannedUsers'])) {
+        if ((!empty($steamId) && in_array($steamId, $preDb['bannedUsers'])) ||
+            (!empty($userId) && in_array($userId, $preDb['bannedUsers']))) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'banned', 'message' => 'Ce compte est suspendu par la modération.']);
+            exit;
+        }
+    }
+
+    // Vérification des noms interdits et protégés
+    $customForbidden = $preDb['forbiddenNames'] ?? [];
+    if (isNameForbidden($normalized, $steamId, $customForbidden)) {
         http_response_code(403);
         echo json_encode([
             'success' => false,
             'error' => 'forbidden',
-            'message' => 'Les pseudonymes "Hibouxe" et "Edsaje" sont strictement réservés au créateur et administrateur du site.'
+            'message' => 'Ce pseudonyme fait partie des termes protégés ou réservés.'
         ]);
         exit;
     }

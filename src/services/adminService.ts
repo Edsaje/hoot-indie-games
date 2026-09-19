@@ -50,6 +50,11 @@ export interface AdminUsernameEntry {
   steamId?: string | null;
   userId?: string | null;
   claimedAt: string;
+  lastSeenAt?: string;
+  role?: 'admin' | 'vip' | 'user';
+  status?: 'active' | 'banned';
+  customTitle?: string;
+  note?: string;
   isAdminReserved?: boolean;
 }
 
@@ -88,6 +93,8 @@ export interface AdminOverviewPayload {
   usernames: {
     total: number;
     list: AdminUsernameEntry[];
+    forbiddenNames?: string[];
+    bannedCount?: number;
   };
   suggestions: {
     total: number;
@@ -181,3 +188,160 @@ export async function resetServerStats(
   const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
   return data;
 }
+
+/**
+ * Modifie les attributs d'un utilisateur (Pseudo, rôle, statut, titre, note)
+ */
+export async function editAdminUser(
+  target: string,
+  fields: {
+    displayName?: string;
+    role?: 'admin' | 'vip' | 'user';
+    status?: 'active' | 'banned';
+    customTitle?: string;
+    note?: string;
+  },
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string; user?: AdminUsernameEntry }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'edit_user');
+  formData.append('steamId', steamId);
+  formData.append('target', target);
+  if (fields.displayName !== undefined) formData.append('displayName', fields.displayName);
+  if (fields.role !== undefined) formData.append('role', fields.role);
+  if (fields.status !== undefined) formData.append('status', fields.status);
+  if (fields.customTitle !== undefined) formData.append('customTitle', fields.customTitle);
+  if (fields.note !== undefined) formData.append('note', fields.note);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur de communication réseau' }));
+  return data;
+}
+
+/**
+ * Active ou suspend (bannit) un utilisateur
+ */
+export async function toggleBanAdminUser(
+  target: string,
+  isBanned: boolean,
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'toggle_ban_user');
+  formData.append('steamId', steamId);
+  formData.append('target', target);
+  formData.append('banned', isBanned ? '1' : '0');
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+  return data;
+}
+
+/**
+ * Purge tous les scores d'un joueur dans le Leaderboard
+ */
+export async function purgeUserLeaderboardScores(
+  username: string,
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'purge_user_scores');
+  formData.append('steamId', steamId);
+  formData.append('username', username);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+  return data;
+}
+
+/**
+ * Gère la blacklist des pseudonymes interdits (ajout / suppression / liste)
+ */
+export async function manageForbiddenNames(
+  subaction: 'add' | 'remove' | 'list',
+  word: string = '',
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message?: string; forbiddenNames: string[] }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'manage_forbidden_names');
+  formData.append('steamId', steamId);
+  formData.append('subaction', subaction);
+  if (word) formData.append('word', word);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, forbiddenNames: [] }));
+  return data;
+}
+
+/**
+ * Crée et réserve manuellement une identité utilisateur
+ */
+export async function createAdminUser(
+  userData: {
+    username: string;
+    targetSteamId?: string;
+    role?: 'admin' | 'vip' | 'user';
+    customTitle?: string;
+    note?: string;
+  },
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string; user?: AdminUsernameEntry }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'create_user');
+  formData.append('steamId', steamId);
+  formData.append('username', userData.username);
+  if (userData.targetSteamId) formData.append('targetSteamId', userData.targetSteamId);
+  if (userData.role) formData.append('role', userData.role);
+  if (userData.customTitle) formData.append('customTitle', userData.customTitle);
+  if (userData.note) formData.append('note', userData.note);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+  return data;
+}
+

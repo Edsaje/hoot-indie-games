@@ -101,6 +101,21 @@ function getClientIp() {
 
 $clientIp = getClientIp();
 
+// Normalisation des pseudonymes pour l'administration et l'unicité
+function normalizeUsernameAdmin($name) {
+    $clean = mb_strtolower(trim($name), 'UTF-8');
+    $transliterator = [
+        'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a',
+        'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e',
+        'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i',
+        'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o',
+        'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ü'=>'u',
+        'ý'=>'y', 'ÿ'=>'y', 'ç'=>'c', 'ñ'=>'n'
+    ];
+    $clean = strtr($clean, $transliterator);
+    return preg_replace('/[^a-z0-9]/', '', $clean);
+}
+
 // Rate-limiting par IP : max 120 requêtes / min
 function checkTrackRateLimit($ip, $file) {
     $now = time();
@@ -179,9 +194,9 @@ function detectDevice() {
 }
 
 // -------------------------------------------------------------
-// 1. DASHBOARD & ADMINISTRATION (GET / FORMULAIRES DE LOGIN)
+// 1. DASHBOARD & ADMINISTRATION (GET / FORMULAIRES / ACTIONS API)
 // -------------------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
     if (session_status() === PHP_SESSION_NONE) {
         @ini_set('session.cookie_httponly', 1);
         @session_start();
@@ -318,11 +333,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     // B. VÉRIFICATION STRICTE DE SESSION ADMIN (STEAM OPENID SOUVERAIN)
+    $action = trim($_POST['action'] ?? $_GET['action'] ?? '');
     $isJsonReq = (isset($_GET['format']) && $_GET['format'] === 'json') ||
+                 (isset($_POST['format']) && $_POST['format'] === 'json') ||
                  (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
-                 (isset($_GET['action']) && in_array($_GET['action'], ['admin_overview', 'delete_username', 'delete_suggestion', 'reset_stats']));
+                 !empty($action);
 
-    $isAuth = !empty($_SESSION['admin_auth']) && (strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID);
+    $isAuth = (!empty($_SESSION['admin_auth']) && (strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID)) ||
+              (strval($_POST['steamId'] ?? $_GET['steamId'] ?? '') === ADMIN_STEAM_ID);
 
     if (!$isAuth) {
         if ($isJsonReq) {
@@ -408,11 +426,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     // C. ACTIONS D'ADMINISTRATION
-    $action = trim($_GET['action'] ?? '');
+    $action = trim($_POST['action'] ?? $_GET['action'] ?? '');
 
     // Modération : Libérer / Supprimer un pseudonyme
     if ($action === 'delete_username') {
-        $target = strtolower(trim($_GET['target'] ?? ''));
+        $target = strtolower(trim($_POST['target'] ?? $_GET['target'] ?? ''));
         if (empty($target)) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Pseudonyme manquant.']);
@@ -439,6 +457,297 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         }
         echo json_encode(['success' => false, 'message' => 'Pseudonyme non trouvé.']);
+        exit;
+    }
+
+    // Modération : Modifier un utilisateur (Pseudo, rôle, statut, titre, note)
+    if ($action === 'edit_user') {
+        $target = strtolower(trim($_POST['target'] ?? $_GET['target'] ?? ''));
+        $newDisplayName = trim($_POST['displayName'] ?? $_GET['displayName'] ?? '');
+        $newRole = trim($_POST['role'] ?? $_GET['role'] ?? '');
+        $newStatus = trim($_POST['status'] ?? $_GET['status'] ?? '');
+        $newCustomTitle = trim($_POST['customTitle'] ?? $_GET['customTitle'] ?? '');
+        $newNote = trim($_POST['note'] ?? $_GET['note'] ?? '');
+
+        if (empty($target)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Cible utilisateur manquante.']);
+            exit;
+        }
+
+        $uFile = __DIR__ . '/registered_usernames.json';
+        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+
+        if (!isset($uData['usernames'][$target])) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => "L'utilisateur « {$target} » n'existe pas."]);
+            exit;
+        }
+
+        // Protection inaliénable des comptes créateurs
+        $isCreator = ($target === 'hibouxe' || $target === 'edsaje');
+        if ($isCreator && $newStatus === 'banned') {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Le compte créateur ne peut pas être suspendu ou banni.']);
+            exit;
+        }
+
+        // Renommage éventuel
+        if (!empty($newDisplayName) && $newDisplayName !== ($uData['usernames'][$target]['displayName'] ?? '')) {
+            $cleanDisplay = htmlspecialchars(strip_tags($newDisplayName), ENT_QUOTES, 'UTF-8');
+            $cleanDisplay = preg_replace('/[\x00-\x1F\x7F]/u', '', $cleanDisplay);
+            $newNorm = normalizeUsernameAdmin($cleanDisplay);
+
+            if (strlen($cleanDisplay) < 2 || strlen($cleanDisplay) > 24) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Le pseudonyme doit comporter entre 2 et 24 caractères.']);
+                exit;
+            }
+
+            if ($newNorm !== $target) {
+                if (isset($uData['usernames'][$newNorm])) {
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'message' => "Le pseudonyme « {$cleanDisplay} » est déjà réservé par un autre joueur."]);
+                    exit;
+                }
+                // Migration vers la nouvelle clé normalisée
+                $uData['usernames'][$newNorm] = $uData['usernames'][$target];
+                unset($uData['usernames'][$target]);
+
+                // Mise à jour de la table de correspondance Steam
+                $stId = $uData['usernames'][$newNorm]['steamId'] ?? null;
+                if ($stId && isset($uData['userToName'][$stId])) {
+                    $uData['userToName'][$stId] = $newNorm;
+                }
+                $target = $newNorm;
+            }
+            $uData['usernames'][$target]['displayName'] = $cleanDisplay;
+        }
+
+        if (!empty($newRole) && in_array($newRole, ['admin', 'vip', 'user'], true)) {
+            $uData['usernames'][$target]['role'] = $newRole;
+        }
+        if (!empty($newStatus) && in_array($newStatus, ['active', 'banned'], true)) {
+            $uData['usernames'][$target]['status'] = $newStatus;
+            $stId = $uData['usernames'][$target]['steamId'] ?? null;
+            if ($stId) {
+                if (!isset($uData['bannedUsers']) || !is_array($uData['bannedUsers'])) {
+                    $uData['bannedUsers'] = [];
+                }
+                if ($newStatus === 'banned') {
+                    if (!in_array($stId, $uData['bannedUsers'])) $uData['bannedUsers'][] = $stId;
+                } else {
+                    $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$stId]));
+                }
+            }
+        }
+        if ($newCustomTitle !== '') {
+            $uData['usernames'][$target]['customTitle'] = $newCustomTitle;
+        }
+        if ($newNote !== '') {
+            $uData['usernames'][$target]['note'] = $newNote;
+        }
+        $uData['usernames'][$target]['updatedAt'] = date('c');
+
+        @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'message' => "Utilisateur « {$uData['usernames'][$target]['displayName']} » mis à jour avec succès !",
+            'user' => $uData['usernames'][$target]
+        ]);
+        exit;
+    }
+
+    // Modération : Bannir / Débannir un utilisateur
+    if ($action === 'toggle_ban_user') {
+        $target = strtolower(trim($_POST['target'] ?? $_GET['target'] ?? ''));
+        $bannedParam = $_POST['banned'] ?? $_GET['banned'] ?? '1';
+        $isBanned = ($bannedParam === '1' || $bannedParam === 'true' || $bannedParam === true);
+
+        if (empty($target)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Cible manquante.']);
+            exit;
+        }
+
+        if ($target === 'hibouxe' || $target === 'edsaje') {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Le compte créateur ne peut pas être suspendu ou banni.']);
+            exit;
+        }
+
+        $uFile = __DIR__ . '/registered_usernames.json';
+        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+
+        if (!isset($uData['usernames'][$target])) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Utilisateur introuvable.']);
+            exit;
+        }
+
+        $uData['usernames'][$target]['status'] = $isBanned ? 'banned' : 'active';
+        $uData['usernames'][$target]['updatedAt'] = date('c');
+
+        if (!isset($uData['bannedUsers']) || !is_array($uData['bannedUsers'])) {
+            $uData['bannedUsers'] = [];
+        }
+        $stId = $uData['usernames'][$target]['steamId'] ?? null;
+        if ($stId) {
+            if ($isBanned) {
+                if (!in_array($stId, $uData['bannedUsers'])) $uData['bannedUsers'][] = $stId;
+            } else {
+                $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$stId]));
+            }
+        }
+
+        @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'message' => $isBanned
+                ? "L'utilisateur « {$uData['usernames'][$target]['displayName']} » a été banni."
+                : "L'utilisateur « {$uData['usernames'][$target]['displayName']} » a été réactivé."
+        ]);
+        exit;
+    }
+
+    // Modération : Purger les scores Leaderboard d'un joueur
+    if ($action === 'purge_user_scores') {
+        $username = trim($_POST['username'] ?? $_GET['username'] ?? '');
+        if (empty($username)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Pseudonyme manquant pour la purge.']);
+            exit;
+        }
+
+        $lbFile = __DIR__ . '/leaderboard_data.json';
+        $deletedCount = 0;
+        if (file_exists($lbFile)) {
+            $lbData = json_decode(@file_get_contents($lbFile), true) ?: [];
+            foreach ($lbData as $catKey => $games) {
+                if (is_array($games)) {
+                    foreach ($games as $gameKey => $entries) {
+                        if (is_array($entries)) {
+                            $before = count($entries);
+                            $filtered = array_values(array_filter($entries, function($e) use ($username) {
+                                return strcasecmp($e['nickname'] ?? '', $username) !== 0;
+                            }));
+                            $deletedCount += ($before - count($filtered));
+                            $lbData[$catKey][$gameKey] = $filtered;
+                        }
+                    }
+                }
+            }
+            @file_put_contents($lbFile, json_encode($lbData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => "Scores de « {$username} » purgés avec succès ({$deletedCount} entrée(s) supprimée(s))."
+        ]);
+        exit;
+    }
+
+    // Modération : Gestion de la Blacklist des Pseudos Interdits
+    if ($action === 'manage_forbidden_names') {
+        $subaction = trim($_POST['subaction'] ?? $_GET['subaction'] ?? 'list');
+        $rawWord = trim($_POST['word'] ?? $_GET['word'] ?? '');
+        $uFile = __DIR__ . '/registered_usernames.json';
+        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+
+        if (!isset($uData['forbiddenNames']) || !is_array($uData['forbiddenNames'])) {
+            $uData['forbiddenNames'] = ['hibouxe', 'edsaje'];
+        }
+
+        if ($subaction === 'add' && !empty($rawWord)) {
+            $cleanWord = normalizeUsernameAdmin($rawWord);
+            if (!empty($cleanWord) && !in_array($cleanWord, $uData['forbiddenNames'])) {
+                $uData['forbiddenNames'][] = $cleanWord;
+                @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            }
+            echo json_encode([
+                'success' => true,
+                'message' => "Le terme « {$cleanWord} » a été ajouté à la blacklist.",
+                'forbiddenNames' => $uData['forbiddenNames']
+            ]);
+            exit;
+        }
+
+        if ($subaction === 'remove' && !empty($rawWord)) {
+            $cleanWord = normalizeUsernameAdmin($rawWord);
+            if ($cleanWord === 'hibouxe' || $cleanWord === 'edsaje') {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => 'Les pseudonymes créateurs sont protégés de façon permanente.']);
+                exit;
+            }
+            $uData['forbiddenNames'] = array_values(array_diff($uData['forbiddenNames'], [$cleanWord]));
+            @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            echo json_encode([
+                'success' => true,
+                'message' => "Le terme « {$cleanWord} » a été retiré de la blacklist.",
+                'forbiddenNames' => $uData['forbiddenNames']
+            ]);
+            exit;
+        }
+
+        echo json_encode(['success' => true, 'forbiddenNames' => $uData['forbiddenNames']]);
+        exit;
+    }
+
+    // Modération : Créer / Réserver un utilisateur manuellement (Admin)
+    if ($action === 'create_user') {
+        $rawUsername = trim($_POST['username'] ?? $_GET['username'] ?? '');
+        $targetSteamId = trim($_POST['targetSteamId'] ?? $_GET['targetSteamId'] ?? '');
+        $role = trim($_POST['role'] ?? $_GET['role'] ?? 'user');
+        $customTitle = trim($_POST['customTitle'] ?? $_GET['customTitle'] ?? '');
+        $note = trim($_POST['note'] ?? $_GET['note'] ?? '');
+
+        if (empty($rawUsername)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Pseudonyme requis.']);
+            exit;
+        }
+
+        $cleanDisplay = htmlspecialchars(strip_tags($rawUsername), ENT_QUOTES, 'UTF-8');
+        $cleanDisplay = preg_replace('/[\x00-\x1F\x7F]/u', '', $cleanDisplay);
+        $norm = normalizeUsernameAdmin($cleanDisplay);
+
+        if (strlen($cleanDisplay) < 2 || strlen($cleanDisplay) > 24) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Le pseudonyme doit comporter entre 2 et 24 caractères.']);
+            exit;
+        }
+
+        $uFile = __DIR__ . '/registered_usernames.json';
+        $uData = file_exists($uFile) ? (json_decode(@file_get_contents($uFile), true) ?: []) : [];
+
+        if (isset($uData['usernames'][$norm])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => "Le pseudonyme « {$cleanDisplay} » est déjà pris."]);
+            exit;
+        }
+
+        $uData['usernames'][$norm] = [
+            'displayName' => $cleanDisplay,
+            'steamId' => !empty($targetSteamId) ? $targetSteamId : null,
+            'userId' => 'admin_created_' . substr(md5($norm . time()), 0, 8),
+            'claimedAt' => date('c'),
+            'role' => in_array($role, ['admin', 'vip', 'user'], true) ? $role : 'user',
+            'status' => 'active',
+            'customTitle' => $customTitle,
+            'note' => $note,
+            'isAdminReserved' => true
+        ];
+
+        if (!empty($targetSteamId)) {
+            $uData['userToName'][$targetSteamId] = $norm;
+        }
+
+        @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'message' => "L'utilisateur « {$cleanDisplay} » a été créé et réservé avec succès !",
+            'user' => $uData['usernames'][$norm]
+        ]);
         exit;
     }
 
@@ -532,24 +841,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         // Chargement des pseudonymes enregistrés
         $uFile = __DIR__ . '/registered_usernames.json';
-        $usernamesData = ['total' => 0, 'list' => []];
+        $usernamesData = [
+            'total' => 0,
+            'list' => [],
+            'forbiddenNames' => ['hibouxe', 'edsaje'],
+            'bannedCount' => 0
+        ];
         if (file_exists($uFile)) {
             $uRaw = @file_get_contents($uFile);
             if ($uRaw) {
                 $uDec = json_decode($uRaw, true);
                 if (isset($uDec['usernames']) && is_array($uDec['usernames'])) {
                     $uList = [];
+                    $bannedCount = 0;
                     foreach ($uDec['usernames'] as $k => $u) {
+                        $isBanned = ($u['status'] ?? '') === 'banned';
+                        if ($isBanned) $bannedCount++;
+                        $isCreator = ($k === 'hibouxe' || $k === 'edsaje' || ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
                         $uList[] = [
                             'normalized' => $k,
                             'displayName' => $u['displayName'] ?? $k,
                             'steamId' => $u['steamId'] ?? null,
                             'userId' => $u['userId'] ?? null,
                             'claimedAt' => $u['claimedAt'] ?? '',
-                            'isAdminReserved' => !empty($u['isAdminReserved']),
+                            'lastSeenAt' => $u['lastSeenAt'] ?? '',
+                            'role' => $u['role'] ?? ($isCreator ? 'admin' : 'user'),
+                            'status' => $u['status'] ?? 'active',
+                            'customTitle' => $u['customTitle'] ?? '',
+                            'note' => $u['note'] ?? '',
+                            'isAdminReserved' => !empty($u['isAdminReserved']) || $isCreator,
                         ];
                     }
-                    $usernamesData = ['total' => count($uList), 'list' => $uList];
+                    $customForbidden = isset($uDec['forbiddenNames']) && is_array($uDec['forbiddenNames']) ? $uDec['forbiddenNames'] : [];
+                    $allForbidden = array_values(array_unique(array_merge(['hibouxe', 'edsaje'], $customForbidden)));
+                    $usernamesData = [
+                        'total' => count($uList),
+                        'list' => $uList,
+                        'forbiddenNames' => $allForbidden,
+                        'bannedCount' => $bannedCount
+                    ];
                 }
             }
         }
@@ -814,6 +1144,103 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                     <td style="color: #cbd5e1; font-size: 0.82rem;"><?= htmlspecialchars(!empty($act['label']) ? $act['label'] : json_encode($act['props'] ?? [], JSON_UNESCAPED_UNICODE)) ?></td>
                                     <td style="color: var(--text-muted);"><?= htmlspecialchars($act['ref'] ?? 'Direct') ?></td>
                                     <td style="color: var(--text-muted);"><?= htmlspecialchars($act['device'] ?? 'desktop') ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GESTION DES UTILISATEURS & PSEUDONYMES -->
+            <?php
+            $registeredUsersList = [];
+            $uDbFile = __DIR__ . '/registered_usernames.json';
+            if (file_exists($uDbFile)) {
+                $uDbData = json_decode(@file_get_contents($uDbFile), true) ?: [];
+                if (!empty($uDbData['usernames']) && is_array($uDbData['usernames'])) {
+                    $registeredUsersList = $uDbData['usernames'];
+                }
+            }
+            ?>
+            <h2 class="section-title">👥 Gestion des Utilisateurs & Pseudos (<?= count($registeredUsersList) ?>)</h2>
+            <div class="card" style="margin-bottom: 2rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pseudonyme</th>
+                            <th>Steam ID / Compte</th>
+                            <th>Rôle</th>
+                            <th>Statut</th>
+                            <th>Titre / Note</th>
+                            <th>Inscrit le</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($registeredUsersList)): ?>
+                            <tr><td colspan="7" style="color: var(--text-muted); padding: 1.2rem; text-align: center;">Aucun utilisateur enregistré pour le moment.</td></tr>
+                        <?php else: ?>
+                            <?php foreach ($registeredUsersList as $normKey => $u):
+                                $isCreator = ($normKey === 'hibouxe' || $normKey === 'edsaje' || ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
+                                $isBanned = ($u['status'] ?? '') === 'banned';
+                                $role = $u['role'] ?? ($isCreator ? 'admin' : 'user');
+                            ?>
+                                <tr>
+                                    <td>
+                                        <strong style="color: #fff; font-size: 0.95rem;"><?= htmlspecialchars($u['displayName'] ?? $normKey) ?></strong>
+                                        <div style="color: var(--text-muted); font-size: 0.75rem; font-family: monospace;"><?= htmlspecialchars($normKey) ?></div>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($u['steamId'])): ?>
+                                            <a href="https://steamcommunity.com/profiles/<?= htmlspecialchars($u['steamId']) ?>" target="_blank" style="color: #06b6d4; text-decoration: none; font-family: monospace; font-size: 0.82rem;">
+                                                🎮 <?= htmlspecialchars($u['steamId']) ?> ↗
+                                            </a>
+                                        <?php else: ?>
+                                            <span style="color: var(--text-muted); font-size: 0.8rem;"><?= htmlspecialchars($u['userId'] ?? 'Local') ?></span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($isCreator): ?>
+                                            <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">👑 Créateur</span>
+                                        <?php elseif ($role === 'vip'): ?>
+                                            <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4);">⭐ VIP</span>
+                                        <?php else: ?>
+                                            <span class="badge" style="background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25);">Joueur</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($isBanned): ?>
+                                            <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);">🚫 Banni</span>
+                                        <?php else: ?>
+                                            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">✓ Actif</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="font-size: 0.8rem; color: #cbd5e1;">
+                                        <?php if (!empty($u['customTitle'])): ?>
+                                            <div style="font-weight: 600; color: #f59e0b;"><?= htmlspecialchars($u['customTitle']) ?></div>
+                                        <?php endif; ?>
+                                        <?php if (!empty($u['note'])): ?>
+                                            <div style="color: var(--text-muted); font-style: italic;"><?= htmlspecialchars($u['note']) ?></div>
+                                        <?php endif; ?>
+                                        <?php if (empty($u['customTitle']) && empty($u['note'])): ?>
+                                            <span style="color: var(--text-muted);">—</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="color: var(--text-muted); font-size: 0.8rem; white-space: nowrap;">
+                                        <?= !empty($u['claimedAt']) ? htmlspecialchars(date('d/m/Y', strtotime($u['claimedAt']))) : '—' ?>
+                                    </td>
+                                    <td style="text-align: right; white-space: nowrap;">
+                                        <?php if (!$isCreator): ?>
+                                            <?php if ($isBanned): ?>
+                                                <a href="track.php?action=toggle_ban_user&target=<?= urlencode($normKey) ?>&banned=0" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); text-decoration: none; border-radius: 6px; margin-right: 4px;">Débannir</a>
+                                            <?php else: ?>
+                                                <a href="track.php?action=toggle_ban_user&target=<?= urlencode($normKey) ?>&banned=1" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); text-decoration: none; border-radius: 6px; margin-right: 4px;">Bannir</a>
+                                            <?php endif; ?>
+                                            <a href="track.php?action=delete_username&target=<?= urlencode($normKey) ?>" onclick="return confirm('Voulez-vous vraiment libérer ce pseudo ?');" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; border-radius: 6px;">Libérer</a>
+                                        <?php else: ?>
+                                            <span style="font-size: 0.75rem; color: #f59e0b; font-weight: bold;">Inaliénable 🔒</span>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
