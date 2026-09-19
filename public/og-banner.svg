@@ -104,7 +104,7 @@
     LE SANCTUAIRE DES JEUX VIDÉO INDÉPENDANTS
   </text>
   <text x="600" y="335" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="16" fill="#94a3b8" letter-spacing="1">
-    Explorateur de Pépites Certifiées • 3 Défis Quotidiens • Arène 1v1 • Véritable Arcade 1982
+    Explorateur de 94 Pépites • 8 Défis Quotidiens • Time Attack • Duels 1v1
   </text>
 
   <!-- Feature Badges Grid (4 Badges) -->
@@ -120,8 +120,8 @@
   <g transform="translate(365, 385)">
     <rect width="210" height="95" rx="12" fill="url(#badgeBg)" stroke="url(#badgeBorder)" stroke-width="1.5" />
     <text x="105" y="36" text-anchor="middle" font-size="24">📸</text>
-    <text x="105" y="62" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="14" fill="#f8fafc">DÉFIS DU JOUR</text>
-    <text x="105" y="80" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="11" fill="#94a3b8">Screenle, Indledle, Linkle</text>
+    <text x="105" y="62" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="14" fill="#f8fafc">8 DÉFIS DU JOUR</text>
+    <text x="105" y="80" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="11" fill="#94a3b8">Screenle, OST, Classic...</text>
   </g>
 
   <!-- Badge 3: Versus 1v1 Multi -->

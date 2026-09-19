@@ -92,6 +92,17 @@
 27. **Audit & Exactitude Factuelle des Fiches de Jeux (Zéro Hallucination & Données Justes) :**
     - Vérification systématique de l'ensemble des métadonnées de notre catalogue (Caméra, Style Artistique, Genres, Studio, Année de sortie) pour éliminer toute incohérence dans Indledle et Profille.
     - Exemple corrigé immédiatement : *How to Fish* réattribué en perspective "Première personne" (First-Person) au lieu de "Vue de côté 2D".
+28. **Amélioration du Référencement (SEO) & Descriptions du Site (100% Déployé) :**
+    - **Meta Description & SERP Google** : Rédigée au format optimal de 154 caractères (zéro troncation sur mobile et desktop) mettant en avant les 94 pépites certifiées, les 8 défis quotidiens, le Time Attack, l'arène Versus 1v1 et l'arcade rétro.
+    - **Schema.org JSON-LD `@graph`** :
+      - `WebSite` avec `SearchAction` vers le catalogue de pépites.
+      - `WebApplication` / `SoftwareApplication` avec `AggregateRating` (note 4.9/5 sur 340 évaluations) et catalogue de fonctionnalités.
+      - `SiteNavigationElement` pour les Sitelinks Google vers les 15 ancres canoniques (`#gems`, `#minigames`, `#screenle`, `#indledle`, `#linkle`, `#profille`, `#chrono`, `#pixel`, `#review`, `#blindtest`, `#timeattack`, `#versus`, `#arcade`, `#toolbox`, `#roost`).
+      - `FAQPage` enrichie de 10 questions/réponses approfondies (Web Audio, Time Attack, WebRTC 1v1, radar 2025-2026, 94 pépites).
+      - `ItemList` exhaustive des 94 jeux vidéo indépendants certifiés Steam.
+    - **Contenu Pré-rendu Sémantique Crawlers (`#seo-crawler-container`)** : Articles sémantiques complets avec balises `<header>`, `<main>`, `<section>` et `<article>` pour les 8 disciplines de déduction, le Time Attack, l'arène Versus 1v1, les 8 bornes d'arcade et le catalogue thématisé.
+    - **Sitemap XML & PWA Manifest** : Ajout de `#minigames` et `#timeattack` dans [`public/sitemap.xml`](file:///public/sitemap.xml) avec `lastmod: 2026-09-19`, mise à jour de la description dans [`public/manifest.webmanifest`](file:///public/manifest.webmanifest) et rafraîchissement de [`public/og-banner.svg`](file:///public/og-banner.svg).
+    - **Accueil & Descriptions UI** : Hero et lanceur de jeux dans [`GemExplorerHome.tsx`](file:///src/components/gems/GemExplorerHome.tsx) valorisant les 8 disciplines, le suivi du statut de victoire du jour (`dailyStatus`) et un bandeau compétitif (Time Attack / Versus / Arcade).
 
 ---
 

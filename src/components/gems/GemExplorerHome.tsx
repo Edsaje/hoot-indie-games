@@ -14,12 +14,20 @@ import {
   Search,
   Filter,
   Check,
+  FileSearch,
+  History,
+  Sliders,
+  MessageSquareQuote,
+  Music,
+  Zap,
+  Swords,
 } from 'lucide-react';
 import { getDailyGame } from '../../data/games';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { soundFx } from '../../utils/audio';
+import { getChallengeStatusForDate } from '../../utils/streakManager';
 import type { NavTab } from '../common/Navbar';
 import type { ArcadeGameId } from '../arcade/ArcadeModal';
 import { telemetry } from '../../services/telemetry';
@@ -68,26 +76,9 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
   }, [allPlayableGames, isGameOwned]);
 
-  // Check today's game completion status from localStorage
+  // Check today's game completion status for all 8 daily disciplines
   const dailyStatus = useMemo(() => {
-    const checkState = (keyPrefix: string) => {
-      try {
-        const raw = localStorage.getItem(`${keyPrefix}_state_${currentDate}`);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          return Boolean(parsed.isCompleted && parsed.isWon);
-        }
-      } catch {
-        // Ignore
-      }
-      return false;
-    };
-
-    return {
-      screenleWon: checkState('screenle'),
-      indledleWon: checkState('indledle'),
-      linkleWon: checkState('linkle'),
-    };
+    return getChallengeStatusForDate(currentDate);
   }, [currentDate]);
 
   // Extract unique genres across all games
@@ -179,7 +170,9 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
             </h1>
 
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
-              Découvrez chaque jour une pépite sélectionnée pour son identité artistique et sonore, résolvez nos 3 énigmes quotidiennes et jouez à nos mini-jeux rétro.
+              {lang === 'fr'
+                ? "Découvrez chaque jour une pépite certifiée pour sa direction artistique et sonore, relevez nos 8 défis quotidiens de déduction, affrontez vos amis en duel 1v1 ou contre-la-montre et explorez notre salle d'arcade rétro."
+                : "Discover a certified indie gem every day, solve our 8 daily deduction puzzles, challenge friends in 1v1 duels or Time Attack sprints, and explore the retro arcade hall."}
             </p>
 
             {/* Quick Action Buttons */}
@@ -282,56 +275,72 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
       {/* Daily Games Launchpad */}
       <div className="mb-12">
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
           <div className="flex items-center gap-2">
             <span className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
               <Sparkles className="w-4 h-4" />
             </span>
             <div>
               <h2 className="text-xl sm:text-2xl font-black text-white">
-                Les Jeux & Défis Quotidiens
+                {lang === 'fr' ? 'Les 8 Défis & Jeux Quotidiens' : 'The 8 Daily Indie Challenges'}
               </h2>
               <p className="text-xs text-slate-400">
-                3 énigmes quotidiennes renouvelées chaque minuit + la salle d'arcade rétro
+                {lang === 'fr'
+                  ? '8 disciplines de déduction renouvelées chaque minuit • Sprints Time Attack • Duels 1v1'
+                  : '8 deduction disciplines refreshed at midnight • Time Attack sprints • 1v1 Duels'}
               </p>
             </div>
           </div>
+
+          <button
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('minigames');
+            }}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#131a29] hover:bg-[#1e293b] border border-[#1e293b] hover:border-amber-500/50 text-xs font-bold text-amber-400 transition cursor-pointer self-end sm:self-auto"
+          >
+            <span>{lang === 'fr' ? 'Hub des 10 Mini-Jeux' : '10 Mini-Games Hub'}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 8 Daily Games Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
           {/* Card 1: Screenle */}
           <div
             onClick={() => {
               soundFx.playClick();
               onNavigateTab('screenle');
             }}
-            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-amber-500/50 rounded-2xl p-5 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-cyan-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
-                  <Camera className="w-5 h-5" />
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center">
+                  <Camera className="w-4.5 h-4.5" />
                 </div>
-                {dailyStatus.screenleWon ? (
+                {dailyStatus.screenle === 'won' ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
                     <CheckCircle2 className="w-3 h-3" />
-                    Résolu
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[11px] font-bold">
-                    Mode 1
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    1. Capture
                   </span>
                 )}
               </div>
-              <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mb-1">
+              <h3 className="text-base font-black text-white group-hover:text-cyan-400 transition mb-1">
                 {lang === 'fr' ? 'Capture' : 'Framed'}
               </h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                Devinez le jeu secret à travers 6 captures d'écran zoomées progressives.
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? "Identifiez le jeu secret à travers 6 captures d'écran zoomées."
+                  : 'Identify the secret game with 6 progressive zoomed screenshots.'}
               </p>
             </div>
-            <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">
-              <span>Jouer au défi</span>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -342,33 +351,35 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
               soundFx.playClick();
               onNavigateTab('indledle');
             }}
-            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-emerald-500/50 rounded-2xl p-5 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-amber-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
-                  <Layers className="w-5 h-5" />
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                  <Layers className="w-4.5 h-4.5" />
                 </div>
-                {dailyStatus.indledleWon ? (
+                {dailyStatus.indledle === 'won' ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
                     <CheckCircle2 className="w-3 h-3" />
-                    Résolu
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[11px] font-bold">
-                    Mode 2
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    2. Classic
                   </span>
                 )}
               </div>
-              <h3 className="text-lg font-black text-white group-hover:text-emerald-400 transition mb-1">
+              <h3 className="text-base font-black text-white group-hover:text-amber-400 transition mb-1">
                 Classic
               </h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                Comparez l'année, les genres, le style artistique, la caméra et le studio.
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? "Wordle indé : comparez l'année, les genres, le studio et la caméra."
+                  : 'Indie Wordle: compare release year, genres, studio and camera.'}
               </p>
             </div>
-            <div className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">
-              <span>Jouer au défi</span>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -379,63 +390,329 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
               soundFx.playClick();
               onNavigateTab('linkle');
             }}
-            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-purple-500/50 rounded-2xl p-5 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-purple-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5" />
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center">
+                  <Sparkles className="w-4.5 h-4.5" />
                 </div>
-                {dailyStatus.linkleWon ? (
+                {dailyStatus.linkle === 'won' ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
                     <CheckCircle2 className="w-3 h-3" />
-                    Résolu
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[11px] font-bold">
-                    Mode 3
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    3. Connexions
                   </span>
                 )}
               </div>
-              <h3 className="text-lg font-black text-white group-hover:text-purple-400 transition mb-1">
+              <h3 className="text-base font-black text-white group-hover:text-purple-400 transition mb-1">
                 {lang === 'fr' ? 'Connexions' : 'Connections'}
               </h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                Regroupez 16 jeux par 4 catégories thématiques secrètes.
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? 'Regroupez 16 jeux par 4 catégories thématiques secrètes.'
+                  : 'Group 16 indie gems into 4 secret thematic categories.'}
               </p>
             </div>
             <div className="inline-flex items-center gap-1 text-xs font-bold text-purple-400 group-hover:translate-x-1 transition-transform">
-              <span>Jouer au défi</span>
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
 
-          {/* Card 4: Arcade */}
+          {/* Card 4: Profille */}
+          <div
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('profille');
+            }}
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-emerald-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+                  <FileSearch className="w-4.5 h-4.5" />
+                </div>
+                {dailyStatus.profille === 'won' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
+                    <CheckCircle2 className="w-3 h-3" />
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    4. Profil
+                  </span>
+                )}
+              </div>
+              <h3 className="text-base font-black text-white group-hover:text-emerald-400 transition mb-1">
+                Profil
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? "Indices débloqués un par un : année, studio, genre et tagline."
+                  : 'Clues revealed one by one: year, studio, genre, and tagline.'}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Card 5: Chrono */}
+          <div
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('chrono');
+            }}
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-teal-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-teal-500/15 border border-teal-500/30 text-teal-400 flex items-center justify-center">
+                  <History className="w-4.5 h-4.5" />
+                </div>
+                {dailyStatus.chrono === 'won' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
+                    <CheckCircle2 className="w-3 h-3" />
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    5. Chrono
+                  </span>
+                )}
+              </div>
+              <h3 className="text-base font-black text-white group-hover:text-teal-400 transition mb-1">
+                {lang === 'fr' ? 'Chrono' : 'Timeline'}
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? 'Replacez 5 jeux indés par ordre chronologique de sortie.'
+                  : 'Place 5 indie gems in chronological order of release.'}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-teal-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Card 6: Pixel */}
+          <div
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('pixel');
+            }}
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-indigo-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 flex items-center justify-center">
+                  <Sliders className="w-4.5 h-4.5" />
+                </div>
+                {dailyStatus.pixel === 'won' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
+                    <CheckCircle2 className="w-3 h-3" />
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    6. Pixel
+                  </span>
+                )}
+              </div>
+              <h3 className="text-base font-black text-white group-hover:text-indigo-400 transition mb-1">
+                Pixel &amp; Silhouette
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? 'Devinez à partir d’une mosaïque dé-pixellisée et son ombre.'
+                  : 'Identify the game from a de-pixellating mosaic and shadow.'}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-indigo-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Card 7: Review */}
+          <div
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('review');
+            }}
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-rose-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center">
+                  <MessageSquareQuote className="w-4.5 h-4.5" />
+                </div>
+                {dailyStatus.review === 'won' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
+                    <CheckCircle2 className="w-3 h-3" />
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    7. Critique
+                  </span>
+                )}
+              </div>
+              <h3 className="text-base font-black text-white group-hover:text-rose-400 transition mb-1">
+                {lang === 'fr' ? 'Critique Steam' : 'Steam Review'}
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? 'Déchiffrez les mots-clés caviardés d’un avis Steam authentique.'
+                  : 'Decode redacted words from an authentic Steam user review.'}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-rose-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Card 8: Blind Test */}
+          <div
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('blindtest');
+            }}
+            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-violet-500/50 rounded-2xl p-4 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-9 h-9 rounded-xl bg-violet-500/15 border border-violet-500/30 text-violet-400 flex items-center justify-center">
+                  <Music className="w-4.5 h-4.5" />
+                </div>
+                {dailyStatus.blindtest === 'won' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
+                    <CheckCircle2 className="w-3 h-3" />
+                    {lang === 'fr' ? 'Résolu' : 'Solved'}
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold uppercase">
+                    8. Musique
+                  </span>
+                )}
+              </div>
+              <h3 className="text-base font-black text-white group-hover:text-violet-400 transition mb-1">
+                Blind Test OST
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                {lang === 'fr'
+                  ? 'Écoutez des extraits musicaux au synthé et devinez la BO.'
+                  : 'Listen to progressive synth audio clips and name the OST.'}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-violet-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Jouer au défi' : 'Play challenge'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+        </div>
+
+        {/* Competitive & Arcade Trio */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Trio 1: Time Attack */}
+          <div
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('timeattack');
+            }}
+            className="group relative bg-gradient-to-r from-amber-950/40 via-[#131a29] to-[#0f172a] hover:from-amber-900/40 border border-amber-500/30 hover:border-amber-400 rounded-2xl p-5 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <span className="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-black uppercase tracking-wider">
+                  8 Sprints
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mb-1">
+                ⚡ Time Attack
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed mb-4">
+                {lang === 'fr'
+                  ? 'Enchaînez les devinettes contre-la-montre sur les 8 disciplines avec chrono milliseconde !'
+                  : 'Race against the clock across all 8 disciplines with millisecond precision!'}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Lancer un sprint' : 'Launch sprint'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Trio 2: Versus 1v1 */}
+          <div
+            onClick={() => {
+              soundFx.playClick();
+              onNavigateTab('versus');
+            }}
+            className="group relative bg-gradient-to-r from-rose-950/40 via-[#131a29] to-[#0f172a] hover:from-rose-900/40 border border-rose-500/30 hover:border-rose-400 rounded-2xl p-5 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center">
+                  <Swords className="w-5 h-5" />
+                </div>
+                <span className="px-2.5 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-black uppercase tracking-wider">
+                  P2P WebRTC
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-white group-hover:text-rose-400 transition mb-1">
+                ⚔️ {lang === 'fr' ? 'Arène Versus 1v1' : '1v1 Versus Arena'}
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed mb-4">
+                {lang === 'fr'
+                  ? 'Défiez un ami en direct sur les 8 disciplines ou lancez un Tournoi Décathlon Mixte !'
+                  : 'Challenge a friend live across 8 disciplines or battle in the Mixed Decathlon!'}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-rose-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Créer un salon' : 'Create room'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Trio 3: Arcade */}
           <div
             onClick={() => {
               soundFx.playClick();
               onOpenArcade('snake');
             }}
-            className="group relative bg-[#131a29] hover:bg-[#182235] border border-[#1e293b] hover:border-amber-500/50 rounded-2xl p-5 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
+            className="group relative bg-gradient-to-r from-emerald-950/40 via-[#131a29] to-[#0f172a] hover:from-emerald-900/40 border border-emerald-500/30 hover:border-emerald-400 rounded-2xl p-5 shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center">
                   <Gamepad2 className="w-5 h-5" />
                 </div>
-                <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold">
-                  8 Jeux
+                <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-black uppercase tracking-wider">
+                  8 Bornes
                 </span>
               </div>
-              <h3 className="text-lg font-black text-white group-hover:text-amber-400 transition mb-1">
-                Salle d'Arcade
+              <h3 className="text-lg font-black text-white group-hover:text-emerald-400 transition mb-1">
+                🕹️ {lang === 'fr' ? "Salle d'Arcade Rétro" : 'Retro Arcade Hall'}
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                Snake, Pong, Breakout, Flappy Hibou, Space Invaders, Course Sylvestre, Tetris &amp; Mine Storm.
+                {lang === 'fr'
+                  ? 'Snake, Tetris, Pong, Space Invaders et réplique exacte du Mine Storm Vectrex 1982.'
+                  : 'Snake, Tetris, Pong, Space Invaders, and faithful 1982 Vectrex Mine Storm.'}
               </p>
             </div>
-            <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">
-              <span>Lancer un jeu rétro</span>
+            <div className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">
+              <span>{lang === 'fr' ? 'Lancer une borne' : 'Play arcade game'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
