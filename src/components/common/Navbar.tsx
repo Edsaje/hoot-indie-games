@@ -13,6 +13,7 @@ import {
   LogIn,
   Flame,
   Puzzle,
+  Trophy,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
@@ -44,6 +45,7 @@ interface NavbarProps {
   onOpenCalendar: () => void;
   onOpenProfile: () => void;
   onOpenAuth: () => void;
+  onOpenLeaderboard?: () => void;
   onEasterEggTrigger: () => void;
   currentDate: string;
 }
@@ -56,6 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCalendar,
   onOpenProfile,
   onOpenAuth,
+  onOpenLeaderboard,
   onEasterEggTrigger,
   currentDate,
 }) => {
@@ -253,6 +256,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <VolumeX className="w-4 h-4 text-slate-500" />
               )}
             </button>
+
+            {/* Leaderboard Modal Button */}
+            {onOpenLeaderboard && (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenLeaderboard();
+                }}
+                className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-amber-400 hover:bg-slate-800 transition"
+                title={i18n.language.startsWith('fr') ? 'Classements en Ligne (Arcade & Time Attack)' : 'Online Leaderboards'}
+                aria-label="Leaderboards"
+              >
+                <Trophy className="w-4 h-4 text-amber-400/80 hover:text-amber-400" />
+              </button>
+            )}
 
             {/* Stats Modal Button */}
             <button

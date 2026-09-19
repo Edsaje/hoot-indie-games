@@ -27,6 +27,7 @@ import { useAchievements } from '../../context/useAchievements';
 import { SteamIcon } from '../common/SteamIcon';
 import { ShareResultModal } from '../common/ShareResultModal';
 import { StreakNoticeBanner } from '../common/StreakNoticeBanner';
+import { AttemptDistributionChart } from '../common/AttemptDistributionChart';
 import { telemetry } from '../../services/telemetry';
 
 interface ProfilleGameProps {
@@ -240,9 +241,8 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
         score: finalScore,
       });
 
-      // Stats recording (attempts mapped: 3 stars = 1 attempt, 2 stars = 2 attempts, 1 star = 3 attempts)
-      const recordedAttempts = Math.max(1, 4 - finalScore);
-      recordGameResult('profille', currentDate, won, recordedAttempts);
+      // Stats recording (score 3, 2, 1 stars mapped directly for community distribution and stats)
+      recordGameResult('profille', currentDate, won, finalScore);
 
       if (finalScore === 3) {
         soundFx.playVictory();
@@ -1071,6 +1071,16 @@ https://hootindiegames.com/#profille`;
                 {g}
               </span>
             ))}
+          </div>
+
+          {/* Community Attempt Distribution Graph */}
+          <div className="mt-5 pt-4 border-t border-[#1e293b]">
+            <AttemptDistributionChart
+              game="profille"
+              date={currentDate}
+              playerAttempts={score}
+              isWon={score > 0}
+            />
           </div>
         </div>
       )}

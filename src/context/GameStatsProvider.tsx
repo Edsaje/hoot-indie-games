@@ -11,6 +11,7 @@ import {
   getYesterdayDateString,
   getChallengeStatusForDate,
 } from '../utils/streakManager';
+import { recordDailyCommunityCompletion } from '../services/leaderboardService';
 
 export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [stats, setStats] = useState<OverallStats>(() => {
@@ -56,6 +57,7 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
       modeStats.played += 1;
       modeStats.lastPlayedDate = dateStr;
+      recordDailyCommunityCompletion(mode, dateStr, isWon, guessCount);
 
       const todayStr = getTodayDateString();
       const yesterdayStr = getYesterdayDateString(todayStr);

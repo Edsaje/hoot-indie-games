@@ -24,6 +24,7 @@ import { useAchievements } from '../../context/useAchievements';
 import { downloadShareCard, type ShareCardData } from '../../utils/generateShareCard';
 import { ShareResultModal } from '../common/ShareResultModal';
 import { StreakNoticeBanner } from '../common/StreakNoticeBanner';
+import { AttemptDistributionChart } from '../common/AttemptDistributionChart';
 import { CustomLinkleBuilder } from './CustomLinkleBuilder';
 import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { telemetry } from '../../services/telemetry';
@@ -341,7 +342,8 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
         saveGameState(newSolved, mistakesRemaining, true, true, nextPreviousGuesses);
 
         if (!isCustomMode) {
-          recordGameResult('linkle', currentDate, true, 4);
+          const totalAttempts = nextPreviousGuesses.length;
+          recordGameResult('linkle', currentDate, true, totalAttempts);
           unlockAchievement('first_flight');
           if (mistakesRemaining === 4) {
             unlockAchievement('linkle_flawless');
@@ -714,6 +716,18 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
           <p className="text-sm text-slate-300 mb-6">
             {isWon ? t('linkle.wonText') : t('linkle.lostText')}
           </p>
+
+          {/* Community Attempt Distribution Graph */}
+          {!isCustomMode && (
+            <div className="mb-6">
+              <AttemptDistributionChart
+                game="linkle"
+                date={currentDate}
+                playerAttempts={previousGuesses.length || (isWon ? (4 + (maxMistakes - mistakesRemaining)) : 0)}
+                isWon={isWon}
+              />
+            </div>
+          )}
 
           {/* Streak preservation / broken notice banner */}
           <StreakNoticeBanner

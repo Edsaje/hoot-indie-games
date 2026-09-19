@@ -15,6 +15,7 @@ import { soundFx } from '../../utils/audio';
 
 interface ArcadeHallViewProps {
   onOpenGame: (gameId: ArcadeGameId) => void;
+  onOpenLeaderboard?: (gameId?: string) => void;
 }
 
 const GAME_TAGS: Record<ArcadeGameId, { genreFr: string; genreEn: string; year: string; difficulty: string }> = {
@@ -33,7 +34,7 @@ function loadHighScores(): Record<string, number> {
   if (typeof localStorage === 'undefined') return scores;
   for (const g of ARCADE_GAMES) {
     try {
-      const val = localStorage.getItem(`arcade_high_${g.id}`);
+      const val = localStorage.getItem(`hoot_arcade_hs_${g.id}`) || localStorage.getItem(`arcade_high_${g.id}`);
       scores[g.id] = val ? parseInt(val, 10) : 0;
     } catch {
       scores[g.id] = 0;
@@ -42,7 +43,7 @@ function loadHighScores(): Record<string, number> {
   return scores;
 }
 
-export const ArcadeHallView: React.FC<ArcadeHallViewProps> = ({ onOpenGame }) => {
+export const ArcadeHallView: React.FC<ArcadeHallViewProps> = ({ onOpenGame, onOpenLeaderboard }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
@@ -100,6 +101,16 @@ export const ArcadeHallView: React.FC<ArcadeHallViewProps> = ({ onOpenGame }) =>
                 <Dices className="w-4 h-4" />
                 {lang === 'fr' ? 'Insérer une Pièce au Hasard' : 'Insert Coin (Random)'}
               </button>
+
+              {onOpenLeaderboard && (
+                <button
+                  onClick={() => onOpenLeaderboard()}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#131a29] hover:bg-slate-800 border border-amber-500/40 text-amber-300 font-black text-xs sm:text-sm transition shadow-lg active:scale-95 cursor-pointer"
+                >
+                  <Trophy className="w-4 h-4 text-amber-400" />
+                  <span>{lang === 'fr' ? 'Classement Mondial Arcade' : 'Arcade Leaderboard'}</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -166,7 +177,13 @@ export const ArcadeHallView: React.FC<ArcadeHallViewProps> = ({ onOpenGame }) =>
 
               <div className="mt-4 pt-3 border-t border-[#1e293b]/70 flex flex-col gap-3">
                 {/* Record High Score Display */}
-                <div className="flex items-center justify-between text-xs">
+                <div
+                  onClick={() => onOpenLeaderboard?.(game.id)}
+                  className={`flex items-center justify-between text-xs px-3 py-1.5 rounded-lg bg-[#0b0f19] border border-[#1e293b] ${
+                    onOpenLeaderboard ? 'hover:border-amber-500/50 cursor-pointer transition' : ''
+                  }`}
+                  title={lang === 'fr' ? 'Voir le classement de ce jeu' : 'View leaderboard for this game'}
+                >
                   <span className="text-slate-400 font-medium flex items-center gap-1">
                     <Trophy className="w-3.5 h-3.5 text-amber-400" />
                     Record :

@@ -24,9 +24,10 @@ import { ProfilleSprint } from './ProfilleSprint';
 
 interface TimeAttackHubProps {
   initialMode?: TimeAttackMode;
+  onOpenLeaderboard?: (mode?: TimeAttackMode) => void;
 }
 
-export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => {
+export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode, onOpenLeaderboard }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
   const { allPlayableGames } = useSteamCatalog();
@@ -96,11 +97,29 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
         <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto leading-relaxed">
           60 secondes au chronomètre pour chaque jeu. Enchaînez les bonnes réponses, montez votre combo et défiez vos réflexes de passionné d'indés !
         </p>
+
+        {onOpenLeaderboard && (
+          <div className="mt-5 flex items-center justify-center">
+            <button
+              onClick={() => onOpenLeaderboard('screenle')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-amber-300 font-black text-xs sm:text-sm transition shadow-lg shadow-amber-500/10 active:scale-95 cursor-pointer"
+            >
+              <Trophy className="w-4 h-4 text-amber-400" />
+              <span>{lang === 'fr' ? 'Classement Mondial Time Attack' : 'Time Attack Leaderboards'}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Global Quick Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
-        <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md">
+        <div
+          onClick={() => onOpenLeaderboard?.('screenle')}
+          className={`p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md ${
+            onOpenLeaderboard ? 'hover:border-amber-500/40 cursor-pointer transition' : ''
+          }`}
+          title="Voir le classement mondial Screenle Sprint"
+        >
           <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
             <Trophy className="w-5 h-5" />
           </div>
@@ -112,7 +131,13 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md">
+        <div
+          onClick={() => onOpenLeaderboard?.('indledle')}
+          className={`p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md ${
+            onOpenLeaderboard ? 'hover:border-emerald-500/40 cursor-pointer transition' : ''
+          }`}
+          title="Voir le classement mondial Indledle Sprint"
+        >
           <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
             <Target className="w-5 h-5" />
           </div>
@@ -122,7 +147,13 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md">
+        <div
+          onClick={() => onOpenLeaderboard?.('linkle')}
+          className={`p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md ${
+            onOpenLeaderboard ? 'hover:border-sky-500/40 cursor-pointer transition' : ''
+          }`}
+          title="Voir le classement mondial Linkle Sprint"
+        >
           <div className="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
             <Flame className="w-5 h-5" />
           </div>
@@ -134,7 +165,13 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode }) => 
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md">
+        <div
+          onClick={() => onOpenLeaderboard?.('profille')}
+          className={`p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex items-center gap-3 shadow-md ${
+            onOpenLeaderboard ? 'hover:border-purple-500/40 cursor-pointer transition' : ''
+          }`}
+          title="Voir le classement mondial Profille Sprint"
+        >
           <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
             <FileSearch className="w-5 h-5" />
           </div>

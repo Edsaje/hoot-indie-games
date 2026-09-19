@@ -23,6 +23,8 @@ import { TheRoostHub } from './components/roost/TheRoostHub';
 import { ArcadeHallView } from './components/arcade/ArcadeHallView';
 import { ArcadeModal, type ArcadeGameId } from './components/arcade/ArcadeModal';
 import { TimeAttackHub } from './components/timeattack/TimeAttackHub';
+import { LeaderboardModal } from './components/common/LeaderboardModal';
+import type { LeaderboardCategory } from './services/leaderboardService';
 import type { TimeAttackMode } from './types/timeAttack';
 import type { DailyGameMode } from './context/GameStatsContext';
 import { GameStatsProvider } from './context/GameStatsProvider';
@@ -91,10 +93,24 @@ export const AppContent: React.FC = () => {
   const [isEasterEggOpen, setIsEasterEggOpen] = useState<boolean>(false);
   const [isArcadeOpen, setIsArcadeOpen] = useState<boolean>(false);
   const [arcadeGame, setArcadeGame] = useState<ArcadeGameId>('snake');
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
+  const [leaderboardCategory, setLeaderboardCategory] = useState<LeaderboardCategory>('arcade');
+  const [leaderboardGame, setLeaderboardGame] = useState<string>('snake');
 
   const handleOpenArcade = (gameId: ArcadeGameId = 'snake') => {
     setArcadeGame(gameId);
     setIsArcadeOpen(true);
+  };
+
+  const handleOpenLeaderboard = (category: LeaderboardCategory = 'arcade', gameId?: string) => {
+    soundFx.playClick();
+    setLeaderboardCategory(category);
+    if (gameId) {
+      setLeaderboardGame(gameId);
+    } else {
+      setLeaderboardGame(category === 'arcade' ? 'snake' : 'screenle');
+    }
+    setIsLeaderboardOpen(true);
   };
 
   // Switch navigation tabs with sub-game resolution
@@ -149,6 +165,13 @@ export const AppContent: React.FC = () => {
         setCurrentTab('toolbox');
       } else if (hash.startsWith('#roost')) {
         setCurrentTab('roost');
+      } else if (hash.startsWith('#leaderboard')) {
+        const match = window.location.hash.match(/#leaderboard=([a-z]+)/);
+        if (match && ['arcade', 'timeattack'].includes(match[1])) {
+          handleOpenLeaderboard(match[1] as LeaderboardCategory);
+        } else {
+          handleOpenLeaderboard('arcade');
+        }
       } else if (hash.startsWith('#gems') || hash === '') {
         setCurrentTab('gems');
       }
@@ -269,6 +292,7 @@ export const AppContent: React.FC = () => {
         onOpenCalendar={() => setIsCalendarOpen(true)}
         onOpenProfile={() => setIsProfileOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenLeaderboard={() => handleOpenLeaderboard('arcade')}
         onEasterEggTrigger={() => setIsEasterEggOpen(true)}
         currentDate={currentDate}
       />
@@ -379,7 +403,10 @@ export const AppContent: React.FC = () => {
               )}
 
               {activeMiniGame === 'timeattack' && (
-                <TimeAttackHub initialMode={timeAttackInitialMode} />
+                <TimeAttackHub
+                  initialMode={timeAttackInitialMode}
+                  onOpenLeaderboard={(mode) => handleOpenLeaderboard('timeattack', mode)}
+                />
               )}
 
               {activeMiniGame === 'versus' && (
@@ -389,7 +416,12 @@ export const AppContent: React.FC = () => {
           </div>
         )}
 
-        {currentTab === 'arcade' && <ArcadeHallView onOpenGame={handleOpenArcade} />}
+        {currentTab === 'arcade' && (
+          <ArcadeHallView
+            onOpenGame={handleOpenArcade}
+            onOpenLeaderboard={(gameId) => handleOpenLeaderboard('arcade', gameId)}
+          />
+        )}
         {currentTab === 'toolbox' && <ToolboxHub />}
         {currentTab === 'roost' && <TheRoostHub onOpenArcade={handleOpenArcade} />}
       </main>
@@ -442,6 +474,14 @@ export const AppContent: React.FC = () => {
         isOpen={isArcadeOpen}
         initialGame={arcadeGame}
         onClose={() => setIsArcadeOpen(false)}
+        onOpenLeaderboard={(gameId) => handleOpenLeaderboard('arcade', gameId)}
+      />
+
+      <LeaderboardModal
+        isOpen={isLeaderboardOpen}
+        onClose={() => setIsLeaderboardOpen(false)}
+        initialCategory={leaderboardCategory}
+        initialGame={leaderboardGame}
       />
 
       {/* Footer */}

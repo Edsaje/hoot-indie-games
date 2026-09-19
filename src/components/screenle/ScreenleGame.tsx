@@ -28,6 +28,7 @@ import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { downloadShareCard, type ShareCardData } from '../../utils/generateShareCard';
 import { ShareResultModal } from '../common/ShareResultModal';
+import { AttemptDistributionChart } from '../common/AttemptDistributionChart';
 import { StreakNoticeBanner } from '../common/StreakNoticeBanner';
 import { telemetry } from '../../services/telemetry';
 
@@ -552,6 +553,16 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Community Attempt Distribution Graph */}
+          <div className="mb-5">
+            <AttemptDistributionChart
+              game="screenle"
+              date={currentDate}
+              playerAttempts={guesses.length}
+              isWon={isWon}
+            />
           </div>
 
           {/* Streak preservation / broken notice banner */}

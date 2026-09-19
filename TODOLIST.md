@@ -331,15 +331,19 @@
   - **Extension de l'Arène Versus 1v1** :
     - Intégrer les questions Profille (développeur, année de sortie, genre) dans les manches de duel en direct WebRTC P2P.
     - Variantes de match configurables par l'hôte : Mode Classique (Titres seuls), Mode Profille (Studio / Année), ou Mode Hybride Aléatoire.
-- [ ] **Système de Leaderboard (Classement en Ligne) dans l'Arcade et les Mini-jeux** :
-  - **Leaderboard Salle d'Arcade (8 Bornes)** :
-    - Stockage et synchronisation cloud/serveur des meilleurs scores sur les 8 bornes d'arcade (Flappy Hibou, Course Sylvestre, Snake, Pong, Tetris, Breakout, Space Invaders, Pac-Owl).
-    - Affichage d'un tableau d'honneur Top 10 avec pseudo, avatar, date du record et mise en avant du rang personnel du joueur.
-  - **Leaderboard Mini-jeux & Time Attack** :
-    - Classement Time Attack par discipline (Screenle Sprint, Indledle Sprint, Linkle Sprint, Profille Sprint).
-    - Classement quotidien des mini-jeux (vitesse de résolution et nombre d'essais pour Screenle, Indledle, Linkle, Profille).
-    - Classement ELO officiel pour l'Arène Versus 1v1 avec rangs et ligues compétitives.
-    - Sécurisation du backend contre la falsification et l'injection de faux scores.
+- [x] **Système de Leaderboard (Classement en Ligne) & Graphique de Répartition Communautaire** :
+  - **Leaderboard Global Souverain (Arcade & Time Attack)** ([`src/components/common/LeaderboardModal.tsx`](file:///src/components/common/LeaderboardModal.tsx), [`public/api/leaderboard.php`](file:///public/api/leaderboard.php)) :
+    - API PHP sécurisée avec rate limiting (30 req/min/IP), assainissement XSS strict (`strip_tags`, `htmlspecialchars`), liste blanche stricte des catégories et persistence atomique des Top 100 dans `leaderboard_data.json` avec verrou `LOCK_EX`.
+    - Classement des 8 bornes Arcade (*Snake*, *Flappy Hibou*, *Course Sylvestre*, *Pong*, *Breakout*, *Tetris*, *Space Invaders*, *Mine Storm*).
+    - Classement des 4 sprints Time Attack (*Screenle Sprint*, *Indledle Sprint*, *Linkle Sprint*, *Profille Sprint*).
+    - Podium Top 3 médaillé (Or, Argent, Bronze), affichage du rang personnel du joueur, choix d'avatars hiboux exclusifs et personnalisation du pseudo avec publication en 1 clic des records locaux.
+    - Passerelles d'accès intégrées dans la barre de navigation principale (icône Trophée), dans l'en-tête de la Salle d'Arcade, sur l'écran de Game Over de chaque borne, et dans le Hub Time Attack.
+  - **Graphique de Répartition des Essais Communautaire (Daily Attempt Distribution)** ([`src/components/common/AttemptDistributionChart.tsx`](file:///src/components/common/AttemptDistributionChart.tsx), [`public/api/community_stats.php`](file:///public/api/community_stats.php)) :
+    - Graphique en barres horizontales animées affiché immédiatement après la fin de chaque partie (victoire ou défaite) sur les 4 défis quotidiens (*Screenle*, *Indledle*, *Linkle*, *Profille*).
+    - Calcul en temps réel de la moyenne d'essais de la communauté (ex: `🎯 Moyenne : 3.4 essais`), du total de joueurs du jour, et de l'insight de centile personnalisé (*"Vous avez fait mieux que X% des joueurs aujourd'hui !"*).
+    - Mise en relief de la ligne du joueur avec dégradé lumineux ambré, anneau et badge `"VOUS / YOU"`.
+    - Modèle adaptatif selon le jeu : 1 à 6 essais + Échec pour Screenle & Indledle, 4 à 7 tentatives pour Linkle, 3/3 à 0/3 étoiles pour Profille.
+    - Générateur de courbe de base réaliste déterministe par date pour garantir un affichage instantané et équilibré même en début de journée ou hors-ligne.
 - [ ] **Amélioration & Optimisation de Track.php (Analytics & Admin)** :
   - **Tableau de bord administrateur enrichi** ([`public/api/track.php`](file:///public/api/track.php)) :
     - Visualisation claire de la fréquentation globale (visiteurs uniques, sessions, pages vues, répartition mobile vs desktop).

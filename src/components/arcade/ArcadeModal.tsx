@@ -22,12 +22,14 @@ interface ArcadeModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialGame?: ArcadeGameId;
+  onOpenLeaderboard?: (gameId?: string) => void;
 }
 
 export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   isOpen,
   onClose,
   initialGame = 'snake',
+  onOpenLeaderboard,
 }) => {
   const [selectedGame, setSelectedGame] = useState<ArcadeGameId>(initialGame);
   const [gameKey, setGameKey] = useState<number>(0);
@@ -2181,11 +2183,15 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             <span className="font-mono text-amber-400 text-sm font-black">{score}</span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-slate-400">
+          <button
+            onClick={() => onOpenLeaderboard?.(selectedGame)}
+            className="flex items-center gap-1.5 text-slate-400 hover:text-amber-300 transition cursor-pointer"
+            title="Voir le classement mondial de ce jeu"
+          >
             <Trophy className="w-3.5 h-3.5 text-amber-400" />
             <span>Record :</span>
             <span className="font-mono text-white font-bold">{highScore}</span>
-          </div>
+          </button>
 
           <button
             onClick={restartCurrentGame}
@@ -2217,13 +2223,24 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
               <p className="text-sm text-slate-300 mb-4">
                 Score final : <span className="font-black text-amber-400 font-mono text-base">{score}</span>
               </p>
-              <button
-                onClick={restartCurrentGame}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20 cursor-pointer"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                Rejouer Immédiatement
-              </button>
+              <div className="flex flex-col gap-2 w-full max-w-[210px]">
+                <button
+                  onClick={restartCurrentGame}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20 cursor-pointer"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  Rejouer Immédiatement
+                </button>
+                {onOpenLeaderboard && (
+                  <button
+                    onClick={() => onOpenLeaderboard(selectedGame)}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 transition shadow cursor-pointer"
+                  >
+                    <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                    Classement en Ligne
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
