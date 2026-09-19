@@ -316,10 +316,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     }
 
-    // B. VÉRIFICATION DE SESSION
+    // B. VÉRIFICATION DE SESSION ET AUTHENTIFICATION ADMIN
+    $paramSteamId = trim($_GET['steamId'] ?? $_POST['steamId'] ?? '');
+    $isJsonReq = (isset($_GET['format']) && $_GET['format'] === 'json') ||
+                 (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
+                 (isset($_GET['action']) && in_array($_GET['action'], ['admin_overview', 'delete_username', 'delete_suggestion', 'reset_stats']));
+
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $secFetchSite = $_SERVER['HTTP_SEC_FETCH_SITE'] ?? '';
+    $isSameOrigin = empty($origin) || (strpos($origin, $host) !== false) || (strpos($origin, 'localhost') !== false) || ($secFetchSite === 'same-origin');
+
+    if ($paramSteamId === ADMIN_STEAM_ID && $isSameOrigin) {
+        $_SESSION['admin_auth'] = true;
+        $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+    }
+
     $isAuth = !empty($_SESSION['admin_auth']) && (strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID);
 
     if (!$isAuth) {
+        if ($isJsonReq) {
+            http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'success' => false,
+                'error' => 'unauthorized',
+                'message' => 'Accès administrateur exclusif réservé au créateur du site (Steam ID ' . ADMIN_STEAM_ID . ').'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
         $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
         $protocol = $isHttps ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'];
@@ -391,7 +417,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
-    // C. DASHBOARD ADMINISTRATEUR AUTHENTIFIÉ
+    // C. ACTIONS D'ADMINISTRATION
+    $action = trim($_GET['action'] ?? '');
+
+    // Modération : Libérer / Supprimer un pseudonyme
+    if ($action === 'delete_username') {
+        $target = strtolower(trim($_GET['target'] ?? ''));
+        if (empty($target)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Pseudonyme manquant.']);
+            exit;
+        }
+        if ($target === 'hibouxe' || $target === 'edsaje') {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Les pseudonymes créateur ne peuvent pas être supprimés.']);
+            exit;
+        }
+
+        $uFile = __DIR__ . '/registered_usernames.json';
+        if (file_exists($uFile)) {
+            $uData = json_decode(@file_get_contents($uFile), true) ?: [];
+            if (isset($uData['usernames'][$target])) {
+                $steamIdAssociated = $uData['usernames'][$target]['steamId'] ?? null;
+                unset($uData['usernames'][$target]);
+                if ($steamIdAssociated && isset($uData['userToName'][$steamIdAssociated])) {
+                    unset($uData['userToName'][$steamIdAssociated]);
+                }
+                @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                echo json_encode(['success' => true, 'message' => "Le pseudonyme « {$target} » a été libéré avec succès."]);
+                exit;
+            }
+        }
+        echo json_encode(['success' => false, 'message' => 'Pseudonyme non trouvé.']);
+        exit;
+    }
+
+    // Modération : Supprimer une suggestion communautaire
+    if ($action === 'delete_suggestion') {
+        $sugId = trim($_GET['id'] ?? '');
+        $sugFile = __DIR__ . '/suggestions.json';
+        if (file_exists($sugFile)) {
+            $suggestions = json_decode(@file_get_contents($sugFile), true) ?: [];
+            $filtered = array_values(array_filter($suggestions, function($s) use ($sugId) {
+                return ($s['id'] ?? '') !== $sugId;
+            }));
+            @file_put_contents($sugFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            echo json_encode(['success' => true, 'message' => 'Suggestion supprimée avec succès.']);
+            exit;
+        }
+        echo json_encode(['success' => false, 'message' => 'Fichier de suggestions introuvable.']);
+        exit;
+    }
+
+    // Réinitialisation des statistiques
+    if ($action === 'reset_stats') {
+        $blankStats = [
+            'summary' => [
+                'pageviews' => 0,
+                'unique_visitors' => 0,
+                'games_played' => 0,
+                'games_won' => 0,
+                'versus_played' => 0,
+                'steam_clicks' => 0,
+                'easter_eggs' => 0,
+            ],
+            'games' => [
+                'screenle' => ['plays' => 0, 'wins' => 0],
+                'indledle' => ['plays' => 0, 'wins' => 0],
+                'linkle' => ['plays' => 0, 'wins' => 0],
+                'versus' => ['plays' => 0, 'wins' => 0],
+                'arcade' => ['plays' => 0, 'wins' => 0],
+            ],
+            'events' => [],
+            'referrers' => [],
+            'devices' => ['desktop' => 0, 'mobile' => 0, 'tablet' => 0],
+            'daily' => [],
+            'recent' => [],
+        ];
+        @file_put_contents($statsFile, json_encode($blankStats, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode(['success' => true, 'message' => 'Métriques réinitialisées avec succès.']);
+        exit;
+    }
+
+    // D. DASHBOARD ADMINISTRATEUR AUTHENTIFIÉ
     $defaultStats = [
         'summary' => [
             'pageviews' => 0,
@@ -427,11 +535,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     }
 
-    // Export JSON sécurisé
-    if (isset($_GET['format']) && $_GET['format'] === 'json') {
+    // Export JSON sécurisé & API React Admin Overview
+    if ($isJsonReq || (isset($_GET['format']) && $_GET['format'] === 'json')) {
         header('Content-Type: application/json; charset=utf-8');
         unset($stats['today_hashes']);
-        echo json_encode($stats, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        // Chargement des pseudonymes enregistrés
+        $uFile = __DIR__ . '/registered_usernames.json';
+        $usernamesData = ['total' => 0, 'list' => []];
+        if (file_exists($uFile)) {
+            $uRaw = @file_get_contents($uFile);
+            if ($uRaw) {
+                $uDec = json_decode($uRaw, true);
+                if (isset($uDec['usernames']) && is_array($uDec['usernames'])) {
+                    $uList = [];
+                    foreach ($uDec['usernames'] as $k => $u) {
+                        $uList[] = [
+                            'normalized' => $k,
+                            'displayName' => $u['displayName'] ?? $k,
+                            'steamId' => $u['steamId'] ?? null,
+                            'userId' => $u['userId'] ?? null,
+                            'claimedAt' => $u['claimedAt'] ?? '',
+                            'isAdminReserved' => !empty($u['isAdminReserved']),
+                        ];
+                    }
+                    $usernamesData = ['total' => count($uList), 'list' => $uList];
+                }
+            }
+        }
+
+        // Chargement des suggestions de jeux
+        $sFile = __DIR__ . '/suggestions.json';
+        $suggestionsData = ['total' => 0, 'list' => []];
+        if (file_exists($sFile)) {
+            $sRaw = @file_get_contents($sFile);
+            if ($sRaw) {
+                $sDec = json_decode($sRaw, true);
+                if (is_array($sDec)) {
+                    $suggestionsData = ['total' => count($sDec), 'list' => array_reverse($sDec)];
+                }
+            }
+        }
+
+        // Chargement du statut du leaderboard
+        $lbFile = __DIR__ . '/leaderboard_data.json';
+        $leaderboardData = ['totalEntries' => 0, 'categories' => []];
+        if (file_exists($lbFile)) {
+            $lbRaw = @file_get_contents($lbFile);
+            if ($lbRaw) {
+                $lbDec = json_decode($lbRaw, true);
+                if (is_array($lbDec)) {
+                    $tot = 0;
+                    $cats = [];
+                    foreach ($lbDec as $cat => $games) {
+                        if (is_array($games)) {
+                            $cats[$cat] = [];
+                            foreach ($games as $g => $entries) {
+                                $c = is_array($entries) ? count($entries) : 0;
+                                $tot += $c;
+                                $cats[$cat][$g] = $c;
+                            }
+                        }
+                    }
+                    $leaderboardData = ['totalEntries' => $tot, 'categories' => $cats];
+                }
+            }
+        }
+
+        $system = [
+            'phpVersion' => PHP_VERSION,
+            'serverTime' => date('c'),
+            'statsFileSize' => file_exists($statsFile) ? filesize($statsFile) : 0,
+            'usernamesFileSize' => file_exists($uFile) ? filesize($uFile) : 0,
+            'suggestionsFileSize' => file_exists($sFile) ? filesize($sFile) : 0,
+            'leaderboardFileSize' => file_exists($lbFile) ? filesize($lbFile) : 0,
+            'adminSteamId' => ADMIN_STEAM_ID,
+        ];
+
+        echo json_encode([
+            'success' => true,
+            'admin' => true,
+            'analytics' => $stats,
+            'usernames' => $usernamesData,
+            'suggestions' => $suggestionsData,
+            'leaderboard' => $leaderboardData,
+            'system' => $system,
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 

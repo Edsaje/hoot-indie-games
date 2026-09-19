@@ -51,6 +51,7 @@ interface NavbarProps {
   onOpenProfile: () => void;
   onOpenAuth: () => void;
   onOpenLeaderboard?: () => void;
+  onOpenAdminDashboard?: () => void;
   onEasterEggTrigger: () => void;
   currentDate: string;
 }
@@ -64,6 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenProfile,
   onOpenAuth,
   onOpenLeaderboard,
+  onOpenAdminDashboard,
   onEasterEggTrigger,
   currentDate,
 }) => {
@@ -302,16 +304,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Admin Dashboard Direct Shortcut */}
             {isAdmin && (
-              <a
-                href="/api/track.php"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition flex items-center justify-center shrink-0 shadow-sm shadow-amber-500/10 cursor-pointer"
-                title="Tableau de Bord Analytics Administrateur (/api/track.php)"
-                aria-label="Admin Track Analytics"
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  if (onOpenAdminDashboard) {
+                    onOpenAdminDashboard();
+                  } else {
+                    window.open('/api/track.php', '_blank');
+                  }
+                }}
+                className="p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition flex items-center justify-center shrink-0 shadow-sm shadow-amber-500/10 cursor-pointer group"
+                title="Tableau de Bord Administrateur (👑 Accès Souverain)"
+                aria-label="Tableau de Bord Administrateur"
               >
-                <Crown className="w-4 h-4 text-amber-400" />
-              </a>
+                <Crown className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+              </button>
             )}
 
             {/* Sign In / Sign Up Button OR Authenticated User Profile */}

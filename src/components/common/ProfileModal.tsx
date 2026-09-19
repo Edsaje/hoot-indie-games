@@ -38,9 +38,14 @@ import { ADMIN_STEAM_ID } from '../../utils/usernameValidation';
 interface ProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenAdminDashboard?: () => void;
 }
 
-export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
+export const ProfileModal: React.FC<ProfileModalProps> = ({
+  isOpen,
+  onClose,
+  onOpenAdminDashboard,
+}) => {
   const {
     profile,
     isAuthenticated,
@@ -459,21 +464,27 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
 
                 {/* Admin Quick Action Banner */}
                 {isAdmin && (
-                  <a
-                    href="/api/track.php"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-cyan-500/10 to-slate-900 border border-amber-500/35 hover:border-amber-500/60 transition group cursor-pointer shadow-lg"
+                  <button
+                    onClick={() => {
+                      soundFx.playClick();
+                      if (onOpenAdminDashboard) {
+                        onClose();
+                        onOpenAdminDashboard();
+                      } else {
+                        window.open('/api/track.php', '_blank');
+                      }
+                    }}
+                    className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-cyan-500/10 to-slate-900 border border-amber-500/35 hover:border-amber-500/60 transition group cursor-pointer shadow-lg text-left"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
-                        <Crown className="w-5 h-5 text-amber-300" />
+                        <Crown className="w-5 h-5 text-amber-300 group-hover:scale-110 transition-transform" />
                       </div>
                       <div className="text-left">
                         <div className="text-xs font-black text-white flex items-center gap-2 flex-wrap">
-                          Tableau de Bord Analytics Administrateur
+                          Tableau de Bord Administrateur & Métriques
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                            Steam OpenID
+                            Souverain
                           </span>
                         </div>
                         <div className="text-[11px] text-slate-400 mt-0.5">
@@ -482,10 +493,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform shrink-0">
-                      <span className="hidden sm:inline">Accéder aux Stats</span>
+                      <span className="hidden sm:inline">Ouvrir le Tableau</span>
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </a>
+                  </button>
                 )}
 
                 {/* Avatar Selection Grid */}

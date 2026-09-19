@@ -29,6 +29,7 @@ import { ArcadeHallView } from './components/arcade/ArcadeHallView';
 import { ArcadeModal, type ArcadeGameId } from './components/arcade/ArcadeModal';
 import { TimeAttackHub } from './components/timeattack/TimeAttackHub';
 import { LeaderboardModal } from './components/common/LeaderboardModal';
+import { AdminDashboardModal } from './components/admin/AdminDashboardModal';
 import type { LeaderboardCategory } from './services/leaderboardService';
 import type { TimeAttackMode } from './types/timeAttack';
 import type { DailyGameMode } from './context/GameStatsContext';
@@ -114,6 +115,7 @@ export const AppContent: React.FC = () => {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [leaderboardCategory, setLeaderboardCategory] = useState<LeaderboardCategory>('arcade');
   const [leaderboardGame, setLeaderboardGame] = useState<string>('snake');
+  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState<boolean>(false);
 
   const handleOpenArcade = (gameId: ArcadeGameId = 'snake') => {
     setArcadeGame(gameId);
@@ -348,6 +350,7 @@ export const AppContent: React.FC = () => {
         onOpenProfile={() => setIsProfileOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         onOpenLeaderboard={() => handleOpenLeaderboard('arcade')}
+        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
         onEasterEggTrigger={() => setIsEasterEggOpen(true)}
         currentDate={currentDate}
       />
@@ -548,6 +551,7 @@ export const AppContent: React.FC = () => {
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
+        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
       />
 
       <AuthModal
@@ -573,6 +577,11 @@ export const AppContent: React.FC = () => {
         onClose={() => setIsLeaderboardOpen(false)}
         initialCategory={leaderboardCategory}
         initialGame={leaderboardGame}
+      />
+
+      <AdminDashboardModal
+        isOpen={isAdminDashboardOpen}
+        onClose={() => setIsAdminDashboardOpen(false)}
       />
 
       {/* Footer */}
