@@ -208,6 +208,12 @@ if ($method === 'POST') {
         $cleanNick = mb_substr($cleanNick, 0, 16, 'UTF-8');
     }
 
+    // Protection des pseudonymes réservés au créateur (Hibouxe & Edsaje)
+    $lowerNorm = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $cleanNick));
+    if (in_array($lowerNorm, ['hibouxe', 'edsaje'], true)) {
+        $cleanNick = 'Hibou Anonyme';
+    }
+
     if (!in_array($avatar, $validAvatars, true)) {
         $avatar = 'owl_wood';
     }

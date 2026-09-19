@@ -30,8 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $statsFile = __DIR__ . '/stats.json';
 $rateLimitFile = __DIR__ . '/track_rate_limits.json';
-$secretFile = __DIR__ . '/.secret';
-$adminPassFile = __DIR__ . '/.admin_pass';
+const ADMIN_STEAM_ID = '76561198035270542';
 
 // Génération d'octets aléatoires sécurisés
 function getSecureRandomBytes($length = 32) {
@@ -181,7 +180,7 @@ function detectDevice() {
 // -------------------------------------------------------------
 // 1. DASHBOARD & ADMINISTRATION (GET / FORMULAIRES DE LOGIN)
 // -------------------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] === 'GET' || isset($_POST['admin_login']) || isset($_POST['admin_setup'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (session_status() === PHP_SESSION_NONE) {
         @ini_set('session.cookie_httponly', 1);
         @session_start();
@@ -189,101 +188,154 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || isset($_POST['admin_login']) || isse
 
     // Déconnexion
     if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-        unset($_SESSION['admin_auth']);
+        unset($_SESSION['admin_auth'], $_SESSION['admin_steam_id']);
         @session_destroy();
         header('Location: track.php');
         exit;
     }
 
-    // A. PREMIER DÉMARRAGE : Aucun mot de passe configuré
-    if (!file_exists($adminPassFile)) {
-        $setupError = false;
-        if (isset($_POST['admin_setup'])) {
-            $p1 = trim($_POST['new_password'] ?? '');
-            $p2 = trim($_POST['confirm_password'] ?? '');
+    // A. RETOUR DU FLUX STEAM OPENID 2.0
+    $openidMode = $_GET['openid_mode'] ?? $_GET['openid.mode'] ?? '';
+    $claimedId = $_GET['openid_claimed_id'] ?? $_GET['openid.claimed_id'] ?? $_GET['openid_identity'] ?? $_GET['openid.identity'] ?? '';
 
-            if (strlen($p1) < 6) {
-                $setupError = 'Le mot de passe doit comporter au moins 6 caractères.';
-            } elseif ($p1 !== $p2) {
-                $setupError = 'Les deux mots de passe ne correspondent pas.';
-            } else {
-                $hash = securePasswordHash($p1);
-                @file_put_contents($adminPassFile, $hash, LOCK_EX);
-                $_SESSION['admin_auth'] = true;
-                header('Location: track.php');
-                exit;
+    if (!empty($openidMode) || !empty($claimedId)) {
+        $steamId = '';
+        if (preg_match('/^https?:\/\/steamcommunity\.com\/openid\/id\/(\d{17,25})$/', $claimedId, $matches)) {
+            $steamId = $matches[1];
+        }
+
+        // Validation OpenID 2.0 avec Valve
+        $isValidAssertion = false;
+        $validationParams = [
+            'openid.ns' => 'http://specs.openid.net/auth/2.0',
+            'openid.mode' => 'check_authentication',
+        ];
+
+        foreach ($_GET as $k => $v) {
+            if (strpos($k, 'openid_') === 0) {
+                $validationParams['openid.' . substr($k, 7)] = $v;
+            } elseif (strpos($k, 'openid.') === 0) {
+                $validationParams[$k] = $v;
+            }
+        }
+        $validationParams['openid.mode'] = 'check_authentication';
+
+        $postData = http_build_query($validationParams);
+        $ch = @curl_init('https://steamcommunity.com/openid/login');
+        if ($ch) {
+            @curl_setopt($ch, CURLOPT_POST, 1);
+            @curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            @curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+            @curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            $resp = @curl_exec($ch);
+            @curl_close($ch);
+            if ($resp && strpos($resp, 'is_valid:true') !== false) {
+                $isValidAssertion = true;
             }
         }
 
-        header('Content-Type: text/html; charset=utf-8');
-        ?>
-        <!DOCTYPE html>
-        <html lang="fr">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Premier Démarrage | Hoot Indie Games Analytics</title>
-            <style>
-                :root {
-                    --bg: #070b13;
-                    --card-bg: rgba(15, 23, 42, 0.85);
-                    --accent-amber: #f59e0b;
-                    --text: #f8fafc;
-                    --text-muted: #94a3b8;
-                    --border: rgba(245, 158, 11, 0.3);
-                }
-                * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-                body { background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
-                .login-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 2.5rem 2rem; max-width: 440px; width: 100%; text-align: center; backdrop-filter: blur(12px); box-shadow: 0 10px 35px rgba(0,0,0,0.6); }
-                h1 { color: var(--accent-amber); font-size: 1.6rem; margin-bottom: 0.6rem; }
-                p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.45; }
-                input[type="password"] { width: 100%; padding: 0.8rem 1rem; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 1rem; outline: none; transition: border-color 0.2s; }
-                input[type="password"]:focus { border-color: var(--accent-amber); box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
-                button { width: 100%; padding: 0.85rem; background: var(--accent-amber); color: #070b13; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
-                button:hover { background: #fbbf24; }
-                .error-msg { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.6rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; }
-                .note { font-size: 0.78rem; color: #64748b; margin-top: 1.2rem; }
-            </style>
-        </head>
-        <body>
-            <div class="login-card">
-                <h1>🦉 Premier Démarrage</h1>
-                <p>Définissez votre mot de passe administrateur pour verrouiller les statistiques de <strong>Hoot Indie Games</strong>. Il sera haché avec Bcrypt et stocké sur votre serveur privé.</p>
-                <?php if ($setupError): ?>
-                    <div class="error-msg"><?= htmlspecialchars($setupError) ?></div>
-                <?php endif; ?>
-                <form method="POST" action="track.php">
-                    <input type="hidden" name="admin_setup" value="1">
-                    <input type="password" name="new_password" placeholder="Nouveau mot de passe (min. 6 car.)" required autofocus>
-                    <input type="password" name="confirm_password" placeholder="Confirmer le mot de passe" required>
-                    <button type="submit">Enregistrer et Activer</button>
-                </form>
-                <div class="note">🔒 Aucun mot de passe en clair dans le code source Git.</div>
-            </div>
-        </body>
-        </html>
-        <?php
-        exit;
-    }
-
-    // B. CONNEXION SÉCURISÉE (Mot de passe déjà défini)
-    $storedHash = trim(@file_get_contents($adminPassFile));
-    $loginError = false;
-
-    if (isset($_POST['admin_login'])) {
-        $submittedPass = trim($_POST['password'] ?? '');
-        if (securePasswordVerify($submittedPass, $storedHash) || $submittedPass === $serverSecret) {
-            $_SESSION['admin_auth'] = true;
-        } else {
-            $loginError = 'Mot de passe incorrect.';
+        if (!$isValidAssertion) {
+            $opts = [
+                'http' => [
+                    'method' => 'POST',
+                    'header' => "Content-Type: application/x-www-form-urlencoded\r\nContent-Length: " . strlen($postData) . "\r\n",
+                    'content' => $postData,
+                    'timeout' => 6,
+                ],
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ]
+            ];
+            $ctx = @stream_context_create($opts);
+            $res = @file_get_contents('https://steamcommunity.com/openid/login', false, $ctx);
+            if ($res && strpos($res, 'is_valid:true') !== false) {
+                $isValidAssertion = true;
+            }
         }
-    } elseif (isset($_GET['key']) && ($_GET['key'] === $serverSecret || securePasswordVerify($_GET['key'], $storedHash))) {
-        $_SESSION['admin_auth'] = true;
+
+        // Vérification stricte du compte Administrateur
+        if ($steamId === ADMIN_STEAM_ID) {
+            $_SESSION['admin_auth'] = true;
+            $_SESSION['admin_steam_id'] = $steamId;
+            $_SESSION['admin_login_at'] = date('c');
+            header('Location: track.php');
+            exit;
+        } else {
+            // Refus strict pour tout autre compte Steam
+            http_response_code(403);
+            header('Content-Type: text/html; charset=utf-8');
+            ?>
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Accès Refusé | Hoot Indie Games Analytics</title>
+                <style>
+                    :root {
+                        --bg: #070b13;
+                        --card-bg: rgba(15, 23, 42, 0.9);
+                        --accent-red: #ef4444;
+                        --accent-amber: #f59e0b;
+                        --text: #f8fafc;
+                        --text-muted: #94a3b8;
+                        --border: rgba(239, 68, 68, 0.3);
+                    }
+                    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+                    body { background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+                    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem 2rem; max-width: 480px; width: 100%; text-align: center; backdrop-filter: blur(14px); box-shadow: 0 10px 40px rgba(0,0,0,0.7); }
+                    .icon { font-size: 3rem; margin-bottom: 1rem; }
+                    h1 { color: var(--accent-red); font-size: 1.6rem; margin-bottom: 0.6rem; }
+                    p { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.2rem; line-height: 1.5; }
+                    .steam-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 0.8rem; font-family: monospace; font-size: 0.85rem; color: #fca5a5; margin-bottom: 1.5rem; word-break: break-all; }
+                    .btn { display: inline-block; width: 100%; padding: 0.85rem; background: var(--accent-amber); color: #070b13; text-decoration: none; border-radius: 8px; font-weight: bold; margin-bottom: 0.75rem; transition: 0.2s; }
+                    .btn:hover { background: #fbbf24; }
+                    .btn-outline { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
+                    .btn-outline:hover { color: #fff; background: rgba(255,255,255,0.12); }
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <div class="icon">🛡️</div>
+                    <h1>Accès Non Autorisé</h1>
+                    <p>Ce compte Steam n'a pas les droits d'administration pour consulter les métriques de <strong>Hoot Indie Games</strong>.</p>
+                    <div class="steam-box">
+                        Votre Steam ID : <?= htmlspecialchars($steamId ?: 'Indéterminé') ?><br>
+                        Compte requis : <?= ADMIN_STEAM_ID ?>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #64748b;">Seul le compte administrateur officiel du créateur est habilité à consulter ce tableau de bord.</p>
+                    <a href="track.php?action=logout" class="btn">Réessayer avec le compte officiel</a>
+                    <a href="../index.html" class="btn btn-outline">← Retour à Hoot Indie Games</a>
+                </div>
+            </body>
+            </html>
+            <?php
+            exit;
+        }
     }
 
-    $isAuth = !empty($_SESSION['admin_auth']);
+    // B. VÉRIFICATION DE SESSION
+    $isAuth = !empty($_SESSION['admin_auth']) && (strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID);
 
     if (!$isAuth) {
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+        $protocol = $isHttps ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_HOST'];
+        $path = strtok($_SERVER['REQUEST_URI'], '?');
+        $returnTo = $protocol . $host . $path;
+        $realm = $protocol . $host;
+
+        $steamLoginUrl = 'https://steamcommunity.com/openid/login?' . http_build_query([
+            'openid.ns' => 'http://specs.openid.net/auth/2.0',
+            'openid.mode' => 'checkid_setup',
+            'openid.return_to' => $returnTo,
+            'openid.realm' => $realm,
+            'openid.identity' => 'http://specs.openid.net/auth/2.0/identifier_select',
+            'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
+        ]);
+
         header('Content-Type: text/html; charset=utf-8');
         ?>
         <!DOCTYPE html>
@@ -291,42 +343,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || isset($_POST['admin_login']) || isse
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Connexion Administrateur | Hoot Indie Games</title>
+            <title>Connexion Administrateur Steam | Hoot Indie Games</title>
             <style>
                 :root {
                     --bg: #070b13;
                     --card-bg: rgba(15, 23, 42, 0.85);
                     --accent-amber: #f59e0b;
+                    --accent-cyan: #06b6d4;
                     --text: #f8fafc;
                     --text-muted: #94a3b8;
                     --border: rgba(245, 158, 11, 0.25);
                 }
                 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-                body { background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
-                .login-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 2.5rem 2rem; max-width: 400px; width: 100%; text-align: center; backdrop-filter: blur(12px); box-shadow: 0 10px 35px rgba(0,0,0,0.6); }
-                h1 { color: var(--accent-amber); font-size: 1.5rem; margin-bottom: 0.5rem; }
-                p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
-                input[type="password"] { width: 100%; padding: 0.8rem 1rem; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem; margin-bottom: 1rem; outline: none; }
-                input[type="password"]:focus { border-color: var(--accent-amber); box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
-                button { width: 100%; padding: 0.85rem; background: var(--accent-amber); color: #070b13; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
-                button:hover { background: #fbbf24; }
-                .error-msg { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 0.6rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; }
-                .back-link { display: inline-block; margin-top: 1.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
+                body { background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.25rem; }
+                .login-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem 2rem; max-width: 440px; width: 100%; text-align: center; backdrop-filter: blur(14px); box-shadow: 0 12px 45px rgba(0,0,0,0.65); position: relative; overflow: hidden; }
+                .login-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #06b6d4); }
+                .logo-icon { font-size: 2.8rem; margin-bottom: 0.8rem; }
+                h1 { color: var(--accent-amber); font-size: 1.6rem; margin-bottom: 0.4rem; letter-spacing: -0.5px; }
+                .subtitle { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.5rem; line-height: 1.45; }
+                .badge-info { display: inline-flex; align-items: center; gap: 6px; background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.3); padding: 5px 12px; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; margin-bottom: 1.75rem; }
+                .btn-steam { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 0.95rem 1.25rem; background: linear-gradient(135deg, #171a21 0%, #1b2838 50%, #2a475e 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-size: 1rem; font-weight: 800; border: 1px solid rgba(102, 192, 244, 0.35); box-shadow: 0 4px 18px rgba(0,0,0,0.4); transition: all 0.25s ease; cursor: pointer; }
+                .btn-steam:hover { border-color: rgba(102, 192, 244, 0.8); box-shadow: 0 6px 24px rgba(27, 40, 56, 0.8), 0 0 15px rgba(102, 192, 244, 0.3); transform: translateY(-1px); color: #fff; }
+                .btn-steam svg { width: 22px; height: 22px; fill: currentColor; }
+                .note { font-size: 0.8rem; color: #64748b; margin-top: 1.5rem; line-height: 1.4; }
+                .back-link { display: inline-block; margin-top: 1.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
                 .back-link:hover { color: var(--accent-amber); }
             </style>
         </head>
         <body>
             <div class="login-card">
-                <h1>🦉 Hoot Analytics</h1>
-                <p>Espace réservé à l'administrateur du site.</p>
-                <?php if ($loginError): ?>
-                    <div class="error-msg"><?= htmlspecialchars($loginError) ?></div>
-                <?php endif; ?>
-                <form method="POST" action="track.php">
-                    <input type="hidden" name="admin_login" value="1">
-                    <input type="password" name="password" placeholder="Mot de passe d'accès" required autofocus>
-                    <button type="submit">Déverrouiller le Tableau de Bord</button>
-                </form>
+                <div class="logo-icon">🦉</div>
+                <h1>Hoot Analytics</h1>
+                <p class="subtitle">Espace d'administration et de métriques souveraines réservé au créateur du site.</p>
+                <div class="badge-info">
+                    👑 Accès exclusif Steam ID : <?= ADMIN_STEAM_ID ?>
+                </div>
+                <a href="<?= htmlspecialchars($steamLoginUrl) ?>" class="btn-steam">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 0 0-10 9.87c0 4.97 3.65 9.09 8.44 9.87l1.7-2.48a4.48 4.48 0 0 1-.68-.82l-2.9 1.18a3.02 3.02 0 0 1-3.66-2.14 3.02 3.02 0 0 1 2.14-3.66c1.37-.36 2.76.32 3.37 1.56l3.14-1.28a4.5 4.5 0 1 1 5.92 5.92l-2.48 1.7A10 10 0 0 0 22 12a10 10 0 0 0-10-10zm0 4.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm-4.7 9.85a1.52 1.52 0 0 0 1.93-1.07 1.52 1.52 0 0 0-1.07-1.93 1.52 1.52 0 0 0-1.93 1.07 1.52 1.52 0 0 0 1.07 1.93z"/></svg>
+                    <span>Se connecter avec Steam</span>
+                </a>
+                <p class="note">🔒 Authentification sécurisée Valve OpenID 2.0.<br>Aucun mot de passe requis.</p>
                 <a href="../index.html" class="back-link">← Retour à Hoot Indie Games</a>
             </div>
         </body>
@@ -452,6 +508,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || isset($_POST['admin_login']) || isse
                 <div>
                     <h1>🦉 Hoot Indie Games <span class="badge-sovereign">Télémétrie Souveraine</span></h1>
                     <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Analytics serveur 100% anonymisées, cookieless et conformes RGPD hébergées sur OVHcloud.</p>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.8rem; background: rgba(245, 158, 11, 0.12); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 12px; border-radius: 9999px;">
+                        👑 Administrateur Authentifié Steam : <strong><?= htmlspecialchars($_SESSION['admin_steam_id'] ?? ADMIN_STEAM_ID) ?></strong>
+                    </div>
                 </div>
                 <div class="actions-bar">
                     <button class="btn btn-outline" onclick="location.reload()">🔄 Actualiser</button>

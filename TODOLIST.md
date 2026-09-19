@@ -475,6 +475,22 @@
     - Intégré dans [`MiniGamesNav.tsx`](file:///src/components/minigames/MiniGamesNav.tsx) (compteur mis à jour à 11 mini-jeux) et [`MiniGamesHub.tsx`](file:///src/components/minigames/MiniGamesHub.tsx).
     - Support deep-link direct `#quiz` dans [`src/App.tsx`](file:///src/App.tsx).
     - Normalisation des identifiants dans [`reviewPuzzles.ts`](file:///src/data/reviewPuzzles.ts) et [`blindtestPuzzles.ts`](file:///src/data/blindtestPuzzles.ts) pour un couplage 100% parfait avec le catalogue de 147 jeux.
+- [x] **Privilèges Administrateur Steam (SteamID 76561198035270542), Verrouillage OpenID de Track.php & Unicité des Pseudos** :
+  - **Élévation Administrateur Officielle** :
+    - Détection automatique et permanente du Steam ID créateur `76561198035270542` dans [`UserAccountProvider.tsx`](file:///src/context/UserAccountProvider.tsx) et [`UserAccountContext.ts`](file:///src/context/UserAccountContext.ts).
+    - Attribution des drapeaux `role = 'admin'` et `isAdmin = true` avec badge royal 👑 dans la Navbar et le profil joueur.
+  - **Sécurisation Valve Steam OpenID de `/api/track.php` (Suppression Totale des Mots de Passe)** :
+    - Éradication complète de l'ancien système de mot de passe (`.admin_pass`) et des formulaires d'accès.
+    - Implémentation du protocole d'authentification Valve Steam OpenID 2.0 cryptographique.
+    - Contrôle strict : seul le compte Steam vérifié avec le SteamID `76561198035270542` est autorisé à déverrouiller le tableau de bord (rejet 403 Forbidden immédiat pour tout autre compte).
+    - Raccourci direct d'accès Analytics dans la [`Navbar.tsx`](file:///src/components/common/Navbar.tsx) et dans [`ProfileModal.tsx`](file:///src/components/common/ProfileModal.tsx).
+  - **Interdiction Stricte des Pseudonymes "Hibouxe" et "Edsaje"** :
+    - Normalisation anti-contournement (casse, accents, espaces, tirets) bloquant toute tentative d'usurpation des pseudos du créateur sur l'ensemble du site et des classements.
+    - Réservation exclusive accordée au compte administrateur officiel.
+  - **Système d'Unicité Globale des Pseudonymes Souverain** :
+    - Création du backend souverain [`public/api/usernames.php`](file:///public/api/usernames.php) avec stockage atomique `LOCK_EX` dans `registered_usernames.json` (hermétiquement protégé par `.htaccess`).
+    - Actions `check` (disponibilité temps réel) et `claim` (attribution unique par joueur).
+    - Utilitaires frontend [`src/utils/usernameValidation.ts`](file:///src/utils/usernameValidation.ts) intégrés dans [`ProfileModal.tsx`](file:///src/components/common/ProfileModal.tsx) et [`LeaderboardModal.tsx`](file:///src/components/common/LeaderboardModal.tsx) avec retour utilisateur clair.
 
 
 ---

@@ -23,6 +23,7 @@ import {
   Square,
   Library,
   Gamepad2,
+  Crown,
 } from 'lucide-react';
 import { SteamIcon } from './SteamIcon';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -32,6 +33,7 @@ import { parseAppIdsFromInput } from '../../services/steamService';
 import { INDIE_AVATARS } from '../../data/avatars';
 import type { IndieAvatarId } from '../../types/user';
 import { soundFx } from '../../utils/audio';
+import { ADMIN_STEAM_ID } from '../../utils/usernameValidation';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -42,6 +44,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
   const {
     profile,
     isAuthenticated,
+    isAdmin,
     setAvatar,
     setUsername,
     exportSaveData,
@@ -67,6 +70,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
   const [activeTab, setActiveTab] = useState<'profile' | 'steam' | 'cloud'>('profile');
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(profile.username);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [isCheckingName, setIsCheckingName] = useState(false);
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
@@ -103,10 +108,19 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
 
   const currentAvatar = INDIE_AVATARS.find((a) => a.id === profile.avatarId) || INDIE_AVATARS[0];
 
-  const handleSaveName = () => {
+  const handleSaveName = async () => {
     soundFx.playClick();
-    setUsername(nameInput);
-    setIsEditingName(false);
+    setNameError(null);
+    setIsCheckingName(true);
+    const res = await setUsername(nameInput);
+    setIsCheckingName(false);
+    if (res.success) {
+      soundFx.playVictory();
+      setIsEditingName(false);
+    } else {
+      soundFx.playError();
+      setNameError(res.error || 'Erreur lors du changement de pseudonyme.');
+    }
   };
 
   const handleExport = () => {
@@ -336,40 +350,83 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   </div>
 
                   <div className="flex-1 text-center sm:text-left">
-                    <div className="flex items-center justify-center sm:justify-start gap-2">
+                    <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
                       {isEditingName ? (
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="text"
-                            value={nameInput}
-                            onChange={(e) => setNameInput(e.target.value)}
-                            maxLength={24}
-                            className="px-2.5 py-1 bg-slate-900 border border-amber-500/50 rounded-lg text-white font-bold text-sm focus:outline-none"
-                            autoFocus
-                          />
-                          <button
-                            onClick={handleSaveName}
-                            className="p-1 rounded-lg bg-emerald-500 text-slate-950 hover:bg-emerald-400"
-                          >
-                            <Check className="w-4 h-4" />
-                          </button>
+                        <div className="flex flex-col gap-1.5 w-full max-w-xs">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={nameInput}
+                              onChange={(e) => {
+                                setNameInput(e.target.value);
+                                if (nameError) setNameError(null);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSaveName();
+                                if (e.key === 'Escape') {
+                                  setNameInput(profile.username);
+                                  setNameError(null);
+                                  setIsEditingName(false);
+                                }
+                              }}
+                              maxLength={24}
+                              disabled={isCheckingName}
+                              placeholder="Votre pseudonyme unique..."
+                              className="px-2.5 py-1 bg-slate-900 border border-amber-500/50 rounded-lg text-white font-bold text-sm focus:outline-none flex-1"
+                              autoFocus
+                            />
+                            <button
+                              onClick={handleSaveName}
+                              disabled={isCheckingName}
+                              className="p-1.5 rounded-lg bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition"
+                              title="Valider le pseudonyme"
+                            >
+                              {isCheckingName ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                            </button>
+                            <button
+                              onClick={() => {
+                                soundFx.playClick();
+                                setNameInput(profile.username);
+                                setNameError(null);
+                                setIsEditingName(false);
+                              }}
+                              className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition"
+                              title="Annuler"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                          {nameError && (
+                            <div className="flex items-start gap-1.5 text-[11px] font-semibold text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2.5 py-1.5 rounded-lg text-left">
+                              <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                              <span>{nameError}</span>
+                            </div>
+                          )}
                         </div>
                       ) : (
-                        <>
+                        <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
                           <h3 className="text-lg font-black text-white tracking-tight">
                             {profile.username}
                           </h3>
+                          {isAdmin && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                              <Crown className="w-3 h-3 text-amber-400" />
+                              Admin
+                            </span>
+                          )}
                           <button
                             onClick={() => {
                               soundFx.playClick();
                               setNameInput(profile.username);
+                              setNameError(null);
                               setIsEditingName(true);
                             }}
                             className="text-slate-400 hover:text-amber-400 transition-colors p-1"
+                            title="Modifier mon pseudonyme unique"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
-                        </>
+                        </div>
                       )}
                     </div>
                     <div className="inline-flex items-center gap-1 text-xs font-semibold text-amber-400 mt-0.5">
@@ -399,6 +456,37 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                     </div>
                   </div>
                 </div>
+
+                {/* Admin Quick Action Banner */}
+                {isAdmin && (
+                  <a
+                    href="/api/track.php"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-cyan-500/10 to-slate-900 border border-amber-500/35 hover:border-amber-500/60 transition group cursor-pointer shadow-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
+                        <Crown className="w-5 h-5 text-amber-300" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs font-black text-white flex items-center gap-2 flex-wrap">
+                          Tableau de Bord Analytics Administrateur
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            Steam OpenID
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-400 mt-0.5">
+                          Accès exclusif et direct réservé à votre Steam ID ({ADMIN_STEAM_ID})
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform shrink-0">
+                      <span className="hidden sm:inline">Accéder aux Stats</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </div>
+                  </a>
+                )}
 
                 {/* Avatar Selection Grid */}
                 <div>

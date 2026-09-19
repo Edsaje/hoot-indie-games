@@ -14,6 +14,7 @@ import {
   Flame,
   Puzzle,
   Trophy,
+  Crown,
 } from 'lucide-react';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
@@ -68,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { feathersCount, unlockAchievement } = useAchievements();
-  const { profile, isAuthenticated, isSteamConnected, steamAccount } = useUserAccount();
+  const { profile, isAuthenticated, isAdmin, isSteamConnected, steamAccount } = useUserAccount();
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
 
   const currentAvatar = INDIE_AVATARS.find((a) => a.id === profile.avatarId) || INDIE_AVATARS[0];
@@ -299,6 +300,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{i18n.language.startsWith('fr') ? 'FR' : 'EN'}</span>
             </button>
 
+            {/* Admin Dashboard Direct Shortcut */}
+            {isAdmin && (
+              <a
+                href="/api/track.php"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition flex items-center justify-center shrink-0 shadow-sm shadow-amber-500/10 cursor-pointer"
+                title="Tableau de Bord Analytics Administrateur (/api/track.php)"
+                aria-label="Admin Track Analytics"
+              >
+                <Crown className="w-4 h-4 text-amber-400" />
+              </a>
+            )}
+
             {/* Sign In / Sign Up Button OR Authenticated User Profile */}
             {!isAuthenticated ? (
               <button
@@ -335,8 +350,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   )}
                 </div>
-                <span className="hidden sm:inline text-xs font-bold text-white max-w-[85px] truncate">
+                <span className="hidden sm:inline text-xs font-bold text-white max-w-[95px] truncate flex items-center gap-1">
                   {profile.username}
+                  {isAdmin && <Crown className="w-3 h-3 text-amber-400 shrink-0 inline ml-0.5" />}
                 </span>
               </button>
             )}

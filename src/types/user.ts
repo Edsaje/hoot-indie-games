@@ -35,6 +35,8 @@ export interface UserProfile {
   title: string;
   createdAt: string;
   isCloudSynced: boolean;
+  isAdmin?: boolean;
+  role?: 'admin' | 'user';
   email?: string;
   steam?: SteamAccountInfo;
   versusStats: {

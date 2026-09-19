@@ -16,6 +16,7 @@ import {
   Globe,
   HelpCircle,
   Sparkles,
+  AlertCircle,
 } from 'lucide-react';
 import {
   fetchLeaderboard,
@@ -28,6 +29,8 @@ import {
   type LeaderboardCategory,
   type LeaderboardEntry,
 } from '../../services/leaderboardService';
+import { useUserAccount } from '../../context/useUserAccount';
+import { validateUsernameFormat, checkUsernameAvailability } from '../../utils/usernameValidation';
 import { soundFx } from '../../utils/audio';
 
 interface LeaderboardModalProps {
@@ -73,6 +76,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
+  const { profile } = useUserAccount();
 
   const [category, setCategory] = useState<LeaderboardCategory>(initialCategory);
   const [selectedGame, setSelectedGame] = useState<string>(
@@ -96,6 +100,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [nicknameInput, setNicknameInput] = useState<string>(nickname);
   const [avatarInput, setAvatarInput] = useState<string>(avatar);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [isCheckingProfile, setIsCheckingProfile] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Read local personal best for this game
@@ -188,9 +194,28 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     setPeriod(newPeriod);
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     soundFx.playClick();
+    setProfileError(null);
     const clean = nicknameInput.trim().slice(0, 16) || 'Hibou Anonyme';
+
+    const val = validateUsernameFormat(clean, profile.steam?.steamId);
+    if (!val.valid) {
+      soundFx.playError();
+      setProfileError(val.error || 'Pseudonyme non autorisé.');
+      return;
+    }
+
+    setIsCheckingProfile(true);
+    const avail = await checkUsernameAvailability(clean, profile.id, profile.steam?.steamId);
+    setIsCheckingProfile(false);
+
+    if (!avail.available) {
+      soundFx.playError();
+      setProfileError(avail.message || 'Ce pseudonyme est déjà utilisé par un autre joueur.');
+      return;
+    }
+
     setPlayerNickname(clean);
     setPlayerAvatar(avatarInput);
     setNicknameState(clean);
@@ -442,19 +467,34 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                   type="text"
                   maxLength={16}
                   value={nicknameInput}
-                  onChange={(e) => setNicknameInput(e.target.value)}
+                  onChange={(e) => {
+                    setNicknameInput(e.target.value);
+                    if (profileError) setProfileError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSaveProfile();
+                  }}
                   placeholder="Votre pseudo..."
+                  disabled={isCheckingProfile}
                   className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-white text-xs focus:outline-none focus:border-amber-500"
                 />
 
                 <button
                   onClick={handleSaveProfile}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition cursor-pointer"
+                  disabled={isCheckingProfile}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 disabled:opacity-50 transition cursor-pointer"
                 >
-                  <Check className="w-3.5 h-3.5" />
+                  {isCheckingProfile ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                   <span>OK</span>
                 </button>
               </div>
+
+              {profileError && (
+                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2.5 py-1.5 rounded-lg text-left">
+                  <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                  <span>{profileError}</span>
+                </div>
+              )}
 
               {/* Avatar Selector */}
               <div className="flex flex-wrap gap-1.5 pt-1">

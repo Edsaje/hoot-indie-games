@@ -4,10 +4,11 @@ import type { UserProfile, IndieAvatarId } from '../types/user';
 export interface UserAccountContextType {
   profile: UserProfile;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isSupabaseActive: boolean;
   updateProfile: (fields: Partial<UserProfile>) => void;
   setAvatar: (avatarId: IndieAvatarId) => void;
-  setUsername: (name: string) => void;
+  setUsername: (name: string) => Promise<{ success: boolean; error?: string }>;
   recordVersusResult: (won: boolean, opponentElo?: number) => void;
   exportSaveData: () => string;
   importSaveData: (jsonString: string) => { success: boolean; error?: string };

@@ -9,6 +9,11 @@ import {
   resolveSteamAccount,
   fetchSteamOwnedGames,
 } from '../services/steamService';
+import {
+  ADMIN_STEAM_ID,
+  validateUsernameFormat,
+  claimUsernameOnServer,
+} from '../utils/usernameValidation';
 import { UserAccountContext } from './UserAccountContext';
 
 const STORAGE_KEY = 'hoot_user_profile_v1';
@@ -103,6 +108,28 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
   }, []);
 
+  // Détection et élévation automatique du rôle Administrateur
+  const isAdmin = useMemo(() => {
+    return (
+      profile.steam?.steamId === ADMIN_STEAM_ID ||
+      profile.role === 'admin' ||
+      Boolean(profile.isAdmin)
+    );
+  }, [profile.steam?.steamId, profile.role, profile.isAdmin]);
+
+  // Synchronisation du statut admin dans le profil
+  useEffect(() => {
+    if (profile.steam?.steamId === ADMIN_STEAM_ID) {
+      if (!profile.isAdmin || profile.role !== 'admin') {
+        setProfile((prev) => ({
+          ...prev,
+          isAdmin: true,
+          role: 'admin',
+        }));
+      }
+    }
+  }, [profile.steam?.steamId, profile.isAdmin, profile.role]);
+
   const updateProfile = useCallback((fields: Partial<UserProfile>) => {
     setProfile((prev) => ({ ...prev, ...fields }));
   }, []);
@@ -111,12 +138,37 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     setProfile((prev) => ({ ...prev, avatarId }));
   }, []);
 
-  const setUsername = useCallback((username: string) => {
-    const trimmed = username.trim();
-    if (trimmed.length > 0) {
-      setProfile((prev) => ({ ...prev, username: trimmed }));
-    }
-  }, []);
+  const setUsername = useCallback(
+    async (username: string): Promise<{ success: boolean; error?: string }> => {
+      const trimmed = username.trim();
+      const formatCheck = validateUsernameFormat(trimmed, profile.steam?.steamId);
+      if (!formatCheck.valid) {
+        return { success: false, error: formatCheck.error };
+      }
+
+      // Réservation auprès de l'API d'unicité souveraine
+      const claimResult = await claimUsernameOnServer(trimmed, profile.id, profile.steam?.steamId);
+      if (!claimResult.success) {
+        return { success: false, error: claimResult.message };
+      }
+
+      const finalName = claimResult.username || trimmed;
+      setProfile((prev) => ({
+        ...prev,
+        username: finalName,
+        isAdmin: prev.steam?.steamId === ADMIN_STEAM_ID || prev.isAdmin,
+        role: prev.steam?.steamId === ADMIN_STEAM_ID ? 'admin' : prev.role,
+      }));
+
+      // Synchronisation avec le pseudonyme du classement
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('hoot_player_nickname', finalName);
+      }
+
+      return { success: true };
+    },
+    [profile.id, profile.steam?.steamId]
+  );
 
   const recordVersusResult = useCallback((won: boolean, opponentElo = 1000) => {
     setProfile((prev) => {
@@ -439,9 +491,12 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           apiKey: keyToUse,
         };
 
+        const isOfficialAdmin = details.steamId === ADMIN_STEAM_ID;
         setProfile((prev) => ({
           ...prev,
           steam: steamInfo,
+          isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+          role: isOfficialAdmin ? 'admin' : prev.role,
           username: prev.username === 'Hibou Mystère' ? details.personaName : prev.username,
         }));
         setIsAuthenticated(true);
@@ -547,6 +602,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         value={{
           profile,
           isAuthenticated: isUserLoggedIn,
+          isAdmin,
           isSupabaseActive: isSupabaseConfigured,
           updateProfile,
           setAvatar,
