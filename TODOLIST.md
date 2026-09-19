@@ -121,6 +121,26 @@
     - Base de données bilingue (FR/EN) massivement enrichie à **180 questions vérifiées** (0 hallucination) tirées au sort avec mélange dynamique des 4 propositions (Fisher-Yates).
     - Raccourcis clavier [1] [2] [3] [4] et [Espace], explications détaillées "Le Saviez-vous ?" et cartes interactives vers la fiche Steam officielle pour les 169 pépites associées.
     - Badges dynamiques synchronisés dans le Hub et la barre d'onglets (`180 Questions` / `180 Q.`).
+30. **Onglet Dédié "Catalogue" & Distanciation "Pépites" vs "Catalogue Étendu" (100% Déployé) :**
+    - Extraction du Catalogue Steam hors de la Boîte à Outils pour en faire un onglet principal de premier niveau dans la Navbar desktop et mobile (`#catalog`).
+    - Préservation stricte de l'onglet *"Pépites"* comme sanctuaire des 147 chefs-d'œuvre certifiés d'élite (>80% d'avis, OST, indices complets).
+    - L'onglet *"Catalogue"* accueille désormais l'ensemble des jeux indépendants (y compris émergents, expérimentaux ou avec des avis plus partagés), permettant aux joueurs d'explorer et de se forger leur propre avis.
+    - Base de données étendue portée à 192 jeux Steam authentiques (plus de 260 jeux indés jouables uniques au total).
+31. **Option pour Masquer les Jeux Steam Déjà Possédés :**
+    - Ajouter une bascule intuitive ou case à cocher explicite permettant aux joueurs ayant synchronisé leur compte Steam de masquer instantanément les jeux qu'ils possèdent déjà dans leur bibliothèque (sur l'onglet Catalogue et sur l'onglet Pépites).
+    - Objectif : Transformer la navigation en un outil puissant de découverte et de recommandation de nouveaux jeux indés à wishlister ou acheter.
+32. **Dynamisation Automatique de la Bannière "Catalogue Étendu de Jeux Indépendants" :**
+    - Remplacer toute valeur statique ou référence chiffrée en dur dans les bannières par des variables dynamiques réactives (`stats.totalGames`, `stats.steamCatalogCount`, `allPlayableGames.length`).
+    - Assurer que les compteurs reflètent toujours en temps réel le nombre exact de jeux moissonnés, sans besoin de mise à jour manuelle du code.
+33. **Amélioration Poussée de la Version Mobile du Site :**
+    - Audit d'ergonomie et polish sur smartphones (360px - 430px) : cibles tactiles confortables (min 44x44px), espacements resserrés, modales adaptatives et zéro débordement horizontal garanti.
+34. **Stratégie & Kit Marketing de Lancement (Streamers, LinkedIn, Réseaux Sociaux) :**
+    - Préparation des supports de communication pour faire connaître le sanctuaire :
+      - Messages d'approche types pour streamers Twitch et vidéastes YouTube gaming (format concis, angle divertissement "routine matinale / fin de live", duels 1v1 avec leur chat).
+      - Posts d'annonce professionnels pour LinkedIn (focus sur le défi technique, l'architecture souveraine WebRTC P2P sans serveur intermédiaire, portfolio créateur de Quentin Beaud / Hibouxe).
+      - Posts et visuels pour X / Twitter, Reddit (r/indiegames, r/webgames), TikTok / Shorts et serveurs Discord indés.
+35. **Refonte Finale de la Direction Artistique (DA) — Préalable Impératif avant Partage :**
+    - Finaliser la refonte visuelle globale (ambiance sylvestre et forêt nocturne poétique, finitions UI premium, harmonie des teintes émeraude/or, animations douces et identité forte du Hibou) **impérativement avant toute diffusion publique ou démarchage marketing**.
 
 ---
 
@@ -501,3 +521,53 @@
 - [ ] **Support Manette (Gamepad API)** pour naviguer et jouer dans la Salle d'Arcade.
 - [ ] **Filtre "Indés Francophones"** dans le catalogue de jeux.
 - [x] **Mode Blind Test Audio Indé** (reconnaître un jeu à sa musique culte — Synthétiseur Web Audio 100% hors-ligne & visualiseur spectral).
+
+---
+
+### 🚀 13. Prochaines Étapes Avant Lancement Public (DA, Mobile, Marketing & Expérience Steam)
+
+- [ ] **Refonte Finale de la Direction Artistique (DA) — Préalable Bloquant avant Partage** :
+  - **Préalable absolu** : La DA doit être impeccablement polie, cohérente et immersive sur 100% des pages avant d'engager le moindre partage public ou démarchage marketing.
+  - **Identité Visuelle Sylvestre & Organique** :
+    - Harmonisation complète de la palette de couleurs (tons ardoise profonde `#0b0f19`, vert mousse/émeraude `#064e3b` / `#059669`, accents ambrés/or `#f59e0b`).
+    - Intégration de textures et détails organiques discrets (feuillages subtils, lianes, brume légère, lucioles bioluminescentes optimisées).
+    - Polissage typographique et hiérarchie visuelle pour un rendu premium digne des meilleurs sanctuaires web du jeu vidéo indépendant.
+    - Élimination des derniers reliquats génériques ou éléments d'interface impersonnels.
+
+- [ ] **Option pour Masquer les Jeux Steam Déjà Possédés** :
+  - **Toggle / Filtre Dédié** :
+    - Ajouter une case à cocher / interrupteur rapide *"Cacher mes jeux possédés"* dans la barre de filtres du Catalogue Steam (`SteamCatalogExplorer.tsx`) et de l'Explorateur de Pépites (`GemExplorerHome.tsx`).
+    - Visible et activable dès que l'utilisateur est connecté à Steam (ou a synchronisé sa bibliothèque).
+    - Persistance du choix dans les préférences locales (`localStorage`) pour une expérience fluide d'une visite à l'autre.
+  - **Valorisation de la Découverte** :
+    - Compteur dynamique affichant le nombre de pépites restant à découvrir (ex: *"185 pépites inconnues dans votre bibliothèque"*).
+    - Raccourci direct vers les soldes Steam pour les jeux non possédés.
+
+- [ ] **Dynamisation Automatique des Chiffres de la Bannière Catalogue** :
+  - **Bannière d'en-tête du Catalogue Étendu (`SteamCatalogExplorer.tsx`)** :
+    - Lier les textes explicatifs et compteurs aux variables d'état réactives (`stats.steamCatalogCount`, `stats.totalGames`, `allPlayableGames.length`).
+    - Remplacer toute mention textuelle figée par une interpolation dynamique (ex: `Explorez notre répertoire de {stats.totalGames} jeux indépendants...`).
+  - **Bannière Découverte de l'onglet Pépites (`GemExplorerHome.tsx`)** :
+    - Lier également la pastille et le texte de redirection vers le catalogue avec le nombre exact de jeux calculé en temps réel.
+
+- [ ] **Perfectionnement Ergonomique de la Version Mobile (Règle Mobile-First)** :
+  - **Audit Format Smartphone (360px - 430px)** :
+    - Vérification systématique sur écrans étroits : Navbar à 6 onglets (scroll fluide et pastilles compactes), Hub des mini-jeux, grilles du catalogue.
+    - Cibles tactiles d'au moins 44x44px pour un confort de jeu au pouce sans fausse manipulation.
+    - Raccourcissement des espacements verticaux pour rendre le contenu immédiatement accessible sans scroll excessif.
+    - Adaptation des modales et fenêtres de jeu avec fermeture aisée à une main (`max-h-[92vh] overflow-y-auto`).
+    - Zéro débordement horizontal (`overflow-x: hidden`) rigoureusement garanti sur tous les navigateurs mobiles (iOS Safari, Android Chrome).
+
+- [ ] **Kit Marketing & Outbound (Streamers, LinkedIn, Réseaux Sociaux)** :
+  - **Messages d'Approche pour Streamers Twitch & Créateurs YouTube** :
+    - Rédaction de templates de messages personnalisés, courts et percutants (pitch en 3 lignes, angle "défi du jour en début/fin de live", proposition de duel 1v1 avec leur chat).
+    - Ciblage des créateurs friands de jeux indés et de devinettes quotidiennes (formats type Wordle/Framed/Gamedle).
+  - **Publications d'Annonce LinkedIn** :
+    - Post d'annonce orienté tech, craft et entrepreneuriat créatif : genèse du projet par Quentin Beaud (@Hibouxe), choix d'architecture souveraine (WebRTC P2P sans latence, Web Audio API procédural, PHP atomique, React 19).
+    - Mise en avant des apprentissages et du portfolio.
+  - **Posts Réseaux Sociaux (Twitter/X, Reddit, Discord, TikTok/Shorts)** :
+    - R/indiegames et r/webgames : présentation sincère axée sur la communauté et la mise en lumière de pépites méconnues.
+    - Formats courts vidéo (TikTok / YouTube Shorts / Reels) montrant un extrait de gameplay Screenle ou Blind Test en 15 secondes.
+  - **Guide & Modèles Complets** : Consulter le kit complet prêt à l'emploi dans [`MARKETING_AND_OUTREACH.md`](file:///MARKETING_AND_OUTREACH.md).
+
+
