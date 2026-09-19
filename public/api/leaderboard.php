@@ -30,7 +30,7 @@ $rateLimitFile = __DIR__ . '/leaderboard_ratelimit.json';
 // Whitelist des catégories et jeux autorisés
 $validCategories = [
     'arcade' => ['snake', 'pong', 'breakout', 'flappy', 'invaders', 'run', 'tetris', 'vectrex'],
-    'timeattack' => ['screenle', 'indledle', 'linkle', 'profille']
+    'timeattack' => ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest']
 ];
 
 // Whitelist des avatars

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Swords,
   Users,
@@ -22,11 +22,24 @@ import {
   ArrowRight,
   User,
   LogOut,
+  Camera,
+  Sliders,
+  MessageSquareQuote,
+  Music,
+  Calendar,
+  Target,
+  FileSearch,
+  Dices,
+  Disc,
+  Play,
+  Pause,
+  ThumbsUp,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Peer, type DataConnection } from 'peerjs';
 import { INDIE_GAMES } from '../../data/games';
 import type { Game } from '../../types/game';
+import type { VersusDiscipline } from '../../types/versus';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useAchievements } from '../../context/useAchievements';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
@@ -34,6 +47,8 @@ import { INDIE_AVATARS } from '../../data/avatars';
 import { soundFx } from '../../utils/audio';
 import { telemetry } from '../../services/telemetry';
 import { SteamIcon } from '../common/SteamIcon';
+import { getRandomReviewPuzzle, type ReviewPuzzle } from '../../data/reviewPuzzles';
+import { getRandomBlindTestPuzzle, noteToFrequency, type BlindTestPuzzle } from '../../data/blindtestPuzzles';
 
 type VersusPhase = 'lobby' | 'waiting_friend' | 'queueing' | 'countdown' | 'playing' | 'round_end' | 'match_end';
 
@@ -67,6 +82,9 @@ interface PeerMessage {
   guessTitle?: string;
   gameTitle?: string;
   score?: number;
+  discipline?: VersusDiscipline;
+  choiceIds?: string[];
+  puzzleSeed?: string;
 }
 
 function generateRoomCode(): string {
@@ -283,6 +301,210 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
   const [lockoutRemaining, setLockoutRemaining] = useState<number>(0);
   const [searchFocused, setSearchFocused] = useState<boolean>(false);
 
+  // Multi-disciplines duel state
+  const [selectedDiscipline, setSelectedDiscipline] = useState<VersusDiscipline>('all');
+  const [currentRoundDiscipline, setCurrentRoundDiscipline] = useState<VersusDiscipline>('screenle');
+  const [currentRoundChoices, setCurrentRoundChoices] = useState<Game[]>([]);
+  const [currentReviewPuzzle, setCurrentReviewPuzzle] = useState<ReviewPuzzle | null>(null);
+  const [currentBlindTestPuzzle, setCurrentBlindTestPuzzle] = useState<BlindTestPuzzle | null>(null);
+
+  // Pixel Canvas Ref
+  const pixelCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Web Audio synth for Versus Blind Test
+  const versusAudioCtxRef = useRef<AudioContext | null>(null);
+  const versusActiveNodesRef = useRef<{ stop: () => void }[]>([]);
+  const versusAudioTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const versusAnimFrameRef = useRef<number | null>(null);
+  const versusAnalyserRef = useRef<AnalyserNode | null>(null);
+  const [isVersusAudioPlaying, setIsVersusAudioPlaying] = useState<boolean>(false);
+  const [versusFrequencies, setVersusFrequencies] = useState<number[]>(new Array(12).fill(0));
+
+  // Arrêt propre du son synthétisé en duel
+  const stopVersusAudio = useCallback(() => {
+    if (versusAudioTimeoutRef.current) {
+      clearTimeout(versusAudioTimeoutRef.current);
+      versusAudioTimeoutRef.current = null;
+    }
+    if (versusAnimFrameRef.current) {
+      cancelAnimationFrame(versusAnimFrameRef.current);
+      versusAnimFrameRef.current = null;
+    }
+    versusActiveNodesRef.current.forEach((n) => {
+      try {
+        n.stop();
+      } catch {
+        // Ignorer
+      }
+    });
+    versusActiveNodesRef.current = [];
+    setIsVersusAudioPlaying(false);
+    setVersusFrequencies(new Array(12).fill(0));
+  }, []);
+
+  // Lecture du Blind Test pour le Versus
+  const playVersusAudio = useCallback((puzzle: BlindTestPuzzle) => {
+    stopVersusAudio();
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    if (!versusAudioCtxRef.current || versusAudioCtxRef.current.state === 'closed') {
+      versusAudioCtxRef.current = new AudioContextClass();
+    }
+    const ctx = versusAudioCtxRef.current;
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 64;
+    versusAnalyserRef.current = analyser;
+
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0.28, ctx.currentTime);
+    masterGain.connect(analyser);
+    analyser.connect(ctx.destination);
+
+    const startTime = ctx.currentTime + 0.05;
+    let noteTime = startTime;
+    const melody = puzzle.audioConfig.melody;
+    const instrument = puzzle.audioConfig.instrument;
+    const nodes: { stop: () => void }[] = [];
+    const playDuration = 5.0;
+
+    let noteIdx = 0;
+    while (noteTime < startTime + playDuration && melody.length > 0) {
+      const item = melody[noteIdx % melody.length];
+      const dur = item.duration;
+      const freq = noteToFrequency(item.note, item.octave);
+
+      const timeLeftSec = (startTime + playDuration) - noteTime;
+      if (timeLeftSec <= 0.02) break;
+
+      const effectiveDur = Math.min(dur, timeLeftSec);
+
+      if (freq > 0) {
+        const osc = ctx.createOscillator();
+        const noteGain = ctx.createGain();
+
+        if (instrument === 'chiptune') {
+          osc.type = 'square';
+        } else if (instrument === 'synth') {
+          osc.type = 'sawtooth';
+        } else if (instrument === 'piano' || instrument === 'guitar') {
+          osc.type = 'triangle';
+        } else {
+          osc.type = 'sine';
+        }
+
+        osc.frequency.setValueAtTime(freq, noteTime);
+
+        const attack = Math.min(0.04, effectiveDur * 0.2);
+        noteGain.gain.setValueAtTime(0.001, noteTime);
+        noteGain.gain.linearRampToValueAtTime(0.3, noteTime + attack);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, noteTime + effectiveDur);
+
+        osc.connect(noteGain);
+        noteGain.connect(masterGain);
+
+        osc.start(noteTime);
+        osc.stop(noteTime + effectiveDur);
+        nodes.push(osc);
+      }
+
+      noteTime += dur;
+      noteIdx++;
+    }
+
+    versusActiveNodesRef.current = nodes;
+    setIsVersusAudioPlaying(true);
+
+    const updateFreqs = () => {
+      if (!versusAnalyserRef.current) return;
+      const dataArray = new Uint8Array(versusAnalyserRef.current.frequencyBinCount);
+      versusAnalyserRef.current.getByteFrequencyData(dataArray);
+
+      const sampled: number[] = [];
+      const step = Math.max(1, Math.floor(dataArray.length / 12));
+      for (let i = 0; i < 12; i++) {
+        sampled.push(dataArray[i * step] || 0);
+      }
+      setVersusFrequencies(sampled);
+      versusAnimFrameRef.current = requestAnimationFrame(updateFreqs);
+    };
+    versusAnimFrameRef.current = requestAnimationFrame(updateFreqs);
+
+    versusAudioTimeoutRef.current = setTimeout(() => {
+      stopVersusAudio();
+    }, playDuration * 1000);
+  }, [stopVersusAudio]);
+
+  // Choix de la discipline de la manche
+  const pickRoundDiscipline = (roundNum: number): VersusDiscipline => {
+    if (selectedDiscipline !== 'all') {
+      return selectedDiscipline;
+    }
+    const order: VersusDiscipline[] = [
+      'screenle',
+      'pixel',
+      'review',
+      'blindtest',
+      'chrono',
+      'profille',
+      'indledle',
+      'linkle',
+    ];
+    return order[(roundNum - 1) % order.length];
+  };
+
+  // Génération des 4 choix (identiques pour les 2 joueurs via WebRTC)
+  const generateRoundChoices = (target: Game, pool: Game[]): Game[] => {
+    const decoys = pool
+      .filter((g) => g.id !== target.id)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    return [target, ...decoys].sort(() => Math.random() - 0.5);
+  };
+
+  // Rendu pixel dynamique sur canevas HTML5
+  const pixelResolution =
+    timerSeconds > 15 ? 8 : timerSeconds > 10 ? 16 : timerSeconds > 5 ? 28 : timerSeconds > 0 ? 54 : 120;
+
+  useEffect(() => {
+    if (currentRoundDiscipline !== 'pixel' || !pixelCanvasRef.current || !currentRoundGame) return;
+
+    const canvas = pixelCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = currentRoundGame.screenshots[0] || currentRoundGame.screenshots[5];
+    img.onload = () => {
+      canvas.width = 640;
+      canvas.height = 360;
+
+      if (phase === 'round_end' || phase === 'match_end') {
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        return;
+      }
+
+      const res = pixelResolution;
+      const offCanvas = document.createElement('canvas');
+      offCanvas.width = res;
+      offCanvas.height = Math.round(res * (img.naturalHeight / img.naturalWidth));
+      const offCtx = offCanvas.getContext('2d');
+      if (!offCtx) return;
+
+      offCtx.drawImage(img, 0, 0, offCanvas.width, offCanvas.height);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(offCanvas, 0, 0, offCanvas.width, offCanvas.height, 0, 0, canvas.width, canvas.height);
+    };
+  }, [currentRoundDiscipline, currentRoundGame, pixelResolution, phase]);
+
   // PeerJS refs
   const peerRef = useRef<Peer | null>(null);
   const connRef = useRef<DataConnection | null>(null);
@@ -330,9 +552,11 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     if (roundTimerRef.current) clearInterval(roundTimerRef.current);
     if (botTimerRef.current) clearTimeout(botTimerRef.current);
     if (lockoutTimerRef.current) clearInterval(lockoutTimerRef.current);
+    stopVersusAudio();
   };
 
   const cleanupP2P = () => {
+    stopVersusAudio();
     try {
       if (connRef.current) {
         connRef.current.close();
@@ -424,10 +648,29 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
       }
 
       case 'round_start': {
-        // L'invité reçoit le jeu exact du round
+        // L'invité reçoit le jeu exact du round, la discipline et les 4 choix
         if (msg.gameId) {
           const matched = gamePool.find((g) => g.id === msg.gameId) || gamePool[0];
           setCurrentRoundGame(matched);
+          const disc = msg.discipline || 'screenle';
+          setCurrentRoundDiscipline(disc);
+
+          if (msg.choiceIds && msg.choiceIds.length > 0) {
+            const choices = msg.choiceIds.map((id) => gamePool.find((g) => g.id === id) || matched);
+            setCurrentRoundChoices(choices);
+          } else {
+            setCurrentRoundChoices(generateRoundChoices(matched, gamePool));
+          }
+
+          if (disc === 'review') {
+            const pz = getRandomReviewPuzzle(msg.puzzleSeed || String(Date.now()));
+            setCurrentReviewPuzzle(pz);
+          } else if (disc === 'blindtest') {
+            const btp = getRandomBlindTestPuzzle(msg.puzzleSeed || String(Date.now()));
+            setCurrentBlindTestPuzzle(btp);
+            playVersusAudio(btp);
+          }
+
           beginRoundExecution(msg.roundNum || 1, playerScoreRef.current, opponentScoreRef.current);
         }
         break;
@@ -621,10 +864,33 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
         if (prev <= 1) {
           clearInterval(interval);
           if (isHostRef.current || opponent?.isBot) {
-            // L'hôte choisit le jeu initial et lance le round
+            // L'hôte choisit le jeu initial, la discipline et les 4 choix
+            const disc = pickRoundDiscipline(1);
             const game = pickRandomGame(gamePool);
+            const choices = generateRoundChoices(game, gamePool);
+            const seed = `${Date.now()}_${Math.random()}`;
+
             setCurrentRoundGame(game);
-            sendP2P({ type: 'round_start', gameId: game.id, roundNum: 1 });
+            setCurrentRoundDiscipline(disc);
+            setCurrentRoundChoices(choices);
+
+            if (disc === 'review') {
+              const pz = getRandomReviewPuzzle(seed);
+              setCurrentReviewPuzzle(pz);
+            } else if (disc === 'blindtest') {
+              const btp = getRandomBlindTestPuzzle(seed);
+              setCurrentBlindTestPuzzle(btp);
+              playVersusAudio(btp);
+            }
+
+            sendP2P({
+              type: 'round_start',
+              gameId: game.id,
+              roundNum: 1,
+              discipline: disc,
+              choiceIds: choices.map((c) => c.id),
+              puzzleSeed: seed,
+            });
             beginRoundExecution(1, 0, 0);
           }
           return 0;
@@ -764,9 +1030,32 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
       endMatch(pScore, oScore);
     } else {
       if (isHostRef.current || opponent?.isBot) {
+        const nextDisc = pickRoundDiscipline(roundNum + 1);
         const nextGame = pickRandomGame(gamePool);
+        const choices = generateRoundChoices(nextGame, gamePool);
+        const seed = `${Date.now()}_${Math.random()}`;
+
         setCurrentRoundGame(nextGame);
-        sendP2P({ type: 'round_start', gameId: nextGame.id, roundNum: roundNum + 1 });
+        setCurrentRoundDiscipline(nextDisc);
+        setCurrentRoundChoices(choices);
+
+        if (nextDisc === 'review') {
+          const pz = getRandomReviewPuzzle(seed);
+          setCurrentReviewPuzzle(pz);
+        } else if (nextDisc === 'blindtest') {
+          const btp = getRandomBlindTestPuzzle(seed);
+          setCurrentBlindTestPuzzle(btp);
+          playVersusAudio(btp);
+        }
+
+        sendP2P({
+          type: 'round_start',
+          gameId: nextGame.id,
+          roundNum: roundNum + 1,
+          discipline: nextDisc,
+          choiceIds: choices.map((c) => c.id),
+          puzzleSeed: seed,
+        });
         beginRoundExecution(roundNum + 1, pScore, oScore);
       }
     }
@@ -819,6 +1108,267 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
       return { filter: 'blur(4px)', transform: 'scale(1.2)' };
     }
     return { filter: 'blur(0px)', transform: 'scale(1)' };
+  };
+
+  const VERSUS_DISCIPLINES: { id: VersusDiscipline; label: string; icon: any; color: string; desc: string }[] = [
+    {
+      id: 'all',
+      label: 'Décathlon Indé (Mixte)',
+      icon: Dices,
+      color: 'from-amber-500 to-orange-600',
+      desc: 'Alterne les épreuves : Capture, Pixel, Critique Steam, Blind Test, Chronologie...',
+    },
+    {
+      id: 'screenle',
+      label: 'Capture d\'écran',
+      icon: Camera,
+      color: 'from-amber-500 to-amber-600',
+      desc: 'Dé-zoom & dé-floutage progressif d\'une capture',
+    },
+    {
+      id: 'pixel',
+      label: 'Pixel & Silhouette',
+      icon: Sliders,
+      color: 'from-rose-500 to-pink-600',
+      desc: 'Mosaïque pixellisée qui s\'affine seconde par seconde',
+    },
+    {
+      id: 'review',
+      label: 'Critique Steam',
+      icon: MessageSquareQuote,
+      color: 'from-cyan-500 to-blue-600',
+      desc: 'Avis Steam de joueurs authentiques caviardés (████)',
+    },
+    {
+      id: 'blindtest',
+      label: 'Blind Test OST',
+      icon: Music,
+      color: 'from-fuchsia-500 to-pink-600',
+      desc: 'Extrait sonore synthétisé en direct et visualiseur',
+    },
+    {
+      id: 'chrono',
+      label: 'Chronologie',
+      icon: Calendar,
+      color: 'from-orange-500 to-amber-600',
+      desc: 'Défis temporels : avant, après et millésimes cultes',
+    },
+    {
+      id: 'profille',
+      label: 'Profil Identité',
+      icon: FileSearch,
+      color: 'from-purple-500 to-indigo-600',
+      desc: 'Déduction par studio de dev, année et genre',
+    },
+    {
+      id: 'indledle',
+      label: 'Classic Indle',
+      icon: Target,
+      color: 'from-emerald-500 to-teal-600',
+      desc: 'Déduction progressive par attributs et moteur',
+    },
+    {
+      id: 'linkle',
+      label: 'Connexions',
+      icon: Sparkles,
+      color: 'from-sky-500 to-indigo-500',
+      desc: 'Repérez le lien commun ou complétez le groupe',
+    },
+  ];
+
+  const getDisciplineMeta = (disc: VersusDiscipline) => {
+    return VERSUS_DISCIPLINES.find((d) => d.id === disc) || VERSUS_DISCIPLINES[0];
+  };
+
+  // Raccourcis clavier (1, 2, 3, 4) pour buzzer instantanément sur les 4 choix
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (phase !== 'playing' || isLockedOut || searchFocused) return;
+
+      if (['1', '&'].includes(e.key) && currentRoundChoices[0]) {
+        e.preventDefault();
+        handlePlayerGuess(currentRoundChoices[0]);
+      } else if (['2', 'é'].includes(e.key) && currentRoundChoices[1]) {
+        e.preventDefault();
+        handlePlayerGuess(currentRoundChoices[1]);
+      } else if (['3', '"'].includes(e.key) && currentRoundChoices[2]) {
+        e.preventDefault();
+        handlePlayerGuess(currentRoundChoices[2]);
+      } else if (['4', "'"].includes(e.key) && currentRoundChoices[3]) {
+        e.preventDefault();
+        handlePlayerGuess(currentRoundChoices[3]);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [phase, isLockedOut, searchFocused, currentRoundChoices, handlePlayerGuess]);
+
+  const renderDisciplineChallenge = () => {
+    switch (currentRoundDiscipline) {
+      case 'pixel':
+        return (
+          <div className="relative w-full h-full flex items-center justify-center bg-slate-950">
+            <canvas ref={pixelCanvasRef} className="w-full h-full object-cover select-none pointer-events-none" />
+            <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-700/60 text-[11px] font-mono text-rose-400 font-bold flex items-center gap-1.5 pointer-events-none">
+              <Sliders className="w-3.5 h-3.5" />
+              <span>Mosaïque {pixelResolution}px</span>
+            </div>
+          </div>
+        );
+
+      case 'review':
+        return (
+          <div className="relative w-full h-full flex flex-col justify-center p-6 md:p-8 bg-slate-950 overflow-hidden select-none">
+            <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-800/80 mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold text-xs">
+                  {currentReviewPuzzle?.author?.charAt(0).toUpperCase() || 'P'}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">{currentReviewPuzzle?.author || 'Joueur Steam'}</div>
+                  <div className="text-[10px] text-slate-400">{currentReviewPuzzle?.hoursPlayed || 42} h enregistrées</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-medium">
+                <ThumbsUp className="w-3 h-3" />
+                <span>Recommandé</span>
+              </div>
+            </div>
+            <p className="text-sm sm:text-base md:text-lg text-slate-200 italic leading-relaxed">
+              "{phase === 'round_end'
+                ? (currentReviewPuzzle?.fullReviewFr || currentRoundGame.title)
+                : (currentReviewPuzzle?.redactedReviewFr || 'Critique Steam en cours de décodage...')}"
+            </p>
+          </div>
+        );
+
+      case 'blindtest':
+        return (
+          <div className="relative w-full h-full flex flex-col items-center justify-center p-6 bg-slate-950 overflow-hidden select-none">
+            <div className="relative mb-3">
+              <div
+                className={`w-20 h-20 rounded-full border-4 border-slate-700 bg-slate-900 flex items-center justify-center shadow-xl ${
+                  isVersusAudioPlaying ? 'animate-spin' : ''
+                }`}
+                style={{ animationDuration: '3s' }}
+              >
+                <div className="w-8 h-8 rounded-full bg-fuchsia-600/30 border border-fuchsia-500/40 flex items-center justify-center text-fuchsia-400">
+                  <Disc className="w-5 h-5" />
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (isVersusAudioPlaying) {
+                    stopVersusAudio();
+                  } else if (currentBlindTestPuzzle) {
+                    playVersusAudio(currentBlindTestPuzzle);
+                  }
+                }}
+                className="absolute -bottom-1 -right-1 p-2 rounded-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-lg transition active:scale-90 cursor-pointer"
+              >
+                {isVersusAudioPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+              </button>
+            </div>
+
+            <div className="text-center mb-3">
+              <div className="text-[10px] uppercase font-bold text-fuchsia-400 tracking-wider">
+                {currentBlindTestPuzzle?.audioConfig?.instrument || 'Synthétiseur'} • {currentBlindTestPuzzle?.audioConfig?.bpm || 120} BPM
+              </div>
+              <div className="text-xs font-semibold text-slate-300">
+                {isVersusAudioPlaying ? '🎵 Extrait OST en cours d\'écoute...' : 'Cliquez pour réécouter l\'extrait'}
+              </div>
+            </div>
+
+            {/* Spectre 12 barres */}
+            <div className="w-48 h-8 flex items-end justify-center gap-1">
+              {versusFrequencies.map((val, i) => {
+                const heightPercent = isVersusAudioPlaying ? Math.max(15, Math.round((val / 255) * 100)) : 12;
+                return (
+                  <div
+                    key={i}
+                    className="flex-1 bg-gradient-to-t from-fuchsia-600 to-pink-400 rounded-t-sm transition-all duration-75"
+                    style={{ height: `${heightPercent}%` }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        );
+
+      case 'chrono':
+        return (
+          <div className="relative w-full h-full flex flex-col justify-center items-center p-6 bg-slate-950 overflow-hidden text-center select-none">
+            <div className="w-12 h-12 rounded-2xl bg-orange-500/20 border border-orange-500/40 text-orange-400 flex items-center justify-center mb-2">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <div className="text-xs uppercase font-bold text-orange-400 tracking-wider mb-1">
+              Frise Chronologique Indé
+            </div>
+            <h4 className="text-base sm:text-lg font-black text-white max-w-md leading-snug mb-2">
+              Retrouvez l'année exacte de sortie ou son ordre chronologique !
+            </h4>
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 font-semibold text-slate-300">
+                Genre : {currentRoundGame.genre.slice(0, 2).join(', ')}
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 font-semibold text-slate-300">
+                Studio : {timerSeconds <= 12 ? currentRoundGame.developer : 'Dévoilé à 12s'}
+              </span>
+            </div>
+          </div>
+        );
+
+      case 'indledle':
+      case 'profille':
+      case 'linkle':
+        return (
+          <div className="relative w-full h-full flex flex-col justify-center items-center p-6 bg-slate-950 overflow-hidden text-center select-none">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center mb-2">
+              <Target className="w-6 h-6" />
+            </div>
+            <div className="text-xs uppercase font-bold text-indigo-400 tracking-wider mb-2">
+              Déduction d'Attributs &amp; Identité
+            </div>
+            <div className="grid grid-cols-2 gap-2 max-w-md w-full text-left">
+              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                <div className="text-[10px] text-slate-500 font-bold uppercase">Genre</div>
+                <div className="text-xs font-bold text-white truncate">{currentRoundGame.genre.join(', ')}</div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                <div className="text-[10px] text-slate-500 font-bold uppercase">Année</div>
+                <div className="text-xs font-bold text-amber-400">
+                  {timerSeconds <= 10 ? currentRoundGame.releaseYear : 'Débloqué à 10s'}
+                </div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                <div className="text-[10px] text-slate-500 font-bold uppercase">Développeur</div>
+                <div className="text-xs font-bold text-sky-400 truncate">
+                  {timerSeconds <= 14 ? currentRoundGame.developer : 'Débloqué à 14s'}
+                </div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                <div className="text-[10px] text-slate-500 font-bold uppercase">Direction Artistique</div>
+                <div className="text-xs font-bold text-emerald-400 truncate">
+                  {currentRoundGame.artStyle?.fr || 'Indé culte'}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'screenle':
+      default:
+        return (
+          <img
+            src={currentRoundGame.screenshots[0] || currentRoundGame.screenshots[5]}
+            alt="Indie Guess Challenge"
+            style={getVisualClueStyles()}
+            className="w-full h-full object-cover transition-all duration-700 select-none pointer-events-none"
+          />
+        );
+    }
   };
 
   return (
@@ -1164,6 +1714,59 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
             </div>
           </div>
 
+          {/* SÉLECTEUR DE DISCIPLINE DE DUEL */}
+          <div className="max-w-3xl mx-auto space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <Dices className="w-4 h-4 text-amber-400" />
+                <span>Discipline du Duel</span>
+              </span>
+              <span className="text-[11px] text-amber-400 font-bold">
+                {selectedDiscipline === 'all'
+                  ? 'Épreuves tournantes par manche'
+                  : `Manches 100% ${getDisciplineMeta(selectedDiscipline).label}`}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              {VERSUS_DISCIPLINES.map((disc) => {
+                const IconComponent = disc.icon;
+                const isSelected = selectedDiscipline === disc.id;
+                return (
+                  <button
+                    key={disc.id}
+                    type="button"
+                    onClick={() => {
+                      soundFx.playClick();
+                      setSelectedDiscipline(disc.id);
+                    }}
+                    className={`p-3 rounded-2xl border text-left transition-all active:scale-95 cursor-pointer relative overflow-hidden group ${
+                      isSelected
+                        ? 'bg-amber-500/15 border-amber-500/60 shadow-lg shadow-amber-500/10'
+                        : 'bg-[#131a29] border-[#1e293b] hover:border-slate-700 text-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 mb-1">
+                      <div
+                        className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                          isSelected ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400 group-hover:text-white'
+                        }`}
+                      >
+                        <IconComponent className="w-3.5 h-3.5" />
+                      </div>
+                      <span className={`text-xs font-black truncate ${isSelected ? 'text-white' : 'text-slate-200'}`}>
+                        {disc.label}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 line-clamp-1 leading-snug">
+                      {disc.desc}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Cartes des Modes */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* Mode 1: Duel Réel entre Amis (WebRTC P2P) */}
@@ -1414,37 +2017,47 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
             </div>
           </div>
 
-          {/* Zone de l'image de jeu */}
-          <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-[#1e293b] shadow-2xl flex items-center justify-center">
-            <img
-              src={currentRoundGame.screenshots[0] || currentRoundGame.screenshots[5]}
-              alt="Indie Guess Challenge"
-              style={getVisualClueStyles()}
-              className="w-full h-full object-cover transition-all duration-700 select-none pointer-events-none"
-            />
-
-            {/* Indices progressifs */}
-            <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-              <div className="px-3 py-1 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-700/60 text-xs font-semibold text-slate-300">
-                {timerSeconds <= 12 ? (
-                  <span>Genre : <strong className="text-amber-400">{currentRoundGame.genre.slice(0, 2).join(', ')}</strong></span>
-                ) : (
-                  <span className="text-slate-500 italic">Indice genre à 12s...</span>
-                )}
+          {/* Badge Discipline Active */}
+          <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-xs">
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">
+                {React.createElement(getDisciplineMeta(currentRoundDiscipline).icon, { className: 'w-3 h-3' })}
               </div>
-
-              <div className="px-3 py-1 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-700/60 text-xs font-semibold text-slate-300">
-                {timerSeconds <= 6 ? (
-                  <span>Année : <strong className="text-amber-400">{currentRoundGame.releaseYear}</strong></span>
-                ) : (
-                  <span className="text-slate-500 italic">Indice année à 6s...</span>
-                )}
-              </div>
+              <span className="text-white font-bold">{getDisciplineMeta(currentRoundDiscipline).label}</span>
             </div>
+            <div className="text-[11px] text-slate-400 font-medium">
+              {selectedDiscipline === 'all' ? 'Épreuve Tournante Mixte' : 'Duel Thématique'}
+            </div>
+          </div>
+
+          {/* Zone du défi de la discipline */}
+          <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-[#1e293b] shadow-2xl flex items-center justify-center">
+            {renderDisciplineChallenge()}
+
+            {/* Indices progressifs si discipline visuelle */}
+            {currentRoundDiscipline !== 'review' && currentRoundDiscipline !== 'blindtest' && (
+              <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+                <div className="px-3 py-1 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-700/60 text-xs font-semibold text-slate-300">
+                  {timerSeconds <= 12 ? (
+                    <span>Genre : <strong className="text-amber-400">{currentRoundGame.genre.slice(0, 2).join(', ')}</strong></span>
+                  ) : (
+                    <span className="text-slate-500 italic">Indice genre à 12s...</span>
+                  )}
+                </div>
+
+                <div className="px-3 py-1 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-700/60 text-xs font-semibold text-slate-300">
+                  {timerSeconds <= 6 ? (
+                    <span>Année : <strong className="text-amber-400">{currentRoundGame.releaseYear}</strong></span>
+                  ) : (
+                    <span className="text-slate-500 italic">Indice année à 6s...</span>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Bilan de fin de manche */}
             {phase === 'round_end' && (
-              <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-in fade-in">
+              <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-in fade-in z-20">
                 {roundWinner === 'player' && (
                   <>
                     <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 flex items-center justify-center mb-3">
@@ -1482,6 +2095,29 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
             )}
           </div>
 
+          {/* Les 4 Choix Buzzers Rapides (1-4) */}
+          {phase === 'playing' && currentRoundChoices.length > 0 && (
+            <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {currentRoundChoices.map((choice, idx) => (
+                  <button
+                    key={choice.id}
+                    disabled={isLockedOut}
+                    onClick={() => handlePlayerGuess(choice)}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-[#131a29] hover:bg-slate-800 border border-[#1e293b] hover:border-amber-500/50 text-left transition-all active:scale-98 disabled:opacity-40 cursor-pointer shadow-md group"
+                  >
+                    <span className="w-6 h-6 rounded-lg bg-slate-950 border border-slate-700 text-amber-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 group-hover:border-amber-500">
+                      {idx + 1}
+                    </span>
+                    <div className="flex-1 min-w-0 truncate font-semibold text-xs sm:text-sm text-white group-hover:text-amber-300">
+                      {choice.title}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Barre de devinette */}
           {phase === 'playing' && (
             <div className="relative" ref={searchContainerRef}>
@@ -1502,9 +2138,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
                         setSearchFocused(true);
                       }}
                       onFocus={() => setSearchFocused(true)}
-                      placeholder="Tapez le titre du jeu indé pour buzzer..."
+                      placeholder="Ou tapez n'importe quel titre du catalogue (94 pépites)..."
                       className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none font-medium"
-                      autoFocus
                     />
                   </div>
 

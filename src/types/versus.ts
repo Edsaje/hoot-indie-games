@@ -1,6 +1,17 @@
 import type { IndieAvatarId } from './user';
 import type { Game } from './game';
 
+export type VersusDiscipline =
+  | 'all'
+  | 'screenle'
+  | 'indledle'
+  | 'linkle'
+  | 'profille'
+  | 'chrono'
+  | 'pixel'
+  | 'review'
+  | 'blindtest';
+
 export interface VersusPlayer {
   id: string;
   username: string;
@@ -15,10 +26,12 @@ export interface VersusPlayer {
 
 export interface VersusRound {
   roundNumber: number;
+  discipline: VersusDiscipline;
   game: Game;
   zoomLevel: number;
   timerSeconds: number;
   winnerId?: string;
+  choices?: Game[];
 }
 
 export type VersusMatchStatus =

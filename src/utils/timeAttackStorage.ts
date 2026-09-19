@@ -7,6 +7,10 @@ const defaultStats: TimeAttackGlobalStats = {
   indledle: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
   linkle: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
   profille: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
+  chrono: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
+  pixel: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
+  review: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
+  blindtest: { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 },
 };
 
 export function getTimeAttackStats(): TimeAttackGlobalStats {
@@ -20,6 +24,10 @@ export function getTimeAttackStats(): TimeAttackGlobalStats {
       indledle: { ...defaultStats.indledle, ...parsed.indledle },
       linkle: { ...defaultStats.linkle, ...parsed.linkle },
       profille: { ...defaultStats.profille, ...parsed.profille },
+      chrono: { ...defaultStats.chrono, ...parsed.chrono },
+      pixel: { ...defaultStats.pixel, ...parsed.pixel },
+      review: { ...defaultStats.review, ...parsed.review },
+      blindtest: { ...defaultStats.blindtest, ...parsed.blindtest },
     };
   } catch {
     return defaultStats;

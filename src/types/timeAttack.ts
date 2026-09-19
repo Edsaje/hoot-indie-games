@@ -1,4 +1,12 @@
-export type TimeAttackMode = 'screenle' | 'indledle' | 'linkle' | 'profille';
+export type TimeAttackMode =
+  | 'screenle'
+  | 'indledle'
+  | 'linkle'
+  | 'profille'
+  | 'chrono'
+  | 'pixel'
+  | 'review'
+  | 'blindtest';
 
 export interface TimeAttackModeStats {
   highScore: number;
@@ -13,6 +21,10 @@ export interface TimeAttackGlobalStats {
   indledle: TimeAttackModeStats;
   linkle: TimeAttackModeStats;
   profille: TimeAttackModeStats;
+  chrono: TimeAttackModeStats;
+  pixel: TimeAttackModeStats;
+  review: TimeAttackModeStats;
+  blindtest: TimeAttackModeStats;
 }
 
 export interface TimeAttackRoundResult {

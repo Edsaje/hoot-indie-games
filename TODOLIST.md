@@ -60,8 +60,22 @@
     - Hub central des Mini-jeux avec statuts des défis du jour, accès direct aux 6 disciplines et sous-navigation par pilules réactive.
 21. **Réfléchir à de Nouveaux Jeux Indés :**
     - Conception et prototypage de nouveaux concepts originaux pour enrichir le hub des mini-jeux (ex: Blind Test OST/musique, Devdle/Studio Match, Tagdle, Silhouette/Pixel Quiz, Chrono-Timeline).
-22. **Mise à Jour Time Attack & Versus avec les Nouveaux Jeux :**
-    - Étendre les modes compétitifs (Time Attack et Versus 1v1) pour intégrer les mécaniques et questions de **Profille** (Sprint Profille : devinette express année/studio/genre) ainsi que les futurs nouveaux jeux.
+22. **Suite Complète Time Attack & Versus Duel pour les 8 Jeux Indés (100% Déployé) :**
+    - **Time Attack (8 Sprints 60s)** :
+      - *Screenle Sprint* (Reconnaissance visuelle sur captures)
+      - *Indledle Sprint* (Quiz express sur l'encyclopédie des pépites indés)
+      - *Linkle Sprint* (Connexions thématiques & intrus)
+      - *Profille Sprint* (Fiche d'identité express : studio, année, genre)
+      - *Chrono Sprint* (Frise temporelle, avant/après et millésimes)
+      - *Pixel Sprint* (Mosaïque 24px dé-pixellisée dynamiquement via `<canvas>`)
+      - *Review Sprint* (Critiques Steam authentiques caviardées `████` avec temps de jeu)
+      - *Blind Test Sprint* (Mélodies synthétisées en Web Audio avec visualiseur de fréquences)
+      - Raccourcis clavier ultra-réactifs [1] [2] [3] [4] et [Espace] pour passer, combos multiplicateurs, bonus de temps +3s et pénalités -5s, records et modales de partage.
+    - **Versus Arena 1v1 (P2P WebRTC Direct & Solo Bot IA)** :
+      - Sélecteur de discipline au lobby permettant de choisir un duel 100% dédié sur l'un des 8 jeux OU le prestigieux **Mode Décathlon Indé (Tournoi Mixte)** qui alterne les disciplines à chaque manche.
+      - Synchronisation WebRTC stricte (discipline, choix [1-4] identiques, puzzles et audio déterministes par graine).
+      - Rendu spécifique pour chaque discipline (toile pixel dynamique, carte critique Steam caviardée, platine vinyle avec synthétiseur et visualiseur sonore, frise chrono, cartes d'identité d'attributs).
+      - Système à double entrée : 4 boutons-buzzers rapides [1] [2] [3] [4] synchronisés avec le clavier ET barre d'autocomplétion instantanée sur les 94 pépites. Pénalité de blocage 3s en cas d'erreur.
 23. **Système de Leaderboard (Classement en Ligne) dans l'Arcade et les Mini-jeux :**
     - Développer un classement compétitif souverain (quotidien, hebdomadaire, all-time) pour :
       - Les 8 bornes de la Salle d'Arcade (High Scores avec pseudo, avatar, filtre amis).
