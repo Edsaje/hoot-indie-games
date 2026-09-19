@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 interface ChronoSprintProps {
   games: Game[];
   onBackToHub: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
 interface Question {
@@ -39,7 +40,7 @@ const STARTING_TIME = 60;
 const BONUS_TIME = 3;
 const PENALTY_TIME = 5;
 
-export const ChronoSprint: React.FC<ChronoSprintProps> = ({ games, onBackToHub }) => {
+export const ChronoSprint: React.FC<ChronoSprintProps> = ({ games, onBackToHub, onOpenLeaderboard }) => {
   const { i18n } = useTranslation();
   const isFr = i18n.language.startsWith('fr');
 
@@ -576,6 +577,19 @@ export const ChronoSprint: React.FC<ChronoSprintProps> = ({ games, onBackToHub }
               <RotateCcw className="w-4 h-4" />
               <span>{isFr ? 'Rejouer (Entrée)' : 'Play Again (Enter)'}</span>
             </button>
+
+            {onOpenLeaderboard && (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenLeaderboard();
+                }}
+                className="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-yellow-500/30 text-yellow-300 font-bold text-sm flex items-center gap-2 transition active:scale-95 cursor-pointer shadow-sm"
+              >
+                <Trophy className="w-4 h-4 text-yellow-400" />
+                <span>{isFr ? 'Classement' : 'Leaderboard'}</span>
+              </button>
+            )}
 
             <button
               onClick={() => setIsShareModalOpen(true)}

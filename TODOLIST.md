@@ -76,10 +76,14 @@
       - Synchronisation WebRTC stricte (discipline, choix [1-4] identiques, puzzles et audio déterministes par graine).
       - Rendu spécifique pour chaque discipline (toile pixel dynamique, carte critique Steam caviardée, platine vinyle avec synthétiseur et visualiseur sonore, frise chrono, cartes d'identité d'attributs).
       - Système à double entrée : 4 boutons-buzzers rapides [1] [2] [3] [4] synchronisés avec le clavier ET barre d'autocomplétion instantanée sur les 94 pépites. Pénalité de blocage 3s en cas d'erreur.
-23. **Système de Leaderboard (Classement en Ligne) dans l'Arcade et les Mini-jeux :**
-    - Développer un classement compétitif souverain (quotidien, hebdomadaire, all-time) pour :
-      - Les 8 bornes de la Salle d'Arcade (High Scores avec pseudo, avatar, filtre amis).
-      - Les mini-jeux quotidiens (Screenle, Indledle, Linkle, Profille) et les sprints Time Attack.
+23. **Système de Leaderboard (Classement en Ligne) dans l'Arcade, Time Attack et Quiz (100% Déployé) :**
+    - Classement compétitif souverain ultra-sécurisé avec API backend PHP (`public/api/leaderboard.php`) et persistance atomique `LOCK_EX` des Top 100 :
+      - **8 Bornes d'Arcade** : *Snake*, *Flappy Hibou*, *Course Sylvestre*, *Pong*, *Breakout*, *Tetris*, *Space Invaders*, *Mine Storm*.
+      - **8 Sprints Time Attack** : *Screenle*, *Indledle*, *Linkle*, *Profille*, *Chrono*, *Pixel*, *Review*, *Blind Test*.
+      - **3 Modes Quiz Indé** : *Standard (10 Questions)*, *Survie (3 Vies)*, *Entraînement Infini*.
+    - Double filtre temporel : 🌍 **Tous les temps (Global)** vs 📅 **Aujourd'hui (Quotidien)** pour un renouvellement permanent de la compétition.
+    - Publication directe en 1-clic du record personnel avec retour visuel animé (bannière de rang célébré, son de victoire, avatar personnalisé parmi 8 hiboux).
+    - Bouton direct "🏆 Classement" intégré sur tous les écrans de Game Over de chaque borne d'arcade, des 8 sprints Time Attack et du Quiz Indé.
 24. **Amélioration Continue de Track.php :**
     - Enrichir notre API d'analytics souveraine [`public/api/track.php`](file:///public/api/track.php) et son dashboard d'administration : statistiques détaillées de rétention des séries (streaks), temps moyen passé par jeu, répartition des victoires/défaites, détection d'erreurs en production, optimisation des performances de stockage JSON et exports CSV/JSON.
 25. **Amélioration Continue de la Version Mobile du Site (Règle Mobile-First Invariable) :**
@@ -396,12 +400,14 @@
     - Intégrer les questions Profille (développeur, année de sortie, genre) dans les manches de duel en direct WebRTC P2P.
     - Variantes de match configurables par l'hôte : Mode Classique (Titres seuls), Mode Profille (Studio / Année), ou Mode Hybride Aléatoire.
 - [x] **Système de Leaderboard (Classement en Ligne) & Graphique de Répartition Communautaire** :
-  - **Leaderboard Global Souverain (Arcade & Time Attack)** ([`src/components/common/LeaderboardModal.tsx`](file:///src/components/common/LeaderboardModal.tsx), [`public/api/leaderboard.php`](file:///public/api/leaderboard.php)) :
+  - **Leaderboard Global Souverain (Arcade, Time Attack & Quiz)** ([`src/components/common/LeaderboardModal.tsx`](file:///src/components/common/LeaderboardModal.tsx), [`public/api/leaderboard.php`](file:///public/api/leaderboard.php)) :
     - API PHP sécurisée avec rate limiting (30 req/min/IP), assainissement XSS strict (`strip_tags`, `htmlspecialchars`), liste blanche stricte des catégories et persistence atomique des Top 100 dans `leaderboard_data.json` avec verrou `LOCK_EX`.
+    - Double filtrage temporel par période : 🌍 **Global (Tous les temps)** et 📅 **Quotidien (Aujourd'hui)**.
     - Classement des 8 bornes Arcade (*Snake*, *Flappy Hibou*, *Course Sylvestre*, *Pong*, *Breakout*, *Tetris*, *Space Invaders*, *Mine Storm*).
-    - Classement des 4 sprints Time Attack (*Screenle Sprint*, *Indledle Sprint*, *Linkle Sprint*, *Profille Sprint*).
-    - Podium Top 3 médaillé (Or, Argent, Bronze), affichage du rang personnel du joueur, choix d'avatars hiboux exclusifs et personnalisation du pseudo avec publication en 1 clic des records locaux.
-    - Passerelles d'accès intégrées dans la barre de navigation principale (icône Trophée), dans l'en-tête de la Salle d'Arcade, sur l'écran de Game Over de chaque borne, et dans le Hub Time Attack.
+    - Classement des 8 sprints Time Attack (*Screenle*, *Indledle*, *Linkle*, *Profille*, *Chrono*, *Pixel*, *Review*, *Blind Test*).
+    - Classement des 3 modes Quiz Indé (*Standard 10 Q.*, *Survie 3 Vies*, *Entraînement Infini*).
+    - Podium Top 3 médaillé (Or, Argent, Bronze), affichage du rang personnel du joueur avec bannière festive animée, choix d'avatars hiboux exclusifs et personnalisation du pseudo avec publication en 1 clic des records locaux.
+    - Passerelles d'accès intégrées dans la barre de navigation principale (icône Trophée), dans l'en-tête de la Salle d'Arcade, sur l'écran de Game Over de chaque borne d'arcade, sur l'écran de Game Over des 8 sprints Time Attack, et sur l'écran de Game Over du Quiz Indé.
   - **Graphique de Répartition des Essais Communautaire (Daily Attempt Distribution)** ([`src/components/common/AttemptDistributionChart.tsx`](file:///src/components/common/AttemptDistributionChart.tsx), [`public/api/community_stats.php`](file:///public/api/community_stats.php)) :
     - Graphique en barres horizontales animées affiché immédiatement après la fin de chaque partie (victoire ou défaite) sur les 4 défis quotidiens (*Screenle*, *Indledle*, *Linkle*, *Profille*).
     - Calcul en temps réel de la moyenne d'essais de la communauté (ex: `🎯 Moyenne : 3.4 essais`), du total de joueurs du jour, et de l'insight de centile personnalisé (*"Vous avez fait mieux que X% des joueurs aujourd'hui !"*).

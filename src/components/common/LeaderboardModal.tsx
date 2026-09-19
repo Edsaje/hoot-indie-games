@@ -12,6 +12,10 @@ import {
   Gamepad2,
   Zap,
   Upload,
+  Calendar,
+  Globe,
+  HelpCircle,
+  Sparkles,
 } from 'lucide-react';
 import {
   fetchLeaderboard,
@@ -49,6 +53,16 @@ const TIME_ATTACK_LIST = [
   { id: 'indledle', label: 'Sprint Classic', icon: '📚' },
   { id: 'linkle', label: 'Sprint Connexions', icon: '✨' },
   { id: 'profille', label: 'Sprint Profil', icon: '🔍' },
+  { id: 'chrono', label: 'Sprint Chrono', icon: '⏳' },
+  { id: 'pixel', label: 'Sprint Pixel', icon: '🎨' },
+  { id: 'review', label: 'Sprint Critique', icon: '💬' },
+  { id: 'blindtest', label: 'Sprint Blind Test', icon: '🎵' },
+];
+
+const QUIZ_MODES_LIST = [
+  { id: 'standard', label: '10 Questions', icon: '🎯' },
+  { id: 'survival', label: 'Survie (3 Vies)', icon: '❤️' },
+  { id: 'infinite', label: 'Entraînement Infini', icon: '♾️' },
 ];
 
 export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
@@ -62,12 +76,19 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
   const [category, setCategory] = useState<LeaderboardCategory>(initialCategory);
   const [selectedGame, setSelectedGame] = useState<string>(
-    initialGame || (initialCategory === 'arcade' ? 'snake' : 'screenle')
+    initialGame ||
+      (initialCategory === 'arcade'
+        ? 'snake'
+        : initialCategory === 'quiz'
+        ? 'standard'
+        : 'screenle')
   );
+  const [period, setPeriod] = useState<'all' | 'daily'>('all');
 
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [totalEntries, setTotalEntries] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [publishedSuccessRank, setPublishedSuccessRank] = useState<number | null>(null);
 
   // Profile editing
   const [nickname, setNicknameState] = useState<string>(() => getPlayerNickname());
@@ -85,13 +106,22 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         localStorage.getItem(`hoot_arcade_hs_${selectedGame}`) ||
         localStorage.getItem(`arcade_high_${selectedGame}`);
       return v ? parseInt(v, 10) : 0;
-    } else {
+    } else if (category === 'timeattack') {
       try {
         const raw = localStorage.getItem('hoot_time_attack_stats_v1');
         if (raw) {
           const parsed = JSON.parse(raw);
           return parsed[selectedGame]?.highScore || 0;
         }
+      } catch {
+        // Ignore
+      }
+    } else if (category === 'quiz') {
+      try {
+        const specific = localStorage.getItem(`hoot_quiz_hs_${selectedGame}`);
+        if (specific) return parseInt(specific, 10);
+        const generic = localStorage.getItem('hoot_quiz_highscore');
+        return generic ? parseInt(generic, 10) : 0;
       } catch {
         // Ignore
       }
@@ -106,16 +136,27 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       if (initialGame) {
         setSelectedGame(initialGame);
       } else {
-        setSelectedGame(initialCategory === 'timeattack' ? 'screenle' : 'snake');
+        setSelectedGame(
+          initialCategory === 'arcade'
+            ? 'snake'
+            : initialCategory === 'quiz'
+            ? 'standard'
+            : 'screenle'
+        );
       }
       setNicknameState(getPlayerNickname());
       setAvatarState(getPlayerAvatar());
+      setPublishedSuccessRank(null);
     }
   }, [isOpen, initialCategory, initialGame]);
 
-  const loadScores = async (cat: LeaderboardCategory, gm: string) => {
+  const loadScores = async (
+    cat: LeaderboardCategory,
+    gm: string,
+    p: 'all' | 'daily' = period
+  ) => {
     setLoading(true);
-    const res = await fetchLeaderboard(cat, gm, 20);
+    const res = await fetchLeaderboard(cat, gm, 20, p);
     setEntries(res.leaderboard);
     setTotalEntries(res.totalEntries);
     setLoading(false);
@@ -123,20 +164,28 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      loadScores(category, selectedGame);
+      loadScores(category, selectedGame, period);
     }
-  }, [isOpen, category, selectedGame]);
+  }, [isOpen, category, selectedGame, period]);
 
   const handleCategoryChange = (cat: LeaderboardCategory) => {
     soundFx.playClick();
     setCategory(cat);
-    const defaultGame = cat === 'arcade' ? 'snake' : 'screenle';
+    setPublishedSuccessRank(null);
+    const defaultGame =
+      cat === 'arcade' ? 'snake' : cat === 'quiz' ? 'standard' : 'screenle';
     setSelectedGame(defaultGame);
   };
 
   const handleGameSelect = (gameId: string) => {
     soundFx.playClick();
     setSelectedGame(gameId);
+    setPublishedSuccessRank(null);
+  };
+
+  const handlePeriodChange = (newPeriod: 'all' | 'daily') => {
+    soundFx.playClick();
+    setPeriod(newPeriod);
   };
 
   const handleSaveProfile = () => {
@@ -155,11 +204,15 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     if (localHighScore <= 0 || isSubmitting) return;
     soundFx.playClick();
     setIsSubmitting(true);
+    setPublishedSuccessRank(null);
     try {
       const res = await submitLeaderboardScore(category, selectedGame, localHighScore, nickname, avatar);
       if (res.success) {
         soundFx.playChime();
-        await loadScores(category, selectedGame);
+        if (res.rank) {
+          setPublishedSuccessRank(res.rank);
+        }
+        await loadScores(category, selectedGame, period);
       }
     } finally {
       setIsSubmitting(false);
@@ -169,6 +222,12 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   if (!isOpen) return null;
 
   const currentAvatarInfo = AVATAR_OPTIONS.find((a) => a.id === avatar) || AVATAR_OPTIONS[0];
+  const currentGamesList =
+    category === 'arcade'
+      ? ARCADE_GAMES_LIST
+      : category === 'timeattack'
+      ? TIME_ATTACK_LIST
+      : QUIZ_MODES_LIST;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
@@ -183,14 +242,14 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Modal Header */}
-        <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#1e293b] shrink-0">
+        <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#1e293b] shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
               <Trophy className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
-                <span>{lang === 'fr' ? 'Classement Mondial' : 'Global Leaderboard'}</span>
+              <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                <span>{lang === 'fr' ? 'Classement en Ligne' : 'Online Leaderboard'}</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold uppercase tracking-wider">
                   Live
                 </span>
@@ -214,36 +273,79 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
           </button>
         </div>
 
-        {/* Main Category Tabs (Arcade vs Time Attack) */}
-        <div className="grid grid-cols-2 gap-2 my-3 p-1 rounded-2xl bg-[#0b0f19] border border-[#1e293b] shrink-0">
-          <button
-            onClick={() => handleCategoryChange('arcade')}
-            className={`flex items-center justify-center gap-2 py-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer ${
-              category === 'arcade'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Gamepad2 className="w-4 h-4" />
-            <span>{lang === 'fr' ? 'Bornes Arcade (8)' : 'Arcade Hall (8)'}</span>
-          </button>
+        {/* Category Tabs (Arcade vs Time Attack vs Quiz) & Period Toggle */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 my-2.5 shrink-0">
+          {/* 3 Categories */}
+          <div className="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-[#0b0f19] border border-[#1e293b] flex-1">
+            <button
+              onClick={() => handleCategoryChange('arcade')}
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                category === 'arcade'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Gamepad2 className="w-3.5 h-3.5" />
+              <span>{lang === 'fr' ? 'Arcade (8)' : 'Arcade (8)'}</span>
+            </button>
 
-          <button
-            onClick={() => handleCategoryChange('timeattack')}
-            className={`flex items-center justify-center gap-2 py-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer ${
-              category === 'timeattack'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Zap className="w-4 h-4" />
-            <span>{lang === 'fr' ? 'Time Attack (4)' : 'Time Attack (4)'}</span>
-          </button>
+            <button
+              onClick={() => handleCategoryChange('timeattack')}
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                category === 'timeattack'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>{lang === 'fr' ? 'Sprint 60s (8)' : 'Sprint 60s (8)'}</span>
+            </button>
+
+            <button
+              onClick={() => handleCategoryChange('quiz')}
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                category === 'quiz'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>{lang === 'fr' ? 'Quiz Indé (3)' : 'Indie Quiz (3)'}</span>
+            </button>
+          </div>
+
+          {/* Period Toggle : Global vs Daily */}
+          <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[#0b0f19] border border-[#1e293b] self-center sm:self-auto shrink-0">
+            <button
+              onClick={() => handlePeriodChange('all')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                period === 'all'
+                  ? 'bg-slate-800 text-amber-300 shadow-sm border border-amber-500/30'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title={lang === 'fr' ? 'Tous les records historiques' : 'All-time records'}
+            >
+              <Globe className="w-3 h-3 text-amber-400" />
+              <span>{lang === 'fr' ? 'Global' : 'All-Time'}</span>
+            </button>
+            <button
+              onClick={() => handlePeriodChange('daily')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                period === 'daily'
+                  ? 'bg-slate-800 text-amber-300 shadow-sm border border-amber-500/30'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title={lang === 'fr' ? "Records établis aujourd'hui" : "Today's records"}
+            >
+              <Calendar className="w-3 h-3 text-amber-400" />
+              <span>{lang === 'fr' ? 'Aujourd’hui' : 'Today'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Games Selector Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 shrink-0">
-          {(category === 'arcade' ? ARCADE_GAMES_LIST : TIME_ATTACK_LIST).map((g) => {
+          {currentGamesList.map((g) => {
             const isSelected = selectedGame === g.id;
             return (
               <button
@@ -261,6 +363,26 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             );
           })}
         </div>
+
+        {/* Success Alert if published */}
+        {publishedSuccessRank && (
+          <div className="my-1 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-between animate-in fade-in shrink-0">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
+              <span>
+                {lang === 'fr'
+                  ? `🎉 Félicitations ! Votre record est publié au Rang #${publishedSuccessRank} !`
+                  : `🎉 Congrats! Your score was published at Rank #${publishedSuccessRank}!`}
+              </span>
+            </div>
+            <button
+              onClick={() => setPublishedSuccessRank(null)}
+              className="text-emerald-400 hover:text-white cursor-pointer ml-2"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
         {/* Player Profile & Publishing Banner */}
         <div className="my-2 p-3 rounded-2xl bg-[#0b0f19] border border-[#1e293b] flex flex-wrap items-center justify-between gap-3 shrink-0 text-xs">

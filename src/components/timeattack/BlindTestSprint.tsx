@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 interface BlindTestSprintProps {
   games: Game[];
   onBackToHub: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
 interface Question {
@@ -45,7 +46,7 @@ const BONUS_TIME = 3;
 const PENALTY_TIME = 5;
 const CLIP_DURATION = 4.0; // 4 secondes d'extrait pour le sprint rapide
 
-export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackToHub }) => {
+export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackToHub, onOpenLeaderboard }) => {
   const { i18n } = useTranslation();
   const isFr = i18n.language.startsWith('fr');
 
@@ -706,18 +707,31 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
             </div>
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col sm:flex-row gap-2.5">
             <button
               onClick={startGame}
-              className="w-full py-3 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-fuchsia-600/20"
+              className="flex-1 py-3 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-fuchsia-600/20 active:scale-95 cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{isFr ? 'Rejouer un Sprint' : 'Play Again'}</span>
             </button>
 
+            {onOpenLeaderboard && (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenLeaderboard();
+                }}
+                className="py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-fuchsia-300 font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors border border-fuchsia-500/40 shadow-sm active:scale-95 cursor-pointer"
+              >
+                <Trophy className="w-4 h-4 text-fuchsia-400" />
+                <span>{isFr ? 'Classement' : 'Leaderboard'}</span>
+              </button>
+            )}
+
             <button
               onClick={() => setIsShareModalOpen(true)}
-              className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors border border-slate-700"
+              className="py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors border border-slate-700 active:scale-95 cursor-pointer"
             >
               <Share2 className="w-4 h-4 text-fuchsia-400" />
               <span>{isFr ? 'Partager le score' : 'Share Score'}</span>

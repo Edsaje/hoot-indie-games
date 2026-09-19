@@ -27,6 +27,7 @@ import { checkGenreMatch } from '../profille/ProfilleGame';
 interface ProfilleSprintProps {
   games: Game[];
   onBackToHub: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
 interface Question {
@@ -42,7 +43,7 @@ const STARTING_TIME = 60;
 const BONUS_TIME = 3;
 const PENALTY_TIME = 5;
 
-export const ProfilleSprint: React.FC<ProfilleSprintProps> = ({ games, onBackToHub }) => {
+export const ProfilleSprint: React.FC<ProfilleSprintProps> = ({ games, onBackToHub, onOpenLeaderboard }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
 
@@ -568,6 +569,19 @@ export const ProfilleSprint: React.FC<ProfilleSprintProps> = ({ games, onBackToH
               <RotateCcw className="w-4 h-4" />
               <span>{lang === 'fr' ? 'Rejouer (60s)' : 'Play Again (60s)'}</span>
             </button>
+
+            {onOpenLeaderboard && (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenLeaderboard();
+                }}
+                className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-purple-500/40 text-purple-300 font-bold text-sm flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer shadow-sm"
+              >
+                <Trophy className="w-4 h-4 text-purple-400" />
+                <span>{lang === 'fr' ? 'Classement' : 'Leaderboard'}</span>
+              </button>
+            )}
 
             <button
               onClick={() => {

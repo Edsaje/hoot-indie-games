@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Sparkles,
   Link2,
+  Trophy,
 } from 'lucide-react';
 import type { Game } from '../../types/game';
 import { soundFx } from '../../utils/audio';
@@ -22,6 +23,7 @@ import type { ShareCardData } from '../../utils/generateShareCard';
 interface LinkleSprintProps {
   games: Game[];
   onBackToHub: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
 interface Question {
@@ -36,7 +38,7 @@ const STARTING_TIME = 60;
 const BONUS_TIME = 3;
 const PENALTY_TIME = 5;
 
-export const LinkleSprint: React.FC<LinkleSprintProps> = ({ games, onBackToHub }) => {
+export const LinkleSprint: React.FC<LinkleSprintProps> = ({ games, onBackToHub, onOpenLeaderboard }) => {
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'gameover'>('idle');
   const [timeLeft, setTimeLeft] = useState<number>(STARTING_TIME);
   const [score, setScore] = useState<number>(0);
@@ -508,6 +510,19 @@ export const LinkleSprint: React.FC<LinkleSprintProps> = ({ games, onBackToHub }
               <RotateCcw className="w-4 h-4 stroke-[2.5]" />
               <span>Rejouer le Sprint</span>
             </button>
+
+            {onOpenLeaderboard && (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenLeaderboard();
+                }}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-amber-500/30 text-amber-300 font-bold text-sm transition active:scale-95 cursor-pointer shadow-sm"
+              >
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <span>Classement</span>
+              </button>
+            )}
 
             <button
               onClick={() => {

@@ -30,7 +30,8 @@ $rateLimitFile = __DIR__ . '/leaderboard_ratelimit.json';
 // Whitelist des catégories et jeux autorisés
 $validCategories = [
     'arcade' => ['snake', 'pong', 'breakout', 'flappy', 'invaders', 'run', 'tetris', 'vectrex'],
-    'timeattack' => ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest']
+    'timeattack' => ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'],
+    'quiz' => ['standard', 'survival', 'infinite']
 ];
 
 // Whitelist des avatars
@@ -87,18 +88,19 @@ function checkRateLimit($rateLimitFile, $ip) {
 // Chargement sécurisé de la base
 function loadLeaderboardData($dataFile) {
     if (!file_exists($dataFile)) {
-        return ['arcade' => [], 'timeattack' => []];
+        return ['arcade' => [], 'timeattack' => [], 'quiz' => []];
     }
     $content = @file_get_contents($dataFile);
     if (!$content) {
-        return ['arcade' => [], 'timeattack' => []];
+        return ['arcade' => [], 'timeattack' => [], 'quiz' => []];
     }
     $data = json_decode($content, true);
     if (!is_array($data)) {
-        return ['arcade' => [], 'timeattack' => []];
+        return ['arcade' => [], 'timeattack' => [], 'quiz' => []];
     }
     if (!isset($data['arcade'])) $data['arcade'] = [];
     if (!isset($data['timeattack'])) $data['timeattack'] = [];
+    if (!isset($data['quiz'])) $data['quiz'] = [];
     return $data;
 }
 
@@ -112,6 +114,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'GET') {
     $category = trim($_GET['category'] ?? 'arcade');
     $game = trim($_GET['game'] ?? 'snake');
+    $period = trim($_GET['period'] ?? 'all'); // 'all' | 'daily'
     $limit = isset($_GET['limit']) ? min(max(1, (int)$_GET['limit']), 50) : 10;
 
     if (!isset($validCategories[$category]) || !in_array($game, $validCategories[$category], true)) {
@@ -123,6 +126,14 @@ if ($method === 'GET') {
     $data = loadLeaderboardData($dataFile);
     $scores = $data[$category][$game] ?? [];
 
+    // Filtre période (Quotidien vs Tous les temps)
+    $today = date('Y-m-d');
+    if ($period === 'daily') {
+        $scores = array_values(array_filter($scores, function($s) use ($today) {
+            return ($s['date'] ?? '') === $today;
+        }));
+    }
+
     // Formatage avec rangs calculés
     $leaderboard = [];
     $rank = 1;
@@ -133,7 +144,7 @@ if ($method === 'GET') {
             'nickname' => $s['nickname'] ?? 'Hibou Anonyme',
             'score' => (int)($s['score'] ?? 0),
             'avatar' => $s['avatar'] ?? 'owl_wood',
-            'date' => $s['date'] ?? date('Y-m-d'),
+            'date' => $s['date'] ?? $today,
         ];
         if (count($leaderboard) >= $limit) break;
     }
@@ -142,6 +153,7 @@ if ($method === 'GET') {
         'status' => 'success',
         'category' => $category,
         'game' => $game,
+        'period' => $period,
         'totalEntries' => count($scores),
         'leaderboard' => $leaderboard,
     ]);

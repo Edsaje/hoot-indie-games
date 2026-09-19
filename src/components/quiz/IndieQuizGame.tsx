@@ -58,7 +58,11 @@ function prepareQuestion(q: QuizQuestion): ShuffledQuestion {
   };
 }
 
-export const IndieQuizGame: React.FC = () => {
+interface IndieQuizGameProps {
+  onOpenLeaderboard?: (mode?: QuizMode) => void;
+}
+
+export const IndieQuizGame: React.FC<IndieQuizGameProps> = ({ onOpenLeaderboard }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith('fr') ? 'fr' : 'en';
   const isFr = lang === 'fr';
@@ -160,6 +164,7 @@ export const IndieQuizGame: React.FC = () => {
         setHighScore(newScore);
         try {
           localStorage.setItem('hoot_quiz_highscore', newScore.toString());
+          localStorage.setItem(`hoot_quiz_hs_${mode}`, newScore.toString());
         } catch {
           // ignore
         }
@@ -598,19 +603,32 @@ export const IndieQuizGame: React.FC = () => {
             </div>
           </div>
 
-          {/* Actions : Rejouer ou Partager */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          {/* Actions : Rejouer, Classement ou Partager */}
+          <div className="flex flex-col sm:flex-row gap-2.5">
             <button
               onClick={() => startNewSession(mode, selectedCategory)}
               className="flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>{isFr ? '10 Nouvelles Questions' : '10 New Random Questions'}</span>
+              <span>{isFr ? 'Rejouer' : 'Play Again'}</span>
             </button>
+
+            {onOpenLeaderboard && (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenLeaderboard(mode);
+                }}
+                className="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-sm rounded-xl border border-amber-500/30 transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <span>{isFr ? 'Classement' : 'Leaderboard'}</span>
+              </button>
+            )}
 
             <button
               onClick={handleShareResult}
-              className="py-3 px-5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-700 transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              className="py-3 px-4 bg-slate-800/80 hover:bg-slate-700 text-white font-bold text-sm rounded-xl border border-slate-700 transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
               {copied ? (
                 <>

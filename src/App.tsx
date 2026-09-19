@@ -126,7 +126,9 @@ export const AppContent: React.FC = () => {
     if (gameId) {
       setLeaderboardGame(gameId);
     } else {
-      setLeaderboardGame(category === 'arcade' ? 'snake' : 'screenle');
+      setLeaderboardGame(
+        category === 'arcade' ? 'snake' : category === 'quiz' ? 'standard' : 'screenle'
+      );
     }
     setIsLeaderboardOpen(true);
   };
@@ -200,7 +202,7 @@ export const AppContent: React.FC = () => {
         setCurrentTab('roost');
       } else if (hash.startsWith('#leaderboard')) {
         const match = window.location.hash.match(/#leaderboard=([a-z]+)/);
-        if (match && ['arcade', 'timeattack'].includes(match[1])) {
+        if (match && ['arcade', 'timeattack', 'quiz'].includes(match[1])) {
           handleOpenLeaderboard(match[1] as LeaderboardCategory);
         } else {
           handleOpenLeaderboard('arcade');
@@ -499,7 +501,7 @@ export const AppContent: React.FC = () => {
               )}
 
               {activeMiniGame === 'quiz' && (
-                <IndieQuizGame />
+                <IndieQuizGame onOpenLeaderboard={(mode) => handleOpenLeaderboard('quiz', mode)} />
               )}
             </div>
           </div>

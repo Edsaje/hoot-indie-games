@@ -69,35 +69,83 @@ export const TimeAttackHub: React.FC<TimeAttackHubProps> = ({ initialMode, onOpe
 
   // If a specific mode is active, render that mode
   if (activeMode === 'screenle') {
-    return <ScreenleSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <ScreenleSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('screenle')}
+      />
+    );
   }
 
   if (activeMode === 'indledle') {
-    return <IndledleSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <IndledleSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('indledle')}
+      />
+    );
   }
 
   if (activeMode === 'linkle') {
-    return <LinkleSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <LinkleSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('linkle')}
+      />
+    );
   }
 
   if (activeMode === 'profille') {
-    return <ProfilleSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <ProfilleSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('profille')}
+      />
+    );
   }
 
   if (activeMode === 'chrono') {
-    return <ChronoSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <ChronoSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('chrono')}
+      />
+    );
   }
 
   if (activeMode === 'pixel') {
-    return <PixelSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <PixelSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('pixel')}
+      />
+    );
   }
 
   if (activeMode === 'review') {
-    return <ReviewSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <ReviewSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('review')}
+      />
+    );
   }
 
   if (activeMode === 'blindtest') {
-    return <BlindTestSprint games={allPlayableGames} onBackToHub={handleBackToHub} />;
+    return (
+      <BlindTestSprint
+        games={allPlayableGames}
+        onBackToHub={handleBackToHub}
+        onOpenLeaderboard={() => onOpenLeaderboard?.('blindtest')}
+      />
+    );
   }
 
   const totalAnswered =

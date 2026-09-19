@@ -6,7 +6,7 @@
  * Avec fallback local automatique et persistance offline garantie.
  */
 
-export type LeaderboardCategory = 'arcade' | 'timeattack';
+export type LeaderboardCategory = 'arcade' | 'timeattack' | 'quiz';
 
 export interface LeaderboardEntry {
   rank: number;
@@ -81,19 +81,23 @@ export function setPlayerAvatar(avatarId: string): void {
 }
 
 /**
- * Récupère le classement en ligne (Top 10 ou Top N) pour une borne d'arcade ou un sprint Time Attack
+ * Récupère le classement en ligne (Top 10 ou Top N) pour une borne d'arcade, un sprint Time Attack ou le Quiz
  */
 export async function fetchLeaderboard(
   category: LeaderboardCategory,
   game: string,
-  limit: number = 10
+  limit: number = 10,
+  period: 'all' | 'daily' = 'all'
 ): Promise<{ totalEntries: number; leaderboard: LeaderboardEntry[] }> {
   const currentNick = getPlayerNickname();
 
   try {
-    const res = await fetch(`/api/leaderboard.php?category=${category}&game=${game}&limit=${limit}`, {
-      headers: { Accept: 'application/json' },
-    });
+    const res = await fetch(
+      `/api/leaderboard.php?category=${category}&game=${game}&limit=${limit}&period=${period}`,
+      {
+        headers: { Accept: 'application/json' },
+      }
+    );
 
     if (res.ok) {
       const data = await res.json();
@@ -364,11 +368,19 @@ function getFallbackLeaderboard(
     run: [3120, 2850, 2600, 2340, 2100, 1850, 1620, 1450, 1280, 1100],
     tetris: [34500, 29800, 26400, 23100, 19800, 17200, 14500, 12800, 11200, 9500],
     vectrex: [5800, 5100, 4650, 4100, 3750, 3300, 2950, 2600, 2250, 1900],
-    // Time Attack
+    // Time Attack (8 Sprints)
     screenle: [2800, 2500, 2300, 2100, 1900, 1750, 1600, 1450, 1300, 1150],
     indledle: [2600, 2350, 2150, 1950, 1800, 1650, 1500, 1350, 1200, 1050],
     linkle: [2400, 2200, 2050, 1850, 1700, 1550, 1400, 1250, 1100, 950],
     profille: [2500, 2300, 2100, 1900, 1750, 1600, 1450, 1300, 1150, 1000],
+    chrono: [2700, 2400, 2200, 2000, 1800, 1650, 1500, 1350, 1200, 1050],
+    pixel: [2900, 2600, 2350, 2150, 1900, 1750, 1550, 1400, 1250, 1100],
+    review: [2650, 2400, 2150, 1950, 1750, 1600, 1450, 1300, 1150, 1000],
+    blindtest: [3200, 2850, 2550, 2250, 1950, 1750, 1550, 1350, 1200, 1050],
+    // Quiz Indé (3 Modes)
+    standard: [10, 10, 9, 9, 8, 8, 7, 7, 6, 5],
+    survival: [42, 36, 29, 24, 20, 17, 14, 11, 9, 7],
+    infinite: [85, 72, 63, 54, 46, 38, 32, 26, 21, 16],
   };
 
   const sampleNames = [
