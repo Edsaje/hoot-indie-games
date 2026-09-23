@@ -1,0 +1,1264 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Database,
+  Search,
+  ExternalLink,
+  PlusCircle,
+  X,
+  CheckCircle2,
+  Download,
+  Flame,
+  ChevronLeft,
+  ChevronRight,
+  Trash2,
+  Star,
+  RotateCcw,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
+import { useUserAccount } from '../../context/useUserAccount';
+import type { Game } from '../../types/game';
+import type { SteamCatalogGame } from '../../services/steamCatalog';
+import { soundFx } from '../../utils/audio';
+import { getSteamStoreData } from '../../data/steamStoreData';
+import { getAppIdFromSteamUrl } from '../../services/steamService';
+import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
+import { SteamIcon } from '../common/SteamIcon';
+import { ItchIcon } from '../common/ItchIcon';
+import { PaginationControls } from '../common/PaginationControls';
+import { getLocalizedText, getTranslatedGenre, getTranslatedArtStyle, getTranslatedCamera } from '../../utils/localization';
+import { inferCanonicalArtStyle, inferCanonicalCamera, inferEnrichedGenres } from '../../utils/gameInference';
+
+interface SteamCatalogExplorerProps {
+  onSelectGameForIndledle?: (game: Game) => void;
+}
+
+export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
+  onSelectGameForIndledle,
+}) => {
+  const { t, i18n } = useTranslation();
+  const { allPlayableGames, stats, addCustomGame, removeCustomGame } = useSteamCatalog();
+  const { isGameOwned, isSteamConnected, hideOwnedGames, setHideOwnedGames, connectSteamWithOpenId } = useUserAccount();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState<string>('all');
+  const [selectedArtStyle, setSelectedArtStyle] = useState<string>('all');
+  const [selectedCamera, setSelectedCamera] = useState<string>('all');
+  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned' | 'unowned'>(() => (hideOwnedGames ? 'unowned' : 'all'));
+
+  useEffect(() => {
+    if (hideOwnedGames) {
+      setOwnershipFilter('unowned');
+    }
+  }, [hideOwnedGames]);
+  const [priceFilter, setPriceFilter] = useState<'all' | 'sale' | 'free' | 'under10' | 'under20' | '20plus'>('all');
+  const [ratingFilter, setRatingFilter] = useState<
+    'all' | 'overwhelming' | 'very_positive' | 'positive' | 'mostly_positive' | 'mixed'
+  >('all');
+  const [storeFilter, setStoreFilter] = useState<'all' | 'itch'>('all');
+  const [sortBy, setSortBy] = useState<
+    | 'yearDesc'
+    | 'yearAsc'
+    | 'priceAsc'
+    | 'priceDesc'
+    | 'discountDesc'
+    | 'ratingDesc'
+    | 'reviewsCountDesc'
+    | 'titleAsc'
+    | 'titleDesc'
+  >('yearDesc');
+  const [selectedGameForModal, setSelectedGameForModal] = useState<Game | null>(null);
+  const [modalActiveScreenshot, setModalActiveScreenshot] = useState<number>(0);
+
+  // Formulaire de suggestion de pépite indé Steam
+  const [importInput, setImportInput] = useState('');
+  const [userComment, setUserComment] = useState('');
+  const [isImporting, setIsImporting] = useState(false);
+  const [importMessage, setImportMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Extraire les genres uniques triés par fréquence
+  const topGenres = useMemo(() => {
+    const entries = Object.entries(stats.genresCount);
+    entries.sort((a, b) => b[1] - a[1]);
+    return entries.slice(0, 14).map(([name]) => name);
+  }, [stats.genresCount]);
+
+  const ownedCount = useMemo(() => {
+    return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
+  }, [allPlayableGames, isGameOwned]);
+
+  const itchGamesCount = useMemo(() => {
+    return allPlayableGames.filter((g) => Boolean(g.itchUrl)).length;
+  }, [allPlayableGames]);
+
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (searchQuery.trim()) count++;
+    if (selectedGenre !== 'all') count++;
+    if (selectedArtStyle !== 'all') count++;
+    if (selectedCamera !== 'all') count++;
+    if (ownershipFilter !== 'all') count++;
+    if (priceFilter !== 'all') count++;
+    if (ratingFilter !== 'all') count++;
+    if (storeFilter !== 'all') count++;
+    if (sortBy !== 'yearDesc') count++;
+    return count;
+  }, [searchQuery, selectedGenre, selectedArtStyle, selectedCamera, ownershipFilter, priceFilter, ratingFilter, storeFilter, sortBy]);
+
+  const handleResetFilters = () => {
+    soundFx.playClick();
+    setSearchQuery('');
+    setSelectedGenre('all');
+    setSelectedArtStyle('all');
+    setSelectedCamera('all');
+    setOwnershipFilter('all');
+    setHideOwnedGames(false);
+    setPriceFilter('all');
+    setRatingFilter('all');
+    setStoreFilter('all');
+    setSortBy('yearDesc');
+  };
+
+  // Filtrage et tri avancé des jeux
+  const filteredGames = useMemo(() => {
+    let list = allPlayableGames.filter((game) => {
+      // Filtre possession Steam
+      if (ownershipFilter === 'owned' && !isGameOwned(game.steamUrl)) {
+        return false;
+      }
+      if (ownershipFilter === 'unowned' && isGameOwned(game.steamUrl)) {
+        return false;
+      }
+      // Filtre texte
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const match =
+          game.title.toLowerCase().includes(q) ||
+          game.developer.toLowerCase().includes(q) ||
+          game.genre.some((g) => g.toLowerCase().includes(q)) ||
+          Object.values(game.hints.tagline).some((val) => typeof val === 'string' && val.toLowerCase().includes(q));
+        if (!match) return false;
+      }
+
+      // Filtre genre
+      if (selectedGenre !== 'all' && !game.genre.includes(selectedGenre)) {
+        return false;
+      }
+
+      // Filtre ArtStyle
+      if (selectedArtStyle !== 'all' && game.artStyle.en !== selectedArtStyle) {
+        return false;
+      }
+
+      // Filtre Caméra
+      if (selectedCamera !== 'all' && game.camera.en !== selectedCamera) {
+        return false;
+      }
+
+      const appId = getAppIdFromSteamUrl(game.steamUrl);
+      const storeData = getSteamStoreData(appId);
+
+      // Filtre Prix & Soldes
+      if (priceFilter === 'sale') {
+        if (!storeData || storeData.discountPercent <= 0) return false;
+      } else if (priceFilter === 'free') {
+        const isFree = (storeData && (storeData.isFree || storeData.finalPriceCents === 0)) || (!game.steamUrl && Boolean(game.itchUrl));
+        if (!isFree) return false;
+      } else if (priceFilter === 'under10') {
+        if (!storeData || storeData.isFree || storeData.finalPriceCents <= 0 || storeData.finalPriceCents > 1000) {
+          return false;
+        }
+      } else if (priceFilter === 'under20') {
+        if (!storeData || storeData.isFree || storeData.finalPriceCents <= 0 || storeData.finalPriceCents > 2000) {
+          return false;
+        }
+      } else if (priceFilter === '20plus') {
+        if (!storeData || storeData.finalPriceCents <= 2000) return false;
+      }
+
+      // Filtre Avis
+      if (ratingFilter === 'overwhelming') {
+        if (!storeData || storeData.positivePercent < 95) return false;
+      } else if (ratingFilter === 'very_positive') {
+        if (!storeData || storeData.positivePercent < 85) return false;
+      } else if (ratingFilter === 'positive') {
+        if (!storeData || storeData.positivePercent < 80) return false;
+      } else if (ratingFilter === 'mostly_positive') {
+        if (!storeData || storeData.positivePercent < 70) return false;
+      } else if (ratingFilter === 'mixed') {
+        if (!storeData || storeData.positivePercent >= 70) return false;
+      }
+
+      // Filtre Store (Itch.io)
+      if (storeFilter === 'itch' && !game.itchUrl) {
+        return false;
+      }
+
+      return true;
+    });
+
+    list = [...list].sort((a, b) => {
+      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl));
+      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl));
+
+      switch (sortBy) {
+        case 'yearDesc':
+          return b.releaseYear !== a.releaseYear
+            ? b.releaseYear - a.releaseYear
+            : a.title.localeCompare(b.title);
+
+        case 'yearAsc':
+          return a.releaseYear !== b.releaseYear
+            ? a.releaseYear - b.releaseYear
+            : a.title.localeCompare(b.title);
+
+        case 'priceAsc': {
+          const priceA = storeA?.isFree ? 0 : (storeA?.finalPriceCents ?? 99999);
+          const priceB = storeB?.isFree ? 0 : (storeB?.finalPriceCents ?? 99999);
+          if (priceA !== priceB) return priceA - priceB;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'priceDesc': {
+          const priceA = storeA?.isFree ? 0 : (storeA?.finalPriceCents ?? 0);
+          const priceB = storeB?.isFree ? 0 : (storeB?.finalPriceCents ?? 0);
+          if (priceA !== priceB) return priceB - priceA;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'discountDesc': {
+          const discA = storeA?.discountPercent || 0;
+          const discB = storeB?.discountPercent || 0;
+          if (discB !== discA) return discB - discA;
+          return (storeB?.positivePercent || 0) - (storeA?.positivePercent || 0);
+        }
+
+        case 'ratingDesc': {
+          const rateA = storeA?.positivePercent || 0;
+          const rateB = storeB?.positivePercent || 0;
+          if (rateB !== rateA) return rateB - rateA;
+          return (storeB?.totalReviews || 0) - (storeA?.totalReviews || 0);
+        }
+
+        case 'reviewsCountDesc': {
+          const countA = storeA?.totalReviews || 0;
+          const countB = storeB?.totalReviews || 0;
+          if (countB !== countA) return countB - countA;
+          return a.title.localeCompare(b.title);
+        }
+
+        case 'titleDesc':
+          return b.title.localeCompare(a.title);
+
+        case 'titleAsc':
+        default:
+          return a.title.localeCompare(b.title);
+      }
+    });
+
+    return list;
+  }, [allPlayableGames, searchQuery, selectedGenre, selectedArtStyle, selectedCamera, ownershipFilter, priceFilter, ratingFilter, storeFilter, sortBy, isGameOwned]);
+
+  // Système de pagination (paramétrable par l'utilisateur, persistant dans localStorage)
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('hoot_items_per_page');
+      if (saved) {
+        const val = parseInt(saved, 10);
+        if ([-1, 12, 24, 48, 96].includes(val)) return val;
+      }
+    } catch {
+      // Ignore
+    }
+    return 24;
+  });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedGenre, selectedArtStyle, selectedCamera, ownershipFilter, priceFilter, ratingFilter, storeFilter, sortBy]);
+
+  const effectiveItemsPerPage = itemsPerPage === -1 ? Math.max(1, filteredGames.length) : itemsPerPage;
+  const totalPages = Math.max(1, Math.ceil(filteredGames.length / effectiveItemsPerPage));
+
+  const paginatedGames = useMemo(() => {
+    if (itemsPerPage === -1) {
+      return filteredGames;
+    }
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredGames.slice(start, start + itemsPerPage);
+  }, [filteredGames, currentPage, itemsPerPage]);
+
+  const handleItemsPerPageChange = (newCount: number) => {
+    soundFx.playClick();
+    setItemsPerPage(newCount);
+    try {
+      localStorage.setItem('hoot_items_per_page', String(newCount));
+    } catch {
+      // Ignore
+    }
+    if (newCount === -1) {
+      setCurrentPage(1);
+    } else {
+      const currentFirstIndex = (currentPage - 1) * (itemsPerPage === -1 ? filteredGames.length : itemsPerPage);
+      const targetPage = Math.max(1, Math.floor(currentFirstIndex / newCount) + 1);
+      setCurrentPage(targetPage);
+    }
+  };
+
+  // Import direct d'un jeu Steam par AppID ou URL
+  const handleDirectImport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!importInput.trim()) return;
+
+    soundFx.playClick();
+    setIsImporting(true);
+    setImportMessage(null);
+
+    // Extraction de l'AppID depuis l'URL ou le nombre
+    let appIdStr = importInput.trim();
+    const urlMatch = appIdStr.match(/\/app\/(\d+)/);
+    if (urlMatch) {
+      appIdStr = urlMatch[1];
+    }
+
+    const appId = parseInt(appIdStr, 10);
+    if (isNaN(appId) || appId <= 0) {
+      setIsImporting(false);
+      setImportMessage({
+        type: 'error',
+        text: 'Identifiant Steam invalide. Entrez un AppID numérique (ex: 1145360) ou une URL de magasin Steam.',
+      });
+      return;
+    }
+
+    // Vérifier si le jeu existe déjà
+    const existing = allPlayableGames.find(
+      (g) => (g as SteamCatalogGame).steamAppId === appId || g.steamUrl?.includes(String(appId))
+    );
+    if (existing) {
+      setIsImporting(false);
+      setImportMessage({
+        type: 'error',
+        text: `Ce jeu fait déjà partie du catalogue : "${existing.title}".`,
+      });
+      return;
+    }
+
+    try {
+      // Résolution souveraine via notre proxy backend PHP (sans restriction CORS)
+      let dataFR: any = null;
+      let dataEN: any = null;
+
+      try {
+        const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${appId}`);
+        if (lookupRes.ok) {
+          const lookupJson = await lookupRes.json();
+          if (lookupJson.status === 'success' && lookupJson.dataFR) {
+            dataFR = lookupJson.dataFR;
+            dataEN = lookupJson.dataEN || lookupJson.dataFR;
+          } else if (lookupJson.message) {
+            throw new Error(lookupJson.message);
+          }
+        } else if (lookupRes.status === 404 || lookupRes.status === 400 || lookupRes.status === 429) {
+          const errJson = await lookupRes.json().catch(() => null);
+          throw new Error(errJson?.message || 'Jeu non trouvé sur Steam ou soumis à des restrictions régionales.');
+        }
+      } catch (proxyErr: unknown) {
+        if (
+          proxyErr instanceof Error &&
+          !proxyErr.message.includes('fetch') &&
+          !proxyErr.message.includes('NetworkError') &&
+          !proxyErr.message.includes('Failed to')
+        ) {
+          throw proxyErr;
+        }
+      }
+
+      // Fallback résilient via proxy CORS si indisponibilité du backend local
+      if (!dataFR) {
+        try {
+          const corsUrlFR = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=french`)}`;
+          const corsUrlEN = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`)}`;
+          const [frRes, enRes] = await Promise.all([fetch(corsUrlFR), fetch(corsUrlEN)]);
+          const [frJson, enJson] = await Promise.all([frRes.json(), enRes.json()]);
+          dataFR = frJson?.[String(appId)]?.data;
+          dataEN = enJson?.[String(appId)]?.data || dataFR;
+        } catch {
+          // Si le fallback CORS échoue également
+        }
+      }
+
+      if (!dataFR || !dataFR.name) {
+        throw new Error('Jeu non trouvé sur Steam ou impossible de contacter les serveurs de Valve.');
+      }
+
+      const title = dataFR.name.trim();
+      const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const releaseYear = parseInt(dataFR.release_date?.date?.match(/\b(19\d\d|20\d\d)\b/)?.[1] || '2024', 10);
+      const developer = dataFR.developers?.[0] || 'Studio Indépendant';
+      const steamUrl = `https://store.steampowered.com/app/${appId}/`;
+      const headerImage = dataFR.header_image;
+
+      const screenshots: string[] = (dataFR.screenshots || [])
+        .map((s: { path_full: string }) => s.path_full)
+        .slice(0, 6);
+      while (screenshots.length < 6) {
+        screenshots.push(headerImage);
+      }
+
+      const taglineFR = (dataFR.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '');
+      const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '');
+
+      const fullDesc = `${title} ${dataFR.short_description || ''} ${dataEN?.short_description || ''} ${dataFR.detailed_description || ''}`;
+      const rawGenres = (dataFR.genres || []).map((g: { description: string }) => g.description);
+      const enrichedGenres = inferEnrichedGenres(rawGenres, fullDesc);
+      const artStyle = inferCanonicalArtStyle(fullDesc, enrichedGenres);
+      const camera = inferCanonicalCamera(fullDesc, enrichedGenres);
+
+      const newGame: SteamCatalogGame = {
+        id,
+        title,
+        releaseYear,
+        genre: enrichedGenres,
+        artStyle,
+        camera,
+        developer,
+        steamUrl,
+        screenshots,
+        hints: {
+          tagline: { fr: taglineFR, en: taglineEN },
+        },
+        steamAppId: appId,
+        headerImage,
+        isCustomImport: true,
+      };
+
+      addCustomGame(newGame);
+
+      // Transmission au backend pour modération administrative
+      try {
+        const backendRes = await fetch('/api/suggest_game.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            appId,
+            title,
+            developer,
+            releaseYear,
+            genres: enrichedGenres,
+            comment: userComment.trim(),
+          }),
+        });
+
+        if (backendRes.status === 409) {
+          const resJson = await backendRes.json();
+          soundFx.playVictory();
+          setImportMessage({
+            type: 'success',
+            text: resJson.message || `Ce jeu (« ${title} ») a déjà été proposé et est en cours d'examen par les veilleurs !`,
+          });
+          setImportInput('');
+          setUserComment('');
+          return;
+        }
+
+        if (backendRes.status === 429) {
+          const resJson = await backendRes.json();
+          soundFx.playError();
+          setImportMessage({
+            type: 'error',
+            text: resJson.message || 'Limite de suggestions atteinte pour le moment. Veuillez patienter quelques minutes.',
+          });
+          return;
+        }
+
+        if (backendRes.ok) {
+          const resJson = await backendRes.json();
+          soundFx.playVictory();
+          setImportMessage({
+            type: 'success',
+            text: resJson.message || `Merci ! Votre suggestion pour « ${title} » a été transmise aux veilleurs du Nichoir.`,
+          });
+          setImportInput('');
+          setUserComment('');
+          return;
+        }
+      } catch {
+        // En cas d'indisponibilité de l'API locale ou PHP hors-ligne
+      }
+
+      soundFx.playVictory();
+      setImportMessage({
+        type: 'success',
+        text: `Proposition enregistrée ! « ${title} » (${releaseYear}) a été transmis aux veilleurs et ajouté à votre session locale pour test.`,
+      });
+      setImportInput('');
+      setUserComment('');
+    } catch (err: unknown) {
+      soundFx.playError();
+      const errorMsg = err instanceof Error ? err.message : 'Erreur de connexion Steam.';
+      setImportMessage({
+        type: 'error',
+        text: `Échec de l'analyse : ${errorMsg}`,
+      });
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const handleOpenGameModal = (game: Game) => {
+    soundFx.playClick();
+    setSelectedGameForModal(game);
+    setModalActiveScreenshot(0);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedGameForModal(null);
+  };
+
+  useEffect(() => {
+    if (!selectedGameForModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleCloseModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedGameForModal]);
+
+  return (
+    <div className="w-full max-w-6xl mx-auto space-y-6">
+      {/* Top Banner Stats */}
+      <div className="group relative p-6 sm:p-8 bg-gradient-to-br from-[#093a2b] via-[#05261c] to-[#021711] border-2 border-[#78350f] rounded-3xl shadow-2xl overflow-visible">
+        <SylvestreIvyFrame density="medium" />
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">
+              <Database className="w-4 h-4 text-emerald-400" />
+              Alimentation API Steam • Données Officielles
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+              Catalogue Étendu de Jeux Indépendants
+            </h2>
+            <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Base de données massive synchronisée directement avec les métadonnées officielles de Steam (captures haute résolution, développeurs certifiés, taglines bilingues et genres canoniques).
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="px-4 py-3 bg-[#03140e] border border-[#0d543e] rounded-2xl text-center shadow-inner">
+              <div className="text-[10px] uppercase font-bold text-slate-400">Jeux Jouables</div>
+              <div className="text-2xl sm:text-3xl font-black text-amber-400 font-mono">
+                {stats.totalGames}
+              </div>
+            </div>
+            <div className="px-4 py-3 bg-[#03140e] border border-[#0d543e] rounded-2xl text-center shadow-inner">
+              <div className="text-[10px] uppercase font-bold text-slate-400">Catalogue Steam</div>
+              <div className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
+                {stats.steamCatalogCount}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Formulaire de Suggestion de Pépite Indé */}
+      <div className="group relative p-6 bg-gradient-to-br from-[#0d3f30]/80 via-[#07281e] to-[#03150f] border-2 border-amber-500/50 rounded-3xl shadow-xl overflow-visible">
+        <SylvestreIvyFrame density="delicate" />
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
+          <div>
+            <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
+              <PlusCircle className="w-4 h-4 text-amber-400" />
+              Suggérer une Pépite Indé pour le Catalogue Canonique
+            </h3>
+            <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Vous connaissez un chef-d'œuvre indépendant injustement méconnu disponible sur Steam ? Suggérez-le ! Chaque jeu proposé est examiné et certifié avec ses données officielles Steam avant d'être intégré au sanctuaire.
+            </p>
+          </div>
+          <span className="self-start px-2.5 py-1 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold shrink-0">
+            🦉 Examen des Veilleurs
+          </span>
+        </div>
+
+        <form onSubmit={handleDirectImport} className="space-y-2.5">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              value={importInput}
+              onChange={(e) => setImportInput(e.target.value)}
+              placeholder="URL de la page Steam Store ou AppID (ex: 1145360)..."
+              className="flex-1 px-4 py-2.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+            />
+            <button
+              type="submit"
+              disabled={isImporting || !importInput.trim()}
+              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-xs font-bold transition flex items-center justify-center gap-2 shrink-0 cursor-pointer shadow-md shadow-amber-500/20 active:scale-95"
+            >
+              <Download className="w-4 h-4" />
+              <span>{isImporting ? 'Examen Steam...' : 'Proposer cette pépite'}</span>
+            </button>
+          </div>
+
+          <input
+            type="text"
+            value={userComment}
+            onChange={(e) => setUserComment(e.target.value)}
+            placeholder="Pourquoi cette pépite mérite d'être mise en avant ? (direction artistique, musique, gameplay innovant... - facultatif)"
+            maxLength={300}
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-200 text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50"
+          />
+        </form>
+
+        {importMessage && (
+          <div
+            className={`mt-3 p-3 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+              importMessage.type === 'success'
+                ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-300'
+                : 'bg-rose-500/15 border border-rose-500/40 text-rose-300'
+            }`}
+          >
+            {importMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" /> : <X className="w-4 h-4 shrink-0 text-rose-400" />}
+            <span>{importMessage.text}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Barres de Recherche & Filtres */}
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {/* Recherche texte */}
+          <div className="relative sm:col-span-2 lg:col-span-2">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('catalog.searchPlaceholder')}
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Filtre Prix & Soldes */}
+          <select
+            value={priceFilter}
+            onChange={(e) => setPriceFilter(e.target.value as any)}
+            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="all">{t('catalog.allPrices')}</option>
+            <option value="sale" className="text-emerald-400 font-bold">{t('catalog.onSaleFilter')}</option>
+            <option value="free" className="text-cyan-300 font-bold">{t('catalog.freeFilter')}</option>
+            <option value="under10">{t('catalog.under10')}</option>
+            <option value="under20">{t('catalog.under20')}</option>
+            <option value="20plus">{t('catalog.twentyPlus')}</option>
+          </select>
+
+          {/* Filtre Avis Steam */}
+          <select
+            value={ratingFilter}
+            onChange={(e) => setRatingFilter(e.target.value as any)}
+            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="all">{t('catalog.allReviews')}</option>
+            <option value="overwhelming" className="text-amber-300 font-bold">{t('catalog.overwhelming')}</option>
+            <option value="very_positive">{t('catalog.veryPositive')}</option>
+            <option value="positive">{t('catalog.positive')}</option>
+            <option value="mostly_positive">{t('catalog.mostlyPositive')}</option>
+            <option value="mixed" className="text-amber-200">{t('catalog.mixed')}</option>
+          </select>
+
+          {/* Tri Avancé */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="px-3 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="yearDesc">{t('catalog.sortNewest')}</option>
+            <option value="yearAsc">{t('catalog.sortOldest')}</option>
+            <option value="discountDesc" className="text-emerald-400 font-bold">{t('catalog.sortDiscount')}</option>
+            <option value="priceAsc">{t('catalog.sortPriceAsc')}</option>
+            <option value="priceDesc">{t('catalog.sortPriceDesc')}</option>
+            <option value="ratingDesc" className="text-amber-300 font-bold">{t('catalog.sortRating')}</option>
+            <option value="reviewsCountDesc">{t('catalog.sortReviews')}</option>
+            <option value="titleAsc">{t('catalog.sortTitle')}</option>
+          </select>
+        </div>
+
+        {/* Ligne 2 : ArtStyle, Caméra & Possession */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Quick Pill: Hide Owned Games Toggle (Directive 31) */}
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              if (isSteamConnected || ownedCount > 0) {
+                const next = ownershipFilter !== 'unowned';
+                setHideOwnedGames(next);
+                setOwnershipFilter(next ? 'unowned' : 'all');
+              } else {
+                connectSteamWithOpenId();
+              }
+            }}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+              ownershipFilter === 'unowned' && (isSteamConnected || ownedCount > 0)
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 shadow-sm shadow-emerald-500/20'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-emerald-300 border-[#1e293b] hover:border-emerald-500/40'
+            }`}
+            title={
+              isSteamConnected || ownedCount > 0
+                ? (ownershipFilter === 'unowned' ? t('catalog.hideOwnedActive') : t('catalog.hideOwned'))
+                : t('catalog.connectSteamToHide')
+            }
+          >
+            {ownershipFilter === 'unowned' && (isSteamConnected || ownedCount > 0) ? (
+              <EyeOff className="w-3.5 h-3.5 text-emerald-400" />
+            ) : (
+              <Eye className="w-3.5 h-3.5 text-slate-400" />
+            )}
+            <span>
+              {ownershipFilter === 'unowned' && (isSteamConnected || ownedCount > 0)
+                ? t('catalog.hideOwnedActive')
+                : t('catalog.hideOwned')}
+              {isSteamConnected || ownedCount > 0 ? ` (${ownedCount})` : ''}
+            </span>
+            {!isSteamConnected && ownedCount === 0 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
+                <SteamIcon className="w-2.5 h-2.5" />
+                <span>Sync</span>
+              </span>
+            )}
+          </button>
+
+          {isSteamConnected && (
+            <select
+              value={ownershipFilter}
+              onChange={(e) => {
+                const val = e.target.value as 'all' | 'owned' | 'unowned';
+                setOwnershipFilter(val);
+                setHideOwnedGames(val === 'unowned');
+              }}
+              className="px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-cyan-500/40 text-cyan-300 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="all" className="bg-[#131a29] text-white">
+                {t('catalog.allGames', { count: allPlayableGames.length })}
+              </option>
+              <option value="owned" className="bg-[#131a29] text-cyan-400">
+                {t('catalog.inMyLibrary', { count: ownedCount })}
+              </option>
+              <option value="unowned" className="bg-[#131a29] text-emerald-400">
+                {t('catalog.toDiscover', { count: allPlayableGames.length - ownedCount })}
+              </option>
+            </select>
+          )}
+
+          {/* Filtre ArtStyle */}
+          <select
+            value={selectedArtStyle}
+            onChange={(e) => setSelectedArtStyle(e.target.value)}
+            className="px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="all">{t('catalog.allArtStyles')}</option>
+            <option value="Pixel Art">{getTranslatedArtStyle('Pixel Art', i18n.language)}</option>
+            <option value="2D Hand-drawn">{getTranslatedArtStyle('2D Hand-drawn', i18n.language)}</option>
+            <option value="Stylized 3D">{getTranslatedArtStyle('Stylized 3D', i18n.language)}</option>
+            <option value="Retro Low-poly 3D">{getTranslatedArtStyle('Retro Low-poly 3D', i18n.language)}</option>
+            <option value="Realistic 3D">{getTranslatedArtStyle('Realistic 3D', i18n.language)}</option>
+            <option value="Monochrome">{getTranslatedArtStyle('Monochrome', i18n.language)}</option>
+          </select>
+
+          {/* Filtre Caméra */}
+          <select
+            value={selectedCamera}
+            onChange={(e) => setSelectedCamera(e.target.value)}
+            className="px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-300 text-xs font-semibold focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="all">{t('catalog.allCameras')}</option>
+            <option value="2D Side-scroller">{getTranslatedCamera('2D Side-scroller', i18n.language)}</option>
+            <option value="2D Top-down">{getTranslatedCamera('2D Top-down', i18n.language)}</option>
+            <option value="Isometric / 2.5D">{getTranslatedCamera('Isometric / 2.5D', i18n.language)}</option>
+            <option value="First-Person">{getTranslatedCamera('First-Person', i18n.language)}</option>
+            <option value="Third-Person">{getTranslatedCamera('Third-Person', i18n.language)}</option>
+          </select>
+
+          {/* Quick pills */}
+          <button
+            type="button"
+            onClick={() => setPriceFilter(priceFilter === 'sale' ? 'all' : 'sale')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${
+              priceFilter === 'sale'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-emerald-300 border-[#1e293b]'
+            }`}
+          >
+            🏷️ {t('catalog.onSale')}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setPriceFilter(priceFilter === 'under10' ? 'all' : 'under10')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${
+              priceFilter === 'under10'
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/60'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b]'
+            }`}
+          >
+            💸 &lt; 10 €
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setRatingFilter(ratingFilter === 'overwhelming' ? 'all' : 'overwhelming')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${
+              ratingFilter === 'overwhelming'
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/60'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b]'
+            }`}
+          >
+            🌟 Top Avis (≥ 95%)
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              setStoreFilter(storeFilter === 'itch' ? 'all' : 'itch');
+            }}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer flex items-center gap-1.5 ${
+              storeFilter === 'itch'
+                ? 'bg-[#fa5c5c]/20 text-[#fa5c5c] border-[#fa5c5c]/60 shadow-sm shadow-[#fa5c5c]/20'
+                : 'bg-[#0b0f19] text-slate-400 hover:text-[#fa5c5c] border-[#1e293b]'
+            }`}
+          >
+            <ItchIcon className="w-3.5 h-3.5 text-[#fa5c5c]" />
+            <span>Itch.io ({itchGamesCount})</span>
+          </button>
+
+          {activeFiltersCount > 0 && (
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="ml-auto inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-bold transition cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>{t('catalog.resetFilters', { count: activeFiltersCount })}</span>
+            </button>
+          )}
+        </div>
+
+        {/* Badges de genres rapides */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <button
+            onClick={() => setSelectedGenre('all')}
+            className={`px-3 py-1 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+              selectedGenre === 'all'
+                ? 'bg-amber-500 text-slate-950 font-black'
+                : 'bg-[#131a29] text-slate-400 hover:text-white border border-[#1e293b]'
+            }`}
+          >
+            Tous les genres ({allPlayableGames.length})
+          </button>
+          {topGenres.map((genre) => (
+            <button
+              key={genre}
+              onClick={() => setSelectedGenre(selectedGenre === genre ? 'all' : genre)}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                selectedGenre === genre
+                  ? 'bg-amber-500 text-slate-950 font-black'
+                  : 'bg-[#131a29] text-slate-400 hover:text-white border border-[#1e293b]'
+              }`}
+            >
+              {getTranslatedGenre(genre, i18n.language)} ({stats.genresCount[genre] || 0})
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Grille de jeux certifiés */}
+      <div id="catalog-grid-top">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 text-xs text-slate-400 font-semibold">
+          <span>{filteredGames.length} {filteredGames.length > 1 ? 'jeux trouvés' : 'jeu trouvé'}</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span className="hidden sm:inline font-medium text-slate-400">{t('pagination.perPage', { defaultValue: 'Par page :' })}</span>
+              <div className="inline-flex rounded-xl bg-[#0b0f19] border border-[#1e293b] p-0.5 shadow-inner">
+                {[12, 24, 48, 96, -1].map((opt) => {
+                  const isAll = itemsPerPage === -1 || (filteredGames.length > 0 && itemsPerPage >= filteredGames.length);
+                  const isSelected = opt === -1 ? isAll : itemsPerPage === opt && !isAll;
+                  const label = opt === -1 ? t('pagination.all', { defaultValue: 'Tous' }) : String(opt);
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => handleItemsPerPageChange(opt)}
+                      aria-pressed={isSelected}
+                      className={`px-2 py-0.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                        isSelected
+                          ? 'bg-amber-500 text-slate-950 font-black shadow-sm shadow-amber-500/20'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <span className="hidden md:inline">Données officielles Valve &amp; Steam Store</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {paginatedGames.map((game) => {
+            const steamGame = game as SteamCatalogGame;
+            const coverUrl = steamGame.headerImage || game.screenshots[game.screenshots.length - 1];
+            const appId = getAppIdFromSteamUrl(game.steamUrl) || steamGame.steamAppId;
+            const storeData = getSteamStoreData(appId);
+
+            return (
+              <div
+                key={game.id}
+                onClick={() => handleOpenGameModal(game)}
+                className="deferred-card group p-3 bg-[#131a29] border border-[#0d543e] hover:border-[#10b981]/50 rounded-2xl cursor-pointer transition shadow-md flex flex-col justify-between relative overflow-hidden"
+              >
+                <div>
+                  {/* Visuel principal */}
+                  <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-900 mb-2.5">
+                    <img
+                      src={coverUrl}
+                      alt={game.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+
+                    {/* Badge Année & Prix */}
+                    <div className="absolute top-2 right-2 flex items-center gap-1">
+                      {storeData && storeData.discountPercent > 0 ? (
+                        <span className="px-2 py-0.5 rounded-lg bg-emerald-500 text-black font-black text-xs shadow-md">
+                          -{storeData.discountPercent}%
+                        </span>
+                      ) : null}
+                      <span className="px-2.5 py-1 rounded-lg bg-slate-950/90 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-slate-700">
+                        {game.releaseYear}
+                      </span>
+                    </div>
+
+                    {storeData ? (
+                      storeData.discountPercent > 0 ? (
+                        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shadow-md">
+                          <span className="line-through text-slate-500 text-[9px]">{storeData.formattedInitialPrice}</span>
+                          <span>{storeData.formattedFinalPrice}</span>
+                        </div>
+                      ) : storeData.isFree ? (
+                        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
+                          {t('catalog.free')}
+                        </div>
+                      ) : (
+                        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-[11px] font-mono font-bold text-slate-200 border border-white/10 shadow-md">
+                          {storeData.formattedFinalPrice}
+                        </div>
+                      )
+                    ) : game.itchUrl ? (
+                      <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
+                        {t('catalog.free')}
+                      </div>
+                    ) : null}
+
+                    <div className="absolute top-2 left-2 flex items-center gap-1">
+                      {steamGame.isCustomImport && (
+                        <span className="px-2 py-0.5 rounded-lg bg-emerald-500 text-xs font-bold uppercase text-slate-950">
+                          Import Direct
+                        </span>
+                      )}
+                      {game.itchUrl && (
+                        <span className="px-2 py-0.5 rounded-lg bg-[#fa5c5c]/90 text-white text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md">
+                          <ItchIcon className="w-2.5 h-2.5 text-white" />
+                          <span>Itch</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Titre & Développeur */}
+                  <h4 className="font-bold text-white text-sm line-clamp-1 group-hover:text-amber-400 transition">
+                    {game.title}
+                  </h4>
+                  <p className="text-xs text-slate-300 line-clamp-1 mt-0.5">
+                    {game.developer}
+                  </p>
+
+                  {/* Note Steam */}
+                  {storeData && storeData.totalReviews > 0 && (
+                    <div className="flex items-center gap-1.5 mt-1.5 text-xs text-sky-400">
+                      <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                      <span className="font-bold font-mono">{storeData.positivePercent}%</span>
+                      <span className="text-slate-500 text-[11px]">({getLocalizedText(storeData.reviewScoreDesc, i18n.language)})</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Badges styles & caméras */}
+                <div className="pt-3 border-t border-[#1e293b] mt-3 flex items-center justify-between text-xs text-slate-300">
+                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-200 truncate max-w-[120px]">
+                    {getTranslatedArtStyle(game.artStyle, i18n.language)}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-200 truncate max-w-[100px]">
+                    {getTranslatedCamera(game.camera, i18n.language)}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredGames.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={handleItemsPerPageChange}
+          itemsPerPageOptions={[12, 24, 48, 96, -1]}
+          itemName={t('pagination.games', { defaultValue: 'jeux' })}
+          scrollToId="catalog-grid-top"
+          className="mt-6"
+        />
+      </div>
+
+      {/* Modal Détails & Galerie Screenshots */}
+      {selectedGameForModal && (
+        <div
+          onClick={handleCloseModal}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200 cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="group relative bg-[#072a20] border-2 border-[#78350f] rounded-3xl w-full max-w-3xl overflow-visible shadow-2xl space-y-4 p-6 max-h-[90vh] overflow-y-auto cursor-default"
+          >
+            <SylvestreIvyFrame density="delicate" />
+            {/* Header Modal */}
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold">
+                    {selectedGameForModal.releaseYear}
+                  </span>
+                  <span className="text-xs text-slate-400">
+                    par <strong className="text-white">{selectedGameForModal.developer}</strong>
+                  </span>
+                </div>
+                <h3 className="text-2xl font-black text-white mt-1">
+                  {selectedGameForModal.title}
+                </h3>
+              </div>
+
+              <button
+                onClick={handleCloseModal}
+                className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Visionneuse Screenshot */}
+            <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-inner">
+              <img
+                src={selectedGameForModal.screenshots[modalActiveScreenshot]}
+                alt={`Screenshot ${modalActiveScreenshot + 1}`}
+                className="w-full h-full object-contain"
+              />
+              <div className="absolute bottom-2 right-2 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-xs font-mono text-white">
+                Image {modalActiveScreenshot + 1} / {selectedGameForModal.screenshots.length}
+              </div>
+
+              {selectedGameForModal.screenshots.length > 1 && (
+                <>
+                  <button
+                    onClick={() =>
+                      setModalActiveScreenshot((prev) =>
+                        prev === 0 ? selectedGameForModal.screenshots.length - 1 : prev - 1
+                      )
+                    }
+                    className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-black/60 hover:bg-black/80 text-white"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() =>
+                      setModalActiveScreenshot((prev) =>
+                        prev === selectedGameForModal.screenshots.length - 1 ? 0 : prev + 1
+                      )
+                    }
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-black/60 hover:bg-black/80 text-white"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Miniatures Screenshots */}
+            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+              {selectedGameForModal.screenshots.map((s, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setModalActiveScreenshot(idx)}
+                  className={`w-20 aspect-video rounded-lg overflow-hidden border-2 shrink-0 transition ${
+                    modalActiveScreenshot === idx ? 'border-amber-400 scale-105' : 'border-slate-800 opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={s} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+
+            {/* Description & Caractéristiques */}
+            <div className="p-4 bg-[#0b0f19] border border-[#1e293b] rounded-2xl space-y-3">
+              {(() => {
+                const modalAppId = getAppIdFromSteamUrl(selectedGameForModal.steamUrl) || (selectedGameForModal as SteamCatalogGame).steamAppId;
+                const modalStore = getSteamStoreData(modalAppId);
+                if (!modalStore) {
+                  if (selectedGameForModal.itchUrl) {
+                    return (
+                      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#131a29] border border-[#1e293b]">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-slate-400 font-bold uppercase">Itch.io</span>
+                          <span className="text-emerald-400 font-black text-sm">{t('catalog.free')}</span>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }
+                return (
+                  <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#131a29] border border-[#1e293b]">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-400 font-bold uppercase">{t('catalog.steamPrice')}</span>
+                      {modalStore.discountPercent > 0 ? (
+                        <div className="flex items-center gap-1.5">
+                          <span className="line-through text-slate-500 text-xs">{modalStore.formattedInitialPrice}</span>
+                          <span className="text-emerald-400 font-black text-sm">{modalStore.formattedFinalPrice}</span>
+                          <span className="px-2 py-0.5 rounded bg-emerald-500 text-black font-black text-xs">-{modalStore.discountPercent}%</span>
+                        </div>
+                      ) : modalStore.isFree ? (
+                        <span className="text-cyan-300 font-black text-sm">{t('catalog.free')}</span>
+                      ) : (
+                        <span className="text-white font-black text-sm">{modalStore.formattedFinalPrice}</span>
+                      )}
+                    </div>
+
+                    {modalStore.totalReviews > 0 && (
+                      <div className="flex items-center gap-1.5 text-xs">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-950/50 border border-sky-500/40 text-sky-300 font-mono font-bold">
+                          <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                          <span>{modalStore.positivePercent}%</span>
+                        </span>
+                        <span className="text-slate-300 font-semibold">{getLocalizedText(modalStore.reviewScoreDesc, i18n.language)}</span>
+                        <span className="text-slate-500">({modalStore.totalReviews.toLocaleString()} {t('catalog.reviewsSuffix')})</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              <p className="text-xs text-slate-300 italic leading-relaxed">
+                « {getLocalizedText(selectedGameForModal.hints?.tagline, i18n.language)} »
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-xs">
+                <div>
+                  <span className="text-xs uppercase font-bold text-slate-400">{t('common.artStyle')}</span>
+                  <div className="font-bold text-white mt-0.5">{getTranslatedArtStyle(selectedGameForModal.artStyle, i18n.language)}</div>
+                </div>
+                <div>
+                  <span className="text-xs uppercase font-bold text-slate-400">{t('common.camera')}</span>
+                  <div className="font-bold text-white mt-0.5">{getTranslatedCamera(selectedGameForModal.camera, i18n.language)}</div>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-xs uppercase font-bold text-slate-400">{t('common.genre')}</span>
+                  <div className="flex flex-wrap gap-1 mt-0.5">
+                    {selectedGameForModal.genre.map((g) => (
+                      <span key={g} className="px-2 py-0.5 rounded bg-slate-800 text-xs text-slate-200">
+                        {getTranslatedGenre(g, i18n.language)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions Modal */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <div className="flex items-center gap-2">
+                {selectedGameForModal.steamUrl && (
+                  <a
+                    href={selectedGameForModal.steamUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition"
+                  >
+                    <ExternalLink className="w-4 h-4 text-amber-400" />
+                    <span>{t('catalog.viewOnSteam')}</span>
+                  </a>
+                )}
+                {selectedGameForModal.itchUrl && (
+                  <a
+                    href={selectedGameForModal.itchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#fa5c5c]/15 hover:bg-[#fa5c5c]/25 border border-[#fa5c5c]/40 hover:border-[#fa5c5c]/70 text-[#fa5c5c] text-xs font-bold transition"
+                  >
+                    <ItchIcon className="w-4 h-4 text-[#fa5c5c]" />
+                    <span>{t('catalog.viewOnItch', 'Voir sur Itch.io')}</span>
+                    <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+                  </a>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                {(selectedGameForModal as SteamCatalogGame).isCustomImport && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Supprimer ce jeu importé de votre liste locale ?')) {
+                        removeCustomGame(selectedGameForModal.id);
+                        handleCloseModal();
+                      }
+                    }}
+                    className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 text-xs font-bold transition"
+                    title="Supprimer l'import"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
+
+                {onSelectGameForIndledle && (
+                  <button
+                    onClick={() => {
+                      onSelectGameForIndledle(selectedGameForModal);
+                      handleCloseModal();
+                    }}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition"
+                  >
+                    <Flame className="w-4 h-4" />
+                    <span>Tester dans Indledle</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

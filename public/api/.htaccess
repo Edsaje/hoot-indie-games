@@ -1,0 +1,17 @@
+# Interdire l'accès direct aux fichiers sensibles
+<FilesMatch "(\.json|\.secret|\.steam_key|\.admin_pass|\.log|\.env|\.bak)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^tracker/?$ track.php [L,QSA]
+    RewriteRule ^track/?$ track.php [L,QSA]
+</IfModule>
+

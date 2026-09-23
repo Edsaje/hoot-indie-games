@@ -1,0 +1,1258 @@
+[
+  {
+    "id": "the-binding-of-isaac-rebirth",
+    "title": "The Binding of Isaac: Rebirth",
+    "releaseYear": 2014,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art 16-bit macabre et expressif",
+      "en": "Grim and expressive 16-bit pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "Nicalis, Inc., Edmund McMillen",
+    "steamUrl": "https://store.steampowered.com/app/250900/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/ss_25a4a446a433218d41a7e87e35b60c297e68e7a4.1920x1080.jpg?t=1731977365",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/ss_19ef624e8d97136ba6f928d389b85f7b8130c37a.1920x1080.jpg?t=1731977365",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/ss_9fa4199fa93cb8b1edd8780fa6ce9e80d2bfb503.1920x1080.jpg?t=1731977365",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/ss_008a76bd0ab314c8140dd1a7ec61090c122d1779.1920x1080.jpg?t=1731977365",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/ss_b146a76ac5348e1cf958c3d01834e13b33c4e561.1920x1080.jpg?t=1731977365",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/ss_89aa019b678e96fd13367a5fda6145ed0bc79fce.1920x1080.jpg?t=1731977365"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "The Binding of Isaac: Rebirth is a randomly generated action RPG shooter with heavy Rogue-like elements. Following Isaac on his journey players will find bizarre treasures that change Isaac’s form giving him super human abilities and enabling him to fight off droves of mysterious creatures, discover secrets and fight his way to safety.",
+        "en": "The Binding of Isaac: Rebirth is a randomly generated action RPG shooter with heavy Rogue-like elements. Following Isaac on his journey players will find bizarre treasures that change Isaac’s form giving him super human abilities and enabling him to fight off droves of mysterious creatures, discover secrets and fight his way to safety."
+      },
+      "composer": "Ridiculon"
+    }
+  },
+  {
+    "id": "terraria",
+    "title": "Terraria",
+    "releaseYear": 2011,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art rétro coloré et foisonnant",
+      "en": "Vibrant and detailed retro pixel art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Re-Logic",
+    "steamUrl": "https://store.steampowered.com/app/105600/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_8c03886f214d2108cafca13845533eaa3d87d83f.1920x1080.jpg?t=1769844435",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_ae168a00ab08104ba266dc30232654d4b3c919e5.1920x1080.jpg?t=1769844435",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_9edd98caaf9357c2f40758f354475a56e356e8b0.1920x1080.jpg?t=1769844435",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_75ea9a7e39eb34b40efa1e6dfd2536098dc4734b.1920x1080.jpg?t=1769844435",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_782374517c1792debd74d24856203b876eba3a5d.1920x1080.jpg?t=1769844435",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_04dd9f0a5773b686a452ba480b951f83b3ed5061.1920x1080.jpg?t=1769844435"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Creuser, survivre, explorer, construire ! Tout est possible dans ce jeu d'aventure bourré d'action. Pack de 4 jeux également disponible !",
+        "en": "Creuser, survivre, explorer, construire ! Tout est possible dans ce jeu d'aventure bourré d'action. Pack de 4 jeux également disponible !"
+      },
+      "composer": "Scott Lloyd Shelly (RE-LOGIC)"
+    }
+  },
+  {
+    "id": "vampire-survivors",
+    "title": "Vampire Survivors",
+    "releaseYear": 2022,
+    "genre": [
+      "Action",
+      "Occasionnel",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art rétro gothique style Castlevania",
+      "en": "Gothic retro pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "poncle",
+    "steamUrl": "https://store.steampowered.com/app/1794680/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_6c55afe36be2a7784bf18cb9b3218321ae2d10e5.1920x1080.jpg?t=1787911678",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_6105ad3d6af52593c31d915bf39e91512611ea8e.1920x1080.jpg?t=1787911678",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_054159adc52856d066d48bda02866da524c43439.1920x1080.jpg?t=1787911678",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_01ec75b8055dbaa6895a0be127508ff569917a1e.1920x1080.jpg?t=1787911678",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_bf22b444801d96026863fcf284f9f93441354035.1920x1080.jpg?t=1787911678",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_bea7831ae00c044d9cd31c3f8e0fee766b4fe1c6.1920x1080.jpg?t=1787911678"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Réduisez des milliers de créatures de la nuit en bouillie pour survivre jusqu'à l'aurore ! Vampire Survivors est un jeu d'horreur gothique teinté d'éléments de roguelite, dans lequel vos choix vous permettent de lutter contre des hordes de monstres qui vous assaillent de toute part.",
+        "en": "Réduisez des milliers de créatures de la nuit en bouillie pour survivre jusqu'à l'aurore ! Vampire Survivors est un jeu d'horreur gothique teinté d'éléments de roguelite, dans lequel vos choix vous permettent de lutter contre des hordes de monstres qui vous assaillent de toute part."
+      },
+      "composer": "Daniele Zandara / Filippo Vicarelli"
+    }
+  },
+  {
+    "id": "cult-of-the-lamb",
+    "title": "Cult of the Lamb",
+    "releaseYear": 2022,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Dessin 2D cartoon mignon et occulte",
+      "en": "Cute and occult hand-drawn cartoon 2D"
+    },
+    "camera": {
+      "fr": "Vue Isométrique 2.5D",
+      "en": "2.5D Isometric"
+    },
+    "developer": "Massive Monster",
+    "steamUrl": "https://store.steampowered.com/app/1313140/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_3bda2c2e740660fcde8c42eafab4cb7574ab54e6.1920x1080.jpg?t=1786554901",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_805babf3c8dec217798c836daea48a63b47c192b.1920x1080.jpg?t=1786554901",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_b26625d6f64a739ed1ddf832a5d26b665ab0619f.1920x1080.jpg?t=1786554901",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_90f238e89ab4c4500d3baee273419bd23f8e5f84.1920x1080.jpg?t=1786554901",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_f4ca3fd0416c3f41c57bc3809bb45f8f20e684ec.1920x1080.jpg?t=1786554901",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_566aecf445ab0448191f1996600fd7ec80d0a0d7.1920x1080.jpg?t=1786554901"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Montez votre propre culte dans un pays de faux prophètes, parcourez des régions étonnantes et mystérieuses pour faire croître une communauté d'adeptes fidèles dans les bois et répandez la bonne parole pour devenir le seul culte véritable.",
+        "en": "Montez votre propre culte dans un pays de faux prophètes, parcourez des régions étonnantes et mystérieuses pour faire croître une communauté d'adeptes fidèles dans les bois et répandez la bonne parole pour devenir le seul culte véritable."
+      },
+      "composer": "River Boy (Narayana Johnson)"
+    }
+  },
+  {
+    "id": "shovel-knight",
+    "title": "Shovel Knight: Treasure Trove",
+    "releaseYear": 2014,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art 8-bit authentique style NES",
+      "en": "Authentic 8-bit NES pixel art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Yacht Club Games",
+    "steamUrl": "https://store.steampowered.com/app/250760/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250760/ss_afe6ad5414f6506883573a10997d3470b7759374.1920x1080.jpg?t=1780266579",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250760/ss_5fadc2bbe9db6d36e2e2cd3de41aac474d7c8e54.1920x1080.jpg?t=1780266579",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250760/ss_4bde75094f028e9bfbb1bdda2e9eda91e3927173.1920x1080.jpg?t=1780266579",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250760/ss_dbf4b4a3a361ceb7c0d81e070b0189b57ac9e309.1920x1080.jpg?t=1780266579",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250760/ss_eb2376fbf477be217ae2ef1256f5b3e7f815cd4d.1920x1080.jpg?t=1780266579",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250760/ss_eb2376fbf477be217ae2ef1256f5b3e7f815cd4d.1920x1080.jpg?t=1780266579"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Shovel Knight: Treasure Trove, l’édition complète de Shovel Knight, regroupe les 5 jeux de la saga ! Frayez-vous un chemin à coup de pelle et d'explosions dans un univers de plates-formes exigeant, peuplé de personnages mémorables et inspiré des classiques d'action/aventure de l'ère 8-bits.",
+        "en": "Shovel Knight: Treasure Trove, l’édition complète de Shovel Knight, regroupe les 5 jeux de la saga ! Frayez-vous un chemin à coup de pelle et d'explosions dans un univers de plates-formes exigeant, peuplé de personnages mémorables et inspiré des classiques d'action/aventure de l'ère 8-bits."
+      },
+      "composer": "Jake Kaufman & Manami Matsumae"
+    }
+  },
+  {
+    "id": "inside",
+    "title": "INSIDE",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Minimaliste atmosphérique en nuances de gris",
+      "en": "Atmospheric minimalist 3D in desaturated tones"
+    },
+    "camera": {
+      "fr": "Vue de côté 2.5D cinématique",
+      "en": "Cinematic 2.5D Side-scroller"
+    },
+    "developer": "Playdead",
+    "steamUrl": "https://store.steampowered.com/app/304430/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/304430/ss_d23769199f1e3d498f8293892f0456696458c717.1920x1080.jpg?t=1761819581",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/304430/ss_b15d0a5c037198b5b9db6a82fedf5018f1b43de5.1920x1080.jpg?t=1761819581",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/304430/ss_ebeba62a8d2141b4fd36760500529fb2d9a29190.1920x1080.jpg?t=1761819581",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/304430/ss_8b67b9a40e620c7316df60cb5a783820f77b935c.1920x1080.jpg?t=1761819581",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/304430/ss_82584c66b8ff7d935481e753596ab36d9b5e9fb7.1920x1080.jpg?t=1761819581",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/304430/ss_5fa85af6a5041f4671ce148cf3d768d5bfbd51b7.1920x1080.jpg?t=1761819581"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Seul et pourchassé, un garçon se retrouve entraîné au cœur d'un sombre projet.",
+        "en": "Seul et pourchassé, un garçon se retrouve entraîné au cœur d'un sombre projet."
+      },
+      "composer": "Martin Stig Andersen & SØS Gunver Ryberg"
+    }
+  },
+  {
+    "id": "limbo",
+    "title": "LIMBO",
+    "releaseYear": 2011,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Noir et blanc monochrome en ombres chinoises",
+      "en": "Monochrome black & white silhouette noir"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Playdead",
+    "steamUrl": "https://store.steampowered.com/app/48000/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/48000/ss_d33513ed37acf1073ea92f182b76e165101bfdac.1920x1080.jpg?t=1761819450",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/48000/ss_402b32434e4bb1a8445397aa24b1b893fe3d257f.1920x1080.jpg?t=1761819450",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/48000/ss_a62bc173abb93fbc12dbb6b8d366524a43c1356f.1920x1080.jpg?t=1761819450",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/48000/ss_a9d219f68ed392daba5e848c55dd9814ee3483b2.1920x1080.jpg?t=1761819450",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/48000/ss_4fd6a8dfb40b1a061dec596bfafea10063e70ea0.1920x1080.jpg?t=1761819450",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/48000/ss_312f9cbb367362a246a5bbfc8f4911b904eb2ba1.1920x1080.jpg?t=1761819450"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Incertain du sort de sa sœur, un garçon pénètre dans LIMBO",
+        "en": "Incertain du sort de sa sœur, un garçon pénètre dans LIMBO"
+      },
+      "composer": "Martin Stig Andersen"
+    }
+  },
+  {
+    "id": "cocoon",
+    "title": "COCOON",
+    "releaseYear": 2023,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée épurée et extraterrestre",
+      "en": "Sleek stylized alien 3D"
+    },
+    "camera": {
+      "fr": "Vue Isométrique du dessus",
+      "en": "Top-down Isometric"
+    },
+    "developer": "Geometric Interactive",
+    "steamUrl": "https://store.steampowered.com/app/1497440/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_e1760582c4ed7da2bc737b878126864f83308ca0.1920x1080.jpg?t=1763721043",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_33edba0e9cbf89a896e9ec2e9b2731303c4ea83a.1920x1080.jpg?t=1763721043",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_33294bb3b7addea79361629d24023223dab0aa4c.1920x1080.jpg?t=1763721043",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_515d6e054265fde30ca72373ffaefd50e9276fc2.1920x1080.jpg?t=1763721043",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_c86c35b3d748565240b4d02879a18dd3ba0c18fd.1920x1080.jpg?t=1763721043",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_df2535ce031cdbeb300f2e2ad0b97d8bcbb6b5b4.1920x1080.jpg?t=1763721043"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "De Jeppe Carlsen, le principal concepteur de gameplay de LIMBO et INSIDE — COCOON vous emmène dans une aventure à travers des mondes dans des mondes. Maîtrisez les mécanismes de saut du monde et résolvez des énigmes complexes pour percer un mystère cosmique.",
+        "en": "De Jeppe Carlsen, le principal concepteur de gameplay de LIMBO et INSIDE — COCOON vous emmène dans une aventure à travers des mondes dans des mondes. Maîtrisez les mécanismes de saut du monde et résolvez des énigmes complexes pour percer un mystère cosmique."
+      },
+      "composer": "Jakob Schmid"
+    }
+  },
+  {
+    "id": "return-of-the-obra-dinn",
+    "title": "Return of the Obra Dinn",
+    "releaseYear": 2018,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Monochrome 1-bit dithering rétro Mac/PC",
+      "en": "1-bit monochrome dithering classic Macintosh"
+    },
+    "camera": {
+      "fr": "Première personne 3D (First-person)",
+      "en": "First-person 3D"
+    },
+    "developer": "Lucas Pope",
+    "steamUrl": "https://store.steampowered.com/app/653530/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_7dd3476ace2170e134141e487f9491d4c9d094f3.1920x1080.jpg?t=1686697594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_380dc35237fde7d3863a44270abafc37924d1db4.1920x1080.jpg?t=1686697594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_69b3c98eda3c3476a4dee6a1a220169ac70dcb6d.1920x1080.jpg?t=1686697594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_4f555f01fa82723c28fcce8f0909570caaee8e8f.1920x1080.jpg?t=1686697594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_7a8824f581b399abc52f598966b339fada982349.1920x1080.jpg?t=1686697594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_f3e24e7a7f86ad925076f63b4e6cd86258f63d2c.1920x1080.jpg?t=1686697594"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Perdu en mer, 1803 LE FIER VAISSEAU « OBRA DINN »",
+        "en": "Perdu en mer, 1803 LE FIER VAISSEAU « OBRA DINN »"
+      },
+      "composer": "Lucas Pope"
+    }
+  },
+  {
+    "id": "ultrakill",
+    "title": "ULTRAKILL",
+    "releaseYear": 2020,
+    "genre": [
+      "Action",
+      "Indépendant",
+      "Accès anticipé"
+    ],
+    "artStyle": {
+      "fr": "Rétro Low-poly texturé style PS1 / Quake",
+      "en": "Retro low-poly PS1/Quake aesthetic"
+    },
+    "camera": {
+      "fr": "Première personne 3D (FPS)",
+      "en": "First-person 3D (FPS)"
+    },
+    "developer": "Arsi \"Hakita\" Patala",
+    "steamUrl": "https://store.steampowered.com/app/1229490/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/ss_8c743b6de2d6124bd583d8764f28cafe2b7ecb3f.1920x1080.jpg?t=1783942574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/ss_7a5692d56ec4115252980fed4ad5536d1e401e04.1920x1080.jpg?t=1783942574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/ss_bc7a00fadbcde4a6c6dcb95d8e464ad5ffc06e3c.1920x1080.jpg?t=1783942574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/ss_21e8e9c78b24c73451c8d9ed1d17e21e43f3adb7.1920x1080.jpg?t=1783942574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/ss_2f2213d07fd390f3f612dd60ec07c03ceab42e40.1920x1080.jpg?t=1783942574",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/ss_7460a480b1deb03f64cbfff0173445fb50d0c514.1920x1080.jpg?t=1783942574"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "ULTRAKILL est un FPS rétro ultra-violent au rythme effréné qui allie le système de score basé sur l'habileté des jeux d'action à la débauche de violence pure inspirée des meilleurs jeux de tir des années 90.",
+        "en": "ULTRAKILL est un FPS rétro ultra-violent au rythme effréné qui allie le système de score basé sur l'habileté des jeux d'action à la débauche de violence pure inspirée des meilleurs jeux de tir des années 90."
+      },
+      "composer": "Hakita (Arsi Patala)"
+    }
+  },
+  {
+    "id": "enter-the-gungeon",
+    "title": "Enter the Gungeon",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art vibrant et hyper-animé",
+      "en": "Vibrant and richly animated pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "Dodge Roll",
+    "steamUrl": "https://store.steampowered.com/app/311690/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_bca0036bc452b872a7d9ee3de9e0c9548e8cd4f5.1920x1080.jpg?t=1779733990",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_9d3f304b18e8cd1cf6ac4a886bec474e0b677800.1920x1080.jpg?t=1779733990",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_de49a9579b13337e98719d39df0f5bc46b9fe886.1920x1080.jpg?t=1779733990",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_ecdf8986898c7d866d419943eb7c7cbef42754bd.1920x1080.jpg?t=1779733990",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_009d6fd10948fccb1cbf06ceb4d7f2035cb415a4.1920x1080.jpg?t=1779733990",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_9a74ab65fb19e85cac6a64b7dbe05da5411cfb7b.1920x1080.jpg?t=1779733990"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Enter the Gungeon est un jeu d'exploration d'un donjon où une horde d'aventuriers tiraille à tout va, pille, manie la roulade d'esquive et renverse les tables dans l'espoir de trouver la rédemption.",
+        "en": "Enter the Gungeon est un jeu d'exploration d'un donjon où une horde d'aventuriers tiraille à tout va, pille, manie la roulade d'esquive et renverse les tables dans l'espoir de trouver la rédemption."
+      },
+      "composer": "doseone"
+    }
+  },
+  {
+    "id": "risk-of-rain-2",
+    "title": "Risk of Rain 2",
+    "releaseYear": 2020,
+    "genre": [
+      "Action",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Cel-shaded stylisée et texturée",
+      "en": "Stylized cel-shaded 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne 3D (Over-the-shoulder)",
+      "en": "Third-person 3D"
+    },
+    "developer": "Hopoo Games",
+    "steamUrl": "https://store.steampowered.com/app/632360/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632360/ss_2bb49071317f7b241a527cf6e7aabd2cb6af055b.1920x1080.jpg?t=1783621122",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632360/ss_a3f57f281813cb51cb5d919701470acb962ff297.1920x1080.jpg?t=1783621122",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632360/ss_328d6fcb223f848c2a1047bb86702c4175d92317.1920x1080.jpg?t=1783621122",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632360/ss_dc777b5c583794c99440b196cd1d26884fb1720b.1920x1080.jpg?t=1783621122",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632360/ss_0377ff24b4d60db6a38ddc0824b7f308890b9231.1920x1080.jpg?t=1783621122",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632360/ss_85548e86c50ff654c6a49235ea686a956f8ee9ec.1920x1080.jpg?t=1783621122"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Échappez à une planète étrangère chaotique en affrontant des hordes de monstres déchaînés, en solo ou entre amis. Combinez le butin de façon surprenante et maîtrisez chacun des personnages jusqu'à devenir vous-même le chaos que vous craigniez tant lors de votre premier écrasement.",
+        "en": "Échappez à une planète étrangère chaotique en affrontant des hordes de monstres déchaînés, en solo ou entre amis. Combinez le butin de façon surprenante et maîtrisez chacun des personnages jusqu'à devenir vous-même le chaos que vous craigniez tant lors de votre premier écrasement."
+      },
+      "composer": "Chris Christodoulou"
+    }
+  },
+  {
+    "id": "hyper-light-drifter",
+    "title": "Hyper Light Drifter",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art 16-bit néon et cinématique",
+      "en": "Neon-soaked cinematic 16-bit pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "Heart Machine",
+    "steamUrl": "https://store.steampowered.com/app/257850/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257850/ss_e786b1d9c66eb9c61e4da2945fe1d9faeb2af736.1920x1080.jpg?t=1762899660",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257850/ss_19c973259b736f14c4541ba044f3761b39a18737.1920x1080.jpg?t=1762899660",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257850/ss_37ad0b207c867078e87cf8a185fe3c66b0bdd490.1920x1080.jpg?t=1762899660",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257850/ss_b38d4392356a39a745fd18c032195a71c40d038b.1920x1080.jpg?t=1762899660",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257850/ss_6f2737707906d93e4bd92c7aa4db615b8da10693.1920x1080.jpg?t=1762899660",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257850/ss_fba6762a846f9d79ade2f008514e2e4cea16d0a4.1920x1080.jpg?t=1762899660"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Explore a beautiful, vast and ruined world riddled with dangers and lost technologies.",
+        "en": "Explore a beautiful, vast and ruined world riddled with dangers and lost technologies."
+      },
+      "composer": "Disasterpeace"
+    }
+  },
+  {
+    "id": "spelunky-2",
+    "title": "Spelunky 2",
+    "releaseYear": 2020,
+    "genre": [
+      "Action",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Dessin 2D cartoon soigné et précis",
+      "en": "Sharp hand-drawn 2D cartoon"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Mossmouth, BlitWorks",
+    "steamUrl": "https://store.steampowered.com/app/418530/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418530/ss_bf20692e69cfef2da4b6b4096f42823a5283701c.1920x1080.jpg?t=1663719294",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418530/ss_e92a2f46bb81fc745684204858ecc1284b3eeae4.1920x1080.jpg?t=1663719294",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418530/ss_3f2ba63b195e3b6739faf812d7e31dbe6c9295fd.1920x1080.jpg?t=1663719294",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418530/ss_69755bc2679253aa132928f261bdd059f215d342.1920x1080.jpg?t=1663719294",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418530/ss_b04a6809f69c842e1cb4f8192c8488839733f405.1920x1080.jpg?t=1663719294",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418530/ss_5fa3946203b6f225541847b1c04158f5c5abeb46.1920x1080.jpg?t=1663719294"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Spelunky 2 étoffe les défis aléatoires et uniques de son prédécesseur roguelike, offrant une aventure satisfaisante pour les anciens joueurs comme pour les nouveaux. Rencontrez la prochaine génération d'explorateurs lunaires, à la recherche de trésors et de proches disparus.",
+        "en": "Spelunky 2 étoffe les défis aléatoires et uniques de son prédécesseur roguelike, offrant une aventure satisfaisante pour les anciens joueurs comme pour les nouveaux. Rencontrez la prochaine génération d'explorateurs lunaires, à la recherche de trésors et de proches disparus."
+      },
+      "composer": "Eirik Suhrke"
+    }
+  },
+  {
+    "id": "rain-world",
+    "title": "Rain World",
+    "releaseYear": 2017,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Survie",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art organique et animation procédurale",
+      "en": "Organic pixel art with procedural animation"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Videocult",
+    "steamUrl": "https://store.steampowered.com/app/312520/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_cbd4e647d6b3bb3b311cb68fdf0cd8835d5919d7.1920x1080.jpg?t=1786047879",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_628274c84b196e270733f540139062f2787c4423.1920x1080.jpg?t=1786047879",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_d551eee41e60ba8f5f2005b3de41c5f2c27cb444.1920x1080.jpg?t=1786047879",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_5c8c0413e98f3521e3df370d4ad7018b771ce353.1920x1080.jpg?t=1786047879",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_becb0959f6479d07e05f2c14f48980a15b5e5192.1920x1080.jpg?t=1786047879",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_519831951a674f56ca80fd7e14884a7291d71e50.1920x1080.jpg?t=1786047879"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Vous êtes un chat-limace nomade, à la fois proie et prédateur, qui évolue dans un écosystème corrompu.",
+        "en": "You are a nomadic slugcat, both predator and prey in a broken ecosystem."
+      },
+      "composer": "James Primate & Lydia Esrig"
+    }
+  },
+  {
+    "id": "firewatch",
+    "title": "Firewatch",
+    "releaseYear": 2016,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée chaude et picturale",
+      "en": "Warm pictorial stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne 3D (First-person)",
+      "en": "First-person 3D"
+    },
+    "developer": "Campo Santo",
+    "steamUrl": "https://store.steampowered.com/app/383870/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383870/ss_80432f2d4f4192017115c23e7dff090df95b204a.1920x1080.jpg?t=1755789801",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383870/ss_c7e16bc8d5a6d40ab1f7c339395d26d8f6eb57ff.1920x1080.jpg?t=1755789801",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383870/ss_570bc87288b5ab4e235ba270e1d2ae30312d5b82.1920x1080.jpg?t=1755789801",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383870/ss_eb64648f294463df89e55f9363cdf159aebcf11e.1920x1080.jpg?t=1755789801",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383870/ss_4b9d67ae2af0da570d03731d93b095d0203b973d.1920x1080.jpg?t=1755789801",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383870/ss_634d9b9352169125aec4cbf8b7834a18f9992eeb.1920x1080.jpg?t=1755789801"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Firewatch est un jeu plein de mystères pour un joueur à la première personne, qui se déroule dans le décor sauvage du Wyoming.",
+        "en": "Firewatch est un jeu plein de mystères pour un joueur à la première personne, qui se déroule dans le décor sauvage du Wyoming."
+      },
+      "composer": "Chris Remo"
+    }
+  },
+  {
+    "id": "what-remains-of-edith-finch",
+    "title": "What Remains of Edith Finch",
+    "releaseYear": 2017,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Réaliste narrative et poétique",
+      "en": "Poetic narrative realistic 3D"
+    },
+    "camera": {
+      "fr": "Première personne 3D (First-person)",
+      "en": "First-person 3D"
+    },
+    "developer": "Giant Sparrow",
+    "steamUrl": "https://store.steampowered.com/app/501300/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_5e17b98cf2effabcb74aedc537ef3d68578b5c66.1920x1080.jpg?t=1785424558",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_b33a742463deb8564a382e1744febceaa91a5bab.1920x1080.jpg?t=1785424558",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_cc50bb10f1858d16a4df684f4dd264bda5d432ba.1920x1080.jpg?t=1785424558",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_77ebb61562a25dbcd0c4cc1c5090b76a76a055b2.1920x1080.jpg?t=1785424558",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/501300/ss_7a68ff5a7b3e6c85ab89f9bbf549a0232281bd19.1920x1080.jpg?t=1785424558"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "What Remains of Edith Finch est une collection de contes étranges sur une famille de l’État de Washington. En incarnant Edith, vous allez explorer l’énorme demeure des Finch, à la recherche d’histoires sur le passé de cette famille et vous devrez découvrir pourquoi elle en est le dernier membre encore vivant.",
+        "en": "What Remains of Edith Finch est une collection de contes étranges sur une famille de l’État de Washington. En incarnant Edith, vous allez explorer l’énorme demeure des Finch, à la recherche d’histoires sur le passé de cette famille et vous devrez découvrir pourquoi elle en est le dernier membre encore vivant."
+      },
+      "composer": "Jeff Russo"
+    }
+  },
+  {
+    "id": "super-meat-boy",
+    "title": "Super Meat Boy",
+    "releaseYear": 2010,
+    "genre": [
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Dessin 2D cartoon vectoriel délirant",
+      "en": "Wild cartoon vector 2D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Team Meat",
+    "steamUrl": "https://store.steampowered.com/app/40800/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/40800/ss_2482dad154fa38c32195a5301891ec7d9cefa7da.1920x1080.jpg?t=1700669950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/40800/ss_652092068cc0d5e75fe3f199ad1bbc395806c1f2.1920x1080.jpg?t=1700669950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/40800/ss_71f114e451550394500613d8ec8082ae3eac44e5.1920x1080.jpg?t=1700669950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/40800/ss_d158c2843c714bf2294376e03d9c4d6c7cd96397.1920x1080.jpg?t=1700669950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/40800/ss_8579adfaa58c863497e71df1b36331d37e51aeab.1920x1080.jpg?t=1700669950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/40800/ss_84f8832c8cfb5d93dba79c099b0067e22447cbab.1920x1080.jpg?t=1700669950"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le fameux jeu de plateforme arrive sur Steam avec un Head Crab jouable (exclusivité Steam) !",
+        "en": "Le fameux jeu de plateforme arrive sur Steam avec un Head Crab jouable (exclusivité Steam) !"
+      },
+      "composer": "Danny Baranowsky"
+    }
+  },
+  {
+    "id": "bastion",
+    "title": "Bastion",
+    "releaseYear": 2011,
+    "genre": [
+      "Action",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Peinture numérique texturée et colorée",
+      "en": "Lush hand-painted digital art"
+    },
+    "camera": {
+      "fr": "Vue Isométrique 2.5D",
+      "en": "2.5D Isometric"
+    },
+    "developer": "Supergiant Games",
+    "steamUrl": "https://store.steampowered.com/app/107100/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/107100/ss_12e48f86f7429da252c6895ad337b0ac38560244.1920x1080.jpg?t=1729113932",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/107100/ss_490170c42afe389fb80324b5c29f9b704d87943e.1920x1080.jpg?t=1729113932",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/107100/ss_d158b1b4ece3a362c7d8acc6168ad14de00e64ba.1920x1080.jpg?t=1729113932",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/107100/ss_f9e16007834d0e06fe46358e1481b733ec226cca.1920x1080.jpg?t=1729113932",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/107100/ss_fe6e7f8b86b783cea7e01f46f319055a8385f899.1920x1080.jpg?t=1729113932",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/107100/ss_b7d87f1fd711231166ea7dcfe6aa56717c48d335.1920x1080.jpg?t=1729113932"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Découvrez les secrets de la Calamité, une catastrophe surréaliste qui a brisé le monde en morceaux.",
+        "en": "Découvrez les secrets de la Calamité, une catastrophe surréaliste qui a brisé le monde en morceaux."
+      },
+      "composer": "Darren Korb"
+    }
+  },
+  {
+    "id": "transistor",
+    "title": "Transistor",
+    "releaseYear": 2014,
+    "genre": [
+      "Action",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Peinture numérique cyberpunk et Art Déco",
+      "en": "Art Deco cyberpunk painted aesthetic"
+    },
+    "camera": {
+      "fr": "Vue Isométrique 2.5D",
+      "en": "2.5D Isometric"
+    },
+    "developer": "Supergiant Games",
+    "steamUrl": "https://store.steampowered.com/app/237930/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/237930/ss_1fdf65579ebad27f4d6a6732e44fc84180016a7b.1920x1080.jpg?t=1729113992",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/237930/ss_9858355976e979758841f05839ccc6224ddaa00e.1920x1080.jpg?t=1729113992",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/237930/ss_1916e041ab65f8b6256a09ab494d5a2ab372fefe.1920x1080.jpg?t=1729113992",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/237930/ss_3b1538861473fb042792380ce85c3fda2f95a459.1920x1080.jpg?t=1729113992",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/237930/ss_341fc37cbb9c3da906f07c8c0f5b9aa187510bc8.1920x1080.jpg?t=1729113992",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/237930/ss_ceec46589ca1914cb584d80a1cc4779b216cd937.1920x1080.jpg?t=1729113992"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Découvrez le monde de Transistor, un jeu de rôle / action SF développé par les créateurs de Bastion.",
+        "en": "Découvrez le monde de Transistor, un jeu de rôle / action SF développé par les créateurs de Bastion."
+      },
+      "composer": "Darren Korb"
+    }
+  },
+  {
+    "id": "ftl-faster-than-light",
+    "title": "FTL: Faster Than Light",
+    "releaseYear": 2012,
+    "genre": [
+      "Indépendant",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art spatial épuré et fonctionnel",
+      "en": "Clean and functional sci-fi pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus vaisseau 2D (Top-down cockpit)",
+      "en": "2D Top-down Ship Overview"
+    },
+    "developer": "Subset Games",
+    "steamUrl": "https://store.steampowered.com/app/212680/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_e650b133cc1d3d6320b34d131566fd28ab92b010.1920x1080.jpg?t=1748969356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_ff45cfec186ec14e97cfdb01054d9cc0bb4034ff.1920x1080.jpg?t=1748969356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_f60e708609b4cfaa712fdc6c12546aaf7a5b9ebc.1920x1080.jpg?t=1748969356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_7cf0e1d8a6142f7f18c56e9a5a84b0b588ba655e.1920x1080.jpg?t=1748969356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_f5a5c31e92cb9151dceb9d2bcc800554cccc5ff3.1920x1080.jpg?t=1748969356",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_9e317b3a735d7ea04cae0cc8fa246413a8d5322e.1920x1080.jpg?t=1748969356"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Ce jeu de simulation spatiale de type rogue-like vous permet de piloter votre vaisseau dans une galaxie générée aléatoirement où vous pourrez vous couvrir de gloire... si vous parvenez à éviter la défaite.",
+        "en": "Ce jeu de simulation spatiale de type rogue-like vous permet de piloter votre vaisseau dans une galaxie générée aléatoirement où vous pourrez vous couvrir de gloire... si vous parvenez à éviter la défaite."
+      },
+      "composer": "Ben Prunty"
+    }
+  },
+  {
+    "id": "into-the-breach",
+    "title": "Into the Breach",
+    "releaseYear": 2018,
+    "genre": [
+      "Indépendant",
+      "RPG",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art miniature isométrique précis",
+      "en": "Crisp isometric miniature pixel art"
+    },
+    "camera": {
+      "fr": "Vue Isométrique 2D sur grille (Grid-based)",
+      "en": "2D Isometric Grid"
+    },
+    "developer": "Subset Games",
+    "steamUrl": "https://store.steampowered.com/app/590380/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/590380/ss_81867eb29fc38fb0ce55a327b2c1e3fc6c1a2454.1920x1080.jpg?t=1755610784",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/590380/ss_0f7f92bba050d455e59fddda24962d4471c2c135.1920x1080.jpg?t=1755610784",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/590380/ss_67ac95724c323759623a15b931028c4fcab1f92c.1920x1080.jpg?t=1755610784",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/590380/ss_3f3f952893f1aa24200c7fd31ab5023080b86b9d.1920x1080.jpg?t=1755610784",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/590380/ss_373fb6abd54a86b716f184eaf4623ac83d067652.1920x1080.jpg?t=1755610784",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/590380/ss_292c5ed15488a97340e9a663f5aa423ffbf67997.1920x1080.jpg?t=1755610784"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Contrôlez de puissants Mechas venus du futur pour vaincre une terrible menace extraterrestre. Chaque tentative faite pour sauver le monde est un nouveau défi généré aléatoirement dans ce jeu de stratégie au tour par tour.",
+        "en": "Contrôlez de puissants Mechas venus du futur pour vaincre une terrible menace extraterrestre. Chaque tentative faite pour sauver le monde est un nouveau défi généré aléatoirement dans ce jeu de stratégie au tour par tour."
+      },
+      "composer": "Ben Prunty"
+    }
+  },
+  {
+    "id": "omori",
+    "title": "OMORI",
+    "releaseYear": 2020,
+    "genre": [
+      "Aventure",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Dessin aux crayons de papier et Pixel Art 16-bit",
+      "en": "Hand-drawn colored pencil sketches & 16-bit pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down RPG)",
+      "en": "2D Top-down RPG"
+    },
+    "developer": "OMOCAT, LLC",
+    "steamUrl": "https://store.steampowered.com/app/1150690/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1150690/ss_219463835487a7205f0af93fb02d2c84855c667b.1920x1080.jpg?t=1671584768",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1150690/ss_4bb5647e9094a13078d23f2a9daa4a9bd160841e.1920x1080.jpg?t=1671584768",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1150690/ss_72e19b9ca001c03084b9eb7f5665514e60a6a6dd.1920x1080.jpg?t=1671584768",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1150690/ss_14bd4cd7c2be96cdffa112d991ce755600c8ad72.1920x1080.jpg?t=1671584768",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1150690/ss_126ccd3db36bf47431f6d6b92cf0922a3a918bfc.1920x1080.jpg?t=1671584768",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1150690/ss_591d0375a075ae2afdd3ddf5a6172beb3f04c338.1920x1080.jpg?t=1671584768"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Explore a strange world full of colorful friends and foes. When the time comes, the path you’ve chosen will determine your fate... and perhaps the fate of others as well.",
+        "en": "Explore a strange world full of colorful friends and foes. When the time comes, the path you’ve chosen will determine your fate... and perhaps the fate of others as well."
+      },
+      "composer": "OMOCAT, Pedro Silva, Jami Lynne"
+    }
+  },
+  {
+    "id": "ufo-50",
+    "title": "UFO 50",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant",
+      "RPG",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art 8-bit fictionnel console vintage",
+      "en": "Fictional 8-bit vintage console pixel art"
+    },
+    "camera": {
+      "fr": "Multiples perspectives rétro 2D",
+      "en": "Multiple retro 2D perspectives"
+    },
+    "developer": "Mossmouth",
+    "steamUrl": "https://store.steampowered.com/app/1147860/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147860/ss_927184ce23f456d9a302a1c1e75588aae4edfebb.1920x1080.jpg?t=1776264051",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147860/ss_fc1d24cb1a1e2be6f32834bf322af2864d48eaf3.1920x1080.jpg?t=1776264051",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147860/ss_a74b84c81001243c2b6a3ad243325f2d9fcf5377.1920x1080.jpg?t=1776264051",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147860/ss_cb6093ea7097449cc8a6b8d924761d786e1a1cf5.1920x1080.jpg?t=1776264051",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147860/ss_efc1334c16eb980682392470da5480bd6bd6b405.1920x1080.jpg?t=1776264051",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147860/ss_44498ff89451c3a61196db6dea6a6171ad8c498b.1920x1080.jpg?t=1776264051"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "UFO 50 est une compilation de 50 jeux solo et multijoueur recouvrant un large panel de genres, du jeu de plateforme aux shoot ‘em up en passant par le jeu de puzzle, le roguelite ou le RPG. Notre but est de marier une esthétique 8-bit bien connue à des idées nouvelles et un design moderne.",
+        "en": "UFO 50 est une compilation de 50 jeux solo et multijoueur recouvrant un large panel de genres, du jeu de plateforme aux shoot ‘em up en passant par le jeu de puzzle, le roguelite ou le RPG. Notre but est de marier une esthétique 8-bit bien connue à des idées nouvelles et un design moderne."
+      },
+      "composer": "Eirik Suhrke"
+    }
+  },
+  {
+    "id": "lorelei-and-the-laser-eyes",
+    "title": "Lorelei and the Laser Eyes",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Monochrome noir & blanc avec accents cramoisis",
+      "en": "Black & white 3D monochrome with crimson accents"
+    },
+    "camera": {
+      "fr": "Plans fixes cinématographiques 3D",
+      "en": "Fixed cinematic 3D angles"
+    },
+    "developer": "Simogo",
+    "steamUrl": "https://store.steampowered.com/app/2008920/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2008920/ss_86f62a07410301ecd069518695cfca290c185785.1920x1080.jpg?t=1759241374",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2008920/ss_6d6585ba21a31dff78818170b3090b738c3d2851.1920x1080.jpg?t=1759241374",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2008920/ss_5fb55deabca4eb6e739dbc7349d22aa812f19345.1920x1080.jpg?t=1759241374",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2008920/ss_c37c597f912935bad034f34449a06b9d948c992f.1920x1080.jpg?t=1759241374",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2008920/ss_a17a6c305aa71449f39443e3666f092e9cd93443.1920x1080.jpg?t=1759241374",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2008920/ss_73125f5b55ba8fdb2f8c5c4f35d3b23ad0be7573.1920x1080.jpg?t=1759241374"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le décor est planté. Imaginez un vieux manoir baroque, voire un hôtel ou un musée, quelque part en Europe centrale. Une femme erre à la recherche de réponses.",
+        "en": "Le décor est planté. Imaginez un vieux manoir baroque, voire un hôtel ou un musée, quelque part en Europe centrale. Une femme erre à la recherche de réponses."
+      },
+      "composer": "Simogo / Daniel Olsén"
+    }
+  },
+  {
+    "id": "sanabi",
+    "title": "SANABI",
+    "releaseYear": 2023,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art cyberpunk dynamique et néon",
+      "en": "Dynamic neon cyberpunk pixel art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D (Side-scroller)",
+      "en": "2D Side-scroller"
+    },
+    "developer": "WONDER POTION",
+    "steamUrl": "https://store.steampowered.com/app/1562700/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562700/ss_9309623510d853bf750877457f863e45eb7c6cbe.1920x1080.jpg?t=1764564242",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562700/ss_dc42526e8a4db7c389494d0a14d5c21da1974c51.1920x1080.jpg?t=1764564242",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562700/ss_3b7f6ffbdf8d80e288c452d1c619916dc3ba36ab.1920x1080.jpg?t=1764564242",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562700/ss_4c2d1c53e327b002eb10d544d45a6b01381c3f95.1920x1080.jpg?t=1764564242",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562700/ss_883d35689221a08ccb88cc9d6915c4f25376ea2b.1920x1080.jpg?t=1764564242",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1562700/ss_a2622d9f393597e6e61cd25520a4b23e77a29192.1920x1080.jpg?t=1764564242"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "SANABI est un jeu dystopique de plateforme et d'action, stylé et exaltant. Incarnez un ancien combattant légendaire à la retraite et utilisez votre célèbre prothèse de bras pour sauter par-dessus des falaises et des gratte-ciels, esquiver des balles et des pièges et vaincre de puissants ennemis.",
+        "en": "SANABI est un jeu dystopique de plateforme et d'action, stylé et exaltant. Incarnez un ancien combattant légendaire à la retraite et utilisez votre célèbre prothèse de bras pour sauter par-dessus des falaises et des gratte-ciels, esquiver des balles et des pièges et vaincre de puissants ennemis."
+      },
+      "composer": "WONDER POTION"
+    }
+  },
+  {
+    "id": "lethal-company",
+    "title": "Lethal Company",
+    "releaseYear": 2023,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant",
+      "Accès anticipé"
+    ],
+    "artStyle": {
+      "fr": "3D Rétro basse fidélité style cassette VHS",
+      "en": "Low-fi VHS retro 3D"
+    },
+    "camera": {
+      "fr": "Première personne 3D (First-person)",
+      "en": "First-person 3D"
+    },
+    "developer": "Zeekerss",
+    "steamUrl": "https://store.steampowered.com/app/1966720/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1966720/ss_78075e9a94675823024f12fce9d69b243cca94f8.1920x1080.jpg?t=1775380053",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1966720/ss_51860be59845771c01a3a4d9ab1ebf773f16fef5.1920x1080.jpg?t=1775380053",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1966720/ss_08fa3ef83b6eb70313119096f82285fa411f02e5.1920x1080.jpg?t=1775380053",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1966720/ss_568d97dfa9d8d3128157d84c9437030ccc1011b0.1920x1080.jpg?t=1775380053",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1966720/ss_e07f1d6ee90e3669118096dab1fe52c20ec6ce10.1920x1080.jpg?t=1775380053",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1966720/ss_0499d96a2b9ca0fc8966d77e6d5c95ae94c38492.1920x1080.jpg?t=1775380053"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A co-op horror about scavenging at abandoned moons to sell scrap to the Company.",
+        "en": "A co-op horror about scavenging at abandoned moons to sell scrap to the Company."
+      },
+      "composer": "Zeekerss"
+    }
+  },
+  {
+    "id": "citizen-sleeper",
+    "title": "Citizen Sleeper",
+    "releaseYear": 2022,
+    "genre": [
+      "Aventure",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Illustrations de personnages manga & UI cyberpunk épurée",
+      "en": "Manga character portraits & slick cyberpunk UI"
+    },
+    "camera": {
+      "fr": "Vue statique 2D de station / Visual Novel",
+      "en": "2D Static Station Map & Visual Novel"
+    },
+    "developer": "Jump Over The Age",
+    "steamUrl": "https://store.steampowered.com/app/1578650/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1578650/ss_a07b9124d9a9ecd2c3855a43a1ad171e4b55aa37.1920x1080.jpg?t=1789539823",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1578650/ss_52df51fd2c303597cbf6755546da94e449322954.1920x1080.jpg?t=1789539823",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1578650/ss_bd7d024d0d8573a119e92c1add7ad61eed5a345c.1920x1080.jpg?t=1789539823",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1578650/ss_6888f9b65b70d27e25ab6527bd7f1d243c4c68a7.1920x1080.jpg?t=1789539823",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1578650/ss_73518818ceb440a8edd79a336a4897836b9f3ccf.1920x1080.jpg?t=1789539823",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1578650/ss_ea8cc180eaeed024b8037afaaeadb2542254b86f.1920x1080.jpg?t=1789539823"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Une aventure dans les ruines du capitalisme interplanétaire. Incarnez un fugitif échoué sur une station anarchique aux confins d'une société interstellaire. Explorez les lieux, choisissez vos amis, fuyez votre passé et changez votre avenir avec une liberté inspirée des jeux de rôle papier.",
+        "en": "Une aventure dans les ruines du capitalisme interplanétaire. Incarnez un fugitif échoué sur une station anarchique aux confins d'une société interstellaire. Explorez les lieux, choisissez vos amis, fuyez votre passé et changez votre avenir avec une liberté inspirée des jeux de rôle papier."
+      },
+      "composer": "Amos Roddy"
+    }
+  },
+  {
+    "id": "crypt-of-the-necrodancer",
+    "title": "Crypt of the NecroDancer",
+    "releaseYear": 2015,
+    "genre": [
+      "Action",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art rétro vif et musical",
+      "en": "Lively retro musical pixel art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "Brace Yourself Games",
+    "steamUrl": "https://store.steampowered.com/app/247080/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/247080/ss_849069b2208a21d5adfc00d67e5b8b428e2d0677.1920x1080.jpg?t=1789603692",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/247080/ss_9de26271c7fcc4da87a5dcc9e4c52bd3a2aacb58.1920x1080.jpg?t=1789603692",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/247080/ss_3b23b37dcfbf9711aad2fd035b49b8a8ac943008.1920x1080.jpg?t=1789603692",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/247080/ss_d0253d4a526b7ea30db5eaa66d5cac7efc5a4ce0.1920x1080.jpg?t=1789603692",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/247080/ss_0f7c3d0df25292e501fa55294f3d4ada1f307cd4.1920x1080.jpg?t=1789603692",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/247080/ss_fb8381eef756dfa6bdeeaa65e69ba56061ceb142.1920x1080.jpg?t=1789603692"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Crypt of the NecroDancer est un jeu de rythme roguelike primé. Bouge sur la musique et bats-toi en suivant les pulsations ! Groove avec la bande-son épique de Danny Baranowsky, ou choisis des chansons de ta propre collection MP3 !",
+        "en": "Crypt of the NecroDancer est un jeu de rythme roguelike primé. Bouge sur la musique et bats-toi en suivant les pulsations ! Groove avec la bande-son épique de Danny Baranowsky, ou choisis des chansons de ta propre collection MP3 !"
+      },
+      "composer": "Danny Baranowsky"
+    }
+  },
+  {
+    "id": "dont-starve",
+    "title": "Don't Starve",
+    "releaseYear": 2013,
+    "genre": [
+      "Aventure",
+      "Indépendant",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "Dessin gothique au trait style gravure macabre",
+      "en": "Gothic scratchboard storybook art style"
+    },
+    "camera": {
+      "fr": "Vue Isométrique 2.5D orientable",
+      "en": "2.5D Rotatable Isometric"
+    },
+    "developer": "Klei Entertainment",
+    "steamUrl": "https://store.steampowered.com/app/219740/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219740/ss_09bb6bdce4fa085c2c4a9a8f48ea52d3051b44bc.1920x1080.jpg?t=1789497543",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219740/ss_26b6414b4ae07cfc2e2d15bd6ff315a4678f00f3.1920x1080.jpg?t=1789497543",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219740/ss_3d32a04e77363f3c8179a319de6f90ac1b8b2e0e.1920x1080.jpg?t=1789497543",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219740/ss_0167fbdf9d30407734baf3ab3b08213945738166.1920x1080.jpg?t=1789497543",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219740/ss_38d4d1b21050fc4b3978fcf65c909260d3673fb7.1920x1080.jpg?t=1789497543",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219740/ss_1d3d9b7d9d752666feb9853215c118104816eee2.1920x1080.jpg?t=1789497543"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Don’t Starve is an uncompromising wilderness survival game full of science and magic. Enter a strange and unexplored world full of strange creatures, dangers, and surprises. Gather resources to craft items and structures that match your survival style.",
+        "en": "Don’t Starve is an uncompromising wilderness survival game full of science and magic. Enter a strange and unexplored world full of strange creatures, dangers, and surprises. Gather resources to craft items and structures that match your survival style."
+      },
+      "composer": "Vince de Giorgi"
+    }
+  },
+  {
+    "id": "stray",
+    "title": "Stray",
+    "releaseYear": 2022,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Réaliste immersive et néon-cyberpunk",
+      "en": "Immersive realistic neon-cyberpunk 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne féline 3D",
+      "en": "Third-person Feline 3D"
+    },
+    "developer": "BlueTwelve Studio",
+    "steamUrl": "https://store.steampowered.com/app/1332010/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1332010/ss_88e209a90c2039fa76bca6fa08c641365be38d50.1920x1080.jpg?t=1785424330",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1332010/ss_e8f0cbd5efdba352e89c4cfcee3fe991a1e1be8a.1920x1080.jpg?t=1785424330",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1332010/ss_2221af260c64362fdc835a9dca65f6f1d1192b25.1920x1080.jpg?t=1785424330",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1332010/ss_3fdd04a5418293864bf82d33c75f833121e63804.1920x1080.jpg?t=1785424330",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1332010/ss_90f8a99d0d1454bc77f46542f00f9ae5043c4268.1920x1080.jpg?t=1785424330",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1332010/ss_a697971e484b3deef50153a13f2afd0539347d23.1920x1080.jpg?t=1785424330"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Perdu, seul et séparé de sa famille, un chat errant doit résoudre un ancien mystère pour fuir une cyber-cité tombée dans l’oubli et retourner chez lui.",
+        "en": "Perdu, seul et séparé de sa famille, un chat errant doit résoudre un ancien mystère pour fuir une cyber-cité tombée dans l’oubli et retourner chez lui."
+      },
+      "composer": "Yann van der Cruyssen"
+    }
+  },
+  {
+    "id": "chicory-a-colorful-tale",
+    "title": "Chicory: A Colorful Tale",
+    "releaseYear": 2021,
+    "genre": [
+      "Aventure",
+      "Indépendant",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Dessin à la main noir et blanc à peindre",
+      "en": "Coloring book black and white hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Top-down)",
+      "en": "2D Top-down"
+    },
+    "developer": "Wishes Ultd., Greg Lobanov, Alexis Dean-Jones, Lena Raine, Madeline Berger, A Shell in the Pit",
+    "steamUrl": "https://store.steampowered.com/app/1123450/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1123450/ss_2f643ac851b504a1c10e0b6f1cfdc3089707ab55.1920x1080.jpg?t=1783360001",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1123450/ss_1f16a64698124ab065ed1fdd7cc0ea23511f3791.1920x1080.jpg?t=1783360001",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1123450/ss_9e46f9eaaf395c41aacba63a739670abd9255c7d.1920x1080.jpg?t=1783360001",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1123450/ss_119ef0155a50538c028669a625aabc939dc6e30c.1920x1080.jpg?t=1783360001",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1123450/ss_ea36cdfb65136f5bfe21422388bb2942bac9bdac.1920x1080.jpg?t=1783360001",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1123450/ss_c972c1518fa981a619b5487b35f513d453392242.1920x1080.jpg?t=1783360001"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Une aventure en vue de dessus dans un monde haut en couleurs. Utilise ta peinture pour explorer, te faire des amis, résoudre des énigmes, et dessine partout ! Par les créateurs de Celeste &amp; Wandersong.",
+        "en": "Une aventure en vue de dessus dans un monde haut en couleurs. Utilise ta peinture pour explorer, te faire des amis, résoudre des énigmes, et dessine partout ! Par les créateurs de Celeste &amp; Wandersong."
+      },
+      "composer": "Lena Raine"
+    }
+  },
+  {
+    "id": "sifu",
+    "title": "Sifu",
+    "releaseYear": 2023,
+    "genre": [
+      "Action",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée façon peinture à l’huile et cinéma d’arts martiaux",
+      "en": "Stylized oil-painted martial arts cinematic 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne 3D (Over-the-shoulder)",
+      "en": "Third-person 3D"
+    },
+    "developer": "Sloclap",
+    "steamUrl": "https://store.steampowered.com/app/2138710/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138710/ss_9be1654f96e9fd6517fbe9107d76da245cbfaeb9.1920x1080.jpg?t=1782742326",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138710/ss_7f7fd03f973d0a1e5e9d481a2235402c19c0f0e5.1920x1080.jpg?t=1782742326",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138710/ss_fcbdfe30cb361fdc6971878306a5179d175240c9.1920x1080.jpg?t=1782742326",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138710/ss_c917c981f912e8331b40a2638a32b3021458d4b8.1920x1080.jpg?t=1782742326",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138710/ss_6541bc550e7b1133d123ebce8b0e098dccbe66eb.1920x1080.jpg?t=1782742326",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138710/ss_c400edce5e28150a5d9859aaace1c76fb2b44d78.1920x1080.jpg?t=1782742326"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Sifu est un jeu de combat réaliste à la troisième personne, avec des mécaniques pointues de kung-fu et une action digne des films d'arts martiaux qui vous entraîne dans une quête de vengeance.",
+        "en": "Sifu est un jeu de combat réaliste à la troisième personne, avec des mécaniques pointues de kung-fu et une action digne des films d'arts martiaux qui vous entraîne dans une quête de vengeance."
+      },
+      "composer": "Howie Lee"
+    }
+  },
+  {
+    "id": "jusant",
+    "title": "Jusant",
+    "releaseYear": 2023,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée lumineuse et minérale",
+      "en": "Luminous and mineral stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne 3D d’escalade",
+      "en": "Third-person Climbing 3D"
+    },
+    "developer": "DON'T NOD",
+    "steamUrl": "https://store.steampowered.com/app/1977170/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1977170/ss_cb8d2e6f82291e22aa0f58a943d355c67b0c33af.1920x1080.jpg?t=1771331092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1977170/ss_e67326ddf0d3409ef0cde09d78e67a7b09872bf1.1920x1080.jpg?t=1771331092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1977170/ss_6f917526327053f0eed0f0f9cad418f63df909be.1920x1080.jpg?t=1771331092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1977170/ss_63d8b664496f63336f755312508fdac4b117e2ff.1920x1080.jpg?t=1771331092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1977170/ss_2a2aacbd9110b701cb65b7d6baead26edc73c801.1920x1080.jpg?t=1771331092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1977170/ss_a0afced7958efd91d0bc584ff1d5d4cf85d870ff.1920x1080.jpg?t=1771331092"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Laissez-vous emporter par l'ambiance méditative de Jusant, un jeu d'escalade d'action &amp; puzzle. Défiez les hauteurs infinies d’une tour colossale et découvrez ses mystères aux côtés de votre compagnon constitué d'eau.",
+        "en": "Laissez-vous emporter par l'ambiance méditative de Jusant, un jeu d'escalade d'action &amp; puzzle. Défiez les hauteurs infinies d’une tour colossale et découvrez ses mystères aux côtés de votre compagnon constitué d'eau."
+      },
+      "composer": "Guillaume Ferran"
+    }
+  },
+  {
+    "id": "thank-goodness-youre-here",
+    "title": "Thank Goodness You're Here!",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Occasionnel",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "Dessin animé britannique traditionnel fait main",
+      "en": "Traditional hand-drawn British comedy cartoon"
+    },
+    "camera": {
+      "fr": "Vue de dessus / latérale 2D cartoon",
+      "en": "2D Cartoon Top-down / Side hybrid"
+    },
+    "developer": "Coal Supper",
+    "steamUrl": "https://store.steampowered.com/app/2366980/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366980/ss_928c3226d2a3723e29e63cc19c13f47bd88faa86.1920x1080.jpg?t=1733154706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366980/ss_c624fda9191859781cf9b34a6563c1953d977800.1920x1080.jpg?t=1733154706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366980/ss_179e32f0cddfa678a826750968325810bf83e6b3.1920x1080.jpg?t=1733154706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366980/ss_dfd24b8c643032dea42919d1584b94f100dccd2b.1920x1080.jpg?t=1733154706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366980/ss_d9dc1ea31fae0bbe198885ef23ed9a6348190a5f.1920x1080.jpg?t=1733154706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2366980/ss_21e18c4d8f5e892281a5f6877abb878812379141.1920x1080.jpg?t=1733154706"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Thank Goodness You're Here! est un jeu de claqueforme comique et absurde au cœur du nord de l'Angleterre, dans l'étrange ville de Barnsworth. En tant que commercial itinérant, visitez les lieux et rencontrez ses habitants, impatients de vous confier des tâches plus loufoques les unes que les autres…",
+        "en": "Thank Goodness You're Here! est un jeu de claqueforme comique et absurde au cœur du nord de l'Angleterre, dans l'étrange ville de Barnsworth. En tant que commercial itinérant, visitez les lieux et rencontrez ses habitants, impatients de vous confier des tâches plus loufoques les unes que les autres…"
+      },
+      "composer": "Coal Supper"
+    }
+  },
+  {
+    "id": "minishoot-adventures",
+    "title": "Minishoot' Adventures",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Occasionnel",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Dessin vectoriel 2D vibrant et coloré",
+      "en": "Vibrant and colorful 2D vector art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D (Twin-stick / Metroidvania)",
+      "en": "2D Top-down Twin-stick"
+    },
+    "developer": "SoulGame Studio",
+    "steamUrl": "https://store.steampowered.com/app/1634860/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1634860/ss_a27d15bad37bafc01b1ac80381b46b14cc1a34fc.1920x1080.jpg?t=1778570664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1634860/ss_86852586349766e5d496a3035eb92dff74905ca0.1920x1080.jpg?t=1778570664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1634860/ss_36e73da31ffb07af94e668c53136197c4b539391.1920x1080.jpg?t=1778570664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1634860/ss_7b8f85ab8a99841c031c24e98bf376831354a7e5.1920x1080.jpg?t=1778570664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1634860/ss_0ad10aa0948e6e3af8da494d47e52f6fd1517a0c.1920x1080.jpg?t=1778570664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1634860/ss_ea0a3dcf1a509e31f836acdafaf1d99e29de5786.1920x1080.jpg?t=1778570664"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Minishoot' est un jeu d'aventure unique mêlant exploration libre et gameplay twin stick shooter. Combattez à travers le monde de la surface et celui des profondeurs, améliorez votre vaisseau pour venir à bout des boss de donjon et secourir vos amis !",
+        "en": "Minishoot' est un jeu d'aventure unique mêlant exploration libre et gameplay twin stick shooter. Combattez à travers le monde de la surface et celui des profondeurs, améliorez votre vaisseau pour venir à bout des boss de donjon et secourir vos amis !"
+      },
+      "composer": "SoulGame"
+    }
+  }
+]

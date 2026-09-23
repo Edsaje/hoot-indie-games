@@ -1,0 +1,45 @@
+{
+  "name": "hoot-indie-games",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "prebuild": "npx tsx scripts/generateSeoIndex.ts",
+    "generate-seo": "npx tsx scripts/generateSeoIndex.ts",
+    "generate-og": "npx tsx scripts/generateOgBanner.ts",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "add-game": "npx tsx scripts/fetchSteamGame.ts",
+    "update-db": "npx tsx scripts/addBatchGames.ts && npx tsx scripts/mergeGamesDatabase.ts",
+    "audit-db": "npx tsx scripts/verifySteamDatabase.ts",
+    "audit-links": "npx tsx scripts/auditExternalLinks.ts",
+    "harvest-daily": "npx tsx scripts/dailyIndieHarvest.ts",
+    "sync-store": "npx tsx scripts/syncSteamStoreData.ts",
+    "fetch-steam": "npx tsx scripts/fetchSteamCatalog.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
+    "framer-motion": "^13.4.0",
+    "i18next": "^26.4.2",
+    "lucide-react": "^1.47.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.14",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "tsx": "^4.23.13",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

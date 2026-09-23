@@ -1,0 +1,307 @@
+@import "tailwindcss";
+
+@theme {
+  --color-slate-dark: #03140e;
+  --color-slate-container: #062319;
+  --color-slate-surface: #093224;
+  --color-slate-border: #0f4c38;
+  --color-amber-accent: #f59e0b;
+  --color-emerald-feedback: #10b981;
+  --color-mustard-feedback: #eab308;
+  --color-brick-feedback: #ef4444;
+  --color-mystic-purple: #8b5cf6;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: #010604;
+  background-image: linear-gradient(180deg, #020f0a 0%, #010a07 35%, #010604 100%);
+  background-attachment: fixed;
+  color: #f1f5f9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* Glowing Amber Eye Animation */
+@keyframes owlEyeGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px #f59e0b) drop-shadow(0 0 7px #f59e0b);
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px #f59e0b) drop-shadow(0 0 16px #f59e0b);
+    transform: scale(1.15);
+  }
+}
+
+.owl-eye-pulsing {
+  animation: owlEyeGlow 1.4s ease-in-out infinite;
+}
+
+/* Card flip animation helpers */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Ambient nocturnal starfield (Twinkling starry night sky) */
+.bg-ambient-stars {
+  background-image: 
+    /* Layer 1: Bright sharp nocturnal stars */
+    radial-gradient(1.2px 1.2px at 45px 65px, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 150px 120px, rgba(210, 250, 235, 0.85), transparent),
+    radial-gradient(1.5px 1.5px at 280px 220px, rgba(254, 240, 138, 0.9), transparent),
+    radial-gradient(1px 1px at 390px 80px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.8px 1.8px at 510px 310px, rgba(167, 243, 208, 0.95), transparent),
+    radial-gradient(1px 1px at 640px 140px, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.4px 1.4px at 760px 240px, rgba(250, 204, 21, 0.85), transparent),
+    radial-gradient(1px 1px at 850px 70px, rgba(210, 245, 235, 0.8), transparent),
+    /* Layer 2: Deeper stardust & distant pinpricks */
+    radial-gradient(1px 1px at 90px 320px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.3px 1.3px at 210px 410px, rgba(167, 243, 208, 0.65), transparent),
+    radial-gradient(1px 1px at 340px 340px, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.5px 1.5px at 460px 450px, rgba(253, 224, 71, 0.7), transparent),
+    radial-gradient(1px 1px at 580px 210px, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.2px 1.2px at 700px 420px, rgba(210, 250, 235, 0.65), transparent),
+    radial-gradient(1px 1px at 820px 190px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 940px 360px, rgba(210, 250, 235, 0.55), transparent);
+  background-repeat: repeat;
+  background-size: 960px 520px;
+}
+
+/* ==========================================================================
+   Sylvestre Organic Leaves - Hover-Only Gentle Rustle (Zero Automatic Wind)
+   ========================================================================== */
+
+.sylvestre-leaf {
+  transform: scaleX(var(--leaf-scale-x, 1)) rotate(var(--leaf-rot, 0deg));
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  will-change: transform;
+}
+
+/* When the user hovers directly over the leaf */
+.sylvestre-leaf:hover {
+  transform: scaleX(var(--leaf-scale-x, 1)) scale(1.18) rotate(calc(var(--leaf-rot, 0deg) + 8deg)) !important;
+  filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.7));
+}
+
+/* When hovering over the parent card/container */
+.group:hover .sylvestre-leaf {
+  transform: scaleX(var(--leaf-scale-x, 1)) scale(1.06) rotate(calc(var(--leaf-rot, 0deg) + 4deg));
+}
+
+/* Guarantee Sylvestre decorative frames never inherit space-y / space-x margins from parents */
+[data-sylvestre-ivy-frame="true"] {
+  margin: 0 !important;
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+/* ==========================================================================
+   Universal Sylvestre Emerald HUD Styling (100% Site-Wide Lush Forest Panels)
+   ========================================================================== */
+
+/* Universal Emerald Forest HUD Card Transformation with Wood Frame Border */
+.hud-wood-panel,
+.bg-\[\#131a29\],
+.bg-\[\#1a2234\],
+.bg-\[\#111c2a\],
+.bg-\[\#0f172a\],
+.bg-\[\#0e1422\],
+.bg-\[\#0c1220\],
+.bg-\[\#090d16\],
+.bg-slate-900 {
+  background: 
+    radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.22), transparent 75%),
+    linear-gradient(180deg, #072a20 0%, #031711 100%) !important;
+  border-color: #78350f !important;
+  box-shadow: 
+    inset 0 1px 1.5px rgba(217, 119, 6, 0.35),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.75),
+    0 8px 24px -4px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Subtle nocturnal moss texture on darker inner surfaces */
+.bg-\[\#0b0f19\],
+.bg-\[\#0c121e\],
+.bg-slate-950 {
+  background-color: #01110a !important;
+}
+
+/* Wood frame border overrides (all frames & cards on the site) */
+.border-\[\#1e293b\],
+.border-slate-800,
+.border-slate-700,
+.border-slate-900,
+.border-\[\#0d543e\],
+.border-\[\#0d543e\]\/50,
+.border-\[\#0d543e\]\/60,
+.border-\[\#0d543e\]\/70 {
+  border-color: #6d3b14 !important;
+}
+
+/* Primary carved wood border on main HUD frames */
+.border-\[\#10b981\]\/50,
+.border-\[\#10b981\]\/60,
+.border-\[\#10b981\]\/70,
+.border-\[\#10b981\] {
+  border-color: #78350f !important;
+}
+
+/* Card hover highlight with glowing wood & amber aura */
+.hover\:border-amber-500\/50:hover,
+.hover\:border-amber-400:hover,
+.hover\:border-\[\#10b981\]\/60:hover,
+.hover\:border-\[\#10b981\]\/70:hover,
+.hover\:border-\[\#1e293b\]:hover {
+  border-color: #b45309 !important;
+  box-shadow: 
+    inset 0 1px 1px rgba(245, 158, 11, 0.45),
+    0 0 18px rgba(180, 83, 9, 0.4) !important;
+}
+
+/* Verdant canopy plank header with carved wood border */
+.hud-wood-plank {
+  background: 
+    repeating-linear-gradient(90deg, transparent 0, transparent 80px, rgba(0,0,0,0.18) 80px, rgba(0,0,0,0.18) 82px),
+    linear-gradient(180deg, #0a3a2c 0%, #052119 100%);
+  border: 2px solid #78350f !important;
+  box-shadow: 
+    inset 0 1.5px 0 rgba(245, 158, 11, 0.3),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.7),
+    0 8px 20px rgba(0,0,0,0.5);
+}
+
+/* ==========================================================================
+   Retro CRT Scanlines & Cathode Glow Mode (Konami Code Easter Egg)
+   ========================================================================== */
+
+body[data-crt="true"] {
+  filter: contrast(1.06) brightness(1.02) saturate(1.12);
+}
+
+body[data-crt="true"]::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: 
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.26) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.015), rgba(0, 0, 255, 0.03));
+  z-index: 99999;
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+@keyframes crtFlicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+body[data-crt="true"] #root {
+  animation: crtFlicker 0.18s infinite;
+}
+
+/* ==========================================================================
+   Mobile-First Performance & Ergonomic Optimizations
+   ========================================================================== */
+
+/* 1. Touch ergonomics: Eliminate 300ms tap delay & remove tap highlights */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex="0"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 2. Prevent iOS Safari auto-zoom on input focus */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* 3. Smooth momentum scrolling on iOS */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 4. Defer off-screen rendering for long catalog & games feeds (content-visibility) */
+.deferred-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 280px;
+}
+
+/* 5. Safe Area Inset utilities for iPhone X+ & modern bezel-less devices */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+}
+
+.bottom-safe {
+  bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+
+/* 6. Touch-friendly comfortable target size */
+.touch-target-comfortable {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+

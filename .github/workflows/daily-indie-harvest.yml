@@ -1,0 +1,78 @@
+name: 🦉 Daily Indie Games Harvest
+
+on:
+  schedule:
+    # S'exécute automatiquement chaque nuit à 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Permet de lancer le moissonnage manuellement depuis l'onglet Actions de GitHub
+
+permissions:
+  contents: write
+
+jobs:
+  harvest-and-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Récupération du code source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: ⚙️ Configuration de l'environnement Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: 📦 Installation des dépendances
+        run: npm ci
+
+      - name: 🔍 Moissonnage des nouveautés indés Steam
+        run: npx tsx scripts/dailyIndieHarvest.ts
+
+      - name: 🏷️ Synchronisation des prix et évaluations Steam Store
+        run: npm run sync-store
+
+      - name: 🛡️ Audit de conformité & Règle Zéro Hallucination
+        run: npm run audit-db
+
+      - name: 🏗️ Compilation de production du site (Vite / React)
+        run: npm run build
+
+      - name: 🚀 Commit et Push des nouveaux jeux vers GitHub
+        id: commit_step
+        run: |
+          git config --local user.email "bot@hootindiegames.com"
+          git config --local user.name "Hoot Bot (Daily Harvest)"
+          if [ -n "$(git status --porcelain src/data/ public/data/)" ]; then
+            echo "📋 Modifications détectées dans les données. Préparation du commit..."
+            git status --short
+            # Inclure l'ensemble des données récoltées (Steam, Itch.io, Catalogue, Radar) ainsi que index.html mis à jour par prebuild (SEO)
+            git add src/data/ public/data/ index.html
+            git commit -m "chore(data): moissonnage nocturne Steam & Itch.io, synchronisation du radar [skip ci]"
+            # Nettoyage défensif des fichiers résiduels pour garantir un répertoire de travail 100% propre
+            git checkout -- . 2>/dev/null || true
+            echo "🔄 Synchronisation avec origin/main..."
+            git pull --rebase origin main
+            echo "🚀 Push vers GitHub..."
+            git push origin HEAD:main
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            echo "🎉 Base de données et Radar mis à jour et poussés sur GitHub avec succès !"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "☕ Aucun changement à pousser aujourd'hui."
+          fi
+
+      - name: 📤 Déploiement automatique vers l'hébergement OVH
+        if: steps.commit_step.outputs.has_changes == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.cluster129.hosting.ovh.net
+          username: hootinu
+          password: ${{ secrets.OVH_FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./www/
+          dangerous-clean-slate: false
