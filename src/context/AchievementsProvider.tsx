@@ -8,7 +8,9 @@ import {
   addBonusFeathers as addBonusFeathersUtil,
   spendFeathers as spendFeathersUtil,
   checkAndClaimAllPendingDailyRewards,
+  isLocalAdminProfile,
 } from '../utils/featherEconomy';
+import { useUserAccount } from './useUserAccount';
 import { getTodayDateString } from '../utils/streakManager';
 import { Feather, Sparkles, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -19,20 +21,33 @@ const STORAGE_KEY = 'hoot_unlocked_achievements_v1';
 
 export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { t, i18n } = useTranslation();
+  const { isAdmin, isCreator } = useUserAccount();
   const [unlockedIds, setUnlockedIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      const list = saved ? (JSON.parse(saved) as string[]) : [];
-      const hour = new Date().getHours();
-      if ((hour >= 23 || hour < 5) && !list.includes('night_watch')) {
-        list.push('night_watch');
+      let list: string[] = [];
+      if (saved) {
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) list = parsed;
+          else if (parsed && typeof parsed === 'object') list = Object.keys(parsed);
         } catch {
-          // Ignore
+          list = [];
         }
       }
-      return list;
+      const validSet = new Set(ACHIEVEMENTS_LIST.map((a) => a.id));
+      const cleanList = Array.from(new Set(list.filter((id) => validSet.has(id))));
+
+      const hour = new Date().getHours();
+      if ((hour >= 23 || hour < 5) && !cleanList.includes('night_watch')) {
+        cleanList.push('night_watch');
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanList));
+      } catch {
+        // Ignore
+      }
+      return cleanList;
     } catch {
       return [];
     }
@@ -50,16 +65,31 @@ export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, [unlockedIds]);
 
   // Solde disponible dynamique (Succès + Farm journalier - Dépenses en boutique)
+  // Le compte administrateur officiel dispose de plumes infinies (Infinity).
   const feathersCount = React.useMemo(() => {
-    return getFeathersBalance(baseAchievementsFeathers);
-  }, [baseAchievementsFeathers, economyTick]);
+    if (isAdmin || isCreator || isLocalAdminProfile()) {
+      return Infinity;
+    }
+    return getFeathersBalance(baseAchievementsFeathers, false);
+  }, [baseAchievementsFeathers, economyTick, isAdmin, isCreator]);
 
   // Écoute de la synchronisation cloud et des mises à jour d'économie
   useEffect(() => {
     const handleCloudRestored = (e: any) => {
       const cloudData = e.detail;
       if (cloudData && Array.isArray(cloudData.achievements)) {
-        setUnlockedIds((prev) => Array.from(new Set([...prev, ...cloudData.achievements])));
+        const validSet = new Set(ACHIEVEMENTS_LIST.map((a) => a.id));
+        setUnlockedIds((prev) => {
+          const clean = Array.from(
+            new Set([...prev, ...cloudData.achievements])
+          ).filter((id: string) => validSet.has(id));
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
+          } catch {
+            // Ignore
+          }
+          return clean;
+        });
       }
       setEconomyTick((t) => t + 1);
     };
@@ -68,11 +98,34 @@ export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ 
       setEconomyTick((t) => t + 1);
     };
 
+    const handleAchievementsReset = () => {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        let list: string[] = [];
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) list = parsed;
+        }
+        const hour = new Date().getHours();
+        if ((hour >= 23 || hour < 5) && !list.includes('night_watch')) {
+          list.push('night_watch');
+        }
+        setUnlockedIds(list);
+      } catch {
+        setUnlockedIds([]);
+      }
+      setEconomyTick((t) => t + 1);
+    };
+
     window.addEventListener('hoot_cloud_save_restored', handleCloudRestored as any);
     window.addEventListener('hoot_feathers_updated', handleFeathersUpdated);
+    window.addEventListener('hoot_achievements_updated', handleAchievementsReset);
+    window.addEventListener('hoot_cloud_reset', handleAchievementsReset);
     return () => {
       window.removeEventListener('hoot_cloud_save_restored', handleCloudRestored as any);
       window.removeEventListener('hoot_feathers_updated', handleFeathersUpdated);
+      window.removeEventListener('hoot_achievements_updated', handleAchievementsReset);
+      window.removeEventListener('hoot_cloud_reset', handleAchievementsReset);
     };
   }, []);
 
@@ -110,13 +163,16 @@ export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   const spendFeathers = useCallback(
     (amount: number, reason?: string) => {
+      if (isAdmin || isCreator || isLocalAdminProfile()) {
+        return true;
+      }
       const success = spendFeathersUtil(amount, feathersCount, reason);
       if (success) {
         setEconomyTick((v) => v + 1);
       }
       return success;
     },
-    [feathersCount]
+    [feathersCount, isAdmin, isCreator]
   );
 
   const addBonusFeathers = useCallback((amount: number, reason?: string) => {

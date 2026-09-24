@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/admin_auth.php';
-const FORBIDDEN_NORMALIZED_NAMES = ['hibouxe', 'edsaje'];
+const FORBIDDEN_NORMALIZED_NAMES = ['hibouxe', 'edsaje', 'admin', 'administrator', 'moderateur', 'moderator', 'staff', 'support', 'root', 'superadmin'];
 
 $storageFile = __DIR__ . '/registered_usernames.json';
 $rateLimitFile = __DIR__ . '/usernames_ratelimit.json';
@@ -119,24 +119,13 @@ function loadUsernamesData($file) {
                 'customTitle' => '👑 Créateur du Site',
                 'isAdminReserved' => true,
                 'isAdmin' => true
-            ],
-            'edsaje' => [
-                'displayName' => 'Edsaje',
-                'steamId' => ADMIN_STEAM_ID,
-                'userId' => 'admin_edsaje',
-                'claimedAt' => '2026-01-01T00:00:00Z',
-                'role' => 'admin',
-                'status' => 'active',
-                'customTitle' => '👑 Créateur du Site',
-                'isAdminReserved' => true,
-                'isAdmin' => true
             ]
         ],
         'userToName' => [
             ADMIN_STEAM_ID => 'hibouxe',
             'steam_' . ADMIN_STEAM_ID => 'hibouxe'
         ],
-        'forbiddenNames' => ['hibouxe', 'edsaje'],
+        'forbiddenNames' => ['hibouxe', 'edsaje', 'admin'],
         'bannedUsers' => []
     ];
 
@@ -162,19 +151,75 @@ function loadUsernamesData($file) {
     }
 
     $dirty = false;
-    // Assurer la présence des réservations créateur
+
+    // 1. Purge définitive des anciens comptes : Edsaje et sqdsqd
+    if (isset($data['usernames']['edsaje'])) {
+        unset($data['usernames']['edsaje']);
+        $dirty = true;
+    }
+    if (isset($data['usernames']['sqdsqd'])) {
+        unset($data['usernames']['sqdsqd']);
+        $dirty = true;
+    }
+
+    // 2. Nettoyage de la table de correspondance userToName
+    if (isset($data['userToName']) && is_array($data['userToName'])) {
+        foreach ($data['userToName'] as $k => $v) {
+            if ($v === 'edsaje' || $v === 'sqdsqd') {
+                unset($data['userToName'][$k]);
+                $dirty = true;
+            }
+        }
+        $data['userToName'][ADMIN_STEAM_ID] = 'hibouxe';
+        $data['userToName']['steam_' . ADMIN_STEAM_ID] = 'hibouxe';
+    }
+
+    // 3. Garantir l'enregistrement officiel unique du créateur Hibouxe
     if (!isset($data['usernames']['hibouxe'])) {
         $data['usernames']['hibouxe'] = $default['usernames']['hibouxe'];
         $dirty = true;
+    } else {
+        $data['usernames']['hibouxe']['role'] = 'admin';
+        $data['usernames']['hibouxe']['isAdmin'] = true;
+        $data['usernames']['hibouxe']['isAdminReserved'] = true;
+        $data['usernames']['hibouxe']['steamId'] = ADMIN_STEAM_ID;
     }
-    if (!isset($data['usernames']['edsaje'])) {
-        $data['usernames']['edsaje'] = $default['usernames']['edsaje'];
-        $dirty = true;
+
+    // 4. Rétrogradation stricte de tout autre compte qui aurait un rôle admin
+    foreach ($data['usernames'] as $uKey => &$uEntry) {
+        if ($uKey !== 'hibouxe') {
+            if (($uEntry['role'] ?? '') === 'admin') {
+                $uEntry['role'] = 'user';
+                $dirty = true;
+            }
+            if (!empty($uEntry['isAdmin'])) {
+                $uEntry['isAdmin'] = false;
+                $dirty = true;
+            }
+            if (!empty($uEntry['isAdminReserved'])) {
+                $uEntry['isAdminReserved'] = false;
+                $dirty = true;
+            }
+            if (($uEntry['steamId'] ?? '') === ADMIN_STEAM_ID) {
+                $uEntry['steamId'] = null;
+                $dirty = true;
+            }
+        }
     }
+
+    // 5. Maintien strict de la liste des pseudos interdits (Edsaje reste interdit)
     if (!isset($data['forbiddenNames']) || !is_array($data['forbiddenNames'])) {
-        $data['forbiddenNames'] = ['hibouxe', 'edsaje'];
+        $data['forbiddenNames'] = ['hibouxe', 'edsaje', 'admin'];
         $dirty = true;
+    } else {
+        foreach (['hibouxe', 'edsaje', 'admin'] as $fb) {
+            if (!in_array($fb, $data['forbiddenNames'], true)) {
+                $data['forbiddenNames'][] = $fb;
+                $dirty = true;
+            }
+        }
     }
+
     if (!isset($data['bannedUsers']) || !is_array($data['bannedUsers'])) {
         $data['bannedUsers'] = [];
         $dirty = true;
@@ -402,14 +447,30 @@ if ($method === 'POST') {
         $db = loadUsernamesData('');
     }
 
+    // Protection absolue du Steam ID administrateur et des pseudonymes protégés
+    $isAttemptingAdminIdentity = (strval($steamId) === ADMIN_STEAM_ID)
+                              || in_array($normalized, ['hibouxe', 'edsaje'], true);
+
+    if ($isAttemptingAdminIdentity && !isCreatorAdminAuthorized()) {
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        http_response_code(403);
+        echo json_encode([
+            'success' => false,
+            'error' => 'forbidden_admin_identity',
+            'message' => 'L\'identité et le compte Steam de l\'administrateur créateur sont strictement protégés et vérifiés par Valve OpenID.'
+        ]);
+        exit;
+    }
+
     $claimed = $db['usernames'][$normalized] ?? null;
 
     if ($claimed) {
         $isSameUser = (!empty($userId) && ($claimed['userId'] ?? '') === $userId)
                    || (!empty($steamId) && ($claimed['steamId'] ?? '') === $steamId);
 
-        // Si c'est l'admin officiel
-        if (strval($steamId) === ADMIN_STEAM_ID && !empty($claimed['isAdminReserved'])) {
+        // Seul l'administrateur créateur authentifié peut revendiquer un compte réservé
+        if ($isAttemptingAdminIdentity && isCreatorAdminAuthorized()) {
             $isSameUser = true;
         }
 
@@ -436,9 +497,11 @@ if ($method === 'POST') {
         }
     }
 
-    // Enregistrer le nouveau pseudo avec l'ensemble des métadonnées requises
+    // Enregistrer le nouveau pseudo : LE RÔLE ADMIN NE PEUT JAMAIS ÊTRE CRÉÉ PAR REQUÊTE PUBLIQUE
     $nowIso = date('c');
-    $isAdmin = (strval($steamId) === ADMIN_STEAM_ID);
+    $isOfficialCreator = isCreatorAdminAuthorized() && (strval($steamId) === ADMIN_STEAM_ID) && ($normalized === 'hibouxe');
+    $assignedRole = $isOfficialCreator ? 'admin' : 'user';
+
     $db['usernames'][$normalized] = [
         'displayName' => $cleanDisplay,
         'userId' => $userId,
@@ -446,17 +509,31 @@ if ($method === 'POST') {
         'claimedAt' => $claimed['claimedAt'] ?? $nowIso,
         'updatedAt' => $nowIso,
         'lastSeenAt' => $nowIso,
-        'role' => $isAdmin ? 'admin' : ($claimed['role'] ?? 'user'),
+        'role' => $assignedRole,
         'status' => $claimed['status'] ?? 'active',
-        'customTitle' => $isAdmin ? '👑 Créateur du Site' : ($claimed['customTitle'] ?? ''),
+        'customTitle' => $isOfficialCreator ? '👑 Créateur du Site' : ($claimed['customTitle'] ?? ''),
         'note' => $claimed['note'] ?? '',
-        'isAdminReserved' => $isAdmin || !empty($claimed['isAdminReserved']),
-        'isAdmin' => $isAdmin
+        'isAdminReserved' => $isOfficialCreator,
+        'isAdmin' => $isOfficialCreator
     ];
     $db['userToName'][$identKey] = $normalized;
     if (!empty($steamId)) {
         $db['userToName'][strval($steamId)] = $normalized;
         $db['userToName']['steam_' . strval($steamId)] = $normalized;
+    }
+
+    // Nettoyage de sécurité proactif : réinitialiser tout compte non-autorisé qui aurait pu usurper admin
+    if (isset($db['usernames']) && is_array($db['usernames'])) {
+        foreach ($db['usernames'] as $uKey => &$uEntry) {
+            if (($uEntry['userId'] ?? '') !== 'admin_hibouxe' || $uKey !== 'hibouxe') {
+                if (($uEntry['role'] ?? '') === 'admin' || !empty($uEntry['isAdmin'])) {
+                    $uEntry['role'] = 'user';
+                    $uEntry['isAdmin'] = false;
+                    $uEntry['isAdminReserved'] = false;
+                }
+            }
+        }
+        unset($uEntry);
     }
 
     // Réécriture atomique
@@ -467,15 +544,15 @@ if ($method === 'POST') {
     flock($fp, LOCK_UN);
     fclose($fp);
 
-    $savedRole = $db['usernames'][$normalized]['role'] ?? ($isAdmin ? 'admin' : 'user');
+    $savedRole = $db['usernames'][$normalized]['role'] ?? 'user';
     echo json_encode([
         'success' => true,
         'username' => $cleanDisplay,
         'normalized' => $normalized,
         'message' => 'Pseudonyme validé et enregistré avec succès !',
-        'isAdmin' => $isAdmin,
+        'isAdmin' => $isOfficialCreator,
         'role' => $savedRole,
-        'isModerator' => ($savedRole === 'moderator'),
+        'isModerator' => false,
         'customTitle' => $db['usernames'][$normalized]['customTitle'] ?? ''
     ]);
     exit;

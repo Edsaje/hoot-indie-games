@@ -195,7 +195,7 @@ export const INDIE_AVATARS: IndieAvatar[] = [
     emoji: '🦉',
     bgGradient: 'from-amber-400 via-amber-600 to-yellow-950',
     quote: 'Paré de mille reflets d’or pur sous la canopée du sanctuaire.',
-    shopPrice: 50,
+    shopPrice: 400,
   },
   {
     id: 'celestial_knight',
@@ -204,7 +204,7 @@ export const INDIE_AVATARS: IndieAvatar[] = [
     emoji: '⚔️',
     bgGradient: 'from-amber-400 via-indigo-700 to-purple-950',
     quote: 'L’éclat d’une étincelle pure dans l’abysse infini.',
-    shopPrice: 60,
+    shopPrice: 550,
   },
   {
     id: 'golden_hornet',
@@ -213,7 +213,7 @@ export const INDIE_AVATARS: IndieAvatar[] = [
     emoji: '🪡',
     bgGradient: 'from-rose-500 via-amber-500 to-red-950',
     quote: 'Le fil de soie dorée tisse le destin de Pharloom.',
-    shopPrice: 60,
+    shopPrice: 550,
   },
   {
     id: 'retro_ghost',
@@ -222,6 +222,6 @@ export const INDIE_AVATARS: IndieAvatar[] = [
     emoji: '👻',
     bgGradient: 'from-emerald-400 via-teal-700 to-slate-950',
     quote: 'Venu des temps immémoriaux de la cartouche cathodique.',
-    shopPrice: 75,
+    shopPrice: 800,
   },
 ];

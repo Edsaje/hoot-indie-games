@@ -5,10 +5,9 @@
  * Garantit que les opérations sensibles (modération, catalogue, badge créateur, stats)
  * ne peuvent JAMAIS être usurpées par un tiers connaissant le Steam ID public.
  * 
- * Mécanismes de vérification autorisés :
- * 1. Environnement Localhost (Développement sans friction pour le créateur)
- * 2. Session PHP authentifiée cryptographiquement via Steam OpenID 2.0 (Valve)
- * 3. Jeton Maître Secret (.admin_pass / en-tête X-Admin-Key)
+ * Mécanismes de vérification stricts et inviolables :
+ * 1. Session PHP authentifiée cryptographiquement via Steam OpenID 2.0 (Valve)
+ * 2. Jeton Maître Secret (.admin_pass / en-tête X-Admin-Key)
  */
 
 if (!defined('ADMIN_STEAM_ID')) {
@@ -35,21 +34,11 @@ if (!function_exists('getAuthClientIp')) {
 }
 
 /**
- * Vérifie si la requête actuelle est légitimement autorisée en tant qu'administrateur créateur
+ * Vérifie si la requête actuelle est légitimement autorisée en tant qu'administrateur créateur.
+ * Sécurité absolue : Aucun en-tête client (Host, User-Agent, Referer, etc.) ne peut contourner cette vérification.
  */
 function isCreatorAdminAuthorized() {
-    $ip = getAuthClientIp();
-    $host = $_SERVER['HTTP_HOST'] ?? '';
-
-    // 1. Environnement Localhost : Développement local garanti
-    $isLocal = in_array($ip, ['127.0.0.1', '::1'], true) ||
-               strpos($host, 'localhost') !== false ||
-               strpos($host, '127.0.0.1') !== false;
-    if ($isLocal) {
-        return true;
-    }
-
-    // 2. Session PHP vérifiée (obtenue lors du login Steam OpenID officiel sur track.php)
+    // 1. Session PHP vérifiée (obtenue lors du login Steam OpenID officiel sur track.php validé par Valve)
     if (session_status() === PHP_SESSION_NONE) {
         @session_start();
     }
@@ -57,7 +46,7 @@ function isCreatorAdminAuthorized() {
         return true;
     }
 
-    // 3. Jeton Maître Secret (.admin_pass)
+    // 2. Jeton Maître Secret (.admin_pass) passé via header X-Admin-Key ou paramètre adminKey
     $adminPassFile = __DIR__ . '/.admin_pass';
     if (!file_exists($adminPassFile)) {
         // Génération automatique d'un secret cryptographique fort s'il n'existe pas
@@ -72,6 +61,13 @@ function isCreatorAdminAuthorized() {
         if (!empty($inputKey) && hash_equals($secret, $inputKey)) {
             return true;
         }
+    }
+
+    // 3. Uniquement si strictement en CLI server local de dev (sans proxy externe)
+    $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+    $hasForwardedIp = !empty($_SERVER['HTTP_CF_CONNECTING_IP']) || !empty($_SERVER['HTTP_X_FORWARDED_FOR']);
+    if (!$hasForwardedIp && in_array($remoteIp, ['127.0.0.1', '::1'], true) && php_sapi_name() === 'cli-server') {
+        return true;
     }
 
     return false;

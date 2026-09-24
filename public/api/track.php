@@ -130,24 +130,13 @@ function loadAndEnsureUsernamesDb($uFile) {
                 'customTitle' => '👑 Créateur du Site',
                 'isAdminReserved' => true,
                 'isAdmin' => true
-            ],
-            'edsaje' => [
-                'displayName' => 'Edsaje',
-                'steamId' => ADMIN_STEAM_ID,
-                'userId' => 'admin_edsaje',
-                'claimedAt' => '2026-01-01T00:00:00Z',
-                'role' => 'admin',
-                'status' => 'active',
-                'customTitle' => '👑 Créateur du Site',
-                'isAdminReserved' => true,
-                'isAdmin' => true
             ]
         ],
         'userToName' => [
             ADMIN_STEAM_ID => 'hibouxe',
             'steam_' . ADMIN_STEAM_ID => 'hibouxe'
         ],
-        'forbiddenNames' => ['hibouxe', 'edsaje'],
+        'forbiddenNames' => ['hibouxe', 'edsaje', 'admin'],
         'bannedUsers' => []
     ];
 
@@ -169,18 +158,75 @@ function loadAndEnsureUsernamesDb($uFile) {
     }
 
     $dirty = false;
+
+    // 1. Purge définitive des anciens comptes : Edsaje et sqdsqd
+    if (isset($data['usernames']['edsaje'])) {
+        unset($data['usernames']['edsaje']);
+        $dirty = true;
+    }
+    if (isset($data['usernames']['sqdsqd'])) {
+        unset($data['usernames']['sqdsqd']);
+        $dirty = true;
+    }
+
+    // 2. Nettoyage de la correspondance userToName
+    if (isset($data['userToName']) && is_array($data['userToName'])) {
+        foreach ($data['userToName'] as $k => $v) {
+            if ($v === 'edsaje' || $v === 'sqdsqd') {
+                unset($data['userToName'][$k]);
+                $dirty = true;
+            }
+        }
+        $data['userToName'][ADMIN_STEAM_ID] = 'hibouxe';
+        $data['userToName']['steam_' . ADMIN_STEAM_ID] = 'hibouxe';
+    }
+
+    // 3. Garantir que Hibouxe est le seul compte administrateur officiel
     if (!isset($data['usernames']['hibouxe'])) {
         $data['usernames']['hibouxe'] = $default['usernames']['hibouxe'];
         $dirty = true;
+    } else {
+        $data['usernames']['hibouxe']['role'] = 'admin';
+        $data['usernames']['hibouxe']['isAdmin'] = true;
+        $data['usernames']['hibouxe']['isAdminReserved'] = true;
+        $data['usernames']['hibouxe']['steamId'] = ADMIN_STEAM_ID;
     }
-    if (!isset($data['usernames']['edsaje'])) {
-        $data['usernames']['edsaje'] = $default['usernames']['edsaje'];
-        $dirty = true;
+
+    // 4. Rétrogradation systématique de tout autre compte qui aurait un rôle admin
+    foreach ($data['usernames'] as $uKey => &$uEntry) {
+        if ($uKey !== 'hibouxe') {
+            if (($uEntry['role'] ?? '') === 'admin') {
+                $uEntry['role'] = 'user';
+                $dirty = true;
+            }
+            if (!empty($uEntry['isAdmin'])) {
+                $uEntry['isAdmin'] = false;
+                $dirty = true;
+            }
+            if (!empty($uEntry['isAdminReserved'])) {
+                $uEntry['isAdminReserved'] = false;
+                $dirty = true;
+            }
+            if (($uEntry['steamId'] ?? '') === ADMIN_STEAM_ID) {
+                $uEntry['steamId'] = null;
+                $dirty = true;
+            }
+        }
     }
+
+    // 5. Maintien strict de la liste des pseudonymes interdits (Edsaje reste interdit)
     if (!isset($data['forbiddenNames']) || !is_array($data['forbiddenNames'])) {
-        $data['forbiddenNames'] = ['hibouxe', 'edsaje'];
+        $data['forbiddenNames'] = ['hibouxe', 'edsaje', 'admin'];
         $dirty = true;
+    } else {
+        foreach (['hibouxe', 'edsaje', 'admin'] as $fb) {
+            if (!in_array($fb, $data['forbiddenNames'], true)) {
+                $data['forbiddenNames'][] = $fb;
+                $dirty = true;
+            }
+        }
     }
+
     if (!isset($data['bannedUsers']) || !is_array($data['bannedUsers'])) {
         $data['bannedUsers'] = [];
         $dirty = true;
@@ -512,9 +558,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             echo json_encode(['success' => false, 'message' => 'Pseudonyme manquant.']);
             exit;
         }
-        if ($target === 'hibouxe' || $target === 'edsaje') {
+        if ($target === 'hibouxe') {
             http_response_code(403);
-            echo json_encode(['success' => false, 'message' => 'Les pseudonymes créateur ne peuvent pas être supprimés.']);
+            echo json_encode(['success' => false, 'message' => 'Le pseudonyme créateur officiel Hibouxe ne peut pas être supprimé.']);
             exit;
         }
 
@@ -561,8 +607,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             exit;
         }
 
-        // Protection inaliénable des comptes créateurs
-        $isCreator = ($target === 'hibouxe' || $target === 'edsaje');
+        // Protection inaliénable du compte créateur officiel
+        $isCreator = ($target === 'hibouxe');
         if ($isCreator && $newStatus === 'banned') {
             http_response_code(403);
             echo json_encode(['success' => false, 'message' => 'Le compte créateur ne peut pas être suspendu ou banni.']);
@@ -602,7 +648,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         if (!empty($newRole) && in_array($newRole, ['admin', 'moderator', 'vip', 'user'], true)) {
-            $uData['usernames'][$target]['role'] = $newRole;
+            // Seul Hibouxe peut être administrateur
+            $uData['usernames'][$target]['role'] = ($target === 'hibouxe') ? 'admin' : ($newRole === 'admin' ? 'moderator' : $newRole);
         }
         if (!empty($newStatus) && in_array($newStatus, ['active', 'banned'], true)) {
             $uData['usernames'][$target]['status'] = $newStatus;
@@ -647,7 +694,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             exit;
         }
 
-        if ($target === 'hibouxe' || $target === 'edsaje') {
+        if ($target === 'hibouxe') {
             http_response_code(403);
             echo json_encode(['success' => false, 'message' => 'Le compte créateur ne peut pas être suspendu ou banni.']);
             exit;
@@ -1011,7 +1058,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         foreach ($uDec['usernames'] as $k => $u) {
             $isBanned = ($u['status'] ?? '') === 'banned';
             if ($isBanned) $bannedCount++;
-            $isCreator = ($k === 'hibouxe' || $k === 'edsaje' || ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
+            $isCreator = ($k === 'hibouxe' && ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
             $uList[] = [
                 'normalized' => $k,
                 'displayName' => $u['displayName'] ?? $k,
@@ -1019,15 +1066,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                 'userId' => $u['userId'] ?? null,
                 'claimedAt' => $u['claimedAt'] ?? '',
                 'lastSeenAt' => $u['lastSeenAt'] ?? '',
-                'role' => $u['role'] ?? ($isCreator ? 'admin' : 'user'),
+                'role' => $isCreator ? 'admin' : (($u['role'] ?? '') === 'admin' ? 'user' : ($u['role'] ?? 'user')),
                 'status' => $u['status'] ?? 'active',
                 'customTitle' => $u['customTitle'] ?? '',
                 'note' => $u['note'] ?? '',
-                'isAdminReserved' => !empty($u['isAdminReserved']) || $isCreator,
+                'isAdminReserved' => $isCreator,
             ];
         }
         $customForbidden = isset($uDec['forbiddenNames']) && is_array($uDec['forbiddenNames']) ? $uDec['forbiddenNames'] : [];
-        $allForbidden = array_values(array_unique(array_merge(['hibouxe', 'edsaje'], $customForbidden)));
+        $allForbidden = array_values(array_unique(array_merge(['hibouxe', 'edsaje', 'admin'], $customForbidden)));
         $usernamesData = [
             'total' => count($uList),
             'list' => $uList,
@@ -1379,9 +1426,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                             <tr><td colspan="7" style="color: var(--text-muted); padding: 1.2rem; text-align: center;">Aucun utilisateur enregistré pour le moment.</td></tr>
                         <?php else: ?>
                             <?php foreach ($registeredUsersList as $normKey => $u):
-                                $isCreator = ($normKey === 'hibouxe' || $normKey === 'edsaje' || ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
+                                $isCreator = ($normKey === 'hibouxe' && ($u['steamId'] ?? '') === ADMIN_STEAM_ID);
                                 $isBanned = ($u['status'] ?? '') === 'banned';
-                                $role = $u['role'] ?? ($isCreator ? 'admin' : 'user');
+                                $role = $isCreator ? 'admin' : (($u['role'] ?? '') === 'admin' ? 'user' : ($u['role'] ?? 'user'));
                             ?>
                                 <tr>
                                     <td>

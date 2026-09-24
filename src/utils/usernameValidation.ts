@@ -27,11 +27,8 @@ export function normalizeUsername(name: string): string {
  * Vérifie si le pseudonyme est interdit pour un utilisateur donné
  * (Seul le compte Steam officiel du créateur peut s'appeler Hibouxe ou Edsaje)
  */
-export function isForbiddenUsername(name: string, steamId?: string, isAdminOrOwner?: boolean): boolean {
-  if (
-    isAdminOrOwner ||
-    (steamId && String(steamId).trim() === ADMIN_STEAM_ID)
-  ) {
+export function isForbiddenUsername(name: string, _steamId?: string, isAdminOrOwner?: boolean): boolean {
+  if (isAdminOrOwner) {
     return false;
   }
   const norm = normalizeUsername(name);

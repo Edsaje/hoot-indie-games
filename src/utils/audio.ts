@@ -414,6 +414,62 @@ class AudioManager {
       // Ignore
     }
   }
+
+  // Bruitage physique de déchirure de sachet / booster métallisé (foil rip)
+  public playBoosterTear() {
+    if (!this.soundEnabled) return;
+    try {
+      const ctx = this.initCtx();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      const bufferSize = Math.floor(ctx.sampleRate * 0.42);
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        // Friction de papier / aluminium avec texture granuleuse
+        output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.55));
+      }
+
+      const whiteNoise = ctx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(2200, now);
+      filter.frequency.exponentialRampToValueAtTime(3600, now + 0.15);
+      filter.frequency.exponentialRampToValueAtTime(900, now + 0.4);
+      filter.Q.setValueAtTime(4.0, now);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.01, now);
+      gain.gain.linearRampToValueAtTime(0.24, now + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.42);
+
+      whiteNoise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      whiteNoise.start(now);
+
+      // Harmonique de déchirement aigu
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(1600, now + 0.12);
+      osc.frequency.exponentialRampToValueAtTime(320, now + 0.35);
+
+      oscGain.gain.setValueAtTime(0.04, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.35);
+    } catch {
+      // Ignore
+    }
+  }
 }
 
 export const soundFx = new AudioManager();

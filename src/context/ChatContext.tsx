@@ -22,7 +22,7 @@ export interface ChatContextType {
   deleteMessage: (messageId: string) => Promise<{ success: boolean; message?: string }>;
   moderationWarning: string | null;
   setModerationWarning: (warning: string | null) => void;
-  refreshMessages: () => Promise<void>;
+  refreshMessages: (forceFull?: boolean) => Promise<void>;
 }
 
 export const ChatContext = createContext<ChatContextType | null>(null);

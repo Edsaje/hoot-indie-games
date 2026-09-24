@@ -8,8 +8,9 @@
  */
 
 import { getChallengeStatusForDate, getTodayDateString } from './streakManager';
+import { ADMIN_STEAM_ID } from './usernameValidation';
 
-export const EXPRESS_RENAME_COST = 25;
+export const EXPRESS_RENAME_COST = 150;
 export const DAILY_GAME_FEATHER_REWARD = 10;
 export const DAILY_GRAND_SLAM_BONUS = 25;
 export const RENAME_COOLDOWN_DAYS = 14;
@@ -52,35 +53,35 @@ export const SHOP_TITLES: ShopTitle[] = [
   {
     id: 'title_gem_hunter',
     name: 'Dénicheur de Pépites',
-    cost: 15,
+    cost: 120,
     icon: '💎',
     description: 'Pour ceux dont l’œil avisé sait repérer les trésors méconnus de la scène indépendante.',
   },
   {
     id: 'title_pixel_master',
     name: 'Maître du Pixel',
-    cost: 20,
+    cost: 180,
     icon: '🎨',
     description: 'La basse résolution et l’esthétique 8-bit / 16-bit n’ont aucun secret pour vous.',
   },
   {
     id: 'title_melody_owl',
     name: 'Mélomane du Perchoir',
-    cost: 25,
+    cost: 250,
     icon: '🎵',
     description: 'Capable d’identifier une bande originale indé culte dès les premières notes.',
   },
   {
     id: 'title_summit_explorer',
     name: 'Explorateur des Cimes',
-    cost: 30,
+    cost: 350,
     icon: '🏔️',
     description: 'A bravé le froid et les plateformes vertigineuses pour contempler la canopée.',
   },
   {
     id: 'title_grand_duc',
     name: 'Grand-Duc Sylvestre',
-    cost: 50,
+    cost: 600,
     icon: '👑',
     description: 'Titre de haute distinction décerné par les gardiens de la forêt nocturne.',
   },
@@ -99,7 +100,7 @@ export const SHOP_FRAMES: ShopFrame[] = [
   {
     id: 'frame_celestial_gold',
     name: 'Liseré Doré Céleste',
-    cost: 35,
+    cost: 300,
     borderClass: 'border-amber-400 ring-2 ring-amber-300/40',
     glowClass: 'shadow-lg shadow-amber-500/30 animate-pulse',
     previewColor: 'from-amber-400 via-yellow-300 to-amber-600',
@@ -108,7 +109,7 @@ export const SHOP_FRAMES: ShopFrame[] = [
   {
     id: 'frame_neon_synthwave',
     name: 'Néon Synthwave 80s',
-    cost: 40,
+    cost: 450,
     borderClass: 'border-cyan-400 ring-2 ring-fuchsia-500/50',
     glowClass: 'shadow-lg shadow-cyan-500/40',
     previewColor: 'from-cyan-400 via-fuchsia-500 to-purple-600',
@@ -117,7 +118,7 @@ export const SHOP_FRAMES: ShopFrame[] = [
   {
     id: 'frame_dark_emerald',
     name: 'Émeraude Profonde',
-    cost: 50,
+    cost: 650,
     borderClass: 'border-emerald-400 ring-2 ring-emerald-500/50',
     glowClass: 'shadow-xl shadow-emerald-500/30',
     previewColor: 'from-emerald-400 via-teal-600 to-green-900',
@@ -165,10 +166,50 @@ export function getRenameCooldownInfo(lastChangedAt?: string, isAdmin?: boolean)
 }
 
 /**
+ * Vérifie si le compte utilisateur actif en local est l'administrateur / créateur officiel.
+ */
+export function isLocalAdminProfile(): boolean {
+  if (typeof window === 'undefined' || !window.localStorage) return false;
+  try {
+    if (localStorage.getItem('hoot_dev_admin') === 'true') return true;
+    const raw = localStorage.getItem('hoot_user_profile_v1');
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    // 1. Adresse email authentifiée officielle du créateur
+    if (parsed.email && parsed.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr') {
+      return true;
+    }
+    // 2. Steam ID officiel du créateur
+    if (parsed.steam?.steamId && String(parsed.steam.steamId).trim() === ADMIN_STEAM_ID) {
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Formate le solde de plumes pour l'affichage :
+ * Affiche le symbole '∞' si le compte dispose de plumes infinies (compte administrateur/créateur),
+ * sinon formate le nombre avec séparateurs de milliers.
+ */
+export function formatFeathers(amount: number): string {
+  if (amount === Infinity || !isFinite(amount) || amount >= 999999999) {
+    return '∞';
+  }
+  return amount.toLocaleString();
+}
+
+/**
  * Calcule le solde disponible en Plumes d'Or :
  * Solde = (Plumes de Succès) + (Plumes de Farm Quotidien) - (Dépenses en Boutique)
+ * Le compte administrateur officiel dispose en permanence de plumes infinies (Infinity).
  */
-export function getFeathersBalance(baseAchievementsFeathers: number): number {
+export function getFeathersBalance(baseAchievementsFeathers: number, isAdmin?: boolean): number {
+  if (isAdmin || isLocalAdminProfile()) {
+    return Infinity;
+  }
   if (typeof window === 'undefined' || !window.localStorage) {
     return baseAchievementsFeathers;
   }
@@ -203,9 +244,16 @@ export function addBonusFeathers(amount: number, reason?: string): void {
 
 /**
  * Dépense des plumes dans la boutique. Retourne true si le solde était suffisant.
+ * Pour le compte administrateur (ou si solde infini), la transaction est toujours validée sans déduction.
  */
 export function spendFeathers(amount: number, currentFeathersBalance: number, reason?: string): boolean {
   if (amount <= 0) return true;
+  if (currentFeathersBalance === Infinity || !isFinite(currentFeathersBalance) || isLocalAdminProfile()) {
+    if (reason) {
+      console.log(`[FeatherEconomy] Privilège Admin : transaction gratuite (${reason}). Solde infini préservé 🪶✨`);
+    }
+    return true;
+  }
   if (currentFeathersBalance < amount) return false;
   if (typeof window === 'undefined' || !window.localStorage) return false;
 

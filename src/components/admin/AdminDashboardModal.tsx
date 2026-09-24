@@ -626,7 +626,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     if (userStatusFilter === 'steam') {
       list = list.filter((u) => !!u.steamId);
     } else if (userStatusFilter === 'staff') {
-      list = list.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje');
+      list = list.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe');
     } else if (userStatusFilter === 'banned') {
       list = list.filter((u) => u.status === 'banned');
     }
@@ -1417,7 +1417,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           <Star className="w-3.5 h-3.5 text-amber-400" />
                         </div>
                         <div className="text-xl font-black text-amber-300 font-mono">
-                          {data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0}
+                          {data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe').length || 0}
                         </div>
                         <div className="text-[10px] text-amber-400">Rôles privilégiés</div>
                       </div>
@@ -1475,7 +1475,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         {[
                           { id: 'all', label: 'Tous', count: data.usernames?.list?.length || 0 },
                           { id: 'steam', label: 'Steam', count: data.usernames?.list?.filter((u) => !!u.steamId).length || 0 },
-                          { id: 'staff', label: 'Staff / VIP', count: data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0 },
+                          { id: 'staff', label: 'Staff / VIP', count: data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe').length || 0 },
                           { id: 'banned', label: 'Bannis', count: data.usernames?.list?.filter((u) => u.status === 'banned').length || 0 },
                         ].map((f) => {
                           const isSelected = userStatusFilter === f.id;
@@ -1548,10 +1548,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                               </tr>
                             ) : (
                               filteredUsernames.map((u) => {
-                                const isCreator = u.normalized === 'hibouxe' || u.normalized === 'edsaje';
-                                const isCurrentAdmin = u.steamId === ADMIN_STEAM_ID;
+                                const isCreator = u.normalized === 'hibouxe' && u.steamId === ADMIN_STEAM_ID;
+                                const isCurrentAdmin = isCreator;
                                 const isBanned = u.status === 'banned';
-                                const role = u.role || (isCreator ? 'admin' : 'user');
+                                const role = isCreator ? 'admin' : (u.role === 'admin' ? 'user' : (u.role || 'user'));
 
                                 return (
                                   <tr key={u.normalized} className="hover:bg-white/[0.02] transition">

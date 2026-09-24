@@ -21,6 +21,8 @@ export interface ChatMessage {
   isModerator?: boolean;
   isDeleted?: boolean;
   category?: FeedbackCategory;
+  userId?: string;
+  steamId?: string;
   scoreData?: {
     game: string;
     score: number;
@@ -40,56 +42,56 @@ export const CHAT_CHANNELS: ChatChannelInfo[] = [
   {
     id: 'global',
     name: 'Mondial',
-    label: '🌍 Global',
+    label: 'Global',
     icon: '🌍',
     description: 'Salon international ouvert à tous les explorateurs',
   },
   {
     id: 'fr',
     name: 'Français',
-    label: '🇫🇷 Français',
+    label: 'Français',
     icon: '🇫🇷',
     description: 'Salon francophone pour échanger astuces et pépites',
   },
   {
     id: 'en',
     name: 'English',
-    label: '🇬🇧 English',
+    label: 'English',
     icon: '🇬🇧',
     description: 'International English lounge for indie game discussion',
   },
   {
     id: 'es',
     name: 'Español',
-    label: '🇪🇸 Español',
+    label: 'Español',
     icon: '🇪🇸',
     description: 'Comunidad hispanohablante de exploradores indie',
   },
   {
     id: 'de',
     name: 'Deutsch',
-    label: '🇩🇪 Deutsch',
+    label: 'Deutsch',
     icon: '🇩🇪',
     description: 'Deutscher Salon für Indie-Game-Liebhaber',
   },
   {
     id: 'ja',
     name: '日本語',
-    label: '🇯🇵 日本語',
+    label: '日本語',
     icon: '🇯🇵',
     description: 'インディーゲーム探索者のための日本語ラウンジ',
   },
   {
     id: 'pt-BR',
     name: 'Português',
-    label: '🇧🇷 Português',
+    label: 'Português',
     icon: '🇧🇷',
     description: 'Espaço para os jogadores e exploradores de língua portuguesa',
   },
   {
     id: 'feedback',
     name: 'Retours & Idées',
-    label: '💡 Retours & Idées',
+    label: 'Retours & Idées',
     icon: '💡',
     description: 'Boîte à idées, signalements et suggestions pour améliorer le site',
   },
@@ -305,7 +307,6 @@ export async function sendChatMessage(payload: {
   const now = Math.floor(Date.now() / 1000);
   const isCreator =
     payload.username.toLowerCase() === 'hibouxe' ||
-    payload.username.toLowerCase() === 'edsaje' ||
     payload.avatarId === 'hibouxe_creator';
 
   const localMsg: ChatMessage = {
@@ -338,20 +339,37 @@ export async function sendChatMessage(payload: {
  */
 export async function deleteChatMessage(
   messageId: string,
-  auth: { steamId?: string; userId?: string }
+  auth: {
+    steamId?: string;
+    userId?: string;
+    email?: string;
+    username?: string;
+    role?: string;
+    isAdmin?: boolean;
+    isModerator?: boolean;
+  }
 ): Promise<{ success: boolean; message?: string }> {
   try {
+    const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
     const res = await fetch('/api/chat.php', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
       },
       body: JSON.stringify({
         action: 'delete_message',
         messageId,
         steamId: auth.steamId || '',
         userId: auth.userId || '',
+        email: auth.email || '',
+        username: auth.username || '',
+        role: auth.role || '',
+        isAdmin: auth.isAdmin || false,
+        isModerator: auth.isModerator || false,
+        adminKey,
       }),
     });
     const data = await res.json();
@@ -445,7 +463,7 @@ export async function fetchChatModerationLogs(auth: {
     params.append('action', 'get_moderation_logs');
     if (auth.steamId) params.append('steamId', auth.steamId);
     if (auth.userId) params.append('userId', auth.userId);
-    const res = await fetch(`/api/chat.php?${params.toString()}`);
+    const res = await fetch(`/api/chat.php?${params.toString()}`, { credentials: 'include' });
     const data = await res.json();
     return data;
   } catch {
@@ -466,7 +484,7 @@ export async function dismissChatModerationLog(
     params.append('logId', logId);
     if (auth.steamId) params.append('steamId', auth.steamId);
     if (auth.userId) params.append('userId', auth.userId);
-    const res = await fetch(`/api/chat.php?${params.toString()}`);
+    const res = await fetch(`/api/chat.php?${params.toString()}`, { credentials: 'include' });
     const data = await res.json();
     return data;
   } catch {

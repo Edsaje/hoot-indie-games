@@ -189,6 +189,15 @@ if (!$userKey) {
     exit;
 }
 
+// Protection absolue du compte créateur souverain (interdiction totale d'accès aux non-administrateurs)
+if ($userKey === 'steam_' . ADMIN_STEAM_ID || $userKey === 'name_hibouxe' || $userKey === 'name_edsaje') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé : Le compte officiel du créateur nécessite une authentification stricte.']);
+        exit;
+    }
+}
+
 $saveFile = $savesDir . '/' . $userKey . '.json';
 $action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : 'load';
 $inputSyncKey = trim($_SERVER['HTTP_X_SYNC_KEY'] ?? $_REQUEST['syncKey'] ?? '');
@@ -347,13 +356,15 @@ switch ($action) {
             $merged['syncKeyHash'] = hash('sha256', $inputSyncKey);
         }
 
-        // Garantie de privilèges pour le créateur
-        if ((isset($_REQUEST['steamId']) && trim($_REQUEST['steamId']) === ADMIN_STEAM_ID) || ($merged['steamId'] ?? '') === ADMIN_STEAM_ID) {
+        // Garantie de privilèges pour le créateur : Exige impérativement isCreatorAdminAuthorized()
+        if (isCreatorAdminAuthorized() && ((isset($_REQUEST['steamId']) && trim($_REQUEST['steamId']) === ADMIN_STEAM_ID) || ($merged['steamId'] ?? '') === ADMIN_STEAM_ID)) {
             $merged['steamId'] = ADMIN_STEAM_ID;
             $merged['isCreator'] = true;
             if (!in_array('hibouxe_creator', $merged['unlockedAvatars'] ?? [], true)) {
                 $merged['unlockedAvatars'][] = 'hibouxe_creator';
             }
+        } else {
+            $merged['isCreator'] = false;
         }
 
         $json = json_encode($merged, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

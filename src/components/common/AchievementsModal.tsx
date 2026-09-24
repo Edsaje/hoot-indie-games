@@ -33,6 +33,7 @@ import {
   DAILY_GAME_FEATHER_REWARD,
   DAILY_GRAND_SLAM_BONUS,
   ALL_DAILY_GAMES,
+  formatFeathers,
 } from '../../utils/featherEconomy';
 
 interface AchievementsModalProps {
@@ -80,7 +81,7 @@ const renderIcon = (iconName: string, isUnlocked: boolean) => {
 const DAILY_GAMES_METADATA = [
   {
     id: 'screenle',
-    title: 'Screenle',
+    title: 'Capture',
     subtitle: "Capture d'écran du jour zoomée",
     icon: '📸',
     border: 'border-cyan-500/40',
@@ -88,7 +89,7 @@ const DAILY_GAMES_METADATA = [
   },
   {
     id: 'indledle',
-    title: 'Indledle',
+    title: 'Classic',
     subtitle: 'Wordle du jeu indé en 6 essais',
     icon: '🔍',
     border: 'border-amber-500/40',
@@ -96,7 +97,7 @@ const DAILY_GAMES_METADATA = [
   },
   {
     id: 'linkle',
-    title: 'Linkle',
+    title: 'Connexions',
     subtitle: 'Reliez 16 pépites en 4 familles',
     icon: '🧩',
     border: 'border-purple-500/40',
@@ -104,7 +105,7 @@ const DAILY_GAMES_METADATA = [
   },
   {
     id: 'profille',
-    title: 'Profille',
+    title: 'Profil',
     subtitle: "Fiche d'identité aux indices textuels",
     icon: '📋',
     border: 'border-emerald-500/40',
@@ -166,12 +167,18 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
     return ach.category === filter;
   });
 
+  // Filtrage strict : uniquement les succès valides dans allAchievements
+  const validUnlockedIds = useMemo(() => {
+    const validSet = new Set(allAchievements.map((a) => a.id));
+    return Array.from(new Set(unlockedIds.filter((id) => validSet.has(id))));
+  }, [unlockedIds, allAchievements]);
+
   const totalPossibleFeathers = allAchievements.reduce((acc, a) => acc + a.feathersReward, 0);
-  const unlockedAchievementFeathers = unlockedIds.reduce((sum, id) => {
+  const unlockedAchievementFeathers = validUnlockedIds.reduce((sum, id) => {
     const ach = allAchievements.find((a) => a.id === id);
     return sum + (ach ? ach.feathersReward : 0);
   }, 0);
-  const progressPercent = Math.round((unlockedIds.length / allAchievements.length) * 100);
+  const progressPercent = Math.min(100, Math.round((validUnlockedIds.length / allAchievements.length) * 100));
 
   // Calculs Quotidien
   const completedDailyCount = ALL_DAILY_GAMES.filter((g) => {
@@ -208,7 +215,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
                 {t('achievementsModal.title')}
                 <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono font-bold">
                   <Feather className="w-3.5 h-3.5 text-amber-400" />
-                  {feathersCount} 🪶
+                  {formatFeathers(feathersCount)} 🪶
                 </span>
               </h2>
               <p className="text-xs text-slate-300">
@@ -243,7 +250,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
             }`}
           >
             <Trophy className="w-4 h-4" />
-            <span>Succès du Sanctuaire ({unlockedIds.length}/{allAchievements.length})</span>
+            <span>Succès du Sanctuaire ({validUnlockedIds.length}/{allAchievements.length})</span>
           </button>
           <button
             type="button"
@@ -272,7 +279,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
                   {t('achievementsModal.overallProgress')}
                 </span>
                 <span className="text-amber-400 font-mono font-bold">
-                  {unlockedIds.length} / {allAchievements.length} ({progressPercent}%) • {unlockedAchievementFeathers} / {totalPossibleFeathers} {t('achievementsModal.feathersUnit')}
+                  {validUnlockedIds.length} / {allAchievements.length} ({progressPercent}%) • {unlockedAchievementFeathers} / {totalPossibleFeathers} {t('achievementsModal.feathersUnit')}
                 </span>
               </div>
               <div className="w-full h-2.5 bg-[#131a29] rounded-full overflow-hidden border border-[#1e293b]">
@@ -313,7 +320,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
             {/* Achievements List */}
             <div className="flex-1 overflow-y-auto pr-1 space-y-2.5 mt-1 no-scrollbar">
               {filteredAchievements.map((achievement: Achievement) => {
-                const unlocked = unlockedIds.includes(achievement.id);
+                const unlocked = validUnlockedIds.includes(achievement.id);
                 const isSecret = achievement.secret && !unlocked;
 
                 return (
@@ -471,14 +478,14 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-black text-white truncate">
-                            {game.title}
+                            {t(`minigamesHub.${game.id}.title`, { defaultValue: game.title })}
                           </h4>
                           <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono font-bold ${game.badge}`}>
                             +{DAILY_GAME_FEATHER_REWARD} 🪶
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-400 truncate">
-                          {game.subtitle}
+                          {t(`minigamesHub.${game.id}.subtitle`, { defaultValue: game.subtitle })}
                         </p>
                       </div>
                     </div>
@@ -523,7 +530,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
           <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
             <Feather className="w-3.5 h-3.5 text-amber-400" />
             <span>
-              Solde actuel : <strong className="text-amber-300 font-mono">{feathersCount} Plumes</strong>
+              Solde actuel : <strong className="text-amber-300 font-mono">{formatFeathers(feathersCount)} Plumes</strong>
             </span>
           </div>
           <button

@@ -63,32 +63,34 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       if (this.props.isModal) {
         return (
-          <div className="p-6 text-center bg-[#072a20] border border-amber-500/40 rounded-2xl shadow-xl max-w-md mx-auto my-4 space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
-              <AlertCircle className="w-6 h-6" />
-            </div>
-            <h3 className="text-base font-bold text-white">
-              {this.props.fallbackTitle || 'Un contretemps est survenu'}
-            </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {this.props.fallbackMessage || 'Une plume s’est égarée dans ce panneau. Vous pouvez retenter l’ouverture ou rafraîchir.'}
-            </p>
-            <div className="flex items-center justify-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={this.handleReset}
-                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition cursor-pointer"
-              >
-                Réessayer
-              </button>
-              <button
-                type="button"
-                onClick={this.handleReload}
-                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
-              >
-                <RotateCw className="w-3 h-3" />
-                <span>Rafraîchir</span>
-              </button>
+          <div className="fixed inset-0 z-[95] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+            <div className="p-6 text-center bg-[#072a20] border-2 border-amber-500/50 rounded-2xl shadow-2xl max-w-md w-full mx-auto space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+                <AlertCircle className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-white">
+                {this.props.fallbackTitle || 'Un contretemps est survenu'}
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {this.props.fallbackMessage || 'Une plume s’est égarée dans ce panneau. Vous pouvez retenter l’ouverture ou rafraîchir.'}
+              </p>
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={this.handleReset}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition cursor-pointer"
+                >
+                  Réessayer
+                </button>
+                <button
+                  type="button"
+                  onClick={this.handleReload}
+                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <RotateCw className="w-3 h-3" />
+                  <span>Rafraîchir</span>
+                </button>
+              </div>
             </div>
           </div>
         );

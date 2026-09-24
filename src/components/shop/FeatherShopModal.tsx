@@ -21,6 +21,7 @@ import {
   EXPRESS_RENAME_COST,
   DAILY_GAME_FEATHER_REWARD,
   DAILY_GRAND_SLAM_BONUS,
+  formatFeathers,
 } from '../../utils/featherEconomy';
 import { INDIE_AVATARS } from '../../data/avatars';
 import type { IndieAvatarId } from '../../types/user';
@@ -214,7 +215,7 @@ export const FeatherShopModal: React.FC<FeatherShopModalProps> = ({
                 <div className="text-right">
                   <div className="text-[9px] uppercase font-bold text-amber-400/80">Solde Disponible</div>
                   <div className="text-lg sm:text-xl font-black text-amber-300 font-mono flex items-center justify-end gap-1.5 leading-none mt-0.5">
-                    <span>{feathersCount}</span>
+                    <span>{formatFeathers(feathersCount)}</span>
                     <span className="text-base sm:text-lg">🪶</span>
                   </div>
                 </div>
@@ -369,7 +370,7 @@ export const FeatherShopModal: React.FC<FeatherShopModalProps> = ({
                   {shopAvatars.map((av) => {
                     const isUnlocked = unlockedAvatars.includes(av.id) || isAdmin;
                     const isEquipped = profile.avatarId === av.id;
-                    const cost = av.shopPrice || 50;
+                    const cost = av.shopPrice || 400;
 
                     return (
                       <div

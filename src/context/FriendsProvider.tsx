@@ -154,6 +154,23 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => clearInterval(timer);
   }, [syncSelf, myFriendCode]);
 
+  // Écoute de réinitialisation lors d'une déconnexion
+  useEffect(() => {
+    const handleReset = () => {
+      const defaultCodes = ['HOOT-HIBOU'];
+      setFriendCodes(defaultCodes);
+      setFriends([]);
+      saveStoredFriendCodes(defaultCodes);
+    };
+
+    window.addEventListener('hoot_friends_updated', handleReset);
+    window.addEventListener('hoot_cloud_reset', handleReset);
+    return () => {
+      window.removeEventListener('hoot_friends_updated', handleReset);
+      window.removeEventListener('hoot_cloud_reset', handleReset);
+    };
+  }, []);
+
   // Ajouter un ami (par code ou par pseudo)
   const addFriend = async (query: string): Promise<{ success: boolean; message?: string; error?: string }> => {
     const cleanQuery = query.trim();

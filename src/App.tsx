@@ -29,6 +29,7 @@ const MicroIndieHub = React.lazy(() => import('./components/microindies/MicroInd
 const TheRoostHub = React.lazy(() => import('./components/roost/TheRoostHub').then(module => ({ default: module.TheRoostHub })));
 const ArcadeHallView = React.lazy(() => import('./components/arcade/ArcadeHallView').then(module => ({ default: module.ArcadeHallView })));
 const ToolboxHub = React.lazy(() => import('./components/toolbox/ToolboxHub').then(module => ({ default: module.ToolboxHub })));
+const CardsBinderView = React.lazy(() => import('./components/cards/CardsBinderView').then(module => ({ default: module.CardsBinderView })));
 
 // Mini-Games (Lazy Loaded)
 const ScreenleGame = React.lazy(() => import('./components/screenle/ScreenleGame').then(module => ({ default: module.ScreenleGame })));
@@ -110,6 +111,7 @@ export const AppContent: React.FC = () => {
       if (hash.startsWith('#micro') || hash.startsWith('#itch')) return 'microindies';
       if (hash.startsWith('#catalog') || hash.startsWith('#steam')) return 'catalog';
       if (hash.startsWith('#arcade')) return 'arcade';
+      if (hash.startsWith('#cards') || hash.startsWith('#album') || hash.startsWith('#binder')) return 'cards';
       if (hash.startsWith('#toolbox')) return 'toolbox';
       if (hash.startsWith('#roost')) return 'roost';
     }
@@ -153,6 +155,7 @@ export const AppContent: React.FC = () => {
     }
     return false;
   });
+  const [isCardsModalOpen, setIsCardsModalOpen] = useState<boolean>(false);
 
   const { unlockAchievement } = useAchievements();
 
@@ -295,6 +298,8 @@ export const AppContent: React.FC = () => {
         setCurrentTab('catalog');
       } else if (hash.startsWith('#arcade')) {
         setCurrentTab('arcade');
+      } else if (hash.startsWith('#cards') || hash.startsWith('#album') || hash.startsWith('#binder')) {
+        setCurrentTab('cards');
       } else if (hash.startsWith('#toolbox')) {
         setCurrentTab('toolbox');
       } else if (hash.startsWith('#roost')) {
@@ -349,6 +354,14 @@ export const AppContent: React.FC = () => {
         de: 'Retro-Arcade-Halle & 1982 Vectrex | Hoot Indie Games',
         ja: 'レトロアーケード＆1982 Vectrex | Hoot Indie Games',
         'pt-BR': 'Salão de Arcade Retrô e Vectrex 1982 | Hoot Indie Games',
+      },
+      cards: {
+        fr: 'Classeur de Cartes & Boosters — Collection Sylvestre | Hoot Indie Games',
+        en: 'Trading Cards Binder & Boosters — Sylvan Collection | Hoot Indie Games',
+        es: 'Álbum de Cartas y Sobres — Colección Silvestre | Hoot Indie Games',
+        de: 'Sammelkarten-Album & Booster — Sylvestre-Sammlung | Hoot Indie Games',
+        ja: 'カードバインダー＆ブースターパック — シルベストル・コレクション | Hoot Indie Games',
+        'pt-BR': 'Álbum de Cartas e Pacotes — Coleção Silvestre | Hoot Indie Games',
       },
       toolbox: {
         fr: 'Boîte à Outils & Radar Indé | Hoot Indie Games',
@@ -623,6 +636,15 @@ export const AppContent: React.FC = () => {
             onOpenLeaderboard={(gameId) => handleOpenLeaderboard('arcade', gameId)}
           />
         )}
+        {currentTab === 'cards' && (
+          <ErrorBoundary>
+            <CardsBinderView
+              onNavigateToCatalog={() => handleTabChange('catalog')}
+              onOpenShop={() => setIsShopOpen(true)}
+              onModalStateChange={setIsCardsModalOpen}
+            />
+          </ErrorBoundary>
+        )}
         {currentTab === 'toolbox' && <ToolboxHub />}
         {currentTab === 'roost' && (
           <TheRoostHub
@@ -762,7 +784,8 @@ export const AppContent: React.FC = () => {
           isArcadeOpen ||
           isLeaderboardOpen ||
           isAdminDashboardOpen ||
-          isShopOpen
+          isShopOpen ||
+          isCardsModalOpen
         );
         return <ChatDrawer onOpenAuth={() => setIsAuthOpen(true)} isModalActive={isAnyModalOpen} />;
       })()}

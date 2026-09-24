@@ -42,12 +42,13 @@ import {
   fetchSteamProxyStatus,
   saveMasterSteamApiKey,
 } from '../../services/steamService';
+import { formatFeathers } from '../../utils/featherEconomy';
 import { INDIE_AVATARS } from '../../data/avatars';
 import type { IndieAvatarId } from '../../types/user';
 import { soundFx } from '../../utils/audio';
 import { ADMIN_STEAM_ID } from '../../utils/usernameValidation';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
-import { getFrameDefinition } from '../../utils/featherEconomy';
+import { getFrameDefinition, EXPRESS_RENAME_COST } from '../../utils/featherEconomy';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -85,7 +86,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     steamAccount,
     isSteamConnected,
     connectSteamWithOpenId,
-    connectSteamByIdentifier,
     syncSteamLibrary,
     disconnectSteam,
     toggleGameOwned,
@@ -94,6 +94,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   } = useUserAccount();
 
   const { unlockedIds, allAchievements, feathersCount, spendFeathers } = useAchievements();
+  const validUnlockedCount = useMemo(() => {
+    const validSet = new Set(allAchievements.map((a) => a.id));
+    return unlockedIds.filter((id) => validSet.has(id)).length;
+  }, [unlockedIds, allAchievements]);
   const { allPlayableGames } = useSteamCatalog();
 
   const [activeTab, setActiveTab] = useState<'profile' | 'steam' | 'cloud'>('profile');
@@ -123,7 +127,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [copiedFriendCode, setCopiedFriendCode] = useState(false);
 
   // Steam state
-  const [steamInput, setSteamInput] = useState('');
   const [steamApiKeyInput, setSteamApiKeyInput] = useState(steamAccount?.apiKey || '');
   const [steamImportText, setSteamImportText] = useState('');
   const [showImportBox, setShowImportBox] = useState(false);
@@ -262,24 +265,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const handleSteamOpenId = () => {
     soundFx.playClick();
     connectSteamWithOpenId();
-  };
-
-  const handleConnectSteamById = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!steamInput.trim()) return;
-    soundFx.playClick();
-    setIsSteamLoading(true);
-    setSteamStatus(null);
-    const res = await connectSteamByIdentifier(steamInput, steamApiKeyInput || undefined);
-    setIsSteamLoading(false);
-    if (res.success) {
-      soundFx.playVictory();
-      setSteamStatus({ type: 'success', message: res.message || 'Compte Steam lié avec succès !' });
-      setSteamInput('');
-    } else {
-      soundFx.playError();
-      setSteamStatus({ type: 'error', message: res.message || 'Erreur lors de la liaison.' });
-    }
   };
 
   const handleSyncLibrary = async () => {
@@ -593,7 +578,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                                 className="inline-flex items-center gap-1 font-bold text-amber-400 hover:text-amber-300 underline decoration-amber-400/60 cursor-pointer"
                               >
                                 <Zap className="w-3 h-3 text-amber-400" />
-                                <span>Renommage Express (25 🪶)</span>
+                                <span>Renommage Express ({EXPRESS_RENAME_COST} 🪶)</span>
                               </button>
                             </div>
                           )}
@@ -615,7 +600,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <div className="text-xs uppercase font-bold text-slate-300">Plumes</div>
                       <div className="text-sm font-black text-amber-400 flex items-center justify-center gap-1">
                         <Sparkles className="w-3.5 h-3.5" />
-                        {feathersCount}
+                        {formatFeathers(feathersCount)}
                       </div>
                       {onOpenShop && (
                         <button
@@ -885,7 +870,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div className="p-2 sm:p-3 bg-[#131a29] border border-[#1e293b] rounded-xl sm:rounded-2xl text-center">
                     <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 mx-auto mb-1" />
                     <div className="text-sm sm:text-base font-black text-white">
-                      {unlockedIds.length}/{allAchievements.length}
+                      {validUnlockedCount}/{allAchievements.length}
                     </div>
                     <div className="text-[9px] sm:text-[10px] font-semibold text-slate-400 truncate">
                       <span>Succès</span>
@@ -961,11 +946,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         </div>
 
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             soundFx.playClick();
-                            disconnectSteam();
+                            await disconnectSteam();
+                            onClose();
                           }}
-                          className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition flex items-center gap-1.5 self-end sm:self-auto"
+                          className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition flex items-center gap-1.5 self-end sm:self-auto cursor-pointer"
                         >
                           <LogOut className="w-3.5 h-3.5" />
                           Déconnecter
@@ -1065,34 +1051,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         </p>
                       </div>
 
-                      {/* Direct ID Link Alternative */}
-                      <div className="relative my-3">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-slate-700/60" />
-                        </div>
-                        <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-400">
-                          <span className="bg-[#132236] px-3">Ou liaison par SteamID / URL</span>
-                        </div>
+                      {/* Security notice : Official Valve OpenID only */}
+                      <div className="p-3 rounded-xl bg-cyan-950/30 border border-cyan-800/40 text-[11px] text-slate-300 flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <span>
+                          <strong>Protection & Authenticité :</strong> La liaison Steam s'effectue exclusivement via Valve OpenID 2.0 cryptographique. Aucun tiers ne peut usurper votre identité ou votre inventaire.
+                        </span>
                       </div>
-
-                      <form onSubmit={handleConnectSteamById} className="space-y-2">
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={steamInput}
-                            onChange={(e) => setSteamInput(e.target.value)}
-                            placeholder="SteamID64 (ex: 76561198...) ou pseudo Steam"
-                            className="flex-1 px-3 py-2 bg-[#0b1019] border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
-                          />
-                          <button
-                            type="submit"
-                            disabled={isSteamLoading || !steamInput.trim()}
-                            className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs transition disabled:opacity-50 shrink-0"
-                          >
-                            {isSteamLoading ? 'Connexion...' : 'Lier'}
-                          </button>
-                        </div>
-                      </form>
                     </div>
                   )}
 

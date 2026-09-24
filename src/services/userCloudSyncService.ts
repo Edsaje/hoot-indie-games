@@ -3,6 +3,8 @@
  * Permet de synchroniser les plumes d'or, records, succès et profils entre tous les appareils d'un joueur.
  */
 
+import { ACHIEVEMENTS_LIST } from '../data/achievements';
+
 export interface UserCloudSavePayload {
   steamId?: string;
   userId?: string;
@@ -22,6 +24,8 @@ export interface UserCloudSavePayload {
   stats?: any;
   timeAttackStats?: any;
   versusStats?: any;
+  cardCollection?: Record<string, { count: number; countHolo: number; firstObtainedAt?: string }>;
+  lastDailyBoosterClaim?: string;
   syncedAt?: string;
 }
 
@@ -69,7 +73,21 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
     const claimedDaily = rawClaimed ? JSON.parse(rawClaimed) : {};
 
     const rawAch = localStorage.getItem('hoot_unlocked_achievements_v1') || localStorage.getItem(STORAGE_ACHIEVEMENTS);
-    const achievements = rawAch ? JSON.parse(rawAch) : [];
+    let parsedAch: string[] = [];
+    if (rawAch) {
+      try {
+        const parsed = JSON.parse(rawAch);
+        if (Array.isArray(parsed)) {
+          parsedAch = parsed;
+        } else if (parsed && typeof parsed === 'object') {
+          parsedAch = Object.keys(parsed);
+        }
+      } catch {
+        parsedAch = [];
+      }
+    }
+    const validAchSet = new Set(ACHIEVEMENTS_LIST.map((a) => a.id));
+    const cleanAchievements = Array.from(new Set(parsedAch.filter((id) => validAchSet.has(id))));
 
     const rawStats = localStorage.getItem(STORAGE_GAME_STATS);
     const stats = rawStats ? JSON.parse(rawStats) : {};
@@ -92,10 +110,19 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
         spent,
         claimedDaily,
       },
-      achievements: Array.isArray(achievements) ? achievements : [],
+      achievements: cleanAchievements,
       stats,
       timeAttackStats,
       versusStats: profile.versusStats,
+      cardCollection: (() => {
+        try {
+          const raw = localStorage.getItem('hoot_cards_collection_v1');
+          return raw ? JSON.parse(raw) : undefined;
+        } catch {
+          return undefined;
+        }
+      })(),
+      lastDailyBoosterClaim: localStorage.getItem('hoot_last_daily_booster_claim_v1') || undefined,
       syncedAt: new Date().toISOString(),
     };
   } catch (err) {
@@ -164,12 +191,28 @@ export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): v
     }
 
     // 2. Succès débloqués
-    if (Array.isArray(cloudData.achievements) && cloudData.achievements.length > 0) {
+    if (Array.isArray(cloudData.achievements)) {
       const existingAchRaw = localStorage.getItem('hoot_unlocked_achievements_v1') || localStorage.getItem(STORAGE_ACHIEVEMENTS);
-      const existingAch = existingAchRaw ? JSON.parse(existingAchRaw) : [];
-      const mergedAch = Array.from(new Set([...existingAch, ...cloudData.achievements]));
+      let existingAch: string[] = [];
+      if (existingAchRaw) {
+        try {
+          const parsed = JSON.parse(existingAchRaw);
+          if (Array.isArray(parsed)) existingAch = parsed;
+          else if (parsed && typeof parsed === 'object') existingAch = Object.keys(parsed);
+        } catch {
+          existingAch = [];
+        }
+      }
+      const validAchSet = new Set(ACHIEVEMENTS_LIST.map((a) => a.id));
+      const mergedAch = Array.from(
+        new Set([...existingAch, ...cloudData.achievements])
+      ).filter((id) => validAchSet.has(id));
       localStorage.setItem('hoot_unlocked_achievements_v1', JSON.stringify(mergedAch));
-      localStorage.setItem(STORAGE_ACHIEVEMENTS, JSON.stringify(mergedAch));
+      try {
+        localStorage.removeItem(STORAGE_ACHIEVEMENTS);
+      } catch {
+        // Ignore
+      }
     }
 
     // 3. Stats des jeux
@@ -226,6 +269,38 @@ export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): v
         isCloudSynced: true,
       };
       localStorage.setItem(STORAGE_USER_PROFILE, JSON.stringify(updatedProfile));
+    }
+
+    // 6. Collection de cartes
+    if (cloudData.cardCollection && typeof cloudData.cardCollection === 'object') {
+      try {
+        const localCardsRaw = localStorage.getItem('hoot_cards_collection_v1');
+        const localCards = localCardsRaw ? JSON.parse(localCardsRaw) : {};
+        const mergedCards: Record<string, any> = { ...localCards };
+
+        for (const [cardId, cloudEntry] of Object.entries(cloudData.cardCollection)) {
+          const localEntry = mergedCards[cardId] || { count: 0, countHolo: 0 };
+          mergedCards[cardId] = {
+            count: Math.max(localEntry.count || 0, (cloudEntry as any).count || 0),
+            countHolo: Math.max(localEntry.countHolo || 0, (cloudEntry as any).countHolo || 0),
+            firstObtainedAt: localEntry.firstObtainedAt || (cloudEntry as any).firstObtainedAt || new Date().toISOString(),
+          };
+        }
+        localStorage.setItem('hoot_cards_collection_v1', JSON.stringify(mergedCards));
+        window.dispatchEvent(new CustomEvent('hoot_cards_updated', { detail: mergedCards }));
+      } catch {
+        // Ignore
+      }
+    }
+    if (cloudData.lastDailyBoosterClaim) {
+      try {
+        const localClaim = localStorage.getItem('hoot_last_daily_booster_claim_v1');
+        if (!localClaim || cloudData.lastDailyBoosterClaim > localClaim) {
+          localStorage.setItem('hoot_last_daily_booster_claim_v1', cloudData.lastDailyBoosterClaim);
+        }
+      } catch {
+        // Ignore
+      }
     }
 
     // Déclenchement d'un événement global pour notifier tous les providers et composants React

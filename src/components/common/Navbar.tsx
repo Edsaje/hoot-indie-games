@@ -16,6 +16,7 @@ import {
   Trophy,
   Crown,
   Database,
+  Layers,
   Check,
   ChevronDown,
   Sparkles,
@@ -23,7 +24,10 @@ import {
   ShoppingBag,
   MessageSquare,
   LogOut,
+  Menu,
+  X,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
 import { soundFx } from '../../utils/audio';
@@ -35,6 +39,7 @@ import { SUPPORTED_LANGUAGES, getAppLanguage, type AppLanguage } from '../../uti
 import { INDIE_AVATARS } from '../../data/avatars';
 import { telemetry } from '../../services/telemetry';
 import { getTodayDateString, getYesterdayDateString } from '../../utils/streakManager';
+import { formatFeathers } from '../../utils/featherEconomy';
 
 export type NavTab =
   | 'gems'
@@ -52,6 +57,7 @@ export type NavTab =
   | 'versus'
   | 'ranking'
   | 'arcade'
+  | 'cards'
   | 'timeattack'
   | 'toolbox'
   | 'roost';
@@ -109,6 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     soundFx.playClick();
     telemetry.track('navigation', 'tab_change', tab);
     onTabChange(tab);
+    setIsMobileMenuOpen(false);
     if (typeof window !== 'undefined') {
       window.location.hash = tab === 'gems' ? '#gems' : `#${tab}`;
     }
@@ -124,10 +131,21 @@ export const Navbar: React.FC<NavbarProps> = ({
     telemetry.track('interaction', 'sound_toggle', next ? 'on' : 'off');
   };
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isPlayerMenuOpen, setIsPlayerMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
   const playerMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1280) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const currentLangCode = getAppLanguage(i18n.language);
   const currentLangMeta = SUPPORTED_LANGUAGES.find((l) => l.id === currentLangCode) || SUPPORTED_LANGUAGES[0];
@@ -168,8 +186,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       <div className="w-full max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-16 sm:h-[72px] lg:h-[76px] gap-1.5 sm:gap-3">
-          {/* Brand & Owl Logo */}
+          {/* Brand & Owl Logo + Burger Menu on Mobile */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Mobile Burger Menu Button */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setIsMobileMenuOpen((prev) => !prev);
+              }}
+              className="xl:hidden p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-400 hover:text-white hover:border-amber-400 transition flex items-center justify-center shrink-0 min-h-[38px] min-w-[38px] cursor-pointer touch-manipulation"
+              title={isMobileMenuOpen ? 'Fermer le menu' : 'Menu des onglets'}
+              aria-label="Menu principal"
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-amber-300" />
+              ) : (
+                <Menu className="w-5 h-5 text-amber-400" />
+              )}
+            </button>
+
             <OwlLogo onEasterEggTrigger={onEasterEggTrigger} size="md" />
             <div
               className="cursor-pointer select-none"
@@ -260,7 +297,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </a>
 
-            {/* 3. Arcade */}
+            {/* 4. Arcade */}
             <a
               href="#arcade"
               onClick={(e) => handleTabSelect('arcade', e)}
@@ -272,6 +309,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Gamepad2 className="w-3.5 h-3.5 shrink-0" />
               <span>{t('nav.arcade')}</span>
+            </a>
+
+            {/* 5. Cartes */}
+            <a
+              href="#cards"
+              onClick={(e) => handleTabSelect('cards', e)}
+              className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                currentTab === 'cards'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5 shrink-0" />
+              <span>{t('nav.cards', 'Cartes')}</span>
             </a>
 
             <div className="h-4 w-px bg-[#78350f] mx-0.5 xl:mx-1 shrink-0" />
@@ -371,7 +422,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                 <div className="flex items-center gap-1 font-mono text-amber-300 text-xs font-bold">
                   <Feather className="hidden min-[1800px]:inline w-3 h-3 text-amber-400/90" />
-                  <span>{feathersCount}</span>
+                  <span>{formatFeathers(feathersCount)}</span>
                 </div>
                 <ChevronDown
                   className={`hidden min-[1800px]:inline w-3 h-3 text-slate-400 transition-transform duration-200 ${
@@ -386,7 +437,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <span>{t('nav.playerHub')}</span>
                     <span className="flex items-center gap-1 text-[10px] text-amber-400 font-mono font-black">
                       <Feather className="w-3 h-3 text-amber-400" />
-                      {feathersCount}
+                      {formatFeathers(feathersCount)}
                     </span>
                   </div>
 
@@ -434,7 +485,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="text-slate-100 font-bold group-hover:text-amber-300 flex items-center justify-between">
                         <span>{t('nav.achievements')}</span>
-                        <span className="text-[10px] font-mono text-amber-400/90">{feathersCount}</span>
+                        <span className="text-[10px] font-mono text-amber-400/90">{formatFeathers(feathersCount)}</span>
                       </div>
                       <p className="text-[10px] text-slate-400 truncate">
                         {t('nav.achievementsDesc')}
@@ -802,56 +853,154 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Mobile & Tablet Sub-Navigation Bar (Scrollable with edge fade & without native scrollbar) */}
-        <div className="relative xl:hidden w-full max-w-full overflow-hidden border-t border-[#0d543e]/60">
-          <div className="overflow-x-auto py-1.5 sm:py-2 no-scrollbar scroll-smooth w-full max-w-full px-2">
-            <div className="flex items-center gap-1 sm:gap-1.5 min-w-max">
-              {(
-                [
-                  { id: 'gems', label: t('nav.gems'), icon: Compass },
-                  { id: 'microindies', label: t('nav.microindies', 'Micro-Indés'), icon: Sparkles },
-                  { id: 'catalog', label: t('nav.catalog', 'Catalogue'), icon: Database },
-                  { id: 'minigames', label: t('nav.games', 'Mini-Jeux'), icon: Puzzle, badge: '11' },
-                  { id: 'arcade', label: t('nav.arcade'), icon: Gamepad2 },
-                  { id: 'toolbox', label: t('nav.toolbox'), icon: Wrench },
-                  { id: 'roost', label: t('nav.roost'), icon: Feather },
-                ] as const
-              ).map((item) => {
-                const Icon = item.icon;
-                const active =
-                  item.id === 'minigames' ? isMinigamesActive : currentTab === item.id;
-                return (
-                  <a
-                    key={item.id}
-                    href={item.id === 'gems' ? '#gems' : `#${item.id}`}
-                    onClick={(e) => handleTabSelect(item.id, e)}
-                    className={`shrink-0 flex items-center justify-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer min-h-[38px] sm:min-h-[40px] active:scale-95 touch-manipulation ${
-                      active
-                        ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
-                        : 'bg-[#06241b] text-slate-300 border border-[#78350f] hover:text-white'
-                    }`}
+        {/* Mobile Burger Menu Drawer (remplace le scroll horizontal sur mobile) */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Dark Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-0 top-16 sm:top-[72px] lg:top-[76px] bg-black/80 backdrop-blur-md z-40 xl:hidden"
+              />
+
+              {/* Mobile Drawer Panel */}
+              <motion.div
+                initial={{ opacity: 0, y: -14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -14 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-x-0 top-16 sm:top-[72px] lg:top-[76px] bg-[#02130e] border-b-2 border-[#78350f] shadow-2xl shadow-black/95 z-50 xl:hidden max-h-[calc(100vh-76px)] overflow-y-auto no-scrollbar p-3.5 sm:p-5 text-slate-100"
+              >
+                <div className="flex items-center justify-between px-1 pb-3 mb-3 border-b border-[#78350f]/60 text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
+                  <span className="flex items-center gap-1.5">
+                    <Compass className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Navigation Principale</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-white"
                   >
-                    <Icon className="w-3.5 h-3.5 shrink-0" />
-                    <span>{item.label}</span>
-                    {'badge' in item && item.badge && (
-                      <span
-                        className={`text-[9px] font-black uppercase px-1 rounded ${
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Grid of the 8 navigation tabs */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                  {(
+                    [
+                      { id: 'gems' as NavTab, label: t('nav.gems'), desc: 'Pépites certifiées & actualités', icon: Compass },
+                      { id: 'microindies' as NavTab, label: t('nav.microindies', 'Micro-Indés'), desc: 'Pépites Itch.io & Game Jams', icon: Sparkles, badge: 'Itch' },
+                      { id: 'catalog' as NavTab, label: t('nav.catalog', 'Catalogue'), desc: '185 chefs-d’œuvre indépendants', icon: Database },
+                      { id: 'minigames' as NavTab, label: t('nav.games', 'Mini-Jeux'), desc: '11 défis quotidiens, sprint & duel 1v1', icon: Puzzle, badge: '11' },
+                      { id: 'arcade' as NavTab, label: t('nav.arcade'), desc: 'Salle de jeux rétro & classements', icon: Gamepad2 },
+                      { id: 'cards' as NavTab, label: t('nav.cards', 'Cartes'), desc: 'Album de 185 cartes & boosters', icon: Layers, badge: '185' },
+                      { id: 'toolbox' as NavTab, label: t('nav.toolbox'), desc: 'Filtres, générateurs & outils indés', icon: Wrench },
+                      { id: 'roost' as NavTab, label: t('nav.roost'), desc: 'Communauté, retours & créateur', icon: Feather },
+                    ]
+                  ).map((item) => {
+                    const Icon = item.icon;
+                    const active = item.id === 'minigames' ? isMinigamesActive : currentTab === item.id;
+
+                    return (
+                      <a
+                        key={item.id}
+                        href={item.id === 'gems' ? '#gems' : `#${item.id}`}
+                        onClick={(e) => {
+                          handleTabSelect(item.id, e);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className={`flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer select-none active:scale-[0.99] touch-manipulation ${
                           active
-                            ? 'bg-slate-950/20 text-slate-950'
-                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            ? 'bg-amber-500 text-slate-950 font-black border-amber-400 shadow-lg shadow-amber-500/25 ring-1 ring-amber-300/50'
+                            : 'bg-[#06241b] text-slate-200 border-[#78350f] hover:border-amber-500/50 hover:bg-[#093527]'
                         }`}
                       >
-                        {item.badge}
-                      </span>
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
+                              active
+                                ? 'bg-slate-950/20 border-slate-950/30 text-slate-950'
+                                : 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
+                            }`}
+                          >
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold leading-tight flex items-center gap-1.5">
+                              <span>{item.label}</span>
+                              {active && <span className="text-[10px] text-slate-950">✓</span>}
+                            </div>
+                            <div
+                              className={`text-[10px] mt-0.5 line-clamp-1 ${
+                                active ? 'text-slate-900 font-semibold' : 'text-slate-400'
+                              }`}
+                            >
+                              {item.desc}
+                            </div>
+                          </div>
+                        </div>
+
+                        {item.badge && (
+                          <span
+                            className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md font-mono ${
+                              active
+                                ? 'bg-slate-950 text-amber-300'
+                                : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                            }`}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                      </a>
+                    );
+                  })}
+                </div>
+
+                {/* Quick Utilities Footer in Drawer */}
+                <div className="mt-3.5 pt-3.5 border-t border-[#78350f]/60 grid grid-cols-2 gap-2 text-xs">
+                  {/* Calendar / Date */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFx.playClick();
+                      setIsMobileMenuOpen(false);
+                      onOpenCalendar();
+                    }}
+                    className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 hover:text-white cursor-pointer active:scale-95"
+                  >
+                    <Calendar className="w-4 h-4 text-amber-400" />
+                    <span className="font-mono font-bold text-xs">{currentDate}</span>
+                  </button>
+
+                  {/* Sound Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleSound();
+                    }}
+                    className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 hover:text-white cursor-pointer active:scale-95"
+                  >
+                    {soundEnabled ? (
+                      <>
+                        <Volume2 className="w-4 h-4 text-emerald-400" />
+                        <span className="font-bold text-xs text-emerald-300">Son Activé</span>
+                      </>
+                    ) : (
+                      <>
+                        <VolumeX className="w-4 h-4 text-slate-400" />
+                        <span className="font-bold text-xs text-slate-400">Son Coupé</span>
+                      </>
                     )}
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-          {/* Subtle right gradient edge hint showing tabs can be horizontally scrolled */}
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#010805] via-[#010805]/80 to-transparent pointer-events-none sm:hidden" />
-        </div>
+                  </button>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
