@@ -382,7 +382,7 @@ export function generateSeoIndexHtml(): string {
   for (const f of faqs) {
     faqHtml += `
       <article style="margin-bottom: 1.5rem; background: #131a29; padding: 1.25rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
-        <h4 style="color: #f8fafc; margin-top: 0; font-size: 1.1rem;">${escapeHtml(f.q)}</h4>
+        <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.1rem;">${escapeHtml(f.q)}</h3>
         <p style="color: #cbd5e1; margin-bottom: 0; line-height: 1.6;">${escapeHtml(f.a)}</p>
       </article>
     `;
@@ -420,7 +420,7 @@ export function generateSeoIndexHtml(): string {
         </nav>
       </header>
 
-      <main>
+      <div role="main" class="seo-crawler-content">
         <!-- Section 1 : Introduction aux Jeux Indépendants -->
         <section style="margin-bottom: 3rem;">
           <h2 style="color: #38bdf8; font-size: 1.8rem; margin-bottom: 1rem;">
@@ -607,7 +607,7 @@ export function generateSeoIndexHtml(): string {
             et le code source officiel sur <a href="https://github.com/Edsaje/hoot-indie-games" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; font-weight: 600;">GitHub (Edsaje)</a>.
           </p>
         </section>
-      </main>
+      </div>
 
       <footer style="text-align: center; border-top: 1px solid #1e293b; padding-top: 2rem; color: #64748b; font-size: 0.9rem;">
         <p>© 2026 Hoot Indie Games • Le Sanctuaire des Jeux Vidéo Indépendants • Tous droits réservés aux studios et créateurs respectifs.</p>
@@ -620,54 +620,54 @@ export function generateSeoIndexHtml(): string {
   const fullHtml = `<!doctype html>
 <html lang="fr" dir="ltr">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/logo-512.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/logo-512.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Primary SEO Meta Tags -->
     <title>Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants</title>
-    <meta name="title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
-    <meta name="description" content="Le sanctuaire du jeu vidéo indé : ${INDIE_GAMES.length} pépites certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test...), Time Attack, duels 1v1 et arcade rétro." />
-    <meta name="keywords" content="jeux vidéo indépendants, jeux indés, indie games, meilleurs jeux vidéo indés, pépites jeux indés, catalogue steam indé, screenle, indledle, linkle, profille, chrono timeline, quiz pixel art, devinette avis steam, blind test ost jeu video, time attack sprint, duel versus 1v1 jeu indé, hollow knight, outer wilds, celeste, hades, balatro, quentin beaud, hibouxe, arcade rétro vectrex" />
-    <meta name="author" content="Quentin Beaud (Hibouxe)" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
+    <meta name="description" content="Le sanctuaire du jeu vidéo indé : ${INDIE_GAMES.length} pépites certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test...), Time Attack, duels 1v1 et arcade rétro.">
+    <meta name="keywords" content="jeux vidéo indépendants, jeux indés, indie games, meilleurs jeux vidéo indés, pépites jeux indés, catalogue steam indé, screenle, indledle, linkle, profille, chrono timeline, quiz pixel art, devinette avis steam, blind test ost jeu video, time attack sprint, duel versus 1v1 jeu indé, hollow knight, outer wilds, celeste, hades, balatro, quentin beaud, hibouxe, arcade rétro vectrex">
+    <meta name="author" content="Quentin Beaud (Hibouxe)">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <!-- Canonical URL & Multilingual Alternates -->
-    <link rel="canonical" href="${CANONICAL_DOMAIN}/" />
-    <link rel="alternate" hreflang="fr" href="${CANONICAL_DOMAIN}/" />
-    <link rel="alternate" hreflang="en" href="${CANONICAL_DOMAIN}/" />
-    <link rel="alternate" hreflang="x-default" href="${CANONICAL_DOMAIN}/" />
+    <link rel="canonical" href="${CANONICAL_DOMAIN}/">
+    <link rel="alternate" hreflang="fr" href="${CANONICAL_DOMAIN}/">
+    <link rel="alternate" hreflang="en" href="${CANONICAL_DOMAIN}/">
+    <link rel="alternate" hreflang="x-default" href="${CANONICAL_DOMAIN}/">
 
     <!-- Open Graph / Facebook / Discord -->
-    <meta property="og:site_name" content="Hoot Indie Games" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="${CANONICAL_DOMAIN}/" />
-    <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
-    <meta property="og:description" content="Explorez ${INDIE_GAMES.length} chefs-d'œuvre indépendants certifiés Steam, 8 défis quotidiens gratuits (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST), sprints Time Attack, arène de duels 1v1 et salle d'arcade rétro." />
-    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2" />
-    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=2" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants" />
-    <meta property="og:locale" content="fr_FR" />
-    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:site_name" content="Hoot Indie Games">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="${CANONICAL_DOMAIN}/">
+    <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
+    <meta property="og:description" content="Explorez ${INDIE_GAMES.length} chefs-d'œuvre indépendants certifiés Steam, 8 défis quotidiens gratuits (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST), sprints Time Attack, arène de duels 1v1 et salle d'arcade rétro.">
+    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
+    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:locale:alternate" content="en_US">
 
     <!-- Twitter / X Cards -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Hibouxe" />
-    <meta name="twitter:creator" content="@Hibouxe" />
-    <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants" />
-    <meta name="twitter:description" content="${INDIE_GAMES.length} pépites indés certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), sprints Time Attack, duels 1v1 P2P et salle d'arcade rétro." />
-    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2" />
-    <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@Hibouxe">
+    <meta name="twitter:creator" content="@Hibouxe">
+    <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
+    <meta name="twitter:description" content="${INDIE_GAMES.length} pépites indés certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), sprints Time Attack, duels 1v1 P2P et salle d'arcade rétro.">
+    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
+    <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants">
 
     <!-- Mobile & PWA Theme -->
-    <meta name="theme-color" content="#0b0f19" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0b0f19">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Structured Data (JSON-LD Schema.org) -->
     <script type="application/ld+json">
@@ -717,7 +717,7 @@ ${JSON.stringify(jsonLdGraph, null, 2)}
     <div id="root">
       <div id="app-loading">
         <div style="position: relative; margin-bottom: 1.25rem;">
-          <img src="/logo-512.png" alt="Hoot Indie Games" width="80" height="80" style="width: 80px; height: 80px; animation: hoot-pulse 2s ease-in-out infinite;" />
+          <img src="/logo-512.png" alt="Hoot Indie Games" width="80" height="80" style="width: 80px; height: 80px; animation: hoot-pulse 2s ease-in-out infinite;">
         </div>
         <div style="font-size: 1.25rem; font-weight: 700; color: #f59e0b; letter-spacing: 0.5px; margin-bottom: 0.5rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
           Hoot Indie Games

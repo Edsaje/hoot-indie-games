@@ -279,7 +279,7 @@ function saveClaimedDailyFeathers(dateStr: string, record: DailyClaimRecord): vo
   }
 }
 
-const ALL_DAILY_GAMES = [
+export const ALL_DAILY_GAMES = [
   'screenle',
   'indledle',
   'linkle',

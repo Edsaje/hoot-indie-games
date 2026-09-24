@@ -73,7 +73,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   initialGame = 'snake',
   onOpenLeaderboard,
 }) => {
-  const { unlockAchievement } = useAchievements();
+  const { unlockAchievement, isUnlocked } = useAchievements();
   const [selectedGame, setSelectedGame] = useState<ArcadeGameId>(initialGame);
   const [gameKey, setGameKey] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
@@ -94,6 +94,16 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   });
   const [soundMuted, setSoundMuted] = useState<boolean>(!soundFx.isEnabled());
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [isVectrexUnlocked, setIsVectrexUnlocked] = useState<boolean>(() => {
+    try {
+      return (
+        localStorage.getItem('hoot_vectrex_unlocked') === 'true' ||
+        localStorage.getItem('hoot_vectrex_phosphor') === 'true'
+      );
+    } catch {
+      return false;
+    }
+  });
   const [isVectrexPhosphor, setIsVectrexPhosphor] = useState<boolean>(() => {
     try {
       return localStorage.getItem('hoot_vectrex_phosphor') === 'true';
@@ -103,6 +113,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   });
   const isVectrexPhosphorRef = useRef(isVectrexPhosphor);
   isVectrexPhosphorRef.current = isVectrexPhosphor;
+  const hasVectrexUnlocked = isVectrexUnlocked || isUnlocked('vectrex_phosphor');
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameIdRef = useRef<number | null>(null);
@@ -2811,7 +2822,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
               secretUnlockedJustNow = true;
               isVectrexPhosphorRef.current = true;
               setIsVectrexPhosphor(true);
+              setIsVectrexUnlocked(true);
               try {
+                localStorage.setItem('hoot_vectrex_unlocked', 'true');
                 localStorage.setItem('hoot_vectrex_phosphor', 'true');
               } catch {
                 // Ignore
@@ -3657,8 +3670,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           </div>
         </div>
 
-        {/* Toggle Tube Vert Phosphore (Vectrex 1982) */}
-        {selectedGame === 'vectrex' && (
+        {/* Toggle Tube Vert Phosphore (Vectrex 1982) - Uniquement si débloqué */}
+        {selectedGame === 'vectrex' && hasVectrexUnlocked && (
           <div className="w-full max-w-[320px] sm:max-w-[380px] flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] mb-2 text-xs">
             <span className="text-slate-300 font-bold flex items-center gap-1.5">
               <Tv className="w-3.5 h-3.5 text-emerald-400" />

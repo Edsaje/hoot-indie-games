@@ -653,6 +653,10 @@ export const AppContent: React.FC = () => {
         <AchievementsModal
           isOpen={isAchievementsOpen}
           onClose={() => setIsAchievementsOpen(false)}
+          onNavigateGame={(gameMode) => {
+            setIsAchievementsOpen(false);
+            handleTabChange(gameMode as any);
+          }}
         />
       )}
 
