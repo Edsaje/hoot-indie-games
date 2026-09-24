@@ -7,7 +7,10 @@
 [![React](https://img.shields.io/badge/React-18+-61dafb?logo=react)](https://react.dev/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
 [![Oxlint](https://img.shields.io/badge/Oxlint-0_warnings-emerald)](https://oxc.rs/)
+[![Sécurité](https://img.shields.io/badge/Sécurité-Priorité_Absolue-red)](./GEMINI.md)
 [![Licence](https://img.shields.io/badge/Auteur-Quentin_Beaud_(Hibouxe)-amber)](https://quentinbeaud.com/)
+
+> 🛡️ **Règle Primordiale : La sécurité est notre priorité sur ce site.** Intégrité anti-triche, zéro fuite de données, protection contre les injections et respect absolu de la vie privée.
 
 ---
 
@@ -156,15 +159,20 @@ npm run update-db
 
 Tout agent AI (Gemini, Claude, GPT, etc.) ou développeur reprenant ce projet **DOIT respecter rigoureusement les règles consignées dans [`GEMINI.md`](./GEMINI.md)** :
 
-1. **Règle 0 Hallucination** :
+1. **Règle Primordiale : La sécurité est notre priorité sur ce site** :
+   - Subordonner la commodité et les fonctionnalités à la sécurité absolue.
+   - Protection anti-triche et zéro fuite (anti-F12, anti-spoiler, données secrètes protégées).
+   - Sanitisation systématique contre les injections (XSS, SQL, code dynamique banni).
+   - Verrouillage des endpoints, rate-limiting, isolation `.htaccess` et respect de la vie privée (RGPD).
+2. **Règle 0 Hallucination** :
    - Ne jamais inventer de dates, de jeux, de studios ou de métadonnées.
    - `src/data/games.ts` ne contient **QUE** des jeux réellement sortis et vérifiables.
    - Les jeux non parus résident exclusivement dans `src/data/upcomingGames.ts` avec la mention officielle (*TBA*).
-2. **Typage Strict 0 `any`** :
+3. **Typage Strict 0 `any`** :
    - `tsc -b` doit compiler sans la moindre erreur.
-3. **Qualité de code** :
+4. **Qualité de code** :
    - `npm run lint` (Oxlint) doit retourner 0 warning et 0 erreur.
-4. **Anti "IA Slop"** :
+5. **Anti "IA Slop"** :
    - Pas de pilules génériques géantes `rounded-full` sur les cartes de contenu.
    - Pas de faux glassmorphism laiteux illisible : surfaces sombres ciselées (`#0b0f19`, `#131a29`, `#1e293b`).
 

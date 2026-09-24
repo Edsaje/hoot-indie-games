@@ -18,6 +18,8 @@ export interface ChatMessage {
   text: string;
   timestamp: number; // Unix timestamp in seconds
   isCreator?: boolean;
+  isModerator?: boolean;
+  isDeleted?: boolean;
   category?: FeedbackCategory;
   scoreData?: {
     game: string;
@@ -220,13 +222,21 @@ export async function sendChatMessage(payload: {
   title?: string;
   activeFrame?: string;
   steamId?: string;
+  email?: string;
+  userId?: string;
   category?: FeedbackCategory;
   scoreData?: {
     game: string;
     score: number;
     mode: string;
   } | null;
-}): Promise<{ success: boolean; message?: ChatMessage; error?: string }> {
+}): Promise<{
+  success: boolean;
+  message?: ChatMessage;
+  error?: string;
+  warning?: string;
+  flaggedWords?: string[];
+}> {
   const cleanText = payload.text.trim();
   if (!cleanText) {
     return { success: false, error: 'Le message ne peut pas être vide.' };
@@ -248,6 +258,8 @@ export async function sendChatMessage(payload: {
         title: payload.title,
         activeFrame: payload.activeFrame,
         steamId: payload.steamId,
+        email: payload.email,
+        userId: payload.userId,
         category: payload.category || 'general',
         scoreData: payload.scoreData || null,
       }),
@@ -259,11 +271,34 @@ export async function sendChatMessage(payload: {
         return { success: true, message: data.message };
       }
       return { success: false, error: data?.error || 'Erreur lors de l\'envoi.' };
-    } else if (res.status === 429) {
-      return { success: false, error: 'Veuillez patienter quelques secondes entre chaque message.' };
+    } else {
+      const data = await res.json().catch(() => null);
+      if (data?.error === 'profanity_detected' || data?.error === 'phishing_detected') {
+        return {
+          success: false,
+          error: data.error,
+          warning: data.warning || '⚠️ Avertissement de sécurité : Votre message a été bloqué.',
+          flaggedWords: data.flaggedWords || [],
+        };
+      }
+      if (res.status === 429) {
+        return { success: false, error: 'Veuillez patienter quelques secondes entre chaque message.' };
+      }
+      return { success: false, error: data?.message || data?.error || 'Erreur lors de l\'envoi.' };
     }
   } catch {
     // Fallback local
+  }
+
+  // Contrôle anti-hameçonnage en mode local/hors-ligne
+  const phishingCheck = checkTextForPhishing(cleanText);
+  if (phishingCheck.isSuspicious) {
+    return {
+      success: false,
+      error: 'phishing_detected',
+      warning: phishingCheck.warning || '⚠️ Bouclier Sécurité & Anti-Hameçonnage : Votre message a été bloqué.',
+      flaggedWords: [phishingCheck.reason || 'suspicious_pattern'],
+    };
   }
 
   // Fallback local si backend injoignable
@@ -296,4 +331,145 @@ export async function sendChatMessage(payload: {
   }
 
   return { success: true, message: localMsg };
+}
+
+/**
+ * Supprime ou modère un message de la discussion (Modérateur ou Admin)
+ */
+export async function deleteChatMessage(
+  messageId: string,
+  auth: { steamId?: string; userId?: string }
+): Promise<{ success: boolean; message?: string }> {
+  try {
+    const res = await fetch('/api/chat.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'delete_message',
+        messageId,
+        steamId: auth.steamId || '',
+        userId: auth.userId || '',
+      }),
+    });
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    return { success: false, message: err.message || 'Erreur lors de la modération du message.' };
+  }
+}
+
+export interface ChatModerationLog {
+  id: string;
+  type?: 'profanity_detected' | 'phishing_blocked';
+  timestamp: number;
+  date: string;
+  username: string;
+  userId: string;
+  steamId: string;
+  channel: ChatChannel;
+  flaggedWords: string[];
+  originalText: string;
+  status: string;
+}
+
+export interface PhishingCheckResult {
+  isSuspicious: boolean;
+  reason?: string;
+  warning?: string;
+}
+
+/**
+ * Analyse client-side préventive anti-hameçonnage
+ */
+export function checkTextForPhishing(text: string, isStaff = false): PhishingCheckResult {
+  if (isStaff) return { isSuspicious: false };
+  const lower = text.toLowerCase();
+
+  // 1. Détection de domaines usurpateurs ou raccourcisseurs
+  const suspiciousDomains = [
+    'steamcommuni', 'steamcomun', 'steamgift', 'steam-gift', 'steam-wallet',
+    'steamtrade', 'steam-promo', 'steampowered-', 'grabify', 'iplogger',
+    'bit.ly', 'tinyurl.com', 'is.gd', 'cutt.ly', 'discorcl', 'dlscord', 'discrod',
+    'discord-nitro', 'discord-gift', 'free-nitro', '2no.co', 'yip.su'
+  ];
+  for (const s of suspiciousDomains) {
+    if (lower.includes(s)) {
+      return {
+        isSuspicious: true,
+        reason: 'suspicious_domain_or_shortener',
+        warning: '🛡️ Sécurité : Ce message contient un lien ou domaine identifié comme risqué ou frauduleux.',
+      };
+    }
+  }
+
+  // 2. Mots-clés de faux cadeaux / arnaques Steam
+  const scamKeywords = [
+    'free steam', 'carte steam gratuite', 'code steam gratuit', 'free nitro',
+    'nitro gratuit', 'carte 50€ steam', 'carte 100€', 'vote for my team',
+    'vote pour mon équipe', 'claim your gift', 'réclame ton cadeau'
+  ];
+  for (const kw of scamKeywords) {
+    if (lower.includes(kw)) {
+      return {
+        isSuspicious: true,
+        reason: 'scam_keywords',
+        warning: '🛡️ Sécurité : Les offres de cadeaux gratuits ou incitations de vote sont des pièges d\'hameçonnage.',
+      };
+    }
+  }
+
+  // 3. Divulgation de données sensibles
+  if ((lower.includes('mot de passe') || lower.includes('password') || lower.includes('mdp')) && (lower.includes(':') || lower.includes('est') || lower.includes('is'))) {
+    return {
+      isSuspicious: true,
+      reason: 'sensitive_data',
+      warning: '🛡️ Sécurité : Ne partagez jamais votre mot de passe sur le tchat public.',
+    };
+  }
+
+  return { isSuspicious: false };
+}
+
+/**
+ * Récupère le journal des alertes anti-injures (Modérateur ou Admin)
+ */
+export async function fetchChatModerationLogs(auth: {
+  steamId?: string;
+  userId?: string;
+}): Promise<{ success: boolean; logs?: ChatModerationLog[] }> {
+  try {
+    const params = new URLSearchParams();
+    params.append('action', 'get_moderation_logs');
+    if (auth.steamId) params.append('steamId', auth.steamId);
+    if (auth.userId) params.append('userId', auth.userId);
+    const res = await fetch(`/api/chat.php?${params.toString()}`);
+    const data = await res.json();
+    return data;
+  } catch {
+    return { success: false, logs: [] };
+  }
+}
+
+/**
+ * Archive / acquitte un rapport d'alerte (Modérateur ou Admin)
+ */
+export async function dismissChatModerationLog(
+  logId: string,
+  auth: { steamId?: string; userId?: string }
+): Promise<{ success: boolean }> {
+  try {
+    const params = new URLSearchParams();
+    params.append('action', 'dismiss_moderation_log');
+    params.append('logId', logId);
+    if (auth.steamId) params.append('steamId', auth.steamId);
+    if (auth.userId) params.append('userId', auth.userId);
+    const res = await fetch(`/api/chat.php?${params.toString()}`);
+    const data = await res.json();
+    return data;
+  } catch {
+    return { success: false };
+  }
 }

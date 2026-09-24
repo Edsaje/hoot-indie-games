@@ -208,7 +208,7 @@ export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ 
         <aside
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-[#041d15] border-2 border-amber-400/80 rounded-2xl p-4 shadow-2xl shadow-amber-500/25 animate-in slide-in-from-bottom-5 duration-300 flex items-start gap-3"
+          className="fixed bottom-20 right-4 sm:bottom-20 sm:right-6 z-[60] max-w-sm w-full bg-[#041d15] border-2 border-amber-400/80 rounded-2xl p-4 shadow-2xl shadow-amber-500/25 animate-in slide-in-from-bottom-5 duration-300 flex items-start gap-3"
         >
           <div className="p-2.5 rounded-xl bg-amber-500/25 text-amber-300 border border-amber-400/50 shrink-0">
             <Feather className="w-5 h-5 text-amber-300 animate-pulse" />
@@ -241,7 +241,7 @@ export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ 
         <aside
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-[#131a29] border border-amber-500/60 rounded-2xl p-4 shadow-2xl shadow-amber-500/20 animate-bounce duration-300 flex items-start gap-3"
+          className="fixed bottom-20 right-4 sm:bottom-20 sm:right-6 z-[60] max-w-sm w-full bg-[#131a29] border border-amber-500/60 rounded-2xl p-4 shadow-2xl shadow-amber-500/20 animate-bounce duration-300 flex items-start gap-3"
         >
           <div className="p-2.5 rounded-xl bg-amber-500/20 text-[#f59e0b] border border-amber-500/40 shrink-0">
             <Sparkles className="w-5 h-5 animate-spin duration-1000" />

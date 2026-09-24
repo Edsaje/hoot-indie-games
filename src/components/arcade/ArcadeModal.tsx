@@ -16,6 +16,7 @@ import {
   Crosshair,
   MousePointer,
   Zap,
+  Tv,
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { ARCADE_GAMES, type ArcadeGameId, type ArcadeGameMeta } from '../../data/arcadeGames';
@@ -100,6 +101,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       return false;
     }
   });
+  const isVectrexPhosphorRef = useRef(isVectrexPhosphor);
+  isVectrexPhosphorRef.current = isVectrexPhosphor;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameIdRef = useRef<number | null>(null);
@@ -110,6 +113,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   const keysDownRef = useRef<Set<string>>(new Set());
   const keyboardKeysRef = useRef<Set<string>>(new Set());
   const gamepadKeysRef = useRef<Set<string>>(new Set());
+  const virtualPressTimestampsRef = useRef<Map<string, number>>(new Map());
+  const virtualReleaseTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const virtualRepeatTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
   const touchPosRef = useRef<{ x: number; y: number; active: boolean }>({ x: 200, y: 200, active: false });
   const touchStartPosRef = useRef<{ x: number; y: number }>({ x: 200, y: 200 });
   const scoreRef = useRef<number>(0);
@@ -467,6 +473,28 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           started = true;
           soundFx.playClick();
         }
+      };
+
+      const onKeyDownSnake = (e: KeyboardEvent) => {
+        const c = e.code;
+        const k = e.key;
+        if (!started) {
+          started = true;
+          soundFx.playClick();
+        }
+        if ((['ArrowUp', 'KeyW', 'KeyZ'].includes(c) || ['ArrowUp', 'w', 'W', 'z', 'Z'].includes(k)) && dir !== 'DOWN') {
+          nextDir = 'UP';
+        } else if ((['ArrowDown', 'KeyS'].includes(c) || ['ArrowDown', 's', 'S'].includes(k)) && dir !== 'UP') {
+          nextDir = 'DOWN';
+        } else if ((['ArrowLeft', 'KeyA', 'KeyQ'].includes(c) || ['ArrowLeft', 'a', 'A', 'q', 'Q'].includes(k)) && dir !== 'RIGHT') {
+          nextDir = 'LEFT';
+        } else if ((['ArrowRight', 'KeyD'].includes(c) || ['ArrowRight', 'd', 'D'].includes(k)) && dir !== 'LEFT') {
+          nextDir = 'RIGHT';
+        }
+      };
+      window.addEventListener('keydown', onKeyDownSnake);
+      customCleanup = () => {
+        window.removeEventListener('keydown', onKeyDownSnake);
       };
 
       const snakeSpeed = difficulty === 'expert' ? 85 : difficulty === 'detente' ? 145 : 115;
@@ -1932,10 +1960,16 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const loop = () => {
         if (!gameActive) return;
 
-        // Speed calculation based on difficulty and progression
-        const runBaseSpeed = difficulty === 'expert' ? 4.3 : difficulty === 'detente' ? 2.8 : 3.5;
-        const runSpeedDivisor = difficulty === 'expert' ? 2000 : difficulty === 'detente' ? 3000 : 2500;
-        const currentSpeed = Math.min(7.2, runBaseSpeed + scoreRef.current / runSpeedDivisor);
+        // Progressive Difficulty Curve for Course Sylvestre:
+        // Speed & obstacle frequency smoothly accelerate as player survives longer
+        const currentScore = scoreRef.current;
+        const rampThreshold = difficulty === 'expert' ? 300 : difficulty === 'detente' ? 500 : 400;
+        const progress = Math.min(currentScore / rampThreshold, 1.0);
+
+        const runBaseSpeed = difficulty === 'expert' ? 4.0 : difficulty === 'detente' ? 2.6 : 3.3;
+        const runMaxSpeed = difficulty === 'expert' ? 7.6 : difficulty === 'detente' ? 5.2 : 6.5;
+        const currentSpeed = runBaseSpeed + progress * (runMaxSpeed - runBaseSpeed);
+        const speedMultiplier = (currentSpeed / runBaseSpeed).toFixed(1);
 
         // Rich Forest Night Sky
         ctx.fillStyle = '#04120e';
@@ -2086,11 +2120,17 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         }
 
         // Procedural Feasible Spawner
-        // Guarantees mathematically clearable courses with ample reaction time
+        // Progressive Difficulty: intervals compress and patterns diversify with score
         distanceToNextSpawn -= currentSpeed;
         if (distanceToNextSpawn <= 0) {
           let nextType: ObstacleType = 'ground';
-          const overheadChance = difficulty === 'detente' ? 0.35 : 0.5;
+          // Progressive introduction of overhead obstacles:
+          // Early on (score < 35), 100% ground obstacles to allow player to find rhythm
+          let overheadChance = 0;
+          if (currentScore >= 35) {
+            const baseChance = difficulty === 'detente' ? 0.30 : 0.45;
+            overheadChance = currentScore < 90 ? 0.25 : baseChance;
+          }
           if (Math.random() < overheadChance) {
             nextType = 'overhead';
           }
@@ -2107,18 +2147,41 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           }
 
           if (nextType === 'ground') {
-            obstacles.push({ x: width + 10, w: 24, h: 32, type: 'ground' });
-            // Reaction buffer after ground obstacle (jump takes 40 frames + safety clearance)
-            const jumpBufferFrames = difficulty === 'expert' ? 62 : difficulty === 'detente' ? 88 : 74;
-            const variance = Math.floor(Math.random() * 16);
+            const stumpH = currentScore > 100 && Math.random() < 0.35 ? 36 : 30;
+            obstacles.push({ x: width + 10, w: 24, h: stumpH, type: 'ground' });
+            // Dynamic jump buffer compresses smoothly as score climbs
+            const baseJumpBuffer = difficulty === 'expert' ? 66 : difficulty === 'detente' ? 90 : 78;
+            const minJumpBuffer = difficulty === 'expert' ? 44 : difficulty === 'detente' ? 64 : 52;
+            const jumpBufferFrames = Math.max(minJumpBuffer, Math.round(baseJumpBuffer - progress * 24));
+            const variance = Math.floor(Math.random() * 12);
             distanceToNextSpawn = currentSpeed * (jumpBufferFrames + variance);
           } else {
             obstacles.push({ x: width + 10, w: 28, h: 140, type: 'overhead' });
-            // Reaction buffer after slide (slide clear takes ~12 frames + safety clearance)
-            const slideBufferFrames = difficulty === 'expert' ? 48 : difficulty === 'detente' ? 76 : 60;
-            const variance = Math.floor(Math.random() * 14);
+            // Dynamic slide buffer compresses smoothly
+            const baseSlideBuffer = difficulty === 'expert' ? 52 : difficulty === 'detente' ? 78 : 64;
+            const minSlideBuffer = difficulty === 'expert' ? 34 : difficulty === 'detente' ? 52 : 40;
+            const slideBufferFrames = Math.max(minSlideBuffer, Math.round(baseSlideBuffer - progress * 22));
+            const variance = Math.floor(Math.random() * 10);
             distanceToNextSpawn = currentSpeed * (slideBufferFrames + variance);
           }
+        }
+
+        // Draw HUD: Vitesse progressive
+        if (started) {
+          ctx.save();
+          ctx.font = 'bold 11px monospace';
+          ctx.textAlign = 'right';
+          const hudColor = progress > 0.6 ? '#fbbf24' : '#34d399';
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+          ctx.beginPath();
+          ctx.roundRect(width - 92, 12, 80, 22, 6);
+          ctx.fill();
+          ctx.strokeStyle = hudColor;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.fillStyle = hudColor;
+          ctx.fillText(`⚡ x${speedMultiplier}`, width - 20, 27);
+          ctx.restore();
         }
 
         // Update and Render Obstacles
@@ -2437,19 +2500,21 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
       // Tetris discrete key listener
       const onKeyDownTetris = (e: KeyboardEvent) => {
-        if (['ArrowLeft', 'KeyA', 'KeyQ'].includes(e.code)) {
+        const c = e.code || '';
+        const k = e.key || '';
+        if (['ArrowLeft', 'KeyA', 'KeyQ'].includes(c) || ['ArrowLeft', 'a', 'A', 'q', 'Q'].includes(k)) {
           if (!collides(curPiece, pX - 1, pY)) pX--;
         }
-        if (['ArrowRight', 'KeyD'].includes(e.code)) {
+        if (['ArrowRight', 'KeyD'].includes(c) || ['ArrowRight', 'd', 'D'].includes(k)) {
           if (!collides(curPiece, pX + 1, pY)) pX++;
         }
-        if (['ArrowDown', 'KeyS'].includes(e.code)) {
+        if (['ArrowDown', 'KeyS'].includes(c) || ['ArrowDown', 's', 'S'].includes(k)) {
           if (!collides(curPiece, pX, pY + 1)) pY++;
         }
-        if (['ArrowUp', 'KeyW', 'KeyZ'].includes(e.code)) {
+        if (['ArrowUp', 'KeyW', 'KeyZ'].includes(c) || ['ArrowUp', 'w', 'W', 'z', 'Z'].includes(k)) {
           rotate(curPiece);
         }
-        if (['Space'].includes(e.code)) {
+        if (['Space'].includes(c) || k === ' ' || k === 'Spacebar') {
           while (!collides(curPiece, pX, pY + 1)) {
             pY++;
           }
@@ -2535,18 +2600,13 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       let shieldTimer = 90; // 1.5s safe shield on spawn
       let gameActive = true;
 
-      let isPhosphorMode = false;
-      try {
-        isPhosphorMode = localStorage.getItem('hoot_vectrex_phosphor') === 'true';
-      } catch {
-        // Ignore
-      }
+      const getIsPhosphor = () => isVectrexPhosphorRef.current;
       let phosphorHoldFrames = 0;
       let secretUnlockedJustNow = false;
       let started = false;
 
-      const getPrimaryColor = () => (isPhosphorMode ? '#39ff14' : '#00ffcc');
-      const getGlowColor = () => (isPhosphorMode ? '#39ff14' : '#00ffcc');
+      const getPrimaryColor = () => (getIsPhosphor() ? '#39ff14' : '#00ffcc');
+      const getGlowColor = () => (getIsPhosphor() ? '#39ff14' : '#00ffcc');
 
       // Spawn authentic vector line burst debris (capped for 60fps stability)
       const addVectorExplosion = (x: number, y: number, count: number, color = getPrimaryColor()) => {
@@ -2663,6 +2723,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const loop = () => {
         if (!gameActive) return;
 
+        const isPhosphorMode = getIsPhosphor();
         const primaryColor = getPrimaryColor();
         const glowColor = getGlowColor();
 
@@ -2748,7 +2809,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
             if (phosphorHoldFrames >= 300 && !secretUnlockedJustNow) {
               secretUnlockedJustNow = true;
-              isPhosphorMode = true;
+              isVectrexPhosphorRef.current = true;
               setIsVectrexPhosphor(true);
               try {
                 localStorage.setItem('hoot_vectrex_phosphor', 'true');
@@ -3255,6 +3316,11 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       keyboardKeysRef.current.clear();
       gamepadKeysRef.current.clear();
       keysDownRef.current.clear();
+      virtualReleaseTimersRef.current.forEach((t) => clearTimeout(t));
+      virtualReleaseTimersRef.current.clear();
+      virtualRepeatTimersRef.current.forEach((i) => clearInterval(i));
+      virtualRepeatTimersRef.current.clear();
+      virtualPressTimestampsRef.current.clear();
     };
   }, [isOpen]);
 
@@ -3265,32 +3331,88 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
   // Continuous touch / mouse press handlers for virtual controls
   const handleVirtualPress = (code: string) => {
+    // Annuler tout timer de relâchement en attente pour cette touche
+    const pendingRelease = virtualReleaseTimersRef.current.get(code);
+    if (pendingRelease) {
+      clearTimeout(pendingRelease);
+      virtualReleaseTimersRef.current.delete(code);
+    }
+    virtualPressTimestampsRef.current.set(code, Date.now());
+
     keyboardKeysRef.current.add(code);
     keysDownRef.current.add(code);
     window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code, bubbles: true }));
+
+    // Auto-repeat pour les jeux discrets (Tetris, etc.)
+    const pendingRepeat = virtualRepeatTimersRef.current.get(code);
+    if (pendingRepeat) clearInterval(pendingRepeat);
+    const startRepeat = setTimeout(() => {
+      const interval = setInterval(() => {
+        if (keysDownRef.current.has(code)) {
+          window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code, bubbles: true }));
+        } else {
+          clearInterval(interval);
+        }
+      }, 75);
+      virtualRepeatTimersRef.current.set(code, interval);
+    }, 220);
+    virtualReleaseTimersRef.current.set(`repeat_start_${code}`, startRepeat);
   };
+
   const handleVirtualRelease = (code: string) => {
-    keyboardKeysRef.current.delete(code);
-    keysDownRef.current.delete(code);
-    window.dispatchEvent(new KeyboardEvent('keyup', { code, key: code, bubbles: true }));
+    const repeatStart = virtualReleaseTimersRef.current.get(`repeat_start_${code}`);
+    if (repeatStart) {
+      clearTimeout(repeatStart);
+      virtualReleaseTimersRef.current.delete(`repeat_start_${code}`);
+    }
+    const repeatInterval = virtualRepeatTimersRef.current.get(code);
+    if (repeatInterval) {
+      clearInterval(repeatInterval);
+      virtualRepeatTimersRef.current.delete(code);
+    }
+
+    const pressTime = virtualPressTimestampsRef.current.get(code) || 0;
+    const elapsed = Date.now() - pressTime;
+    // Maintenir la touche active au minimum 140ms pour garantir la prise en compte dans les boucles à intervalle (Snake 85-145ms)
+    const minHoldDuration = 140;
+
+    const doRelease = () => {
+      keyboardKeysRef.current.delete(code);
+      keysDownRef.current.delete(code);
+      window.dispatchEvent(new KeyboardEvent('keyup', { code, key: code, bubbles: true }));
+      virtualReleaseTimersRef.current.delete(code);
+    };
+
+    if (elapsed < minHoldDuration) {
+      const timer = setTimeout(doRelease, minHoldDuration - elapsed);
+      virtualReleaseTimersRef.current.set(code, timer);
+    } else {
+      doRelease();
+    }
   };
 
   const bindVirtualTouch = (code: string) => ({
-    onTouchStart: (e: React.TouchEvent) => {
-      e.preventDefault();
+    onPointerDown: (e: React.PointerEvent) => {
+      try {
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      } catch {}
       handleVirtualPress(code);
     },
-    onTouchEnd: (e: React.TouchEvent) => {
-      e.preventDefault();
+    onPointerUp: (e: React.PointerEvent) => {
+      try {
+        (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+      } catch {}
       handleVirtualRelease(code);
     },
-    onTouchCancel: (e: React.TouchEvent) => {
-      e.preventDefault();
+    onPointerCancel: (e: React.PointerEvent) => {
+      try {
+        (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+      } catch {}
       handleVirtualRelease(code);
     },
-    onMouseDown: () => handleVirtualPress(code),
-    onMouseUp: () => handleVirtualRelease(code),
-    onMouseLeave: () => handleVirtualRelease(code),
+    onTouchStart: (e: React.TouchEvent) => {
+      e.preventDefault();
+    },
     onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
   });
 
@@ -3534,6 +3656,40 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
             </button>
           </div>
         </div>
+
+        {/* Toggle Tube Vert Phosphore (Vectrex 1982) */}
+        {selectedGame === 'vectrex' && (
+          <div className="w-full max-w-[320px] sm:max-w-[380px] flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] mb-2 text-xs">
+            <span className="text-slate-300 font-bold flex items-center gap-1.5">
+              <Tv className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Tube Cathodique 1982 :</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setIsVectrexPhosphor((prev) => {
+                  const next = !prev;
+                  try {
+                    localStorage.setItem('hoot_vectrex_phosphor', String(next));
+                  } catch {
+                    // Ignore
+                  }
+                  return next;
+                });
+              }}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer border ${
+                isVectrexPhosphor
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm'
+                  : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white'
+              }`}
+              title="Activer ou désactiver l'effet Tube Vert Phosphore du Vectrex"
+            >
+              <span className={`w-2 h-2 rounded-full ${isVectrexPhosphor ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`} />
+              <span>{isVectrexPhosphor ? 'Tube Vert : Actif' : 'Vecteur Blanc'}</span>
+            </button>
+          </div>
+        )}
 
         {/* Canvas Game Area with Direct Touch / Swipe Support */}
         <div className="relative w-full max-w-[320px] sm:max-w-[380px] aspect-square rounded-2xl overflow-hidden border-2 border-[#1e293b] bg-[#060f09] shadow-2xl flex items-center justify-center">

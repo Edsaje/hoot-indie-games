@@ -4,6 +4,7 @@ import type { SteamCatalogGame } from '../services/steamCatalog';
 
 export interface SteamCatalogContextType {
   allPlayableGames: Game[];
+  curatedGems: Game[];
   steamCatalog: SteamCatalogGame[];
   isLoading: boolean;
   searchGames: (query: string, limit?: number) => Game[];

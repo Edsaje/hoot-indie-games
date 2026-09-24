@@ -275,7 +275,7 @@ export function initSecurityAntiCheat(): void {
 `%c🌿 Bienvenue dans la console de développement du sanctuaire !
 Vous explorez le code, inspectez les éléments ou aimez le jeu vidéo indépendant ? Vous êtes chez vous.
 • 177 Pépites & Micro-Indés certifiés avec amour (Steam & Itch.io)
-• 10 Mini-jeux quotidiens & duels 1v1 P2P en temps réel
+• 11 Mini-jeux indés (8 défis quotidiens, sprint chrono, duel 1v1 & quiz)
 • Commandes interactives secrètes disponibles (tapez-les directement ci-dessous) :
    ➜ hoot()         : Invoque la tempête de plumes dorées ET le murmure de Sylvestre 🪶✨
    ➜ hootRain()     : Déclenche la pluie magique de plumes dorées et feuilles d'émeraude 🍃

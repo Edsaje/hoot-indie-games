@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+require_once __DIR__ . '/admin_auth.php';
 $dataFile = __DIR__ . '/friends_data.json';
 $rateLimitFile = __DIR__ . '/friends_ratelimit.json';
 $steamKeyFile = __DIR__ . '/.steam_key';
@@ -272,6 +273,14 @@ if ($action === 'register') {
     ];
 
     if ($friendCode === 'HOOT-HIBOU') {
+        if (!isCreatorAdminAuthorized()) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Le profil souverain HOOT-HIBOU est réservé au créateur du site.'
+            ]);
+            exit;
+        }
         $playerEntry['isCreator'] = true;
     }
 

@@ -1,4 +1,4 @@
-import { INDIE_GAMES } from './games';
+import { INDIE_GAMES, getActiveDailyPool } from './games';
 import type { Game, LocalizedText } from '../types/game';
 
 export interface ReviewClue {
@@ -708,8 +708,9 @@ export function getDailyReviewPuzzle(dateString: string): ReviewPuzzle {
     const idx = Math.floor(rand() * eligibleGames.length);
     targetGame = eligibleGames[idx];
   } else {
-    const idx = Math.floor(rand() * INDIE_GAMES.length);
-    targetGame = INDIE_GAMES[idx];
+    const pool = getActiveDailyPool();
+    const idx = Math.floor(rand() * pool.length);
+    targetGame = pool[idx];
   }
 
   const revData = createReviewForGame(targetGame, rand);
@@ -748,8 +749,9 @@ export function getRandomReviewPuzzle(seedSuffix = Date.now().toString()): Revie
     const idx = Math.floor(rand() * eligibleGames.length);
     targetGame = eligibleGames[idx];
   } else {
-    const idx = Math.floor(rand() * INDIE_GAMES.length);
-    targetGame = INDIE_GAMES[idx];
+    const pool = getActiveDailyPool();
+    const idx = Math.floor(rand() * pool.length);
+    targetGame = pool[idx];
   }
 
   const revData = createReviewForGame(targetGame, rand);

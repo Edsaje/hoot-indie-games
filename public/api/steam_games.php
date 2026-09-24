@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-const ADMIN_STEAM_ID = '76561198035270542';
+require_once __DIR__ . '/admin_auth.php';
 $steamKeyFile = __DIR__ . '/.steam_key';
 $cacheDir = __DIR__;
 
@@ -120,8 +120,8 @@ if ($action === 'set_master_key') {
     $inputKey = trim($_POST['apiKey'] ?? $_GET['apiKey'] ?? '');
     $adminId = trim($_POST['adminSteamId'] ?? $_GET['adminSteamId'] ?? '');
 
-    // Sécurité : autoriser si .steam_key n'existe pas encore OU si le SteamID admin correspond
-    $isAuthorized = empty($masterKey) || ($adminId === ADMIN_STEAM_ID);
+    // Sécurité : autoriser si .steam_key n'existe pas encore OU si authentifié en tant qu'administrateur
+    $isAuthorized = empty($masterKey) || isCreatorAdminAuthorized();
 
     if (!$isAuthorized) {
         http_response_code(403);

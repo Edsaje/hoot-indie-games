@@ -366,24 +366,32 @@ class AudioManager {
   }
 
   // Triumphant Coucou Hibou jingle on discovery of the leaf piano easter egg
+  // La vraie mélodie traditionnelle de la comptine française "Dans la forêt lointaine (Coucou hibou)"
   public playCoucouHibouJingle() {
     if (!this.soundEnabled) return;
     try {
       const ctx = this.initCtx();
       if (!ctx) return;
       const t = ctx.currentTime;
-      // "Cou-cou, hi-bou ! Cou-cou, hi-bou !"
-      // G5 (783.99), E5 (659.25), G5, E5, G5, E5, C5 (523.25)
+      // "Cou-cou hi-bou (Mi Ré Do Ré), cou-cou hi-bou (Mi Ré Do Ré), cou-cou cou-cou hi-bou (Mi Ré Mi Ré Do) !"
+      // Mi5: 659.25, Ré5: 587.33, Do5: 523.25
       const jingleNotes = [
-        { freq: 783.99, delay: 0.0, dur: 0.22 }, // Sol
-        { freq: 659.25, delay: 0.22, dur: 0.35 }, // Mi
-        { freq: 783.99, delay: 0.6, dur: 0.22 },  // Sol
-        { freq: 659.25, delay: 0.82, dur: 0.35 }, // Mi
-        { freq: 783.99, delay: 1.2, dur: 0.18 },  // Sol
-        { freq: 880.00, delay: 1.38, dur: 0.18 }, // La
-        { freq: 783.99, delay: 1.56, dur: 0.22 }, // Sol
-        { freq: 659.25, delay: 1.78, dur: 0.22 }, // Mi
-        { freq: 523.25, delay: 2.0, dur: 0.55 },  // Do
+        // 1er "Cou-cou, hi-bou !"
+        { freq: 659.25, delay: 0.00, dur: 0.22 }, // Mi
+        { freq: 587.33, delay: 0.24, dur: 0.22 }, // Ré
+        { freq: 523.25, delay: 0.48, dur: 0.22 }, // Do
+        { freq: 587.33, delay: 0.72, dur: 0.38 }, // Ré
+        // 2e "Cou-cou, hi-bou !"
+        { freq: 659.25, delay: 1.20, dur: 0.22 }, // Mi
+        { freq: 587.33, delay: 1.44, dur: 0.22 }, // Ré
+        { freq: 523.25, delay: 1.68, dur: 0.22 }, // Do
+        { freq: 587.33, delay: 1.92, dur: 0.38 }, // Ré
+        // "Cou-cou, cou-cou, hi-bou !"
+        { freq: 659.25, delay: 2.38, dur: 0.20 }, // Mi
+        { freq: 587.33, delay: 2.60, dur: 0.20 }, // Ré
+        { freq: 659.25, delay: 2.82, dur: 0.20 }, // Mi
+        { freq: 587.33, delay: 3.04, dur: 0.20 }, // Ré
+        { freq: 523.25, delay: 3.28, dur: 0.65 }, // Do (final soutenu)
       ];
 
       jingleNotes.forEach(({ freq, delay, dur }) => {

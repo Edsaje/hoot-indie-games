@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, Eye, EyeOff, LogIn, UserPlus, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { SteamIcon } from './SteamIcon';
@@ -103,17 +104,29 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     connectSteamWithOpenId();
   };
 
-  return (
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-950/80 backdrop-blur-md overflow-hidden">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+            className="absolute inset-0"
           />
 
           {/* Modal Container */}
@@ -122,24 +135,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ duration: 0.2 }}
-            className="relative overflow-visible w-full max-w-md bg-[#06241b] border-2 border-[#78350f] rounded-3xl shadow-2xl z-10 max-h-[90dvh] overflow-y-auto"
+            className="relative w-full max-w-md bg-[#06241b] border-2 border-[#78350f] rounded-2xl sm:rounded-3xl shadow-2xl z-10 max-h-[92dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden"
           >
-            <SylvestreIvyFrame density="medium" />
+            <div className="hidden sm:block pointer-events-none">
+              <SylvestreIvyFrame density="medium" />
+            </div>
             {/* Ambient Background Glow */}
             <div className="absolute top-0 right-1/4 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
             {/* Header */}
-            <div className="relative p-6 pb-4 flex items-center justify-between border-b border-[#1e293b]">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="relative p-4 sm:p-6 pb-3 sm:pb-4 flex items-center justify-between border-b border-[#1e293b] shrink-0">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
                   <OwlLogo size="sm" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-white tracking-tight flex items-center gap-2">
                     {mode === 'signin' ? 'Connexion au Sanctuaire' : 'Rejoindre Hoot Indie Games'}
                   </h2>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-[11px] sm:text-xs text-slate-400">
                     Sauvegardez vos streaks et synchronisez vos jeux
                   </p>
                 </div>
@@ -147,15 +162,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition cursor-pointer"
+                className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition cursor-pointer shrink-0"
                 aria-label="Fermer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Content Body */}
-            <div className="p-6 space-y-5">
+            {/* Content Body - smoothly scrollable on mobile */}
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 custom-scrollbar">
               {/* 1-Click Authentication Buttons */}
               <div className="space-y-2.5">
                 {/* Steam 1-Click Button */}
@@ -346,6 +361,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

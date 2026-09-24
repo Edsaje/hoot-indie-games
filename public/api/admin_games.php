@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-const ADMIN_STEAM_ID = '76561198035270542';
+require_once __DIR__ . '/admin_auth.php';
 $overrideFile = __DIR__ . '/games_override.json';
 
 // Helper : Lecture sécurisée des données de surcharge
@@ -36,6 +36,8 @@ function loadGameOverrides($filePath) {
         'hiddenGameIds' => [],
         'modifiedGames' => (object)[],
         'customAdminGames' => [],
+        'excludedFromGems' => ['kernel-hearts'],
+        'promotedToGems' => [],
         'lastUpdated' => date('c'),
     ];
 
@@ -61,6 +63,12 @@ function loadGameOverrides($filePath) {
     }
     if (!isset($decoded['customAdminGames']) || !is_array($decoded['customAdminGames'])) {
         $decoded['customAdminGames'] = [];
+    }
+    if (!isset($decoded['excludedFromGems']) || !is_array($decoded['excludedFromGems'])) {
+        $decoded['excludedFromGems'] = ['kernel-hearts'];
+    }
+    if (!isset($decoded['promotedToGems']) || !is_array($decoded['promotedToGems'])) {
+        $decoded['promotedToGems'] = [];
     }
     if (!isset($decoded['lastUpdated'])) {
         $decoded['lastUpdated'] = date('c');
@@ -88,17 +96,19 @@ if ($action === 'public_overrides') {
         'hiddenGameIds' => $overrides['hiddenGameIds'],
         'modifiedGames' => $overrides['modifiedGames'],
         'customAdminGames' => $overrides['customAdminGames'],
+        'excludedFromGems' => $overrides['excludedFromGems'],
+        'promotedToGems' => $overrides['promotedToGems'],
         'lastUpdated' => $overrides['lastUpdated'],
     ]);
     exit;
 }
 
 // 2. Vérification stricte des permissions administrateur pour toutes les autres opérations
-if ($steamId !== ADMIN_STEAM_ID) {
+if (!isCreatorAdminAuthorized()) {
     http_response_code(403);
     echo json_encode([
         'success' => false,
-        'message' => 'Accès refusé : Seul le compte créateur souverain (Steam ID ' . ADMIN_STEAM_ID . ') peut administrer le catalogue.',
+        'message' => 'Accès refusé : Session administrateur non authentifiée ou clé secrète manquante.',
     ]);
     exit;
 }
@@ -120,6 +130,8 @@ switch ($action) {
             'hiddenGameIds' => $overrides['hiddenGameIds'],
             'modifiedGames' => $overrides['modifiedGames'],
             'customAdminGames' => $overrides['customAdminGames'],
+            'excludedFromGems' => $overrides['excludedFromGems'],
+            'promotedToGems' => $overrides['promotedToGems'],
             'lastUpdated' => $overrides['lastUpdated'],
         ]);
         break;
@@ -154,6 +166,58 @@ switch ($action) {
                 'gameId' => $gameId,
                 'hidden' => $hidden,
                 'hiddenGameIds' => $overrides['hiddenGameIds'],
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Échec de l\'écriture du fichier de persistance.']);
+        }
+        break;
+
+    // Basculer le statut Pépite d'un jeu (affiché dans les Pépites ou Catalogue uniquement)
+    case 'toggle_gem':
+        $gameId = isset($_POST['id']) ? sanitizeStr($_POST['id']) : (isset($_GET['id']) ? sanitizeStr($_GET['id']) : '');
+        $isGem = isset($_POST['isGem']) ? (bool)$_POST['isGem'] : (isset($_GET['isGem']) ? (bool)$_GET['isGem'] : false);
+
+        if (empty($gameId)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Identifiant de jeu requis.']);
+            exit;
+        }
+
+        $excluded = is_array($overrides['excludedFromGems']) ? $overrides['excludedFromGems'] : [];
+        $promoted = is_array($overrides['promotedToGems']) ? $overrides['promotedToGems'] : [];
+
+        if ($isGem) {
+            // Retirer de la liste d'exclusion des pépites
+            $excluded = array_values(array_filter($excluded, function($id) use ($gameId) {
+                return $id !== $gameId;
+            }));
+            if (!in_array($gameId, $promoted, true)) {
+                $promoted[] = $gameId;
+            }
+        } else {
+            // Ajouter à la liste d'exclusion des pépites
+            if (!in_array($gameId, $excluded, true)) {
+                $excluded[] = $gameId;
+            }
+            $promoted = array_values(array_filter($promoted, function($id) use ($gameId) {
+                return $id !== $gameId;
+            }));
+        }
+
+        $overrides['excludedFromGems'] = $excluded;
+        $overrides['promotedToGems'] = $promoted;
+
+        if (saveGameOverrides($overrideFile, $overrides)) {
+            echo json_encode([
+                'success' => true,
+                'message' => $isGem
+                    ? "Le jeu '$gameId' apparaît désormais dans les Pépites."
+                    : "Le jeu '$gameId' a été retiré des Pépites (il reste disponible dans le catalogue).",
+                'gameId' => $gameId,
+                'isGem' => $isGem,
+                'excludedFromGems' => $overrides['excludedFromGems'],
+                'promotedToGems' => $overrides['promotedToGems'],
             ]);
         } else {
             http_response_code(500);
@@ -255,6 +319,32 @@ switch ($action) {
             $overrides['modifiedGames'] = $modified;
         }
 
+        // Gestion du statut Pépite (si spécifié dans le payload)
+        if (isset($payload['isGem'])) {
+            $isGem = (bool)$payload['isGem'];
+            $excluded = is_array($overrides['excludedFromGems']) ? $overrides['excludedFromGems'] : [];
+            $promoted = is_array($overrides['promotedToGems']) ? $overrides['promotedToGems'] : [];
+
+            if ($isGem) {
+                $excluded = array_values(array_filter($excluded, function($id) use ($gameId) {
+                    return $id !== $gameId;
+                }));
+                if (!in_array($gameId, $promoted, true)) {
+                    $promoted[] = $gameId;
+                }
+            } else {
+                if (!in_array($gameId, $excluded, true)) {
+                    $excluded[] = $gameId;
+                }
+                $promoted = array_values(array_filter($promoted, function($id) use ($gameId) {
+                    return $id !== $gameId;
+                }));
+            }
+
+            $overrides['excludedFromGems'] = $excluded;
+            $overrides['promotedToGems'] = $promoted;
+        }
+
         // Si le jeu était masqué et qu'on le sauvegarde, s'assurer qu'il n'est plus masqué sauf si explicite
         if (isset($payload['hidden']) && !$payload['hidden']) {
             $overrides['hiddenGameIds'] = array_values(array_filter($overrides['hiddenGameIds'], function($id) use ($gameId) {
@@ -331,6 +421,18 @@ switch ($action) {
         if (isset($modified[$gameId])) {
             unset($modified[$gameId]);
             $overrides['modifiedGames'] = $modified;
+        }
+
+        // Retirer des exclusions ou promotions de pépites
+        if (isset($overrides['excludedFromGems']) && is_array($overrides['excludedFromGems'])) {
+            $overrides['excludedFromGems'] = array_values(array_filter($overrides['excludedFromGems'], function($id) use ($gameId) {
+                return $id !== $gameId;
+            }));
+        }
+        if (isset($overrides['promotedToGems']) && is_array($overrides['promotedToGems'])) {
+            $overrides['promotedToGems'] = array_values(array_filter($overrides['promotedToGems'], function($id) use ($gameId) {
+                return $id !== $gameId;
+            }));
         }
 
         if (saveGameOverrides($overrideFile, $overrides)) {

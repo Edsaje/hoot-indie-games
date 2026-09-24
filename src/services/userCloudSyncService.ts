@@ -32,6 +32,22 @@ const STORAGE_ACHIEVEMENTS = 'hoot_achievements_v1';
 const STORAGE_GAME_STATS = 'hoot_game_stats_v1';
 const STORAGE_TIME_ATTACK = 'hoot_time_attack_stats_v1';
 const STORAGE_USER_PROFILE = 'hoot_user_profile_v1';
+const STORAGE_SYNC_KEY = 'hoot_cloud_sync_key_v1';
+
+/**
+ * Récupère ou génère une clé cryptographique unique pour sceller la sauvegarde cloud du joueur
+ */
+export function getOrCreateCloudSyncKey(): string {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return '';
+  }
+  let key = localStorage.getItem(STORAGE_SYNC_KEY);
+  if (!key) {
+    key = 'sync_' + Math.random().toString(36).substring(2, 15) + '_' + Date.now().toString(36);
+    localStorage.setItem(STORAGE_SYNC_KEY, key);
+  }
+  return key;
+}
 
 /**
  * Récupère l'ensemble des données locales de jeu depuis le localStorage
@@ -214,7 +230,8 @@ export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): v
 
     // Déclenchement d'un événement global pour notifier tous les providers et composants React
     window.dispatchEvent(new CustomEvent('hoot_cloud_save_restored', { detail: cloudData }));
-    window.dispatchEvent(new CustomEvent('hoot_feathers_updated'));
+    // Signaler la mise à jour des plumes avec le flag 'fromCloud: true' pour éviter la boucle infinie de re-synchronisation
+    window.dispatchEvent(new CustomEvent('hoot_feathers_updated', { detail: { fromCloud: true } }));
   } catch (err) {
     console.warn('[UserCloudSync] Erreur lors de l’application locale:', err);
   }
@@ -232,6 +249,8 @@ export async function fetchUserCloudSave(identifiers: {
   if (identifiers.steamId) params.append('steamId', identifiers.steamId);
   if (identifiers.userId) params.append('userId', identifiers.userId);
   if (identifiers.username) params.append('username', identifiers.username);
+  const syncKey = getOrCreateCloudSyncKey();
+  if (syncKey) params.append('syncKey', syncKey);
   params.append('action', 'load');
   params.append('t', String(Date.now()));
 
@@ -239,6 +258,7 @@ export async function fetchUserCloudSave(identifiers: {
   const response = await fetch(url, {
     method: 'GET',
     headers: { Accept: 'application/json' },
+    credentials: 'include',
   });
 
   if (!response.ok) {
@@ -259,6 +279,8 @@ export async function pushUserCloudSave(
   if (identifiers.steamId) params.append('steamId', identifiers.steamId);
   if (identifiers.userId) params.append('userId', identifiers.userId);
   if (identifiers.username) params.append('username', identifiers.username);
+  const syncKey = getOrCreateCloudSyncKey();
+  if (syncKey) params.append('syncKey', syncKey);
   params.append('action', 'save');
 
   const url = `/api/user_cloud_sync.php?${params.toString()}`;
@@ -268,6 +290,7 @@ export async function pushUserCloudSave(
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(payload),
   });
 
@@ -278,39 +301,92 @@ export async function pushUserCloudSave(
   return response.json();
 }
 
+let inFlightSyncPromise: Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> | null = null;
+let lastSyncTimestamp = 0;
+let lastSyncedDataHash = '';
+
+function computeSaveFingerprint(data: UserCloudSavePayload): string {
+  return JSON.stringify({
+    bonus: data.feathers?.bonus,
+    spent: data.feathers?.spent,
+    claimed: Object.keys(data.feathers?.claimedDaily || {}).length,
+    ach: data.achievements?.length,
+    username: data.username,
+    avatarId: data.avatarId,
+    title: data.title,
+    frame: data.activeFrame,
+    statsGamesPlayed: data.stats?.gamesPlayed,
+    taPlayed: Object.keys(data.timeAttackStats || {}).length,
+  });
+}
+
 /**
  * Exécute une synchronisation bidirectionnelle intelligente
+ * Avec dédoublonnage en vol, détection des changements locaux et anti-boucle
  */
-export async function syncUserCloudSave(identifiers: {
-  steamId?: string;
-  userId?: string;
-  username?: string;
-}): Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> {
+export async function syncUserCloudSave(
+  identifiers: {
+    steamId?: string;
+    userId?: string;
+    username?: string;
+  },
+  options?: { force?: boolean }
+): Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> {
   if (!identifiers.steamId && !identifiers.userId && !identifiers.username) {
     return { success: false, message: 'Aucun identifiant utilisateur disponible pour la synchronisation.' };
   }
 
-  try {
-    // 1. Récupération des données distantes
-    const cloudRes = await fetchUserCloudSave(identifiers);
-
-    // Si des données distantes existent, on les applique d'abord localement
-    if (cloudRes.success && cloudRes.exists && cloudRes.data) {
-      applyCloudSaveToLocalStorage(cloudRes.data);
-    }
-
-    // 3. On envoie l'état local fusionné au serveur pour persistance
-    const updatedLocal = gatherLocalSaveData();
-    const pushRes = await pushUserCloudSave(identifiers, updatedLocal);
-
-    if (pushRes.success && pushRes.data) {
-      applyCloudSaveToLocalStorage(pushRes.data);
-      return { success: true, message: 'Compte synchronisé avec succès sur le Cloud Souverain !', data: pushRes.data };
-    }
-
-    return { success: true, message: 'Synchronisation terminée.', data: updatedLocal };
-  } catch (err: any) {
-    console.warn('[UserCloudSync] Échec synchronisation cloud:', err);
-    return { success: false, message: err.message || 'Erreur réseau lors de la synchronisation cloud.' };
+  // Si une synchronisation est déjà en vol, réutiliser la même promesse pour éviter les requêtes concurrentes
+  if (inFlightSyncPromise) {
+    return inFlightSyncPromise;
   }
+
+  const now = Date.now();
+  const currentLocal = gatherLocalSaveData();
+  const currentFingerprint = computeSaveFingerprint(currentLocal);
+
+  // Si la sauvegarde n'est pas forcée, temporiser et vérifier si des données ont réellement changé
+  if (!options?.force) {
+    // Si rien n'a changé depuis la dernière synchronisation récente (< 60s), ne pas surcharger le réseau
+    if (currentFingerprint === lastSyncedDataHash && now - lastSyncTimestamp < 60000) {
+      return { success: true, message: 'Données déjà synchronisées.', data: currentLocal };
+    }
+    // Délai minimum de 5s entre synchronisations automatiques
+    if (now - lastSyncTimestamp < 5000) {
+      return { success: true, message: 'Synchronisation temporisée.', data: currentLocal };
+    }
+  }
+
+  inFlightSyncPromise = (async () => {
+    try {
+      // 1. Récupération des données distantes
+      const cloudRes = await fetchUserCloudSave(identifiers);
+
+      // Si des données distantes existent, on les applique d'abord localement
+      if (cloudRes.success && cloudRes.exists && cloudRes.data) {
+        applyCloudSaveToLocalStorage(cloudRes.data);
+      }
+
+      // 3. On envoie l'état local fusionné au serveur pour persistance
+      const updatedLocal = gatherLocalSaveData();
+      const pushRes = await pushUserCloudSave(identifiers, updatedLocal);
+
+      lastSyncTimestamp = Date.now();
+      lastSyncedDataHash = computeSaveFingerprint(updatedLocal);
+
+      if (pushRes.success && pushRes.data) {
+        applyCloudSaveToLocalStorage(pushRes.data);
+        return { success: true, message: 'Compte synchronisé avec succès sur le Cloud Souverain !', data: pushRes.data };
+      }
+
+      return { success: true, message: 'Synchronisation terminée.', data: updatedLocal };
+    } catch (err: any) {
+      console.warn('[UserCloudSync] Échec synchronisation cloud:', err);
+      return { success: false, message: err.message || 'Erreur réseau lors de la synchronisation cloud.' };
+    } finally {
+      inFlightSyncPromise = null;
+    }
+  })();
+
+  return inFlightSyncPromise;
 }

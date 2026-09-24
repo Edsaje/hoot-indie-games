@@ -1,4 +1,4 @@
-import { INDIE_GAMES } from '../data/games';
+import { INDIE_GAMES, setCustomDailyPool } from '../data/games';
 import type { Game } from '../types/game';
 import { inferCanonicalArtStyle, inferCanonicalCamera, inferEnrichedGenres } from '../utils/gameInference';
 
@@ -9,6 +9,8 @@ export interface SteamCatalogGame extends Game {
 }
 
 const STORAGE_KEY_CUSTOM_GAMES = 'hoot_custom_imported_steam_games_v1';
+const STORAGE_KEY_SERVER_OVERRIDES = 'hoot_server_overrides_cache_v2';
+const STORAGE_KEY_STEAM_CATALOG = 'hoot_steam_catalog_cache_v2';
 
 class SteamCatalogService {
   private catalog: SteamCatalogGame[] = [];
@@ -17,6 +19,38 @@ class SteamCatalogService {
   private serverHiddenIds = new Set<string>();
   private serverModifiedGames = new Map<string, Partial<Game>>();
   private serverCustomGames: Game[] = [];
+  private serverExcludedGemIds = new Set<string>(['kernel-hearts']);
+  private serverPromotedGemIds = new Set<string>();
+
+  constructor() {
+    this.initFromCache();
+  }
+
+  private initFromCache() {
+    if (typeof localStorage === 'undefined') return;
+    try {
+      const overridesRaw = localStorage.getItem(STORAGE_KEY_SERVER_OVERRIDES);
+      if (overridesRaw) {
+        const data = JSON.parse(overridesRaw);
+        if (data.hiddenGameIds) this.serverHiddenIds = new Set(data.hiddenGameIds);
+        if (data.modifiedGames) this.serverModifiedGames = new Map(Object.entries(data.modifiedGames));
+        if (data.customAdminGames) this.serverCustomGames = data.customAdminGames;
+        if (data.excludedFromGems) this.serverExcludedGemIds = new Set(data.excludedFromGems);
+        if (data.promotedToGems) this.serverPromotedGemIds = new Set(data.promotedToGems);
+      }
+      const catalogRaw = localStorage.getItem(STORAGE_KEY_STEAM_CATALOG);
+      if (catalogRaw) {
+        const items = JSON.parse(catalogRaw);
+        if (Array.isArray(items) && items.length > 0) {
+          this.catalog = items;
+        }
+      }
+    } catch {
+      // Ignorer les erreurs de parsing du cache local
+    }
+    // Synchroniser immédiatement le pool quotidien avec les pépites
+    setCustomDailyPool(this.getCuratedGems());
+  }
 
   /**
    * Met à jour les surcharges serveur en mémoire
@@ -25,6 +59,8 @@ class SteamCatalogService {
     hiddenGameIds?: string[];
     modifiedGames?: Record<string, Partial<Game>>;
     customAdminGames?: Game[];
+    excludedFromGems?: string[];
+    promotedToGems?: string[];
   }) {
     if (overrides.hiddenGameIds) {
       this.serverHiddenIds = new Set(overrides.hiddenGameIds);
@@ -34,6 +70,30 @@ class SteamCatalogService {
     }
     if (overrides.customAdminGames) {
       this.serverCustomGames = overrides.customAdminGames;
+    }
+    if (overrides.excludedFromGems) {
+      this.serverExcludedGemIds = new Set(overrides.excludedFromGems);
+    }
+    if (overrides.promotedToGems) {
+      this.serverPromotedGemIds = new Set(overrides.promotedToGems);
+    }
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(
+          STORAGE_KEY_SERVER_OVERRIDES,
+          JSON.stringify({
+            hiddenGameIds: Array.from(this.serverHiddenIds),
+            modifiedGames: Object.fromEntries(this.serverModifiedGames.entries()),
+            customAdminGames: this.serverCustomGames,
+            excludedFromGems: Array.from(this.serverExcludedGemIds),
+            promotedToGems: Array.from(this.serverPromotedGemIds),
+          })
+        );
+      } catch {}
+    }
+    setCustomDailyPool(this.getCuratedGems());
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('hoot_steam_catalog_updated'));
     }
   }
 
@@ -71,6 +131,12 @@ class SteamCatalogService {
         if (steamRes && steamRes.ok) {
           const items: SteamCatalogGame[] = await steamRes.json();
           this.catalog = items;
+          if (typeof localStorage !== 'undefined') {
+            try {
+              localStorage.setItem(STORAGE_KEY_STEAM_CATALOG, JSON.stringify(items));
+            } catch {}
+          }
+          setCustomDailyPool(this.getCuratedGems());
         }
       } catch (err) {
         console.warn('Impossible de charger /data/steam_catalog.json, repli sur le catalogue de base:', err);
@@ -173,6 +239,47 @@ class SteamCatalogService {
   }
 
   /**
+   * Retourne la liste filtrée des jeux certifiés "Pépites" (Explorateur de Pépites)
+   * - Filtre les jeux masqués (serverHiddenIds)
+   * - Filtre les jeux explicitement exclus des pépites par l'administrateur (serverExcludedGemIds)
+   * - Inclut les jeux certifiés de base (INDIE_GAMES)
+   * - Inclut les jeux personnalisés / catalogue promus en pépites (serverPromotedGemIds)
+   */
+  public getCuratedGems(): Game[] {
+    const allPlayable = this.getAllPlayableGames();
+    const baseIdSet = new Set(INDIE_GAMES.map((g) => g.id));
+
+    return allPlayable.filter((game) => {
+      if (this.serverHiddenIds.has(game.id)) return false;
+      if (this.serverExcludedGemIds.has(game.id)) return false;
+      if (this.serverPromotedGemIds.has(game.id)) return true;
+      return baseIdSet.has(game.id);
+    });
+  }
+
+  /**
+   * Vérifie si un jeu donné est qualifié de "Pépite"
+   */
+  public isGameGem(id: string): boolean {
+    if (this.serverHiddenIds.has(id)) return false;
+    if (this.serverExcludedGemIds.has(id)) return false;
+    if (this.serverPromotedGemIds.has(id)) return true;
+    return INDIE_GAMES.some((bg) => bg.id === id);
+  }
+
+  public getExcludedGemIds(): Set<string> {
+    return this.serverExcludedGemIds;
+  }
+
+  public getPromotedGemIds(): Set<string> {
+    return this.serverPromotedGemIds;
+  }
+
+  public getRawCatalog(): SteamCatalogGame[] {
+    return this.catalog;
+  }
+
+  /**
    * Recherche instantanée bilingue multi-critères
    */
   public searchGames(query: string, limit = 20): Game[] {
@@ -248,6 +355,7 @@ class SteamCatalogService {
     filtered.unshift({ ...game, isCustomImport: true });
     try {
       localStorage.setItem(STORAGE_KEY_CUSTOM_GAMES, JSON.stringify(filtered));
+      setCustomDailyPool(this.getCuratedGems());
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('hoot_steam_catalog_updated'));
       }
@@ -265,6 +373,7 @@ class SteamCatalogService {
     const filtered = current.filter((g) => g.id !== id);
     try {
       localStorage.setItem(STORAGE_KEY_CUSTOM_GAMES, JSON.stringify(filtered));
+      setCustomDailyPool(this.getCuratedGems());
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('hoot_steam_catalog_updated'));
       }

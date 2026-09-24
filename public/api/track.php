@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $statsFile = __DIR__ . '/stats.json';
 $rateLimitFile = __DIR__ . '/track_rate_limits.json';
 $secretFile = __DIR__ . '/.secret';
-const ADMIN_STEAM_ID = '76561198035270542';
+require_once __DIR__ . '/admin_auth.php';
 
 // Génération d'octets aléatoires sécurisés
 function getSecureRandomBytes($length = 32) {
@@ -416,8 +416,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                  (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
                  !empty($action);
 
-    $isAuth = (!empty($_SESSION['admin_auth']) && (strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID)) ||
-              (strval($_POST['steamId'] ?? $_GET['steamId'] ?? '') === ADMIN_STEAM_ID);
+    $isAuth = isCreatorAdminAuthorized();
 
     if (!$isAuth) {
         if ($isJsonReq) {
@@ -602,7 +601,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             $uData['usernames'][$target]['displayName'] = $cleanDisplay;
         }
 
-        if (!empty($newRole) && in_array($newRole, ['admin', 'vip', 'user'], true)) {
+        if (!empty($newRole) && in_array($newRole, ['admin', 'moderator', 'vip', 'user'], true)) {
             $uData['usernames'][$target]['role'] = $newRole;
         }
         if (!empty($newStatus) && in_array($newStatus, ['active', 'banned'], true)) {
@@ -776,6 +775,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         $rawUsername = trim($_POST['username'] ?? $_GET['username'] ?? '');
         $targetSteamId = trim($_POST['targetSteamId'] ?? $_GET['targetSteamId'] ?? '');
         $role = trim($_POST['role'] ?? $_GET['role'] ?? 'user');
+        if (!in_array($role, ['admin', 'moderator', 'vip', 'user'], true)) $role = 'user';
         $customTitle = trim($_POST['customTitle'] ?? $_GET['customTitle'] ?? '');
         $note = trim($_POST['note'] ?? $_GET['note'] ?? '');
 

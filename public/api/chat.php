@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-const ADMIN_STEAM_ID = '76561198035270542';
+require_once __DIR__ . '/admin_auth.php';
 $dataFile = __DIR__ . '/chat_messages.json';
 $rateLimitFile = __DIR__ . '/chat_ratelimit.json';
 
@@ -112,18 +112,160 @@ function checkRateLimit($rateLimitFile, $ip) {
     return true;
 }
 
-// Filtre simple de modération de mots injurieux
-function filterProfanities($text) {
-    $badWords = [
-        'connard', 'salope', 'pute', 'fdp', 'nique', 'enculé', 'bâtard',
-        'nigger', 'faggot', 'retard', 'hitler', 'nazi', 'chink'
+// Détection ciblée des insultes réelles (anti-faux positifs / pas de censure de mots légitimes)
+function detectProfanities($text) {
+    $patterns = [
+        'connard' => '/\bconnard[se]?\b/iu',
+        'connasse' => '/\bconnasse[s]?\b/iu',
+        'salope' => '/\bsalope[s]?\b/iu',
+        'pute' => '/\b(pute[s]?|fils de pute|fdp)\b/iu',
+        'enculé' => '/\bencul[eé]e?s?\b/iu',
+        'nique' => '/\bnique[rz]? (ta |vos |sa |leur )/iu',
+        'bâtard' => '/\bb[aâ]tard[es]?\b/iu',
+        'pouffiasse' => '/\bpouffiasse[s]?\b/iu',
+        'tocard' => '/\btocard[se]?\b/iu',
+        'grosse merde' => '/\bgrosse? merde\b/iu',
+        'propos haineux' => '/\b(nigger[s]?|faggot[s]?|chink[s]?|sale nazi)\b/iu',
     ];
-    $clean = $text;
-    foreach ($badWords as $w) {
-        $pattern = '/' . preg_quote($w, '/') . '/i';
-        $clean = preg_replace($pattern, '***', $clean);
+
+    $flagged = [];
+    foreach ($patterns as $label => $pattern) {
+        if (preg_match($pattern, $text)) {
+            $flagged[] = $label;
+        }
     }
-    return $clean;
+    return $flagged;
+}
+
+// Helpers de compatibilité chaînes
+function strEndsWithCompat($haystack, $needle) {
+    $length = strlen($needle);
+    return $length === 0 || (substr($haystack, -$length) === $needle);
+}
+function strContainsCompat($haystack, $needle) {
+    return strpos($haystack, $needle) !== false;
+}
+
+// -------------------------------------------------------------
+// DÉTECTION ROBUSTE ANTI-HAMEÇONNAGE & PROTECTION DU TCHAT
+// -------------------------------------------------------------
+function detectPhishingAndSuspiciousLinks($text, $isStaff = false) {
+    $flagged = [];
+
+    // 1. Détection de domaines de phishing et typosquatting (Faux Steam, Faux Discord, etc.)
+    $phishingDomains = [
+        'faux_domaine_steam' => '/\b(steamcommuni[tl]y|steamcomun[tl]y|steamcommnunity|steamcomunity|steam-community|steancommunity|steam-powered|steampowered-[a-z0-9]|steam-gift|steamgift|steam-wallet|steamwallet|steamtrade|steam-trade|steam-promo|steampromo|steamlevelu|steam-giveaway|steamcommunity-trade|steam-direct|steam-code|steamcard|steam-login|steam-bonus)\b/iu',
+        'faux_domaine_discord' => '/\b(discorcl|dlscord|discrod|discord-nitro|discordnitro|discord-gift|discordgift|discord-free|discord-app\.net|discord-airdrop|free-nitro)\b/iu',
+        'raccourcisseur_ou_ip_logger' => '/\b(grabify\.(link|icu)|iplogger\.(org|com|ru)|2no\.co|yip\.su|bit\.ly|tinyurl\.com|t\.co|cutt\.ly|is\.gd|ow\.ly|rebrand\.ly|shorturl\.at|adf\.ly|shorte\.st|shink\.me|v\.gd|bc\.vc|clck\.ru)\b/iu',
+        'extension_tld_suspecte' => '/https?:\/\/[^\s\/$.?#].[^\s]*\.(xyz|top|click|buzz|zip|mov|fit|rest|tk|ml|ga|cf|gq|cc|su)\b/iu',
+        'invitation_externe_inconnue' => '/\b(t\.me\/|telegram\.me\/|discord\.gg\/[a-z0-9]+|chat\.whatsapp\.com\/)/iu',
+    ];
+
+    foreach ($phishingDomains as $key => $pattern) {
+        if (preg_match($pattern, $text)) {
+            $flagged[] = $key;
+        }
+    }
+
+    // 2. Mots-clés et scénarios typiques d'hameçonnage / ingénierie sociale
+    $scamPatterns = [
+        'arnaque_carte_steam_gratuite' => '/\b(free steam (gift|card|wallet|code|key|game)|carte steam gratuite|code steam gratuit|free nitro|nitro gratuit|giveaway 50\$|50€ steam|carte 100€|claim your (gift|reward|nitro|card)|r[eé]clame ton cadeau|gagne 50€|free v-bucks|robux gratuit|steam promo)\b/iu',
+        'arnaque_vote_tournoi' => '/\b(vote for my (team|csgo|cs2|tournament|clan)|vote pour mon [eé]quipe|tournoi csgo|sign up for tournament|rejoins ma team tournoi)\b/iu',
+        'lien_echange_steam_suspect' => '/\b(tradeoffer\/new\/\?partner=|steamcommunity\.com\/tradeoffer)\b/iu',
+        'divulgation_donnees_sensibles' => '/\b(steam guard[:\s]+[a-z0-9]{4,6}|(mon )?mot de passe (est|:)|my password is|mdp\s*:\s*[^\s]{4,}|code steam guard)\b/iu',
+    ];
+
+    foreach ($scamPatterns as $key => $pattern) {
+        if (preg_match($pattern, $text)) {
+            $flagged[] = $key;
+        }
+    }
+
+    if (!empty($flagged)) {
+        return $flagged;
+    }
+
+    // 3. Contrôle des liens pour les utilisateurs réguliers (non-staff)
+    if (!$isStaff) {
+        $hasUrl = preg_match('/(https?:\/\/|www\.)[^\s]+/iu', $text) || preg_match('/\b[a-z0-9\-]+\.(com|org|net|fr|io|gg|ru|co|biz|info)\b/iu', $text);
+        if ($hasUrl) {
+            preg_match_all('/https?:\/\/[^\s]+/iu', $text, $matches);
+            $urls = $matches[0] ?? [];
+
+            if (empty($urls)) {
+                $flagged[] = 'domaine_non_autorise';
+                return $flagged;
+            }
+
+            $allowedDomains = [
+                'store.steampowered.com',
+                'steamcommunity.com',
+                'itch.io',
+                'youtube.com',
+                'youtu.be',
+            ];
+
+            foreach ($urls as $url) {
+                $parsed = parse_url($url);
+                $host = strtolower($parsed['host'] ?? '');
+                $path = strtolower($parsed['path'] ?? '');
+
+                $isAllowed = false;
+                foreach ($allowedDomains as $allowed) {
+                    if ($host === $allowed || strEndsWithCompat($host, '.' . $allowed)) {
+                        $isAllowed = true;
+                        break;
+                    }
+                }
+
+                // Pour steamcommunity.com, interdire les pages de trade offer / login
+                if ($host === 'steamcommunity.com' || strEndsWithCompat($host, '.steamcommunity.com')) {
+                    if (strContainsCompat($path, 'tradeoffer') || strContainsCompat($path, 'login')) {
+                        $flagged[] = 'lien_trade_ou_login_steam';
+                        return $flagged;
+                    }
+                }
+
+                if (!$isAllowed) {
+                    $flagged[] = 'lien_externe_non_autorise';
+                    return $flagged;
+                }
+            }
+        }
+    }
+
+    return $flagged;
+}
+
+// Vérifie si un utilisateur est Administrateur ou Modérateur
+function checkIsUserAdminOrModerator($steamId, $userId, $username = '') {
+    if (isCreatorAdminAuthorized()) {
+        return ['authorized' => true, 'role' => 'admin'];
+    }
+    if (!empty($steamId) && strval($steamId) === ADMIN_STEAM_ID) {
+        if (isCreatorAdminAuthorized()) return ['authorized' => true, 'role' => 'admin'];
+    }
+    $uFile = __DIR__ . '/registered_usernames.json';
+    if (file_exists($uFile)) {
+        $raw = @file_get_contents($uFile);
+        if ($raw) {
+            $db = json_decode($raw, true);
+            if (isset($db['usernames']) && is_array($db['usernames'])) {
+                foreach ($db['usernames'] as $u) {
+                    $match = (!empty($steamId) && strval($u['steamId'] ?? '') === strval($steamId))
+                          || (!empty($userId) && strval($u['userId'] ?? '') === strval($userId))
+                          || (!empty($username) && strtolower($u['displayName'] ?? '') === strtolower($username));
+                    if ($match) {
+                        $role = $u['role'] ?? 'user';
+                        if ($role === 'admin' || $role === 'moderator') {
+                            return ['authorized' => true, 'role' => $role];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return ['authorized' => false, 'role' => 'user'];
 }
 
 // Initialisation du fichier de données s'il n'existe pas
@@ -251,10 +393,6 @@ if ($action === 'send_message') {
         $rawText = mb_substr($rawText, 0, 350, 'UTF-8');
     }
 
-    // Sanitisation stricte anti-XSS et filtrage
-    $cleanText = htmlspecialchars(strip_tags($rawText), ENT_QUOTES, 'UTF-8');
-    $cleanText = filterProfanities($cleanText);
-
     // Identité utilisateur
     $rawUsername = trim($body['username'] ?? 'Explorateur');
     $cleanUsername = htmlspecialchars(strip_tags($rawUsername), ENT_QUOTES, 'UTF-8');
@@ -262,19 +400,138 @@ if ($action === 'send_message') {
         $cleanUsername = 'Explorateur';
     }
 
+    // Vérification d'authentification obligatoire : interdiction de poster sans être connecté
+    $userId = trim($body['userId'] ?? '');
+    $email = trim($body['email'] ?? '');
     $steamId = trim($body['steamId'] ?? '');
+
+    if (empty($steamId) && empty($email) && (empty($userId) || strpos($userId, 'local_') === 0)) {
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Vous devez être connecté à un compte pour participer au tchat.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     $isCreator = false;
+    $isModerator = false;
     $normUser = mb_strtolower($cleanUsername, 'UTF-8');
 
-    // Vérification du statut Créateur
-    $isLocal = in_array($ip, ['127.0.0.1', '::1']) || strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false;
-    if ($steamId === ADMIN_STEAM_ID || ($isLocal && in_array($normUser, ['hibouxe', 'edsaje'], true))) {
+    // Vérification des privilèges admin & modérateur
+    $authInfo = checkIsUserAdminOrModerator($steamId, $userId, $cleanUsername);
+    if ($authInfo['role'] === 'moderator') {
+        $isModerator = true;
+    }
+
+    // Vérification stricte du statut Créateur souverain (anti-spoofing)
+    $hasAuthorizedCreatorRights = isCreatorAdminAuthorized();
+    if ($hasAuthorizedCreatorRights && ($steamId === ADMIN_STEAM_ID || in_array($normUser, ['hibouxe', 'edsaje'], true) || $authInfo['role'] === 'admin')) {
         $isCreator = true;
         $cleanUsername = 'Hibouxe';
     } else if (in_array($normUser, ['hibouxe', 'edsaje'], true)) {
-        // Interdiction d'usurpation de l'identité du fondateur
+        // Interdiction absolue d'usurpation de l'identité du fondateur
         $cleanUsername = 'Explorateur_' . substr(md5($ip), 0, 4);
     }
+
+    // Anti-usurpation d'identité : protéger les membres contre les faux comptes Staff / Support / Modérateur
+    $isStaffUser = ($isCreator || $isModerator || $authInfo['role'] === 'admin');
+    if (!$isStaffUser) {
+        $reservedKeywords = ['admin', 'moderator', 'modérateur', 'support', 'staff', 'security', 'sécurité', 'hibouxe', 'edsaje', 'system', 'système', 'steam_support', 'officiel', 'official'];
+        foreach ($reservedKeywords as $kw) {
+            if (stripos($cleanUsername, $kw) !== false) {
+                $cleanUsername = 'Explorateur_' . substr(md5($ip . $userId), 0, 4);
+                break;
+            }
+        }
+    }
+
+    // 1. Détection stricte anti-hameçonnage (protection absolue contre les arnaques et liens malveillants)
+    $flaggedPhishing = detectPhishingAndSuspiciousLinks($rawText, $isStaffUser);
+    if (!empty($flaggedPhishing)) {
+        // Enregistrement de l'incident de sécurité pour les administrateurs et modérateurs
+        $logsFile = __DIR__ . '/chat_moderation_logs.json';
+        $logs = [];
+        if (file_exists($logsFile)) {
+            $rawLogs = @file_get_contents($logsFile);
+            if ($rawLogs) {
+                $logs = json_decode($rawLogs, true) ?: [];
+            }
+        }
+        $incident = [
+            'id' => 'mod_phish_' . time() . '_' . substr(md5(uniqid($ip, true)), 0, 6),
+            'type' => 'phishing_blocked',
+            'timestamp' => time(),
+            'date' => date('c'),
+            'username' => $cleanUsername,
+            'userId' => $userId,
+            'steamId' => $steamId,
+            'ipHash' => hash('sha256', $ip . '_hoot_mod_salt'),
+            'channel' => $channel,
+            'flaggedWords' => $flaggedPhishing,
+            'originalText' => htmlspecialchars(strip_tags($rawText), ENT_QUOTES, 'UTF-8'),
+            'status' => 'blocked'
+        ];
+        $logs[] = $incident;
+        if (count($logs) > 200) {
+            $logs = array_slice($logs, -200);
+        }
+        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'phishing_detected',
+            'warning' => '🛡️ Bouclier Sécurité & Anti-Hameçonnage : Votre message a été bloqué pour protéger la communauté. Les liens externes non certifiés, raccourcisseurs d\'URL, promesses de cadeaux ou demandes de données sensibles sont strictement interdits.',
+            'flaggedWords' => $flaggedPhishing
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // 2. Détection stricte anti-injures ciblées (sans faux positifs)
+    $flaggedProfanities = detectProfanities($rawText);
+    if (!empty($flaggedProfanities)) {
+        // Enregistrement de l'incident pour les administrateurs et modérateurs
+        $logsFile = __DIR__ . '/chat_moderation_logs.json';
+        $logs = [];
+        if (file_exists($logsFile)) {
+            $rawLogs = @file_get_contents($logsFile);
+            if ($rawLogs) {
+                $logs = json_decode($rawLogs, true) ?: [];
+            }
+        }
+        $incident = [
+            'id' => 'mod_inc_' . time() . '_' . substr(md5(uniqid($ip, true)), 0, 6),
+            'type' => 'profanity_detected',
+            'timestamp' => time(),
+            'date' => date('c'),
+            'username' => $cleanUsername,
+            'userId' => $userId,
+            'steamId' => $steamId,
+            'ipHash' => hash('sha256', $ip . '_hoot_mod_salt'),
+            'channel' => $channel,
+            'flaggedWords' => $flaggedProfanities,
+            'originalText' => htmlspecialchars(strip_tags($rawText), ENT_QUOTES, 'UTF-8'),
+            'status' => 'warning_issued'
+        ];
+        $logs[] = $incident;
+        if (count($logs) > 200) {
+            $logs = array_slice($logs, -200);
+        }
+        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'profanity_detected',
+            'warning' => '⚠️ Avertissement de modération : Des propos inappropriés ont été détectés dans votre message. Merci de rester courtois et bienveillant dans le sanctuaire Hoot Indie Games.',
+            'flaggedWords' => $flaggedProfanities
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Sanitisation stricte anti-XSS
+    $cleanText = htmlspecialchars(strip_tags($rawText), ENT_QUOTES, 'UTF-8');
 
     // Avatar
     $avatarId = trim($body['avatarId'] ?? 'owl');
@@ -320,6 +577,7 @@ if ($action === 'send_message') {
         'text' => $cleanText,
         'timestamp' => time(),
         'isCreator' => $isCreator,
+        'isModerator' => $isModerator,
         'category' => $category,
         'scoreData' => $scoreData
     ];
@@ -360,6 +618,111 @@ if ($action === 'send_message') {
         'success' => true,
         'message' => $newMessage
     ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// -------------------------------------------------------------
+// SUPPRESSION / MODÉRATION D'UN MESSAGE (ADMIN OU MODÉRATEUR)
+// -------------------------------------------------------------
+if ($action === 'delete_message') {
+    $inputJson = file_get_contents('php://input');
+    $body = json_decode($inputJson, true) ?: $_POST;
+
+    $messageId = trim($body['messageId'] ?? $_REQUEST['messageId'] ?? '');
+    $steamId = trim($body['steamId'] ?? $_REQUEST['steamId'] ?? '');
+    $userId = trim($body['userId'] ?? $_REQUEST['userId'] ?? '');
+
+    $auth = checkIsUserAdminOrModerator($steamId, $userId);
+    if (!$auth['authorized']) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès modérateur ou administrateur requis.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if (empty($messageId)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'missing_id', 'message' => 'Identifiant du message requis.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $data = getChatData($dataFile);
+    $found = false;
+    foreach ($data['messages'] as &$m) {
+        if (($m['id'] ?? '') === $messageId) {
+            $m['isDeleted'] = true;
+            $m['text'] = '[Message retiré par la modération]';
+            $m['scoreData'] = null;
+            $found = true;
+            break;
+        }
+    }
+    unset($m);
+
+    if ($found) {
+        @file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode(['success' => true, 'messageId' => $messageId, 'message' => 'Message modéré avec succès.'], JSON_UNESCAPED_UNICODE);
+    } else {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'not_found', 'message' => 'Message introuvable.'], JSON_UNESCAPED_UNICODE);
+    }
+    exit;
+}
+
+// -------------------------------------------------------------
+// JOURNAL DES INCIDENTS ANTI-INJURES (ADMIN OU MODÉRATEUR)
+// -------------------------------------------------------------
+if ($action === 'get_moderation_logs') {
+    $steamId = trim($_REQUEST['steamId'] ?? '');
+    $userId = trim($_REQUEST['userId'] ?? '');
+
+    $auth = checkIsUserAdminOrModerator($steamId, $userId);
+    if (!$auth['authorized']) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $logsFile = __DIR__ . '/chat_moderation_logs.json';
+    $logs = [];
+    if (file_exists($logsFile)) {
+        $raw = @file_get_contents($logsFile);
+        if ($raw) {
+            $logs = json_decode($raw, true) ?: [];
+        }
+    }
+
+    echo json_encode(['success' => true, 'logs' => array_reverse($logs)], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// -------------------------------------------------------------
+// ARCHIVER / CLORE UN SIGNALEMENT D'INCIDENT (ADMIN OU MODÉRATEUR)
+// -------------------------------------------------------------
+if ($action === 'dismiss_moderation_log') {
+    $steamId = trim($_REQUEST['steamId'] ?? '');
+    $userId = trim($_REQUEST['userId'] ?? '');
+    $logId = trim($_REQUEST['logId'] ?? '');
+
+    $auth = checkIsUserAdminOrModerator($steamId, $userId);
+    if (!$auth['authorized']) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $logsFile = __DIR__ . '/chat_moderation_logs.json';
+    if (file_exists($logsFile)) {
+        $raw = @file_get_contents($logsFile);
+        if ($raw) {
+            $logs = json_decode($raw, true) ?: [];
+            $logs = array_filter($logs, function($l) use ($logId) {
+                return ($l['id'] ?? '') !== $logId;
+            });
+            @file_put_contents($logsFile, json_encode(array_values($logs), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+    }
+
+    echo json_encode(['success' => true, 'logId' => $logId], JSON_UNESCAPED_UNICODE);
     exit;
 }
 

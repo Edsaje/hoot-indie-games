@@ -43,9 +43,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
   const { t, i18n } = useTranslation();
   const { isGameOwned } = useUserAccount();
   const { recordGameResult } = useGameStats();
-
-  // The secret game of the day
-  const secretGame = getDailyGame(currentDate, 0);
+  const { allPlayableGames, curatedGems } = useSteamCatalog();
 
   // Local storage state key
   const storageKey = `screenle_state_${currentDate}`;
@@ -56,13 +54,14 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
       if (saved) {
         const parsed = JSON.parse(saved);
         const restoredGuesses = (parsed.guessIds || [])
-          .map((id: string) => INDIE_GAMES.find((g) => g.id === id))
+          .map((id: string) => allPlayableGames.find((g) => g.id === id) || INDIE_GAMES.find((g) => g.id === id))
           .filter(Boolean) as Game[];
         return {
           guesses: restoredGuesses,
           isCompleted: Boolean(parsed.isCompleted),
           isWon: Boolean(parsed.isWon),
           activeStageIndex: parsed.isCompleted ? 5 : Math.min(5, restoredGuesses.length),
+          savedSecretGameId: parsed.secretGameId as string | undefined,
         };
       }
     } catch {
@@ -73,11 +72,22 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
       isCompleted: false,
       isWon: false,
       activeStageIndex: 0,
+      savedSecretGameId: undefined,
     };
   })();
 
+  // Jeu secret du jour : pioché parmi les pépites (curatedGems) ou verrouillé si déjà commencé
+  const secretGame = useMemo(() => {
+    if (savedState.savedSecretGameId) {
+      const lockedGame =
+        allPlayableGames.find((g) => g.id === savedState.savedSecretGameId) ||
+        INDIE_GAMES.find((g) => g.id === savedState.savedSecretGameId);
+      if (lockedGame) return lockedGame;
+    }
+    return getDailyGame(currentDate, 0, curatedGems);
+  }, [currentDate, curatedGems, allPlayableGames, savedState.savedSecretGameId]);
+
   const { unlockAchievement } = useAchievements();
-  const { allPlayableGames } = useSteamCatalog();
   const [guesses, setGuesses] = useState<Game[]>(savedState.guesses);
   const [isCompleted, setIsCompleted] = useState<boolean>(savedState.isCompleted);
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
@@ -104,6 +114,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
         storageKey,
         JSON.stringify({
           date: currentDate,
+          secretGameId: secretGame.id,
           guessIds: newGuesses.map((g) => g.id),
           isCompleted: completed,
           isWon: won,

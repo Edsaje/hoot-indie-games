@@ -2,6 +2,25 @@
 
 Ce document consigne l'ensemble des règles invariantes, directives de design, contraintes techniques et structures de données régissant le développement de la plateforme **Hoot Indie Games**.
 
+> [!IMPORTANT]
+> ### 🛡️ RÈGLE PRIMORDIALE : La sécurité est notre priorité sur ce site.
+> **La sécurité est la priorité absolue, cardinale et non négociable du sanctuaire Hoot Indie Games.**
+> Aucune fonctionnalité, optimisation cosmétique ou facilité de développement ne doit compromettre l'intégrité, la résilience et la confidentialité du site.
+> 
+> 1. **Protection Anti-Triche & Zéro Fuite (Anti-F12 / Anti-Spoiler)** :
+>    - Les réponses secrètes (jeux du jour, années, studios, catégories Linkle, tags Profille) ne doivent jamais transiter en clair sur le réseau ou être exposées dans le bundle/state avant la fin de partie.
+>    - Aucun attribut DOM (`alt`, `title`, `data-*`) ne doit révéler la solution d'une énigme non résolue.
+>    - Les moteurs et états de jeux doivent être scellés dans des fermetures (closures) privées (zéro variable sensible sur l'objet global `window`).
+> 2. **Sanitisation Rigoureuse & Anti-Injections** :
+>    - Neutralisation systématique de toutes les entrées utilisateurs (pseudos, messages de tchat communautaire, duels, suggestions Steam) contre les attaques XSS, HTML et SQL.
+>    - Validation stricte des paramètres (regex numériques, formats de codes attendus). Interdiction absolue de `eval()`, `new Function()` ou `dangerouslySetInnerHTML` non audité.
+> 3. **Protection des Secrets, Accès & Données Serveur** :
+>    - Zéro secret, token d'écriture ou mot de passe dans le code client ou sur le dépôt public git.
+>    - Fichiers sensibles protégés hermétiquement par `.htaccess`.
+>    - Endpoints PHP sécurisés avec rate-limiting par IP, hachage Bcrypt pour l'administration et verrous atomiques (`LOCK_EX`).
+> 4. **Respect de la Vie Privée (RGPD & CNIL)** :
+>    - Architecture 100% Cookieless (zéro cookie tiers traceur), anonymisation des adresses IP via hachage SHA-256 avec sel dynamique quotidien.
+
 ---
 
 ## 1. Vision & Identité Visuelle
@@ -290,9 +309,9 @@ Consulter impérativement le fichier [`TODOLIST.md`](file:///TODOLIST.md) à la 
 
 ---
 
-## 15. Règle Fondamentale : Cybersécurité, Intégrité & Protection Zéro-Fuite
+## 15. Règle Primordiale : La sécurité est notre priorité sur ce site (Cybersécurité, Intégrité & Protection Zéro-Fuite)
 
-La sécurité du sanctuaire Hoot Indie Games est une exigence absolue et primordiale :
+La sécurité du sanctuaire Hoot Indie Games est notre priorité absolue, une exigence souveraine et non négociable :
 
 1. **Intégrité Anti-Triche sur TOUS les Jeux (Anti-F12 & Zéro Fuite)** :
    - **Protection Réseau (XHR / Fetch)** : Les réponses secrètes (titre du jeu, année, studio, catégories de Linkle, tags de Profille) ne doivent jamais transiter en clair dans les requêtes réseau ou être exposées dans le state global avant la fin de partie.

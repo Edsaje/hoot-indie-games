@@ -11,6 +11,7 @@ interface SteamCatalogProviderProps {
 export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ children }) => {
   const [catalog, setCatalog] = useState<SteamCatalogGame[]>([]);
   const [allGames, setAllGames] = useState<Game[]>(() => steamCatalog.getAllPlayableGames());
+  const [curatedGems, setCuratedGems] = useState<Game[]>(() => steamCatalog.getCuratedGems());
   const [isLoading, setIsLoading] = useState(true);
   const [version, setVersion] = useState(0);
 
@@ -21,12 +22,14 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
       if (isMounted) {
         setCatalog(items);
         setAllGames(steamCatalog.getAllPlayableGames());
+        setCuratedGems(steamCatalog.getCuratedGems());
         setIsLoading(false);
       }
     });
 
     const handleUpdate = () => {
       setAllGames(steamCatalog.getAllPlayableGames());
+      setCuratedGems(steamCatalog.getCuratedGems());
       setVersion((v) => v + 1);
     };
 
@@ -59,6 +62,7 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
   const value = useMemo(
     () => ({
       allPlayableGames: allGames,
+      curatedGems,
       steamCatalog: catalog,
       isLoading,
       searchGames,
@@ -66,7 +70,7 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
       removeCustomGame,
       stats,
     }),
-    [allGames, catalog, isLoading, searchGames, addCustomGame, removeCustomGame, stats]
+    [allGames, curatedGems, catalog, isLoading, searchGames, addCustomGame, removeCustomGame, stats]
   );
 
   return <SteamCatalogContext.Provider value={value}>{children}</SteamCatalogContext.Provider>;

@@ -51,15 +51,14 @@ export const SylvestreBranchDivider: React.FC<SylvestreBranchDividerProps> = ({
   const clearPopupTimeoutRef = useRef<number | null>(null);
 
   const checkMelody = (notes: string[]): boolean => {
-    // Join last 7 notes with hyphen
-    const seq = notes.slice(-7).join('-');
+    // Join last 10 notes with hyphen
+    const seq = notes.slice(-10).join('-');
     const patterns = [
-      'Do-Mi-Sol-Sol', // Dans la forêt...
-      'Do-Mi-Sol-Sol-Sol',
-      'Do-Mi-Sol-Sol-La-Sol',
-      'Sol-Mi-Sol-Mi', // Coucou, hibou !
-      'Sol-Mi-Sol',
-      'Do-Mi-Sol',
+      'Mi-Ré-Do-Ré-Mi-Ré-Do-Ré', // Coucou hibou, coucou hibou
+      'Mi-Ré-Do-Ré-Mi-Do',       // Coucou hibou, coucou !
+      'Mi-Ré-Mi-Ré-Do',          // Coucou, coucou, hibou !
+      'Do-Ré-Mi-Do-Mi-Do-Mi',    // Dans la forêt lointaine...
+      'Sol-Mi-Sol-Mi',           // Coucou hibou (tierce mineure)
     ];
     return patterns.some((p) => seq.endsWith(p));
   };

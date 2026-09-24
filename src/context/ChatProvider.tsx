@@ -9,6 +9,7 @@ import {
   type FeedbackCategory,
   fetchChatMessages,
   sendChatMessage,
+  deleteChatMessage,
 } from '../services/chatService';
 import { soundFx } from '../utils/audio';
 
@@ -25,7 +26,7 @@ const INITIAL_MESSAGES_MAP: Record<ChatChannel, ChatMessage[]> = {
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { i18n } = useTranslation();
-  const { profile } = useUserAccount();
+  const { profile, isAuthenticated } = useUserAccount();
 
   // Canal initial basé sur la langue ou le hash d'URL
   const getInitialChannel = (): ChatChannel => {
@@ -64,6 +65,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isSending, setIsSending] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [cooldownSeconds, setCooldownSeconds] = useState<number>(0);
+  const [moderationWarning, setModerationWarning] = useState<string | null>(null);
 
   const lastServerTimeRef = useRef<number>(0);
   const knownMessageIdsRef = useRef<Set<string>>(new Set());
@@ -182,7 +184,14 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       text: string,
       category?: FeedbackCategory,
       scoreData?: { game: string; score: number; mode: string } | null
-    ): Promise<{ success: boolean; error?: string }> => {
+    ): Promise<{ success: boolean; error?: string; warning?: string }> => {
+      if (!isAuthenticated) {
+        return {
+          success: false,
+          error: 'Vous devez être connecté à un compte pour participer au tchat.',
+        };
+      }
+
       if (cooldownSeconds > 0) {
         return { success: false, error: `Veuillez patienter ${cooldownSeconds}s.` };
       }
@@ -197,6 +206,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         title: profile.title,
         activeFrame: profile.activeFrame,
         steamId: profile.steam?.steamId,
+        email: profile.email,
+        userId: profile.id,
         category,
         scoreData,
       });
@@ -229,9 +240,46 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: true };
       }
 
-      return { success: false, error: res.error || 'Impossible d\'envoyer le message.' };
+      if (res.warning) {
+        setModerationWarning(res.warning);
+      }
+
+      return {
+        success: false,
+        error: res.error || 'Impossible d\'envoyer le message.',
+        warning: res.warning,
+      };
     },
-    [cooldownSeconds, currentChannel, profile]
+    [isAuthenticated, cooldownSeconds, currentChannel, profile]
+  );
+
+  // Modération / suppression de message
+  const deleteMessage = useCallback(
+    async (messageId: string): Promise<{ success: boolean; message?: string }> => {
+      const res = await deleteChatMessage(messageId, {
+        steamId: profile.steam?.steamId,
+        userId: profile.id,
+      });
+
+      if (res.success) {
+        soundFx.playClick();
+        setAllMessages((prev) => {
+          const next = { ...prev };
+          for (const ch of Object.keys(next) as ChatChannel[]) {
+            next[ch] = next[ch].map((m) =>
+              m.id === messageId
+                ? { ...m, isDeleted: true, text: '[Message retiré par la modération]' }
+                : m
+            );
+          }
+          return next;
+        });
+        return { success: true };
+      }
+
+      return { success: false, message: res.message || 'Erreur lors de la modération du message.' };
+    },
+    [profile.steam?.steamId, profile.id]
   );
 
   const activeMessages = useMemo(() => {
@@ -253,6 +301,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       unreadCount,
       cooldownSeconds,
       sendMessage,
+      deleteMessage,
+      moderationWarning,
+      setModerationWarning,
       refreshMessages,
     }),
     [
@@ -269,6 +320,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       unreadCount,
       cooldownSeconds,
       sendMessage,
+      deleteMessage,
+      moderationWarning,
+      setModerationWarning,
       refreshMessages,
     ]
   );

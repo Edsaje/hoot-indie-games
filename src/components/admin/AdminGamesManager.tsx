@@ -23,12 +23,14 @@ import {
   fetchAdminGameOverrides,
   saveAdminGame,
   toggleAdminGameVisibility,
+  toggleAdminGameGemStatus,
   deleteAdminGame,
   restoreAdminGame,
   ADMIN_STEAM_ID,
   type AdminGameOverridesPayload,
 } from '../../services/adminService';
 import { steamCatalogService } from '../../services/steamCatalog';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
 
 interface AdminGamesManagerProps {
@@ -41,8 +43,10 @@ interface AdminGamesManagerProps {
 
 interface EnrichedAdminGame extends Game {
   isCustomAdmin: boolean;
+  isCatalogBase?: boolean;
   isModified: boolean;
   isHidden: boolean;
+  isGem: boolean;
 }
 
 const ITEMS_PER_PAGE = 12;
@@ -54,10 +58,11 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   onPrefillConsumed,
   onGameSaved,
 }) => {
+  const { steamCatalog } = useSteamCatalog();
   const [overrides, setOverrides] = useState<AdminGameOverridesPayload | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'base' | 'custom' | 'modified' | 'hidden'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'gems' | 'catalog_only' | 'steam' | 'base' | 'custom' | 'modified' | 'hidden'>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   // Modale d'édition / création
@@ -82,6 +87,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   const [formSteamUrl, setFormSteamUrl] = useState('');
   const [formItchUrl, setFormItchUrl] = useState('');
   const [formIsFree, setFormIsFree] = useState(false);
+  const [formIsGem, setFormIsGem] = useState(true);
   const [formHeaderImage, setFormHeaderImage] = useState('');
   const [formScreenshots, setFormScreenshots] = useState('');
   const [formTaglineFr, setFormTaglineFr] = useState('');
@@ -105,6 +111,12 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    if (!steamCatalog || steamCatalog.length === 0) {
+      steamCatalogService.loadCatalog();
+    }
+  }, [steamCatalog]);
 
   // Pré-remplissage automatique depuis une suggestion communautaire
   useEffect(() => {
@@ -134,28 +146,48 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     }
   }, [initialPrefillGame, onPrefillConsumed]);
 
-  // Fusion complète du catalogue : INDIE_GAMES + customAdminGames + modifications + masqués
+  // Fusion complète du catalogue : INDIE_GAMES + catalogue Steam étendu + customAdminGames + modifications + masqués + pépites
   const enrichedGamesList = useMemo<EnrichedAdminGame[]>(() => {
     const hiddenSet = new Set(overrides?.hiddenGameIds || []);
     const modifiedMap = overrides?.modifiedGames || {};
     const customList = overrides?.customAdminGames || [];
+    const excludedGemSet = new Set(overrides?.excludedFromGems || ['kernel-hearts']);
+    const promotedGemSet = new Set(overrides?.promotedToGems || []);
 
     const map = new Map<string, EnrichedAdminGame>();
+    const seenAppIds = new Set<string>();
+    const seenTitles = new Set<string>();
 
-    // 1. Jeux certifiés de base
+    const extractAppId = (url?: string): string | null => {
+      if (!url) return null;
+      const m = url.match(/\/app\/(\d+)/);
+      return m ? m[1] : null;
+    };
+
+    const normalizeTitle = (t: string): string => {
+      return t
+        .toLowerCase()
+        .replace(/[:\-–—'’!?]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
+
+    // 1. Jeux certifiés de base (INDIE_GAMES)
     for (const baseGame of INDIE_GAMES) {
       const isModified = !!modifiedMap[baseGame.id];
       const isHidden = hiddenSet.has(baseGame.id);
+      const isGem = !excludedGemSet.has(baseGame.id);
       const mod = modifiedMap[baseGame.id];
 
       const merged: EnrichedAdminGame = {
         ...baseGame,
         ...(mod || {}),
+        genre: Array.isArray(mod?.genre) ? mod.genre : (Array.isArray(baseGame.genre) ? baseGame.genre : []),
         hints: {
           ...baseGame.hints,
           ...(mod?.hints || {}),
           tagline: {
-            ...baseGame.hints.tagline,
+            ...baseGame.hints?.tagline,
             ...(mod?.hints?.tagline || {}),
           },
         },
@@ -168,34 +200,97 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
           ...(mod?.camera || {}),
         },
         isCustomAdmin: false,
+        isCatalogBase: false,
         isModified,
         isHidden,
+        isGem,
       };
 
       map.set(baseGame.id, merged);
+      const appId = extractAppId(baseGame.steamUrl) || baseGame.steamAppId?.toString();
+      if (appId) seenAppIds.add(appId);
+      const normTitle = normalizeTitle(baseGame.title);
+      if (normTitle) seenTitles.add(normTitle);
     }
 
-    // 2. Jeux personnalisés ajoutés par l'admin
+    // 2. Jeux du catalogue étendu Steam
+    const extendedCatalog = steamCatalog && steamCatalog.length > 0 ? steamCatalog : steamCatalogService.getRawCatalog();
+    for (const catGame of extendedCatalog) {
+      const appId = extractAppId(catGame.steamUrl) || catGame.steamAppId?.toString();
+      const normTitle = normalizeTitle(catGame.title);
+
+      if (map.has(catGame.id)) continue;
+      if (appId && seenAppIds.has(appId)) continue;
+      if (normTitle && seenTitles.has(normTitle)) continue;
+
+      const isModified = !!modifiedMap[catGame.id];
+      const isHidden = hiddenSet.has(catGame.id);
+      const isGem = (promotedGemSet.has(catGame.id) || (catGame as any).isGem === true) && !excludedGemSet.has(catGame.id);
+      const mod = modifiedMap[catGame.id];
+
+      const merged: EnrichedAdminGame = {
+        ...catGame,
+        ...(mod || {}),
+        genre: Array.isArray(mod?.genre) ? mod.genre : (Array.isArray(catGame.genre) ? catGame.genre : []),
+        hints: {
+          ...catGame.hints,
+          ...(mod?.hints || {}),
+          tagline: {
+            ...catGame.hints?.tagline,
+            ...(mod?.hints?.tagline || {}),
+          },
+        },
+        artStyle: {
+          ...catGame.artStyle,
+          ...(mod?.artStyle || {}),
+        },
+        camera: {
+          ...catGame.camera,
+          ...(mod?.camera || {}),
+        },
+        isCustomAdmin: false,
+        isCatalogBase: true,
+        isModified,
+        isHidden,
+        isGem,
+      };
+
+      map.set(catGame.id, merged);
+      if (appId) seenAppIds.add(appId);
+      if (normTitle) seenTitles.add(normTitle);
+    }
+
+    // 3. Jeux personnalisés ajoutés par l'admin
     for (const customGame of customList) {
       const isHidden = hiddenSet.has(customGame.id);
+      const isGem = promotedGemSet.has(customGame.id) || (customGame as any).isGem === true;
       map.set(customGame.id, {
         ...customGame,
+        genre: Array.isArray(customGame.genre) ? customGame.genre : [],
         isCustomAdmin: true,
+        isCatalogBase: false,
         isModified: false,
         isHidden,
+        isGem,
       });
     }
 
     return Array.from(map.values());
-  }, [overrides]);
+  }, [overrides, steamCatalog]);
 
   // Filtrage et recherche
   const filteredGames = useMemo(() => {
     let list = enrichedGamesList;
 
     // Filtre d'état
-    if (statusFilter === 'base') {
-      list = list.filter((g) => !g.isCustomAdmin && !g.isHidden);
+    if (statusFilter === 'gems') {
+      list = list.filter((g) => g.isGem && !g.isHidden);
+    } else if (statusFilter === 'catalog_only') {
+      list = list.filter((g) => !g.isGem && !g.isHidden);
+    } else if (statusFilter === 'steam') {
+      list = list.filter((g) => g.isCatalogBase && !g.isHidden);
+    } else if (statusFilter === 'base') {
+      list = list.filter((g) => !g.isCustomAdmin && !g.isCatalogBase && !g.isHidden);
     } else if (statusFilter === 'custom') {
       list = list.filter((g) => g.isCustomAdmin);
     } else if (statusFilter === 'modified') {
@@ -213,7 +308,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         g.title.toLowerCase().includes(q) ||
         g.developer.toLowerCase().includes(q) ||
         g.id.toLowerCase().includes(q) ||
-        g.genre.some((gen) => gen.toLowerCase().includes(q))
+        (Array.isArray(g.genre) && g.genre.some((gen) => gen.toLowerCase().includes(q)))
     );
   }, [enrichedGamesList, statusFilter, searchQuery]);
 
@@ -232,11 +327,25 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   // Métriques
   const stats = useMemo(() => {
     const total = enrichedGamesList.length;
+    const gemCount = enrichedGamesList.filter((g) => g.isGem && !g.isHidden).length;
+    const catalogOnlyCount = enrichedGamesList.filter((g) => !g.isGem && !g.isHidden).length;
+    const baseCount = enrichedGamesList.filter((g) => !g.isCustomAdmin && !g.isCatalogBase && !g.isHidden).length;
+    const steamCount = enrichedGamesList.filter((g) => g.isCatalogBase && !g.isHidden).length;
     const customCount = enrichedGamesList.filter((g) => g.isCustomAdmin).length;
     const modifiedCount = enrichedGamesList.filter((g) => g.isModified).length;
     const hiddenCount = enrichedGamesList.filter((g) => g.isHidden).length;
     const visibleCount = total - hiddenCount;
-    return { total, customCount, modifiedCount, hiddenCount, visibleCount };
+    return {
+      total,
+      gemCount,
+      catalogOnlyCount,
+      baseCount,
+      steamCount,
+      customCount,
+      modifiedCount,
+      hiddenCount,
+      visibleCount,
+    };
   }, [enrichedGamesList]);
 
   // Bascule de visibilité
@@ -256,6 +365,30 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     }
   };
 
+  // Bascule du statut Pépite (mis en avant dans Pépites vs Catalogue seul)
+  const handleToggleGem = async (game: EnrichedAdminGame) => {
+    soundFx.playClick();
+    const nextIsGem = !game.isGem;
+    try {
+      const res = await toggleAdminGameGemStatus(game.id, nextIsGem, currentSteamId);
+      if (res.success) {
+        if (onNotice) {
+          onNotice(
+            'success',
+            nextIsGem
+              ? `Le jeu "${game.title}" apparaît désormais dans les Pépites !`
+              : `Le jeu "${game.title}" a été retiré des Pépites (il reste disponible dans le catalogue).`
+          );
+        }
+        loadData();
+      } else {
+        if (onNotice) onNotice('error', res.message || 'Erreur lors du changement de statut Pépite');
+      }
+    } catch {
+      if (onNotice) onNotice('error', 'Erreur réseau lors du changement de statut Pépite');
+    }
+  };
+
   // Ouverture du formulaire d'édition
   const openEditModal = (game: EnrichedAdminGame) => {
     soundFx.playClick();
@@ -265,7 +398,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormId(game.id);
     setFormDeveloper(game.developer);
     setFormReleaseYear(game.releaseYear);
-    setFormGenres(game.genre.join(', '));
+    setFormGenres(Array.isArray(game.genre) ? game.genre.join(', ') : '');
     setFormArtStyleFr(game.artStyle?.fr || '2D Pixel Art');
     setFormArtStyleEn(game.artStyle?.en || '2D Pixel Art');
     setFormCameraFr(game.camera?.fr || 'Vue de côté 2D');
@@ -273,6 +406,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormSteamUrl(game.steamUrl || '');
     setFormItchUrl(game.itchUrl || '');
     setFormIsFree(!!game.isFree);
+    setFormIsGem(game.isGem);
     setFormHeaderImage(game.headerImage || '');
     setFormScreenshots((game.screenshots || []).join('\n'));
     setFormTaglineFr(game.hints?.tagline?.fr || '');
@@ -297,6 +431,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormSteamUrl('');
     setFormItchUrl('');
     setFormIsFree(false);
+    setFormIsGem(true);
     setFormHeaderImage('');
     setFormScreenshots('');
     setFormTaglineFr('Une aventure indépendante poétique et marquante.');
@@ -325,7 +460,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
-    const gamePayload: Partial<Game> & { isCustomAdmin?: boolean } = {
+    const gamePayload: Partial<Game> & { isCustomAdmin?: boolean; isGem?: boolean } = {
       id: formId.trim() || undefined,
       title: formTitle.trim(),
       developer: formDeveloper.trim() || 'Studio Indé',
@@ -342,6 +477,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       steamUrl: formSteamUrl.trim() || undefined,
       itchUrl: formItchUrl.trim() || undefined,
       isFree: formIsFree,
+      isGem: formIsGem,
       headerImage: formHeaderImage.trim() || undefined,
       screenshots: screenshotsArray,
       hints: {
@@ -453,22 +589,33 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         </div>
 
         {/* Compteurs / Métriques rapides */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1 border-t border-white/5 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 pt-1 border-t border-white/5 text-xs">
           <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col">
             <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Total Jeux</span>
             <span className="text-lg font-black text-white font-mono">{stats.total}</span>
           </div>
+          <div className="p-2.5 rounded-xl bg-amber-500/5 border border-amber-500/20 flex flex-col">
+            <span className="text-amber-400 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1">
+              <Sparkles className="w-2.5 h-2.5" />
+              <span>Pépites</span>
+            </span>
+            <span className="text-lg font-black text-amber-400 font-mono">{stats.gemCount}</span>
+          </div>
           <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col">
-            <span className="text-emerald-400 text-[10px] uppercase font-bold tracking-wider">Publics / Actifs</span>
-            <span className="text-lg font-black text-emerald-400 font-mono">{stats.visibleCount}</span>
+            <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Catalogue Seul</span>
+            <span className="text-lg font-black text-slate-300 font-mono">{stats.catalogOnlyCount}</span>
+          </div>
+          <div className="p-2.5 rounded-xl bg-blue-500/5 border border-blue-500/20 flex flex-col">
+            <span className="text-blue-400 text-[10px] uppercase font-bold tracking-wider">Catalogue Steam</span>
+            <span className="text-lg font-black text-blue-400 font-mono">{stats.steamCount}</span>
           </div>
           <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col">
             <span className="text-cyan-400 text-[10px] uppercase font-bold tracking-wider">Modifiés</span>
             <span className="text-lg font-black text-cyan-400 font-mono">{stats.modifiedCount}</span>
           </div>
           <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col">
-            <span className="text-amber-400 text-[10px] uppercase font-bold tracking-wider">Ajouts Admin</span>
-            <span className="text-lg font-black text-amber-400 font-mono">{stats.customCount}</span>
+            <span className="text-indigo-400 text-[10px] uppercase font-bold tracking-wider">Ajouts Admin</span>
+            <span className="text-lg font-black text-indigo-400 font-mono">{stats.customCount}</span>
           </div>
           <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col">
             <span className="text-rose-400 text-[10px] uppercase font-bold tracking-wider">Masqués</span>
@@ -502,7 +649,10 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0 text-xs">
           {[
             { id: 'all', label: `Tous (${stats.total})` },
-            { id: 'base', label: `Base (${stats.total - stats.customCount})` },
+            { id: 'gems', label: `✨ Pépites (${stats.gemCount})` },
+            { id: 'catalog_only', label: `📦 Catalogue (${stats.catalogOnlyCount})` },
+            { id: 'steam', label: `♨️ Steam (${stats.steamCount})` },
+            { id: 'base', label: `🦉 Base Hoot (${stats.baseCount})` },
             { id: 'custom', label: `Admin (${stats.customCount})` },
             { id: 'modified', label: `Modifiés (${stats.modifiedCount})` },
             { id: 'hidden', label: `Masqués (${stats.hiddenCount})` },
@@ -556,6 +706,8 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     ? 'border-cyan-500/30 hover:border-cyan-500/50'
                     : game.isCustomAdmin
                     ? 'border-amber-500/30 hover:border-amber-500/50'
+                    : game.isCatalogBase
+                    ? 'border-blue-500/20 hover:border-blue-500/40'
                     : 'border-white/5 hover:border-white/20'
                 }`}
               >
@@ -581,16 +733,30 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
 
                       {/* Badges de statut */}
                       <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                        {game.isHidden && (
+                        {game.isHidden ? (
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1">
                             <EyeOff className="w-2.5 h-2.5" />
                             <span>Masqué</span>
                           </span>
-                        )}
-                        {game.isCustomAdmin && (
+                        ) : game.isGem ? (
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                            <Sparkles className="w-2.5 h-2.5" />
+                            <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                            <span>Pépite</span>
+                          </span>
+                        ) : (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/10 flex items-center gap-1">
+                            <span>Catalogue</span>
+                          </span>
+                        )}
+
+                        {game.isCustomAdmin && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
                             <span>Ajout Admin</span>
+                          </span>
+                        )}
+                        {game.isCatalogBase && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/15 text-blue-300 border border-blue-500/30 flex items-center gap-1">
+                            <span>Catalogue Steam</span>
                           </span>
                         )}
                         {game.isModified && !game.isCustomAdmin && (
@@ -599,7 +765,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                             <span>Modifié</span>
                           </span>
                         )}
-                        {!game.isCustomAdmin && !game.isModified && !game.isHidden && (
+                        {!game.isCustomAdmin && !game.isCatalogBase && !game.isModified && !game.isHidden && (
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
                             Certifié Hoot
                           </span>
@@ -610,7 +776,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
 
                   {/* Genres & Style */}
                   <div className="flex flex-wrap gap-1">
-                    {game.genre.slice(0, 3).map((g, idx) => (
+                    {(Array.isArray(game.genre) ? game.genre : []).slice(0, 3).map((g, idx) => (
                       <span
                         key={idx}
                         className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[10px] text-slate-300 font-medium"
@@ -618,7 +784,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                         {g}
                       </span>
                     ))}
-                    {game.genre.length > 3 && (
+                    {Array.isArray(game.genre) && game.genre.length > 3 && (
                       <span className="px-1.5 py-0.5 rounded-md bg-white/5 text-[10px] text-slate-500">
                         +{game.genre.length - 3}
                       </span>
@@ -640,6 +806,24 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     )}
+
+                    {/* Basculer Pépite / Catalogue */}
+                    <button
+                      onClick={() => handleToggleGem(game)}
+                      className={`p-1.5 rounded-lg border transition cursor-pointer flex items-center gap-1 text-xs font-bold ${
+                        game.isGem
+                          ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 hover:bg-amber-500/30'
+                          : 'bg-white/5 border-white/10 text-slate-400 hover:text-slate-200 hover:bg-white/10'
+                      }`}
+                      title={
+                        game.isGem
+                          ? 'Présent dans les Pépites (cliquer pour retirer des Pépites sans supprimer du catalogue)'
+                          : 'Réservé au catalogue (cliquer pour promouvoir en Pépite)'
+                      }
+                    >
+                      <Sparkles className={`w-3.5 h-3.5 ${game.isGem ? 'text-amber-400 fill-amber-400/40' : 'text-slate-500'}`} />
+                      <span className="text-[10px] hidden sm:inline">{game.isGem ? 'Pépite' : 'Catalogue'}</span>
+                    </button>
 
                     {/* Masquer / Afficher */}
                     <button
@@ -860,6 +1044,32 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       placeholder="Ex: 2D Dessiné main"
                       className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
                     />
+                    <div className="flex flex-wrap gap-1 pt-1">
+                      {[
+                        { fr: 'Pixel Art', en: 'Pixel Art' },
+                        { fr: '2D Dessiné à la main', en: '2D Hand-drawn' },
+                        { fr: '3D Stylisée', en: 'Stylized 3D' },
+                        { fr: '3D Réaliste', en: 'Realistic 3D' },
+                        { fr: '3D Rétro Low-poly', en: 'Retro Low-poly 3D' },
+                        { fr: 'Monochrome / Minimaliste', en: 'Monochrome' },
+                      ].map((preset) => (
+                        <button
+                          key={preset.fr}
+                          type="button"
+                          onClick={() => {
+                            setFormArtStyleFr(preset.fr);
+                            setFormArtStyleEn(preset.en);
+                          }}
+                          className={`text-[10px] px-2 py-0.5 rounded-lg border transition cursor-pointer ${
+                            formArtStyleFr === preset.fr
+                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
+                              : 'bg-white/5 text-slate-400 border-white/5 hover:text-white'
+                          }`}
+                        >
+                          {preset.fr}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Perspective Caméra */}
@@ -872,6 +1082,31 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       placeholder="Ex: Vue de côté 2D"
                       className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
                     />
+                    <div className="flex flex-wrap gap-1 pt-1">
+                      {[
+                        { fr: 'Vue de côté 2D', en: '2D Side-scroller' },
+                        { fr: 'Vue du dessus 2D', en: '2D Top-down' },
+                        { fr: 'Isométrique / 2.5D', en: 'Isometric / 2.5D' },
+                        { fr: 'Troisième personne', en: 'Third-Person' },
+                        { fr: 'Première personne', en: 'First-Person' },
+                      ].map((preset) => (
+                        <button
+                          key={preset.fr}
+                          type="button"
+                          onClick={() => {
+                            setFormCameraFr(preset.fr);
+                            setFormCameraEn(preset.en);
+                          }}
+                          className={`text-[10px] px-2 py-0.5 rounded-lg border transition cursor-pointer ${
+                            formCameraFr === preset.fr
+                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
+                              : 'bg-white/5 text-slate-400 border-white/5 hover:text-white'
+                          }`}
+                        >
+                          {preset.fr}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -901,18 +1136,48 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                   </div>
                 </div>
 
-                {/* Gratuit Checkbox */}
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
-                  <input
-                    type="checkbox"
-                    id="formIsFreeCheckbox"
-                    checked={formIsFree}
-                    onChange={(e) => setFormIsFree(e.target.checked)}
-                    className="w-4 h-4 rounded text-amber-500 accent-amber-500 cursor-pointer"
-                  />
-                  <label htmlFor="formIsFreeCheckbox" className="font-medium text-slate-300 cursor-pointer">
-                    Jeu 100% Gratuit / En accès libre (0,00 €)
-                  </label>
+                {/* Options d'affichage : Pépites & Gratuit */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Pépite Checkbox */}
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                      <div>
+                        <label htmlFor="formIsGemCheckbox" className="font-bold text-xs text-amber-200 cursor-pointer block">
+                          Afficher dans les Pépites
+                        </label>
+                        <p className="text-[10px] text-slate-400 leading-tight">
+                          Mis en avant dans l'Explorateur de Pépites (sinon catalogue seul)
+                        </p>
+                      </div>
+                    </div>
+                    <input
+                      type="checkbox"
+                      id="formIsGemCheckbox"
+                      checked={formIsGem}
+                      onChange={(e) => setFormIsGem(e.target.checked)}
+                      className="w-4 h-4 rounded text-amber-500 accent-amber-500 cursor-pointer shrink-0"
+                    />
+                  </div>
+
+                  {/* Gratuit Checkbox */}
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div>
+                      <label htmlFor="formIsFreeCheckbox" className="font-bold text-xs text-slate-200 cursor-pointer block">
+                        Jeu 100% Gratuit
+                      </label>
+                      <p className="text-[10px] text-slate-400 leading-tight">
+                        Accès libre sans achat (0,00 €)
+                      </p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      id="formIsFreeCheckbox"
+                      checked={formIsFree}
+                      onChange={(e) => setFormIsFree(e.target.checked)}
+                      className="w-4 h-4 rounded text-amber-500 accent-amber-500 cursor-pointer shrink-0"
+                    />
+                  </div>
                 </div>
 
                 {/* Taglines FR & EN */}

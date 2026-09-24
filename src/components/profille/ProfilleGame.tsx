@@ -23,6 +23,7 @@ import {
   Star,
 } from 'lucide-react';
 import { INDIE_GAMES, getDailyProfilleGame } from '../../data/games';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
@@ -54,6 +55,7 @@ interface ProfilleGameProps {
 }
 
 interface SavedProfilleState {
+  secretGameId?: string;
   activeCategories?: ProfilleCategory[];
   yearGuesses?: number[];
   devGuesses?: string[];
@@ -98,43 +100,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
   const { unlockAchievement } = useAchievements();
-
-  // Secret game to profile
-  const secretGame = useMemo(() => getDailyProfilleGame(currentDate), [currentDate]);
-
-  // Unique list of developers, genres, composers
-  const allDevelopers = useMemo(() => {
-    return Array.from(new Set(INDIE_GAMES.map((g) => g.developer))).sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: 'base' })
-    );
-  }, []);
-
-  const allGenres = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const g of INDIE_GAMES) {
-      for (const gen of g.genre) {
-        const key = normalizeGenreKey(gen);
-        if (!map.has(key)) {
-          map.set(key, gen);
-        }
-      }
-    }
-    return Array.from(map.values()).sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: 'base' })
-    );
-  }, []);
-
-  const allComposers = useMemo(() => {
-    const set = new Set<string>();
-    for (const g of INDIE_GAMES) {
-      if (g.hints?.composer?.trim()) {
-        set.add(g.hints.composer.trim());
-      }
-    }
-    return Array.from(set).sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: 'base' })
-    );
-  }, []);
+  const { allPlayableGames, curatedGems } = useSteamCatalog();
 
   // Storage key
   const storageKey = `profille_state_${currentDate}`;
@@ -145,6 +111,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
       if (raw) {
         const parsed = JSON.parse(raw);
         return {
+          secretGameId: parsed.secretGameId as string | undefined,
           activeCategories: Array.isArray(parsed.activeCategories) ? parsed.activeCategories : undefined,
           yearGuesses: Array.isArray(parsed.yearGuesses) ? parsed.yearGuesses : [],
           devGuesses: Array.isArray(parsed.devGuesses) ? parsed.devGuesses : [],
@@ -168,6 +135,54 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     }
     return {};
   }, [storageKey]);
+
+  // Jeu secret pour Profille : pioché parmi les pépites (curatedGems) ou verrouillé si session en cours
+  const secretGame = useMemo(() => {
+    if (savedState.secretGameId) {
+      const lockedGame =
+        allPlayableGames.find((g) => g.id === savedState.secretGameId) ||
+        INDIE_GAMES.find((g) => g.id === savedState.secretGameId);
+      if (lockedGame) return lockedGame;
+    }
+    return getDailyProfilleGame(currentDate, curatedGems);
+  }, [currentDate, curatedGems, allPlayableGames, savedState.secretGameId]);
+
+  // Unique list of developers, genres, composers across all playable games
+  const allDevelopers = useMemo(() => {
+    const list = (allPlayableGames.length > 0 ? allPlayableGames : INDIE_GAMES).map((g) => g.developer);
+    return Array.from(new Set(list)).sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' })
+    );
+  }, [allPlayableGames]);
+
+  const allGenres = useMemo(() => {
+    const map = new Map<string, string>();
+    const list = allPlayableGames.length > 0 ? allPlayableGames : INDIE_GAMES;
+    for (const g of list) {
+      for (const gen of g.genre) {
+        const key = normalizeGenreKey(gen);
+        if (!map.has(key)) {
+          map.set(key, gen);
+        }
+      }
+    }
+    return Array.from(map.values()).sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' })
+    );
+  }, [allPlayableGames]);
+
+  const allComposers = useMemo(() => {
+    const set = new Set<string>();
+    const list = allPlayableGames.length > 0 ? allPlayableGames : INDIE_GAMES;
+    for (const g of list) {
+      if (g.hints?.composer?.trim()) {
+        set.add(g.hints.composer.trim());
+      }
+    }
+    return Array.from(set).sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' })
+    );
+  }, [allPlayableGames]);
 
   // Determine active categories: backward compatible with legacy saved games
   const activeCategories = useMemo<ProfilleCategory[]>(() => {
@@ -301,6 +316,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     (patch: Partial<SavedProfilleState>) => {
       try {
         const stateToSave: SavedProfilleState = {
+          secretGameId: secretGame.id,
           activeCategories,
           yearGuesses,
           devGuesses,
@@ -325,6 +341,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
       }
     },
     [
+      secretGame.id,
       activeCategories,
       yearGuesses,
       devGuesses,

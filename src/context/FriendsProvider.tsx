@@ -15,21 +15,22 @@ import { getTodayDateString } from '../utils/streakManager';
 import { ADMIN_STEAM_ID } from '../utils/usernameValidation';
 
 export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { profile, updateProfile, isSteamConnected, steamAccount } = useUserAccount();
+  const { profile, updateProfile, isSteamConnected, steamAccount, isAuthenticated } = useUserAccount();
 
   const profileRef = useRef(profile);
   profileRef.current = profile;
 
   const myFriendCode = useMemo(() => {
+    if (!isAuthenticated) return '';
     return getOrCreateFriendCode(profile);
-  }, [profile.steam?.steamId, profile.id, profile.username, profile.friendCode]);
+  }, [isAuthenticated, profile.steam?.steamId, profile.id, profile.username, profile.friendCode]);
 
-  // Si le profil n'avait pas encore le friendCode stocké, on le persiste
+  // Si le profil n'avait pas encore le friendCode stocké, on le persiste uniquement pour un utilisateur connecté
   useEffect(() => {
-    if (profile.friendCode !== myFriendCode) {
+    if (isAuthenticated && myFriendCode && profile.friendCode !== myFriendCode) {
       updateProfile({ friendCode: myFriendCode });
     }
-  }, [profile.friendCode, myFriendCode, updateProfile]);
+  }, [isAuthenticated, profile.friendCode, myFriendCode, updateProfile]);
 
   // Vérifie si un joueur ou un code correspond à l'utilisateur lui-même
   const isSelf = useCallback(
@@ -107,14 +108,15 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [friendCodes, isSelf]);
 
-  // Synchronisation de soi-même sur le serveur souverain
+  // Synchronisation de soi-même sur le serveur souverain (uniquement si connecté avec code ami)
   const syncSelf = useCallback(async () => {
+    if (!isAuthenticated || !myFriendCode) return;
     try {
       await registerSelfOnServer(profileRef.current, myFriendCode);
     } catch {
       // Ignorer
     }
-  }, [myFriendCode]);
+  }, [isAuthenticated, myFriendCode]);
 
   // Chargement des données des amis (en excluant soi-même)
   const refreshFriends = useCallback(async () => {

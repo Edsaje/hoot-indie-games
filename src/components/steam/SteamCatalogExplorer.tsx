@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Database,
@@ -11,6 +11,7 @@ import {
   Flame,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Trash2,
   Star,
   RotateCcw,
@@ -29,7 +30,7 @@ import { SteamIcon } from '../common/SteamIcon';
 import { ItchIcon } from '../common/ItchIcon';
 import { PaginationControls } from '../common/PaginationControls';
 import { getLocalizedText, getTranslatedGenre, getTranslatedArtStyle, getTranslatedCamera } from '../../utils/localization';
-import { inferCanonicalArtStyle, inferCanonicalCamera, inferEnrichedGenres } from '../../utils/gameInference';
+import { inferEnrichedGenres } from '../../utils/gameInference';
 
 interface SteamCatalogExplorerProps {
   onSelectGameForIndledle?: (game: Game) => void;
@@ -39,7 +40,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
   onSelectGameForIndledle,
 }) => {
   const { t, i18n } = useTranslation();
-  const { allPlayableGames, stats, addCustomGame, removeCustomGame } = useSteamCatalog();
+  const { allPlayableGames, stats, removeCustomGame } = useSteamCatalog();
   const { isGameOwned, isSteamConnected, hideOwnedGames, setHideOwnedGames, connectSteamWithOpenId } = useUserAccount();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -79,11 +80,42 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
   const [importMessage, setImportMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Extraire les genres uniques triés par fréquence
-  const topGenres = useMemo(() => {
+  const allSortedGenres = useMemo(() => {
     const entries = Object.entries(stats.genresCount);
     entries.sort((a, b) => b[1] - a[1]);
-    return entries.slice(0, 14).map(([name]) => name);
+    return entries.map(([name]) => name);
   }, [stats.genresCount]);
+
+  // Principaux genres en accès direct (les 6 plus représentés)
+  const primaryGenres = useMemo(() => {
+    return allSortedGenres.slice(0, 6);
+  }, [allSortedGenres]);
+
+  // Les autres genres accessibles via le menu "Voir plus"
+  const secondaryGenres = useMemo(() => {
+    return allSortedGenres.slice(6);
+  }, [allSortedGenres]);
+
+  const [isMoreGenresOpen, setIsMoreGenresOpen] = useState(false);
+  const moreGenresRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (moreGenresRef.current && !moreGenresRef.current.contains(e.target as Node)) {
+        setIsMoreGenresOpen(false);
+      }
+    };
+    if (isMoreGenresOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isMoreGenresOpen]);
+
+  const isSecondaryGenreActive = selectedGenre !== 'all' && secondaryGenres.includes(selectedGenre);
 
   const ownedCount = useMemo(() => {
     return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
@@ -396,47 +428,12 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
       }
 
       const title = dataFR.name.trim();
-      const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const releaseYear = parseInt(dataFR.release_date?.date?.match(/\b(19\d\d|20\d\d)\b/)?.[1] || '2024', 10);
       const developer = dataFR.developers?.[0] || 'Studio Indépendant';
-      const steamUrl = `https://store.steampowered.com/app/${appId}/`;
-      const headerImage = dataFR.header_image;
-
-      const screenshots: string[] = (dataFR.screenshots || [])
-        .map((s: { path_full: string }) => s.path_full)
-        .slice(0, 6);
-      while (screenshots.length < 6) {
-        screenshots.push(headerImage);
-      }
-
-      const taglineFR = (dataFR.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '');
-      const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '');
 
       const fullDesc = `${title} ${dataFR.short_description || ''} ${dataEN?.short_description || ''} ${dataFR.detailed_description || ''}`;
       const rawGenres = (dataFR.genres || []).map((g: { description: string }) => g.description);
       const enrichedGenres = inferEnrichedGenres(rawGenres, fullDesc);
-      const artStyle = inferCanonicalArtStyle(fullDesc, enrichedGenres);
-      const camera = inferCanonicalCamera(fullDesc, enrichedGenres);
-
-      const newGame: SteamCatalogGame = {
-        id,
-        title,
-        releaseYear,
-        genre: enrichedGenres,
-        artStyle,
-        camera,
-        developer,
-        steamUrl,
-        screenshots,
-        hints: {
-          tagline: { fr: taglineFR, en: taglineEN },
-        },
-        steamAppId: appId,
-        headerImage,
-        isCustomImport: true,
-      };
-
-      addCustomGame(newGame);
 
       // Transmission au backend pour modération administrative
       try {
@@ -493,7 +490,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
       soundFx.playVictory();
       setImportMessage({
         type: 'success',
-        text: `Proposition enregistrée ! « ${title} » (${releaseYear}) a été transmis aux veilleurs et ajouté à votre session locale pour test.`,
+        text: `Proposition enregistrée ! « ${title} » (${releaseYear}) a bien été transmise aux veilleurs pour examen.`,
       });
       setImportInput('');
       setUserComment('');
@@ -550,13 +547,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="px-4 py-3 bg-[#03140e] border border-[#0d543e] rounded-2xl text-center shadow-inner">
-              <div className="text-[10px] uppercase font-bold text-slate-400">Jeux Jouables</div>
-              <div className="text-2xl sm:text-3xl font-black text-amber-400 font-mono">
-                {stats.totalGames}
-              </div>
-            </div>
-            <div className="px-4 py-3 bg-[#03140e] border border-[#0d543e] rounded-2xl text-center shadow-inner">
+            <div className="px-5 py-3 bg-[#03140e] border border-[#0d543e] rounded-2xl text-center shadow-inner">
               <div className="text-[10px] uppercase font-bold text-slate-400">Catalogue Steam</div>
               <div className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
                 {stats.steamCatalogCount}
@@ -856,31 +847,101 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
           )}
         </div>
 
-        {/* Badges de genres rapides */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        {/* Badges de genres principaux et menu déroulant "Voir plus" */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
           <button
-            onClick={() => setSelectedGenre('all')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              setSelectedGenre('all');
+            }}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
               selectedGenre === 'all'
-                ? 'bg-amber-500 text-slate-950 font-black'
+                ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
                 : 'bg-[#131a29] text-slate-400 hover:text-white border border-[#1e293b]'
             }`}
           >
-            Tous les genres ({allPlayableGames.length})
+            {t('catalog.allGenresFilter', { defaultValue: 'Tous les genres' })} ({allPlayableGames.length})
           </button>
-          {topGenres.map((genre) => (
-            <button
-              key={genre}
-              onClick={() => setSelectedGenre(selectedGenre === genre ? 'all' : genre)}
-              className={`px-3 py-1 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                selectedGenre === genre
-                  ? 'bg-amber-500 text-slate-950 font-black'
-                  : 'bg-[#131a29] text-slate-400 hover:text-white border border-[#1e293b]'
-              }`}
-            >
-              {getTranslatedGenre(genre, i18n.language)} ({stats.genresCount[genre] || 0})
-            </button>
-          ))}
+
+          {primaryGenres.map((genre) => {
+            const isSelected = selectedGenre === genre;
+            return (
+              <button
+                key={genre}
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  setSelectedGenre(isSelected ? 'all' : genre);
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+                  isSelected
+                    ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
+                    : 'bg-[#131a29] text-slate-400 hover:text-white border border-[#1e293b]'
+                }`}
+              >
+                {getTranslatedGenre(genre, i18n.language)} ({stats.genresCount[genre] || 0})
+              </button>
+            );
+          })}
+
+          {/* Menu déroulant "Voir plus" pour les genres secondaires */}
+          {secondaryGenres.length > 0 && (
+            <div className="relative" ref={moreGenresRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  setIsMoreGenresOpen((prev) => !prev);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap border cursor-pointer ${
+                  isSecondaryGenreActive
+                    ? 'bg-amber-500 text-slate-950 font-black border-amber-400 shadow-md shadow-amber-500/20'
+                    : 'bg-[#131a29] text-slate-400 hover:text-white border-[#1e293b]'
+                }`}
+              >
+                <span>
+                  {isSecondaryGenreActive
+                    ? `${getTranslatedGenre(selectedGenre, i18n.language)} (${stats.genresCount[selectedGenre] || 0})`
+                    : t('catalog.moreGenres', { defaultValue: 'Voir plus' })}
+                </span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isMoreGenresOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isMoreGenresOpen && (
+                <div className="absolute left-0 mt-1.5 w-60 max-h-72 overflow-y-auto bg-[#0b0f19] border border-[#1e293b] rounded-2xl shadow-2xl z-30 p-1.5 space-y-1 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
+                    <span>{t('catalog.otherGenres', { defaultValue: 'Autres genres' })}</span>
+                    <span className="font-mono text-slate-400">{secondaryGenres.length}</span>
+                  </div>
+                  {secondaryGenres.map((genre) => {
+                    const isSelected = selectedGenre === genre;
+                    return (
+                      <button
+                        key={genre}
+                        type="button"
+                        onClick={() => {
+                          soundFx.playClick();
+                          setSelectedGenre(isSelected ? 'all' : genre);
+                          setIsMoreGenresOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${
+                          isSelected
+                            ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+                            : 'text-slate-300 hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        <span className="truncate">{getTranslatedGenre(genre, i18n.language)}</span>
+                        <span className={`text-[10px] font-mono ml-2 shrink-0 ${isSelected ? 'text-slate-900 font-bold' : 'text-slate-400'}`}>
+                          ({stats.genresCount[genre] || 0})
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -976,11 +1037,6 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                     ) : null}
 
                     <div className="absolute top-2 left-2 flex items-center gap-1">
-                      {steamGame.isCustomImport && (
-                        <span className="px-2 py-0.5 rounded-lg bg-emerald-500 text-xs font-bold uppercase text-slate-950">
-                          Import Direct
-                        </span>
-                      )}
                       {game.itchUrl && (
                         <span className="px-2 py-0.5 rounded-lg bg-[#fa5c5c]/90 text-white text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md">
                           <ItchIcon className="w-2.5 h-2.5 text-white" />

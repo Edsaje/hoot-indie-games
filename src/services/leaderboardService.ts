@@ -94,8 +94,7 @@ export function getPlayerNickname(): string {
   if (saved && saved.trim()) return saved.trim();
 
   // 3. Fallback générique amical
-  const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-  const defaultName = isLocalHost ? 'Hibouxe' : 'Hibou_' + Math.floor(100 + Math.random() * 900);
+  const defaultName = 'Hibou_' + Math.floor(100 + Math.random() * 900);
   localStorage.setItem(NICKNAME_KEY, defaultName);
   return defaultName;
 }
@@ -139,12 +138,10 @@ export function setPlayerAvatar(avatarId: string): void {
 export function getPlayerAccountId(): string {
   if (typeof localStorage === 'undefined') return '';
   try {
-    const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
     const userRawV1 = localStorage.getItem('hoot_user_profile_v1');
     if (userRawV1) {
       const parsed = JSON.parse(userRawV1);
-      if (String(parsed?.steam?.steamId) === '76561198035270542' || parsed?.username === 'Hibouxe' && (parsed?.isAdmin || isLocalHost)) {
+      if (String(parsed?.steam?.steamId) === '76561198035270542') {
         return 'admin_hibouxe';
       }
       if (parsed?.steam?.steamId) return `steam_${parsed.steam.steamId}`;
@@ -153,14 +150,11 @@ export function getPlayerAccountId(): string {
     const userRaw = localStorage.getItem('hoot_user_profile');
     if (userRaw) {
       const parsed = JSON.parse(userRaw);
-      if (String(parsed?.steam?.steamId) === '76561198035270542' || parsed?.username === 'Hibouxe') {
+      if (String(parsed?.steam?.steamId) === '76561198035270542') {
         return 'admin_hibouxe';
       }
       if (parsed?.steam?.steamId) return `steam_${parsed.steam.steamId}`;
       if (parsed?.id) return parsed.id;
-    }
-    if (isLocalHost) {
-      return 'admin_hibouxe';
     }
     let deviceId = localStorage.getItem('hoot_device_account_id');
     if (!deviceId) {

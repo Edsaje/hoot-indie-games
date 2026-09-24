@@ -62,7 +62,7 @@ export interface AdminUsernameEntry {
   userId?: string | null;
   claimedAt: string;
   lastSeenAt?: string;
-  role?: 'admin' | 'vip' | 'user';
+  role?: 'admin' | 'moderator' | 'vip' | 'user';
   status?: 'active' | 'banned';
   customTitle?: string;
   note?: string;
@@ -207,7 +207,7 @@ export async function editAdminUser(
   target: string,
   fields: {
     displayName?: string;
-    role?: 'admin' | 'vip' | 'user';
+    role?: 'admin' | 'moderator' | 'vip' | 'user';
     status?: 'active' | 'banned';
     customTitle?: string;
     note?: string;
@@ -327,7 +327,7 @@ export async function createAdminUser(
   userData: {
     username: string;
     targetSteamId?: string;
-    role?: 'admin' | 'vip' | 'user';
+    role?: 'admin' | 'moderator' | 'vip' | 'user';
     customTitle?: string;
     note?: string;
   },
@@ -383,6 +383,8 @@ export interface AdminGameOverridesPayload {
   hiddenGameIds: string[];
   modifiedGames: Record<string, Partial<Game>>;
   customAdminGames: Game[];
+  excludedFromGems?: string[];
+  promotedToGems?: string[];
   lastUpdated: string;
 }
 
@@ -434,7 +436,7 @@ export async function fetchPublicGameOverrides(): Promise<AdminGameOverridesPayl
  * Sauvegarde ou met à jour une fiche de jeu dans le catalogue souverain
  */
 export async function saveAdminGame(
-  game: Partial<Game> & { isCustomAdmin?: boolean; hidden?: boolean },
+  game: Partial<Game> & { isCustomAdmin?: boolean; hidden?: boolean; isGem?: boolean },
   steamId: string = ADMIN_STEAM_ID
 ): Promise<{ success: boolean; message: string; game?: Game }> {
   const url = `/api/admin_games.php?action=save_game&steamId=${encodeURIComponent(steamId)}`;
@@ -449,6 +451,40 @@ export async function saveAdminGame(
   });
 
   const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+  return data;
+}
+
+/**
+ * Bascule le statut Pépite d'un jeu (présent dans l'explorateur de Pépites ou réservé au catalogue)
+ */
+export async function toggleAdminGameGemStatus(
+  id: string,
+  isGem: boolean,
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{
+  success: boolean;
+  message: string;
+  gameId?: string;
+  isGem: boolean;
+  excludedFromGems?: string[];
+  promotedToGems?: string[];
+}> {
+  const formData = new URLSearchParams();
+  formData.append('id', id);
+  formData.append('isGem', isGem ? '1' : '0');
+
+  const url = `/api/admin_games.php?action=toggle_gem&steamId=${encodeURIComponent(steamId)}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau', isGem }));
   return data;
 }
 

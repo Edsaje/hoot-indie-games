@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+require_once __DIR__ . '/admin_auth.php';
 $dataFile = __DIR__ . '/micro_indies.json';
 $rateLimitFile = __DIR__ . '/micro_indies_rates.json';
 $secretFile = __DIR__ . '/.secret';
@@ -252,6 +253,27 @@ if ($action === 'like') {
     } else {
         echo json_encode(['success' => true, 'likesCount' => 1]);
     }
+    exit;
+}
+
+// 4. Modération administrateur : Supprimer une proposition
+if ($action === 'delete') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $targetId = sanitizeText($postData['id'] ?? $_GET['id'] ?? '', 100);
+    $items = [];
+    if (file_exists($dataFile)) {
+        $raw = @file_get_contents($dataFile);
+        $items = json_decode($raw, true) ?: [];
+    }
+    $filtered = array_values(array_filter($items, function($item) use ($targetId) {
+        return ($item['id'] ?? '') !== $targetId;
+    }));
+    @file_put_contents($dataFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    echo json_encode(['success' => true, 'message' => 'Jeu retiré de La Clairière.']);
     exit;
 }
 

@@ -49,6 +49,7 @@ import { GameStatsProvider } from './context/GameStatsProvider';
 import { AchievementsProvider } from './context/AchievementsProvider';
 import { useAchievements } from './context/useAchievements';
 import { UserAccountProvider } from './context/UserAccountProvider';
+import { useUserAccount } from './context/useUserAccount';
 import { SteamCatalogProvider } from './context/SteamCatalogProvider';
 import { FriendsProvider } from './context/FriendsProvider';
 import { ChatProvider } from './context/ChatProvider';
@@ -57,10 +58,12 @@ import { useKonamiCode } from './utils/useKonamiCode';
 import { CrtRetroControl } from './components/common/CrtRetroControl';
 import { Calendar, RefreshCw, Archive, Flame } from 'lucide-react';
 import { soundFx } from './utils/audio';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { getTodayDateString, getYesterdayDateString, isDatePlayable } from './utils/streakManager';
 
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { isAuthenticated, isAdmin } = useUserAccount();
 
   // Mini-game sub-tab state (Hub or one of the 7 disciplines)
   const [activeMiniGame, setActiveMiniGame] = useState<MiniGameSubTab>(() => {
@@ -162,7 +165,10 @@ export const AppContent: React.FC = () => {
   });
   const [showCrtControl, setShowCrtControl] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('hoot_crt_mode') === 'true';
+      return (
+        localStorage.getItem('hoot_crt_mode') === 'true' ||
+        localStorage.getItem('hoot_crt_unlocked') === 'true'
+      );
     }
     return false;
   });
@@ -177,11 +183,22 @@ export const AppContent: React.FC = () => {
     }
   }, [isCrtActive]);
 
+  useEffect(() => {
+    const handleOpenAuthEvent = () => setIsAuthOpen(true);
+    window.addEventListener('hoot_open_auth', handleOpenAuthEvent);
+    return () => window.removeEventListener('hoot_open_auth', handleOpenAuthEvent);
+  }, []);
+
   useKonamiCode({
     enabled: true,
     onSuccess: () => {
       soundFx.playKonamiJingle();
       unlockAchievement('konami_code');
+      try {
+        localStorage.setItem('hoot_crt_unlocked', 'true');
+      } catch {
+        // Ignore
+      }
       setIsCrtActive((prev) => {
         const next = !prev;
         try {
@@ -424,7 +441,11 @@ export const AppContent: React.FC = () => {
         onOpenShop={() => setIsShopOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         onOpenLeaderboard={() => handleOpenLeaderboard('arcade')}
-        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
+        onOpenAdminDashboard={() => {
+          if (isAuthenticated && isAdmin) {
+            setIsAdminDashboardOpen(true);
+          }
+        }}
         onEasterEggTrigger={() => setIsEasterEggOpen(true)}
         currentDate={currentDate}
       />
@@ -610,10 +631,13 @@ export const AppContent: React.FC = () => {
           />
         )}
       </main>
+      </React.Suspense>
 
-      {/* Global Modals */}
-      {isStatsOpen && (
-        <StatsModal
+      {/* Global Modals - Isolated Suspense & ErrorBoundary so they never unmount the page */}
+      <ErrorBoundary isModal>
+        <React.Suspense fallback={null}>
+          {isStatsOpen && (
+            <StatsModal
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           initialTab={
@@ -649,9 +673,14 @@ export const AppContent: React.FC = () => {
         <ProfileModal
           isOpen={isProfileOpen}
           onClose={() => setIsProfileOpen(false)}
-          onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
+          onOpenAdminDashboard={() => {
+            if (isAuthenticated && isAdmin) {
+              setIsAdminDashboardOpen(true);
+            }
+          }}
           onOpenFriends={() => setIsFriendsOpen(true)}
           onOpenShop={() => setIsShopOpen(true)}
+          onOpenAuth={() => setIsAuthOpen(true)}
         />
       )}
 
@@ -667,6 +696,7 @@ export const AppContent: React.FC = () => {
         <FriendsModal
           isOpen={isFriendsOpen}
           onClose={() => setIsFriendsOpen(false)}
+          onOpenAuth={() => setIsAuthOpen(true)}
           onStartVersusDuel={(roomCode) => {
             setIsFriendsOpen(false);
             window.location.hash = `#versus=${roomCode}`;
@@ -709,14 +739,40 @@ export const AppContent: React.FC = () => {
         />
       )}
 
-      {isAdminDashboardOpen && (
+      {isAdminDashboardOpen && isAuthenticated && isAdmin && (
         <AdminDashboardModal
           isOpen={isAdminDashboardOpen}
           onClose={() => setIsAdminDashboardOpen(false)}
         />
       )}
 
-      <ChatDrawer />
+      {(() => {
+        const isAnyModalOpen = Boolean(
+          isStatsOpen ||
+          isAchievementsOpen ||
+          isCalendarOpen ||
+          isProfileOpen ||
+          isFriendsOpen ||
+          isAuthOpen ||
+          isEasterEggOpen ||
+          isArcadeOpen ||
+          isLeaderboardOpen ||
+          isAdminDashboardOpen ||
+          isShopOpen
+        );
+        return <ChatDrawer onOpenAuth={() => setIsAuthOpen(true)} isModalActive={isAnyModalOpen} />;
+      })()}
+        </React.Suspense>
+      </ErrorBoundary>
+
+      {/* Overlay Rétro CRT Cathodique (Konami Code) */}
+      {isCrtActive && (
+        <div
+          id="hoot-crt-screen-overlay"
+          aria-hidden="true"
+          className="crt-screen-overlay"
+        />
+      )}
 
       {showCrtControl && (
         <CrtRetroControl
@@ -732,10 +788,8 @@ export const AppContent: React.FC = () => {
               return next;
             });
           }}
-          onClose={() => setShowCrtControl(false)}
         />
       )}
-      </React.Suspense>
 
       {/* Footer */}
       <div className="relative z-10">
@@ -756,7 +810,9 @@ export default function App() {
           <SteamCatalogProvider>
             <FriendsProvider>
               <ChatProvider>
-                <AppContent />
+                <ErrorBoundary>
+                  <AppContent />
+                </ErrorBoundary>
               </ChatProvider>
             </FriendsProvider>
           </SteamCatalogProvider>

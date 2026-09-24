@@ -1,4 +1,4 @@
-import { INDIE_GAMES } from './games';
+import { getActiveDailyPool } from './games';
 import type { Game, LocalizedText } from '../types/game';
 
 export interface PixelClue {
@@ -113,8 +113,9 @@ export function getDailyPixelPuzzle(dateString: string): PixelPuzzle {
   const seed = stringToHash(`pixel_puzzle_${dateString}`);
   const rand = mulberry32(seed);
 
-  const gameIndex = Math.floor(rand() * INDIE_GAMES.length);
-  const targetGame = INDIE_GAMES[gameIndex];
+  const pool = getActiveDailyPool();
+  const gameIndex = Math.floor(rand() * pool.length);
+  const targetGame = pool[gameIndex];
   const imageUrl = pickGameScreenshot(targetGame, rand());
   const clues = buildCluesForGame(targetGame);
 
@@ -134,8 +135,9 @@ export function getRandomPixelPuzzle(seedSuffix = Date.now().toString()): PixelP
   const seed = stringToHash(`pixel_rand_${seedSuffix}`);
   const rand = mulberry32(seed);
 
-  const gameIndex = Math.floor(rand() * INDIE_GAMES.length);
-  const targetGame = INDIE_GAMES[gameIndex];
+  const pool = getActiveDailyPool();
+  const gameIndex = Math.floor(rand() * pool.length);
+  const targetGame = pool[gameIndex];
   const imageUrl = pickGameScreenshot(targetGame, rand());
   const clues = buildCluesForGame(targetGame);
 

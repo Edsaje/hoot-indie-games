@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+require_once __DIR__ . '/admin_auth.php';
 $dataFile = __DIR__ . '/leaderboard_data.json';
 $rateLimitFile = __DIR__ . '/leaderboard_ratelimit.json';
 
@@ -243,7 +244,7 @@ if ($method === 'POST') {
         }
 
         $lowerNorm = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $cleanNick));
-        $isAdmin = ($accountId === 'admin_hibouxe' || $accountId === 'steam_76561198035270542' || strpos($accountId, '76561198035270542') !== false);
+        $isAdmin = isCreatorAdminAuthorized() && ($accountId === 'admin_hibouxe' || strpos($accountId, '76561198035270542') !== false);
         if (!$isAdmin && in_array($lowerNorm, ['hibouxe', 'edsaje'], true)) {
             $cleanNick = 'Hibou Anonyme';
         }
@@ -376,7 +377,7 @@ if ($method === 'POST') {
 
     // Protection des pseudonymes réservés au créateur (Hibouxe & Edsaje)
     $lowerNorm = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $cleanNick));
-    $isAdmin = ($accountId === 'admin_hibouxe' || $accountId === 'steam_76561198035270542' || strpos($accountId, '76561198035270542') !== false);
+    $isAdmin = isCreatorAdminAuthorized() && ($accountId === 'admin_hibouxe' || strpos($accountId, '76561198035270542') !== false);
     if (!$isAdmin && in_array($lowerNorm, ['hibouxe', 'edsaje'], true)) {
         $cleanNick = 'Hibou Anonyme';
     }

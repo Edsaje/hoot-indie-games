@@ -4,7 +4,7 @@ import type { Game } from '../types/game';
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 191
+ * Total de jeux : 185
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -7271,28 +7271,116 @@ export const INDIE_GAMES: Game[] = [
         "pt-BR": "Administre um cemitério medieval enfrentando dilemas éticos duvidosos com muito humor negro e comércio."
       }
     }
+  },
+  {
+    "id": "drapline",
+    "title": "DRAPLINE",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Simulation",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "KANAWO",
+    "steamUrl": "https://store.steampowered.com/app/3103780/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3103780/28fed18f3fcb7a0f714751dc4480c41786011e79/ss_28fed18f3fcb7a0f714751dc4480c41786011e79.1920x1080.jpg?t=1790232428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3103780/259518be7f4f0cc76931607eb1b9b3eba11f04b7/ss_259518be7f4f0cc76931607eb1b9b3eba11f04b7.1920x1080.jpg?t=1790232428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3103780/29690c5270b66a364227c0d6227c0f51adf42487/ss_29690c5270b66a364227c0d6227c0f51adf42487.1920x1080.jpg?t=1790232428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3103780/8b0f9225bea7fa7d14c5c6dc01377de905690599/ss_8b0f9225bea7fa7d14c5c6dc01377de905690599.1920x1080.jpg?t=1790232428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3103780/61f948b1f27a627ef921e57ebb5d3ff8fa2a6151/ss_61f948b1f27a627ef921e57ebb5d3ff8fa2a6151.1920x1080.jpg?t=1790232428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3103780/f01fd9a71a7daac0733e2dff1a5de67666cf594c/ss_f01fd9a71a7daac0733e2dff1a5de67666cf594c.1920x1080.jpg?t=1790232428"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "&quot;DRAPLINE&quot; is a roguelite training game where you raise a dragon girl who eats anything and train her to become the strongest in one year. Feed her a variety of things to increase her abilities, combine various skills to build your own strategy, and defeat the impending catastrophe!",
+        "en": "&quot;DRAPLINE&quot; is a roguelite training game where you raise a dragon girl who eats anything and train her to become the strongest in one year. Feed her a variety of things to increase her abilities, combine various skills to build your own strategy, and defeat the impending catastrophe!"
+      }
+    }
+  },
+  {
+    "id": "stick-it-to-the-stickman",
+    "title": "Stick It to the Stickman",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Free Lives",
+    "steamUrl": "https://store.steampowered.com/app/2085540/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085540/91888fdf60da6e911c5d1df8e4372cb6937a1e24/ss_91888fdf60da6e911c5d1df8e4372cb6937a1e24.1920x1080.jpg?t=1790179341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085540/9d793d6103d59d439f1d864edc1e679597015cb8/ss_9d793d6103d59d439f1d864edc1e679597015cb8.1920x1080.jpg?t=1790179341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085540/6c75a999d9dff4ac141b992b861b62768f0df1f6/ss_6c75a999d9dff4ac141b992b861b62768f0df1f6.1920x1080.jpg?t=1790179341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085540/976c437f1cba6a15f72ba13de4423cf663a1d428/ss_976c437f1cba6a15f72ba13de4423cf663a1d428.1920x1080.jpg?t=1790179341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085540/637b578979d6866dc3d413a4c62c93801a7cdc67/ss_637b578979d6866dc3d413a4c62c93801a7cdc67.1920x1080.jpg?t=1790179341",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085540/2b22bfe5c4c3f9e65cccfd83558502918c6c78e2/ss_2b22bfe5c4c3f9e65cccfd83558502918c6c78e2.1920x1080.jpg?t=1790179341"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Stick it to the Stickman est un beat them all rogue-lite dans lequel vous vous hissez au sommet de la hiérarchie par la violence. Développez des portfolios de combat dévastateurs pour débloquer de nouveaux employés et modes de jeu tout en augmentant votre valeur actionnariale.",
+        "en": "Stick it to the Stickman is a rogue-lite physics brawler where you brutally displace your way up the corporate ladder. Assemble devastating combat portfolios, unlocking new workers and game modes as you increase shareholder value."
+      }
+    }
   }
 ];
 
-export function getDailyGame(dateString: string, offset = 0): Game {
+// Pool dynamique pour les jeux quotidiens (permet d'inclure les pépites promues via l'admin et exclure les jeux retirés)
+let customDailyPool: Game[] | null = null;
+
+export function setCustomDailyPool(pool: Game[] | null) {
+  if (pool && pool.length > 0) {
+    customDailyPool = pool;
+  } else {
+    customDailyPool = null;
+  }
+}
+
+export function getActiveDailyPool(): Game[] {
+  if (customDailyPool && customDailyPool.length > 0) {
+    return customDailyPool;
+  }
+  return INDIE_GAMES;
+}
+
+// Helper déterministe pour obtenir le jeu du jour basé sur une graine temporelle "YYYY-MM-DD"
+export function getDailyGame(dateString: string, offset = 0, pool?: Game[]): Game {
+  const gamesPool = pool && pool.length > 0 ? pool : getActiveDailyPool();
   let hash = 0;
   for (let i = 0; i < dateString.length; i++) {
     hash = (hash << 5) - hash + dateString.charCodeAt(i);
     hash |= 0;
   }
-  const index = Math.abs(hash + offset) % INDIE_GAMES.length;
-  return INDIE_GAMES[index];
+  const index = Math.abs(hash + offset) % gamesPool.length;
+  return gamesPool[index];
 }
 
 // Helper déterministe pour obtenir le jeu du jour pour Profille (sans collision avec Screenle ni Indledle)
-export function getDailyProfilleGame(dateString: string): Game {
-  const g0 = getDailyGame(dateString, 0);
-  const g3 = getDailyGame(dateString, 3);
+export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
+  const gamesPool = pool && pool.length > 0 ? pool : getActiveDailyPool();
+  const g0 = getDailyGame(dateString, 0, gamesPool);
+  const g3 = getDailyGame(dateString, 3, gamesPool);
   let offset = 7;
-  let candidate = getDailyGame(dateString, offset);
+  let candidate = getDailyGame(dateString, offset, gamesPool);
   while ((candidate.id === g0.id || candidate.id === g3.id) && offset < 50) {
     offset++;
-    candidate = getDailyGame(dateString, offset);
+    candidate = getDailyGame(dateString, offset, gamesPool);
   }
   return candidate;
 }

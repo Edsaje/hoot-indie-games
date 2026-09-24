@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -29,6 +30,7 @@ import {
   Copy,
   ShoppingBag,
   Zap,
+  LogIn,
 } from 'lucide-react';
 import { useFriends } from '../../context/useFriends';
 import { SteamIcon } from './SteamIcon';
@@ -53,6 +55,7 @@ interface ProfileModalProps {
   onOpenAdminDashboard?: () => void;
   onOpenFriends?: () => void;
   onOpenShop?: () => void;
+  onOpenAuth?: () => void;
 }
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({
@@ -61,6 +64,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   onOpenAdminDashboard,
   onOpenFriends,
   onOpenShop,
+  onOpenAuth,
 }) => {
   const {
     profile,
@@ -104,13 +108,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Friend code state
-  let myFriendCode = profile.friendCode || 'HOOT-HIBOU';
+  // Friend code state - Uniquement disponible pour les utilisateurs connectés
+  let myFriendCode = (isAuthenticated && profile.friendCode) ? profile.friendCode : '';
   let totalFriendsCount = 0;
   try {
     const friendsCtx = useFriends();
     if (friendsCtx) {
-      myFriendCode = friendsCtx.myFriendCode;
+      myFriendCode = isAuthenticated ? friendsCtx.myFriendCode : '';
       totalFriendsCount = friendsCtx.totalFriendsCount;
     }
   } catch {
@@ -332,73 +336,108 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     setShowImportBox(false);
   };
 
-  return (
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-sm overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative overflow-visible w-full max-w-2xl bg-[#06241b] border-2 border-[#78350f] rounded-3xl p-4 sm:p-6 shadow-2xl max-h-[90dvh] flex flex-col"
+          className="relative overflow-hidden sm:overflow-visible w-full max-w-2xl bg-[#06241b] border-2 border-[#78350f] rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col"
         >
-          <SylvestreIvyFrame density="medium" />
+          <div className="hidden sm:block pointer-events-none">
+            <SylvestreIvyFrame density="medium" />
+          </div>
           {/* Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-[#1e293b]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                <User className="w-5 h-5" />
+          <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#1e293b] shrink-0">
+            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <h2 className="text-xl font-black text-white tracking-tight">
+              <div className="min-w-0">
+                <h2 className="text-lg sm:text-xl font-black text-white tracking-tight truncate">
                   Profil du Joueur
                 </h2>
-                <p className="text-xs text-slate-400">
+                <p className="hidden sm:block text-xs text-slate-400">
                   Personnalisez votre avatar et synchronisez votre bibliothèque Steam
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => {
-                soundFx.playClick();
-                onClose();
-              }}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {isAuthenticated && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    soundFx.playClick();
+                    await logout();
+                    onClose();
+                  }}
+                  className="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 hover:text-rose-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer touch-manipulation"
+                  title="Se déconnecter de votre compte"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-rose-400" />
+                  <span className="hidden sm:inline">Déconnexion</span>
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  onClose();
+                }}
+                className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors shrink-0 cursor-pointer"
+                aria-label="Fermer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex gap-2 my-4 p-1 bg-[#131a29] border border-[#1e293b] rounded-2xl shrink-0">
+          <div className="flex gap-1 sm:gap-2 my-2.5 sm:my-4 p-1 bg-[#131a29] border border-[#1e293b] rounded-2xl shrink-0">
             <button
               onClick={() => {
                 soundFx.playClick();
                 setActiveTab('profile');
               }}
-              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 touch-manipulation ${
                 activeTab === 'profile'
-                  ? 'bg-amber-500 text-slate-950 shadow-md'
+                  ? 'bg-amber-500 text-slate-950 shadow-md font-black'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <User className="w-4 h-4" />
-              Avatar & Stats
+              <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span>Avatar</span>
+              <span className="hidden sm:inline">& Stats</span>
             </button>
             <button
               onClick={() => {
                 soundFx.playClick();
                 setActiveTab('steam');
               }}
-              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 relative ${
+              className={`flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 relative touch-manipulation ${
                 activeTab === 'steam'
-                  ? 'bg-cyan-500 text-slate-950 shadow-md'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <SteamIcon className="w-4 h-4" />
-              Steam & Jeux
+              <SteamIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span>Steam</span>
+              <span className="hidden sm:inline">& Jeux</span>
               {isSteamConnected && (
-                <span className="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-slate-900" />
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 ring-2 ring-slate-900" />
               )}
             </button>
             <button
@@ -406,22 +445,23 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 soundFx.playClick();
                 setActiveTab('cloud');
               }}
-              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 touch-manipulation ${
                 activeTab === 'cloud'
-                  ? 'bg-amber-500 text-slate-950 shadow-md'
+                  ? 'bg-amber-500 text-slate-950 shadow-md font-black'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Cloud className="w-4 h-4" />
-              Cloud & Sauvegarde
+              <Cloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span>Cloud</span>
+              <span className="hidden sm:inline">& Sauvegarde</span>
               {profile.isCloudSynced && (
-                <span className="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-slate-900" title="Synchronisé au Cloud" />
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 ring-2 ring-slate-900" title="Synchronisé au Cloud" />
               )}
             </button>
           </div>
 
-          {/* Content Body */}
-          <div className="overflow-y-auto space-y-6 pr-1 custom-scrollbar">
+          {/* Content Body - flex-1 min-h-0 guarantees smooth scrolling on all mobile browsers */}
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-4 sm:space-y-6 pr-1 custom-scrollbar">
             {activeTab === 'profile' ? (
               <>
                 {/* Profile Card Summary */}
@@ -502,7 +542,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                             <h3 className="text-lg font-black text-white tracking-tight">
                               {profile.username}
                             </h3>
-                            {isAdmin && (
+                            {isAuthenticated && isAdmin && (
                               <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
                                 <Crown className="w-3 h-3 text-amber-400" />
                                 Admin
@@ -570,7 +610,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
 
                   {/* Rating / Feathers Pill */}
-                  <div className="flex sm:flex-col items-center gap-2 border-t sm:border-t-0 sm:border-l border-slate-800 pt-3 sm:pt-0 sm:pl-4">
+                  <div className="flex sm:flex-col items-center justify-around sm:justify-center w-full sm:w-auto gap-4 sm:gap-2 border-t sm:border-t-0 sm:border-l border-slate-800/80 pt-2.5 sm:pt-0 sm:pl-4">
                     <div className="text-center">
                       <div className="text-xs uppercase font-bold text-slate-300">Plumes</div>
                       <div className="text-sm font-black text-amber-400 flex items-center justify-center gap-1">
@@ -585,7 +625,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                             onClose();
                             onOpenShop();
                           }}
-                          className="mt-1 px-2 py-0.5 rounded-md bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-[10px] font-black text-amber-300 flex items-center gap-1 transition shadow-sm cursor-pointer mx-auto"
+                          className="mt-1 px-2 py-0.5 rounded-md bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-[10px] font-black text-amber-300 flex items-center gap-1 transition shadow-sm cursor-pointer mx-auto touch-manipulation"
                           title="Ouvrir la Boutique du Sanctuaire"
                         >
                           <ShoppingBag className="w-2.5 h-2.5" />
@@ -604,74 +644,110 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 </div>
 
                 {/* Friend Code & Compagnons Card */}
-                <div className="p-4 bg-gradient-to-br from-[#06241b] via-[#041d16] to-[#010805] border border-emerald-500/40 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
-                      <Users className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/90 flex items-center gap-1.5">
-                        <span>Code Joueur Ami</span>
-                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">
-                          Anti-Spoil
-                        </span>
+                {isAuthenticated && myFriendCode ? (
+                  <div className="p-3 sm:p-4 bg-gradient-to-br from-[#06241b] via-[#041d16] to-[#010805] border border-emerald-500/40 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-md">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
                       </div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="font-mono text-base font-black tracking-wider text-white select-all">
-                          {myFriendCode}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (navigator.clipboard) {
-                              navigator.clipboard.writeText(myFriendCode);
-                              setCopiedFriendCode(true);
-                              soundFx.playSuccess();
-                              setTimeout(() => setCopiedFriendCode(false), 2000);
-                            }
-                          }}
-                          className="p-1 px-2 rounded-lg bg-emerald-950/70 hover:bg-emerald-800/80 border border-emerald-500/30 text-emerald-300 hover:text-white transition flex items-center gap-1 text-xs font-semibold cursor-pointer"
-                          title="Copier mon code ami"
-                        >
-                          {copiedFriendCode ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-emerald-400" />
-                              <span className="text-[11px] font-bold text-emerald-300">Copié !</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" />
-                              <span className="text-[11px]">Copier</span>
-                            </>
-                          )}
-                        </button>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/90 flex items-center gap-1.5">
+                          <span>Code Joueur Ami</span>
+                          <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono">
+                            Anti-Spoil
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="font-mono text-sm sm:text-base font-black tracking-wider text-white select-all break-all sm:break-normal">
+                            {myFriendCode}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (navigator.clipboard) {
+                                navigator.clipboard.writeText(myFriendCode);
+                                setCopiedFriendCode(true);
+                                soundFx.playSuccess();
+                                setTimeout(() => setCopiedFriendCode(false), 2000);
+                              }
+                            }}
+                            className="p-1 px-2 rounded-lg bg-emerald-950/70 hover:bg-emerald-800/80 border border-emerald-500/30 text-emerald-300 hover:text-white transition flex items-center gap-1 text-xs font-semibold cursor-pointer shrink-0 touch-manipulation"
+                            title="Copier mon code ami"
+                          >
+                            {copiedFriendCode ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                <span className="text-[11px] font-bold text-emerald-300">Copié !</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5" />
+                                <span className="text-[11px]">Copier</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {onOpenFriends && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundFx.playClick();
-                        onClose();
-                        onOpenFriends();
-                      }}
-                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 border border-emerald-400/30 self-stretch sm:self-auto shrink-0 cursor-pointer"
-                    >
-                      <Users className="w-4 h-4" />
-                      <span>Cercle des Compagnons</span>
-                      {totalFriendsCount > 0 && (
-                        <span className="px-1.5 py-0.5 rounded-full bg-black/40 text-emerald-200 text-[10px] font-mono">
-                          {totalFriendsCount}
-                        </span>
-                      )}
-                    </button>
-                  )}
-                </div>
+                    {onOpenFriends && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundFx.playClick();
+                          onClose();
+                          onOpenFriends();
+                        }}
+                        className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 border border-emerald-400/30 self-stretch sm:self-auto shrink-0 cursor-pointer touch-manipulation"
+                      >
+                        <Users className="w-4 h-4" />
+                        <span>Cercle des Compagnons</span>
+                        {totalFriendsCount > 0 && (
+                          <span className="px-1.5 py-0.5 rounded-full bg-black/40 text-emerald-200 text-[10px] font-mono">
+                            {totalFriendsCount}
+                          </span>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="p-3.5 sm:p-4 bg-gradient-to-br from-[#06241b] via-[#041d16] to-[#010805] border border-amber-500/30 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-md">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <span>Compagnons & Sauvegarde en Ligne</span>
+                          <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono">
+                            Compte requis
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 mt-0.5 leading-relaxed">
+                          Connectez-vous pour obtenir votre Code Ami unique, sauvegarder vos séries de victoires et défier vos compagnons en duel !
+                        </p>
+                      </div>
+                    </div>
+
+                    {onOpenAuth && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundFx.playClick();
+                          onClose();
+                          onOpenAuth();
+                        }}
+                        className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition flex items-center justify-center gap-2 self-stretch sm:self-auto shrink-0 cursor-pointer touch-manipulation whitespace-nowrap"
+                      >
+                        <LogIn className="w-3.5 h-3.5" />
+                        <span>Se connecter</span>
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Admin Quick Action Banner */}
-                {isAdmin && (
+                {isAuthenticated && isAdmin && (
                   <button
                     onClick={() => {
                       soundFx.playClick();
@@ -805,29 +881,38 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 </div>
 
                 {/* Performance Stats Cards */}
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl text-center">
-                    <Trophy className="w-4 h-4 text-amber-400 mx-auto mb-1" />
-                    <div className="text-base font-black text-white">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  <div className="p-2 sm:p-3 bg-[#131a29] border border-[#1e293b] rounded-xl sm:rounded-2xl text-center">
+                    <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 mx-auto mb-1" />
+                    <div className="text-sm sm:text-base font-black text-white">
                       {unlockedIds.length}/{allAchievements.length}
                     </div>
-                    <div className="text-[10px] font-semibold text-slate-400">Succès Débloqués</div>
+                    <div className="text-[9px] sm:text-[10px] font-semibold text-slate-400 truncate">
+                      <span>Succès</span>
+                      <span className="hidden sm:inline"> Débloqués</span>
+                    </div>
                   </div>
 
-                  <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl text-center">
-                    <Swords className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
-                    <div className="text-base font-black text-white">
+                  <div className="p-2 sm:p-3 bg-[#131a29] border border-[#1e293b] rounded-xl sm:rounded-2xl text-center">
+                    <Swords className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 mx-auto mb-1" />
+                    <div className="text-sm sm:text-base font-black text-white">
                       {profile.versusStats.matchesWon}/{profile.versusStats.matchesPlayed}
                     </div>
-                    <div className="text-[10px] font-semibold text-slate-400">Victoires Versus</div>
+                    <div className="text-[9px] sm:text-[10px] font-semibold text-slate-400 truncate">
+                      <span>Versus</span>
+                      <span className="hidden sm:inline"> Gagnés</span>
+                    </div>
                   </div>
 
-                  <div className="p-3 bg-[#131a29] border border-[#1e293b] rounded-2xl text-center">
-                    <Sparkles className="w-4 h-4 text-indigo-400 mx-auto mb-1" />
-                    <div className="text-base font-black text-white">
+                  <div className="p-2 sm:p-3 bg-[#131a29] border border-[#1e293b] rounded-xl sm:rounded-2xl text-center">
+                    <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-400 mx-auto mb-1" />
+                    <div className="text-sm sm:text-base font-black text-white">
                       {profile.versusStats.bestStreak}
                     </div>
-                    <div className="text-[10px] font-semibold text-slate-400">Meilleure Série</div>
+                    <div className="text-[9px] sm:text-[10px] font-semibold text-slate-400 truncate">
+                      <span>Série</span>
+                      <span className="hidden sm:inline"> Record</span>
+                    </div>
                   </div>
                 </div>
               </>
@@ -918,29 +1003,31 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       </div>
 
                       {/* Quick Sync & Options Bar */}
-                      <div className="flex flex-wrap gap-2 pt-1">
+                      <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-1">
                         <button
                           onClick={handleSyncLibrary}
                           disabled={isSteamLoading}
-                          className="flex-1 py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition shadow-md disabled:opacity-50"
+                          className="w-full sm:flex-1 py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition shadow-md disabled:opacity-50 touch-manipulation cursor-pointer"
                         >
                           <RefreshCw className={`w-3.5 h-3.5 ${isSteamLoading ? 'animate-spin' : ''}`} />
-                          Actualiser la bibliothèque
+                          <span>Actualiser la bibliothèque</span>
                         </button>
-                        <button
-                          onClick={() => setShowImportBox(!showImportBox)}
-                          className="py-2 px-3 rounded-xl bg-[#0b121e] border border-cyan-500/30 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5"
-                        >
-                          <Library className="w-3.5 h-3.5 text-cyan-400" />
-                          Importer des AppIDs
-                        </button>
-                        <button
-                          onClick={() => setShowApiKeyBox(!showApiKeyBox)}
-                          className="py-2 px-3 rounded-xl bg-[#0b121e] border border-cyan-500/30 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5"
-                        >
-                          <Key className="w-3.5 h-3.5 text-amber-400" />
-                          Clé API
-                        </button>
+                        <div className="grid grid-cols-2 gap-2 sm:flex sm:w-auto w-full">
+                          <button
+                            onClick={() => setShowImportBox(!showImportBox)}
+                            className="py-2 px-2.5 sm:px-3 rounded-xl bg-[#0b121e] border border-cyan-500/30 text-slate-200 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 touch-manipulation cursor-pointer"
+                          >
+                            <Library className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>Importer</span>
+                          </button>
+                          <button
+                            onClick={() => setShowApiKeyBox(!showApiKeyBox)}
+                            className="py-2 px-2.5 sm:px-3 rounded-xl bg-[#0b121e] border border-cyan-500/30 text-slate-200 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 touch-manipulation cursor-pointer"
+                          >
+                            <Key className="w-3.5 h-3.5 text-amber-400" />
+                            <span>Clé API</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -1067,7 +1154,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       </div>
 
                       {/* Section Administrateur : Définition de la Clé Maîtresse Souveraine */}
-                      {isAdmin && (
+                      {isAuthenticated && isAdmin && (
                         <div className="p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-slate-900 border border-amber-500/35 space-y-2.5 mt-2">
                           <div className="flex items-center justify-between">
                             <span className="font-black text-amber-300 flex items-center gap-1.5">
@@ -1410,20 +1497,20 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     Exportez votre progression complète dans un fichier JSON pour ne jamais perdre vos succès, même en naviguant en mode privé.
                   </p>
 
-                  <div className="flex gap-2.5 pt-1">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 pt-1">
                     <button
                       onClick={handleExport}
-                      className="flex-1 py-2 px-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-amber-500/50 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                      className="flex-1 py-2 px-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-amber-500/50 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation cursor-pointer"
                     >
                       <Download className="w-3.5 h-3.5 text-amber-400" />
-                      Exporter (Sauvegarder)
+                      <span>Exporter (Sauvegarde JSON)</span>
                     </button>
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex-1 py-2 px-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-amber-500/50 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                      className="flex-1 py-2 px-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-amber-500/50 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation cursor-pointer"
                     >
                       <Upload className="w-3.5 h-3.5 text-indigo-400" />
-                      Importer (Restaurer)
+                      <span>Importer un fichier JSON</span>
                     </button>
                     <input
                       type="file"
@@ -1439,6 +1526,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

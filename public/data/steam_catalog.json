@@ -7103,5 +7103,76 @@
     },
     "steamAppId": 4696240,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4696240/dc08a5235599b93d86d1f481478b09c4cebc1cee/ss_dc08a5235599b93d86d1f481478b09c4cebc1cee.1920x1080.jpg?t=1790132436"
+  },
+  {
+    "id": "miaou-squad-peche-incrementale",
+    "title": "Miaou Squad: Pêche incrémentale",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Happy Universe Studios",
+    "steamUrl": "https://store.steampowered.com/app/4753960/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753960/6d86c3a68b796cd70d3f07f207ef54be69004e1b/ss_6d86c3a68b796cd70d3f07f207ef54be69004e1b.1920x1080.jpg?t=1790215214",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753960/56ad7904f427170be19f09fb76835a37afda0a01/ss_56ad7904f427170be19f09fb76835a37afda0a01.1920x1080.jpg?t=1790215214",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753960/b2170f7510d4626096bed33be9225c6d84a7707b/ss_b2170f7510d4626096bed33be9225c6d84a7707b.1920x1080.jpg?t=1790215214",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753960/c053b4d18e097e7d4258e5728ae30123c3fb80cb/ss_c053b4d18e097e7d4258e5728ae30123c3fb80cb.1920x1080.jpg?t=1790215214",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753960/c3e4bbc2d1131298f90f2281dd5aa863f51719e6/ss_c3e4bbc2d1131298f90f2281dd5aa863f51719e6.1920x1080.jpg?t=1790215214",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753960/270f632a7274c90479cb927e191d7e35eb627006/ss_270f632a7274c90479cb927e191d7e35eb627006.1920x1080.jpg?t=1790215214"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "30 secondes par partie, facile à prendre en main ! Un jeu de pêche incrémental relaxant et addictif combinant pêche incrémentale et combats de boss arcade. Dans cinq mers, pêchez, entraînez votre escouade miaou et défiez de mystérieux seigneurs !",
+        "en": "30 Seconds a Round, Easy to Pick Up! This relaxing, addictive fishing-themed incremental game combines incremental fishing with arcade-style boss battles. Across five seas, catch fish, train your meow squad, and challenge mysterious Overlords beneath the waves!"
+      }
+    },
+    "steamAppId": 4753960,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4753960/d4025e4bc9ac030ec0275eac2c08d814b9c81b2e/header.jpg?t=1790215214"
+  },
+  {
+    "id": "it-s-fine",
+    "title": "It's Fine",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Buma Games",
+    "steamUrl": "https://store.steampowered.com/app/3936270/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/a0832620425fde2cfada5ebf9189e03f1942ca9a/ss_a0832620425fde2cfada5ebf9189e03f1942ca9a.1920x1080.jpg?t=1790225431",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/b1b57b2317d6a4cd799041c09ce5555365d509bc/ss_b1b57b2317d6a4cd799041c09ce5555365d509bc.1920x1080.jpg?t=1790225431",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/31bbcf7d60aeb037f7bf0db1907a1584c9432991/ss_31bbcf7d60aeb037f7bf0db1907a1584c9432991.1920x1080.jpg?t=1790225431",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/15e94cefae3f781fe14236df635161ca4f42085e/ss_15e94cefae3f781fe14236df635161ca4f42085e.1920x1080.jpg?t=1790225431",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/e80be541b1627794db738d1b2bc7f166bb1a437b/ss_e80be541b1627794db738d1b2bc7f166bb1a437b.1920x1080.jpg?t=1790225431",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/e026ca3800c3e7feed8858fd1c67a36ccaa4261d/ss_e026ca3800c3e7feed8858fd1c67a36ccaa4261d.1920x1080.jpg?t=1790225431"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dans ce jeu incrémental/idle, vous développez un jeu avec votre chien Joe. Débloquez des mécaniques uniques, évoluez avec un système poussé de prestige, trouvez des secrets et les différentes fins, et livrez votre jeu dans les temps !",
+        "en": "Idle / Incremental about developing a game with your dog Joe. Unlock unique mechanics, evolve with multi-layered prestige, find secrets, beat all alt endings, and deliver your game on time!"
+      },
+      "composer": "Alon Amit"
+    },
+    "steamAppId": 3936270,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/51c36d1ba7b271c68ab3e20c164b55f4a7109459/header.jpg?t=1790225431"
   }
 ]

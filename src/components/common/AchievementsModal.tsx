@@ -86,7 +86,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, on
       role="dialog"
       aria-modal="true"
       aria-labelledby="achievements-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-[65] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
     >
       <div className="relative overflow-visible w-full max-w-2xl bg-[#06241b] border-2 border-[#78350f] rounded-3xl shadow-2xl p-4 sm:p-6 flex flex-col max-h-[90dvh]">
         <SylvestreIvyFrame density="medium" rounded="3xl" />

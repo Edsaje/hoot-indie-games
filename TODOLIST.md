@@ -5,6 +5,11 @@
 > - **Site en production :** [`http://www.hootindiegames.com/`](http://www.hootindiegames.com/)
 > - **Déploiement Continu (CI/CD) :** Chaque `git push` sur la branche `main` déclenche le workflow GitHub Actions [`.github/workflows/deploy-ovh.yml`](file:///.github/workflows/deploy-ovh.yml) qui exécute l'audit `npm run audit-db`, compile le projet `npm run build` et déploie automatiquement sur le cluster OVH via FTP.
 
+> [!IMPORTANT]
+> ### 🛡️ RÈGLE PRIMORDIALE : La sécurité est notre priorité sur ce site.
+> **La sécurité, l'intégrité anti-triche, la protection contre les injections, l'isolation des secrets et le blindage de tous les accès constituent la priorité numéro 1 absolue du sanctuaire Hoot Indie Games.**
+> Aucun compromis ne doit être fait sur la sécurité lors de l'ajout ou de la refonte de fonctionnalités (jeux, tchat, profil, monétisation, administration, cartes).
+
 ---
 
 ## 🎯 Directives & Décisions Utilisateur Récents
@@ -395,6 +400,18 @@
         - Titres honorifiques de profil personnalisés (*« Dénicheur de Pépites »*, *« Maître du Pixel »*, *« Mélomane du Perchoir »*...).
         - Cadres de profil cosmétiques prestigieux (Sylvestre, Doré Céleste, Néon Cyberpunk...).
         - Jokers / Indices bonus pour débloquer une situation difficile sur les mini-jeux quotidiens.
+83. **Système de Boosters de Cartes à Échanger Indés (Trading Cards) (À FAIRE — Prochaine Version) :**
+    - Concevoir et intégrer un système de cartes à collectionner et échanger célébrant l'ensemble des pépites indés du sanctuaire :
+      - *Obtention de Boosters* : Paquets de cartes à ouvrir débloqués via les séries quotidiennes (streaks), les succès ou l'achat dans la Boutique du Sanctuaire avec les Plumes d'Or 🪶.
+      - *Ouverture Interactive & Animation* : Animation immersive d'ouverture de booster avec déchirure du sachet, révélation carte par carte et effets de rareté (Commune, Rare, Épique, Légendaire / Holographique / Foil brillante).
+      - *Classeur Virtuel & Collection* : Galerie et album de collectionneur dans le profil pour contempler ses cartes, le taux de complétion par jeu et le décompte des doublons.
+      - *Système d'Échange (Trading Hub)* : Échange sécurisé de cartes en double avec ses compagnons (amis) ou via code d'échange bilatéral.
+      - *Crafting & Badges Collector* : Forger des sets complets de cartes pour débloquer des badges de profil prestigieux, titres et cosmétiques exclusifs.
+84. **Règle Primordiale : La sécurité est notre priorité sur ce site (Sanctification & Défense Active) `[🔒 INVARIANT]` :**
+    - **Principe Directeur Absolu :** La sécurité est déclarée priorité numéro 1 du sanctuaire Hoot Indie Games. Toute nouvelle fonctionnalité (tchat, leaderboard, boutique, amis, mini-jeux, administration) doit être conçue et auditée avec une approche *Security by Design* et *Zero Trust*.
+    - **Anti-Triche & Anti-Spoiler :** Protection réseau hermétique (zéro fuite dans le bundle, le state ou les requêtes XHR), scellement en closures privées des moteurs de jeu, intégrité cryptographique des scores soumis.
+    - **Protection Serveur & Données :** Rate-limiting par IP, verrouillage atomique (`LOCK_EX`), isolation stricte `.htaccess`, hachage Bcrypt des mots de passe admin et conformité RGPD (hachage anonymisé SHA-256 des adresses IP, 0 cookie tiers).
+    - **Validation & Sanitisation Continue :** Échappement systématique XSS de toutes les entrées utilisateur, validation par regex, interdiction formelle de l'injection dynamique de code.
 
 ---
 
@@ -1582,6 +1599,30 @@ Pour faciliter le pilotage technique, l'ensemble des chantiers restants (**À FA
   - **Diagnostic Chirurgical du Décalage de 16px** : Dans Tailwind CSS v4, les conteneurs avec espacement vertical (`space-y-3.5`, `space-y-4`...) appliquent la règle `:is(.space-y-* > :not(:last-child)) { margin-block-end: ... }`. `SylvestreIvyFrame` étant inséré en premier enfant du conteneur, il recevait un `margin-bottom: 14px` (ou 16px). En CSS pour un élément `position: absolute; inset: 0;`, cette marge réduit directement la hauteur calculée de l'élément (`height = container_height - margin_bottom`), ce qui rehaussait la ligne de base inférieure (`bottom: 0`) de 16px vers le haut.
   - **Alignement Exact au Biseau Extérieur (`border-2`)** : L'utilisation de `inset: 0` positionnait l'élément sur la boîte de padding (2px à l'intérieur du bois). En passant à des coordonnées outer-border (`top: -borderOffset, left: -borderOffset, right: -borderOffset, bottom: -borderOffset` avec `borderOffset = 2px` par défaut), la liane s'aligne mathématiquement à 0px de décalage avec le `border-radius: 24px` (`rounded-3xl`) du cadre.
   - **Immunité Totale contre les Marges Parentales** : Application de `margin: 0 !important; margin-block-start: 0 !important; margin-block-end: 0 !important;` via règle globale CSS dédiée `[data-sylvestre-ivy-frame="true"]` et styles inline directs. Le cadre de liane est désormais rigoureusement collé aux 4 coins sur n'importe quel conteneur (barre de recherche, modales, grilles).
+
+---
+
+### 🃏 35. Système de Boosters de Cartes à Échanger Indés (Trading Cards) (À FAIRE — Prochaine Version)
+- [ ] **1. Spécification & Modèle de Données des Cartes Indés (`TradingCard`)** `[🟡 Palier 2 - Moyenne]` :
+  - Définition du schéma de carte : ID unique, identifiant du jeu lié (parmi les 183 pépites certifiées), titre du jeu, studio créateur, illustration signature HD / pixel-art, citation / anecdote de développement, rareté (*Commune ⚪, Peu Commune 🟢, Rare 🔵, Épique 🟣, Légendaire 🟡*), finition (*Standard, Foil Brillante ✨, Holographique Mystique 🌌*) et numéro de série dans la collection.
+  - Modèle de booster pack (`BoosterPack`) : Nom du paquet (ex: *Booster Sanctuaire Sylvestre*, *Booster Rétro Pixel*, *Booster Métroidvania & Action*, *Booster Roguelike & Cartes*), nombre de cartes par paquet (ex: 3 à 5 cartes), table de tirage pondérée (drop rates avec garantie d'au moins 1 carte Rare ou supérieure).
+- [ ] **2. Économie & Mécanismes d'Obtention des Boosters** `[🟡 Palier 2 - Moyenne]` :
+  - **Récompense de Série Quotidienne (Streaks)** : Attribution d'un booster bonus tous les 7 jours consécutifs de jeu ou lors de la réalisation du Grand Chelem quotidien (8/8 disciplines complétées).
+  - **Boutique du Sanctuaire** : Achat de boosters avec les Plumes d'Or 🪶 gagnées en jouant (ex: 30 plumes pour un booster standard, 75 plumes pour un booster thématique premium).
+  - **Trophées & Défis de l'Arcade / Time Attack** : Nouveaux succès débloquant des boosters exclusifs lors de l'atteinte de certains paliers de score.
+- [ ] **3. Cérémonie d'Ouverture Interactive & Animation 3D (Booster Pack Opening)** `[🟠 Palier 3 - Élevée]` :
+  - Modale dédiée d'ouverture avec rendu interactif du sachet scellé sous lueur dorée.
+  - Geste tactile / clic de glissement pour déchirer le haut du paquet avec particules d'étincelles et bruitage Web Audio de papier d'aluminium froissé.
+  - Découverte palpitante carte par carte (retournement 3D CSS `rotateY(180deg)`), halo lumineux coloré selon la rareté dévoilée et effet de brillance iridescente (shader CSS holographique) réagissant au mouvement du gyroscope/souris sur les cartes Foil.
+- [ ] **4. Classeur Virtuel & Galerie de Collection (Binder View)** `[🟡 Palier 2 - Moyenne]` :
+  - Vue album de collectionneur intégrée dans la modale de profil avec pochettes transparentes, classement par jeu et jauges de complétion par saga.
+  - Détection automatique et empilement des doublons avec badge compteur (`x2`, `x3`...).
+- [ ] **5. Système d'Échange Sécurisé entre Compagnons (Trading Hub)** `[🟠 Palier 3 - Élevée]` :
+  - Salle de troc avec les amis du Cercle des Compagnons : sélection de cartes en double à proposer, sélection des cartes convoitées chez l'ami, et confirmation bilatérale asynchrone sécurisée par token via l'API souveraine.
+  - Possibilité de générer un lien ou code d'échange public pour troquer sur le Perchoir / Tchat communautaire.
+- [ ] **6. Crafting de Badges, Titres de Profil & Émotes** `[🟢 Palier 1 - Faible]` :
+  - Mécanique de recyclage des sets complets : réunir toutes les cartes d'un jeu permet de forger le **Badge Collector** du jeu, un titre de profil honorifique et une émote exclusive utilisable dans le salon de tchat.
+
 
 
 

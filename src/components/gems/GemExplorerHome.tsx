@@ -62,25 +62,31 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   onOpenArcade,
 }) => {
   const { t, i18n } = useTranslation();
-  const curatedGems = INDIE_GAMES;
+  const { stats: steamStats, curatedGems: catalogGems } = useSteamCatalog();
+  const curatedGems = catalogGems && catalogGems.length > 0 ? catalogGems : INDIE_GAMES;
   const { isGameOwned, isSteamConnected, toggleGameOwned, hideOwnedGames, setHideOwnedGames, connectSteamWithOpenId } = useUserAccount();
-  const { stats: steamStats } = useSteamCatalog();
 
-  // The featured canonical daily gem (guaranteed never to spoil Screenle (offset 0) or Indledle (offset 3))
+  // The featured canonical daily gem (guaranteed never to spoil Screenle (offset 0) or Indledle (offset 3), and drawn strictly from curated gems)
   const dailyGem = useMemo(() => {
-    const screenleGame = getDailyGame(currentDate, 0);
-    const indledleGame = getDailyGame(currentDate, 3);
+    const screenleGame = getDailyGame(currentDate, 0, curatedGems);
+    const indledleGame = getDailyGame(currentDate, 3, curatedGems);
+    const pool = curatedGems.length > 0 ? curatedGems : INDIE_GAMES;
+    let hash = 0;
+    for (let i = 0; i < currentDate.length; i++) {
+      hash = (hash << 5) - hash + currentDate.charCodeAt(i);
+      hash |= 0;
+    }
     let offset = 17;
-    let candidate = getDailyGame(currentDate, offset);
+    let candidate = pool[Math.abs(hash + offset) % pool.length];
     while (
       (candidate.id === screenleGame.id || candidate.id === indledleGame.id) &&
       offset < 100
     ) {
       offset += 5;
-      candidate = getDailyGame(currentDate, offset);
+      candidate = pool[Math.abs(hash + offset) % pool.length];
     }
     return candidate;
-  }, [currentDate]);
+  }, [currentDate, curatedGems]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
@@ -406,73 +412,75 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   }, [randomPickedGame]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 animate-in fade-in duration-300">
       {/* Hero Spotlight: Featured Daily Gem & Nocturnal Woodland Atmosphere */}
-      <div className="group relative rounded-3xl overflow-visible bg-gradient-to-br from-[#093a2b] via-[#05261c] to-[#021711] border-2 border-[#78350f] p-6 sm:p-10 mb-10 shadow-[inset_0_2px_2px_rgba(217,119,6,0.3),0_16px_40px_rgba(0,0,0,0.8)]">
+      <div className="group relative rounded-2xl sm:rounded-3xl overflow-visible bg-gradient-to-br from-[#093a2b] via-[#05261c] to-[#021711] border-2 border-[#78350f] p-4 sm:p-8 lg:p-10 mb-6 sm:mb-10 shadow-[inset_0_2px_2px_rgba(217,119,6,0.3),0_16px_40px_rgba(0,0,0,0.8)]">
         {/* Living Creeping Ivy Frame Contour */}
         <SylvestreIvyFrame density="medium" />
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           {/* Left Hero Text */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="lg:col-span-7 space-y-3 sm:space-y-4">
             <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider">
                 <Compass className="w-3.5 h-3.5" />
                 <span>{t('home.gemExplorer')}</span>
               </div>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
               {t('home.heroTitlePart1')}<span className="text-amber-400">{t('home.heroTitleHighlight')}</span>
             </h1>
 
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
+            <p className="text-xs sm:text-base text-slate-300 leading-relaxed max-w-xl">
               {t('home.heroDesc')}
             </p>
 
-            {/* Quick Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            {/* Quick Action Buttons (Optimized Mobile-First Thumb Targets) */}
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2">
               <button
                 onClick={() => {
                   soundFx.playClick();
                   onNavigateTab('screenle');
                 }}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer touch-manipulation"
               >
                 <Camera className="w-4 h-4" />
-                {t('home.playDailyChallenge')}
+                <span>{t('home.playDailyChallenge')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <button
-                onClick={handleRandomPick}
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-[#0b0f19] hover:bg-slate-800 text-slate-200 border border-emerald-900/40 hover:border-amber-500/50 text-xs sm:text-sm font-bold transition shadow cursor-pointer"
-              >
-                <Dice5 className="w-4 h-4 text-amber-400" />
-                {t('home.randomGem')}
-              </button>
+              <div className="grid grid-cols-2 sm:flex sm:w-auto gap-2 sm:gap-3 w-full sm:w-auto">
+                <button
+                  onClick={handleRandomPick}
+                  className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-[#0b0f19] hover:bg-slate-800 text-slate-200 border border-emerald-900/40 hover:border-amber-500/50 text-xs sm:text-sm font-bold transition shadow cursor-pointer touch-manipulation"
+                >
+                  <Dice5 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="truncate">{t('home.randomGem')}</span>
+                </button>
 
-              <button
-                onClick={() => {
-                  soundFx.playClick();
-                  onNavigateTab('microindies');
-                }}
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-900/80 to-[#06241b] hover:from-emerald-800 hover:to-emerald-700 text-emerald-200 border border-emerald-500/40 hover:border-amber-400 text-xs sm:text-sm font-bold transition shadow cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>{t('home.microIndiesBtn', 'La Clairière des Micro-Indés')}</span>
-              </button>
+                <button
+                  onClick={() => {
+                    soundFx.playClick();
+                    onNavigateTab('microindies');
+                  }}
+                  className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-emerald-900/80 to-[#06241b] hover:from-emerald-800 hover:to-emerald-700 text-emerald-200 border border-emerald-500/40 hover:border-amber-400 text-xs sm:text-sm font-bold transition shadow cursor-pointer touch-manipulation"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="truncate">{t('home.microIndiesBtn', 'Micro-Indés')}</span>
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Right: Featured Daily Gem Card */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-5 w-full">
             <SylvestreHudFrame
               variant="wood"
               accent="amber"
               withLeaves={true}
               interactive={true}
             >
-              <div className="p-4 sm:p-5 flex flex-col justify-between">
+              <div className="p-3.5 sm:p-5 flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-3">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow">
                     ⭐ {t('home.dailyGem')}
@@ -526,7 +534,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-[#4a3424]/70 flex items-center gap-2">
+                <div className="pt-3 border-t border-[#4a3424]/70 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   {dailyGem.steamUrl && (
                     <a
                       href={dailyGem.steamUrl}

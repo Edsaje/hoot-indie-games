@@ -77,7 +77,11 @@ function auditCandidateGame(game: Game, genreMap?: Map<string, string>): { valid
 }
 
 // Nettoyage des genres pour éliminer les étiquettes non pertinentes
-function sanitizeGenres(steamGenres: Array<{ description: string }>, descriptionText: string): string[] {
+function sanitizeGenres(
+  steamGenres: Array<{ description: string }>,
+  descriptionText: string,
+  existingGenreMap?: Map<string, string>
+): string[] {
   const banned = ['indépendant', 'accès anticipé', 'indie', 'early access', 'free to play', 'gratuit', 'occasionnel', 'casual'];
   const mapping: Record<string, string> = {
     action: 'Action',
@@ -88,6 +92,9 @@ function sanitizeGenres(steamGenres: Array<{ description: string }>, description
     strategy: 'Stratégie',
     stratégie: 'Stratégie',
     simulation: 'Simulation',
+    coop: 'Co-op',
+    'co-op': 'Co-op',
+    coopération: 'Co-op',
   };
 
   const results = new Set<string>();
@@ -107,9 +114,20 @@ function sanitizeGenres(steamGenres: Array<{ description: string }>, description
   if (lowerDesc.includes('platformer') || lowerDesc.includes('plateforme')) results.add('Platformer');
   if (lowerDesc.includes('puzzle') || lowerDesc.includes('énigme')) results.add('Puzzle');
   if (lowerDesc.includes('survie') || lowerDesc.includes('survival')) results.add('Survie');
-  if (lowerDesc.includes('coop') || lowerDesc.includes('coopération')) results.add('Coop');
+  if (lowerDesc.includes('coop') || lowerDesc.includes('coopération')) results.add('Co-op');
 
-  const finalGenres = Array.from(results).slice(0, 4);
+  // Harmonisation automatique avec les variantes déjà enregistrées dans la base pour éviter tout rejet inutile
+  const harmonized = new Set<string>();
+  for (const genre of results) {
+    const norm = genre.toLowerCase().replace(/[-_ \/]/g, '').trim();
+    if (existingGenreMap?.has(norm)) {
+      harmonized.add(existingGenreMap.get(norm)!);
+    } else {
+      harmonized.add(genre);
+    }
+  }
+
+  const finalGenres = Array.from(harmonized).slice(0, 4);
   return finalGenres.length > 0 ? finalGenres : ['Aventure', 'Indépendant'];
 }
 
@@ -350,7 +368,8 @@ async function syncUpcomingRadar(
 
       const genres = sanitizeGenres(
         detailsFr.genres || [],
-        detailsFr.short_description
+        detailsFr.short_description,
+        existingNormalizedGenres
       );
 
       const screenshots = (detailsFr.screenshots || []).slice(0, 6).map((s) => s.path_full);
@@ -378,6 +397,7 @@ async function syncUpcomingRadar(
           },
           ...(composer ? { composer } : {}),
         },
+        ...(detailsFr.is_free ? { isFree: true } : {}),
       };
 
       const audit = auditCandidateGame(promotedGame, existingNormalizedGenres);
@@ -883,29 +903,7 @@ export async function runDailyHarvest() {
     const detailsFr = await fetchGameDetails(appId, 'french');
     if (!detailsFr || detailsFr.type !== 'game') continue;
 
-    // 1. Exclure les jeux F2P ou MMO
-    if (detailsFr.is_free) {
-      console.log(`   ⛔ [Filtré F2P] ${detailsFr.name} est gratuit / free-to-play.`);
-      continue;
-    }
-
-    const isExcludedGenre = detailsFr.genres?.some((g) => {
-      const desc = g.description.toLowerCase();
-      return [
-        'free to play',
-        'gratuit',
-        'mmo',
-        'massif',
-        'massivement multijoueur',
-        'massively multiplayer',
-      ].includes(desc);
-    });
-    if (isExcludedGenre) {
-      console.log(`   ⛔ [Filtré Genre Exclu] ${detailsFr.name} (MMO / F2P).`);
-      continue;
-    }
-
-    // 2. Vérifier que le titre contient des caractères latins lisibles
+    // 1. Vérifier que le titre contient des caractères latins lisibles
     if (!hasLatinLetters(detailsFr.name)) {
       console.log(`   ⛔ [Filtré Titre Non-Latin] "${detailsFr.name}" ne comporte aucun caractère latin.`);
       continue;
@@ -966,7 +964,8 @@ export async function runDailyHarvest() {
 
     const genres = sanitizeGenres(
       detailsFr.genres || [],
-      detailsFr.short_description
+      detailsFr.short_description,
+      existingNormalizedGenres
     );
 
     const screenshots = detailsFr.screenshots.slice(0, 6).map((s) => s.path_full);
@@ -994,6 +993,7 @@ export async function runDailyHarvest() {
         },
         ...(composer ? { composer } : {}),
       },
+      ...(detailsFr.is_free ? { isFree: true } : {}),
     };
 
     const audit = auditCandidateGame(gameObj, existingNormalizedGenres);

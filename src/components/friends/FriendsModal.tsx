@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Users,
@@ -19,8 +20,10 @@ import {
   Music,
   User,
   MessageSquare,
+  LogIn,
 } from 'lucide-react';
 import { useFriends } from '../../context/useFriends';
+import type { FriendPlayer } from '../../types/friends';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useChat } from '../../context/useChat';
 import { INDIE_AVATARS } from '../../data/avatars';
@@ -32,6 +35,7 @@ interface FriendsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onStartVersusDuel?: (roomCode: string) => void;
+  onOpenAuth?: () => void;
 }
 
 const DISCIPLINES = [
@@ -49,6 +53,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
   isOpen,
   onClose,
   onStartVersusDuel,
+  onOpenAuth,
 }) => {
   const {
     friends,
@@ -64,7 +69,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
     toggleFavoriteFriend,
   } = useFriends();
 
-  const { isSteamConnected } = useUserAccount();
+  const { isSteamConnected, isAuthenticated } = useUserAccount();
   const { openChat } = useChat();
 
   const [addInput, setAddInput] = useState(() => {
@@ -93,7 +98,17 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
     }
   }, [isOpen, myFriendCode]);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  if (!isOpen || typeof document === 'undefined') return null;
 
   const handleCopyCode = () => {
     soundFx.playClick();
@@ -172,27 +187,29 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="group relative bg-[#072a20] border-2 border-[#78350f] rounded-3xl w-full max-w-2xl overflow-visible shadow-2xl space-y-5 p-5 sm:p-7 max-h-[90vh] overflow-y-auto">
-        <SylvestreIvyFrame density="delicate" />
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-200">
+      <div className="relative bg-[#072a20] border-2 border-[#78350f] rounded-2xl sm:rounded-3xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] overflow-hidden">
+        <div className="hidden sm:block pointer-events-none">
+          <SylvestreIvyFrame density="delicate" />
+        </div>
 
         {/* Header Modal */}
-        <div className="flex items-center justify-between gap-3 border-b border-[#1b4332] pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-400 shadow-md shadow-amber-500/10">
-              <Users className="w-6 h-6" />
+        <div className="flex items-center justify-between gap-3 border-b border-[#1b4332] p-4 sm:p-6 pb-3 sm:pb-4 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="p-2 sm:p-2.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-400 shadow-md shadow-amber-500/10 shrink-0">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-xl sm:text-2xl font-black text-white tracking-wide">
+                <h2 className="text-lg sm:text-2xl font-black text-white tracking-wide">
                   Cercle des Compagnons
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-black uppercase tracking-wider">
                   Social
                 </span>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5">
                 Suivez les exploits quotidiens de vos amis et défiez-les en duels 1v1 !
               </p>
             </div>
@@ -201,56 +218,94 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-400 hover:text-white transition cursor-pointer hover:border-amber-500/50"
+            className="p-1.5 sm:p-2 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-400 hover:text-white transition cursor-pointer hover:border-amber-500/50 shrink-0"
             title="Fermer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Carte : Mon Code Joueur Unique */}
-        <div className="relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#123829] via-[#0d281e] to-[#071d15] border border-amber-500/30 shadow-lg">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <div className="text-[11px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Votre Code Joueur Unique</span>
+        {/* Scrollable Modal Content */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 custom-scrollbar">
+          {/* Carte : Mon Code Joueur Unique */}
+          {isAuthenticated && myFriendCode ? (
+            <div className="relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#123829] via-[#0d281e] to-[#071d15] border border-amber-500/30 shadow-lg">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <div className="text-[11px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Votre Code Joueur Unique</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-amber-400 bg-black/40 px-3.5 py-1 rounded-xl border border-amber-500/40 shadow-inner select-all">
+                      {myFriendCode}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-2 max-w-md leading-relaxed">
+                    Partagez ce code avec vos amis pour leur permettre de voir vos réussites du jour et vous lancer des duels !
+                  </p>
+                </div>
+
+                <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleCopyCode}
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
+                  >
+                    {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedCode ? 'Code copié !' : 'Copier le code'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyInviteLink}
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#0b0f19] hover:bg-slate-900 border border-amber-500/30 hover:border-amber-400 text-amber-300 font-bold text-xs transition active:scale-95 cursor-pointer"
+                    title="Copie un lien direct ouvrant le site pour ajouter votre ami"
+                  >
+                    {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+                    <span>{copiedLink ? 'Lien copié !' : 'Partager le lien'}</span>
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-amber-400 bg-black/40 px-3.5 py-1 rounded-xl border border-amber-500/40 shadow-inner select-all">
-                  {myFriendCode}
-                </span>
+            </div>
+          ) : (
+            <div className="relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#123829] via-[#0d281e] to-[#071d15] border border-amber-500/30 shadow-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                  <Users className="w-5 h-5 text-amber-400" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>Code Ami & Compagnons en Ligne</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono">
+                      Compte requis
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                    Le Cercle des Compagnons est synchronisé en ligne. Connectez-vous à votre compte pour obtenir votre Code Ami unique, retrouver vos compagnons et comparer vos streaks quotidiens !
+                  </p>
+                </div>
               </div>
-              <p className="text-[11px] text-slate-300 mt-2 max-w-md leading-relaxed">
-                Partagez ce code avec vos amis pour leur permettre de voir vos réussites du jour et vous lancer des duels !
-              </p>
+
+              {onOpenAuth && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick();
+                    onClose();
+                    onOpenAuth();
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition flex items-center justify-center gap-2 self-stretch sm:self-auto shrink-0 cursor-pointer touch-manipulation whitespace-nowrap"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Se connecter</span>
+                </button>
+              )}
             </div>
+          )}
 
-            <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto shrink-0">
-              <button
-                type="button"
-                onClick={handleCopyCode}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
-              >
-                {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedCode ? 'Code copié !' : 'Copier le code'}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleCopyInviteLink}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#0b0f19] hover:bg-slate-900 border border-amber-500/30 hover:border-amber-400 text-amber-300 font-bold text-xs transition active:scale-95 cursor-pointer"
-                title="Copie un lien direct ouvrant le site pour ajouter votre ami"
-              >
-                {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
-                <span>{copiedLink ? 'Lien copié !' : 'Partager le lien'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Section : Ajouter un Compagnon */}
-        <div className="p-4 rounded-2xl bg-[#0b1b14] border border-[#1b4332]">
+          {/* Section : Ajouter un Compagnon */}
+          <div className="p-4 rounded-2xl bg-[#0b1b14] border border-[#1b4332]">
           <form onSubmit={handleAddSubmit} className="space-y-3">
             <div className="text-xs font-bold text-slate-200 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
@@ -345,14 +400,24 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
             </div>
           ) : (
             <div className="space-y-3">
-              {friends.map((friend) => {
-                const avatar = INDIE_AVATARS.find((a) => a.id === friend.avatarId) || INDIE_AVATARS[0];
-                const daily = friend.dailyScores;
-                const isFav = isFavoriteFriend(friend.friendCode);
+              {(friends || [])
+                .filter((friend): friend is FriendPlayer => Boolean(friend && friend.friendCode))
+                .map((friend) => {
+                  const avatar =
+                    (friend.avatarId && INDIE_AVATARS.find((a) => a.id === friend.avatarId)) ||
+                    INDIE_AVATARS[0] || {
+                      id: 'default',
+                      name: 'Compagnon',
+                      emoji: '🦉',
+                      bgGradient: 'from-amber-600 via-[#0d543e] to-[#041d15]',
+                      imageUrl: '/logo.png',
+                    };
+                  const daily = friend.dailyScores;
+                  const isFav = isFavoriteFriend(friend.friendCode);
 
-                return (
-                  <div
-                    key={friend.friendCode}
+                  return (
+                    <div
+                      key={friend.friendCode}
                     className={`p-4 rounded-2xl transition shadow-md flex flex-col gap-3 group border ${
                       isFav
                         ? 'bg-gradient-to-r from-[#0d281e] to-[#0a1e16] border-amber-500/40 ring-1 ring-amber-500/20 shadow-amber-950/20'
@@ -596,7 +661,9 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
             </div>
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

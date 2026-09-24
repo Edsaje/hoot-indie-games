@@ -143,6 +143,20 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
     },
   ];
 
+  const handleNavSelect = (subTab: MiniGameSubTab, e?: React.MouseEvent) => {
+    if (e && (e.button === 1 || e.ctrlKey || e.metaKey || e.shiftKey)) {
+      return; // Clic molette ou touche modificatrice : laisser le navigateur ouvrir dans un nouvel onglet
+    }
+    if (e) {
+      e.preventDefault();
+    }
+    soundFx.playClick();
+    onSelectSubTab(subTab);
+    if (typeof window !== 'undefined') {
+      window.location.hash = subTab === 'hub' ? '#minigames' : `#${subTab}`;
+    }
+  };
+
   return (
     <div className="relative w-full bg-[#020e0a]/95 border-b border-[#0d543e]/70 backdrop-blur-md sticky top-16 z-30 shadow-md">
       <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/50 to-transparent pointer-events-none" />
@@ -150,11 +164,9 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
         {/* Étage 1 : Hub & Modes Compétitifs */}
         <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
           {/* Bouton Hub proéminent pour revenir à l'accueil des mini-jeux à tout moment */}
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              onSelectSubTab('hub');
-            }}
+          <a
+            href="#minigames"
+            onClick={(e) => handleNavSelect('hub', e)}
             className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
               activeSubTab === 'hub'
                 ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 scale-[1.02]'
@@ -177,7 +189,7 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
             >
               11
             </span>
-          </button>
+          </a>
 
           <div className="hidden sm:block h-4 w-px bg-emerald-800/50 mx-1" />
 
@@ -186,12 +198,10 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
             const Icon = item.icon;
             const isActive = activeSubTab === item.id;
             return (
-              <button
+              <a
                 key={item.id}
-                onClick={() => {
-                  soundFx.playClick();
-                  onSelectSubTab(item.id);
-                }}
+                href={`#${item.id}`}
+                onClick={(e) => handleNavSelect(item.id, e)}
                 className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   isActive
                     ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 scale-[1.02]'
@@ -211,7 +221,7 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
                     {item.badge}
                   </span>
                 )}
-              </button>
+              </a>
             );
           })}
         </div>
@@ -224,12 +234,10 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
             const isSolved = dailyStatuses[item.dailyKey] === 'won';
 
             return (
-              <button
+              <a
                 key={item.id}
-                onClick={() => {
-                  soundFx.playClick();
-                  onSelectSubTab(item.id);
-                }}
+                href={`#${item.id}`}
+                onClick={(e) => handleNavSelect(item.id, e)}
                 className={`group flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.2 rounded-xl text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
                   isActive
                     ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 scale-[1.02]'
@@ -259,7 +267,7 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
                     }`}
                   />
                 )}
-              </button>
+              </a>
             );
           })}
         </div>

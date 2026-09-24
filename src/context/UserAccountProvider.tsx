@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { UserProfile, IndieAvatarId, AccountSaveData, SteamAccountInfo } from '../types/user';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
@@ -13,7 +13,6 @@ import {
   ADMIN_STEAM_ID,
   validateUsernameFormat,
   claimUsernameOnServer,
-  normalizeUsername,
 } from '../utils/usernameValidation';
 import { updateLeaderboardPlayerProfile } from '../services/leaderboardService';
 import { UserAccountContext } from './UserAccountContext';
@@ -27,17 +26,15 @@ import { syncUserCloudSave } from '../services/userCloudSyncService';
 const STORAGE_KEY = 'hoot_user_profile_v1';
 
 function getDefaultProfile(): UserProfile {
-  const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
   return {
     id: 'local_' + Math.random().toString(36).substring(2, 9),
-    username: isLocalHost ? 'Hibouxe' : 'Hibou Mystère',
-    avatarId: isLocalHost ? 'hibouxe_creator' : 'owl',
-    title: isLocalHost ? 'Fondateur du Perchoir' : 'Oisillon du Perchoir',
+    username: 'Hibou Mystère',
+    avatarId: 'owl',
+    title: 'Oisillon du Perchoir',
     createdAt: new Date().toISOString(),
     isCloudSynced: false,
-    isAdmin: isLocalHost,
-    role: isLocalHost ? 'admin' : 'user',
+    isAdmin: false,
+    role: 'user',
     versusStats: {
       matchesPlayed: 0,
       matchesWon: 0,
@@ -53,7 +50,15 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return { ...getDefaultProfile(), ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        const safeAvatar = parsed.avatarId === 'hibouxe_creator' ? 'owl' : (parsed.avatarId || 'owl');
+        return {
+          ...getDefaultProfile(),
+          ...parsed,
+          isAdmin: false,
+          role: 'user',
+          avatarId: safeAvatar,
+        };
       }
     } catch {
       // Fallback
@@ -85,11 +90,16 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, [profile]);
 
-  // Synchronisation Cloud Souverain automatique au chargement et écoute des événements
+  const hasInitialSyncedRef = useRef(false);
+
+  // Synchronisation Cloud Souverain automatique au chargement initial et lors de l'authentification
   useEffect(() => {
     const steamId = profile.steam?.steamId;
     const username = profile.username;
-    if (steamId || (username && username !== 'Hibou Mystère')) {
+    const hasValidIdentity = Boolean(steamId || (username && username !== 'Hibou Mystère') || isAuthenticated);
+
+    if (hasValidIdentity && !hasInitialSyncedRef.current) {
+      hasInitialSyncedRef.current = true;
       syncUserCloudSave({ steamId, userId: profile.id, username }).then((res) => {
         if (res.success && res.data) {
           const cloudData = res.data;
@@ -129,12 +139,15 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     return () => {
       window.removeEventListener('hoot_cloud_save_restored', handleCloudRestored as any);
     };
-  }, []);
+  }, [isAuthenticated, profile.steam?.steamId]);
 
   // Sauvegarde automatique cloud lors d'achats ou de récolte de plumes
   useEffect(() => {
     let timer: any = null;
-    const handleFeathersChanged = () => {
+    const handleFeathersChanged = (e: any) => {
+      // Éviter la boucle infinie si l'événement provient de la synchronisation cloud elle-même
+      if (e?.detail?.fromCloud) return;
+
       clearTimeout(timer);
       timer = setTimeout(() => {
         const steamId = profile.steam?.steamId;
@@ -142,13 +155,13 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         if (steamId || (username && username !== 'Hibou Mystère')) {
           syncUserCloudSave({ steamId, userId: profile.id, username }).catch(() => {});
         }
-      }, 500);
+      }, 3000);
     };
 
-    window.addEventListener('hoot_feathers_updated', handleFeathersChanged);
+    window.addEventListener('hoot_feathers_updated', handleFeathersChanged as any);
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('hoot_feathers_updated', handleFeathersChanged);
+      window.removeEventListener('hoot_feathers_updated', handleFeathersChanged as any);
     };
   }, [profile.steam?.steamId, profile.id, profile.username]);
 
@@ -187,20 +200,34 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
   }, []);
 
-  // Détection et élévation automatique du rôle Administrateur et Créateur (Hibouxe / Quentin)
+  const isUserLoggedIn = isAuthenticated || Boolean(profile.steam?.steamId) || Boolean(profile.email);
+
+  // Détection stricte et inviolable : l'accès administrateur exige impérativement d'être connecté sur un compte admin officiel.
   const isCreator = useMemo(() => {
-    const norm = normalizeUsername(profile.username);
-    return (
-      profile.steam?.steamId === ADMIN_STEAM_ID ||
-      profile.role === 'admin' ||
-      Boolean(profile.isAdmin) ||
-      norm === 'hibouxe' ||
-      norm === 'edsaje' ||
-      (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    if (!isUserLoggedIn) return false;
+
+    // 1. Authentification Steam officielle du créateur
+    const isOfficialSteam = Boolean(
+      profile.steam?.steamId && String(profile.steam.steamId).trim() === ADMIN_STEAM_ID
     );
-  }, [profile.steam?.steamId, profile.role, profile.isAdmin, profile.username]);
+
+    // 2. Authentification par compte vérifié (Supabase/Email) avec rôle admin ou email administrateur officiel
+    const isOfficialEmail = Boolean(
+      profile.email && profile.email.toLowerCase() === 'quentin.beaud@hotmail.fr'
+    );
+    const isOfficialCloudAdmin = Boolean(
+      isAuthenticated && (profile.role === 'admin' || isOfficialEmail)
+    );
+
+    return isOfficialSteam || isOfficialCloudAdmin;
+  }, [isUserLoggedIn, profile.steam?.steamId, profile.email, profile.role, isAuthenticated]);
 
   const isAdmin = isCreator;
+
+  const isModerator = useMemo(() => {
+    if (isAdmin || isCreator) return true;
+    return profile.role === 'moderator' || profile.isModerator === true;
+  }, [isAdmin, isCreator, profile.role, profile.isModerator]);
 
   // Synchronisation du statut admin & attribution exclusive de l'avatar fondateur
   useEffect(() => {
@@ -214,11 +241,13 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         }));
       }
     } else {
-      // Sécurité stricte : personne d'autre ne peut utiliser cet avatar
-      if (profile.avatarId === 'hibouxe_creator') {
+      // Sécurité stricte : personne d'autre ne peut utiliser cet avatar ni avoir de statut admin
+      if (profile.isAdmin || profile.role === 'admin' || profile.avatarId === 'hibouxe_creator') {
         setProfile((prev) => ({
           ...prev,
-          avatarId: 'owl',
+          isAdmin: false,
+          role: prev.role === 'admin' ? (prev.isModerator ? 'moderator' : 'user') : prev.role,
+          avatarId: prev.avatarId === 'hibouxe_creator' ? 'owl' : prev.avatarId,
         }));
       }
     }
@@ -244,11 +273,20 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
     // Déclencher l'enregistrement atomique auprès de l'API /api/usernames.php
     const timer = setTimeout(() => {
-      claimUsernameOnServer(desiredName, profile.id, steamId).catch(() => {});
+      claimUsernameOnServer(desiredName, profile.id, steamId).then((res) => {
+        if (res && res.success && res.role) {
+          setProfile((prev) => ({
+            ...prev,
+            role: res.role === 'moderator' ? 'moderator' : (res.role === 'admin' && isCreator ? 'admin' : prev.role),
+            isModerator: res.role === 'moderator' || Boolean(res.isModerator),
+            customTitle: res.customTitle || prev.customTitle,
+          }));
+        }
+      }).catch(() => {});
     }, 1200);
 
     return () => clearTimeout(timer);
-  }, [profile.steam?.steamId, profile.steam?.personaName, profile.username, profile.email, profile.id]);
+  }, [profile.steam?.steamId, profile.steam?.personaName, profile.username, profile.email, profile.id, isCreator]);
 
   const updateProfile = useCallback((fields: Partial<UserProfile>) => {
     setProfile((prev) => ({ ...prev, ...fields }));
@@ -296,20 +334,12 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       }
 
       const finalName = claimResult.username || trimmed;
-      const isNowCreator =
-        isCreator ||
-        normalizeUsername(finalName) === 'hibouxe' ||
-        normalizeUsername(finalName) === 'edsaje';
-
       const oldName = profile.username;
 
       setProfile((prev) => ({
         ...prev,
         username: finalName,
         lastUsernameChangeAt: new Date().toISOString(),
-        isAdmin: isNowCreator || prev.isAdmin,
-        role: isNowCreator ? 'admin' : prev.role,
-        avatarId: isNowCreator ? 'hibouxe_creator' : prev.avatarId,
       }));
 
       // Synchronisation avec le pseudonyme du classement et mise à jour de TOUS les scores du joueur
@@ -319,7 +349,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
       updateLeaderboardPlayerProfile(
         finalName,
-        isNowCreator ? 'hibouxe_creator' : profile.avatarId,
+        isCreator ? 'hibouxe_creator' : profile.avatarId,
         oldName
       ).catch(() => {});
 
@@ -595,17 +625,24 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       ...prev,
       email: undefined,
       steam: undefined,
+      isAdmin: false,
+      role: 'user',
+      avatarId: prev.avatarId === 'hibouxe_creator' ? 'owl' : prev.avatarId,
+      title: prev.title === '👑 Créateur du Site' || prev.title === 'Fondateur du Perchoir' ? 'Oisillon du Perchoir' : prev.title,
       isCloudSynced: false,
     }));
   }, []);
 
   const syncCloud = useCallback(async (): Promise<{ success: boolean; message: string }> => {
     try {
-      const res = await syncUserCloudSave({
-        steamId: profile.steam?.steamId,
-        userId: profile.id,
-        username: profile.username,
-      });
+      const res = await syncUserCloudSave(
+        {
+          steamId: profile.steam?.steamId,
+          userId: profile.id,
+          username: profile.username,
+        },
+        { force: true }
+      );
 
       if (res.success && res.data) {
         const cloudData = res.data;
@@ -795,7 +832,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         // Enregistrement automatique sur le serveur souverain et synchronisation cloud
         claimUsernameOnServer(details.personaName, profile.id, details.steamId).catch(() => {});
 
-        syncUserCloudSave({ steamId: details.steamId, username: details.personaName }).then((syncResCloud) => {
+        syncUserCloudSave({ steamId: details.steamId, username: details.personaName }, { force: true }).then((syncResCloud) => {
           if (syncResCloud.success && syncResCloud.data) {
             const cloudData = syncResCloud.data;
             setProfile((prev) => ({
@@ -909,14 +946,13 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, [connectSteamByIdentifier]);
 
-    const isUserLoggedIn = isAuthenticated || Boolean(profile.steam?.steamId) || Boolean(profile.email);
-
     return (
       <UserAccountContext.Provider
         value={{
           profile,
           isAuthenticated: isUserLoggedIn,
           isAdmin,
+          isModerator,
           isCreator,
           isSupabaseActive: isSupabaseConfigured,
           updateProfile,

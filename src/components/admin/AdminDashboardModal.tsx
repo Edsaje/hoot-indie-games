@@ -67,6 +67,7 @@ import {
   inferCanonicalArtStyle,
   inferCanonicalCamera,
   inferEnrichedGenres,
+  detectNonIndieStatus,
 } from '../../utils/gameInference';
 import type { Game } from '../../types/game';
 import {
@@ -86,7 +87,12 @@ interface AdminDashboardModalProps {
 type AdminTab = 'overview' | 'catalog' | 'games' | 'usernames' | 'suggestions' | 'system';
 
 export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen, onClose }) => {
-  const { profile } = useUserAccount();
+  const { profile, isAuthenticated, isAdmin } = useUserAccount();
+
+  if (!isOpen || !isAuthenticated || !isAdmin) {
+    return null;
+  }
+
   const currentSteamId = profile.steam?.steamId || ADMIN_STEAM_ID;
 
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
@@ -109,7 +115,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   // Modale d'édition utilisateur
   const [editingUser, setEditingUser] = useState<AdminUsernameEntry | null>(null);
   const [editDisplayName, setEditDisplayName] = useState<string>('');
-  const [editRole, setEditRole] = useState<'admin' | 'vip' | 'user'>('user');
+  const [editRole, setEditRole] = useState<'admin' | 'moderator' | 'vip' | 'user'>('user');
   const [editStatus, setEditStatus] = useState<'active' | 'banned'>('active');
   const [editCustomTitle, setEditCustomTitle] = useState<string>('');
   const [editNote, setEditNote] = useState<string>('');
@@ -119,7 +125,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
   const [createUsername, setCreateUsername] = useState<string>('');
   const [createSteamId, setCreateSteamId] = useState<string>('');
-  const [createRole, setCreateRole] = useState<'admin' | 'vip' | 'user'>('user');
+  const [createRole, setCreateRole] = useState<'admin' | 'moderator' | 'vip' | 'user'>('user');
   const [createCustomTitle, setCreateCustomTitle] = useState<string>('');
   const [createNote, setCreateNote] = useState<string>('');
   const [isCreatingUser, setIsCreatingUser] = useState<boolean>(false);
@@ -407,6 +413,22 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   // Validation directe en 1-clic d'une suggestion communautaire
   const handleQuickApproveSuggestion = async (s: AdminCommunitySuggestion) => {
     soundFx.playClick();
+
+    const nonIndieCheck = detectNonIndieStatus({
+      title: s.title,
+      developer: s.developer,
+      genres: s.genres,
+      comment: s.comment,
+    });
+    if (nonIndieCheck.isLikelyNonIndie) {
+      const confirmed = window.confirm(
+        `⚠️ ATTENTION : Le jeu « ${s.title} » semble être une production NON-INDÉPENDANTE / AAA (${nonIndieCheck.reason}).\n\nÊtes-vous certain de vouloir valider ce jeu dans le sanctuaire des pépites indés ?`
+      );
+      if (!confirmed) {
+        return;
+      }
+    }
+
     setValidatingSuggestionId(s.id);
     try {
       let dataFR: any = null;
@@ -440,9 +462,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
         screenshots.push(headerImage);
       }
 
-      const fullDesc = `${title} ${dataFR?.short_description || ''} ${dataEN?.short_description || ''} ${dataFR?.detailed_description || ''}`;
+      const publisher = dataFR?.publishers?.[0] || '';
+      const fullDesc = `${title} ${developer} ${publisher} ${dataFR?.short_description || ''} ${dataEN?.short_description || ''} ${dataFR?.detailed_description || ''}`;
       const rawGenres = (dataFR?.genres || []).map((g: { description: string }) => g.description);
-      const enrichedGenres = inferEnrichedGenres(rawGenres.length > 0 ? rawGenres : s.genres, fullDesc);
+      const rawCategories = (dataFR?.categories || []).map((c: { description: string }) => c.description);
+      const combinedGenres = [...rawGenres, ...rawCategories];
+      const enrichedGenres = inferEnrichedGenres(combinedGenres.length > 0 ? combinedGenres : s.genres, fullDesc);
       const artStyle = inferCanonicalArtStyle(fullDesc, enrichedGenres);
       const camera = inferCanonicalCamera(fullDesc, enrichedGenres);
 
@@ -522,9 +547,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
         screenshots.push(headerImage);
       }
 
-      const fullDesc = `${title} ${dataFR?.short_description || ''} ${dataEN?.short_description || ''} ${dataFR?.detailed_description || ''}`;
+      const publisher = dataFR?.publishers?.[0] || '';
+      const fullDesc = `${title} ${developer} ${publisher} ${dataFR?.short_description || ''} ${dataEN?.short_description || ''} ${dataFR?.detailed_description || ''}`;
       const rawGenres = (dataFR?.genres || []).map((g: { description: string }) => g.description);
-      const enrichedGenres = inferEnrichedGenres(rawGenres.length > 0 ? rawGenres : s.genres, fullDesc);
+      const rawCategories = (dataFR?.categories || []).map((c: { description: string }) => c.description);
+      const combinedGenres = [...rawGenres, ...rawCategories];
+      const enrichedGenres = inferEnrichedGenres(combinedGenres.length > 0 ? combinedGenres : s.genres, fullDesc);
       const artStyle = inferCanonicalArtStyle(fullDesc, enrichedGenres);
       const camera = inferCanonicalCamera(fullDesc, enrichedGenres);
 
@@ -598,7 +626,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     if (userStatusFilter === 'steam') {
       list = list.filter((u) => !!u.steamId);
     } else if (userStatusFilter === 'staff') {
-      list = list.filter((u) => u.role === 'admin' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje');
+      list = list.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje');
     } else if (userStatusFilter === 'banned') {
       list = list.filter((u) => u.status === 'banned');
     }
@@ -1389,7 +1417,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           <Star className="w-3.5 h-3.5 text-amber-400" />
                         </div>
                         <div className="text-xl font-black text-amber-300 font-mono">
-                          {data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0}
+                          {data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0}
                         </div>
                         <div className="text-[10px] text-amber-400">Rôles privilégiés</div>
                       </div>
@@ -1447,7 +1475,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         {[
                           { id: 'all', label: 'Tous', count: data.usernames?.list?.length || 0 },
                           { id: 'steam', label: 'Steam', count: data.usernames?.list?.filter((u) => !!u.steamId).length || 0 },
-                          { id: 'staff', label: 'Staff / VIP', count: data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0 },
+                          { id: 'staff', label: 'Staff / VIP', count: data.usernames?.list?.filter((u) => u.role === 'admin' || u.role === 'moderator' || u.role === 'vip' || u.normalized === 'hibouxe' || u.normalized === 'edsaje').length || 0 },
                           { id: 'banned', label: 'Bannis', count: data.usernames?.list?.filter((u) => u.status === 'banned').length || 0 },
                         ].map((f) => {
                           const isSelected = userStatusFilter === f.id;
@@ -1536,6 +1564,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                               ? 'bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20'
                                               : role === 'admin'
                                               ? 'bg-purple-500/30 text-purple-300 border border-purple-500/40'
+                                              : role === 'moderator'
+                                              ? 'bg-blue-500/30 text-blue-300 border border-blue-500/40'
                                               : role === 'vip'
                                               ? 'bg-amber-500/30 text-amber-300 border border-amber-500/40'
                                               : 'bg-white/10 text-slate-300'
@@ -1543,6 +1573,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                         >
                                           {isCreator ? (
                                             <Crown className="w-4 h-4" />
+                                          ) : role === 'moderator' ? (
+                                            <Shield className="w-4 h-4 text-blue-300" />
                                           ) : role === 'vip' ? (
                                             <Star className="w-4 h-4" />
                                           ) : (
@@ -1602,12 +1634,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                           className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 w-fit ${
                                             role === 'admin'
                                               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                                              : role === 'moderator'
+                                              ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
                                               : role === 'vip'
                                               ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                                               : 'bg-slate-500/20 text-slate-300 border border-slate-500/30'
                                           }`}
                                         >
-                                          {role === 'admin' ? 'Admin' : role === 'vip' ? 'VIP' : 'Joueur'}
+                                          {role === 'admin' && <Crown className="w-2.5 h-2.5" />}
+                                          {role === 'moderator' && <Shield className="w-2.5 h-2.5" />}
+                                          {role === 'vip' && <Star className="w-2.5 h-2.5" />}
+                                          {role === 'admin' ? 'Admin' : role === 'moderator' ? 'Modérateur' : role === 'vip' ? 'VIP' : 'Joueur'}
                                         </span>
 
                                         <span
@@ -1757,23 +1794,47 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {data.suggestions.list.map((s) => (
-                          <div
-                            key={s.id}
-                            className="p-4 rounded-2xl bg-[#0c1220] border border-white/5 space-y-3 hover:border-amber-500/30 transition flex flex-col justify-between"
-                          >
-                            <div className="space-y-1.5">
-                              <div className="flex items-start justify-between gap-2">
-                                <div>
-                                  <h4 className="font-bold text-white text-sm">{s.title}</h4>
-                                  <p className="text-xs text-slate-400">
-                                    Studio : <strong className="text-slate-300">{s.developer}</strong> ({s.releaseYear})
-                                  </p>
+                        {data.suggestions.list.map((s) => {
+                          const nonIndieCheck = detectNonIndieStatus({
+                            title: s.title,
+                            developer: s.developer,
+                            genres: s.genres,
+                            comment: s.comment,
+                          });
+                          return (
+                            <div
+                              key={s.id}
+                              className={`p-4 rounded-2xl border space-y-3 transition flex flex-col justify-between ${
+                                nonIndieCheck.isLikelyNonIndie
+                                  ? 'bg-[#160c11] border-rose-500/40 hover:border-rose-400'
+                                  : 'bg-[#0c1220] border-white/5 hover:border-amber-500/30'
+                              }`}
+                            >
+                              <div className="space-y-1.5">
+                                {nonIndieCheck.isLikelyNonIndie && (
+                                  <div className="flex items-start gap-2 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs mb-2">
+                                    <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                                    <div>
+                                      <div className="font-black text-rose-200 uppercase tracking-wide text-[10px]">
+                                        ⚠️ Production AAA / Majeure Détectée
+                                      </div>
+                                      <div className="text-[11px] text-rose-300 font-semibold mt-0.5">
+                                        {nonIndieCheck.reason}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                                <div className="flex items-start justify-between gap-2">
+                                  <div>
+                                    <h4 className="font-bold text-white text-sm">{s.title}</h4>
+                                    <p className="text-xs text-slate-400">
+                                      Studio : <strong className="text-slate-300">{s.developer}</strong> ({s.releaseYear})
+                                    </p>
+                                  </div>
+                                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shrink-0">
+                                    AppID {s.appId}
+                                  </span>
                                 </div>
-                                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shrink-0">
-                                  AppID {s.appId}
-                                </span>
-                              </div>
 
                               {s.comment && (
                                 <p className="text-xs text-slate-300 bg-black/30 p-2.5 rounded-xl border border-white/5 italic">
@@ -1865,8 +1926,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                               </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
+                        );
+                      })}
+                    </div>
                     )}
                   </div>
                 )}
@@ -2138,16 +2200,18 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Rôle */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1.5">Rôle & Privilèges</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {(['user', 'vip', 'admin'] as const).map((r) => (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {(['user', 'moderator', 'vip', 'admin'] as const).map((r) => (
                           <button
                             key={r}
                             type="button"
                             onClick={() => setEditRole(r)}
-                            className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                            className={`py-2 px-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                               editRole === r
                                 ? r === 'admin'
                                 ? 'bg-purple-500/20 text-purple-300 border-purple-500/50'
+                                : r === 'moderator'
+                                ? 'bg-blue-500/20 text-blue-300 border-blue-500/50'
                                 : r === 'vip'
                                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
                                 : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
@@ -2155,8 +2219,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             }`}
                           >
                             {r === 'admin' && <Crown className="w-3.5 h-3.5" />}
+                            {r === 'moderator' && <Shield className="w-3.5 h-3.5 text-blue-400" />}
                             {r === 'vip' && <Star className="w-3.5 h-3.5" />}
-                            <span>{r === 'admin' ? 'Admin' : r === 'vip' ? 'VIP' : 'Joueur'}</span>
+                            <span>{r === 'admin' ? 'Admin' : r === 'moderator' ? 'Modérateur' : r === 'vip' ? 'VIP' : 'Joueur'}</span>
                           </button>
                         ))}
                       </div>
@@ -2323,16 +2388,18 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Rôle */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1.5">Rôle initial</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {(['user', 'vip', 'admin'] as const).map((r) => (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {(['user', 'moderator', 'vip', 'admin'] as const).map((r) => (
                           <button
                             key={r}
                             type="button"
                             onClick={() => setCreateRole(r)}
-                            className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                            className={`py-2 px-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                               createRole === r
                                 ? r === 'admin'
                                 ? 'bg-purple-500/20 text-purple-300 border-purple-500/50'
+                                : r === 'moderator'
+                                ? 'bg-blue-500/20 text-blue-300 border-blue-500/50'
                                 : r === 'vip'
                                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
                                 : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
@@ -2340,8 +2407,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             }`}
                           >
                             {r === 'admin' && <Crown className="w-3.5 h-3.5" />}
+                            {r === 'moderator' && <Shield className="w-3.5 h-3.5 text-blue-400" />}
                             {r === 'vip' && <Star className="w-3.5 h-3.5" />}
-                            <span>{r === 'admin' ? 'Admin' : r === 'vip' ? 'VIP' : 'Joueur'}</span>
+                            <span>{r === 'admin' ? 'Admin' : r === 'moderator' ? 'Modérateur' : r === 'vip' ? 'VIP' : 'Joueur'}</span>
                           </button>
                         ))}
                       </div>

@@ -85,13 +85,16 @@ export function inferCanonicalArtStyle(
     return { fr: '2D Dessiné à la main', en: '2D Hand-drawn' };
   }
 
-  // 7. Détection Contexte 3D réel (avec délimiteurs de mots \b3d\b)
+  // 7. Détection Contexte 3D réel (avec délimiteurs de mots \b3d\b ou indices contextuels 3D)
   const has3DContext =
     /\b3d\b/.test(lower) ||
-    /\b(third-person|first-person)\b/.test(lower) ||
-    genres.some((g) => ['3D', 'Action 3D', 'Aventure 3D'].includes(g));
+    /\b(third-person|third person|first-person|first person|open world|monde ouvert|action-adventure|stealth|infiltration|assassin|pirate|naval|realistic|moteur 3d|unreal|cryengine|frostbite|driving|course 3d|fps)\b/.test(lower) ||
+    genres.some((g) => ['3D', 'Action 3D', 'Aventure 3D', 'FPS', 'Course', 'Simulation'].includes(g));
 
   if (has3DContext && !hasExplicit2D) {
+    if (/\b(realistic|photorealist|photorealistic|réaliste|cinematic|cinématique|aaa|blockbuster)\b/.test(lower)) {
+      return { fr: '3D Réaliste', en: 'Realistic 3D' };
+    }
     return { fr: '3D Stylisée', en: 'Stylized 3D' };
   }
 
@@ -100,8 +103,13 @@ export function inferCanonicalArtStyle(
     return { fr: '2D Dessiné à la main', en: '2D Hand-drawn' };
   }
 
-  // Défaut : Pixel Art (signature historique du jeu indépendant)
-  return { fr: 'Pixel Art', en: 'Pixel Art' };
+  // Si le contexte n'a aucune mention de pixel art ni 2D, mais des genres d'action/aventure
+  if (genres.some((g) => ['Action', 'Aventure', 'RPG', 'Stratégie'].includes(g))) {
+    return { fr: '3D Stylisée', en: 'Stylized 3D' };
+  }
+
+  // Défaut : 2D Dessiné à la main ou 3D Stylisée
+  return { fr: '3D Stylisée', en: 'Stylized 3D' };
 }
 
 /**
@@ -118,7 +126,8 @@ export function inferCanonicalCamera(
   if (
     /\b(first-person|first person|première personne|fps|fpv|vue subjective)\b/.test(
       lower
-    )
+    ) ||
+    genres.includes('FPS')
   ) {
     return { fr: 'Première personne', en: 'First-Person' };
   }
@@ -143,23 +152,126 @@ export function inferCanonicalCamera(
   if (
     /\b(side-scroller|sidescroller|platformer|plateforme|metroidvania|vue de côté|défilement horizontal)\b/.test(
       lower
-    ) ||
-    /\b2d\b/.test(lower)
+    )
   ) {
     return { fr: 'Vue de côté 2D', en: '2D Side-scroller' };
   }
 
   // 5. Troisième personne
   if (
-    /\b(third-person|third person|troisième personne|tps|over-the-shoulder|3d platformer)\b/.test(
+    /\b(third-person|third person|troisième personne|tps|over-the-shoulder|3d platformer|open world|monde ouvert|action-adventure|stealth|infiltration|assassin|pirate|naval)\b/.test(
       lower
     ) ||
-    /\b3d\b/.test(lower)
+    /\b3d\b/.test(lower) ||
+    genres.some((g) => ['Action', 'Aventure', 'RPG'].includes(g))
   ) {
     return { fr: 'Troisième personne', en: 'Third-Person' };
   }
 
-  return { fr: 'Vue de côté 2D', en: '2D Side-scroller' };
+  if (/\b2d\b/.test(lower)) {
+    return { fr: 'Vue de côté 2D', en: '2D Side-scroller' };
+  }
+
+  return { fr: 'Troisième personne', en: 'Third-Person' };
+}
+
+export interface NonIndieCheckResult {
+  isLikelyNonIndie: boolean;
+  reason?: string;
+  majorEntity?: string;
+}
+
+/**
+ * 🛡️ Détection souveraine des jeux majeurs / AAA / non-indépendants
+ * Avertit les administrateurs si une suggestion concerne un mastodonte de l'industrie.
+ */
+export function detectNonIndieStatus(input: {
+  title?: string;
+  developer?: string;
+  publisher?: string;
+  comment?: string;
+  genres?: string[];
+}): NonIndieCheckResult {
+  const text = `${input.title || ''} ${input.developer || ''} ${input.publisher || ''} ${input.comment || ''}`.toLowerCase();
+
+  // 1. Grands éditeurs et conglomérats AAA
+  const MAJOR_PUBLISHERS = [
+    { name: 'Ubisoft', regex: /\bubisoft\b/i },
+    { name: 'Electronic Arts (EA)', regex: /\b(electronic arts|ea games|ea sports|\bea\b)\b/i },
+    { name: 'Activision / Blizzard', regex: /\b(activision|blizzard|king|treyarch|infinity ward)\b/i },
+    { name: 'Sony / PlayStation Studios', regex: /\b(sony interactive|playstation studios|naughty dog|insomniac games|santa monica studio|guerrilla games|sucker punch)\b/i },
+    { name: 'Microsoft / Xbox Game Studios', regex: /\b(xbox game studios|microsoft studios|bethesda|zenimax|343 industries|turn 10|playground games|the coalition)\b/i },
+    { name: 'Take-Two / 2K / Rockstar', regex: /\b(take-two|take two|rockstar games|2k games|2k sports|hangar 13|firaxis)\b/i },
+    { name: 'Square Enix', regex: /\bsquare enix\b/i },
+    { name: 'Capcom', regex: /\bcapcom\b/i },
+    { name: 'Bandai Namco', regex: /\bbandai namco\b/i },
+    { name: 'Warner Bros. Games', regex: /\b(warner bros|wb games|netherrealm|rocksteady)\b/i },
+    { name: 'Konami', regex: /\bkonami\b/i },
+    { name: 'Sega', regex: /\b(sega|atlus|creative assembly)\b/i },
+    { name: 'Valve', regex: /\bvalve\b/i },
+    { name: 'CD Projekt', regex: /\bcd projekt\b/i },
+    { name: 'Riot Games', regex: /\briot games\b/i },
+    { name: 'Epic Games', regex: /\bepic games\b/i },
+    { name: 'Nintendo', regex: /\bnintendo\b/i },
+    { name: 'Tencent', regex: /\btencent\b/i },
+    { name: 'NetEase', regex: /\bnetease\b/i },
+    { name: 'Krafton', regex: /\bkrafton\b/i },
+  ];
+
+  for (const pub of MAJOR_PUBLISHERS) {
+    if (pub.regex.test(text)) {
+      return {
+        isLikelyNonIndie: true,
+        reason: `Éditeur / Studio majeur identifié (${pub.name})`,
+        majorEntity: pub.name,
+      };
+    }
+  }
+
+  // 2. Franchises et licences AAA mondiales
+  const MAJOR_FRANCHISES = [
+    { franchise: "Assassin's Creed", regex: /\bassassin'?s\s*creed\b/i },
+    { franchise: 'Far Cry', regex: /\bfar\s*cry\b/i },
+    { franchise: 'Watch Dogs', regex: /\bwatch\s*dogs\b/i },
+    { franchise: 'Tom Clancy', regex: /\btom\s*clancy\b/i },
+    { franchise: 'Call of Duty', regex: /\bcall\s*of\s*duty|\bcod\b/i },
+    { franchise: 'Battlefield', regex: /\bbattlefield\b/i },
+    { franchise: 'FIFA / EA Sports FC', regex: /\b(fifa|ea sports fc)\b/i },
+    { franchise: 'Grand Theft Auto (GTA)', regex: /\b(grand\s*theft\s*auto|\bgta\b)\b/i },
+    { franchise: 'Red Dead Redemption', regex: /\bred\s*dead\b/i },
+    { franchise: 'The Elder Scrolls / Skyrim', regex: /\b(elder\s*scrolls|skyrim|oblivion|morrowind)\b/i },
+    { franchise: 'Fallout', regex: /\bfallout\b/i },
+    { franchise: 'Final Fantasy', regex: /\bfinal\s*fantasy\b/i },
+    { franchise: 'Resident Evil', regex: /\bresident\s*evil\b/i },
+    { franchise: 'Monster Hunter', regex: /\bmonster\s*hunter\b/i },
+    { franchise: 'Street Fighter', regex: /\bstreet\s*fighter\b/i },
+    { franchise: 'Tekken', regex: /\btekken\b/i },
+    { franchise: 'Halo', regex: /\bhalo\b/i },
+    { franchise: 'Forza', regex: /\bforza\b/i },
+    { franchise: 'God of War', regex: /\bgod\s*of\s*war\b/i },
+    { franchise: 'Uncharted', regex: /\buncharted\b/i },
+    { franchise: 'The Last of Us', regex: /\bthe\s*last\s*of\s*us\b/i },
+    { franchise: 'Cyberpunk 2077', regex: /\bcyberpunk\s*2077\b/i },
+    { franchise: 'The Witcher', regex: /\bthe\s*witcher\b/i },
+    { franchise: 'Borderlands', regex: /\bborderlands\b/i },
+    { franchise: 'BioShock', regex: /\bbioshock\b/i },
+    { franchise: 'Diablo', regex: /\bdiablo\b/i },
+    { franchise: 'World of Warcraft', regex: /\bworld\s*of\s*warcraft\b/i },
+    { franchise: 'Star Wars AAA', regex: /\bstar\s*wars\b/i },
+    { franchise: 'Hogwarts Legacy', regex: /\bhogwarts\s*legacy\b/i },
+  ];
+
+  for (const fr of MAJOR_FRANCHISES) {
+    if (fr.regex.test(text)) {
+      return {
+        isLikelyNonIndie: true,
+        reason: `Franchise AAA majeure reconnue (${fr.franchise})`,
+        majorEntity: fr.franchise,
+      };
+    }
+  }
+
+  return { isLikelyNonIndie: false };
 }
 
 /**

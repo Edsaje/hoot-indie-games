@@ -6,6 +6,7 @@ export interface UserAccountContextType {
   profile: UserProfile;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isModerator: boolean;
   isCreator: boolean;
   isSupabaseActive: boolean;
   updateProfile: (fields: Partial<UserProfile>) => void;

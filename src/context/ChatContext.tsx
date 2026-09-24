@@ -18,7 +18,10 @@ export interface ChatContextType {
     text: string,
     category?: FeedbackCategory,
     scoreData?: { game: string; score: number; mode: string } | null
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string; warning?: string }>;
+  deleteMessage: (messageId: string) => Promise<{ success: boolean; message?: string }>;
+  moderationWarning: string | null;
+  setModerationWarning: (warning: string | null) => void;
   refreshMessages: () => Promise<void>;
 }
 

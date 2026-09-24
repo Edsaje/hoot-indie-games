@@ -667,5 +667,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzc5MTY4NzQucG5n/315x250%23c/Nu7e5v.png"
     ],
     "dateAdded": "2026-09-23"
+  },
+  {
+    "id": "itch-serenitrove",
+    "title": "Serenitrove",
+    "developer": "alfredncy",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://alfredncy.itch.io/serenitrove",
+    "playInBrowserUrl": "https://alfredncy.itch.io/serenitrove",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Dig, upgrade, expand... then dig deeper!",
+      "en": "Dig, upgrade, expand... then dig deeper!"
+    },
+    "description": {
+      "fr": "Dig, upgrade, expand... then dig deeper!",
+      "en": "Dig, upgrade, expand... then dig deeper!"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI1MDU0ODE5LnBuZw==/315x250%23c/oNTRwi.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI1MDU0ODE5LnBuZw==/315x250%23c/oNTRwi.png"
+    ],
+    "dateAdded": "2026-09-24"
+  },
+  {
+    "id": "itch-doki-doki-literature-club",
+    "title": "Doki Doki Literature Club!",
+    "developer": "teamsalvato",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://teamsalvato.itch.io/ddlc",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Will you write the way into her heart?",
+      "en": "Will you write the way into her heart?"
+    },
+    "description": {
+      "fr": "Will you write the way into her heart?",
+      "en": "Will you write the way into her heart?"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTA2NTk5LzU4NjAxMi5naWY=/original/%2Fz0let.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvMTA2NTk5LzU4NjAxMi5naWY=/original/%2Fz0let.gif"
+    ],
+    "dateAdded": "2026-09-24"
   }
 ];

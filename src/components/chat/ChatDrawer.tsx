@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   X,
@@ -10,7 +10,14 @@ import {
   Trophy,
   Smile,
   ShieldAlert,
+  Shield,
+  ShieldCheck,
+  Trash2,
   ChevronDown,
+  LogIn,
+  RotateCw,
+  ExternalLink,
+  Lock,
 } from 'lucide-react';
 import { useChat } from '../../context/useChat';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -18,6 +25,10 @@ import {
   CHAT_CHANNELS,
   FEEDBACK_CATEGORIES,
   type FeedbackCategory,
+  type ChatModerationLog,
+  fetchChatModerationLogs,
+  dismissChatModerationLog,
+  checkTextForPhishing,
 } from '../../services/chatService';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { getFrameDefinition } from '../../utils/featherEconomy';
@@ -25,7 +36,12 @@ import { soundFx } from '../../utils/audio';
 
 const QUICK_EMOJIS = ['🦉', '🎮', '💎', '🏆', '✨', '❤️', '🔥', '👏', '👋', '🎉'];
 
-export const ChatDrawer: React.FC = () => {
+export interface ChatDrawerProps {
+  onOpenAuth?: () => void;
+  isModalActive?: boolean;
+}
+
+export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActive = false }) => {
   const { t } = useTranslation();
   const {
     isOpen,
@@ -39,14 +55,70 @@ export const ChatDrawer: React.FC = () => {
     unreadCount,
     cooldownSeconds,
     sendMessage,
+    deleteMessage,
+    moderationWarning,
+    setModerationWarning,
   } = useChat();
 
-  const { profile } = useUserAccount();
+  const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
+  const canModerate = Boolean(
+    isAdmin || isCreator || isModerator || profile.role === 'moderator' || profile.role === 'admin'
+  );
 
   const [inputText, setInputText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<FeedbackCategory>('suggestion');
   const [showChannelDropdown, setShowChannelDropdown] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Guide de prévention & anti-hameçonnage
+  const [showSecurityGuide, setShowSecurityGuide] = useState(false);
+
+  // Confirmation de redirection pour lien externe sécurisé
+  const [externalLinkToConfirm, setExternalLinkToConfirm] = useState<string | null>(null);
+
+  // Vue du Journal de modération anti-injure et anti-phishing
+  const [showModLogs, setShowModLogs] = useState(false);
+  const [modLogs, setModLogs] = useState<ChatModerationLog[]>([]);
+  const [loadingModLogs, setLoadingModLogs] = useState(false);
+
+  const loadModLogs = useCallback(async () => {
+    if (!canModerate) return;
+    setLoadingModLogs(true);
+    const res = await fetchChatModerationLogs({
+      steamId: profile.steam?.steamId,
+      userId: profile.id,
+    });
+    if (res.success && Array.isArray(res.logs)) {
+      setModLogs(res.logs);
+    }
+    setLoadingModLogs(false);
+  }, [canModerate, profile.steam?.steamId, profile.id]);
+
+  useEffect(() => {
+    if (showModLogs) {
+      loadModLogs();
+    }
+  }, [showModLogs, loadModLogs]);
+
+  const handleDismissLog = async (logId: string) => {
+    soundFx.playClick();
+    await dismissChatModerationLog(logId, {
+      steamId: profile.steam?.steamId,
+      userId: profile.id,
+    });
+    setModLogs((prev) => prev.filter((l) => l.id !== logId));
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    soundFx.playClick();
+    if (window.confirm('Voulez-vous retirer ce message de la discussion (action modérateur) ?')) {
+      const res = await deleteMessage(messageId);
+      if (!res.success && res.message) {
+        setErrorMessage(res.message);
+        setTimeout(() => setErrorMessage(null), 4000);
+      }
+    }
+  };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -70,14 +142,36 @@ export const ChatDrawer: React.FC = () => {
 
   const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!inputText.trim() || isSending || cooldownSeconds > 0) return;
+    if (!isAuthenticated) {
+      if (onOpenAuth) {
+        onOpenAuth();
+      } else {
+        window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+      }
+      return;
+    }
+    const trimmed = inputText.trim();
+    if (!trimmed || isSending || cooldownSeconds > 0) return;
+
+    // Pré-validation client-side anti-hameçonnage
+    const clientPhishingCheck = checkTextForPhishing(trimmed, canModerate);
+    if (clientPhishingCheck.isSuspicious) {
+      soundFx.playError();
+      setModerationWarning(
+        clientPhishingCheck.warning ||
+          '🛡️ Bouclier Sécurité & Anti-Hameçonnage : Ce message contient un lien ou motif suspect non autorisé.'
+      );
+      return;
+    }
 
     setErrorMessage(null);
     const categoryToSend = currentChannel === 'feedback' ? selectedCategory : undefined;
 
-    const res = await sendMessage(inputText.trim(), categoryToSend);
+    const res = await sendMessage(trimmed, categoryToSend);
     if (res.success) {
       setInputText('');
+    } else if (res.warning) {
+      soundFx.playError();
     } else if (res.error) {
       setErrorMessage(res.error);
       soundFx.playError();
@@ -128,13 +222,42 @@ export const ChatDrawer: React.FC = () => {
     };
   };
 
+  // Rendu sécurisé des messages avec confirmation sur les liens externes
+  const renderMessageContent = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <button
+            key={index}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              soundFx.playClick();
+              setExternalLinkToConfirm(part);
+            }}
+            className="text-amber-300 underline hover:text-amber-200 transition-colors inline-flex items-center gap-0.5 break-all cursor-pointer font-medium"
+            title="Lien externe - Cliquez pour vérifier la redirection sécurisée"
+          >
+            <span>{part}</span>
+            <ExternalLink className="w-2.5 h-2.5 shrink-0 inline ml-0.5 opacity-80" />
+          </button>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
+
   // 1. Bouton flottant détaché en bas à droite lorsque la fenêtre est fermée / réduite
   if (!isOpen) {
+    if (isModalActive) return null;
     return (
       <button
         type="button"
         onClick={() => openChat()}
-        className="fixed bottom-[max(1rem,env(safe-area-inset-bottom,0px))] right-4 sm:bottom-6 sm:right-6 z-[100] px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-[#06241b]/95 hover:bg-[#093a2b] border-2 border-[#78350f] hover:border-amber-400 text-amber-200 font-bold text-xs sm:text-sm shadow-2xl flex items-center gap-2 backdrop-blur-md transition-all hover:scale-105 active:scale-95 group cursor-pointer"
+        className="fixed bottom-[max(1rem,env(safe-area-inset-bottom,0px))] right-4 sm:bottom-6 sm:right-6 z-[50] px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-[#06241b]/95 hover:bg-[#093a2b] border-2 border-[#78350f] hover:border-amber-400 text-amber-200 font-bold text-xs sm:text-sm shadow-2xl flex items-center gap-2 backdrop-blur-md transition-all hover:scale-105 active:scale-95 group cursor-pointer"
         title={t('chat.open')}
         aria-label={t('chat.discussion')}
       >
@@ -154,7 +277,7 @@ export const ChatDrawer: React.FC = () => {
 
   // 2. Fenêtre de discussion détachée — Rectangle flottant en bas à droite
   return (
-    <div className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] right-3 sm:bottom-6 sm:right-6 z-[120] w-[calc(100vw-1.5rem)] sm:w-[420px] max-w-[440px] h-[540px] max-h-[calc(100dvh-4.5rem-env(safe-area-inset-bottom,0px))] rounded-2xl bg-[#04120e] text-[#f1f5f9] border-2 border-[#78350f] shadow-[0_12px_45px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div className={`fixed bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] right-3 sm:bottom-6 sm:right-6 z-[55] w-[calc(100vw-1.5rem)] sm:w-[420px] max-w-[440px] h-[540px] max-h-[calc(100dvh-4.5rem-env(safe-area-inset-bottom,0px))] rounded-2xl bg-[#04120e] text-[#f1f5f9] border-2 border-[#78350f] shadow-[0_12px_45px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300 ${isModalActive ? 'opacity-20 pointer-events-none' : ''}`}>
       {/* Entête avec Titre "Discussion", Sélecteur de Canaux & Commandes Réduire / Fermer */}
       <div className="p-3 bg-[#061e16] border-b border-[#059669]/30 flex flex-col gap-2 shrink-0">
         <div className="flex items-center justify-between">
@@ -173,10 +296,27 @@ export const ChatDrawer: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1">
+            {/* Bouton Journal de Modération (si admin ou modérateur) */}
+            {canModerate && (
+              <button
+                type="button"
+                onClick={() => setShowModLogs((prev) => !prev)}
+                className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer ${
+                  showModLogs
+                    ? 'bg-blue-600/30 text-blue-300 border border-blue-400/50'
+                    : 'text-blue-300/80 hover:text-white hover:bg-blue-900/30'
+                }`}
+                title="Journal des alertes de modération anti-injure"
+              >
+                <Shield className="w-3.5 h-3.5 text-blue-400" />
+                <span className="text-[10px] hidden sm:inline">Modération</span>
+              </button>
+            )}
+
             {/* Bouton Réduire */}
             <button
               onClick={closeChat}
-              className="p-1 rounded-lg text-emerald-300/80 hover:text-white hover:bg-emerald-800/40 transition-colors"
+              className="p-1 rounded-lg text-emerald-300/80 hover:text-white hover:bg-emerald-800/40 transition-colors cursor-pointer"
               title={t('chat.minimize')}
               aria-label={t('chat.minimize')}
             >
@@ -186,7 +326,7 @@ export const ChatDrawer: React.FC = () => {
             {/* Bouton Fermer */}
             <button
               onClick={closeChat}
-              className="p-1 rounded-lg text-emerald-300/80 hover:text-white hover:bg-emerald-800/40 transition-colors"
+              className="p-1 rounded-lg text-emerald-300/80 hover:text-white hover:bg-emerald-800/40 transition-colors cursor-pointer"
               title={t('chat.close')}
               aria-label={t('chat.close')}
             >
@@ -291,140 +431,316 @@ export const ChatDrawer: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Bandeau de Prévention Sécurité & Anti-Hameçonnage */}
+        <div className="px-2.5 py-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <p className="text-[11px] text-emerald-200/90 truncate">
+              <span className="font-bold text-emerald-300">Sécurité : </span>
+              Ne partagez jamais vos mots de passe ou liens de trade.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              setShowSecurityGuide(true);
+            }}
+            className="text-[10px] font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded-lg whitespace-nowrap transition cursor-pointer shrink-0"
+          >
+            Vigilance
+          </button>
+        </div>
       </div>
 
-      {/* Fil des messages */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
-        {isLoading && messages.length === 0 ? (
-          <div className="flex items-center justify-center h-36 text-emerald-400 text-xs animate-pulse">
-            Chargement de la discussion...
-          </div>
-        ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 text-center text-slate-400 p-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-900/30 border border-emerald-600/30 flex items-center justify-center text-xl mb-1.5">
-              {currentChannelInfo.icon}
+      {/* Vue modérateur : Journal des incidents anti-injure & anti-phishing OU Fil des messages */}
+      {showModLogs ? (
+        <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-[#020d0a] flex flex-col">
+          <div className="flex items-center justify-between pb-2 border-b border-blue-500/30">
+            <div className="flex items-center gap-1.5 text-blue-300 font-bold text-xs">
+              <Shield className="w-4 h-4 text-blue-400" />
+              <span>Modération & Sécurité ({modLogs.length})</span>
             </div>
-            <p className="font-bold text-amber-200 text-xs">
-              Soyez le premier à participer !
-            </p>
-            <p className="text-[11px] text-slate-400 mt-0.5 max-w-xs leading-relaxed">
-              {currentChannel === 'feedback'
-                ? 'Une suggestion, un coup de cœur ou un signalement ? Partagez-le avec l\'équipe !'
-                : 'Partagez vos impressions et discutez entre explorateurs de jeux indépendants.'}
-            </p>
-          </div>
-        ) : (
-          messages.map((msg) => {
-            const isMe = msg.username === profile.username;
-            const avatar = getAvatarInfo(msg.avatarId);
-            const frameDef = getFrameDefinition(msg.activeFrame);
-
-            return (
-              <div
-                key={msg.id}
-                className={`flex items-start gap-2 group transition-opacity ${
-                  isMe ? 'flex-row-reverse' : ''
-                }`}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={loadModLogs}
+                disabled={loadingModLogs}
+                className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 text-xs cursor-pointer"
+                title="Rafraîchir"
               >
-                {/* Avatar avec cadre éventuel */}
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 bg-gradient-to-br ${
-                    avatar.bgGradient
-                  } ${frameDef.borderClass} ${frameDef.glowClass || ''} shadow-md overflow-hidden`}
-                  title={avatar.name}
-                >
-                  {avatar.imageUrl ? (
-                    <img
-                      src={avatar.imageUrl}
-                      alt={avatar.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span>{avatar.emoji}</span>
-                  )}
-                </div>
+                <RotateCw className={`w-3.5 h-3.5 ${loadingModLogs ? 'animate-spin' : ''}`} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowModLogs(false)}
+                className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-semibold cursor-pointer"
+              >
+                Retour tchat
+              </button>
+            </div>
+          </div>
 
-                {/* Corps du message */}
+          {loadingModLogs ? (
+            <div className="flex items-center justify-center h-40 text-blue-400 text-xs animate-pulse">
+              Chargement des signalements...
+            </div>
+          ) : modLogs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-48 text-center text-slate-400 p-3">
+              <div className="w-10 h-10 rounded-full bg-emerald-950/60 border border-emerald-500/40 flex items-center justify-center text-xl mb-1.5">
+                🕊️
+              </div>
+              <p className="font-bold text-emerald-300 text-xs">Aucun incident de modération</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Le tchat est sécurisé, courtois et respectueux.</p>
+            </div>
+          ) : (
+            modLogs.map((log) => {
+              const isPhishing = log.type === 'phishing_blocked' || log.id.startsWith('mod_phish_');
+              return (
                 <div
-                  className={`flex flex-col max-w-[84%] ${
-                    isMe ? 'items-end' : 'items-start'
+                  key={log.id}
+                  className={`p-2.5 rounded-xl border text-xs flex flex-col gap-1.5 ${
+                    isPhishing ? 'bg-rose-950/20 border-rose-500/40' : 'bg-[#03150f] border-blue-500/30'
                   }`}
                 >
-                  {/* Header info utilisateur */}
-                  <div className="flex items-center gap-1.5 mb-0.5 px-0.5 flex-wrap">
-                    <span className="font-bold text-[11px] text-amber-100 flex items-center gap-1">
-                      {msg.username}
-                      {msg.isCreator && (
-                        <span
-                          className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold"
-                          title="Créateur & Développeur officiel"
-                        >
-                          <Crown className="w-2.5 h-2.5 text-amber-400" />
-                          Créateur
+                  <div className="flex items-center justify-between gap-1 flex-wrap">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-bold text-amber-200">{log.username}</span>
+                      <span className="text-[10px] text-slate-400 font-mono">#{log.channel}</span>
+                      <span className="text-[10px] text-slate-500">
+                        {new Date(log.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      {isPhishing ? (
+                        <span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 flex items-center gap-0.5">
+                          <ShieldAlert className="w-2.5 h-2.5" />
+                          <span>Phishing bloqué</span>
+                        </span>
+                      ) : (
+                        <span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                          Propos inappropriés
                         </span>
                       )}
-                    </span>
-
-                    {msg.title && (
-                      <span className="text-[10px] text-emerald-400/80 truncate max-w-[100px]">
-                        • {msg.title}
-                      </span>
-                    )}
-
-                    <span className="text-[10px] text-slate-500">
-                      {formatTimestamp(msg.timestamp)}
-                    </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDismissLog(log.id)}
+                      className="text-[10px] text-slate-400 hover:text-slate-100 bg-white/5 hover:bg-white/10 px-1.5 py-0.5 rounded transition cursor-pointer"
+                      title="Archiver ce rapport"
+                    >
+                      Archiver
+                    </button>
                   </div>
 
-                  {/* Badge catégorie pour les retours */}
-                  {msg.channel === 'feedback' && msg.category && (
-                    <div className="mb-0.5">
-                      {(() => {
-                        const catInfo = FEEDBACK_CATEGORIES.find((c) => c.id === msg.category);
-                        return (
-                          <span
-                            className={`text-[9px] px-1.5 py-0.2 rounded-full border inline-flex items-center gap-1 ${
-                              catInfo?.badgeColor || 'bg-emerald-900/40 text-emerald-300'
-                            }`}
-                          >
-                            <span>{catInfo?.icon}</span>
-                            <span className="font-semibold">{catInfo?.label}</span>
-                          </span>
-                        );
-                      })()}
-                    </div>
-                  )}
-
-                  {/* Bulle de texte */}
                   <div
-                    className={`px-3 py-1.5 rounded-2xl text-xs leading-relaxed shadow border ${
-                      isMe
-                        ? 'bg-[#064e3b]/90 text-emerald-50 border-[#059669]/60 rounded-tr-none'
-                        : msg.isCreator
-                        ? 'bg-[#291b07]/90 text-amber-100 border-amber-500/50 rounded-tl-none ring-1 ring-amber-500/30'
-                        : 'bg-[#061e16]/90 text-slate-200 border-[#78350f]/40 rounded-tl-none'
+                    className={`text-[11px] px-2 py-1 rounded-lg ${
+                      isPhishing
+                        ? 'text-rose-200 bg-rose-950/60 border border-rose-500/40'
+                        : 'text-amber-200 bg-amber-950/40 border border-amber-500/30'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                    <span className="font-bold">
+                      {isPhishing ? 'Motifs d\'hameçonnage : ' : 'Mots détectés : '}
+                    </span>
+                    {log.flaggedWords.join(', ')}
+                  </div>
 
-                    {/* Carte de score partagé éventuelle */}
-                    {msg.scoreData && (
-                      <div className="mt-1.5 p-1.5 rounded-lg bg-black/40 border border-amber-500/30 flex items-center gap-1.5 text-[11px] text-amber-200">
-                        <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                        <div className="truncate">
-                          <span className="font-bold text-white">{msg.scoreData.game}</span> —{' '}
-                          <span>Score : {msg.scoreData.score}</span>
-                        </div>
-                      </div>
-                    )}
+                  <div className="text-[11px] text-slate-300 bg-black/40 p-2 rounded-lg break-words">
+                    <span className="text-[10px] text-slate-500 block mb-0.5 font-bold">
+                      {isPhishing ? 'Message neutralisé :' : 'Message bloqué :'}
+                    </span>
+                    "{log.originalText}"
                   </div>
                 </div>
+              );
+            })
+          )}
+        </div>
+      ) : (
+        /* Fil des messages */
+        <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
+          {isLoading && messages.length === 0 ? (
+            <div className="flex items-center justify-center h-36 text-emerald-400 text-xs animate-pulse">
+              Chargement de la discussion...
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-48 text-center text-slate-400 p-3">
+              <div className="w-10 h-10 rounded-full bg-emerald-900/30 border border-emerald-600/30 flex items-center justify-center text-xl mb-1.5">
+                {currentChannelInfo.icon}
               </div>
-            );
-          })
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+              <p className="font-bold text-amber-200 text-xs">
+                Soyez le premier à participer !
+              </p>
+              <p className="text-[11px] text-slate-400 mt-0.5 max-w-xs leading-relaxed">
+                {currentChannel === 'feedback'
+                  ? 'Une suggestion, un coup de cœur ou un signalement ? Partagez-le avec l\'équipe !'
+                  : 'Partagez vos impressions et discutez entre explorateurs de jeux indépendants.'}
+              </p>
+            </div>
+          ) : (
+            messages.map((msg) => {
+              const isMe = msg.username === profile.username;
+              const avatar = getAvatarInfo(msg.avatarId);
+              const frameDef = getFrameDefinition(msg.activeFrame);
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex items-start gap-2 group transition-opacity ${
+                    isMe ? 'flex-row-reverse' : ''
+                  }`}
+                >
+                  {/* Avatar avec cadre éventuel */}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 bg-gradient-to-br ${
+                      avatar.bgGradient
+                    } ${frameDef.borderClass} ${frameDef.glowClass || ''} shadow-md overflow-hidden`}
+                    title={avatar.name}
+                  >
+                    {avatar.imageUrl ? (
+                      <img
+                        src={avatar.imageUrl}
+                        alt={avatar.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span>{avatar.emoji}</span>
+                    )}
+                  </div>
+
+                  {/* Corps du message */}
+                  <div
+                    className={`flex flex-col max-w-[84%] ${
+                      isMe ? 'items-end' : 'items-start'
+                    }`}
+                  >
+                    {/* Header info utilisateur */}
+                    <div className="flex items-center gap-1.5 mb-0.5 px-0.5 flex-wrap">
+                      <span className="font-bold text-[11px] text-amber-100 flex items-center gap-1">
+                        {msg.username}
+                        {msg.isCreator && (
+                          <span
+                            className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold"
+                            title="Créateur & Développeur officiel"
+                          >
+                            <Crown className="w-2.5 h-2.5 text-amber-400" />
+                            Créateur
+                          </span>
+                        )}
+                        {msg.isModerator && !msg.isCreator && (
+                          <span
+                            className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-blue-500/20 text-blue-300 border border-blue-400/50 font-bold"
+                            title="Modérateur officiel"
+                          >
+                            <Shield className="w-2.5 h-2.5 text-blue-400" />
+                            Modérateur
+                          </span>
+                        )}
+                      </span>
+
+                      {msg.title && (
+                        <span className="text-[10px] text-emerald-400/80 truncate max-w-[100px]">
+                          • {msg.title}
+                        </span>
+                      )}
+
+                      <span className="text-[10px] text-slate-500">
+                        {formatTimestamp(msg.timestamp)}
+                      </span>
+                    </div>
+
+                    {/* Badge catégorie pour les retours */}
+                    {msg.channel === 'feedback' && msg.category && (
+                      <div className="mb-0.5">
+                        {(() => {
+                          const catInfo = FEEDBACK_CATEGORIES.find((c) => c.id === msg.category);
+                          return (
+                            <span
+                              className={`text-[9px] px-1.5 py-0.2 rounded-full border inline-flex items-center gap-1 ${
+                                catInfo?.badgeColor || 'bg-emerald-900/40 text-emerald-300'
+                              }`}
+                            >
+                              <span>{catInfo?.icon}</span>
+                              <span className="font-semibold">{catInfo?.label}</span>
+                            </span>
+                          );
+                        })()}
+                      </div>
+                    )}
+
+                    {/* Bulle de texte et action modération */}
+                    <div className="flex items-center gap-1 group/bubble">
+                      <div
+                        className={`px-3 py-1.5 rounded-2xl text-xs leading-relaxed shadow border ${
+                          msg.isDeleted
+                            ? 'bg-[#020d0a]/80 text-slate-400 border-slate-700/40 italic'
+                            : isMe
+                            ? 'bg-[#064e3b]/90 text-emerald-50 border-[#059669]/60 rounded-tr-none'
+                            : msg.isCreator
+                            ? 'bg-[#291b07]/90 text-amber-100 border-amber-500/50 rounded-tl-none ring-1 ring-amber-500/30'
+                            : msg.isModerator
+                            ? 'bg-[#091b2c]/90 text-blue-100 border-blue-500/40 rounded-tl-none'
+                            : 'bg-[#061e16]/90 text-slate-200 border-[#78350f]/40 rounded-tl-none'
+                        }`}
+                      >
+                        <p className="whitespace-pre-wrap break-words">
+                          {msg.isDeleted ? msg.text : renderMessageContent(msg.text)}
+                        </p>
+
+                        {/* Carte de score partagé éventuelle */}
+                        {msg.scoreData && !msg.isDeleted && (
+                          <div className="mt-1.5 p-1.5 rounded-lg bg-black/40 border border-amber-500/30 flex items-center gap-1.5 text-[11px] text-amber-200">
+                            <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                            <div className="truncate">
+                              <span className="font-bold text-white">{msg.scoreData.game}</span> —{' '}
+                              <span>Score : {msg.scoreData.score}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {canModerate && !msg.isDeleted && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteMessage(msg.id)}
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded transition cursor-pointer self-center shrink-0"
+                          title="Retirer ce message (Action Modérateur)"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      )}
+
+      {/* Avertissement visible de modération (anti-injure ou anti-phishing) */}
+      {moderationWarning && (
+        <div className="p-2.5 bg-amber-950/95 border-t border-amber-500/60 text-amber-200 text-xs flex items-start justify-between gap-2 animate-in fade-in shrink-0">
+          <div className="flex items-start gap-2">
+            <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-amber-300">Alerte de Sécurité & Modération</p>
+              <p className="text-[11px] text-amber-100/90 leading-tight mt-0.5">
+                {moderationWarning}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setModerationWarning(null)}
+            className="text-amber-400 hover:text-white p-1 rounded hover:bg-amber-900/40 cursor-pointer"
+            title="Fermer l'avertissement"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Barre d'erreur éventuelle */}
       {errorMessage && (
@@ -434,69 +750,238 @@ export const ChatDrawer: React.FC = () => {
         </div>
       )}
 
-      {/* Barre de saisie inférieure */}
-      <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
-        {/* Barre de réactions rapides / emojis */}
-        <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none">
-          <span className="text-[10px] text-emerald-400/70 shrink-0 flex items-center gap-0.5 mr-0.5">
-            <Smile className="w-3 h-3" />
-          </span>
-          {QUICK_EMOJIS.map((emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              onClick={() => handleAddEmoji(emoji)}
-              className="w-7 h-7 sm:w-6 sm:h-6 rounded-md bg-[#020d0a] hover:bg-emerald-900/60 border border-[#78350f]/40 text-xs flex items-center justify-center shrink-0 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
-              title={`Insérer ${emoji}`}
-            >
-              {emoji}
-            </button>
-          ))}
-        </div>
-
-        {/* Formulaire d'envoi */}
-        <form onSubmit={handleSend} className="flex items-center gap-1.5">
-          <div className="relative flex-1">
-            <input
-              ref={inputRef}
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              maxLength={350}
-              placeholder={
-                currentChannel === 'feedback'
-                  ? t('chat.feedbackPlaceholder')
-                  : `${t('chat.placeholder')}`
-              }
-              className="w-full px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 text-slate-100 text-xs focus:outline-none focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/60 placeholder:text-slate-500"
-            />
-            <span className="absolute right-2 bottom-1.5 text-[9px] text-slate-500">
-              {inputText.length}/350
+      {/* Barre de saisie inférieure ou invite de connexion */}
+      {isAuthenticated ? (
+        <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
+          {/* Barre de réactions rapides / emojis */}
+          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none">
+            <span className="text-[10px] text-emerald-400/70 shrink-0 flex items-center gap-0.5 mr-0.5">
+              <Smile className="w-3 h-3" />
             </span>
+            {QUICK_EMOJIS.map((emoji) => (
+              <button
+                key={emoji}
+                type="button"
+                onClick={() => handleAddEmoji(emoji)}
+                className="w-7 h-7 sm:w-6 sm:h-6 rounded-md bg-[#020d0a] hover:bg-emerald-900/60 border border-[#78350f]/40 text-xs flex items-center justify-center shrink-0 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
+                title={`Insérer ${emoji}`}
+              >
+                {emoji}
+              </button>
+            ))}
           </div>
 
+          {/* Formulaire d'envoi */}
+          <form onSubmit={handleSend} className="flex items-center gap-1.5">
+            <div className="relative flex-1">
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                maxLength={350}
+                placeholder={
+                  currentChannel === 'feedback'
+                    ? t('chat.feedbackPlaceholder')
+                    : `${t('chat.placeholder')}`
+                }
+                className="w-full px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 text-slate-100 text-xs focus:outline-none focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/60 placeholder:text-slate-500"
+              />
+              <span className="absolute right-2 bottom-1.5 text-[9px] text-slate-500">
+                {inputText.length}/350
+              </span>
+            </div>
+
+            <button
+              type="submit"
+              disabled={!inputText.trim() || isSending || cooldownSeconds > 0}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1 transition-all shadow-md shrink-0 cursor-pointer ${
+                !inputText.trim() || isSending || cooldownSeconds > 0
+                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                  : 'bg-gradient-to-r from-emerald-600 to-amber-600 text-white hover:from-emerald-500 hover:to-amber-500 border border-amber-400/50 shadow-emerald-950/40 active:scale-95'
+              }`}
+            >
+              {cooldownSeconds > 0 ? (
+                <span>⏳ {cooldownSeconds}s</span>
+              ) : isSending ? (
+                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span>{t('chat.send')}</span>
+                  <Send className="w-3 h-3" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Note de prévention discrète sous l'input */}
+          <div className="flex items-center justify-between px-1 text-[10px] text-slate-400">
+            <span className="flex items-center gap-1 text-emerald-400/80">
+              <Lock className="w-2.5 h-2.5" />
+              <span>Bouclier anti-hameçonnage actif</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setShowSecurityGuide(true);
+              }}
+              className="hover:text-amber-300 transition-colors underline cursor-pointer"
+            >
+              Règles de sécurité
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="p-3 bg-[#061e16] border-t border-[#059669]/30 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0 text-center sm:text-left">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+              <LogIn className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-200">
+                Mode lecture seule
+              </p>
+              <p className="text-[11px] text-slate-400 leading-tight">
+                Connectez-vous pour envoyer des messages et échanger avec la communauté.
+              </p>
+            </div>
+          </div>
           <button
-            type="submit"
-            disabled={!inputText.trim() || isSending || cooldownSeconds > 0}
-            className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1 transition-all shadow-md shrink-0 cursor-pointer ${
-              !inputText.trim() || isSending || cooldownSeconds > 0
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                : 'bg-gradient-to-r from-emerald-600 to-amber-600 text-white hover:from-emerald-500 hover:to-amber-500 border border-amber-400/50 shadow-emerald-950/40 active:scale-95'
-            }`}
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              if (onOpenAuth) {
+                onOpenAuth();
+              } else {
+                window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+              }
+            }}
+            className="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer touch-manipulation whitespace-nowrap active:scale-95"
           >
-            {cooldownSeconds > 0 ? (
-              <span>⏳ {cooldownSeconds}s</span>
-            ) : isSending ? (
-              <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                <span>{t('chat.send')}</span>
-                <Send className="w-3 h-3" />
-              </>
-            )}
+            <LogIn className="w-3.5 h-3.5" />
+            <span>Se connecter</span>
           </button>
-        </form>
-      </div>
+        </div>
+      )}
+
+      {/* Volet / Modale du Guide de Prévention & Anti-Hameçonnage */}
+      {showSecurityGuide && (
+        <div className="absolute inset-0 z-50 bg-[#03150f]/95 backdrop-blur-md p-4 flex flex-col justify-between animate-in fade-in overflow-y-auto">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-amber-500/30">
+              <div className="flex items-center gap-2 text-amber-200 font-black text-sm">
+                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span>Guide de Prévention & Sécurité</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSecurityGuide(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer"
+                title="Fermer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              La sécurité est notre priorité absolue sur Hoot Indie Games. Voici les règles essentielles pour protéger votre compte Steam et vos données :
+            </p>
+
+            <div className="space-y-2 text-xs">
+              <div className="p-2.5 rounded-xl bg-black/40 border border-emerald-500/30 flex items-start gap-2.5">
+                <span className="text-base leading-none">🔑</span>
+                <div>
+                  <h5 className="font-bold text-emerald-300">Identifiants 100% Secrets</h5>
+                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                    Ne partagez jamais vos mots de passe, adresses email privées ou codes Steam Guard. L'équipe Hoot ne vous les demandera <strong>JAMAIS</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-black/40 border border-amber-500/30 flex items-start gap-2.5">
+                <span className="text-base leading-none">🚫</span>
+                <div>
+                  <h5 className="font-bold text-amber-300">Zéro Faux Cadeaux ni Tournois</h5>
+                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                    Méfiez-vous des offres de jeux gratuits, cartes cadeaux ou invitations à "voter pour une équipe". Ce sont des tentatives d'escroquerie.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-black/40 border border-blue-500/30 flex items-start gap-2.5">
+                <span className="text-base leading-none">👑</span>
+                <div>
+                  <h5 className="font-bold text-blue-300">Staff Officiel Certifié</h5>
+                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                    Les modérateurs et créateurs officiels possèdent un badge certifié vérifié par le serveur (<code className="text-amber-300 font-bold">👑 Créateur</code> ou <code className="text-blue-300 font-bold">🛡️ Modérateur</code>).
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-black/40 border border-rose-500/30 flex items-start gap-2.5">
+                <span className="text-base leading-none">🛡️</span>
+                <div>
+                  <h5 className="font-bold text-rose-300">Bouclier Automatique & Signalement</h5>
+                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                    Le tchat bloque automatiquement les liens frauduleux et les raccourcisseurs d'URL. Tout abus est archivé pour sanction immédiate.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-white/10 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setShowSecurityGuide(false)}
+              className="w-full py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-amber-600 hover:from-emerald-500 hover:to-amber-500 text-white font-bold text-xs shadow-md transition cursor-pointer"
+            >
+              J'ai compris, merci !
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modale de confirmation de redirection externe sécurisée */}
+      {externalLinkToConfirm && (
+        <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-sm p-4 flex items-center justify-center animate-in fade-in">
+          <div className="bg-[#03150f] border-2 border-amber-500/60 rounded-2xl p-4 max-w-sm w-full space-y-3 shadow-2xl">
+            <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
+              <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0" />
+              <span>Avertissement de Sécurité</span>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Vous vous apprêtez à quitter le sanctuaire Hoot Indie Games pour visiter un site externe :
+            </p>
+            <div className="p-2.5 rounded-xl bg-black/60 border border-white/10 font-mono text-[11px] text-amber-200 break-all select-all">
+              {externalLinkToConfirm}
+            </div>
+            <div className="p-2 rounded-lg bg-rose-950/40 border border-rose-500/30 text-[11px] text-rose-200 leading-tight">
+              ⚠️ <strong>Règle de vigilance :</strong> Ne communiquez jamais votre mot de passe ni vos codes Steam Guard en dehors des domaines officiels.
+            </div>
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setExternalLinkToConfirm(null)}
+                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-semibold cursor-pointer"
+              >
+                Annuler
+              </button>
+              <a
+                href={externalLinkToConfirm}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                onClick={() => setExternalLinkToConfirm(null)}
+                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1 cursor-pointer"
+              >
+                <span>Accéder au site</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

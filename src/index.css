@@ -61,6 +61,18 @@ body {
   background: #f59e0b;
 }
 
+/* Hide scrollbar completely for touch rails & horizontal subnav */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
 /* Glowing Amber Eye Animation */
 @keyframes owlEyeGlow {
   0%, 100% {
@@ -222,35 +234,28 @@ body {
    Retro CRT Scanlines & Cathode Glow Mode (Konami Code Easter Egg)
    ========================================================================== */
 
-body[data-crt="true"] {
-  filter: contrast(1.06) brightness(1.02) saturate(1.12);
-}
-
-body[data-crt="true"]::after {
-  content: " ";
-  display: block;
+.crt-screen-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: 
-    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.26) 50%),
-    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.015), rgba(0, 0, 255, 0.03));
-  z-index: 99999;
-  background-size: 100% 3px, 6px 100%;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
-  opacity: 0.8;
+  z-index: 40;
+  backdrop-filter: contrast(1.06) brightness(1.02) saturate(1.12);
+  -webkit-backdrop-filter: contrast(1.06) brightness(1.02) saturate(1.12);
+  background: 
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.45) 100%),
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.015), rgba(0, 0, 255, 0.03));
+  background-size: 100% 100%, 100% 3px, 6px 100%;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.65);
+  animation: crtOverlayFlicker 0.18s infinite;
 }
 
-@keyframes crtFlicker {
-  0% { opacity: 0.985; }
-  50% { opacity: 1; }
-  100% { opacity: 0.99; }
-}
-
-body[data-crt="true"] #root {
-  animation: crtFlicker 0.18s infinite;
+@keyframes crtOverlayFlicker {
+  0% { opacity: 0.85; }
+  50% { opacity: 0.94; }
+  100% { opacity: 0.88; }
 }
 
 /* ==========================================================================

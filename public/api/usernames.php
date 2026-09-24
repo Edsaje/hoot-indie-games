@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-const ADMIN_STEAM_ID = '76561198035270542';
+require_once __DIR__ . '/admin_auth.php';
 const FORBIDDEN_NORMALIZED_NAMES = ['hibouxe', 'edsaje'];
 
 $storageFile = __DIR__ . '/registered_usernames.json';
@@ -91,9 +91,9 @@ function normalizeUsername($name) {
     return $norm;
 }
 
-// Vérifie si un pseudo est interdit (sauf pour l'administrateur Steam officiel)
+// Vérifie si un pseudo est interdit (sauf pour le compte créateur authentifié)
 function isNameForbidden($normalized, $steamId, $customForbidden = []) {
-    if (strval($steamId) === ADMIN_STEAM_ID) {
+    if (isCreatorAdminAuthorized()) {
         return false;
     }
     $allForbidden = array_unique(array_merge(FORBIDDEN_NORMALIZED_NAMES, $customForbidden));
@@ -206,7 +206,12 @@ if ($method === 'GET') {
     $steamId = trim($_GET['steamId'] ?? '');
 
     // Action d'administration : lister l'ensemble des comptes enregistrés
-    if ($action === 'list' && strval($steamId) === ADMIN_STEAM_ID) {
+    if ($action === 'list') {
+        if (!isCreatorAdminAuthorized()) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès restreint à l\'administrateur.']);
+            exit;
+        }
         $db = loadUsernamesData($storageFile);
         echo json_encode([
             'success' => true,
@@ -274,10 +279,14 @@ if ($method === 'GET') {
                    || (!empty($steamId) && ($claimed['steamId'] ?? '') === $steamId);
 
         if ($isSameUser) {
+            $userRole = $claimed['role'] ?? 'user';
             echo json_encode([
                 'success' => true,
                 'available' => true,
                 'isOwn' => true,
+                'role' => $userRole,
+                'isModerator' => ($userRole === 'moderator'),
+                'customTitle' => $claimed['customTitle'] ?? '',
                 'message' => 'Ce pseudonyme vous appartient déjà.'
             ]);
             exit;
@@ -458,12 +467,16 @@ if ($method === 'POST') {
     flock($fp, LOCK_UN);
     fclose($fp);
 
+    $savedRole = $db['usernames'][$normalized]['role'] ?? ($isAdmin ? 'admin' : 'user');
     echo json_encode([
         'success' => true,
         'username' => $cleanDisplay,
         'normalized' => $normalized,
         'message' => 'Pseudonyme validé et enregistré avec succès !',
-        'isAdmin' => $isAdmin
+        'isAdmin' => $isAdmin,
+        'role' => $savedRole,
+        'isModerator' => ($savedRole === 'moderator'),
+        'customTitle' => $db['usernames'][$normalized]['customTitle'] ?? ''
     ]);
     exit;
 }

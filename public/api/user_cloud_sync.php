@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-const ADMIN_STEAM_ID = '76561198035270542';
+require_once __DIR__ . '/admin_auth.php';
 $savesDir = __DIR__ . '/user_saves';
 
 if (!is_dir($savesDir)) {
@@ -49,18 +49,30 @@ function getUserStorageKey() {
 
     if (!empty($steamId)) {
         $clean = preg_replace('/[^a-zA-Z0-9_\-]/', '', $steamId);
-        if (!empty($clean)) return 'steam_' . $clean;
+        if (!empty($clean)) {
+            return 'steam_' . $clean;
+        }
     }
 
-    if (!empty($userId)) {
+    // Si userId est un vrai compte authentifié (ex: UUID Supabase) et pas un identifiant local temporaire
+    if (!empty($userId) && strpos($userId, 'local_') !== 0) {
         $clean = preg_replace('/[^a-zA-Z0-9_\-]/', '', $userId);
         if (!empty($clean)) return 'user_' . $clean;
     }
 
+    // Pseudonyme revendiqué du joueur
     if (!empty($username)) {
         $clean = mb_strtolower(trim($username), 'UTF-8');
         $clean = preg_replace('/[^a-z0-9]/', '', $clean);
-        if (!empty($clean)) return 'name_' . $clean;
+        if (!empty($clean) && $clean !== 'hiboumystere') {
+            return 'name_' . $clean;
+        }
+    }
+
+    // Fallback sur userId local si aucune autre identité n'est disponible
+    if (!empty($userId)) {
+        $clean = preg_replace('/[^a-zA-Z0-9_\-]/', '', $userId);
+        if (!empty($clean)) return 'user_' . $clean;
     }
 
     return null;
@@ -179,6 +191,7 @@ if (!$userKey) {
 
 $saveFile = $savesDir . '/' . $userKey . '.json';
 $action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : 'load';
+$inputSyncKey = trim($_SERVER['HTTP_X_SYNC_KEY'] ?? $_REQUEST['syncKey'] ?? '');
 
 switch ($action) {
     // -------------------------------------------------------------
@@ -205,11 +218,16 @@ switch ($action) {
                     'syncedAt' => date('c'),
                     'isCreator' => true,
                 ];
+                if (!empty($inputSyncKey)) {
+                    $creatorInitial['syncKeyHash'] = hash('sha256', $inputSyncKey);
+                }
                 @file_put_contents($saveFile, json_encode($creatorInitial, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                $clientInitial = $creatorInitial;
+                unset($clientInitial['syncKeyHash']);
                 echo json_encode([
                     'success' => true,
                     'exists' => true,
-                    'data' => $creatorInitial,
+                    'data' => $clientInitial,
                     'message' => 'Sauvegarde créateur souverain initialisée.',
                 ]);
                 exit;
@@ -237,11 +255,29 @@ switch ($action) {
             exit;
         }
 
+        // Vérification de la clé de synchronisation uniquement pour les invités sans compte (name_...)
+        $isAccountConnected = (!empty($_REQUEST['steamId']) || !empty($_REQUEST['userId']) || strpos($userKey, 'steam_') === 0 || strpos($userKey, 'user_') === 0);
+        if (!$isAccountConnected && !empty($data['syncKeyHash'])) {
+            $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
+            if (empty($inputHash) || !hash_equals($data['syncKeyHash'], $inputHash)) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'invalid_sync_key',
+                    'message' => 'Clé de synchronisation cloud invalide pour ce profil invité.'
+                ]);
+                exit;
+            }
+        }
+
+        $clientData = $data;
+        unset($clientData['syncKeyHash']);
+
         echo json_encode([
             'success' => true,
             'exists' => true,
-            'data' => $data,
-            'lastSyncedAt' => $data['syncedAt'] ?? date('c', filemtime($saveFile)),
+            'data' => $clientData,
+            'lastSyncedAt' => $clientData['syncedAt'] ?? date('c', filemtime($saveFile)),
         ]);
         break;
 
@@ -273,8 +309,43 @@ switch ($action) {
             }
         }
 
+        // Vérification de sécurité anti-usurpation (uniquement pour les profils invités sans compte)
+        $isAccountConnected = (!empty($_REQUEST['steamId']) || !empty($_REQUEST['userId']) || !empty($incoming['steamId']) || !empty($incoming['userId']) || strpos($userKey, 'steam_') === 0 || strpos($userKey, 'user_') === 0);
+        if (!$isAccountConnected && $existing && !empty($existing['syncKeyHash'])) {
+            $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
+            if (empty($inputHash) || !hash_equals($existing['syncKeyHash'], $inputHash)) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'invalid_sync_key',
+                    'message' => 'Clé de synchronisation cloud non concordante pour ce profil invité. Écriture refusée.'
+                ]);
+                exit;
+            }
+        }
+
+        // Protection du compte officiel du créateur lors de la sauvegarde
+        if ($userKey === 'steam_' . ADMIN_STEAM_ID || $userKey === 'name_hibouxe' || $userKey === 'name_edsaje') {
+            if (!isCreatorAdminAuthorized()) {
+                $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
+                $existingHash = $existing['syncKeyHash'] ?? '';
+                if (empty($existingHash) || empty($inputHash) || !hash_equals($existingHash, $inputHash)) {
+                    http_response_code(403);
+                    echo json_encode(['success' => false, 'message' => 'Accès refusé : Le compte officiel du créateur nécessite une session authentifiée ou la clé de synchronisation souveraine.']);
+                    exit;
+                }
+            }
+        }
+
         // Fusion intelligente
         $merged = mergeSaveData($existing, $incoming);
+
+        // Conservation ou attribution de l'empreinte de la clé de synchronisation
+        if ($existing && !empty($existing['syncKeyHash'])) {
+            $merged['syncKeyHash'] = $existing['syncKeyHash'];
+        } elseif (!empty($inputSyncKey)) {
+            $merged['syncKeyHash'] = hash('sha256', $inputSyncKey);
+        }
 
         // Garantie de privilèges pour le créateur
         if ((isset($_REQUEST['steamId']) && trim($_REQUEST['steamId']) === ADMIN_STEAM_ID) || ($merged['steamId'] ?? '') === ADMIN_STEAM_ID) {
@@ -294,10 +365,13 @@ switch ($action) {
             exit;
         }
 
+        $clientMerged = $merged;
+        unset($clientMerged['syncKeyHash']);
+
         echo json_encode([
             'success' => true,
             'message' => 'Sauvegarde synchronisée avec succès dans le Cloud Souverain !',
-            'data' => $merged,
+            'data' => $clientMerged,
             'lastSyncedAt' => $merged['syncedAt'],
         ]);
         break;

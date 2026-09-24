@@ -1,3 +1,6 @@
+# Interdire le listage des répertoires
+Options -Indexes
+
 # Interdire l'accès direct aux fichiers sensibles
 <FilesMatch "(\.json|\.secret|\.steam_key|\.admin_pass|\.log|\.env|\.bak)$">
     <IfModule mod_authz_core.c>

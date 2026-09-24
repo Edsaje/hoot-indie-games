@@ -46,33 +46,44 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
   const { isGameOwned } = useUserAccount();
+  const { allPlayableGames, curatedGems } = useSteamCatalog();
 
-  // Offset 1 to have a distinct game from Screenle if desired, or same
-  const secretGame = getDailyGame(currentDate, 3);
   const storageKey = `indledle_state_${currentDate}`;
 
+  // Récupération de l'état sauvegardé avec restauration complète du jeu secret et des essais
   const savedState = (() => {
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
         const restored = (parsed.guessIds || [])
-          .map((id: string) => INDIE_GAMES.find((g) => g.id === id))
+          .map((id: string) => allPlayableGames.find((g) => g.id === id) || INDIE_GAMES.find((g) => g.id === id))
           .filter(Boolean) as Game[];
         return {
           guesses: restored,
           isCompleted: Boolean(parsed.isCompleted),
           isWon: Boolean(parsed.isWon),
+          savedSecretGameId: parsed.secretGameId as string | undefined,
         };
       }
     } catch {
       // Fallback
     }
-    return { guesses: [] as Game[], isCompleted: false, isWon: false };
+    return { guesses: [] as Game[], isCompleted: false, isWon: false, savedSecretGameId: undefined };
   })();
 
+  // Jeu secret du jour : pioché parmi les pépites (curatedGems) ou verrouillé si déjà commencé
+  const secretGame = useMemo(() => {
+    if (savedState.savedSecretGameId) {
+      const lockedGame =
+        allPlayableGames.find((g) => g.id === savedState.savedSecretGameId) ||
+        INDIE_GAMES.find((g) => g.id === savedState.savedSecretGameId);
+      if (lockedGame) return lockedGame;
+    }
+    return getDailyGame(currentDate, 3, curatedGems);
+  }, [currentDate, curatedGems, allPlayableGames, savedState.savedSecretGameId]);
+
   const { unlockAchievement } = useAchievements();
-  const { allPlayableGames } = useSteamCatalog();
   const [guesses, setGuesses] = useState<Game[]>(savedState.guesses);
   const [isCompleted, setIsCompleted] = useState<boolean>(savedState.isCompleted);
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
@@ -114,6 +125,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
         storageKey,
         JSON.stringify({
           date: currentDate,
+          secretGameId: secretGame.id,
           guessIds: newGuesses.map((g) => g.id),
           isCompleted: completed,
           isWon: won,

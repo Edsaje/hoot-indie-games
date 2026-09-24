@@ -30,8 +30,7 @@ export function normalizeUsername(name: string): string {
 export function isForbiddenUsername(name: string, steamId?: string, isAdminOrOwner?: boolean): boolean {
   if (
     isAdminOrOwner ||
-    (steamId && String(steamId).trim() === ADMIN_STEAM_ID) ||
-    (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    (steamId && String(steamId).trim() === ADMIN_STEAM_ID)
   ) {
     return false;
   }
@@ -156,7 +155,14 @@ export async function claimUsernameOnServer(
   username: string,
   userId: string,
   steamId?: string
-): Promise<{ success: boolean; username?: string; message: string }> {
+): Promise<{
+  success: boolean;
+  username?: string;
+  message: string;
+  role?: 'admin' | 'moderator' | 'vip' | 'user';
+  isModerator?: boolean;
+  customTitle?: string;
+}> {
   let targetName = username.trim();
   const localCheck = validateUsernameFormat(targetName, steamId);
   if (!localCheck.valid) {
@@ -188,6 +194,9 @@ export async function claimUsernameOnServer(
       return {
         success: true,
         username: data.username || targetName,
+        role: data.role,
+        isModerator: data.isModerator,
+        customTitle: data.customTitle,
         message: data.message || 'Pseudonyme réservé avec succès !',
       };
     } else {

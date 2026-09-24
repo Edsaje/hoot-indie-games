@@ -55,10 +55,12 @@ export interface UserProfile {
   username: string;
   avatarId: IndieAvatarId;
   title: string;
+  customTitle?: string;
   createdAt: string;
   isCloudSynced: boolean;
   isAdmin?: boolean;
-  role?: 'admin' | 'user';
+  isModerator?: boolean;
+  role?: 'admin' | 'moderator' | 'user';
   email?: string;
   friendCode?: string;
   steam?: SteamAccountInfo;
