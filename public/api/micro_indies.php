@@ -249,8 +249,113 @@ if ($action === 'like') {
     exit;
 }
 
-// 4. Modération administrateur : Supprimer une proposition
-if ($action === 'delete') {
+// 4. Modération administrateur : Liste complète des propositions (avec stats)
+if ($action === 'admin_list') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $items = [];
+    if (file_exists($dataFile)) {
+        $raw = @file_get_contents($dataFile);
+        $items = json_decode($raw, true) ?: [];
+    }
+    $total = count($items);
+    $pending = count(array_filter($items, function($item) {
+        return empty($item['approved']);
+    }));
+    $approved = count(array_filter($items, function($item) {
+        return !empty($item['approved']);
+    }));
+
+    echo json_encode([
+        'success' => true,
+        'total' => $total,
+        'pending' => $pending,
+        'approved' => $approved,
+        'list' => $items,
+    ]);
+    exit;
+}
+
+// 5. Modération administrateur : Valider et publier un micro-indé
+if ($action === 'admin_approve') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $targetId = sanitizeText($postData['id'] ?? $_GET['id'] ?? '', 100);
+    if (empty($targetId)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Identifiant de jeu manquant.']);
+        exit;
+    }
+
+    $items = [];
+    if (file_exists($dataFile)) {
+        $raw = @file_get_contents($dataFile);
+        $items = json_decode($raw, true) ?: [];
+    }
+    $found = false;
+    $updatedGame = null;
+    foreach ($items as &$item) {
+        if (($item['id'] ?? '') === $targetId) {
+            $item['approved'] = true;
+            $item['approvedAt'] = date('c');
+            $found = true;
+            $updatedGame = $item;
+            break;
+        }
+    }
+    if ($found) {
+        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Le jeu a été validé et publié avec succès dans La Clairière des Micro-Indés !',
+            'game' => $updatedGame,
+        ]);
+    } else {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Jeu introuvable.']);
+    }
+    exit;
+}
+
+// 6. Modération administrateur : Remettre en attente (dé-publier)
+if ($action === 'admin_unapprove') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $targetId = sanitizeText($postData['id'] ?? $_GET['id'] ?? '', 100);
+    $items = [];
+    if (file_exists($dataFile)) {
+        $raw = @file_get_contents($dataFile);
+        $items = json_decode($raw, true) ?: [];
+    }
+    $found = false;
+    foreach ($items as &$item) {
+        if (($item['id'] ?? '') === $targetId) {
+            $item['approved'] = false;
+            $found = true;
+            break;
+        }
+    }
+    if ($found) {
+        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode(['success' => true, 'message' => 'Le micro-indé a été remis en attente de validation.']);
+    } else {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Jeu introuvable.']);
+    }
+    exit;
+}
+
+// 7. Modération administrateur : Supprimer une proposition
+if ($action === 'delete' || $action === 'admin_delete') {
     if (!isCreatorAdminAuthorized()) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);

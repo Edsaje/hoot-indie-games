@@ -924,6 +924,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         exit;
     }
 
+    // Modération : Valider / Approuver un micro-indé
+    if ($action === 'approve_micro_indie') {
+        $mId = trim($_GET['id'] ?? $_POST['id'] ?? '');
+        $mFile = __DIR__ . '/micro_indies.json';
+        if (file_exists($mFile)) {
+            $items = json_decode(@file_get_contents($mFile), true) ?: [];
+            $found = false;
+            foreach ($items as &$item) {
+                if (($item['id'] ?? '') === $mId) {
+                    $item['approved'] = true;
+                    $item['approvedAt'] = date('c');
+                    $found = true;
+                    break;
+                }
+            }
+            if ($found) {
+                @file_put_contents($mFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                echo json_encode(['success' => true, 'message' => 'Micro-indé validé et publié !']);
+                exit;
+            }
+        }
+        echo json_encode(['success' => false, 'message' => 'Jeu introuvable dans les micro-indés.']);
+        exit;
+    }
+
+    // Modération : Supprimer / Rejeter un micro-indé
+    if ($action === 'delete_micro_indie') {
+        $mId = trim($_GET['id'] ?? $_POST['id'] ?? '');
+        $mFile = __DIR__ . '/micro_indies.json';
+        if (file_exists($mFile)) {
+            $items = json_decode(@file_get_contents($mFile), true) ?: [];
+            $filtered = array_values(array_filter($items, function($m) use ($mId) {
+                return ($m['id'] ?? '') !== $mId;
+            }));
+            @file_put_contents($mFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            echo json_encode(['success' => true, 'message' => 'Micro-indé retiré avec succès.']);
+            exit;
+        }
+        echo json_encode(['success' => false, 'message' => 'Fichier des micro-indés introuvable.']);
+        exit;
+    }
+
     // Réinitialisation des statistiques
     if ($action === 'reset_stats') {
         $blankStats = [
@@ -1151,11 +1193,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             }
         }
 
+        // Chargement des micro-indés soumis
+        $mFile = __DIR__ . '/micro_indies.json';
+        $microIndiesData = ['total' => 0, 'pending' => 0, 'approved' => 0, 'list' => []];
+        if (file_exists($mFile)) {
+            $mRaw = @file_get_contents($mFile);
+            if ($mRaw) {
+                $mDec = json_decode($mRaw, true);
+                if (is_array($mDec)) {
+                    $mPending = count(array_filter($mDec, function($item) { return empty($item['approved']); }));
+                    $mApproved = count(array_filter($mDec, function($item) { return !empty($item['approved']); }));
+                    $microIndiesData = [
+                        'total' => count($mDec),
+                        'pending' => $mPending,
+                        'approved' => $mApproved,
+                        'list' => array_reverse($mDec)
+                    ];
+                }
+            }
+        }
+
         $system = [
             'serverTime' => date('c'),
             'statsFileSize' => file_exists($statsFile) ? filesize($statsFile) : 0,
             'usernamesFileSize' => file_exists($uFile) ? filesize($uFile) : 0,
             'suggestionsFileSize' => file_exists($sFile) ? filesize($sFile) : 0,
+            'microIndiesFileSize' => file_exists($mFile) ? filesize($mFile) : 0,
             'leaderboardFileSize' => file_exists($lbFile) ? filesize($lbFile) : 0,
             'adminSteamId' => ADMIN_STEAM_ID,
         ];
@@ -1166,6 +1229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             'analytics' => $stats,
             'usernames' => $usernamesData,
             'suggestions' => $suggestionsData,
+            'microIndies' => $microIndiesData,
             'leaderboard' => $leaderboardData,
             'system' => $system,
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

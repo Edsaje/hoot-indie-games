@@ -7,12 +7,15 @@ import {
   Globe, 
   Search, 
   Trophy, 
-  Gamepad2
+  Gamepad2,
+  Shield
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { soundFx } from '../../utils/audio';
 import { INITIAL_MICRO_INDIES } from '../../data/microIndies';
 import { ProposeMicroIndieModal } from './ProposeMicroIndieModal';
+import { AdminDashboardModal } from '../admin/AdminDashboardModal';
+import { useUserAccount } from '../../context/useUserAccount';
 import type { MicroIndieGame } from '../../types/microIndie';
 
 type FilterType = 'all' | 'itch' | 'steam' | 'web' | 'free' | 'jam';
@@ -20,11 +23,13 @@ type FilterType = 'all' | 'itch' | 'steam' | 'web' | 'free' | 'jam';
 export const MicroIndieHub: React.FC = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || 'fr';
+  const { isAdmin } = useUserAccount();
 
   const [games, setGames] = useState<MicroIndieGame[]>(INITIAL_MICRO_INDIES);
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
   const [likedIds, setLikedIds] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem('hoot_liked_micro_indies');
@@ -33,6 +38,7 @@ export const MicroIndieHub: React.FC = () => {
       return new Set();
     }
   });
+  const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set());
 
   // Charger les propositions communautaires depuis l'API PHP
   useEffect(() => {
@@ -139,16 +145,33 @@ export const MicroIndieHub: React.FC = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              setIsModalOpen(true);
-            }}
-            className="px-6 py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold rounded-2xl shadow-xl shadow-amber-900/40 flex items-center gap-2.5 transition-all transform hover:-translate-y-0.5 active:translate-y-0 text-sm sm:text-base whitespace-nowrap"
-          >
-            <PlusCircle className="w-5 h-5 text-slate-950" />
-            <span>{t('micro.proposeBtn', 'Proposer un Micro-Indé')}</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  setIsAdminDashboardOpen(true);
+                }}
+                className="px-5 py-3.5 bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold rounded-2xl border border-emerald-400/40 shadow-xl shadow-emerald-950/40 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0 text-sm sm:text-base whitespace-nowrap cursor-pointer"
+                title="Accéder au panneau d'administration pour valider ou rejeter les jeux micro-indés"
+              >
+                <Shield className="w-5 h-5 text-emerald-300" />
+                <span>Modérer les Micro-Indés</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                setIsModalOpen(true);
+              }}
+              className="px-6 py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold rounded-2xl shadow-xl shadow-amber-900/40 flex items-center justify-center gap-2.5 transition-all transform hover:-translate-y-0.5 active:translate-y-0 text-sm sm:text-base whitespace-nowrap cursor-pointer"
+            >
+              <PlusCircle className="w-5 h-5 text-slate-950" />
+              <span>{t('micro.proposeBtn', 'Proposer un Micro-Indé')}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -285,16 +308,38 @@ export const MicroIndieHub: React.FC = () => {
                 key={game.id}
                 className="deferred-card group flex flex-col bg-gradient-to-b from-[#06241b] to-[#03150f] border-2 border-[#78350f]/60 hover:border-[#78350f] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
               >
-                {/* Image de couverture */}
-                <div className="relative aspect-video w-full overflow-hidden bg-black/50">
-                  <img
-                    src={game.coverImage}
-                    alt={game.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#03150f] via-transparent to-black/30" />
+                {/* Image de couverture avec protection anti-image noire et referrerPolicy */}
+                <div className="relative aspect-video w-full overflow-hidden bg-[#041a13]">
+                  {failedImageIds.has(game.id) || !game.coverImage ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#0a382a] via-[#041d15] to-[#010e0a] text-center select-none border-b border-amber-500/20">
+                      <div className="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-center text-amber-300 text-xl mb-1.5 shadow-inner">
+                        <Gamepad2 className="w-5 h-5 text-amber-300" />
+                      </div>
+                      <span className="text-xs font-black text-amber-100 line-clamp-1 drop-shadow px-2">
+                        {game.title}
+                      </span>
+                      <span className="text-[10px] text-emerald-300/80 font-mono mt-0.5">
+                        {game.genre.slice(0, 2).join(' • ')}
+                      </span>
+                    </div>
+                  ) : (
+                    <img
+                      src={game.coverImage}
+                      alt={game.title}
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                      onError={() => {
+                        setFailedImageIds((prev) => {
+                          const next = new Set(prev);
+                          next.add(game.id);
+                          return next;
+                        });
+                      }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#03150f] via-transparent to-black/30 pointer-events-none" />
 
                   {/* Badges de statut en haut */}
                   <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
@@ -446,6 +491,15 @@ export const MicroIndieHub: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onGameAdded={handleGameAdded}
       />
+
+      {/* Modale d'administration Micro-Indés pour Hibouxe / Admin */}
+      {isAdmin && (
+        <AdminDashboardModal
+          isOpen={isAdminDashboardOpen}
+          onClose={() => setIsAdminDashboardOpen(false)}
+          initialTab="microIndies"
+        />
+      )}
     </div>
   );
 };

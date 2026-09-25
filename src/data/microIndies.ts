@@ -116,7 +116,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Développé en solo sous Godot Engine. La version initiale Itch.io a prouvé que les expériences brutes et courtes ont un pouvoir immense.",
       "en": "Crafted solo using Godot Engine. The original Itch.io release proved that bite-sized tactile experiences can strike a huge chord."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 98,
     "featured": true,
     "coverImage": "https://img.itch.zone/aW1nLzE0NjIyNDk0LnBuZw==/original/iTohTc.png",
@@ -167,7 +167,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Un hommage indie bourré de contenu avec des dizaines de personnages uniques, une bande-son synthwave énergique, de la pêche, de la déco et zéro micro-transaction.",
       "en": "A massive passion project with dozens of unlockable characters, energetic original soundtracks, mini-games, home decoration, and zero microtransactions."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 165,
     "featured": true,
     "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420510/header.jpg",
@@ -261,7 +261,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Incarnez Claire le petit oiseau. Parcourez la montagne à votre rythme, planez avec le vent d'automne, pêchez, discutez avec d'adorables randonneurs et prenez de la hauteur.",
       "en": "Play as Claire the little bird. Explore mountain paths at your own pace, glide through the autumn breeze, chat with quirky hikers and reach the summit."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 119,
     "featured": true,
     "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/header.jpg",
@@ -351,7 +351,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Grow from childhood to adulthood with the lonely boy next door in this near-fully customizable visual novel.",
       "en": "Grow from childhood to adulthood with the lonely boy next door in this near-fully customizable visual novel."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzcwMTIxNDMucG5n/315x250%23c/BalGQb.png",
@@ -396,7 +396,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "An interactive story about anxiety. You play *as* the anxiety",
       "en": "An interactive story about anxiety. You play *as* the anxiety"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzI3NjQ4NjUucG5n/315x250%23c/DZfV4W.png",
@@ -440,7 +440,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Enter a week long bet against the Grim Reaper to keep your soul... and maybe fall in love along the way?",
       "en": "Enter a week long bet against the Grim Reaper to keep your soul... and maybe fall in love along the way?"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzEzMjI3MDAyLnBuZw==/315x250%23c/kVaU3H.png",
@@ -484,7 +484,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Welcome to our server!",
       "en": "Welcome to our server!"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzc2OTc0OTEucG5n/315x250%23c/b%2FgqIz.png",
@@ -528,7 +528,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "All customers are monsters. Oh no. Oh yeah?",
       "en": "All customers are monsters. Oh no. Oh yeah?"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzIzMzk5OTE0LnBuZw==/315x250%23c/xwM6QL.png",
@@ -572,7 +572,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Gather unknown signals from deep, silent space",
       "en": "Gather unknown signals from deep, silent space"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzI2NDI5NTgzLmpwZw==/315x250%23c/5lRRHP.jpg",
@@ -616,7 +616,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "He's always going to be with you...",
       "en": "He's always going to be with you..."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzIxNDc2NzkxLmdpZg==/original/AWPx1Z.gif",
@@ -660,7 +660,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "A paper airplane, two new neighbors, four autumns, and a one of a kind life.",
       "en": "A paper airplane, two new neighbors, four autumns, and a one of a kind life."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzc5MTY4NzQucG5n/315x250%23c/Nu7e5v.png",
@@ -701,7 +701,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Dig, upgrade, expand... then dig deeper!",
       "en": "Dig, upgrade, expand... then dig deeper!"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzI1MDU0ODE5LnBuZw==/315x250%23c/oNTRwi.png",
@@ -741,7 +741,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Will you write the way into her heart?",
       "en": "Will you write the way into her heart?"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1hZ2UvMTA2NTk5LzU4NjAxMi5naWY=/original/%2Fz0let.gif",
@@ -781,7 +781,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh.",
       "en": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzE4MDAyMzYzLnBuZw==/315x250%23c/ASJcG4.png",
@@ -821,7 +821,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Gay girls playing baseball and falling in love",
       "en": "Gay girls playing baseball and falling in love"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1hZ2UvMTQzODk5LzgzMTY0OC5wbmc=/315x250%23c/Q6ST2A.png",
@@ -869,10 +869,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Conçu en quelques jours pour la Ludum Dare 47 sous le thème \"Stuck in a loop\". L'énergie de la communauté a propulsé le jeu vers les sommets.",
       "en": "Made in a single weekend for Ludum Dare 47. The open-source community support turned it into an instant cultural touchstone."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 230,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzQ1MTU3MzAucG5n/original/52aZ4D.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNzkyNzc4LzQ1MjMzNTkucG5n/original/OUw2Vg.png",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvNzk2NjA2LzQ1MTU3MzcucG5n/original/Jk6xP3.png"
     ],
@@ -915,7 +915,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 115,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzExMTY4NzYucG5n/original/23nK3e.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/609490/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/609490/ss_8e5352c3c90cb64670c50bc596328a90ec4db1d9.1920x1080.jpg"
     ],
@@ -956,12 +956,12 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Un jeu de gestion narratif charmant conçu pour la Ludum Dare 34 où chaque décision impacte l’or, le bonheur et la population de votre cour.",
       "en": "A delightful narrative management gem created for Ludum Dare 34 where every decree balances gold, population, and happiness."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 95,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNDcxODIvMjAzMjU3LnBuZw==/original/2pW7g3.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNDczNjcvMjA1ODcxLnBuZw==/original/VFJ3Yl.png",
     "screenshots": [
-      "https://img.itch.zone/aW1hZ2UvNDcxODIvMjA2NjM0LnBuZw==/original/Hw4wO3.png"
+      "https://img.itch.zone/aW1hZ2UvNDczNjcvMjA2NjM0LnBuZw==/original/Hw4wO3.png"
     ],
     "dateAdded": "2026-09-25"
   },
@@ -1002,7 +1002,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 88,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzE0NzY4OTY1LnBuZw==/original/jFq2K%2B.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2726450/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2726450/ss_225a66699cfef0ff86a51d18476b7b252084c759.1920x1080.jpg"
     ],
@@ -1041,10 +1041,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Parcourez une maison plongée dans le noir à la recherche de cassettes audio décortiquant la relation terrifiante entre l’architecture domestique et le corps humain.",
       "en": "A short lo-fi psychological horror game about wandering an empty house in the dark, collecting cassette tapes, and listening to what they have to say."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 140,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNTM1ODIvMjQxMDgzLmpwZw==/original/M4Y4Jv.jpg",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNTUwMjMvMjQ2MDYzLnBuZw==/original/WVrLz4.png",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvNTM1ODIvMjQxMDgxLmpwZw==/original/GZ1M4E.jpg"
     ],
@@ -1086,7 +1086,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 102,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvMTQ2OTkvNDQwNDQucG5n/original/U82e07.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTYxMDYvNTg5MjkucG5n/original/qKm4Ja.png",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvMTQ2OTkvNDQwNDYucG5n/original/tD0H9%2B.png"
     ],
@@ -1126,10 +1126,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Roulez des boules de neige à travers des labyrinthes de haies soigneusement conçus. Une mécanique sokoban épurée et réconfortante.",
       "en": "Roll balls of snow through beautifully crafted garden mazes in this charming and relaxing sokoban puzzle adventure."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 76,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzE2OTExNDYucG5n/original/j1F81W.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/316610/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/316610/ss_e1e17bc84b5c777d19cfb30349f7d3077eb4fa4a.1920x1080.jpg"
     ],
@@ -1170,10 +1170,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Poussez des blocs de mots pour changer la nature même des objets : FLAG IS WIN, WALL IS STOP, BABA IS YOU. Jouable directement dans votre navigateur.",
       "en": "Push word blocks to rewrite reality: WALL IS STOP, ROCK IS PUSH, BABA IS YOU. Playable directly in your browser!"
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 198,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvMTM2Mjc1LzYyMzU4MS5wbmc=/original/zZ2rA5.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/header.jpg",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvMTM2Mjc1LzYyMzU4My5wbmc=/original/Q5j2yq.png"
     ],
@@ -1216,7 +1216,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 82,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvMzA4MTkyLzE1MDY1OTYucG5n/original/U3wYlW.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_8d34346fa0dbd7a7ff2908f02f928e4e7e60058e.1920x1080.jpg"
     ],
@@ -1259,7 +1259,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 160,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzE3MjAyMDIucG5n/original/s4Uv4g.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70110/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70110/ss_37000e318cf1bfa49c3ce36735168434771638bc.1920x1080.jpg"
     ],
@@ -1299,10 +1299,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Pivotez autour d’un hexagone central pour esquiver des murs convergents dans un tourbillon visuel et sonore ultra-addictif.",
       "en": "Rotate around a central shape to avoid incoming geometric walls to the relentless beats of Chipzel’s chiptune."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 130,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzE3MjAyMDUucG5n/original/u20wOq.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/221640/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/221640/ss_164b73b5f25ae87747e4eb1e6d1976bb58972b22.1920x1080.jpg"
     ],
@@ -1345,7 +1345,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 155,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzI4NTY1MjgucG5n/original/cT8b7S.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/ss_07b9ad0964724a9191d4e028b122f4bda7b2f676.1920x1080.jpg"
     ],
@@ -1386,10 +1386,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Fauchez des milliers de créatures nocturnes et survivez jusqu’à l’aube. Directement jouable dans votre navigateur !",
       "en": "Mow down thousands of night creatures and survive until dawn. Playable directly in your web browser!"
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 210,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzc3MTYwODMucG5n/original/6x3KqF.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_f8cfc38a16db49fe8e0e98031d77759ad45ad2b9.1920x1080.jpg"
     ],
@@ -1432,9 +1432,9 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 94,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNjk5NzcvMzIxMDY0LnBuZw==/original/M7CqN9.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTUzNjUvNTQ2NDYucG5n/original/khg%2BhM.png",
     "screenshots": [
-      "https://img.itch.zone/aW1hZ2UvNjk5NzcvMzIxMDY2LnBuZw==/original/Ocmx6v.png"
+      "https://img.itch.zone/aW1hZ2UvMTUzNjUvNTQ2NDYucG5n/original/khg%2BhM.png"
     ],
     "dateAdded": "2026-09-25"
   },
@@ -1476,7 +1476,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 91,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNDczMTMvMjA0MTU4LnBuZw==/original/2wTqB0.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNDgwNjIvMjEwNTY0LmdpZg==/original/8bMoIe.gif",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvNDczMTMvMjA0MTYwLnBuZw==/original/g4T5g6.png"
     ],
@@ -1514,7 +1514,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "a game about news cycles, vicious cycles, infinite cycles",
       "en": "a game about news cycles, vicious cycles, infinite cycles"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1hZ2UvOTIxMTUvNDU0MDMxLnBuZw==/315x250%23c/cxthdQ.png",
@@ -1554,7 +1554,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "beware of toxic fungi. a slow burn yandere vn (in development)",
       "en": "beware of toxic fungi. a slow burn yandere vn (in development)"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzExNTkxMzIxLmdpZg==/original/pECVwW.gif",

@@ -16,6 +16,8 @@ import {
   Copy,
   Users,
   MessageSquare,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 import type { CardItem, CardOwnership } from '../../types/cards';
 import { RARITY_CONFIG, DISENCHANT_VALUES } from '../../types/cards';
@@ -46,10 +48,12 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith('en') ? 'en' : 'fr';
 
-  // 3D orientation & Zoom state (de 0.75x à 2.5x)
+  // 3D orientation, Pan & Zoom state (de 0.75x à 2.5x)
   const [scale, setScale] = useState<number>(1);
+  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isInteracting, setIsInteracting] = useState<boolean>(false);
+  const [isFullscreenZoom, setIsFullscreenZoom] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Trade Modal State
@@ -59,6 +63,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
   const cardContainerRef = useRef<HTMLDivElement>(null);
   const pinchStartRef = useRef<{ dist: number; initialScale: number } | null>(null);
+  const dragStartRef = useRef<{ clientX: number; clientY: number; initialPanX: number; initialPanY: number } | null>(null);
 
   const { friends, myFriendCode } = useFriends();
   const { openChat, sendMessage } = useChat();
@@ -78,13 +83,42 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   useEffect(() => {
     if (card) {
       setScale(1);
+      setPan({ x: 0, y: 0 });
       setMousePos({ x: 0, y: 0 });
       setIsInteracting(false);
       setIsTradeOpen(false);
       setTradeCopied(false);
       setTradeHolo(false);
+      setIsFullscreenZoom(false);
+      dragStartRef.current = null;
     }
   }, [card]);
+
+  // Fermer le mode plein écran à la touche Échap
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreenZoom) {
+        e.stopPropagation();
+        setIsFullscreenZoom(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreenZoom]);
+
+  // Clamping intelligent pour empêcher la carte d'être perdue hors du viewport
+  const updatePanWithClamping = (currentScale: number, newPanX: number, newPanY: number) => {
+    if (currentScale <= 1.05) {
+      setPan({ x: 0, y: 0 });
+      return;
+    }
+    const maxPanX = Math.round(180 * (currentScale - 1));
+    const maxPanY = Math.round(220 * (currentScale - 1));
+    setPan({
+      x: Math.max(-maxPanX, Math.min(maxPanX, newPanX)),
+      y: Math.max(-maxPanY, Math.min(maxPanY, newPanY)),
+    });
+  };
 
   // Attacher les écouteurs natifs wheel et touchmove non-passifs pour empêcher le scroll du catalogue
   useEffect(() => {
@@ -94,8 +128,12 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
     const onWheelNative = (e: WheelEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      const delta = e.deltaY < 0 ? 0.12 : -0.12;
-      setScale((prev) => Math.min(2.5, Math.max(0.75, Number((prev + delta).toFixed(2)))));
+      const delta = e.deltaY < 0 ? 0.15 : -0.15;
+      setScale((prev) => {
+        const next = Math.min(2.5, Math.max(0.75, Number((prev + delta).toFixed(2))));
+        if (next <= 1.05) setPan({ x: 0, y: 0 });
+        return next;
+      });
     };
 
     const onTouchMoveNative = (e: TouchEvent) => {
@@ -126,24 +164,39 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   const rarityName = lang === 'en' ? rarityMeta?.nameEn || 'Common' : rarityMeta?.nameFr || 'Commune';
   const values = (card.rarity && DISENCHANT_VALUES[card.rarity]) || DISENCHANT_VALUES.common;
 
-  // Gestion du tilt à la souris (PC)
+  // Gestion du tilt et du glisser / pan à la souris (PC)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     setMousePos({ x, y });
+
+    // Déplacement de la carte si la souris est maintenue enfoncée et zoom > 1
+    if (dragStartRef.current && scale > 1.05) {
+      const dx = e.clientX - dragStartRef.current.clientX;
+      const dy = e.clientY - dragStartRef.current.clientY;
+      updatePanWithClamping(scale, dragStartRef.current.initialPanX + dx, dragStartRef.current.initialPanY + dy);
+    }
   };
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsInteracting(true);
+    dragStartRef.current = {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      initialPanX: pan.x,
+      initialPanY: pan.y,
+    };
   };
 
   const handleMouseUp = () => {
     setIsInteracting(false);
+    dragStartRef.current = null;
   };
 
   const handleMouseLeave = () => {
     setIsInteracting(false);
+    dragStartRef.current = null;
     setMousePos({ x: 0, y: 0 });
   };
 
@@ -151,8 +204,12 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const delta = e.deltaY < 0 ? 0.12 : -0.12;
-    setScale((prev) => Math.min(2.5, Math.max(0.75, Number((prev + delta).toFixed(2)))));
+    const delta = e.deltaY < 0 ? 0.15 : -0.15;
+    setScale((prev) => {
+      const next = Math.min(2.5, Math.max(0.75, Number((prev + delta).toFixed(2))));
+      if (next <= 1.05) setPan({ x: 0, y: 0 });
+      return next;
+    });
   };
 
   // Gestion tactile sur mobile (Touch & Drag maintenu + Pinch to Zoom)
@@ -164,12 +221,19 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
         e.touches[0].clientY - e.touches[1].clientY
       );
       pinchStartRef.current = { dist, initialScale: scale };
+      dragStartRef.current = null;
     } else if (e.touches.length === 1 && cardContainerRef.current) {
       const rect = cardContainerRef.current.getBoundingClientRect();
       const touch = e.touches[0];
       const x = Math.max(-1, Math.min(1, ((touch.clientX - rect.left) / rect.width - 0.5) * 2));
       const y = Math.max(-1, Math.min(1, ((touch.clientY - rect.top) / rect.height - 0.5) * 2));
       setMousePos({ x: x * 0.55, y: y * 0.55 });
+      dragStartRef.current = {
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        initialPanX: pan.x,
+        initialPanY: pan.y,
+      };
     }
   };
 
@@ -187,13 +251,20 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
       const ratio = currentDist / pinchStartRef.current.dist;
       const nextScale = Math.min(2.5, Math.max(0.75, Number((pinchStartRef.current.initialScale * ratio).toFixed(2))));
       setScale(nextScale);
+      if (nextScale <= 1.05) setPan({ x: 0, y: 0 });
     } else if (e.touches.length === 1 && cardContainerRef.current) {
-      // Déplacement et orientation 3D au doigt maintenu
       const rect = cardContainerRef.current.getBoundingClientRect();
       const touch = e.touches[0];
       const x = Math.max(-1, Math.min(1, ((touch.clientX - rect.left) / rect.width - 0.5) * 2));
       const y = Math.max(-1, Math.min(1, ((touch.clientY - rect.top) / rect.height - 0.5) * 2));
       setMousePos({ x: x * 0.55, y: y * 0.55 });
+
+      // Glisser au doigt pour déplacer la carte zoomée
+      if (dragStartRef.current && scale > 1.05) {
+        const dx = touch.clientX - dragStartRef.current.clientX;
+        const dy = touch.clientY - dragStartRef.current.clientY;
+        updatePanWithClamping(scale, dragStartRef.current.initialPanX + dx, dragStartRef.current.initialPanY + dy);
+      }
     }
   };
 
@@ -201,6 +272,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
     if (e.touches.length === 0) {
       setIsInteracting(false);
       pinchStartRef.current = null;
+      dragStartRef.current = null;
       setMousePos({ x: 0, y: 0 });
     } else if (e.touches.length === 1) {
       pinchStartRef.current = null;
@@ -341,8 +413,12 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             <div className="flex flex-col items-center select-none">
               <div
                 ref={cardContainerRef}
-                className="relative flex justify-center items-center perspective-[1200px] cursor-grab active:cursor-grabbing touch-none py-2 px-1"
-                style={{ touchAction: 'none' }}
+                className="relative flex justify-center items-start perspective-[1200px] cursor-grab active:cursor-grabbing touch-none py-2 px-1 w-full overflow-visible"
+                style={{
+                  touchAction: 'none',
+                  minHeight: `${Math.round(380 * Math.min(scale, 1.8))}px`,
+                  transition: 'min-height 0.25s ease-out',
+                }}
                 onWheel={handleWheel}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
@@ -355,7 +431,8 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
               >
                 <div
                   style={{
-                    transform: `scale(${scale}) rotateY(${mousePos.x * 26}deg) rotateX(${-mousePos.y * 26}deg)`,
+                    transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${scale}) rotateY(${mousePos.x * 22}deg) rotateX(${-mousePos.y * 22}deg)`,
+                    transformOrigin: 'top center',
                     transition: isInteracting ? 'none' : 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)',
                     transformStyle: 'preserve-3d',
                   }}
@@ -427,7 +504,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
               </div>
 
               {/* Barre de Contrôles Zoom & Reset HUD */}
-              <div className="flex items-center justify-center gap-1.5 mt-3 p-1 rounded-full bg-[#02140f] border border-[#78350f]/60 shadow-lg text-xs">
+              <div className="flex items-center justify-center gap-1.5 mt-3 p-1 rounded-full bg-[#02140f] border border-[#78350f]/60 shadow-lg text-xs z-30">
                 <button
                   type="button"
                   onClick={() => setScale((prev) => Math.max(0.75, Number((prev - 0.25).toFixed(2))))}
@@ -440,6 +517,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                   type="button"
                   onClick={() => {
                     setScale(1);
+                    setPan({ x: 0, y: 0 });
                     setMousePos({ x: 0, y: 0 });
                   }}
                   className="px-2 py-0.5 rounded-full hover:bg-slate-800 text-[11px] font-mono font-bold text-amber-400 hover:text-amber-300 transition cursor-pointer"
@@ -460,16 +538,26 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                   type="button"
                   onClick={() => {
                     setScale(1);
+                    setPan({ x: 0, y: 0 });
                     setMousePos({ x: 0, y: 0 });
                   }}
                   className="p-1.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
-                  title="Réinitialiser l'orientation"
+                  title="Réinitialiser la vue et l'orientation"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                 </button>
+                <div className="w-[1px] h-3.5 bg-slate-700/60 mx-0.5" />
+                <button
+                  type="button"
+                  onClick={() => setIsFullscreenZoom(true)}
+                  className="p-1.5 rounded-full hover:bg-slate-800 text-amber-400 hover:text-amber-300 transition cursor-pointer"
+                  title="Plein écran (Loupe centrée sans bordure)"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </button>
               </div>
               <div className="text-[10px] text-slate-400 mt-1.5 text-center flex items-center justify-center gap-1.5 flex-wrap">
-                <span>Toucher/Glisser pour incliner</span>
+                <span>{scale > 1.05 ? 'Glisser pour déplacer' : 'Glisser pour incliner'}</span>
                 <span>•</span>
                 <span>Molette / 2 doigts pour zoomer</span>
               </div>
@@ -796,6 +884,180 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           </div>
         </motion.div>
       </div>
+
+      {/* ========================================================= */}
+      {/* MODE PLEIN ÉCRAN / LOUPE CENTRÉE (GARANTI SANS DÉBORDEMENT) */}
+      {/* ========================================================= */}
+      {isFullscreenZoom && (
+        <div
+          className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-6 select-none animate-in fade-in duration-200"
+          onClick={() => setIsFullscreenZoom(false)}
+        >
+          {/* Header plein écran */}
+          <div
+            className="w-full max-w-xl flex items-center justify-between z-20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-mono font-bold text-amber-400 text-sm">
+                #{String(card.cardNumber).padStart(3, '0')}
+              </span>
+              <h2 className="text-white font-black text-sm sm:text-base line-clamp-1">
+                {card.title}
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsFullscreenZoom(false)}
+              className="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-bold border border-white/10 cursor-pointer"
+              title="Quitter le plein écran"
+            >
+              <Minimize2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Réduire</span>
+            </button>
+          </div>
+
+          {/* Corps de la carte plein écran centré */}
+          <div
+            className="relative flex items-center justify-center w-full max-w-xl flex-1 my-2 overflow-hidden perspective-[1200px] cursor-grab active:cursor-grabbing"
+            onClick={(e) => e.stopPropagation()}
+            onWheel={handleWheel}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
+          >
+            <div
+              style={{
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${Math.max(1, scale)}) rotateY(${mousePos.x * 24}deg) rotateX(${-mousePos.y * 24}deg)`,
+                transformOrigin: 'center center',
+                transition: isInteracting ? 'none' : 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                transformStyle: 'preserve-3d',
+              }}
+              className={`relative max-h-[72dvh] max-w-[85vw] aspect-[5/7] h-[520px] rounded-none border-3 ${rarityMeta.borderClass} ${
+                holoCount > 0 ? 'ring-2 ring-cyan-300/50 shadow-cyan-500/30' : rarityMeta.glowClass
+              } shadow-2xl p-5 flex flex-col justify-between overflow-hidden bg-gradient-to-b ${
+                rarityMeta.bgGradient
+              }`}
+            >
+              <div className="absolute inset-1.5 border border-white/15 pointer-events-none z-10" />
+
+              {/* Effet Holo foil */}
+              {holoCount > 0 && (
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-60 z-10"
+                  style={{
+                    background: `linear-gradient(${
+                      135 + mousePos.x * 90
+                    }deg, rgba(255,0,128,0.25) 0%, rgba(0,255,255,0.3) 25%, rgba(255,255,0,0.25) 50%, rgba(0,255,128,0.3) 75%, rgba(128,0,255,0.25) 100%)`,
+                  }}
+                />
+              )}
+
+              {/* Top: Card Number & Rarity */}
+              <div className="relative z-20 flex items-center justify-between text-xs font-mono">
+                <span className="font-bold text-slate-300">
+                  #{String(card.cardNumber).padStart(3, '0')}
+                </span>
+                <div className="flex items-center gap-1">
+                  {holoCount > 0 && (
+                    <span className="px-1.5 py-0.5 text-[9px] font-black bg-cyan-400/25 text-cyan-200 border border-cyan-400/50">
+                      ✨ HOLO
+                    </span>
+                  )}
+                  <span className={`px-2 py-0.5 font-bold uppercase text-[9px] border ${rarityMeta.badgeClass}`}>
+                    {rarityName}
+                  </span>
+                </div>
+              </div>
+
+              {/* Artwork Capsule */}
+              <div className="relative z-20 my-2 rounded-none overflow-hidden aspect-[16/9] border border-white/25 bg-black/60 shadow-inner flex-1">
+                <img
+                  src={card.imageUrl}
+                  alt={card.title}
+                  className="w-full h-full object-cover pointer-events-none select-none"
+                  draggable={false}
+                />
+              </div>
+
+              {/* Bottom title & year */}
+              <div className="relative z-20">
+                <h3 className="text-base font-black text-white">{card.title}</h3>
+                <div className="flex items-center justify-between text-xs text-slate-300 mt-1">
+                  <span>{card.developer}</span>
+                  <span className="font-mono text-amber-400 font-bold">{card.releaseYear}</span>
+                </div>
+              </div>
+
+              {/* Copies counter */}
+              <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-200 flex items-center gap-1">
+                  <Layers className="w-4 h-4 text-emerald-400" />
+                  <span>x{totalCount} exemplaire{totalCount > 1 ? 's' : ''}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Barre de Contrôles Zoom Plein Écran */}
+          <div
+            className="flex flex-col items-center gap-2 z-20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-center gap-2 p-1.5 rounded-full bg-[#02140f]/90 border border-amber-500/40 shadow-2xl backdrop-blur-md text-xs">
+              <button
+                type="button"
+                onClick={() => setScale((prev) => Math.max(0.75, Number((prev - 0.25).toFixed(2))))}
+                className="p-2 rounded-full hover:bg-slate-800 text-slate-300 hover:text-white transition cursor-pointer"
+                title="Dézoomer"
+              >
+                <ZoomOut className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setScale(1);
+                  setPan({ x: 0, y: 0 });
+                  setMousePos({ x: 0, y: 0 });
+                }}
+                className="px-3 py-1 rounded-full hover:bg-slate-800 text-xs font-mono font-bold text-amber-400 hover:text-amber-300 transition cursor-pointer"
+                title="Réinitialiser le zoom"
+              >
+                {Math.round(scale * 100)}%
+              </button>
+              <button
+                type="button"
+                onClick={() => setScale((prev) => Math.min(2.5, Number((prev + 0.25).toFixed(2))))}
+                className="p-2 rounded-full hover:bg-slate-800 text-slate-300 hover:text-white transition cursor-pointer"
+                title="Zoomer"
+              >
+                <ZoomIn className="w-4 h-4" />
+              </button>
+              <div className="w-[1px] h-4 bg-slate-700/60 mx-1" />
+              <button
+                type="button"
+                onClick={() => {
+                  setScale(1);
+                  setPan({ x: 0, y: 0 });
+                  setMousePos({ x: 0, y: 0 });
+                }}
+                className="p-2 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
+                title="Réinitialiser la vue"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-[11px] text-slate-400 font-medium">
+              Glissez pour déplacer • Molette ou pincement pour zoomer • Échap pour fermer
+            </p>
+          </div>
+        </div>
+      )}
     </AnimatePresence>
   );
 };

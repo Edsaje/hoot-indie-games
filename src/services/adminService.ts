@@ -93,8 +93,48 @@ export interface AdminSystemStatus {
   statsFileSize: number;
   usernamesFileSize: number;
   suggestionsFileSize: number;
+  microIndiesFileSize?: number;
   leaderboardFileSize: number;
   adminSteamId: string;
+}
+
+export interface AdminMicroIndieEntry {
+  id: string;
+  title: string;
+  developer: string;
+  releaseYear: number;
+  platform: 'itch' | 'steam' | 'web' | 'both';
+  itchUrl?: string;
+  steamUrl?: string;
+  playInBrowserUrl?: string;
+  isFree?: boolean;
+  pricingText?: Record<string, string>;
+  genre: string[];
+  artStyle?: Record<string, string>;
+  tagline: Record<string, string>;
+  description: Record<string, string>;
+  developerMessage?: Record<string, string>;
+  jam?: string;
+  discoveredBy?: string;
+  likesCount?: number;
+  coverImage: string;
+  screenshots: string[];
+  dateAdded: string;
+  approved: boolean;
+  approvedAt?: string;
+  ipHash?: string;
+  sourceType?: string;
+  pitch?: string;
+  submittedAt?: string;
+  gameplayUrl?: string;
+  [key: string]: any;
+}
+
+export interface AdminMicroIndiesData {
+  total: number;
+  pending: number;
+  approved: number;
+  list: AdminMicroIndieEntry[];
 }
 
 export interface AdminOverviewPayload {
@@ -111,6 +151,7 @@ export interface AdminOverviewPayload {
     total: number;
     list: AdminCommunitySuggestion[];
   };
+  microIndies?: AdminMicroIndiesData;
   leaderboard: AdminLeaderboardData;
   system: AdminSystemStatus;
 }
@@ -182,6 +223,58 @@ export async function deleteCommunitySuggestion(
 ): Promise<{ success: boolean; message: string }> {
   const formData = new URLSearchParams();
   formData.append('action', 'delete_suggestion');
+  formData.append('id', id);
+  formData.append('steamId', steamId);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+  return data;
+}
+
+/**
+ * Approuve et publie un micro-indé soumis par un utilisateur
+ */
+export async function approveAdminMicroIndie(
+  id: string,
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'approve_micro_indie');
+  formData.append('id', id);
+  formData.append('steamId', steamId);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+  return data;
+}
+
+/**
+ * Supprime ou rejette un micro-indé soumis par un utilisateur
+ */
+export async function deleteAdminMicroIndie(
+  id: string,
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'delete_micro_indie');
   formData.append('id', id);
   formData.append('steamId', steamId);
 

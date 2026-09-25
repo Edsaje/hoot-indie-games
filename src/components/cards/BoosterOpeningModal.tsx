@@ -66,21 +66,15 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
     startTearSequence();
   };
 
-  // Lancement automatique fluide de l'animation dès l'ouverture du booster
+  // Initialisation à l'état scellé dès l'ouverture du booster (ouverture manuelle par le joueur)
   useEffect(() => {
     if (isOpen && result) {
       setOpenedStep('sealed');
       setRevealedIndices([]);
-
-      const autoTearTimer = setTimeout(() => {
-        startTearSequence();
-      }, 550);
-
-      return () => {
-        clearTimeout(autoTearTimer);
-        if (tearTimeoutRef.current) clearTimeout(tearTimeoutRef.current);
-      };
     }
+    return () => {
+      if (tearTimeoutRef.current) clearTimeout(tearTimeoutRef.current);
+    };
   }, [isOpen, result]);
 
   useEffect(() => {
