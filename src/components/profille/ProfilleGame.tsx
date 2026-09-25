@@ -100,7 +100,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
   const { unlockAchievement } = useAchievements();
-  const { allPlayableGames, curatedGems } = useSteamCatalog();
+  const { allPlayableGames } = useSteamCatalog();
 
   // Storage key
   const storageKey = `profille_state_${currentDate}`;
@@ -136,7 +136,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
     return {};
   }, [storageKey]);
 
-  // Jeu secret pour Profille : pioché parmi les pépites (curatedGems) ou verrouillé si session en cours
+  // Jeu secret pour Profille : pioché de manière déterministe et immuable dans INDIE_GAMES ou verrouillé si session en cours
   const secretGame = useMemo(() => {
     if (savedState.secretGameId) {
       const lockedGame =
@@ -144,8 +144,8 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
         INDIE_GAMES.find((g) => g.id === savedState.secretGameId);
       if (lockedGame) return lockedGame;
     }
-    return getDailyProfilleGame(currentDate, curatedGems);
-  }, [currentDate, curatedGems, allPlayableGames, savedState.secretGameId]);
+    return getDailyProfilleGame(currentDate);
+  }, [currentDate, allPlayableGames, savedState.secretGameId]);
 
   // Unique list of developers, genres, composers across all playable games
   const allDevelopers = useMemo(() => {

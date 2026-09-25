@@ -16,13 +16,9 @@ error_reporting(0);
 // Headers de sécurité HTTP
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
-header('Referrer-Policy: strict-origin-when-cross-origin');
+require_once __DIR__ . '/admin_auth.php';
+sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
-
-// Autoriser CORS pour les requêtes de suggestion
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -45,19 +41,9 @@ function getSecret($file) {
 }
 $secret = getSecret($secretFile);
 
-// Récupération de l'IP
+// Récupération de l'IP fiable (sans spoofing X-Forwarded-For)
 function getIp() {
-    $headers = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
-    foreach ($headers as $h) {
-        if (!empty($_SERVER[$h])) {
-            $parts = explode(',', $_SERVER[$h]);
-            $ip = trim($parts[0]);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return $ip;
-            }
-        }
-    }
-    return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    return getAuthClientIp();
 }
 
 $clientIp = getIp();
@@ -173,12 +159,14 @@ if ($action === 'lookup') {
     $rateLimits[$ipHash]['lookups']++;
     @file_put_contents($rateLimitFile, json_encode($rateLimits), LOCK_EX);
 
-    // Requêtes bilingues serveur cURL
+    // Requêtes bilingues serveur cURL + reviews API
     $urlFR = "https://store.steampowered.com/api/appdetails?appids={$lookupAppId}&l=french";
     $urlEN = "https://store.steampowered.com/api/appdetails?appids={$lookupAppId}&l=english";
+    $urlReviews = "https://store.steampowered.com/appreviews/{$lookupAppId}?json=1&language=all&purchase_type=all";
 
     $resFR = fetchSteamApiUrl($urlFR, 8);
     $resEN = fetchSteamApiUrl($urlEN, 8);
+    $resReviews = fetchSteamApiUrl($urlReviews, 6);
 
     if (!$resFR['ok'] && !$resEN['ok']) {
         http_response_code(502);
@@ -211,11 +199,32 @@ if ($action === 'lookup') {
     $dataFR = $dataFR ?: $dataEN;
     $dataEN = $dataEN ?: $dataFR;
 
+    $reviewsData = null;
+    if ($resReviews['ok']) {
+        $reviewsJson = json_decode($resReviews['body'] ?? '', true);
+        if (!empty($reviewsJson['query_summary'])) {
+            $qs = $reviewsJson['query_summary'];
+            $totalReviews = (int)($qs['total_reviews'] ?? 0);
+            $totalPositive = (int)($qs['total_positive'] ?? 0);
+            $posPercent = $totalReviews > 0 ? (int)round(($totalPositive / $totalReviews) * 100) : 0;
+            $reviewsData = [
+                'totalReviews' => $totalReviews,
+                'totalPositive' => $totalPositive,
+                'positivePercent' => $posPercent,
+                'reviewScoreDesc' => [
+                    'fr' => (string)($qs['review_score_desc'] ?? ''),
+                    'en' => (string)($qs['review_score_desc'] ?? ''),
+                ]
+            ];
+        }
+    }
+
     echo json_encode([
         'status' => 'success',
         'appId' => $lookupAppId,
         'dataFR' => $dataFR,
-        'dataEN' => $dataEN
+        'dataEN' => $dataEN,
+        'reviews' => $reviewsData
     ], JSON_UNESCAPED_UNICODE);
     exit;
 }

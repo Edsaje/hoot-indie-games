@@ -18,10 +18,8 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 
-// Autoriser CORS pour les requêtes de tracking
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+require_once __DIR__ . '/admin_auth.php';
+sendCorsHeaders();
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -31,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $statsFile = __DIR__ . '/stats.json';
 $rateLimitFile = __DIR__ . '/track_rate_limits.json';
 $secretFile = __DIR__ . '/.secret';
-require_once __DIR__ . '/admin_auth.php';
 
 // Génération d'octets aléatoires sécurisés
 function getSecureRandomBytes($length = 32) {
@@ -84,19 +81,9 @@ function getOrCreateSecret($file) {
 }
 $serverSecret = getOrCreateSecret($secretFile);
 
-// Récupération de l'adresse IP (avec compatibilité reverse-proxy / CDN)
+// Récupération de l'adresse IP fiable (sans spoofing X-Forwarded-For)
 function getClientIp() {
-    $headers = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
-    foreach ($headers as $h) {
-        if (!empty($_SERVER[$h])) {
-            $ipList = explode(',', $_SERVER[$h]);
-            $ip = trim($ipList[0]);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return $ip;
-            }
-        }
-    }
-    return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    return getAuthClientIp();
 }
 
 $clientIp = getClientIp();
@@ -383,8 +370,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                     'timeout' => 6,
                 ],
                 'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
+                    'verify_peer' => true,
+                    'verify_peer_name' => true,
                 ]
             ];
             $ctx = @stream_context_create($opts);
@@ -394,8 +381,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             }
         }
 
-        // Vérification stricte du compte Administrateur
+        // [SÉCURITÉ] Vérification stricte : l'assertion OpenID DOIT avoir été validée par Valve
+        // avant d'accorder une session administrateur. Sans cette condition, un attaquant pourrait
+        // forger une URL avec le Steam ID admin sans passer par l'authentification Valve.
+        if (!$isValidAssertion) {
+            error_log("[SECURITY] Tentative d'authentification OpenID rejetée — assertion Valve non validée. Steam ID: " . ($steamId ?: 'inconnu') . " IP: " . getClientIp());
+            http_response_code(403);
+            header('Content-Type: text/html; charset=utf-8');
+            echo '<h1>Erreur d\'authentification</h1><p>La validation Steam OpenID a échoué. Veuillez réessayer via le bouton officiel.</p>';
+            echo '<a href="track.php">Retour</a>';
+            exit;
+        }
+
+        // Vérification stricte du compte Administrateur (assertion Valve certifiée ✅)
         if ($steamId === ADMIN_STEAM_ID) {
+            session_regenerate_id(true); // Protection contre le Session Fixation (CWE-384)
             $_SESSION['admin_auth'] = true;
             $_SESSION['admin_steam_id'] = $steamId;
             $_SESSION['admin_login_at'] = date('c');
@@ -549,6 +549,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
     // C. ACTIONS D'ADMINISTRATION
     $action = trim($_POST['action'] ?? $_GET['action'] ?? '');
+
+    // [SÉCURITÉ CWE-352] Les actions administratives de modification requièrent impérativement POST
+    $mutatingActions = [
+        'delete_username', 'edit_user', 'toggle_ban_user', 'purge_user_scores',
+        'manage_forbidden_names', 'create_user', 'delete_suggestion', 'reset_stats'
+    ];
+    if (in_array($action, $mutatingActions, true)) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode([
+                'success' => false,
+                'error' => 'method_not_allowed',
+                'message' => 'Cette action administrative de modification requiert impérativement une requête POST (Protection anti-CSRF CWE-352).'
+            ]);
+            exit;
+        }
+    }
 
     // Modération : Libérer / Supprimer un pseudonyme
     if ($action === 'delete_username') {
@@ -1121,7 +1138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         $system = [
-            'phpVersion' => PHP_VERSION,
             'serverTime' => date('c'),
             'statsFileSize' => file_exists($statsFile) ? filesize($statsFile) : 0,
             'usernamesFileSize' => file_exists($uFile) ? filesize($uFile) : 0,
@@ -1476,12 +1492,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                                     </td>
                                     <td style="text-align: right; white-space: nowrap;">
                                         <?php if (!$isCreator): ?>
-                                            <?php if ($isBanned): ?>
-                                                <a href="track.php?action=toggle_ban_user&target=<?= urlencode($normKey) ?>&banned=0" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); text-decoration: none; border-radius: 6px; margin-right: 4px;">Débannir</a>
-                                            <?php else: ?>
-                                                <a href="track.php?action=toggle_ban_user&target=<?= urlencode($normKey) ?>&banned=1" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); text-decoration: none; border-radius: 6px; margin-right: 4px;">Bannir</a>
-                                            <?php endif; ?>
-                                            <a href="track.php?action=delete_username&target=<?= urlencode($normKey) ?>" onclick="return confirm('Voulez-vous vraiment libérer ce pseudo ?');" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; border-radius: 6px;">Libérer</a>
+                                            <?php $adminCsrf = getAdminCsrfToken(); ?>
+                                            <form method="POST" action="track.php" style="display:inline;">
+                                                <input type="hidden" name="action" value="toggle_ban_user">
+                                                <input type="hidden" name="target" value="<?= htmlspecialchars($normKey) ?>">
+                                                <input type="hidden" name="banned" value="<?= $isBanned ? '0' : '1' ?>">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($adminCsrf) ?>">
+                                                <button type="submit" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; <?= $isBanned ? 'background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);' : 'background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);' ?> border-radius: 6px; margin-right: 4px; cursor: pointer;">
+                                                    <?= $isBanned ? 'Débannir' : 'Bannir' ?>
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="track.php" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment libérer ce pseudo ?');">
+                                                <input type="hidden" name="action" value="delete_username">
+                                                <input type="hidden" name="target" value="<?= htmlspecialchars($normKey) ?>">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($adminCsrf) ?>">
+                                                <button type="submit" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; cursor: pointer;">
+                                                    Libérer
+                                                </button>
+                                            </form>
                                         <?php else: ?>
                                             <span style="font-size: 0.75rem; color: #f59e0b; font-weight: bold;">Inaliénable 🔒</span>
                                         <?php endif; ?>

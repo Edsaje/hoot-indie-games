@@ -335,6 +335,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Modération / suppression de message
   const deleteMessage = useCallback(
     async (messageId: string): Promise<{ success: boolean; message?: string }> => {
+      if (!isAuthenticated) {
+        return { success: false, message: 'Vous devez être connecté pour supprimer un message.' };
+      }
+
       const isActualAdmin = Boolean(isAdmin || isCreator || profile.isAdmin || profile.role === 'admin');
       const isActualMod = Boolean(isModerator || profile.isModerator || profile.role === 'moderator');
 
@@ -353,29 +357,32 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setAllMessages((prev) => {
           const next = { ...prev };
           for (const ch of Object.keys(next) as ChatChannel[]) {
-            next[ch] = next[ch].map((m) =>
-              m.id === messageId
-                ? {
-                    ...m,
-                    isDeleted: true,
-                    text:
-                      m.username === profile.username
-                        ? '[Message retiré par l\'auteur]'
-                        : (isActualAdmin
-                            ? '[Message retiré par l\'administrateur]'
-                            : '[Message retiré par la modération]'),
-                  }
-                : m
-            );
+            next[ch] = next[ch].map((m) => {
+              if (m.id !== messageId) return m;
+              const isAuthor = Boolean(
+                (profile.username && m.username && m.username.toLowerCase() === profile.username.toLowerCase()) ||
+                (profile.id && m.userId && m.userId === profile.id) ||
+                (profile.steam?.steamId && m.steamId && m.steamId === profile.steam.steamId)
+              );
+              return {
+                ...m,
+                isDeleted: true,
+                text: isAuthor
+                  ? '[Message retiré par l\'auteur]'
+                  : (isActualAdmin
+                      ? '[Message retiré par l\'administrateur]'
+                      : '[Message retiré par la modération]'),
+              };
+            });
           }
           return next;
         });
-        return { success: true };
+        return { success: true, message: res.message };
       }
 
       return { success: false, message: res.message || 'Erreur lors de la modération du message.' };
     },
-    [profile, isAdmin, isCreator, isModerator]
+    [profile, isAdmin, isCreator, isModerator, isAuthenticated]
   );
 
   const activeMessages = useMemo(() => {

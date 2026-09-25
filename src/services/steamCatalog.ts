@@ -1,4 +1,4 @@
-import { INDIE_GAMES, setCustomDailyPool } from '../data/games';
+import { INDIE_GAMES } from '../data/games';
 import type { Game } from '../types/game';
 import { inferCanonicalArtStyle, inferCanonicalCamera, inferEnrichedGenres } from '../utils/gameInference';
 
@@ -48,8 +48,6 @@ class SteamCatalogService {
     } catch {
       // Ignorer les erreurs de parsing du cache local
     }
-    // Synchroniser immédiatement le pool quotidien avec les pépites
-    setCustomDailyPool(this.getCuratedGems());
   }
 
   /**
@@ -91,7 +89,6 @@ class SteamCatalogService {
         );
       } catch {}
     }
-    setCustomDailyPool(this.getCuratedGems());
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('hoot_steam_catalog_updated'));
     }
@@ -136,7 +133,6 @@ class SteamCatalogService {
               localStorage.setItem(STORAGE_KEY_STEAM_CATALOG, JSON.stringify(items));
             } catch {}
           }
-          setCustomDailyPool(this.getCuratedGems());
         }
       } catch (err) {
         console.warn('Impossible de charger /data/steam_catalog.json, repli sur le catalogue de base:', err);
@@ -355,7 +351,6 @@ class SteamCatalogService {
     filtered.unshift({ ...game, isCustomImport: true });
     try {
       localStorage.setItem(STORAGE_KEY_CUSTOM_GAMES, JSON.stringify(filtered));
-      setCustomDailyPool(this.getCuratedGems());
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('hoot_steam_catalog_updated'));
       }
@@ -373,7 +368,6 @@ class SteamCatalogService {
     const filtered = current.filter((g) => g.id !== id);
     try {
       localStorage.setItem(STORAGE_KEY_CUSTOM_GAMES, JSON.stringify(filtered));
-      setCustomDailyPool(this.getCuratedGems());
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('hoot_steam_catalog_updated'));
       }

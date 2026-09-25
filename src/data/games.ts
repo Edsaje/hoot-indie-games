@@ -1,4 +1,5 @@
 import type { Game } from '../types/game';
+import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlyScheduler';
 
 /**
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
@@ -414,7 +415,7 @@ export const INDIE_GAMES: Game[] = [
       "Puzzle"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -732,7 +733,7 @@ export const INDIE_GAMES: Game[] = [
       "Puzzle"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -852,7 +853,7 @@ export const INDIE_GAMES: Game[] = [
       "Rétro"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -1006,8 +1007,9 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2012,
     "genre": [
       "Action",
-      "Fast-FPS",
-      "Rétro"
+      "Rétro",
+      "Twin-stick",
+      "Cyberpunk"
     ],
     "artStyle": {
       "fr": "Pixel Art",
@@ -1724,7 +1726,7 @@ export const INDIE_GAMES: Game[] = [
       "Rétro"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -2395,7 +2397,7 @@ export const INDIE_GAMES: Game[] = [
       "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -2871,7 +2873,7 @@ export const INDIE_GAMES: Game[] = [
       "Psychologique"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -3190,7 +3192,7 @@ export const INDIE_GAMES: Game[] = [
       "Rétro"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -3342,8 +3344,10 @@ export const INDIE_GAMES: Game[] = [
     "title": "How to Fish",
     "releaseYear": 2026,
     "genre": [
-      "Action",
-      "Simulation"
+      "Simulation",
+      "Pêche",
+      "Cozy",
+      "Méditatif"
     ],
     "artStyle": {
       "fr": "3D Stylisée",
@@ -3462,7 +3466,9 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2026,
     "genre": [
       "Massivement multijoueur",
-      "Stratégie"
+      "Stratégie",
+      "Simulation",
+      "Gestion"
     ],
     "artStyle": {
       "fr": "Monochrome / Minimaliste",
@@ -3501,8 +3507,10 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2026,
     "genre": [
       "Puzzle",
+      "Party Game",
+      "Co-op",
       "Comédie",
-      "Co-op"
+      "Physique"
     ],
     "artStyle": {
       "fr": "3D Stylisée",
@@ -3703,7 +3711,9 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Aventure",
       "Survie",
-      "Horreur"
+      "Horreur",
+      "Sci-Fi",
+      "Psychologique"
     ],
     "artStyle": {
       "fr": "3D Réaliste",
@@ -4293,7 +4303,9 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2019,
     "genre": [
       "Puzzle",
-      "Exploration"
+      "Exploration",
+      "Stratégie",
+      "Rétro"
     ],
     "artStyle": {
       "fr": "Pixel Art",
@@ -4337,7 +4349,7 @@ export const INDIE_GAMES: Game[] = [
       "Horreur"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -4377,7 +4389,7 @@ export const INDIE_GAMES: Game[] = [
       "Aventure"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -4766,7 +4778,8 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2022,
     "genre": [
       "Cozy",
-      "Puzzle"
+      "Puzzle",
+      "Méditatif"
     ],
     "artStyle": {
       "fr": "2D Dessiné à la main",
@@ -5160,7 +5173,9 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2021,
     "genre": [
       "Rythme",
-      "Action"
+      "Action",
+      "Narratif",
+      "Rétro"
     ],
     "artStyle": {
       "fr": "Pixel Art",
@@ -5521,7 +5536,7 @@ export const INDIE_GAMES: Game[] = [
       "Psychologique"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -5557,10 +5572,12 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Horreur",
       "Stratégie",
-      "Action"
+      "Psychologique",
+      "Action",
+      "Rétro"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -5799,7 +5816,7 @@ export const INDIE_GAMES: Game[] = [
       "Action"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -5863,7 +5880,8 @@ export const INDIE_GAMES: Game[] = [
         "de": "Kehre zum Turm zurück mit brandneuen Charakteren, Zaubern und Relikten im heißersehnten Nachfolger.",
         "ja": "新たなキャラクターとカード、未知の呪いとともに再び伝説の塔へと挑む大本命デッキ構築ローグライク続編。",
         "pt-BR": "Retorne à Torre com novos heróis, sinergias inéditas e relíquias misteriosas nesta aguardada sequência."
-      }
+      },
+      "composer": "Clark Aboud"
     }
   },
   {
@@ -5872,7 +5890,9 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2026,
     "genre": [
       "Action",
-      "Simulation"
+      "Simulation",
+      "Fast-FPS",
+      "Sci-Fi"
     ],
     "artStyle": {
       "fr": "3D Stylisée",
@@ -5901,7 +5921,8 @@ export const INDIE_GAMES: Game[] = [
         "de": "Bediene schwere Abwehrtürme und vernichte anrollende Kolonnen mechanischer Angreifer mit purer Feuerkraft.",
         "ja": "重量級の防衛タレットを操縦し、四方から押し寄せる強固な装甲機械軍団を圧倒的な火力で迎撃せよ。",
         "pt-BR": "Opere torres de artilharia pesada e repila ondas colossais de invasores mecânicos sem vacilar."
-      }
+      },
+      "composer": "Nick Nieuwoudt, Dominik Latos"
     }
   },
   {
@@ -5909,9 +5930,11 @@ export const INDIE_GAMES: Game[] = [
     "title": "Project Zomboid",
     "releaseYear": 2013,
     "genre": [
+      "Survie",
       "RPG",
       "Simulation",
-      "Survie"
+      "Horreur",
+      "Sandbox"
     ],
     "artStyle": {
       "fr": "3D Stylisée",
@@ -5979,7 +6002,8 @@ export const INDIE_GAMES: Game[] = [
         "de": "Ein origineller Mix aus Plattformer und Incremental Game, in dem jede Zahl dein Können exponentiell steigert.",
         "ja": "ジャンプアクションと放置クリッカーの数値インフレが融合した、中毒性の高い新感覚インクリメンタルゲーム。",
         "pt-BR": "Pule e acumule melhorias numéricas neste criativo e viciante jogo incremental com elementos de plataforma."
-      }
+      },
+      "composer": "Varii"
     }
   },
   {
@@ -6193,7 +6217,9 @@ export const INDIE_GAMES: Game[] = [
     "genre": [
       "Survie",
       "Roguelike",
-      "Action"
+      "Action",
+      "Co-op",
+      "Artisanat"
     ],
     "artStyle": {
       "fr": "3D Stylisée",
@@ -6516,7 +6542,7 @@ export const INDIE_GAMES: Game[] = [
       "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -6719,7 +6745,7 @@ export const INDIE_GAMES: Game[] = [
       "Point & Click"
     ],
     "artStyle": {
-      "fr": "3D Low-Poly / Rétro",
+      "fr": "3D Rétro Low-poly",
       "en": "Retro Low-poly 3D"
     },
     "camera": {
@@ -6881,7 +6907,10 @@ export const INDIE_GAMES: Game[] = [
     "title": "BuGarden",
     "releaseYear": 2026,
     "genre": [
-      "Simulation"
+      "Simulation",
+      "Cozy",
+      "Farming",
+      "Méditatif"
     ],
     "artStyle": {
       "fr": "Pixel Art",
@@ -6910,7 +6939,8 @@ export const INDIE_GAMES: Game[] = [
         "de": "Ein friedvoller digitaler Blumengarten mit sanftem Insektensummen für den unteren Bildschirmrand.",
         "ja": "画面の隅で色とりどりの花が咲き誇り、愛らしい虫たちが集う穏やかで心地よいデスクトップガーデン。",
         "pt-BR": "Cultive um jardim encantador repleto de insetos simpáticos no rodapé da sua tela nesta experiência relaxante."
-      }
+      },
+      "composer": "西梅树工作室 (Plum Tree Studio)"
     }
   },
   {
@@ -6919,6 +6949,7 @@ export const INDIE_GAMES: Game[] = [
     "releaseYear": 2015,
     "genre": [
       "Platformer",
+      "Action",
       "Rétro"
     ],
     "artStyle": {
@@ -7165,12 +7196,14 @@ export const INDIE_GAMES: Game[] = [
     "title": "Happy Wheels",
     "releaseYear": 2026,
     "genre": [
-      "Action",
-      "Course automobile"
+      "Physique",
+      "Platformer",
+      "Comédie",
+      "Action"
     ],
     "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
     },
     "camera": {
       "fr": "Vue de côté 2D",
@@ -7194,7 +7227,8 @@ export const INDIE_GAMES: Game[] = [
         "de": "Steuere unzureichend ausgerüstete Fahrer durch mörderische Hindernisparcours voller schwarzem Humor.",
         "ja": "車椅子やセグウェイに乗った無防備なキャラを操り、トラップだらけの悪路を疾走する伝説の物理アクション死にゲー。",
         "pt-BR": "Ultrapasse pistas de obstáculos letais em veículos improvisados com física hilária e momentos caóticos."
-      }
+      },
+      "composer": "Jim Bonacci"
     }
   },
   {
@@ -7202,16 +7236,18 @@ export const INDIE_GAMES: Game[] = [
     "title": "Beat Saber",
     "releaseYear": 2019,
     "genre": [
-      "Aventure",
-      "Indépendant"
+      "Rythme",
+      "Action",
+      "Simulation",
+      "Sci-Fi"
     ],
     "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Première personne",
+      "en": "First-Person"
     },
     "developer": "Beat Games",
     "steamUrl": "https://store.steampowered.com/app/620980/",
@@ -7231,7 +7267,8 @@ export const INDIE_GAMES: Game[] = [
         "de": "Zerteile im Takt pulsierender Beats anfliegende Rhythmus-Würfel mit leuchtenden Lichtschwertern in VR.",
         "ja": "飛来するキューブを両手の光るサーベルでリズムに乗って両断する、世界中を熱狂させたVRリズムゲームの金字塔。",
         "pt-BR": "Corte os cubos luminosos no ritmo da música com sabres de energia no jogo mais aclamado de realidade virtual."
-      }
+      },
+      "composer": "Jaroslav Beck"
     }
   },
   {
@@ -7239,17 +7276,19 @@ export const INDIE_GAMES: Game[] = [
     "title": "Graveyard Keeper",
     "releaseYear": 2018,
     "genre": [
-      "Aventure",
+      "Gestion",
       "RPG",
-      "Simulation"
+      "Simulation",
+      "Artisanat",
+      "Dark Fantasy"
     ],
     "artStyle": {
       "fr": "Pixel Art",
       "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "Lazy Bear Games",
     "steamUrl": "https://store.steampowered.com/app/599140/",
@@ -7269,7 +7308,8 @@ export const INDIE_GAMES: Game[] = [
         "de": "Leite einen mittelalterlichen Friedhof mit fragwürdiger Moral, finsterem Witz und cleverem Handwerk.",
         "ja": "中世の墓守となり、遺体の埋葬から臓器の密売まで倫理を問われる選択を重ねながら発展させるブラックコメディ経営シム。",
         "pt-BR": "Administre um cemitério medieval enfrentando dilemas éticos duvidosos com muito humor negro e comércio."
-      }
+      },
+      "composer": "Hamza El Hamri"
     }
   },
   {
@@ -7302,9 +7342,10 @@ export const INDIE_GAMES: Game[] = [
     ],
     "hints": {
       "tagline": {
-        "fr": "&quot;DRAPLINE&quot; is a roguelite training game where you raise a dragon girl who eats anything and train her to become the strongest in one year. Feed her a variety of things to increase her abilities, combine various skills to build your own strategy, and defeat the impending catastrophe!",
+        "fr": "DRAPLINE est un jeu d'entraînement rogue-lite où vous élevez une jeune fille dragon gloutonne pour la rendre la plus puissante en un an. Nourrissez-la pour développer ses compétences et repousser le cataclysme !",
         "en": "&quot;DRAPLINE&quot; is a roguelite training game where you raise a dragon girl who eats anything and train her to become the strongest in one year. Feed her a variety of things to increase her abilities, combine various skills to build your own strategy, and defeat the impending catastrophe!"
-      }
+      },
+      "composer": "KANAWO"
     }
   },
   {
@@ -7312,11 +7353,15 @@ export const INDIE_GAMES: Game[] = [
     "title": "Stick It to the Stickman",
     "releaseYear": 2026,
     "genre": [
-      "Action"
+      "Beat them all",
+      "Roguelite",
+      "Action",
+      "Physique",
+      "Comédie"
     ],
     "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
     },
     "camera": {
       "fr": "Vue de côté 2D",
@@ -7336,32 +7381,36 @@ export const INDIE_GAMES: Game[] = [
       "tagline": {
         "fr": "Stick it to the Stickman est un beat them all rogue-lite dans lequel vous vous hissez au sommet de la hiérarchie par la violence. Développez des portfolios de combat dévastateurs pour débloquer de nouveaux employés et modes de jeu tout en augmentant votre valeur actionnariale.",
         "en": "Stick it to the Stickman is a rogue-lite physics brawler where you brutally displace your way up the corporate ladder. Assemble devastating combat portfolios, unlocking new workers and game modes as you increase shareholder value."
-      }
+      },
+      "composer": "Jaybooty"
     }
   }
 ];
 
 // Pool dynamique pour les jeux quotidiens (permet d'inclure les pépites promues via l'admin et exclure les jeux retirés)
-let customDailyPool: Game[] | null = null;
-
-export function setCustomDailyPool(pool: Game[] | null) {
-  if (pool && pool.length > 0) {
-    customDailyPool = pool;
-  } else {
-    customDailyPool = null;
-  }
-}
-
+// Pool stable pour les jeux quotidiens (sanctuarisé sur INDIE_GAMES pour garantir l'immutabilité stricte des défis du jour et du jeu mis en avant)
 export function getActiveDailyPool(): Game[] {
-  if (customDailyPool && customDailyPool.length > 0) {
-    return customDailyPool;
-  }
   return INDIE_GAMES;
 }
 
-// Helper déterministe pour obtenir le jeu du jour basé sur une graine temporelle "YYYY-MM-DD"
+export function setCustomDailyPool(_pool: Game[] | null) {
+  // Sanctuarisé : le pool des défis quotidiens suit le cycle mensuel déterministe
+}
+
+// Helper déterministe pour obtenir le jeu du jour basé sur le calendrier mensuel équitable
 export function getDailyGame(dateString: string, offset = 0, pool?: Game[]): Game {
-  const gamesPool = pool && pool.length > 0 ? pool : getActiveDailyPool();
+  if (offset === 0) {
+    return getScheduledDailyGame(dateString, 'screenle', pool);
+  }
+  if (offset === 3) {
+    return getScheduledDailyGame(dateString, 'indledle', pool);
+  }
+  if (offset === 17) {
+    return getScheduledDailyGame(dateString, 'dailyGem', pool);
+  }
+
+  // Repli déterministe si offset personnalisé
+  const gamesPool = pool && pool.length > 0 ? pool : INDIE_GAMES;
   let hash = 0;
   for (let i = 0; i < dateString.length; i++) {
     hash = (hash << 5) - hash + dateString.charCodeAt(i);
@@ -7373,14 +7422,9 @@ export function getDailyGame(dateString: string, offset = 0, pool?: Game[]): Gam
 
 // Helper déterministe pour obtenir le jeu du jour pour Profille (sans collision avec Screenle ni Indledle)
 export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
-  const gamesPool = pool && pool.length > 0 ? pool : getActiveDailyPool();
-  const g0 = getDailyGame(dateString, 0, gamesPool);
-  const g3 = getDailyGame(dateString, 3, gamesPool);
-  let offset = 7;
-  let candidate = getDailyGame(dateString, offset, gamesPool);
-  while ((candidate.id === g0.id || candidate.id === g3.id) && offset < 50) {
-    offset++;
-    candidate = getDailyGame(dateString, offset, gamesPool);
-  }
-  return candidate;
+  return getScheduledDailyGame(dateString, 'profille', pool);
 }
+
+export { getScheduledDailyGame, getScheduledDay };
+
+

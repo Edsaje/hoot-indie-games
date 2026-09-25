@@ -167,11 +167,12 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   };
 
   const canDeleteMessage = (msg: ChatMessage): boolean => {
-    if (msg.isDeleted) return false;
+    if (msg.isDeleted || !isAuthenticated) return false;
 
     const isMe = Boolean(
-      (profile.username && msg.username === profile.username) ||
-      (profile.id && msg.userId && msg.userId === profile.id)
+      (profile.username && msg.username && msg.username.toLowerCase() === profile.username.toLowerCase()) ||
+      (profile.id && msg.userId && msg.userId === profile.id) ||
+      (profile.steam?.steamId && msg.steamId && msg.steamId === profile.steam.steamId)
     );
 
     // 1. Admin / Créateur : peut supprimer TOUS les messages (les siens, ceux des modos, ceux des utilisateurs)
@@ -204,8 +205,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   const handleDeleteMessage = async (msg: ChatMessage) => {
     soundFx.playClick();
     const isMe = Boolean(
-      (profile.username && msg.username === profile.username) ||
-      (profile.id && msg.userId && msg.userId === profile.id)
+      (profile.username && msg.username && msg.username.toLowerCase() === profile.username.toLowerCase()) ||
+      (profile.id && msg.userId && msg.userId === profile.id) ||
+      (profile.steam?.steamId && msg.steamId && msg.steamId === profile.steam.steamId)
     );
 
     let confirmPrompt = `Voulez-vous retirer ce message de ${msg.username} de la discussion ?`;
@@ -717,8 +719,17 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
             </div>
           ) : (
             messages.map((msg) => {
-              const isMe = msg.username === profile.username;
-              const avatar = getAvatarInfo(msg.avatarId);
+              const isCreatorMsg = Boolean(
+                msg.isCreator ||
+                msg.avatarId === 'hibouxe_creator' ||
+                (msg.title && msg.title.toLowerCase().includes('créateur'))
+              );
+              const isMe = Boolean(
+                (profile.username && (msg.username.toLowerCase() === profile.username.toLowerCase() || (isStrictAdmin && isCreatorMsg))) ||
+                (profile.id && msg.userId && msg.userId === profile.id) ||
+                (profile.steam?.steamId && msg.steamId && msg.steamId === profile.steam.steamId)
+              );
+              const avatar = getAvatarInfo(isCreatorMsg ? 'hibouxe_creator' : msg.avatarId);
               const frameDef = getFrameDefinition(msg.activeFrame);
 
               return (
@@ -754,27 +765,37 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                   >
                     {/* Header info utilisateur */}
                     <div className="flex items-center gap-1.5 mb-0.5 px-0.5 flex-wrap">
-                      <span className="font-bold text-[11px] text-amber-100 flex items-center gap-1">
-                        {msg.username}
-                        {msg.isCreator && (
-                          <span
-                            className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold"
-                            title="Créateur & Développeur officiel"
-                          >
-                            <Crown className="w-2.5 h-2.5 text-amber-400" />
-                            Créateur
+                      {(() => {
+                        const isCreatorMsg = Boolean(
+                          msg.isCreator ||
+                          msg.avatarId === 'hibouxe_creator' ||
+                          (msg.title && msg.title.toLowerCase().includes('créateur'))
+                        );
+                        const authorDisplayName = (isCreatorMsg && msg.username.startsWith('Explorateur_')) ? 'Hibouxe' : msg.username;
+                        return (
+                          <span className="font-bold text-[11px] text-amber-100 flex items-center gap-1">
+                            {authorDisplayName}
+                            {isCreatorMsg && (
+                              <span
+                                className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold"
+                                title="Créateur & Développeur officiel"
+                              >
+                                <Crown className="w-2.5 h-2.5 text-amber-400" />
+                                Créateur
+                              </span>
+                            )}
+                            {msg.isModerator && !isCreatorMsg && (
+                              <span
+                                className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-blue-500/20 text-blue-300 border border-blue-400/50 font-bold"
+                                title="Modérateur officiel"
+                              >
+                                <Shield className="w-2.5 h-2.5 text-blue-400" />
+                                Modérateur
+                              </span>
+                            )}
                           </span>
-                        )}
-                        {msg.isModerator && !msg.isCreator && (
-                          <span
-                            className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-blue-500/20 text-blue-300 border border-blue-400/50 font-bold"
-                            title="Modérateur officiel"
-                          >
-                            <Shield className="w-2.5 h-2.5 text-blue-400" />
-                            Modérateur
-                          </span>
-                        )}
-                      </span>
+                        );
+                      })()}
 
                       {msg.title && (
                         <span className="text-[10px] text-emerald-400/80 truncate max-w-[100px]">
@@ -815,7 +836,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                             ? 'bg-[#020d0a]/80 text-slate-400 border-slate-700/40 italic'
                             : isMe
                             ? 'bg-[#064e3b]/90 text-emerald-50 border-[#059669]/60 rounded-tr-none'
-                            : msg.isCreator
+                            : (msg.isCreator || msg.avatarId === 'hibouxe_creator' || (msg.title && msg.title.toLowerCase().includes('créateur')))
                             ? 'bg-[#291b07]/90 text-amber-100 border-amber-500/50 rounded-tl-none ring-1 ring-amber-500/30'
                             : msg.isModerator
                             ? 'bg-[#091b2c]/90 text-blue-100 border-blue-500/40 rounded-tl-none'

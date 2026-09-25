@@ -6,6 +6,8 @@
 import { INDIE_GAMES } from './games';
 import type { CardItem, CardRarity, BoosterCardResult } from '../types/cards';
 import { CARDS_PER_BOOSTER, HOLO_PROBABILITY } from '../types/cards';
+import type { Game } from '../types/game';
+import { getSteamStoreData } from './steamStoreData';
 
 // Pépites sacrées du panthéon indé (Légendaires)
 const LEGENDARY_GAME_IDS = new Set([
@@ -31,6 +33,8 @@ const LEGENDARY_GAME_IDS = new Set([
 
 // Chefs-d'œuvre majeurs acclamés (Épiques)
 const EPIC_GAME_IDS = new Set([
+  'phasmophobia',
+  'v-rising',
   'sea-of-stars',
   'tunic',
   'chants-of-sennaar',
@@ -203,23 +207,112 @@ const RARE_GAME_IDS = new Set([
 ]);
 
 /**
- * Détermine la rareté d'une carte d'après l'aura du jeu
+ * Seuils officiels d'évaluations Steam pour l'attribution automatique des raretés de cartes.
  */
-function getGameRarity(gameId: string): CardRarity {
-  if (LEGENDARY_GAME_IDS.has(gameId)) return 'legendary';
+export const STEAM_RARITY_THRESHOLDS = {
+  // 🟡 Légendaire : >= 100 000 avis Steam (ou >= 75 000 avis avec score ultra-positif >= 95%)
+  LEGENDARY_MIN_REVIEWS: 100000,
+  LEGENDARY_ALT_MIN_REVIEWS: 75000,
+  LEGENDARY_ALT_MIN_POSITIVE: 95,
+
+  // 🟣 Épique : >= 25 000 avis Steam
+  EPIC_MIN_REVIEWS: 25000,
+
+  // 🔵 Rare : >= 5 000 avis Steam
+  RARE_MIN_REVIEWS: 5000,
+} as const;
+
+/**
+ * Extrait l'AppID Steam numérique d'un objet Game
+ */
+export function extractSteamAppId(game?: Partial<Game> | null): number | null {
+  if (!game) return null;
+  if (typeof game.steamAppId === 'number' && !isNaN(game.steamAppId) && game.steamAppId > 0) {
+    return game.steamAppId;
+  }
+  if (game.steamUrl) {
+    const match = game.steamUrl.match(/\/app\/(\d+)/);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (!isNaN(num) && num > 0) return num;
+    }
+  }
+  return null;
+}
+
+/**
+ * Détermine la rareté d'une carte d'après les seuils officiels d'évaluations Steam et l'aura du jeu.
+ * Priorités :
+ * 1. Surcharge manuelle (game.cardRarity si définie par l'Admin)
+ * 2. Panthéon sacré intemporel (LEGENDARY_GAME_IDS)
+ * 3. Données officielles certifiées Steam Store (nombre d'avis et taux d'approbation)
+ * 4. Listes historiques de prestige (EPIC_GAME_IDS, RARE_GAME_IDS)
+ * 5. Commune par défaut (pépites confidentielles / micro-indés)
+ */
+export function computeGameRarity(gameId: string, game?: Partial<Game>): CardRarity {
+  // 1. Surcharge manuelle forcée
+  if (game && game.cardRarity) {
+    if (['common', 'rare', 'epic', 'legendary'].includes(game.cardRarity)) {
+      return game.cardRarity;
+    }
+  }
+
+  // 2. Panthéon sacré intemporel
+  if (LEGENDARY_GAME_IDS.has(gameId)) {
+    return 'legendary';
+  }
+
+  // 3. Calcul automatique d'après les évaluations Steam certifiées
+  const appId = extractSteamAppId(game);
+  if (appId) {
+    const store = getSteamStoreData(appId);
+    if (store && typeof store.totalReviews === 'number' && store.totalReviews > 0) {
+      const reviews = store.totalReviews;
+      const posPercent = store.positivePercent || 0;
+
+      if (
+        reviews >= STEAM_RARITY_THRESHOLDS.LEGENDARY_MIN_REVIEWS ||
+        (reviews >= STEAM_RARITY_THRESHOLDS.LEGENDARY_ALT_MIN_REVIEWS &&
+          posPercent >= STEAM_RARITY_THRESHOLDS.LEGENDARY_ALT_MIN_POSITIVE)
+      ) {
+        return 'legendary';
+      }
+
+      if (reviews >= STEAM_RARITY_THRESHOLDS.EPIC_MIN_REVIEWS) {
+        return 'epic';
+      }
+
+      if (reviews >= STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS) {
+        return 'rare';
+      }
+
+      return 'common';
+    }
+  }
+
+  // 4. Fallback sur les listes canoniques de prestige
   if (EPIC_GAME_IDS.has(gameId)) return 'epic';
   if (RARE_GAME_IDS.has(gameId)) return 'rare';
+
+  // 5. Défaut : Commune
   return 'common';
 }
 
 /**
- * Liste complète et ordonnée des 185 Cartes de Pépites
+ * Détermine la rareté d'une carte d'après l'aura du jeu (alias de rétrocompatibilité)
  */
-export const ALL_CARDS: CardItem[] = INDIE_GAMES.map((game, index) => {
-  const rarity = getGameRarity(game.id);
+export function getGameRarity(gameId: string, game?: Partial<Game>): CardRarity {
+  return computeGameRarity(gameId, game);
+}
+
+/**
+ * Crée une CardItem à partir d'un objet Game
+ */
+export function createCardFromGame(game: Game, index: number): CardItem {
+  const rarity = computeGameRarity(game.id, game);
   const imageUrl =
     game.headerImage ||
-    game.screenshots[0] ||
+    game.screenshots?.[0] ||
     'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/header.jpg';
 
   return {
@@ -233,15 +326,27 @@ export const ALL_CARDS: CardItem[] = INDIE_GAMES.map((game, index) => {
     genres: game.genre || [],
     imageUrl,
     tagline: {
-      fr: game.hints.tagline.fr || game.title,
-      en: game.hints.tagline.en || game.title,
-      es: game.hints.tagline.es,
-      de: game.hints.tagline.de,
-      ja: game.hints.tagline.ja,
-      'pt-BR': game.hints.tagline['pt-BR'],
+      fr: game.hints?.tagline?.fr || game.title,
+      en: game.hints?.tagline?.en || game.title,
+      es: game.hints?.tagline?.es,
+      de: game.hints?.tagline?.de,
+      ja: game.hints?.tagline?.ja,
+      'pt-BR': game.hints?.tagline?.['pt-BR'],
     },
   };
-});
+}
+
+/**
+ * Construit la liste des cartes à partir de n'importe quel catalogue de pépites
+ */
+export function buildCardsFromGames(games: Game[]): CardItem[] {
+  return games.map((game, index) => createCardFromGame(game, index));
+}
+
+/**
+ * Liste complète et ordonnée des Cartes de Pépites de base
+ */
+export const ALL_CARDS: CardItem[] = buildCardsFromGames(INDIE_GAMES);
 
 export const CARDS_BY_ID = new Map<string, CardItem>(ALL_CARDS.map((c) => [c.id, c]));
 
@@ -251,6 +356,21 @@ export const CARDS_BY_RARITY: Record<CardRarity, CardItem[]> = {
   rare: ALL_CARDS.filter((c) => c.rarity === 'rare'),
   common: ALL_CARDS.filter((c) => c.rarity === 'common'),
 };
+
+/**
+ * Pool de cartes actif (dynamisé par le catalogue de pépites en temps réel)
+ */
+let dynamicCardsPool: CardItem[] = ALL_CARDS;
+
+export function setDynamicCardsPool(pool: CardItem[]): void {
+  if (Array.isArray(pool) && pool.length > 0) {
+    dynamicCardsPool = pool;
+  }
+}
+
+export function getDynamicCardsPool(): CardItem[] {
+  return dynamicCardsPool;
+}
 
 /**
  * Tire une rareté selon les probabilités officielles :
@@ -278,20 +398,20 @@ export function rollRarity(guaranteeRareOrHigher = false): CardRarity {
 /**
  * Pioche une carte aléatoire d'une rareté donnée, en évitant les doublons dans le même booster
  */
-function pickCardOfRarity(rarity: CardRarity, excludeIds: Set<string>): CardItem {
-  const targetPool = CARDS_BY_RARITY[rarity] || [];
-  const pool = targetPool.filter((c) => c && !excludeIds.has(c.id));
-  if (pool.length > 0) {
-    const idx = Math.floor(Math.random() * pool.length);
-    return pool[idx];
-  }
-  // Fallback sur tout le pool de rareté si épuisé
+function pickCardOfRarity(rarity: CardRarity, excludeIds: Set<string>, pool: CardItem[] = dynamicCardsPool): CardItem {
+  const targetPool = pool.filter((c) => c && c.rarity === rarity && !excludeIds.has(c.id));
   if (targetPool.length > 0) {
     const idx = Math.floor(Math.random() * targetPool.length);
     return targetPool[idx];
   }
-  // Fallback ultime sur toutes les cartes valides
-  const allValid = ALL_CARDS.filter(Boolean);
+  // Fallback sur toutes les cartes de cette rareté
+  const rarityPool = pool.filter((c) => c && c.rarity === rarity);
+  if (rarityPool.length > 0) {
+    const idx = Math.floor(Math.random() * rarityPool.length);
+    return rarityPool[idx];
+  }
+  // Fallback ultime sur toutes les cartes valides du pool
+  const allValid = pool.filter(Boolean);
   const idx = Math.floor(Math.random() * allValid.length);
   return allValid[idx];
 }
@@ -302,7 +422,10 @@ function pickCardOfRarity(rarity: CardRarity, excludeIds: Set<string>): CardItem
  * - 5% de chance de variante Holographique par carte
  * - Aucune carte identique dans le même paquet de 5
  */
-export function generateBoosterCards(alreadyOwnedIds: Set<string>): BoosterCardResult[] {
+export function generateBoosterCards(
+  alreadyOwnedIds: Set<string>,
+  pool: CardItem[] = dynamicCardsPool
+): BoosterCardResult[] {
   const pickedIds = new Set<string>();
   const results: BoosterCardResult[] = [];
 
@@ -310,7 +433,7 @@ export function generateBoosterCards(alreadyOwnedIds: Set<string>): BoosterCardR
     // La 5e carte (dernière) garantit une rareté Rare ou supérieure
     const isGuaranteedSlot = i === CARDS_PER_BOOSTER - 1;
     const rarity = rollRarity(isGuaranteedSlot);
-    const card = pickCardOfRarity(rarity, pickedIds);
+    const card = pickCardOfRarity(rarity, pickedIds, pool);
     if (card && card.id) {
       pickedIds.add(card.id);
     }

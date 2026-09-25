@@ -3,9 +3,9 @@
  * Gestion centralisée du classeur de cartes, de l'ouverture de boosters et du désenchantement.
  */
 
-import type { UserCardCollection, BoosterOpenResult } from '../types/cards';
+import type { UserCardCollection, BoosterOpenResult, CardItem } from '../types/cards';
 import { BOOSTER_COST, DISENCHANT_VALUES } from '../types/cards';
-import { ALL_CARDS, CARDS_BY_ID, generateBoosterCards } from '../data/cardsData';
+import { CARDS_BY_ID, generateBoosterCards, getDynamicCardsPool } from '../data/cardsData';
 import { addBonusFeathers, spendFeathers, isLocalAdminProfile } from '../utils/featherEconomy';
 import { getTodayDateString } from '../utils/streakManager';
 
@@ -60,7 +60,11 @@ export function canClaimDailyBooster(todayStr = getTodayDateString(), bypassDail
 /**
  * Réclame le booster quotidien gratuit (1 offert chaque jour !)
  */
-export function claimDailyBooster(todayStr = getTodayDateString(), bypassDailyLimit = false): BoosterOpenResult | null {
+export function claimDailyBooster(
+  todayStr = getTodayDateString(),
+  bypassDailyLimit = false,
+  cardsPool: CardItem[] = getDynamicCardsPool()
+): BoosterOpenResult | null {
   if (!bypassDailyLimit && !canClaimDailyBooster(todayStr, bypassDailyLimit)) return null;
 
   const collection = getCardCollection();
@@ -70,7 +74,7 @@ export function claimDailyBooster(todayStr = getTodayDateString(), bypassDailyLi
     )
   );
 
-  const boosterCards = generateBoosterCards(ownedIds);
+  const boosterCards = generateBoosterCards(ownedIds, cardsPool);
 
   // Mettre à jour la collection
   const now = new Date().toISOString();
@@ -109,7 +113,10 @@ export function claimDailyBooster(todayStr = getTodayDateString(), bypassDailyLi
 /**
  * Achète un booster supplémentaire pour 150 Plumes d'Or
  */
-export function buyBoosterWithFeathers(currentFeathers: number): BoosterOpenResult | { error: string } {
+export function buyBoosterWithFeathers(
+  currentFeathers: number,
+  cardsPool: CardItem[] = getDynamicCardsPool()
+): BoosterOpenResult | { error: string } {
   if (currentFeathers < BOOSTER_COST) {
     return { error: `Il vous manque ${BOOSTER_COST - currentFeathers} plumes d'or pour acheter ce booster.` };
   }
@@ -126,7 +133,7 @@ export function buyBoosterWithFeathers(currentFeathers: number): BoosterOpenResu
     )
   );
 
-  const boosterCards = generateBoosterCards(ownedIds);
+  const boosterCards = generateBoosterCards(ownedIds, cardsPool);
   const now = new Date().toISOString();
   const nextCollection: UserCardCollection = { ...collection };
 
@@ -226,7 +233,10 @@ export interface CollectionStats {
 /**
  * Calcule les métriques globales de l'album de cartes
  */
-export function getCollectionStats(collection: UserCardCollection): CollectionStats {
+export function getCollectionStats(
+  collection: UserCardCollection,
+  cardsPool: CardItem[] = getDynamicCardsPool()
+): CollectionStats {
   let totalUnique = 0;
   let totalCards = 0;
   let totalHolo = 0;
@@ -241,7 +251,7 @@ export function getCollectionStats(collection: UserCardCollection): CollectionSt
 
   const safeCollection = collection && typeof collection === 'object' && !Array.isArray(collection) ? collection : {};
 
-  for (const card of ALL_CARDS) {
+  for (const card of cardsPool) {
     if (!card || !card.id) continue;
     const rarity = (card.rarity && byRarity[card.rarity]) ? card.rarity : 'common';
     byRarity[rarity].total += 1;
@@ -264,7 +274,7 @@ export function getCollectionStats(collection: UserCardCollection): CollectionSt
     }
   }
 
-  const completionPercent = ALL_CARDS.length > 0 ? Math.min(100, Math.round((totalUnique / ALL_CARDS.length) * 100)) : 0;
+  const completionPercent = cardsPool.length > 0 ? Math.min(100, Math.round((totalUnique / cardsPool.length) * 100)) : 0;
 
   return {
     totalUnique,

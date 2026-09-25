@@ -53,7 +53,49 @@ function categorizeGames(games: Game[]) {
   return categories;
 }
 
-function buildFaqSchema() {
+function loadAllCuratedGames(): Game[] {
+  const gamesMap = new Map<string, Game>();
+  INDIE_GAMES.forEach((g) => gamesMap.set(g.id, g));
+
+  try {
+    const overrideFile = path.resolve(__dirname, '../public/api/games_override.json');
+    if (fs.existsSync(overrideFile)) {
+      const overrides = JSON.parse(fs.readFileSync(overrideFile, 'utf8'));
+      if (Array.isArray(overrides.hiddenGameIds)) {
+        overrides.hiddenGameIds.forEach((id: string) => gamesMap.delete(id));
+      }
+      if (Array.isArray(overrides.excludedFromGems)) {
+        overrides.excludedFromGems.forEach((id: string) => gamesMap.delete(id));
+      }
+      if (Array.isArray(overrides.customAdminGames)) {
+        overrides.customAdminGames.forEach((cg: Game) => {
+          // Si promotedToGems est défini, seuls les jeux promus sont comptés comme pépites
+          if (!Array.isArray(overrides.promotedToGems) || overrides.promotedToGems.includes(cg.id)) {
+            gamesMap.set(cg.id, cg);
+          }
+        });
+      }
+
+      // Charger les jeux promus issus du catalogue Steam (ex: V Rising, Phasmophobia)
+      const steamCatFile = path.resolve(__dirname, '../public/data/steam_catalog.json');
+      if (fs.existsSync(steamCatFile) && Array.isArray(overrides.promotedToGems)) {
+        const steamGames: Game[] = JSON.parse(fs.readFileSync(steamCatFile, 'utf8'));
+        const steamMap = new Map(steamGames.map((g) => [g.id, g]));
+        overrides.promotedToGems.forEach((id: string) => {
+          if (!gamesMap.has(id) && steamMap.has(id)) {
+            gamesMap.set(id, steamMap.get(id)!);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    // Repli silencieux
+  }
+
+  return Array.from(gamesMap.values());
+}
+
+function buildFaqSchema(totalCount: number) {
   return [
     {
       q: "Qu'est-ce qu'un jeu vidéo indépendant (jeu indé) ?",
@@ -65,11 +107,27 @@ function buildFaqSchema() {
     },
     {
       q: "Comment découvrir de nouvelles pépites indépendantes méconnues ?",
-      a: `Hoot Indie Games propose un Explorateur de Pépites certifiées regroupant ${INDIE_GAMES.length} pépites rigoureusement auditées selon notre charte officielle de vérification (100% de données Steam réelles, avis extrêmement positifs et captures officielles). Vous pouvez également consulter notre Radar des sorties indépendantes 2025-2026 et synchroniser votre bibliothèque Steam pour identifier en un clic les perles que vous possédez déjà ou qu'il vous reste à explorer.`
+      a: `Hoot Indie Games propose un Explorateur de Pépites certifiées regroupant ${totalCount} pépites rigoureusement auditées selon notre charte officielle de vérification (100% de données Steam réelles, avis extrêmement positifs et captures officielles). Vous pouvez également consulter notre Radar des sorties indépendantes 2025-2026 et synchroniser votre bibliothèque Steam pour identifier en un clic les perles que vous possédez déjà ou qu'il vous reste à explorer.`
     },
     {
-      q: "Quels sont les 8 défis quotidiens gratuits de déduction sur Hoot Indie Games ?",
-      a: "Hoot Indie Games propose chaque jour à minuit 8 défis de déduction gratuits et variés : 1. Screenle (devinette par zoom progressif de capture d'écran HD) ; 2. Indledle (le Wordle du jeu indé comparant l'année, le studio, les genres et la caméra) ; 3. Linkle (16 jeux à regrouper en 4 familles thématiques secrètes) ; 4. Profille (fiche d'identité aux indices textuels progressifs) ; 5. Chrono (classement chronologique de 5 jeux sur la frise temporelle) ; 6. Pixel & Silhouette (mosaïque dé-pixellisée et ombre chinoise) ; 7. Critique Steam (mots-clés caviardés d'un avis d'évaluation Steam authentique) ; 8. Blind Test OST (extraits sonores de bandes originales cultes au synthétiseur Web Audio)."
+      q: "Combien de mini-jeux et défis interactifs propose Hoot Indie Games ?",
+      a: "Hoot Indie Games propose plus de 17 mini-jeux et modes interactifs gratuits : 8 défis quotidiens de déduction renouvelés chaque nuit (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST), 8 bornes d'arcade rétro cultes (Snake, Pong, Casse-Briques, Flappy Hibou, Moon Runner, Space Invaders, Tetris, Mine Storm Vectrex 1982), le Grand Quiz Trivia (180 questions), les sprints Time Attack chronométrés à la milliseconde et l'Arène de Duels Versus 1v1 multijoueur en temps réel."
+    },
+    {
+      q: "Comment fonctionne la collection de cartes et l'ouverture de boosters sur Hoot Indie Games ?",
+      a: `Hoot Indie Games propose une collection sylvestre de ${totalCount} cartes à collectionner correspondant à chaque pépite certifiée du sanctuaire. Chaque carte se décline en 4 raretés (Commune ~65%, Rare ~24%, Épique ~9%, Légendaire ~2%) et bénéficie de finitions holographiques 3D avec reflets gyroscopiques interactifs. Chaque joueur peut ouvrir un booster quotidien de 5 cartes ou utiliser ses Plumes Sylvestres pour compléter son classeur virtuel.`
+    },
+    {
+      q: "Comment remporter des Plumes Sylvestres pour débloquer des boosters et des cartes ?",
+      a: "Les Plumes Sylvestres sont la monnaie gratifiante du sanctuaire, 100% gratuite et sans microtransaction. Vous en gagnez en réussissant vos défis quotidiens, en maintenant des séries de victoires consécutives (streaks), en réalisant des scores élevés sur les bornes d'arcade rétro, en complétant le Grand Quiz Trivia et lors de votre connexion quotidienne."
+    },
+    {
+      q: "Qu'est-ce que le Grand Quiz Trivia du jeu vidéo indépendant ?",
+      a: "Le Grand Quiz Trivia réunit 180 questions thématiques couvrant le lore, les bandes originales (OST), le gameplay, l'histoire des studios créateurs et les dates de sortie des œuvres indépendantes cultes. Chaque question propose des explications historiques et des anecdotes vérifiées pour enrichir votre culture indie."
+    },
+    {
+      q: "Qu'est-ce que l'espace Micro-Pépites et la scène indé alternative (Itch.io) ?",
+      a: "L'espace Micro-Pépites met à l'honneur les trésors cachés de la scène indépendante émergente, les créations de Game Jams et les prototypes expérimentaux issus de plateformes comme Itch.io. C'est l'endroit idéal pour découvrir des pépites courtes, audacieuses et poétiques conçues hors des circuits commerciaux traditionnels."
     },
     {
       q: "Comment fonctionne le Blind Test de musiques de jeux vidéo indépendants (OST) ?",
@@ -99,11 +157,13 @@ function buildFaqSchema() {
 }
 
 export function generateSeoIndexHtml(): string {
-  const categorized = categorizeGames(INDIE_GAMES);
-  const faqs = buildFaqSchema();
+  const allCuratedGames = loadAllCuratedGames();
+  const totalCount = allCuratedGames.length;
+  const categorized = categorizeGames(allCuratedGames);
+  const faqs = buildFaqSchema(totalCount);
 
   // 1. Build ItemList for VideoGame Schema.org (Limit to Top 25 to reduce HTML weight)
-  const topGames = INDIE_GAMES.slice(0, 25);
+  const topGames = allCuratedGames.slice(0, 25);
   const videoGameItems = topGames.map((game, index) => ({
     '@type': 'ListItem',
     position: index + 1,
@@ -148,7 +208,7 @@ export function generateSeoIndexHtml(): string {
         ],
         url: `${CANONICAL_DOMAIN}/`,
         description:
-          `Le Sanctuaire des Jeux Vidéo Indépendants : catalogue certifié de ${INDIE_GAMES.length} pépites Steam, 8 défis quotidiens de déduction, sprints Time Attack, duels multijoueurs 1v1 et salle d\'arcade rétro.`,
+          `Le Sanctuaire des Jeux Vidéo Indépendants : catalogue certifié de ${totalCount} pépites Steam, classeur de cartes à collectionner & boosters sylvestres, 17+ mini-jeux (8 défis quotidiens de déduction, 8 bornes d'arcade rétro dont Mine Storm 1982), Grand Quiz Trivia, sprints Time Attack et duels 1v1 en direct.`,
         publisher: {
           '@type': 'Person',
           name: 'Quentin Beaud',
@@ -171,7 +231,7 @@ export function generateSeoIndexHtml(): string {
         name: 'Hoot Indie Games',
         url: `${CANONICAL_DOMAIN}/`,
         description:
-          'Plateforme gratuite dédiée à la découverte, aux défis quotidiens et aux duels multijoueurs du jeu vidéo indépendant.',
+          'Plateforme gratuite dédiée à la découverte, à la collection de cartes, aux défis quotidiens et aux duels multijoueurs du jeu vidéo indépendant.',
         applicationCategory: 'GameApplication',
         operatingSystem: 'All',
         browserRequirements: 'Requires JavaScript. Requires HTML5 Canvas & Web Audio API.',
@@ -184,12 +244,17 @@ export function generateSeoIndexHtml(): string {
           ratingCount: '340',
         },
         featureList: [
+          `Catalogue Certifié de ${totalCount} Pépites du Jeu Vidéo Indépendant avec métadonnées Steam authentiques`,
+          `Collection Sylvestre de ${totalCount} Cartes à Collectionner (Communes, Rares, Épiques, Légendaires et Holo 3D)`,
+          'Ouverture quotidienne de Boosters de 5 cartes & Économie de Plumes Sylvestres sans microtransaction',
           '8 Défis Quotidiens de Déduction Indé (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST)',
-          '8 Modes Sprints Time Attack avec records millisecondes',
-          'Arène de Duels 1v1 en Temps Réel P2P WebRTC avec Tournoi Décathlon Indé',
-          `Catalogue Certifié de ${INDIE_GAMES.length} Pépites du Jeu Vidéo Indépendant avec métadonnées Steam`,
-          'Synchronisation Officielle de Bibliothèque Steam (OpenID / SteamID)',
-          'Véritable Salle d\'Arcade Rétro 8 Jeux incluant Mine Storm Vectrex 1982',
+          'Grand Quiz Trivia du Jeu Vidéo Indépendant (180 questions et anecdotes de culture indé)',
+          '8 Modes Sprints Time Attack chronométrés à la milliseconde avec multiplicateurs de combo',
+          'Arène de Duels 1v1 en Temps Réel P2P WebRTC avec Tournoi Décathlon Mixte sans latence',
+          'Véritable Salle d\'Arcade Rétro 8 Bornes incluant une reproduction fidèle de Mine Storm Vectrex 1982',
+          'Espace Micro-Pépites dédié aux créations émergentes, game jams et scènes Itch.io',
+          'Synchronisation Officielle de Bibliothèque Steam (OpenID / SteamID64)',
+          'Radar des Prochaines Sorties de Jeux Vidéo Indépendants 2025-2026',
         ],
         offers: {
           '@type': 'Offer',
@@ -218,103 +283,124 @@ export function generateSeoIndexHtml(): string {
             '@type': 'SiteNavigationElement',
             position: 1,
             name: 'Pépites Certifiées',
-            description: `Catalogue officiel des ${INDIE_GAMES.length} meilleures pépites du jeu vidéo indépendant certifiées Steam.`,
+            description: `Catalogue officiel des ${totalCount} meilleures pépites du jeu vidéo indépendant certifiées Steam.`,
             url: `${CANONICAL_DOMAIN}/#gems`,
           },
           {
             '@type': 'SiteNavigationElement',
             position: 2,
-            name: 'Hub des Mini-Jeux',
-            description: 'Les 8 disciplines quotidiennes, Time Attack et duels multijoueurs.',
-            url: `${CANONICAL_DOMAIN}/#minigames`,
+            name: 'Classeur de Cartes & Boosters Sylvestres',
+            description: `Collectionnez les ${totalCount} cartes de pépites indés, ouvrez des boosters quotidiens et admirez les reflets holographiques 3D.`,
+            url: `${CANONICAL_DOMAIN}/#cards`,
           },
           {
             '@type': 'SiteNavigationElement',
             position: 3,
+            name: 'Hub des Mini-Jeux',
+            description: 'Les 8 disciplines quotidiennes, 8 bornes d\'arcade, quiz trivia, Time Attack et duels multijoueurs.',
+            url: `${CANONICAL_DOMAIN}/#minigames`,
+          },
+          {
+            '@type': 'SiteNavigationElement',
+            position: 4,
             name: 'Screenle (Capture)',
             description: 'Devinette quotidienne du jeu indé par zoom progressif de capture d\'écran HD.',
             url: `${CANONICAL_DOMAIN}/#screenle`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 4,
+            position: 5,
             name: 'Indledle (Classic)',
             description: 'Le Wordle du jeu vidéo indépendant par année, genres, studio et caméra.',
             url: `${CANONICAL_DOMAIN}/#indledle`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 5,
+            position: 6,
             name: 'Linkle (Connexions)',
             description: 'Regroupez 16 jeux indés en 4 familles thématiques secrètes.',
             url: `${CANONICAL_DOMAIN}/#linkle`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 6,
+            position: 7,
             name: 'Profille (Profil)',
             description: 'Indices textuels dévoilés progressivement pour deviner le jeu.',
             url: `${CANONICAL_DOMAIN}/#profille`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 7,
+            position: 8,
             name: 'Chrono (Timeline)',
             description: 'Replacez les pépites indés sur la frise chronologique historique.',
             url: `${CANONICAL_DOMAIN}/#chrono`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 8,
+            position: 9,
             name: 'Pixel & Silhouette',
             description: 'Déduction par résolution de mosaïque de pixels et ombre chinoise.',
             url: `${CANONICAL_DOMAIN}/#pixel`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 9,
+            position: 10,
             name: 'Critique Steam (Review)',
             description: 'Déchiffrez les mots-clés biffés d\'une évaluation Steam authentique.',
             url: `${CANONICAL_DOMAIN}/#review`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 10,
+            position: 11,
             name: 'Blind Test OST',
             description: 'Quiz musical au synthétiseur Web Audio en paliers d\'écoute de 1 à 30 secondes.',
             url: `${CANONICAL_DOMAIN}/#blindtest`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 11,
+            position: 12,
+            name: 'Grand Quiz Trivia Indé',
+            description: 'Testez votre érudition vidéoludique sur 180 questions et anecdotes de développement indé.',
+            url: `${CANONICAL_DOMAIN}/#quiz`,
+          },
+          {
+            '@type': 'SiteNavigationElement',
+            position: 13,
             name: 'Time Attack',
             description: 'Sprints contre-la-montre sur les 8 disciplines avec chrono milliseconde.',
             url: `${CANONICAL_DOMAIN}/#timeattack`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 12,
+            position: 14,
             name: 'Arène Versus 1v1',
             description: 'Duels multijoueurs en temps réel P2P WebRTC et Tournoi Décathlon Mixte.',
             url: `${CANONICAL_DOMAIN}/#versus`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 13,
+            position: 15,
             name: 'Salle d\'Arcade Rétro',
             description: '8 jeux d\'arcade cultes dont une réplique fidèle du Mine Storm Vectrex 1982.',
             url: `${CANONICAL_DOMAIN}/#arcade`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 14,
+            position: 16,
+            name: 'Micro-Pépites & Scène Itch.io',
+            description: 'Explorez les créations émergentes, jeux de Game Jams et pépites indés expérimentales.',
+            url: `${CANONICAL_DOMAIN}/#micro`,
+          },
+          {
+            '@type': 'SiteNavigationElement',
+            position: 17,
             name: 'Boîte à Outils & Radar 2025-2026',
             description: 'Radar des sorties de jeux indépendants et boîte à outils pour joueurs.',
             url: `${CANONICAL_DOMAIN}/#toolbox`,
           },
           {
             '@type': 'SiteNavigationElement',
-            position: 15,
+            position: 18,
             name: 'Le Perchoir Sylvestre',
             description: 'Portfolio créatif, essais narratifs et projets de Quentin Beaud (Hibouxe).',
             url: `${CANONICAL_DOMAIN}/#roost`,
@@ -324,9 +410,9 @@ export function generateSeoIndexHtml(): string {
       {
         '@type': 'ItemList',
         '@id': `${CANONICAL_DOMAIN}/#catalog`,
-        name: `Catalogue Officiel des ${INDIE_GAMES.length} Pépites du Jeu Vidéo Indépendant`,
+        name: `Catalogue Officiel des ${totalCount} Pépites du Jeu Vidéo Indépendant`,
         description: 'Sélection certifiée des plus grands chefs-d\'œuvre et découvertes de la scène indépendante PC & Steam.',
-        numberOfItems: INDIE_GAMES.length,
+        numberOfItems: totalCount,
         itemListElement: videoGameItems,
       },
       {
@@ -397,24 +483,28 @@ export function generateSeoIndexHtml(): string {
           🦉 Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants
         </h1>
         <p style="font-size: 1.2rem; color: #94a3b8; max-width: 860px; margin: 0 auto 1.5rem auto; line-height: 1.6;">
-          Le sanctuaire du <strong>jeu vidéo indépendant</strong> : catalogue certifié de ${INDIE_GAMES.length} pépites Steam, 
-          <strong>8 défis quotidiens de déduction</strong> (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST), 
-          sprints <strong>Time Attack</strong>, arène de <strong>duels 1v1</strong> en direct et véritable <strong>salle d'arcade rétro 1982</strong>.
+          Le sanctuaire du <strong>jeu vidéo indépendant</strong> : catalogue certifié de ${totalCount} pépites Steam, 
+          <strong>classeur de cartes à collectionner &amp; boosters sylvestres</strong>, 
+          <strong>17+ mini-jeux &amp; défis</strong> (8 défis quotidiens de déduction, 8 bornes d'arcade rétro 1982, grand quiz trivia), 
+          sprints <strong>Time Attack</strong> et arène de <strong>duels 1v1</strong> en direct.
         </p>
         <nav aria-label="Navigation Principale" style="display: flex; justify-content: center; gap: 1rem 1.5rem; flex-wrap: wrap; font-weight: 600;">
           <a href="#gems" style="color: #fbbf24; text-decoration: none;">💎 Pépites Certifiées</a>
+          <a href="#cards" style="color: #fbbf24; text-decoration: none;">🃏 Cartes &amp; Boosters</a>
           <a href="#minigames" style="color: #fbbf24; text-decoration: none;">🎮 Hub des Mini-Jeux</a>
-          <a href="#screenle" style="color: #fbbf24; text-decoration: none;">📸 Screenle (Capture)</a>
-          <a href="#indledle" style="color: #fbbf24; text-decoration: none;">🔍 Indledle (Classic)</a>
-          <a href="#linkle" style="color: #fbbf24; text-decoration: none;">🧩 Linkle (Connexions)</a>
-          <a href="#profille" style="color: #fbbf24; text-decoration: none;">📋 Profille (Profil)</a>
-          <a href="#chrono" style="color: #fbbf24; text-decoration: none;">⏳ Chrono (Timeline)</a>
+          <a href="#screenle" style="color: #fbbf24; text-decoration: none;">📸 Screenle</a>
+          <a href="#indledle" style="color: #fbbf24; text-decoration: none;">🔍 Indledle</a>
+          <a href="#linkle" style="color: #fbbf24; text-decoration: none;">🧩 Linkle</a>
+          <a href="#profille" style="color: #fbbf24; text-decoration: none;">📋 Profille</a>
+          <a href="#chrono" style="color: #fbbf24; text-decoration: none;">⏳ Chrono</a>
           <a href="#pixel" style="color: #fbbf24; text-decoration: none;">🎨 Pixel &amp; Silhouette</a>
           <a href="#review" style="color: #fbbf24; text-decoration: none;">💬 Critique Steam</a>
           <a href="#blindtest" style="color: #fbbf24; text-decoration: none;">🎵 Blind Test OST</a>
+          <a href="#quiz" style="color: #fbbf24; text-decoration: none;">❓ Grand Quiz Trivia</a>
           <a href="#timeattack" style="color: #fbbf24; text-decoration: none;">⚡ Time Attack</a>
           <a href="#versus" style="color: #fbbf24; text-decoration: none;">⚔️ Arène Versus 1v1</a>
           <a href="#arcade" style="color: #fbbf24; text-decoration: none;">🕹️ Salle d'Arcade</a>
+          <a href="#micro" style="color: #fbbf24; text-decoration: none;">🌱 Micro-Pépites</a>
           <a href="#toolbox" style="color: #fbbf24; text-decoration: none;">🧰 Radar Sorties 2025-2026</a>
           <a href="#roost" style="color: #fbbf24; text-decoration: none;">🦉 Le Perchoir Sylvestre</a>
         </nav>
@@ -433,6 +523,41 @@ export function generateSeoIndexHtml(): string {
           <p style="line-height: 1.7; color: #cbd5e1; font-size: 1.05rem;">
             Chez <strong>Hoot Indie Games</strong>, nous appliquons une <strong>charte de sélection officielle et rigoureuse</strong> : chaque jeu figurant dans notre sanctuaire est audité manuellement, certifié avec ses métadonnées Steam authentiques, ses captures d'écran en haute résolution et ses avis de joueurs vérifiés.
           </p>
+        </section>
+
+        <!-- Section 1 bis : Le Classeur Sylvestre & Cartes à Collectionner -->
+        <section id="cards" style="margin-bottom: 3.5rem; background: #06241b; border: 1px solid #059669; border-radius: 12px; padding: 2rem;">
+          <h2 style="color: #34d399; font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;">
+            🃏 La Collection Sylvestre : Cartes &amp; Boosters de Pépites
+          </h2>
+          <p style="color: #cbd5e1; margin-bottom: 1.5rem; font-size: 1.05rem; line-height: 1.6;">
+            Chaque chef-d'œuvre certifié du sanctuaire prend vie sous forme d'une <strong>carte à collectionner officielle</strong> aux illustrations soignées et effets holographiques 3D.
+            Complétez votre panthéon de jeux indés et feuilletez votre classeur interactif.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+            <article style="background: #093a2b; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #10b981;">
+              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">🎴 ${totalCount} Cartes &amp; 4 Raretés</h3>
+              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
+                Explorez un classeur virtuel complet de <strong>${totalCount} cartes uniques</strong> réparties en 4 niveaux de rareté : 
+                <em>Commune</em> (~65%), <em>Rare</em> (~24%), <em>Épique</em> (~9%) et <em>Légendaire</em> (~2%), avec des finitions holographiques brillantes et des reflets dynamiques.
+              </p>
+              <a href="#cards" style="color: #34d399; font-size: 0.85rem; font-weight: 600;">Ouvrir le Classeur Sylvestre →</a>
+            </article>
+            <article style="background: #093a2b; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #f59e0b;">
+              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">📦 Boosters Quotidiens &amp; Plumes</h3>
+              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
+                Ouvrez un <strong>booster de 5 cartes</strong> chaque jour et gagnez des <strong>Plumes Sylvestres</strong> en relevant vos défis quotidiens, en battant des records d'arcade ou en complétant vos séries de victoires.
+              </p>
+              <a href="#cards" style="color: #fbbf24; font-size: 0.85rem; font-weight: 600;">Ouvrir mes Boosters →</a>
+            </article>
+            <article style="background: #093a2b; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #38bdf8;">
+              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">✨ Reflets Holographiques 3D</h3>
+              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
+                Inspectez chaque carte en 3D avec un shader holographique interactif réagissant au mouvement de votre souris ou à l'inclinaison de votre smartphone pour révéler les auras secrètes des jeux mythiques.
+              </p>
+              <a href="#cards" style="color: #38bdf8; font-size: 0.85rem; font-weight: 600;">Voir les Effets Holo →</a>
+            </article>
+          </div>
         </section>
 
         <!-- Section 2 : Les 8 Disciplines de Déduction Quotidiennes -->
@@ -559,6 +684,17 @@ export function generateSeoIndexHtml(): string {
           <a href="#arcade" style="color: #34d399; font-weight: 600;">Jouer aux 8 bornes rétro d'arcade →</a>
         </section>
 
+        <!-- Section 4 bis : Le Grand Quiz Trivia -->
+        <section id="quiz" style="margin-bottom: 3.5rem; background: #131a29; border: 1px solid #1e293b; border-radius: 12px; padding: 2rem; border-left: 4px solid #f59e0b;">
+          <h2 style="color: #fbbf24; font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;">
+            ❓ Le Grand Quiz Trivia du Jeu Vidéo Indépendant (180 Questions)
+          </h2>
+          <p style="line-height: 1.6; color: #cbd5e1; font-size: 1.05rem;">
+            Mettez votre culture indie à l'épreuve à travers <strong>180 questions thématiques</strong> couvrant les bandes originales légendaires, le lore énigmatique, les mécaniques de gameplay pionnières et les anecdotes de studios indépendants. Chaque question dévoile une explication sourcée pour apprendre en s'amusant.
+          </p>
+          <a href="#quiz" style="color: #f59e0b; font-weight: 600;">Lancer le Grand Quiz Trivia →</a>
+        </section>
+
         <!-- Section 5 : Boîte à Outils & Radar des Sorties 2025-2026 -->
         <section id="toolbox" style="margin-bottom: 3.5rem; background: #131a29; border: 1px solid #1e293b; border-radius: 12px; padding: 2rem;">
           <h2 style="color: #38bdf8; font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem;">
@@ -572,10 +708,21 @@ export function generateSeoIndexHtml(): string {
           <a href="#toolbox" style="color: #38bdf8; font-weight: 600;">Explorer la Boîte à Outils &amp; le Radar →</a>
         </section>
 
-        <!-- Section 6 : Le Grand Catalogue des ${INDIE_GAMES.length} Pépites -->
+        <!-- Section 5 bis : Micro-Pépites & Scène Expérimentale Itch.io -->
+        <section id="micro" style="margin-bottom: 3.5rem; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 2rem; border-left: 4px solid #a855f7;">
+          <h2 style="color: #c084fc; font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;">
+            🌱 Micro-Pépites &amp; Scène Indé Expérimentale Itch.io
+          </h2>
+          <p style="line-height: 1.6; color: #cbd5e1; font-size: 1.05rem;">
+            Au-delà des grands succès commerciaux Steam, Hoot Indie Games met en lumière l'artisanat des créateurs de Game Jams, prototypes narratifs et productions expérimentales gratuites ou à prix libre. Découvrez les pépites confidentielles qui feront les grands genres de demain.
+          </p>
+          <a href="#micro" style="color: #c084fc; font-weight: 600;">Explorer les Micro-Pépites →</a>
+        </section>
+
+        <!-- Section 6 : Le Grand Catalogue des ${totalCount} Pépites -->
         <section id="catalogue-pepites" style="margin-bottom: 3.5rem;">
           <h2 style="color: #38bdf8; font-size: 1.8rem; margin-bottom: 0.5rem;">
-            📚 Le Catalogue de Référence des ${INDIE_GAMES.length} Meilleures Pépites du Jeu Vidéo Indépendant
+            📚 Le Catalogue de Référence des ${totalCount} Meilleures Pépites du Jeu Vidéo Indépendant
           </h2>
           <p style="color: #94a3b8; margin-bottom: 1.5rem; font-size: 1.05rem;">
             Explorez notre sélection exhaustive de chefs-d'œuvre et découvertes incontournables du jeu vidéo indépendant certifiés sur PC et Steam, triés par genres et styles visuels.
@@ -632,8 +779,8 @@ export function generateSeoIndexHtml(): string {
     <!-- Primary SEO Meta Tags -->
     <title>Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants</title>
     <meta name="title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
-    <meta name="description" content="Le sanctuaire du jeu vidéo indé : ${INDIE_GAMES.length} pépites certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test...), Time Attack, duels 1v1 et arcade rétro.">
-    <meta name="keywords" content="jeux vidéo indépendants, jeux indés, indie games, meilleurs jeux vidéo indés, pépites jeux indés, catalogue steam indé, screenle, indledle, linkle, profille, chrono timeline, quiz pixel art, devinette avis steam, blind test ost jeu video, time attack sprint, duel versus 1v1 jeu indé, hollow knight, outer wilds, celeste, hades, balatro, quentin beaud, hibouxe, arcade rétro vectrex">
+    <meta name="description" content="Le sanctuaire du jeu indé : ${totalCount} pépites certifiées, collection de cartes &amp; boosters, 17+ mini-jeux (8 défis quotidiens, arcade rétro 1982), Time Attack et duels 1v1.">
+    <meta name="keywords" content="jeux vidéo indépendants, jeux indés, indie games, meilleurs jeux vidéo indés, pépites jeux indés, catalogue steam indé, cartes à collectionner indé, booster de cartes jeux vidéo, classeur sylvestre, 17 mini jeux indés, screenle, indledle, linkle, profille, chrono timeline, quiz pixel art, devinette avis steam, blind test ost jeu video, grand quiz trivia indé, time attack sprint, duel versus 1v1 jeu indé, micro pépites itch io, hollow knight, outer wilds, celeste, hades, balatro, quentin beaud, hibouxe, arcade rétro vectrex">
     <meta name="author" content="Quentin Beaud (Hibouxe)">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
@@ -648,7 +795,7 @@ export function generateSeoIndexHtml(): string {
     <meta property="og:type" content="website">
     <meta property="og:url" content="${CANONICAL_DOMAIN}/">
     <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
-    <meta property="og:description" content="Explorez ${INDIE_GAMES.length} chefs-d'œuvre indépendants certifiés Steam, 8 défis quotidiens gratuits (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST), sprints Time Attack, arène de duels 1v1 et salle d'arcade rétro.">
+    <meta property="og:description" content="Explorez ${totalCount} pépites indés certifiées Steam ! Collectionnez les cartes de jeux et ouvrez vos boosters, relevez 17+ mini-jeux : 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), 8 bornes d'arcade rétro, quiz trivia, sprints Time Attack et duels 1v1 en direct.">
     <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
     <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
     <meta property="og:image:type" content="image/png">
@@ -663,7 +810,7 @@ export function generateSeoIndexHtml(): string {
     <meta name="twitter:site" content="@Hibouxe">
     <meta name="twitter:creator" content="@Hibouxe">
     <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
-    <meta name="twitter:description" content="${INDIE_GAMES.length} pépites indés certifiées, 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), sprints Time Attack, duels 1v1 P2P et salle d'arcade rétro.">
+    <meta name="twitter:description" content="${totalCount} pépites indés certifiées, collection de cartes &amp; boosters sylvestres, 17+ mini-jeux (8 défis quotidiens, 8 bornes d'arcade 1982), quiz trivia, Time Attack et duels 1v1 P2P.">
     <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
     <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants">
 
@@ -712,8 +859,8 @@ ${JSON.stringify(jsonLdGraph, null, 2)}
       <div style="max-width: 800px; margin: 2rem auto; padding: 2rem; background: #131a29; border: 1px solid #f59e0b; border-radius: 12px; color: #e2e8f0; font-family: sans-serif; line-height: 1.6; text-align: center;">
         <h1 style="color: #f59e0b; font-size: 1.8rem; margin-top: 0;">🦉 Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants</h1>
         <p>Bienvenue sur <strong>Hoot Indie Games</strong>, la plateforme consacrée aux pépites du jeu vidéo indépendant.</p>
-        <p>Explorez notre catalogue certifié de ${INDIE_GAMES.length} jeux indépendants et nos 8 défis quotidiens gratuits (Screenle, Indledle, Linkle, Profille, Chrono, Pixel, Critique Steam, Blind Test OST).</p>
-        <p style="color: #94a3b8; font-size: 0.9rem;">Pour lancer les jeux interactifs, les duels 1v1 et le mode Time Attack, veuillez activer JavaScript dans votre navigateur.</p>
+        <p>Explorez notre catalogue certifié de ${totalCount} jeux indépendants, notre <strong>collection de ${totalCount} cartes à collectionner &amp; boosters</strong>, et nos <strong>17+ mini-jeux gratuits</strong> (8 défis quotidiens, 8 bornes d'arcade rétro 1982, grand quiz trivia, Time Attack et duels 1v1).</p>
+        <p style="color: #94a3b8; font-size: 0.9rem;">Pour lancer les jeux interactifs, ouvrir vos boosters et défier des joueurs en 1v1, veuillez activer JavaScript dans votre navigateur.</p>
       </div>
       ${rootPrerenderContent}
     </noscript>
@@ -744,5 +891,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   console.log(`🦉 Génération de la suite SEO sémantique pour Hoot Indie Games...`);
   const outputHtml = generateSeoIndexHtml();
   fs.writeFileSync(indexPath, outputHtml, 'utf-8');
-  console.log(`✅ index.html mis à jour avec succès avec les ${INDIE_GAMES.length} pépites certifiées, le schéma JSON-LD (FAQPage + ItemList + SiteNavigation) et le contenu sémantique pré-rendu !`);
+  console.log(`✅ index.html mis à jour avec succès avec les pépites certifiées, le schéma JSON-LD (FAQPage + ItemList + SiteNavigation) et le contenu sémantique pré-rendu !`);
 }

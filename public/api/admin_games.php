@@ -16,10 +16,8 @@ error_reporting(0);
 // Headers HTTP de sécurité & CORS
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
-header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+require_once __DIR__ . '/admin_auth.php';
+sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -27,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once __DIR__ . '/admin_auth.php';
 $overrideFile = __DIR__ . '/games_override.json';
 
 // Helper : Lecture sécurisée des données de surcharge
@@ -77,11 +74,91 @@ function loadGameOverrides($filePath) {
     return $decoded;
 }
 
+// Helper : Synchronisation automatique du nombre de jeux dans index.html (SEO & Réseaux Sociaux)
+function syncIndexHtmlGameCount($overrides) {
+    $candidates = [
+        dirname(__DIR__) . '/index.html',
+        dirname(dirname(__DIR__)) . '/index.html',
+    ];
+    $indexPath = null;
+    foreach ($candidates as $cand) {
+        if (file_exists($cand) && is_writable($cand)) {
+            $indexPath = $cand;
+            break;
+        }
+    }
+    if (!$indexPath) return false;
+
+    $html = @file_get_contents($indexPath);
+    if (!$html) return false;
+
+    // Déterminer le total exact des pépites uniques
+    $baseCount = 185;
+    $gamesTsPath = dirname(dirname(__DIR__)) . '/src/data/games.ts';
+    if (file_exists($gamesTsPath)) {
+        $tsContent = @file_get_contents($gamesTsPath);
+        if ($tsContent && preg_match('/Total de jeux\s*:\s*(\d+)/i', $tsContent, $m)) {
+            $baseCount = intval($m[1]);
+        }
+    }
+
+    $excludedIds = array_flip($overrides['excludedFromGems'] ?? []);
+    $hiddenIds = array_flip($overrides['hiddenGameIds'] ?? []);
+    $promotedIds = $overrides['promotedToGems'] ?? [];
+
+    $netBaseCount = $baseCount;
+    foreach (array_keys($excludedIds) as $exId) {
+        $netBaseCount--;
+    }
+    foreach (array_keys($hiddenIds) as $hidId) {
+        if (!isset($excludedIds[$hidId])) {
+            $netBaseCount--;
+        }
+    }
+
+    $uniqueGemsAdded = [];
+    foreach ($promotedIds as $pId) {
+        if (!isset($excludedIds[$pId]) && !isset($hiddenIds[$pId])) {
+            $uniqueGemsAdded[$pId] = true;
+        }
+    }
+    $totalCount = max(1, $netBaseCount + count($uniqueGemsAdded));
+
+    $patterns = [
+        '/(<meta\s+name=["\']description["\']\s+content=["\']Le sanctuaire du jeu(?:\s+vidéo)?\s+indé\s*:\s*)\d+(\s*pépites certifiées)/i' => '${1}' . $totalCount . '${2}',
+        '/(<meta\s+property=["\']og:description["\']\s+content=["\']Explorez\s*)\d+(\s*(?:chefs-d\'œuvre|pépites indés))/i' => '${1}' . $totalCount . '${2}',
+        '/(<meta\s+name=["\']twitter:description["\']\s+content=["\'])\d+(\s*pépites indés)/i' => '${1}' . $totalCount . '${2}',
+        '/(catalogue certifié de\s*)\d+(\s*pépites Steam)/i' => '${1}' . $totalCount . '${2}',
+        '/(Catalogue Certifié de\s*)\d+(\s*Pépites)/i' => '${1}' . $totalCount . '${2}',
+        '/(Catalogue Officiel des\s*)\d+(\s*Pépites)/i' => '${1}' . $totalCount . '${2}',
+        '/(Catalogue officiel des\s*)\d+(\s*meilleures pépites)/i' => '${1}' . $totalCount . '${2}',
+        '/(Collection Sylvestre de\s*)\d+(\s*Cartes à Collectionner)/i' => '${1}' . $totalCount . '${2}',
+        '/(Collectionnez les\s*)\d+(\s*cartes de pépites indés)/i' => '${1}' . $totalCount . '${2}',
+        '/(collection sylvestre de\s*)\d+(\s*cartes à collectionner)/i' => '${1}' . $totalCount . '${2}',
+        '/(collection de\s*)\d+(\s*cartes à collectionner)/i' => '${1}' . $totalCount . '${2}',
+        '/(de\s*)\d+(\s*cartes uniques réparties en 4 niveaux)/i' => '${1}' . $totalCount . '${2}',
+        '/("numberOfItems":\s*)\d+/i' => '"numberOfItems": ' . $totalCount,
+        '/(Le grand catalogue de référence des\s*)\d+/i' => 'Le grand catalogue de référence des ' . $totalCount,
+        '/(catalogue certifié de\s*)\d+(\s*jeux indépendants)/i' => '${1}' . $totalCount . '${2}',
+        '/(regroupant\s*)\d+(\s*pépites rigoureusement auditées)/i' => '${1}' . $totalCount . '${2}',
+    ];
+
+    $newHtml = preg_replace(array_keys($patterns), array_values($patterns), $html);
+    if ($newHtml && $newHtml !== $html) {
+        @file_put_contents($indexPath, $newHtml, LOCK_EX);
+    }
+    return true;
+}
+
 // Helper : Écriture atomique sécurisée
 function saveGameOverrides($filePath, $data) {
     $data['lastUpdated'] = date('c');
     $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    return @file_put_contents($filePath, $json, LOCK_EX) !== false;
+    $res = @file_put_contents($filePath, $json, LOCK_EX) !== false;
+    if ($res) {
+        syncIndexHtmlGameCount($data);
+    }
+    return $res;
 }
 
 // Récupération de l'action et des paramètres
@@ -272,12 +349,12 @@ switch ($action) {
             'releaseYear' => $releaseYear > 1970 && $releaseYear < 2050 ? $releaseYear : intval(date('Y')),
             'genre' => isset($payload['genre']) && is_array($payload['genre']) ? array_values(array_filter(array_map('sanitizeStr', $payload['genre']))) : ['Indépendant'],
             'artStyle' => [
-                'fr' => isset($payload['artStyle']['fr']) ? sanitizeStr($payload['artStyle']['fr']) : (isset($payload['artStyleFr']) ? sanitizeStr($payload['artStyleFr']) : '2D Pixel Art'),
-                'en' => isset($payload['artStyle']['en']) ? sanitizeStr($payload['artStyle']['en']) : (isset($payload['artStyleEn']) ? sanitizeStr($payload['artStyleEn']) : '2D Pixel Art'),
+                'fr' => isset($payload['artStyle']['fr']) ? sanitizeStr($payload['artStyle']['fr']) : (isset($payload['artStyleFr']) ? sanitizeStr($payload['artStyleFr']) : 'Pixel Art'),
+                'en' => isset($payload['artStyle']['en']) ? sanitizeStr($payload['artStyle']['en']) : (isset($payload['artStyleEn']) ? sanitizeStr($payload['artStyleEn']) : 'Pixel Art'),
             ],
             'camera' => [
                 'fr' => isset($payload['camera']['fr']) ? sanitizeStr($payload['camera']['fr']) : (isset($payload['cameraFr']) ? sanitizeStr($payload['cameraFr']) : 'Vue de côté 2D'),
-                'en' => isset($payload['camera']['en']) ? sanitizeStr($payload['camera']['en']) : (isset($payload['cameraEn']) ? sanitizeStr($payload['cameraEn']) : '2D Side View'),
+                'en' => isset($payload['camera']['en']) ? sanitizeStr($payload['camera']['en']) : (isset($payload['cameraEn']) ? sanitizeStr($payload['cameraEn']) : '2D Side-scroller'),
             ],
             'steamUrl' => isset($payload['steamUrl']) ? sanitizeStr($payload['steamUrl']) : '',
             'itchUrl' => isset($payload['itchUrl']) ? sanitizeStr($payload['itchUrl']) : '',
@@ -292,6 +369,9 @@ switch ($action) {
                 ],
                 'composer' => isset($payload['hints']['composer']) ? sanitizeStr($payload['hints']['composer']) : (isset($payload['composer']) ? sanitizeStr($payload['composer']) : ''),
             ],
+            'addedAt' => isset($payload['addedAt']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $payload['addedAt']) ? $payload['addedAt'] : date('Y-m-d'),
+            'steamAppId' => isset($payload['steamAppId']) && is_numeric($payload['steamAppId']) ? intval($payload['steamAppId']) : null,
+            'cardRarity' => isset($payload['cardRarity']) && in_array($payload['cardRarity'], ['common', 'rare', 'epic', 'legendary'], true) ? $payload['cardRarity'] : null,
         ];
 
         // Vérifier si le jeu existe déjà dans customAdminGames

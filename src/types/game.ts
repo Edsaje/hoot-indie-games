@@ -28,6 +28,8 @@ export interface Game {
     tagline: LocalizedText;
     composer?: string;
   };
+  addedAt?: string; // Date d'intégration (ISO "YYYY-MM-DD") pour le cycle mensuel
+  cardRarity?: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
 // Pour le Mode 3 : Connections / Linkle

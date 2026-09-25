@@ -2,7 +2,7 @@
 Options -Indexes
 
 # Interdire l'accès direct aux fichiers sensibles
-<FilesMatch "(\.json|\.secret|\.steam_key|\.admin_pass|\.log|\.env|\.bak)$">
+<FilesMatch "(\.json|\.secret|\.steam_key|\.admin_pass|\.log|\.env|\.bak|\.tmp.*|\.tmp)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

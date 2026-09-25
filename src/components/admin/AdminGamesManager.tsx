@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Save,
   RotateCw,
+  Loader2,
 } from 'lucide-react';
 import { INDIE_GAMES } from '../../data/games';
 import type { Game } from '../../types/game';
@@ -32,6 +33,19 @@ import {
 import { steamCatalogService } from '../../services/steamCatalog';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
+import {
+  inferCanonicalArtStyle,
+  inferCanonicalCamera,
+  inferEnrichedGenres,
+  extractComposerFromText,
+} from '../../utils/gameInference';
+import type { CardRarity } from '../../types/cards';
+import {
+  computeGameRarity,
+  extractSteamAppId,
+  STEAM_RARITY_THRESHOLDS,
+} from '../../data/cardsData';
+import { getSteamStoreData, registerSteamStoreData } from '../../data/steamStoreData';
 
 interface AdminGamesManagerProps {
   currentSteamId?: string;
@@ -70,6 +84,10 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
+  // Détection & Remplissage automatique Steam
+  const [steamLookupQuery, setSteamLookupQuery] = useState('');
+  const [isFetchingSteam, setIsFetchingSteam] = useState(false);
+
   // Confirmations
   const [confirmDelete, setConfirmDelete] = useState<EnrichedAdminGame | null>(null);
   const [confirmRestore, setConfirmRestore] = useState<EnrichedAdminGame | null>(null);
@@ -80,10 +98,10 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   const [formDeveloper, setFormDeveloper] = useState('');
   const [formReleaseYear, setFormReleaseYear] = useState<number>(2024);
   const [formGenres, setFormGenres] = useState<string>('');
-  const [formArtStyleFr, setFormArtStyleFr] = useState('2D Pixel Art');
-  const [formArtStyleEn, setFormArtStyleEn] = useState('2D Pixel Art');
+  const [formArtStyleFr, setFormArtStyleFr] = useState('Pixel Art');
+  const [formArtStyleEn, setFormArtStyleEn] = useState('Pixel Art');
   const [formCameraFr, setFormCameraFr] = useState('Vue de côté 2D');
-  const [formCameraEn, setFormCameraEn] = useState('2D Side View');
+  const [formCameraEn, setFormCameraEn] = useState('2D Side-scroller');
   const [formSteamUrl, setFormSteamUrl] = useState('');
   const [formItchUrl, setFormItchUrl] = useState('');
   const [formIsFree, setFormIsFree] = useState(false);
@@ -93,6 +111,12 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   const [formTaglineFr, setFormTaglineFr] = useState('');
   const [formTaglineEn, setFormTaglineEn] = useState('');
   const [formComposer, setFormComposer] = useState('');
+  const [formCardRarity, setFormCardRarity] = useState<'auto' | CardRarity>('auto');
+  const [steamReviewsInfo, setSteamReviewsInfo] = useState<{
+    totalReviews: number;
+    positivePercent: number;
+    desc?: string;
+  } | null>(null);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -129,10 +153,10 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       setFormDeveloper(initialPrefillGame.developer || '');
       setFormReleaseYear(initialPrefillGame.releaseYear || new Date().getFullYear());
       setFormGenres(Array.isArray(initialPrefillGame.genre) ? initialPrefillGame.genre.join(', ') : '');
-      setFormArtStyleFr(initialPrefillGame.artStyle?.fr || '2D Pixel Art');
-      setFormArtStyleEn(initialPrefillGame.artStyle?.en || '2D Pixel Art');
+      setFormArtStyleFr(initialPrefillGame.artStyle?.fr || 'Pixel Art');
+      setFormArtStyleEn(initialPrefillGame.artStyle?.en || 'Pixel Art');
       setFormCameraFr(initialPrefillGame.camera?.fr || 'Vue de côté 2D');
-      setFormCameraEn(initialPrefillGame.camera?.en || '2D Side View');
+      setFormCameraEn(initialPrefillGame.camera?.en || '2D Side-scroller');
       setFormSteamUrl(initialPrefillGame.steamUrl || '');
       setFormItchUrl(initialPrefillGame.itchUrl || '');
       setFormIsFree(!!initialPrefillGame.isFree);
@@ -394,15 +418,16 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     soundFx.playClick();
     setIsCreatingNew(false);
     setEditingGame(game);
+    setSteamLookupQuery(game.steamAppId ? String(game.steamAppId) : game.steamUrl || '');
     setFormTitle(game.title);
     setFormId(game.id);
     setFormDeveloper(game.developer);
     setFormReleaseYear(game.releaseYear);
     setFormGenres(Array.isArray(game.genre) ? game.genre.join(', ') : '');
-    setFormArtStyleFr(game.artStyle?.fr || '2D Pixel Art');
-    setFormArtStyleEn(game.artStyle?.en || '2D Pixel Art');
+    setFormArtStyleFr(game.artStyle?.fr || 'Pixel Art');
+    setFormArtStyleEn(game.artStyle?.en || 'Pixel Art');
     setFormCameraFr(game.camera?.fr || 'Vue de côté 2D');
-    setFormCameraEn(game.camera?.en || '2D Side View');
+    setFormCameraEn(game.camera?.en || '2D Side-scroller');
     setFormSteamUrl(game.steamUrl || '');
     setFormItchUrl(game.itchUrl || '');
     setFormIsFree(!!game.isFree);
@@ -412,6 +437,19 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormTaglineFr(game.hints?.tagline?.fr || '');
     setFormTaglineEn(game.hints?.tagline?.en || '');
     setFormComposer(game.hints?.composer || '');
+
+    const appId = extractSteamAppId(game);
+    const store = appId ? getSteamStoreData(appId) : null;
+    if (store && store.totalReviews > 0) {
+      setSteamReviewsInfo({
+        totalReviews: store.totalReviews,
+        positivePercent: store.positivePercent,
+        desc: store.reviewScoreDesc?.fr,
+      });
+    } else {
+      setSteamReviewsInfo(null);
+    }
+    setFormCardRarity(game.cardRarity || 'auto');
   };
 
   // Ouverture du formulaire de création
@@ -419,24 +457,147 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     soundFx.playClick();
     setIsCreatingNew(true);
     setEditingGame({});
+    setSteamLookupQuery('');
     setFormTitle('');
     setFormId('');
     setFormDeveloper('');
     setFormReleaseYear(new Date().getFullYear());
-    setFormGenres('Aventure, Indépendant');
-    setFormArtStyleFr('2D Pixel Art');
-    setFormArtStyleEn('2D Pixel Art');
+    setFormGenres('Action, Aventure');
+    setFormArtStyleFr('Pixel Art');
+    setFormArtStyleEn('Pixel Art');
     setFormCameraFr('Vue de côté 2D');
-    setFormCameraEn('2D Side View');
+    setFormCameraEn('2D Side-scroller');
     setFormSteamUrl('');
     setFormItchUrl('');
     setFormIsFree(false);
     setFormIsGem(true);
     setFormHeaderImage('');
     setFormScreenshots('');
-    setFormTaglineFr('Une aventure indépendante poétique et marquante.');
-    setFormTaglineEn('A poetic and memorable indie adventure.');
+    setFormTaglineFr('');
+    setFormTaglineEn('');
     setFormComposer('');
+    setFormCardRarity('auto');
+    setSteamReviewsInfo(null);
+  };
+
+  // Détection & Remplissage automatique depuis Steam (API)
+  const handleAutoFetchSteam = async () => {
+    const raw = steamLookupQuery.trim();
+    if (!raw) return;
+    const match = raw.match(/\b\d{4,9}\b/);
+    const appId = match ? match[0] : '';
+    if (!appId) {
+      if (onNotice) onNotice('error', "Aucun AppID Steam numérique valide trouvé dans votre saisie.");
+      return;
+    }
+
+    soundFx.playClick();
+    setIsFetchingSteam(true);
+    try {
+      let dataFR: any = null;
+      let dataEN: any = null;
+
+      let fetchedReviews: any = null;
+      try {
+        const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${appId}`);
+        if (lookupRes.ok) {
+          const lookupJson = await lookupRes.json();
+          if (lookupJson.status === 'success' && lookupJson.dataFR) {
+            dataFR = lookupJson.dataFR;
+            dataEN = lookupJson.dataEN || lookupJson.dataFR;
+            if (lookupJson.reviews) {
+              fetchedReviews = lookupJson.reviews;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Erreur lookup proxy local:', err);
+      }
+
+      if (!dataFR) {
+        // Fallback CORS
+        const corsUrlFR = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=french`)}`;
+        const corsUrlEN = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`)}`;
+        const [frRes, enRes] = await Promise.all([fetch(corsUrlFR), fetch(corsUrlEN)]);
+        const [frJson, enJson] = await Promise.all([frRes.json(), enRes.json()]);
+        dataFR = frJson?.[appId]?.data;
+        dataEN = enJson?.[appId]?.data || dataFR;
+      }
+
+      if (!dataFR || !dataFR.name) {
+        throw new Error("Impossible de récupérer les métadonnées de ce jeu sur Steam.");
+      }
+
+      const title = dataFR.name.trim();
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `game-${appId}`;
+      const developer = dataFR.developers?.[0] || dataFR.publishers?.[0] || 'Studio Indépendant';
+      const releaseYear = parseInt(
+        dataFR.release_date?.date?.match(/\b(19\d\d|20\d\d)\b/)?.[1] || String(new Date().getFullYear()),
+        10
+      );
+      const headerImage = dataFR.header_image || `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`;
+      const screenshots: string[] = (dataFR.screenshots || [])
+        .map((sc: { path_full: string }) => sc.path_full)
+        .slice(0, 6);
+      while (screenshots.length < 6) {
+        screenshots.push(headerImage);
+      }
+
+      const taglineFr = (dataFR.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '').trim();
+      const taglineEn = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '').trim();
+      const fullDesc = `${title} ${developer} ${taglineFr} ${taglineEn} ${dataFR.detailed_description || ''} ${dataEN?.detailed_description || ''}`;
+
+      const rawGenres = (dataFR.genres || []).map((g: { description: string }) => g.description);
+      const rawCategories = (dataFR.categories || []).map((c: { description: string }) => c.description);
+      const enrichedGenres = inferEnrichedGenres([...rawGenres, ...rawCategories], fullDesc);
+      const artStyle = inferCanonicalArtStyle(fullDesc, enrichedGenres);
+      const camera = inferCanonicalCamera(fullDesc, enrichedGenres);
+      const extractedComposer = extractComposerFromText(fullDesc);
+
+      setFormTitle(title);
+      setFormId(slug);
+      setFormDeveloper(developer);
+      setFormReleaseYear(releaseYear);
+      setFormSteamUrl(`https://store.steampowered.com/app/${appId}/`);
+      setFormHeaderImage(headerImage);
+      setFormScreenshots(screenshots.join('\n'));
+      setFormTaglineFr(taglineFr);
+      setFormTaglineEn(taglineEn);
+      setFormGenres(enrichedGenres.join(', '));
+      setFormArtStyleFr(artStyle.fr);
+      setFormArtStyleEn(artStyle.en);
+      setFormCameraFr(camera.fr);
+      setFormCameraEn(camera.en);
+      if (extractedComposer) {
+        setFormComposer(extractedComposer);
+      }
+
+      if (fetchedReviews) {
+        registerSteamStoreData({
+          appId: parseInt(appId, 10),
+          isFree: !!dataFR.is_free,
+          currency: 'EUR',
+          initialPriceCents: 0,
+          finalPriceCents: 0,
+          discountPercent: 0,
+          formattedFinalPrice: '',
+          totalReviews: fetchedReviews.totalReviews,
+          totalPositive: fetchedReviews.totalPositive,
+          positivePercent: fetchedReviews.positivePercent,
+          reviewScoreDesc: fetchedReviews.reviewScoreDesc,
+        });
+        setSteamReviewsInfo(fetchedReviews);
+      }
+      setFormCardRarity('auto');
+
+      soundFx.playVictory();
+      if (onNotice) onNotice('success', `✨ Fiche Steam auto-remplie avec succès pour « ${title} » !`);
+    } catch (err: any) {
+      soundFx.playError();
+      if (onNotice) onNotice('error', err.message || "Erreur lors de la récupération Steam.");
+    } finally {
+      setIsFetchingSteam(false);
+    }
   };
 
   // Sauvegarde du jeu
@@ -453,28 +614,39 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     const genresArray = formGenres
       .split(',')
       .map((g) => g.trim())
-      .filter((g) => g.length > 0);
+      .filter((g) => g.length > 0 && g.toLowerCase() !== 'indépendant' && g.toLowerCase() !== 'indie');
 
     const screenshotsArray = formScreenshots
       .split('\n')
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
+    const cleanAppId = extractSteamAppId({ steamAppId: (editingGame as Game)?.steamAppId, steamUrl: formSteamUrl });
+    const finalRarity: CardRarity =
+      formCardRarity !== 'auto'
+        ? formCardRarity
+        : computeGameRarity(formId.trim(), {
+            id: formId.trim(),
+            steamAppId: cleanAppId || undefined,
+            steamUrl: formSteamUrl.trim() || undefined,
+          });
+
     const gamePayload: Partial<Game> & { isCustomAdmin?: boolean; isGem?: boolean } = {
       id: formId.trim() || undefined,
       title: formTitle.trim(),
       developer: formDeveloper.trim() || 'Studio Indé',
-      releaseYear: Number(formReleaseYear) || 2024,
-      genre: genresArray.length > 0 ? genresArray : ['Indépendant'],
+      releaseYear: Number(formReleaseYear) || new Date().getFullYear(),
+      genre: genresArray.length > 0 ? genresArray : ['Action', 'Aventure'],
       artStyle: {
-        fr: formArtStyleFr.trim() || '2D Pixel Art',
-        en: formArtStyleEn.trim() || '2D Pixel Art',
+        fr: formArtStyleFr.trim() || 'Pixel Art',
+        en: formArtStyleEn.trim() || 'Pixel Art',
       },
       camera: {
         fr: formCameraFr.trim() || 'Vue de côté 2D',
-        en: formCameraEn.trim() || '2D Side View',
+        en: formCameraEn.trim() || '2D Side-scroller',
       },
       steamUrl: formSteamUrl.trim() || undefined,
+      steamAppId: cleanAppId || undefined,
       itchUrl: formItchUrl.trim() || undefined,
       isFree: formIsFree,
       isGem: formIsGem,
@@ -487,6 +659,8 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         },
         composer: formComposer.trim() || undefined,
       },
+      cardRarity: finalRarity,
+      addedAt: (editingGame as Game)?.addedAt || new Date().toISOString().split('T')[0],
       isCustomAdmin: isCreatingNew || (editingGame as EnrichedAdminGame)?.isCustomAdmin,
     };
 
@@ -770,6 +944,23 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                             Certifié Hoot
                           </span>
                         )}
+
+                        {/* Rareté de la Carte Sylvestre */}
+                        {(() => {
+                          const r = computeGameRarity(game.id, game);
+                          const config: Record<CardRarity, { label: string; bg: string }> = {
+                            legendary: { label: '🟡 Légendaire', bg: 'bg-amber-500/15 text-amber-300 border-amber-500/30' },
+                            epic: { label: '🟣 Épique', bg: 'bg-purple-500/15 text-purple-300 border-purple-500/30' },
+                            rare: { label: '🔵 Rare', bg: 'bg-blue-500/15 text-blue-300 border-blue-500/30' },
+                            common: { label: '⚪ Commune', bg: 'bg-slate-700/40 text-slate-300 border-white/10' },
+                          };
+                          const m = config[r] || { label: r, bg: 'bg-slate-800 text-slate-400 border-white/10' };
+                          return (
+                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${m.bg}`}>
+                              {m.label}
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -961,6 +1152,50 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
 
               {/* Formulaire défilable */}
               <form onSubmit={handleSaveForm} className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
+                {/* Remplissage automatique depuis Steam */}
+                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-amber-950/20 border border-blue-500/30 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-blue-300 font-bold">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      <span>Remplissage automatique depuis Steam</span>
+                    </div>
+                    <span className="text-[10px] text-slate-400 hidden sm:inline">Détection IA des tags, style visuel et caméra</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={steamLookupQuery}
+                      onChange={(e) => setSteamLookupQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAutoFetchSteam();
+                        }
+                      }}
+                      placeholder="Collez une URL Steam (store.steampowered.com/app/...) ou un AppID"
+                      className="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-mono"
+                    />
+                    <button
+                      type="button"
+                      disabled={isFetchingSteam || !steamLookupQuery.trim()}
+                      onClick={handleAutoFetchSteam}
+                      className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs flex items-center gap-1.5 transition disabled:opacity-40 cursor-pointer shrink-0"
+                    >
+                      {isFetchingSteam ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Analyse Steam...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>Analyser & Remplir</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
                 {editingGame?.steamAppId && isCreatingNew && (
                   <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center gap-2.5 text-xs text-amber-300">
                     <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
@@ -1177,6 +1412,84 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       onChange={(e) => setFormIsFree(e.target.checked)}
                       className="w-4 h-4 rounded text-amber-500 accent-amber-500 cursor-pointer shrink-0"
                     />
+                  </div>
+                </div>
+
+                {/* Rareté de la Carte Sylvestre (Classeur & Boosters) */}
+                <div className="p-3.5 rounded-xl bg-gradient-to-r from-purple-950/20 via-amber-950/10 to-transparent border border-white/10 space-y-2.5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">🎴</span>
+                      <div>
+                        <label className="font-bold text-xs text-slate-200 block">
+                          Rareté de la Carte Sylvestre (Classeur & Boosters)
+                        </label>
+                        <p className="text-[10px] text-slate-400">
+                          Automatisée selon les évaluations Steam officielles ou assignation personnalisée.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Badge Rareté Calculée / Active */}
+                    {(() => {
+                      const tempAppId = extractSteamAppId({ steamAppId: (editingGame as Game)?.steamAppId, steamUrl: formSteamUrl });
+                      const activeRarity =
+                        formCardRarity !== 'auto'
+                          ? formCardRarity
+                          : computeGameRarity(formId.trim(), {
+                              id: formId.trim(),
+                              steamAppId: tempAppId || undefined,
+                              steamUrl: formSteamUrl.trim() || undefined,
+                            });
+                      const rarityMeta: Record<CardRarity, { label: string; bg: string; icon: string }> = {
+                        legendary: { label: 'Légendaire', bg: 'bg-amber-500/20 text-amber-300 border-amber-500/40', icon: '🟡' },
+                        epic: { label: 'Épique', bg: 'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: '🟣' },
+                        rare: { label: 'Rare', bg: 'bg-blue-500/20 text-blue-300 border-blue-500/40', icon: '🔵' },
+                        common: { label: 'Commune', bg: 'bg-slate-700/40 text-slate-300 border-white/10', icon: '⚪' },
+                      };
+                      const m = rarityMeta[activeRarity];
+                      return (
+                        <div className="flex items-center gap-2">
+                          {steamReviewsInfo && (
+                            <span className="text-[10px] text-slate-400 font-mono">
+                              Steam : {steamReviewsInfo.totalReviews.toLocaleString()} avis ({steamReviewsInfo.positivePercent}%+)
+                            </span>
+                          )}
+                          <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border flex items-center gap-1 ${m.bg}`}>
+                            <span>{m.icon}</span>
+                            <span>{m.label}</span>
+                            {formCardRarity === 'auto' && (
+                              <span className="text-[9px] opacity-70 font-normal">(Auto)</span>
+                            )}
+                          </span>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Sélecteur de rareté */}
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 pt-1">
+                    {[
+                      { key: 'auto', label: '⚡ Auto (Steam)', desc: 'Calcul dynamique' },
+                      { key: 'common', label: '⚪ Commune', desc: `< ${Math.round(STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS / 1000)}k avis` },
+                      { key: 'rare', label: '🔵 Rare', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS / 1000)}k avis` },
+                      { key: 'epic', label: '🟣 Épique', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.EPIC_MIN_REVIEWS / 1000)}k avis` },
+                      { key: 'legendary', label: '🟡 Légendaire', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.LEGENDARY_MIN_REVIEWS / 1000)}k avis` },
+                    ].map((opt) => (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => setFormCardRarity(opt.key as any)}
+                        className={`p-2 rounded-lg border text-left transition cursor-pointer flex flex-col justify-between ${
+                          formCardRarity === opt.key
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm shadow-amber-500/10'
+                            : 'bg-white/[0.03] text-slate-300 border-white/5 hover:bg-white/[0.07] hover:text-white'
+                        }`}
+                      >
+                        <span className="text-[11px] font-bold block">{opt.label}</span>
+                        <span className="text-[9px] text-slate-400 block">{opt.desc}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
 

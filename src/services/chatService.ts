@@ -2,8 +2,8 @@
  * 🦉 Hoot Indie Games — Service Frontend de Tchat Souverain
  * 
  * Communique avec public/api/chat.php avec résilience hors-ligne / localhost
- * et gestion des canaux multilingues et retours joueurs.
  */
+import { ADMIN_STEAM_ID } from '../utils/usernameValidation';
 
 export type ChatChannel = 'global' | 'fr' | 'en' | 'es' | 'de' | 'ja' | 'pt-BR' | 'feedback';
 export type FeedbackCategory = 'suggestion' | 'bug' | 'idea' | 'love' | 'general';
@@ -113,7 +113,25 @@ function getLocalFallbackMessages(): ChatMessage[] {
     const raw = localStorage.getItem(LOCAL_STORAGE_CHAT_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map((m: ChatMessage) => {
+          const isCreatorMsg = Boolean(
+            m.isCreator ||
+            m.avatarId === 'hibouxe_creator' ||
+            m.steamId === ADMIN_STEAM_ID ||
+            (m.title && m.title.toLowerCase().includes('créateur'))
+          );
+          if (isCreatorMsg) {
+            return {
+              ...m,
+              username: 'Hibouxe',
+              isCreator: true,
+              avatarId: 'hibouxe_creator',
+            };
+          }
+          return m;
+        });
+      }
     }
   } catch {
     // Ignore
@@ -185,9 +203,26 @@ export async function fetchChatMessages(
     if (res.ok) {
       const data = await res.json();
       if (data && data.success && Array.isArray(data.messages)) {
+        const cleanedMessages: ChatMessage[] = data.messages.map((m: ChatMessage) => {
+          const isCreatorMsg = Boolean(
+            m.isCreator ||
+            m.avatarId === 'hibouxe_creator' ||
+            m.steamId === ADMIN_STEAM_ID ||
+            (m.title && m.title.toLowerCase().includes('créateur'))
+          );
+          if (isCreatorMsg) {
+            return {
+              ...m,
+              username: 'Hibouxe',
+              isCreator: true,
+              avatarId: 'hibouxe_creator',
+            };
+          }
+          return m;
+        });
         return {
           success: true,
-          messages: data.messages,
+          messages: cleanedMessages,
           serverTime: data.serverTime || Math.floor(Date.now() / 1000),
         };
       }
@@ -244,12 +279,16 @@ export async function sendChatMessage(payload: {
     return { success: false, error: 'Le message ne peut pas être vide.' };
   }
 
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+
   try {
-    const res = await fetch('/api/chat.php', {
+    const res = await fetch('/api/chat.php?action=send_message', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
       },
       body: JSON.stringify({
         action: 'send_message',
@@ -262,6 +301,7 @@ export async function sendChatMessage(payload: {
         steamId: payload.steamId,
         email: payload.email,
         userId: payload.userId,
+        adminKey,
         category: payload.category || 'general',
         scoreData: payload.scoreData || null,
       }),
@@ -335,7 +375,48 @@ export async function sendChatMessage(payload: {
 }
 
 /**
- * Supprime ou modère un message de la discussion (Modérateur ou Admin)
+ * Supprime ou modère un message dans le cache local (mode hors-ligne ou messages locaux)
+ */
+function deleteLocalFallbackMessage(
+  messageId: string,
+  auth?: { steamId?: string; userId?: string; username?: string; isAdmin?: boolean; isModerator?: boolean }
+): boolean {
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_CHAT_KEY);
+    if (!raw) return false;
+    const list: ChatMessage[] = JSON.parse(raw);
+    if (!Array.isArray(list)) return false;
+
+    const idx = list.findIndex((m) => m.id === messageId);
+    if (idx === -1) return false;
+
+    const target = list[idx];
+    const isMe = Boolean(
+      (auth?.username && target.username && target.username.toLowerCase() === auth.username.toLowerCase()) ||
+      (auth?.userId && target.userId && target.userId === auth.userId) ||
+      (auth?.steamId && target.steamId && target.steamId === auth.steamId)
+    );
+
+    const isAuthorized = Boolean(auth?.isAdmin || (auth?.isModerator && !target.isCreator) || isMe);
+    if (!isAuthorized) return false;
+
+    list[idx] = {
+      ...target,
+      isDeleted: true,
+      text: isMe
+        ? '[Message retiré par l\'auteur]'
+        : (auth?.isAdmin ? '[Message retiré par l\'administrateur]' : '[Message retiré par la modération]'),
+      scoreData: null,
+    };
+    localStorage.setItem(LOCAL_STORAGE_CHAT_KEY, JSON.stringify(list));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Supprime ou modère un message de la discussion (Auteur, Modérateur ou Admin)
  */
 export async function deleteChatMessage(
   messageId: string,
@@ -349,9 +430,19 @@ export async function deleteChatMessage(
     isModerator?: boolean;
   }
 ): Promise<{ success: boolean; message?: string }> {
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+  const payload = {
+    action: 'delete_message',
+    messageId,
+    steamId: auth.steamId || '',
+    userId: auth.userId || '',
+    email: auth.email || '',
+    username: auth.username || '',
+    adminKey,
+  };
+
   try {
-    const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
-    const res = await fetch('/api/chat.php', {
+    const res = await fetch('/api/chat.php?action=delete_message', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -359,23 +450,50 @@ export async function deleteChatMessage(
         Accept: 'application/json',
         ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
       },
-      body: JSON.stringify({
-        action: 'delete_message',
-        messageId,
-        steamId: auth.steamId || '',
-        userId: auth.userId || '',
-        email: auth.email || '',
-        username: auth.username || '',
-        role: auth.role || '',
-        isAdmin: auth.isAdmin || false,
-        isModerator: auth.isModerator || false,
-        adminKey,
-      }),
+      body: JSON.stringify(payload),
     });
-    const data = await res.json();
-    return data;
+
+    const data = await res.json().catch(() => null);
+
+    if (res.ok && data?.success) {
+      deleteLocalFallbackMessage(messageId, auth);
+      return { success: true, message: data.message || 'Message supprimé avec succès.' };
+    }
+
+    // Réponse avec message d'erreur explicite renvoyé par l'API
+    if (data && (data.message || data.error)) {
+      if (data.error === 'not_found') {
+        const localDeleted = deleteLocalFallbackMessage(messageId, auth);
+        if (localDeleted) {
+          return { success: true, message: 'Message retiré localement.' };
+        }
+      }
+      return { success: false, message: data.message || data.error };
+    }
+
+    // Cas d'erreurs HTTP sans corps JSON
+    if (!res.ok) {
+      if (res.status === 403) {
+        return { success: false, message: 'Vous n\'avez pas les permissions pour supprimer ce message.' };
+      }
+      if (res.status === 404) {
+        const localDeleted = deleteLocalFallbackMessage(messageId, auth);
+        if (localDeleted) {
+          return { success: true, message: 'Message retiré localement.' };
+        }
+        return { success: false, message: 'Message introuvable ou déjà supprimé.' };
+      }
+      return { success: false, message: `Erreur serveur (${res.status}).` };
+    }
+
+    return { success: false, message: 'Réponse inattendue du serveur.' };
   } catch (err: any) {
-    return { success: false, message: err.message || 'Erreur lors de la modération du message.' };
+    // Mode hors-ligne ou dev sans backend : tentative de suppression locale
+    const localDeleted = deleteLocalFallbackMessage(messageId, auth);
+    if (localDeleted) {
+      return { success: true, message: 'Message retiré du stockage local.' };
+    }
+    return { success: false, message: err?.message || 'Erreur lors de la modération du message.' };
   }
 }
 

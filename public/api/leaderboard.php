@@ -13,10 +13,8 @@ error_reporting(0);
 // Headers de sécurité HTTP stricts
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
-header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+require_once __DIR__ . '/admin_auth.php';
+sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -24,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once __DIR__ . '/admin_auth.php';
 $dataFile = __DIR__ . '/leaderboard_data.json';
 $rateLimitFile = __DIR__ . '/leaderboard_ratelimit.json';
 
@@ -44,19 +41,9 @@ $validAvatars = [
     'golden_sylvestre', 'celestial_knight', 'golden_hornet', 'retro_ghost'
 ];
 
-// Récupération IP client
+// Récupération IP client fiable (sans spoofing X-Forwarded-For)
 function getClientIp() {
-    $headers = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
-    foreach ($headers as $h) {
-        if (!empty($_SERVER[$h])) {
-            $parts = explode(',', $_SERVER[$h]);
-            $ip = trim($parts[0]);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return $ip;
-            }
-        }
-    }
-    return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    return getAuthClientIp();
 }
 
 // Rate limiting (max 30 requêtes d'écriture par minute par IP)

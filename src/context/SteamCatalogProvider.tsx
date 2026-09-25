@@ -40,6 +40,37 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
     };
   }, []);
 
+  // Synchronisation dynamique du nombre de jeux dans les balises meta de partage et de SEO
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const count = curatedGems.length;
+    if (count <= 0) return;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        'content',
+        `Le sanctuaire du jeu indé : ${count} pépites certifiées, collection de cartes & boosters, 17+ mini-jeux (8 défis quotidiens, arcade rétro 1982), Time Attack et duels 1v1.`
+      );
+    }
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) {
+      ogDesc.setAttribute(
+        'content',
+        `Explorez ${count} pépites indés certifiées Steam ! Collectionnez les cartes de jeux et ouvrez vos boosters, relevez 17+ mini-jeux : 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), 8 bornes d'arcade rétro, quiz trivia, sprints Time Attack et duels 1v1 en direct.`
+      );
+    }
+
+    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDesc) {
+      twitterDesc.setAttribute(
+        'content',
+        `${count} pépites indés certifiées, collection de cartes & boosters sylvestres, 17+ mini-jeux (8 défis quotidiens, 8 bornes d'arcade 1982), quiz trivia, Time Attack et duels 1v1 P2P.`
+      );
+    }
+  }, [curatedGems.length]);
+
   const searchGames = useCallback((query: string, limit = 20) => {
     return steamCatalog.searchGames(query, limit);
   }, []);

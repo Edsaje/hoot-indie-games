@@ -8,7 +8,7 @@ import {
   RefreshCw,
   ShoppingBag,
 } from 'lucide-react';
-import { ALL_CARDS } from '../../data/cardsData';
+import { ALL_CARDS, buildCardsFromGames, setDynamicCardsPool } from '../../data/cardsData';
 import type { CardItem, CardRarity, BoosterOpenResult, UserCardCollection } from '../../types/cards';
 import { BOOSTER_COST } from '../../types/cards';
 import {
@@ -21,6 +21,7 @@ import {
 import { formatFeathers, isLocalAdminProfile } from '../../utils/featherEconomy';
 import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { CardView } from './CardView';
@@ -42,6 +43,18 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
   const { feathersCount } = useAchievements();
   const { isAdmin, isCreator } = useUserAccount();
   const isSuperAdmin = Boolean(isAdmin || isCreator || isLocalAdminProfile());
+  const { curatedGems } = useSteamCatalog();
+
+  const allCards = useMemo(() => {
+    if (curatedGems && curatedGems.length > 0) {
+      return buildCardsFromGames(curatedGems);
+    }
+    return ALL_CARDS;
+  }, [curatedGems]);
+
+  useEffect(() => {
+    setDynamicCardsPool(allCards);
+  }, [allCards]);
 
   const [collection, setCollection] = useState<UserCardCollection>(() => getCardCollection());
   const [isDailyAvailable, setIsDailyAvailable] = useState<boolean>(() => canClaimDailyBooster(undefined, isSuperAdmin));
@@ -96,7 +109,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
       const match = hash.match(/[?&]trade=([a-zA-Z0-9_-]+)/) || hash.match(/#trade=([a-zA-Z0-9_-]+)/);
       if (match && match[1]) {
         const cardId = match[1];
-        const found = ALL_CARDS.find((c) => c.id === cardId);
+        const found = allCards.find((c) => c.id === cardId);
         if (found) {
           setSelectedCard(found);
         }
@@ -108,15 +121,15 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
     return () => {
       window.removeEventListener('hashchange', checkTradeHash);
     };
-  }, []);
+  }, [allCards]);
 
-  const stats = useMemo(() => getCollectionStats(collection), [collection]);
+  const stats = useMemo(() => getCollectionStats(collection, allCards), [collection, allCards]);
 
   // Handle Daily Pack opening
   const handleClaimDailyPack = () => {
     try {
       soundFx.playClick();
-      const res = claimDailyBooster(undefined, isSuperAdmin);
+      const res = claimDailyBooster(undefined, isSuperAdmin, allCards);
       if (res && res.cards && res.cards.length > 0) {
         setBoosterResult(res);
         setIsOpeningModalOpen(true);
@@ -148,7 +161,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
         return;
       }
 
-      const res = buyBoosterWithFeathers(isSuperAdmin ? Infinity : feathersCount);
+      const res = buyBoosterWithFeathers(isSuperAdmin ? Infinity : feathersCount, allCards);
       if ('error' in res) {
         soundFx.playError();
         setErrorMessage(res.error);
@@ -168,7 +181,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
 
   // Filtered and Sorted Cards
   const filteredCards = useMemo(() => {
-    let result = [...ALL_CARDS];
+    let result = [...allCards];
 
     // Search query
     if (searchQuery.trim()) {
@@ -353,7 +366,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
               <span className="font-bold text-slate-300">
                 Progression de l'Album :{' '}
                 <strong className="text-amber-300 font-mono">
-                  {stats.totalUnique} / {ALL_CARDS.length}
+                  {stats.totalUnique} / {allCards.length}
                 </strong>{' '}
                 ({stats.completionPercent}%)
               </span>

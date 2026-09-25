@@ -397,6 +397,7 @@ async function syncUpcomingRadar(
           },
           ...(composer ? { composer } : {}),
         },
+        addedAt: new Date().toISOString().split('T')[0],
         ...(detailsFr.is_free ? { isFree: true } : {}),
       };
 
@@ -587,6 +588,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = `;
 function saveGamesDatabase(gamesList: Game[]) {
   const targetPath = path.join(process.cwd(), 'src/data/games.ts');
   const fileHeader = `import type { Game } from '../types/game';
+import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlyScheduler';
 
 /**
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
@@ -598,29 +600,44 @@ export const INDIE_GAMES: Game[] = `;
 
   const fileFooter = `;
 
-// Helper déterministe pour obtenir le jeu du jour basé sur une graine temporelle "YYYY-MM-DD"
-export function getDailyGame(dateString: string, offset = 0): Game {
+// Pool stable pour les jeux quotidiens (sanctuarisé sur INDIE_GAMES)
+export function getActiveDailyPool(): Game[] {
+  return INDIE_GAMES;
+}
+
+export function setCustomDailyPool(_pool: Game[] | null) {
+  // Sanctuarisé : le pool des défis quotidiens suit le cycle mensuel déterministe
+}
+
+// Helper déterministe pour obtenir le jeu du jour basé sur le calendrier mensuel équitable
+export function getDailyGame(dateString: string, offset = 0, pool?: Game[]): Game {
+  if (offset === 0) {
+    return getScheduledDailyGame(dateString, 'screenle', pool);
+  }
+  if (offset === 3) {
+    return getScheduledDailyGame(dateString, 'indledle', pool);
+  }
+  if (offset === 17) {
+    return getScheduledDailyGame(dateString, 'dailyGem', pool);
+  }
+
+  // Repli déterministe si offset personnalisé
+  const gamesPool = pool && pool.length > 0 ? pool : INDIE_GAMES;
   let hash = 0;
   for (let i = 0; i < dateString.length; i++) {
     hash = (hash << 5) - hash + dateString.charCodeAt(i);
     hash |= 0;
   }
-  const index = Math.abs(hash + offset) % INDIE_GAMES.length;
-  return INDIE_GAMES[index];
+  const index = Math.abs(hash + offset) % gamesPool.length;
+  return gamesPool[index];
 }
 
 // Helper déterministe pour obtenir le jeu du jour pour Profille (sans collision avec Screenle ni Indledle)
-export function getDailyProfilleGame(dateString: string): Game {
-  const g0 = getDailyGame(dateString, 0);
-  const g3 = getDailyGame(dateString, 3);
-  let offset = 7;
-  let candidate = getDailyGame(dateString, offset);
-  while ((candidate.id === g0.id || candidate.id === g3.id) && offset < 50) {
-    offset++;
-    candidate = getDailyGame(dateString, offset);
-  }
-  return candidate;
+export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
+  return getScheduledDailyGame(dateString, 'profille', pool);
 }
+
+export { getScheduledDailyGame, getScheduledDay };
 `;
 
   fs.writeFileSync(targetPath, fileHeader + JSON.stringify(gamesList, null, 2) + fileFooter, 'utf8');
@@ -993,6 +1010,7 @@ export async function runDailyHarvest() {
         },
         ...(composer ? { composer } : {}),
       },
+      addedAt: new Date().toISOString().split('T')[0],
       ...(detailsFr.is_free ? { isFree: true } : {}),
     };
 

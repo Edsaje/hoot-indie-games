@@ -16,18 +16,15 @@ error_reporting(0);
 
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
-header('Referrer-Policy: strict-origin-when-cross-origin');
+require_once __DIR__ . '/admin_auth.php';
+sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-require_once __DIR__ . '/admin_auth.php';
 $dataFile = __DIR__ . '/micro_indies.json';
 $rateLimitFile = __DIR__ . '/micro_indies_rates.json';
 $secretFile = __DIR__ . '/.secret';
@@ -44,19 +41,7 @@ function getSecret($file) {
 $secret = getSecret($secretFile);
 
 function getClientIpHash($secret) {
-    $headers = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
-    $ip = '127.0.0.1';
-    foreach ($headers as $h) {
-        if (!empty($_SERVER[$h])) {
-            $parts = explode(',', $_SERVER[$h]);
-            $candidate = trim($parts[0]);
-            if (filter_var($candidate, FILTER_VALIDATE_IP)) {
-                $ip = $candidate;
-                break;
-            }
-        }
-    }
-    return hash('sha256', $ip . $secret);
+    return hash('sha256', getAuthClientIp() . $secret);
 }
 
 function checkRateLimit($rateLimitFile, $ipHash, $maxRequests = 5, $windowSeconds = 3600) {

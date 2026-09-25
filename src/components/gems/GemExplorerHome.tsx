@@ -66,27 +66,10 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   const curatedGems = catalogGems && catalogGems.length > 0 ? catalogGems : INDIE_GAMES;
   const { isGameOwned, isSteamConnected, toggleGameOwned, hideOwnedGames, setHideOwnedGames, connectSteamWithOpenId } = useUserAccount();
 
-  // The featured canonical daily gem (guaranteed never to spoil Screenle (offset 0) or Indledle (offset 3), and drawn strictly from curated gems)
+  // La pépite du jour en vedette (issue du calendrier mensuel déterministe, distincte de Screenle, Indledle et Profille)
   const dailyGem = useMemo(() => {
-    const screenleGame = getDailyGame(currentDate, 0, curatedGems);
-    const indledleGame = getDailyGame(currentDate, 3, curatedGems);
-    const pool = curatedGems.length > 0 ? curatedGems : INDIE_GAMES;
-    let hash = 0;
-    for (let i = 0; i < currentDate.length; i++) {
-      hash = (hash << 5) - hash + currentDate.charCodeAt(i);
-      hash |= 0;
-    }
-    let offset = 17;
-    let candidate = pool[Math.abs(hash + offset) % pool.length];
-    while (
-      (candidate.id === screenleGame.id || candidate.id === indledleGame.id) &&
-      offset < 100
-    ) {
-      offset += 5;
-      candidate = pool[Math.abs(hash + offset) % pool.length];
-    }
-    return candidate;
-  }, [currentDate, curatedGems]);
+    return getDailyGame(currentDate, 17);
+  }, [currentDate]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');

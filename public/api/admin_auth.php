@@ -15,21 +15,79 @@ if (!defined('ADMIN_STEAM_ID')) {
 }
 
 /**
- * Récupère l'IP réelle du client
+ * Récupère l'IP réelle et fiable du client (Protection anti-usurpation IP CWE-290)
+ * On ne fait confiance à CF-Connecting-IP que si présent. Sinon, seule REMOTE_ADDR est fiable.
  */
 if (!function_exists('getAuthClientIp')) {
     function getAuthClientIp() {
-        $headers = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
-        foreach ($headers as $h) {
-            if (!empty($_SERVER[$h])) {
-                $parts = explode(',', $_SERVER[$h]);
-                $ip = trim($parts[0]);
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    return $ip;
-                }
+        if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+            $parts = explode(',', $_SERVER['HTTP_CF_CONNECTING_IP']);
+            $ip = trim($parts[0]);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return $ip;
             }
         }
         return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    }
+}
+
+/**
+ * Envoie des en-têtes CORS stricts limités aux domaines autorisés (CWE-942)
+ */
+if (!function_exists('sendCorsHeaders')) {
+    function sendCorsHeaders() {
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+        $isAllowed = false;
+
+        if (!empty($origin)) {
+            $parsed = parse_url($origin);
+            $host = $parsed['host'] ?? '';
+            if (
+                $host === 'hootindiegames.com' ||
+                $host === 'www.hootindiegames.com' ||
+                (is_string($host) && substr($host, -18) === '.hootindiegames.com') ||
+                $host === 'localhost' ||
+                $host === '127.0.0.1'
+            ) {
+                $isAllowed = true;
+            }
+        }
+
+        if ($isAllowed && !empty($origin)) {
+            header("Access-Control-Allow-Origin: $origin");
+            header('Vary: Origin');
+            header('Access-Control-Allow-Credentials: true');
+        } else {
+            header('Access-Control-Allow-Origin: https://hootindiegames.com');
+            header('Access-Control-Allow-Credentials: true');
+        }
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Admin-Key, X-Sync-Key');
+    }
+}
+
+/**
+ * Gestion des jetons CSRF pour les formulaires d'administration
+ */
+if (!function_exists('getAdminCsrfToken')) {
+    function getAdminCsrfToken() {
+        if (session_status() === PHP_SESSION_NONE) {
+            @session_start();
+        }
+        if (empty($_SESSION['admin_csrf_token'])) {
+            $_SESSION['admin_csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['admin_csrf_token'];
+    }
+}
+
+if (!function_exists('validateAdminCsrfToken')) {
+    function validateAdminCsrfToken($token) {
+        if (session_status() === PHP_SESSION_NONE) {
+            @session_start();
+        }
+        $expected = $_SESSION['admin_csrf_token'] ?? '';
+        return !empty($expected) && !empty($token) && hash_equals($expected, $token);
     }
 }
 

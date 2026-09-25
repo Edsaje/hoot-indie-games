@@ -18,9 +18,8 @@ error_reporting(0);
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+require_once __DIR__ . '/admin_auth.php';
+sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -28,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once __DIR__ . '/admin_auth.php';
 $dataFile = __DIR__ . '/chat_messages.json';
 $rateLimitFile = __DIR__ . '/chat_ratelimit.json';
 
@@ -47,19 +45,9 @@ $validAvatars = [
     'golden_sylvestre', 'celestial_knight', 'golden_hornet', 'retro_ghost'
 ];
 
-// Récupération IP client
+// Récupération IP client fiable (sans spoofing X-Forwarded-For)
 function getClientIp() {
-    $headers = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
-    foreach ($headers as $h) {
-        if (!empty($_SERVER[$h])) {
-            $parts = explode(',', $_SERVER[$h]);
-            $ip = trim($parts[0]);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return $ip;
-            }
-        }
-    }
-    return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    return getAuthClientIp();
 }
 
 // Vérification du rate-limit (max 1 message toutes les 2.5 secondes, max 25 messages par 5 min)
@@ -237,6 +225,22 @@ function detectPhishingAndSuspiciousLinks($text, $isStaff = false) {
     return $flagged;
 }
 
+// Normalisation robuste du pseudonyme (insensible à la casse, accents et séparateurs)
+function normalizeChatUsername($name) {
+    if (empty($name)) return '';
+    $clean = mb_strtolower(trim($name), 'UTF-8');
+    $transliterator = [
+        'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a',
+        'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e',
+        'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i',
+        'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o',
+        'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ü'=>'u',
+        'ý'=>'y', 'ÿ'=>'y', 'ç'=>'c', 'ñ'=>'n'
+    ];
+    $clean = strtr($clean, $transliterator);
+    return preg_replace('/[^a-z0-9]/', '', $clean);
+}
+
 // Vérifie si un utilisateur est Administrateur ou Modérateur
 function checkIsUserAdminOrModerator($steamId, $userId, $username = '', $email = '') {
     // 1. Session OpenID officielle Valve ou Clé Secrète Maître (.admin_pass / X-Admin-Key)
@@ -244,12 +248,21 @@ function checkIsUserAdminOrModerator($steamId, $userId, $username = '', $email =
         return ['authorized' => true, 'role' => 'admin'];
     }
 
-    // 2. Administrateur Créateur officiel unique (Steam ID officiel ou email officiel + pseudo Hibouxe)
+    $normUser = normalizeChatUsername($username);
     $cleanSteam = trim(strval($steamId));
-    $cleanUser = mb_strtolower(trim($username), 'UTF-8');
     $cleanEmail = mb_strtolower(trim($email), 'UTF-8');
 
-    if ($cleanUser === 'hibouxe' && ($cleanSteam === ADMIN_STEAM_ID || $cleanEmail === 'quentin.beaud@hotmail.fr')) {
+    // Sécurité stricte : Edsaje est formellement interdit comme admin
+    if ($normUser === 'edsaje') {
+        return ['authorized' => false, 'role' => 'user'];
+    }
+
+    // 2. Administrateur Créateur officiel unique (Steam ID officiel ou email officiel)
+    if (
+        $cleanSteam === ADMIN_STEAM_ID ||
+        $cleanEmail === 'quentin.beaud@hotmail.fr' ||
+        ($normUser === 'hibouxe' && ($cleanSteam === ADMIN_STEAM_ID || $cleanEmail === 'quentin.beaud@hotmail.fr'))
+    ) {
         return ['authorized' => true, 'role' => 'admin'];
     }
 
@@ -260,16 +273,15 @@ function checkIsUserAdminOrModerator($steamId, $userId, $username = '', $email =
         if ($raw) {
             $uData = json_decode($raw, true);
             if (is_array($uData) && isset($uData['usernames'])) {
-                $norm = preg_replace('/[^a-z0-9]/', '', $cleanUser);
-                if (!empty($norm) && isset($uData['usernames'][$norm])) {
-                    $entry = $uData['usernames'][$norm];
+                if (!empty($normUser) && isset($uData['usernames'][$normUser])) {
+                    $entry = $uData['usernames'][$normUser];
                     $entryRole = $entry['role'] ?? 'user';
-                    if ($entryRole === 'admin' && $norm === 'hibouxe' && ($cleanSteam === ADMIN_STEAM_ID || $cleanEmail === 'quentin.beaud@hotmail.fr')) {
+                    if ($entryRole === 'admin' && $normUser === 'hibouxe' && ($cleanSteam === ADMIN_STEAM_ID || $cleanEmail === 'quentin.beaud@hotmail.fr')) {
                         return ['authorized' => true, 'role' => 'admin'];
                     }
                     if ($entryRole === 'moderator') {
-                        $matchUser = empty($userId) || ($entry['userId'] ?? '') === $userId;
-                        $matchSteam = empty($cleanSteam) || ($entry['steamId'] ?? '') === $cleanSteam;
+                        $matchUser = !empty($userId) && ($entry['userId'] ?? '') === $userId;
+                        $matchSteam = !empty($cleanSteam) && ($entry['steamId'] ?? '') === $cleanSteam;
                         if ($matchUser || $matchSteam) {
                             return ['authorized' => true, 'role' => 'moderator'];
                         }
@@ -325,12 +337,38 @@ function getChatData($dataFile) {
     if (!is_array($decoded) || !isset($decoded['messages'])) {
         return ['messages' => []];
     }
+
+    // Rétablissement automatique du pseudo officiel Hibouxe pour les messages du créateur
+    $needsSave = false;
+    foreach ($decoded['messages'] as &$m) {
+        $msgSteam = $m['steamId'] ?? '';
+        $msgTitle = $m['title'] ?? '';
+        $msgAvatar = $m['avatarId'] ?? '';
+        $isMsgCreator = !empty($m['isCreator']) || $msgSteam === ADMIN_STEAM_ID || $msgAvatar === 'hibouxe_creator' || stripos($msgTitle, 'Créateur') !== false;
+
+        if ($isMsgCreator && strpos($m['username'] ?? '', 'Explorateur_') === 0) {
+            $m['username'] = 'Hibouxe';
+            $m['avatarId'] = 'hibouxe_creator';
+            $m['isCreator'] = true;
+            $needsSave = true;
+        }
+    }
+    unset($m);
+
+    if ($needsSave) {
+        @file_put_contents($dataFile, json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
     return $decoded;
 }
 
 // Traitement des requêtes
-$method = $_SERVER['REQUEST_METHOD'];
-$action = $_REQUEST['action'] ?? ($method === 'POST' ? 'send_message' : 'get_messages');
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$inputJson = file_get_contents('php://input');
+$jsonBody = !empty($inputJson) ? (json_decode($inputJson, true) ?: []) : [];
+$body = !empty($jsonBody) ? array_merge($_POST, $jsonBody) : $_POST;
+
+$action = $_GET['action'] ?? $_POST['action'] ?? $jsonBody['action'] ?? $_REQUEST['action'] ?? ($method === 'POST' ? 'send_message' : 'get_messages');
 
 if ($action === 'get_messages') {
     $channel = trim($_REQUEST['channel'] ?? 'all');
@@ -401,9 +439,7 @@ if ($action === 'send_message') {
         exit;
     }
 
-    // Récupérer les données POST (JSON ou form-data)
-    $inputJson = file_get_contents('php://input');
-    $body = json_decode($inputJson, true) ?: $_POST;
+    // Les données $body sont déjà extraites et fusionnées (JSON / POST)
 
     $channel = trim($body['channel'] ?? 'global');
     if (!in_array($channel, $validChannels, true)) {
@@ -447,21 +483,34 @@ if ($action === 'send_message') {
 
     $isCreator = false;
     $isModerator = false;
-    $normUser = mb_strtolower($cleanUsername, 'UTF-8');
+    $normUser = normalizeChatUsername($cleanUsername);
+    $cleanSteam = trim(strval($steamId));
+    $cleanEmail = mb_strtolower(trim($email), 'UTF-8');
 
     // Vérification des privilèges admin & modérateur
-    $authInfo = checkIsUserAdminOrModerator($steamId, $userId, $cleanUsername);
+    $authInfo = checkIsUserAdminOrModerator($steamId, $userId, $cleanUsername, $email);
     if ($authInfo['role'] === 'moderator') {
         $isModerator = true;
     }
 
-    // Vérification stricte du statut Créateur souverain (anti-spoofing)
-    $hasAuthorizedCreatorRights = isCreatorAdminAuthorized();
-    if ($hasAuthorizedCreatorRights && ($steamId === ADMIN_STEAM_ID || $normUser === 'hibouxe' || $authInfo['role'] === 'admin')) {
+    // Vérification stricte et souveraine du statut Créateur officiel
+    $isOfficialCreator = (
+        isCreatorAdminAuthorized() ||
+        $authInfo['role'] === 'admin' ||
+        $cleanSteam === ADMIN_STEAM_ID ||
+        $cleanEmail === 'quentin.beaud@hotmail.fr'
+    );
+
+    // Sécurité stricte : Edsaje ne peut jamais être créateur ni admin
+    if ($normUser === 'edsaje') {
+        $isOfficialCreator = false;
+    }
+
+    if ($isOfficialCreator) {
         $isCreator = true;
         $cleanUsername = 'Hibouxe';
     } else if (in_array($normUser, ['hibouxe', 'edsaje'], true)) {
-        // Interdiction absolue d'usurpation de l'identité du fondateur
+        // Interdiction absolue d'usurpation de l'identité du fondateur pour les comptes non autorisés
         $cleanUsername = 'Explorateur_' . substr(md5($ip), 0, 4);
     }
 
@@ -566,7 +615,9 @@ if ($action === 'send_message') {
 
     // Avatar
     $avatarId = trim($body['avatarId'] ?? 'owl');
-    if ($avatarId === 'hibouxe_creator' && !$isCreator) {
+    if ($isCreator) {
+        $avatarId = 'hibouxe_creator';
+    } elseif ($avatarId === 'hibouxe_creator' && !$isCreator) {
         $avatarId = 'owl';
     } elseif (!in_array($avatarId, $validAvatars, true) && $avatarId !== 'hibouxe_creator') {
         $avatarId = 'owl';
@@ -603,6 +654,7 @@ if ($action === 'send_message') {
         'channel' => $channel,
         'username' => $cleanUsername,
         'userId' => $userId,
+        'steamId' => !empty($steamId) ? $steamId : null,
         'avatarId' => $avatarId,
         'title' => $title,
         'activeFrame' => $activeFrame,
@@ -654,12 +706,9 @@ if ($action === 'send_message') {
 }
 
 // -------------------------------------------------------------
-// SUPPRESSION / MODÉRATION D'UN MESSAGE (ADMIN OU MODÉRATEUR)
+// SUPPRESSION / MODÉRATION D'UN MESSAGE (ADMIN, MODÉRATEUR OU AUTEUR)
 // -------------------------------------------------------------
 if ($action === 'delete_message') {
-    $inputJson = file_get_contents('php://input');
-    $body = json_decode($inputJson, true) ?: $_POST;
-
     $messageId = trim($body['messageId'] ?? $_REQUEST['messageId'] ?? '');
     $steamId = trim($body['steamId'] ?? $_REQUEST['steamId'] ?? '');
     $userId = trim($body['userId'] ?? $_REQUEST['userId'] ?? '');
@@ -686,17 +735,29 @@ if ($action === 'delete_message') {
 
     if ($targetIndex === -1 || !$targetMsg) {
         http_response_code(404);
-        echo json_encode(['success' => false, 'error' => 'not_found', 'message' => 'Message introuvable.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'error' => 'not_found', 'message' => 'Message introuvable ou déjà supprimé.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if (!empty($targetMsg['isDeleted'])) {
+        echo json_encode(['success' => true, 'messageId' => $messageId, 'message' => 'Ce message a déjà été supprimé.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     $auth = checkIsUserAdminOrModerator($steamId, $userId, $username, $email);
     $isCallerAdmin = ($auth['role'] === 'admin');
     $isCallerModerator = ($auth['role'] === 'moderator');
-    $targetIsCreator = !empty($targetMsg['isCreator']) || ($targetMsg['username'] ?? '') === 'Hibouxe';
+
+    $targetNorm = normalizeChatUsername($targetMsg['username'] ?? '');
+    $callerNorm = normalizeChatUsername($username);
+    $cleanSteam = trim(strval($steamId));
+
+    $targetIsCreator = !empty($targetMsg['isCreator']) || $targetNorm === 'hibouxe';
     $targetIsModerator = !empty($targetMsg['isModerator']);
-    $isOwnMessage = (!empty($username) && strtolower($targetMsg['username'] ?? '') === strtolower($username))
-                 || (!empty($userId) && !empty($targetMsg['userId']) && $targetMsg['userId'] === $userId);
+
+    $isOwnMessage = (!empty($callerNorm) && $targetNorm === $callerNorm)
+                 || (!empty($userId) && !empty($targetMsg['userId']) && $targetMsg['userId'] === $userId)
+                 || (!empty($cleanSteam) && !empty($targetMsg['steamId']) && $targetMsg['steamId'] === $cleanSteam);
 
     // RÈGLES DE PERMISSIONS :
     // 1. L'Admin / Créateur (Hibouxe) peut supprimer TOUS les messages
@@ -724,7 +785,7 @@ if ($action === 'delete_message') {
         // Autorisé pour son propre message
     } else {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Droits insuffisants pour supprimer ce message.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Vous ne pouvez supprimer que vos propres messages.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 

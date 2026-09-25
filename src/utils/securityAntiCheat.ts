@@ -10,16 +10,12 @@
 
 import confetti from 'canvas-confetti';
 import { soundFx } from './audio';
-import { addBonusFeathers } from './featherEconomy';
 
 declare global {
   interface Window {
     hootRain?: () => void;
     hootSecret?: () => void;
     hoot?: () => void;
-    hootFeathers?: (amount?: number) => void;
-    hootAdmin?: () => void;
-    hootLogoutAdmin?: () => void;
   }
 }
 
@@ -281,9 +277,7 @@ Vous explorez le code, inspectez les éléments ou aimez le jeu vidéo indépend
 • 177 Pépites & Micro-Indés certifiés avec amour (Steam & Itch.io)
 • 11 Mini-jeux indés (8 défis quotidiens, sprint chrono, duel 1v1 & quiz)
 • Commandes interactives secrètes disponibles (tapez-les directement ci-dessous) :
-   ➜ hootAdmin()    : Active le compte Administrateur avec plumes infinies (∞ 🪶) et tous privilèges débloqués 👑
    ➜ hoot()         : Invoque la tempête de plumes dorées ET le murmure de Sylvestre 🪶✨
-   ➜ hootFeathers() : Crédite instantanément +999 999 Plumes d'Or 🪶 pour tester les boosters & la boutique !
    ➜ hootRain()     : Déclenche la pluie magique de plumes dorées et feuilles d'émeraude 🍃
    ➜ hootSecret()   : Écoute un murmure secret du grand hibou 🦉
 
@@ -298,47 +292,10 @@ Amusez-vous, découvrez des chefs-d'œuvre et soutenez les studios indépendants
     // Console désactivée ou restreinte
   }
 
-  // Enregistrement des commandes interactives de la console F12
+  // Enregistrement des commandes Easter Egg inoffensives de la console F12
+  // [SÉCURITÉ] Les anciennes commandes hootAdmin() et hootFeathers() ont été supprimées
+  // car elles permettaient une escalade de privilèges non autorisée (CWE-269).
   try {
-    window.hootAdmin = () => {
-      try {
-        localStorage.setItem('hoot_dev_admin', 'true');
-        soundFx.playChime();
-        console.log(
-          '%c👑 [Admin] Compte Administrateur activé avec succès ! Plumes d\'Or infinies (∞ 🪶), boutique offerte & boosters illimités. Rechargement... ✨',
-          'color: #f59e0b; font-weight: bold; font-size: 13px;'
-        );
-        setTimeout(() => location.reload(), 400);
-      } catch (err) {
-        console.error('Erreur activation admin:', err);
-      }
-    };
-
-    window.hootLogoutAdmin = () => {
-      try {
-        localStorage.removeItem('hoot_dev_admin');
-        console.log('%c[Admin] Mode Administrateur de test désactivé. Rechargement...', 'color: #34d399;');
-        setTimeout(() => location.reload(), 300);
-      } catch (err) {
-        console.error('Erreur désactivation admin:', err);
-      }
-    };
-
-    window.hootFeathers = (amount = 999999) => {
-      addBonusFeathers(amount, 'Dev Console');
-      soundFx.playSuccess();
-      confetti({
-        particleCount: 100,
-        spread: 140,
-        origin: { y: 0.2 },
-        colors: ['#f59e0b', '#fbbf24', '#fef08a', '#d97706'],
-      });
-      console.log(
-        `%c🪶 +${amount.toLocaleString()} Plumes d'Or ajoutées au sanctuaire avec succès ! Solde prêt pour les tests. ✨`,
-        'color: #f59e0b; font-weight: bold; font-size: 13px;'
-      );
-    };
-
     window.hootRain = () => {
       soundFx.playSuccess();
       confetti({

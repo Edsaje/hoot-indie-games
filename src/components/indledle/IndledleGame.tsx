@@ -46,7 +46,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
   const { t, i18n } = useTranslation();
   const { recordGameResult } = useGameStats();
   const { isGameOwned } = useUserAccount();
-  const { allPlayableGames, curatedGems } = useSteamCatalog();
+  const { allPlayableGames } = useSteamCatalog();
 
   const storageKey = `indledle_state_${currentDate}`;
 
@@ -72,7 +72,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
     return { guesses: [] as Game[], isCompleted: false, isWon: false, savedSecretGameId: undefined };
   })();
 
-  // Jeu secret du jour : pioché parmi les pépites (curatedGems) ou verrouillé si déjà commencé
+  // Jeu secret du jour : pioché de manière déterministe et immuable dans INDIE_GAMES ou verrouillé si déjà commencé
   const secretGame = useMemo(() => {
     if (savedState.savedSecretGameId) {
       const lockedGame =
@@ -80,8 +80,8 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
         INDIE_GAMES.find((g) => g.id === savedState.savedSecretGameId);
       if (lockedGame) return lockedGame;
     }
-    return getDailyGame(currentDate, 3, curatedGems);
-  }, [currentDate, curatedGems, allPlayableGames, savedState.savedSecretGameId]);
+    return getDailyGame(currentDate, 3);
+  }, [currentDate, allPlayableGames, savedState.savedSecretGameId]);
 
   const { unlockAchievement } = useAchievements();
   const [guesses, setGuesses] = useState<Game[]>(savedState.guesses);

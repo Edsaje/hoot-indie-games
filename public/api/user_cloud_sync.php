@@ -23,10 +23,8 @@ error_reporting(0);
 // Headers HTTP de sécurité & CORS
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
-header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+require_once __DIR__ . '/admin_auth.php';
+sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -34,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once __DIR__ . '/admin_auth.php';
 $savesDir = __DIR__ . '/user_saves';
 
 if (!is_dir($savesDir)) {
@@ -264,16 +261,24 @@ switch ($action) {
             exit;
         }
 
-        // Vérification de la clé de synchronisation uniquement pour les invités sans compte (name_...)
-        $isAccountConnected = (!empty($_REQUEST['steamId']) || !empty($_REQUEST['userId']) || strpos($userKey, 'steam_') === 0 || strpos($userKey, 'user_') === 0);
-        if (!$isAccountConnected && !empty($data['syncKeyHash'])) {
+        // [SÉCURITÉ CWE-639 IDOR] Vérification stricte de la clé de synchronisation
+        if (!empty($data['syncKeyHash'])) {
             $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
-            if (empty($inputHash) || !hash_equals($data['syncKeyHash'], $inputHash)) {
+            $isAuthorized = false;
+
+            if (!empty($inputHash) && hash_equals($data['syncKeyHash'], $inputHash)) {
+                $isAuthorized = true;
+            }
+            if (!$isAuthorized && isCreatorAdminAuthorized()) {
+                $isAuthorized = true;
+            }
+
+            if (!$isAuthorized) {
                 http_response_code(403);
                 echo json_encode([
                     'success' => false,
                     'error' => 'invalid_sync_key',
-                    'message' => 'Clé de synchronisation cloud invalide pour ce profil invité.'
+                    'message' => 'Clé de synchronisation cloud requise ou invalide pour accéder à ce profil.'
                 ]);
                 exit;
             }
@@ -318,16 +323,24 @@ switch ($action) {
             }
         }
 
-        // Vérification de sécurité anti-usurpation (uniquement pour les profils invités sans compte)
-        $isAccountConnected = (!empty($_REQUEST['steamId']) || !empty($_REQUEST['userId']) || !empty($incoming['steamId']) || !empty($incoming['userId']) || strpos($userKey, 'steam_') === 0 || strpos($userKey, 'user_') === 0);
-        if (!$isAccountConnected && $existing && !empty($existing['syncKeyHash'])) {
+        // [SÉCURITÉ CWE-639 IDOR] Vérification stricte anti-écrasement / anti-usurpation
+        if ($existing && !empty($existing['syncKeyHash'])) {
             $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
-            if (empty($inputHash) || !hash_equals($existing['syncKeyHash'], $inputHash)) {
+            $isAuthorized = false;
+
+            if (!empty($inputHash) && hash_equals($existing['syncKeyHash'], $inputHash)) {
+                $isAuthorized = true;
+            }
+            if (!$isAuthorized && isCreatorAdminAuthorized()) {
+                $isAuthorized = true;
+            }
+
+            if (!$isAuthorized) {
                 http_response_code(403);
                 echo json_encode([
                     'success' => false,
                     'error' => 'invalid_sync_key',
-                    'message' => 'Clé de synchronisation cloud non concordante pour ce profil invité. Écriture refusée.'
+                    'message' => 'Clé de synchronisation cloud non concordante. Écriture refusée.'
                 ]);
                 exit;
             }
@@ -336,13 +349,9 @@ switch ($action) {
         // Protection du compte officiel du créateur lors de la sauvegarde
         if ($userKey === 'steam_' . ADMIN_STEAM_ID || $userKey === 'name_hibouxe' || $userKey === 'name_edsaje') {
             if (!isCreatorAdminAuthorized()) {
-                $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
-                $existingHash = $existing['syncKeyHash'] ?? '';
-                if (empty($existingHash) || empty($inputHash) || !hash_equals($existingHash, $inputHash)) {
-                    http_response_code(403);
-                    echo json_encode(['success' => false, 'message' => 'Accès refusé : Le compte officiel du créateur nécessite une session authentifiée ou la clé de synchronisation souveraine.']);
-                    exit;
-                }
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée.']);
+                exit;
             }
         }
 

@@ -154,10 +154,18 @@ export async function deleteRegisteredUsername(
   targetName: string,
   steamId: string = ADMIN_STEAM_ID
 ): Promise<{ success: boolean; message: string }> {
-  const url = `/api/track.php?action=delete_username&target=${encodeURIComponent(targetName)}&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
+  const formData = new URLSearchParams();
+  formData.append('action', 'delete_username');
+  formData.append('target', targetName);
+  formData.append('steamId', steamId);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
     credentials: 'include',
   });
 
@@ -172,10 +180,18 @@ export async function deleteCommunitySuggestion(
   id: string,
   steamId: string = ADMIN_STEAM_ID
 ): Promise<{ success: boolean; message: string }> {
-  const url = `/api/track.php?action=delete_suggestion&id=${encodeURIComponent(id)}&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
+  const formData = new URLSearchParams();
+  formData.append('action', 'delete_suggestion');
+  formData.append('id', id);
+  formData.append('steamId', steamId);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
     credentials: 'include',
   });
 
@@ -189,10 +205,17 @@ export async function deleteCommunitySuggestion(
 export async function resetServerStats(
   steamId: string = ADMIN_STEAM_ID
 ): Promise<{ success: boolean; message: string }> {
-  const url = `/api/track.php?action=reset_stats&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
+  const formData = new URLSearchParams();
+  formData.append('action', 'reset_stats');
+  formData.append('steamId', steamId);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
     credentials: 'include',
   });
 
