@@ -60,6 +60,28 @@
   - [x] Création de l'onglet dédié « Micro-Indés » (`microIndies`) dans `AdminDashboardModal.tsx` avec compteurs de badges en attente, prévisualisation complète de chaque proposition, bouton de validation en 1 clic (`Valider & Publier`) et suppression/rejet.
   - [x] Ajout d'un bouton d'accès rapide modération avec icône de bouclier dans `MicroIndieHub.tsx` pour l'administrateur Hibouxe connecté.
 
+### 6. 💖 Toggle Like / Unlike et persistance des compteurs Micro-Indés `[✅ 100% Terminé]`
+- **Constat :** Les votes sur les micro-indés ne permettaient pas de retirer son vote (contrairement aux pépites Steam). De plus, les compteurs de likes des 35 pépites initiales n'étaient pas persistés sur le serveur : au rechargement (Ctrl+F5), le cœur restait rouge mais le compteur retombait à sa valeur initiale et ne bougeait plus au clic.
+- **Actions réalisées :**
+  - [x] Implémenter le toggle Like / Unlike dans `MicroIndieHub.tsx` avec `isCurrentlyLiked ? 'unlike' : 'like'`.
+  - [x] Sauvegarder de façon centralisée et atomique (`LOCK_EX`) les compteurs de likes de **tous les jeux** dans `micro_indies_votes.json` via `$vData['counts']`.
+  - [x] Renvoyer `likesMap` dans les endpoints `action=list` et `action=user_likes` et l'appliquer au chargement initial du frontend pour écraser les compteurs par défaut.
+  - [x] Retirer l'émoji diamant `💎` après les prix Steam.
+
+---
+
+### 7. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[⏳ À faire]`
+- **Objectif :** Afficher et convertir automatiquement les prix des jeux Steam et Itch.io dans la devise et le format correspondant à la langue ou au pays sélectionné par le visiteur sur le site (exemple : prix en Yen `¥` pour le Japon / langue `ja`, Dollar `$` pour `en`, Real `R$` pour `pt-BR`, Euro `€` pour `fr`, `de`, `es`).
+- **Pistes d'implémentation :**
+  - [ ] **Backend Steam API (`get_steam_info`)** :
+    - Passer le code pays Steam `cc` (`cc=jp`, `cc=us`, `cc=br`, `cc=fr`, etc.) et la langue `l` (`japanese`, `english`, `brazilian`, `french`, etc.) lors des requêtes à l'API Steam Store `store.steampowered.com/api/appdetails`.
+    - Sauvegarder les prix dans les différentes locales du dictionnaire `pricingText: { fr, en, es, de, ja, pt-BR }`.
+  - [ ] **Itch.io & conversions de devises** :
+    - Définir les règles de conversion ou de formatage selon la monnaie locale (USD / EUR / JPY / BRL).
+  - [ ] **Frontend (`MicroIndieHub.tsx`, cartes de jeux, catalogue)** :
+    - Sélectionner dynamiquement le texte de prix selon la locale active issue de `i18n.language` (`game.pricingText?.[activeLocale] || game.pricingText?.['en']`).
+    - Gérer un repli élégant si une devise spécifique n'est pas encore renseignée.
+
 ---
 
 ## 📦 Historique des Fonctionnalités Déployées & Validées (Archive)
