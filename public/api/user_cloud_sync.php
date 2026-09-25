@@ -179,6 +179,118 @@ function mergeSaveData($existing, $incoming) {
     return $merged;
 }
 
+$action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : 'load';
+
+// -------------------------------------------------------------
+// ACTION : VALIDATION DU RETOUR STEAM OPENID 2.0 (AVEC VALVE)
+// -------------------------------------------------------------
+if ($action === 'verify_steam') {
+    $validationParams = [
+        'openid.ns' => 'http://specs.openid.net/auth/2.0',
+        'openid.mode' => 'check_authentication',
+    ];
+
+    foreach ($_REQUEST as $k => $v) {
+        if (strpos($k, 'openid_') === 0) {
+            $validationParams['openid.' . substr($k, 7)] = $v;
+        } elseif (strpos($k, 'openid.') === 0) {
+            $validationParams[$k] = $v;
+        }
+    }
+    $validationParams['openid.mode'] = 'check_authentication';
+
+    $isValidAssertion = false;
+    $postData = http_build_query($validationParams);
+    $ch = @curl_init('https://steamcommunity.com/openid/login');
+    if ($ch) {
+        @curl_setopt($ch, CURLOPT_POST, 1);
+        @curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        @curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        @curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        $resp = @curl_exec($ch);
+        @curl_close($ch);
+        if ($resp && strpos($resp, 'is_valid:true') !== false) {
+            $isValidAssertion = true;
+        }
+    }
+
+    if (!$isValidAssertion) {
+        $opts = [
+            'http' => [
+                'method' => 'POST',
+                'header' => "Content-Type: application/x-www-form-urlencoded\r\nContent-Length: " . strlen($postData) . "\r\n",
+                'content' => $postData,
+                'timeout' => 8,
+            ],
+            'ssl' => [
+                'verify_peer' => true,
+                'verify_peer_name' => true,
+            ]
+        ];
+        $ctx = @stream_context_create($opts);
+        $res = @file_get_contents('https://steamcommunity.com/openid/login', false, $ctx);
+        if ($res && strpos($res, 'is_valid:true') !== false) {
+            $isValidAssertion = true;
+        }
+    }
+
+    if (!$isValidAssertion) {
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'error' => 'invalid_assertion',
+            'message' => 'Validation Steam OpenID 2.0 rejetée par les serveurs Valve.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $claimedId = $_REQUEST['openid_claimed_id'] ?? $_REQUEST['openid.claimed_id'] ?? $_REQUEST['openid_identity'] ?? $_REQUEST['openid.identity'] ?? '';
+    if (!preg_match('/\/id\/(\d{17})/', $claimedId, $m)) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'missing_steam_id',
+            'message' => 'SteamID non trouvé dans la réponse Valve.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $verifiedSteamId = $m[1];
+    if (session_status() === PHP_SESSION_NONE) {
+        @ini_set('session.cookie_httponly', 1);
+        @session_start();
+    }
+    session_regenerate_id(true);
+    $_SESSION['steam_id'] = $verifiedSteamId;
+
+    $isCreator = ($verifiedSteamId === ADMIN_STEAM_ID);
+    $resData = [
+        'success' => true,
+        'verified' => true,
+        'steamId' => $verifiedSteamId,
+        'isCreator' => $isCreator,
+        'message' => 'Authentification Steam OpenID validée avec succès.',
+    ];
+
+    if ($isCreator) {
+        $_SESSION['admin_auth'] = true;
+        $_SESSION['admin_steam_id'] = $verifiedSteamId;
+        $_SESSION['admin_login_at'] = date('c');
+
+        $adminPassFile = __DIR__ . '/.admin_pass';
+        if (file_exists($adminPassFile)) {
+            $secret = trim(@file_get_contents($adminPassFile) ?: '');
+            if (!empty($secret)) {
+                $resData['adminKey'] = $secret;
+            }
+        }
+    }
+
+    echo json_encode($resData, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $userKey = getUserStorageKey();
 if (!$userKey) {
     http_response_code(400);
@@ -186,21 +298,35 @@ if (!$userKey) {
     exit;
 }
 
+if (session_status() === PHP_SESSION_NONE) {
+    @ini_set('session.cookie_httponly', 1);
+    @session_start();
+}
+
+$reqSteamId = trim($_REQUEST['steamId'] ?? '');
+$sessionSteamId = trim($_SESSION['steam_id'] ?? '');
+$isSteamSessionOwner = (!empty($sessionSteamId) && !empty($reqSteamId) && hash_equals($sessionSteamId, $reqSteamId));
+$isCreatorAdmin = isCreatorAdminAuthorized();
+
 // Protection absolue du compte créateur souverain (interdiction totale d'accès aux non-administrateurs)
 if ($userKey === 'steam_' . ADMIN_STEAM_ID || $userKey === 'name_hibouxe' || $userKey === 'name_edsaje') {
-    if (!isCreatorAdminAuthorized()) {
+    if (!$isCreatorAdmin && !$isSteamSessionOwner) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé : Le compte officiel du créateur nécessite une authentification stricte.']);
+        echo json_encode([
+            'success' => false,
+            'error' => 'forbidden',
+            'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une authentification Steam certifiée ou la clé d\'administration.'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 }
 
 $saveFile = $savesDir . '/' . $userKey . '.json';
-$action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : 'load';
 $inputSyncKey = trim($_SERVER['HTTP_X_SYNC_KEY'] ?? $_REQUEST['syncKey'] ?? '');
 
 // [SÉCURITÉ CWE-639 IDOR] Authentification obligatoire via clé secrète de synchronisation
-if (!isCreatorAdminAuthorized()) {
+// Si l'utilisateur est authentifié via Steam session ou est créateur admin, la clé secrète n'est pas bloquante
+if (!$isCreatorAdmin && !$isSteamSessionOwner) {
     if (empty($inputSyncKey) || strlen($inputSyncKey) < 16) {
         http_response_code(401);
         echo json_encode([
@@ -282,8 +408,14 @@ switch ($action) {
             if (!empty($inputHash) && hash_equals($data['syncKeyHash'], $inputHash)) {
                 $isAuthorized = true;
             }
-            if (!$isAuthorized && isCreatorAdminAuthorized()) {
+            if (!$isAuthorized && ($isCreatorAdmin || $isSteamSessionOwner)) {
                 $isAuthorized = true;
+                // Si l'utilisateur Steam vérifié ou le créateur se connecte depuis un nouveau PC avec une nouvelle clé,
+                // on met à jour l'empreinte pour que ses futures requêtes d'arrière-plan restent autorisées
+                if (!empty($inputSyncKey) && strlen($inputSyncKey) >= 16) {
+                    $data['syncKeyHash'] = hash('sha256', $inputSyncKey);
+                    @file_put_contents($saveFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                }
             }
 
             if (!$isAuthorized) {
@@ -350,7 +482,7 @@ switch ($action) {
             if (!empty($inputHash) && hash_equals($existing['syncKeyHash'], $inputHash)) {
                 $isAuthorized = true;
             }
-            if (!$isAuthorized && isCreatorAdminAuthorized()) {
+            if (!$isAuthorized && ($isCreatorAdmin || $isSteamSessionOwner)) {
                 $isAuthorized = true;
             }
 
@@ -367,7 +499,7 @@ switch ($action) {
 
         // Protection du compte officiel du créateur lors de la sauvegarde
         if ($userKey === 'steam_' . ADMIN_STEAM_ID || $userKey === 'name_hibouxe' || $userKey === 'name_edsaje') {
-            if (!isCreatorAdminAuthorized()) {
+            if (!$isCreatorAdmin && !$isSteamSessionOwner) {
                 http_response_code(403);
                 echo json_encode(['success' => false, 'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée.']);
                 exit;
@@ -378,10 +510,10 @@ switch ($action) {
         $merged = mergeSaveData($existing, $incoming);
 
         // Conservation ou attribution de l'empreinte de la clé de synchronisation
-        if ($existing && !empty($existing['syncKeyHash'])) {
-            $merged['syncKeyHash'] = $existing['syncKeyHash'];
-        } elseif (!empty($inputSyncKey)) {
+        if (!empty($inputSyncKey) && strlen($inputSyncKey) >= 16) {
             $merged['syncKeyHash'] = hash('sha256', $inputSyncKey);
+        } elseif ($existing && !empty($existing['syncKeyHash'])) {
+            $merged['syncKeyHash'] = $existing['syncKeyHash'];
         }
 
         // Garantie de privilèges pour le créateur : Exige impérativement isCreatorAdminAuthorized()

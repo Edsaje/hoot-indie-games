@@ -737,8 +737,8 @@ export const INDIE_GAMES: Game[] = [
       "en": "Retro Low-poly 3D"
     },
     "camera": {
-      "fr": "Vue du dessus 2D",
-      "en": "2D Top-down"
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
     },
     "developer": "rose-engine",
     "steamUrl": "https://store.steampowered.com/app/1262350/SIGNALIS/",

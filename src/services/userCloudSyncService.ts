@@ -54,6 +54,17 @@ export function getOrCreateCloudSyncKey(): string {
 }
 
 /**
+ * Définit ou importe manuellement une clé de synchronisation cloud existante
+ */
+export function setCloudSyncKey(key: string): void {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  const clean = key.trim();
+  if (clean) {
+    localStorage.setItem(STORAGE_SYNC_KEY, clean);
+  }
+}
+
+/**
  * Récupère l'ensemble des données locales de jeu depuis le localStorage
  */
 export function gatherLocalSaveData(): UserCloudSavePayload {
@@ -329,15 +340,28 @@ export async function fetchUserCloudSave(identifiers: {
   params.append('action', 'load');
   params.append('t', String(Date.now()));
 
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+
   const url = `/api/user_cloud_sync.php?${params.toString()}`;
   const response = await fetch(url, {
     method: 'GET',
-    headers: { Accept: 'application/json' },
+    headers: {
+      Accept: 'application/json',
+      ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      ...(syncKey ? { 'X-Sync-Key': syncKey } : {}),
+    },
     credentials: 'include',
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
+    let errorMsg = `Erreur ${response.status}`;
+    try {
+      const errJson = await response.json();
+      if (errJson.message) errorMsg = errJson.message;
+    } catch {
+      // Ignorer si non JSON
+    }
+    throw new Error(errorMsg);
   }
 
   return response.json();
@@ -358,19 +382,30 @@ export async function pushUserCloudSave(
   if (syncKey) params.append('syncKey', syncKey);
   params.append('action', 'save');
 
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+
   const url = `/api/user_cloud_sync.php?${params.toString()}`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      ...(syncKey ? { 'X-Sync-Key': syncKey } : {}),
     },
     credentials: 'include',
     body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
+    let errorMsg = `Erreur ${response.status}`;
+    try {
+      const errJson = await response.json();
+      if (errJson.message) errorMsg = errJson.message;
+    } catch {
+      // Ignorer si non JSON
+    }
+    throw new Error(errorMsg);
   }
 
   return response.json();

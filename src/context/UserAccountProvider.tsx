@@ -1009,7 +1009,30 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     if (isSteamAuth) {
       const steamId = extractSteamIdFromOpenId(searchParams);
       if (steamId) {
-        connectSteamByIdentifier(steamId);
+        // Validation officielle auprès de Valve via le backend pour établir la session PHP sécurisée
+        fetch('/api/user_cloud_sync.php?action=verify_steam', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Accept: 'application/json',
+          },
+          body: searchParams.toString(),
+          credentials: 'include',
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data?.adminKey) {
+              try {
+                localStorage.setItem('hoot_admin_key', data.adminKey);
+              } catch {}
+            }
+          })
+          .catch((err) => {
+            console.warn('[SteamAuth] Vérification Valve en arrière-plan:', err);
+          })
+          .finally(() => {
+            connectSteamByIdentifier(steamId);
+          });
       }
 
       // Nettoyage de l'URL pour une expérience propre

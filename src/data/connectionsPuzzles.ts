@@ -428,7 +428,6 @@ export const CATEGORY_RULES: CategoryRule[] = [
         'dredge',
         'subnautica-below-zero',
         'iron-lung',
-        'how-to-fish',
         'soma',
       ].includes(g.id),
   },
@@ -1014,6 +1013,7 @@ export const CONNECTIONS_PUZZLES: DailyConnectionsPuzzle[] = [
 
 /**
  * Génère une grille quotidienne de 16 jeux dynamiques à partir de la bibliothèque.
+ * Garantit l'absence totale d'ambiguïté (aucun jeu sélectionné ne correspond au filtre d'une autre catégorie active).
  */
 export function generateDailyConnectionsPuzzle(
   dateStr: string,
@@ -1021,45 +1021,84 @@ export function generateDailyConnectionsPuzzle(
 ): DailyConnectionsPuzzle {
   const rand = createPseudoRandom(stringToSeed(dateStr));
   const tiers: DifficultyLevel[] = ['easy', 'medium', 'hard', 'expert'];
-  const chosenGameIds = new Set<string>();
-  const categories: ConnectionCategory[] = [];
 
-  for (const tier of tiers) {
-    const tierRules = CATEGORY_RULES.filter((r) => r.difficulty === tier);
-    const shuffledRules = [...tierRules].sort(() => rand() - 0.5);
+  const easyRules = CATEGORY_RULES.filter((r) => r.difficulty === 'easy').sort(() => rand() - 0.5);
+  const mediumRules = CATEGORY_RULES.filter((r) => r.difficulty === 'medium').sort(() => rand() - 0.5);
+  const hardRules = CATEGORY_RULES.filter((r) => r.difficulty === 'hard').sort(() => rand() - 0.5);
+  const expertRules = CATEGORY_RULES.filter((r) => r.difficulty === 'expert').sort(() => rand() - 0.5);
 
-    let foundCategory = false;
-    for (const rule of shuffledRules) {
-      const eligibleGames = allGames.filter((g) => rule.filter(g) && !chosenGameIds.has(g.id));
-      if (eligibleGames.length >= 4) {
-        const shuffledGames = [...eligibleGames].sort(() => rand() - 0.5);
-        const selected = shuffledGames.slice(0, 4);
-        selected.forEach((g) => chosenGameIds.add(g.id));
+  let selectedRules: CategoryRule[] | null = null;
+  let categoryPureGames: Game[][] | null = null;
 
-        categories.push({
-          id: `${rule.id}-${dateStr}`,
-          label: rule.label,
-          difficulty: tier,
-          items: selected.map((g) => ({
-            gameId: g.id,
-            gameTitle: g.title,
-            imageUrl: getGameImageUrl(g),
-            fallbackUrl: getGameFallbackImageUrl(g),
-          })),
-        });
+  // Recherche d'un ensemble de 4 règles (1 par difficulté) où chaque catégorie dispose d'au moins 4 jeux
+  // qui ne satisfont AUCUNE des 3 autres catégories actives de la grille.
+  outer: for (const r1 of easyRules) {
+    for (const r2 of mediumRules) {
+      for (const r3 of hardRules) {
+        for (const r4 of expertRules) {
+          const rules = [r1, r2, r3, r4];
+          const candidateLists: Game[][] = [];
+          let valid = true;
 
-        foundCategory = true;
-        break;
+          for (let i = 0; i < 4; i++) {
+            const currentRule = rules[i];
+            const otherRules = rules.filter((_, idx) => idx !== i);
+            const pure = allGames.filter(
+              (g) => currentRule.filter(g) && !otherRules.some((or) => or.filter(g))
+            );
+            if (pure.length < 4) {
+              valid = false;
+              break;
+            }
+            candidateLists.push(pure);
+          }
+
+          if (valid) {
+            selectedRules = rules;
+            categoryPureGames = candidateLists;
+            break outer;
+          }
+        }
       }
     }
+  }
 
-    if (!foundCategory) {
-      // Fallback de secours en cas d'impossibilité théorique
-      const fallbackRules = CATEGORY_RULES.filter((r) => r.difficulty === tier);
-      for (const rule of fallbackRules) {
-        const eligible = allGames.filter((g) => rule.filter(g));
-        if (eligible.length >= 4) {
-          const selected = eligible.slice(0, 4);
+  const categories: ConnectionCategory[] = [];
+
+  if (selectedRules && categoryPureGames) {
+    for (let i = 0; i < 4; i++) {
+      const rule = selectedRules[i];
+      const tier = tiers[i];
+      const pureGames = categoryPureGames[i];
+      const shuffledGames = [...pureGames].sort(() => rand() - 0.5);
+      const selected = shuffledGames.slice(0, 4);
+
+      categories.push({
+        id: `${rule.id}-${dateStr}`,
+        label: rule.label,
+        difficulty: tier,
+        items: selected.map((g) => ({
+          gameId: g.id,
+          gameTitle: g.title,
+          imageUrl: getGameImageUrl(g),
+          fallbackUrl: getGameFallbackImageUrl(g),
+        })),
+      });
+    }
+  } else {
+    // Fallback de sécurité glouton si aucune combinaison pure n'était trouvée
+    const chosenGameIds = new Set<string>();
+    for (const tier of tiers) {
+      const tierRules = CATEGORY_RULES.filter((r) => r.difficulty === tier);
+      const shuffledRules = [...tierRules].sort(() => rand() - 0.5);
+
+      for (const rule of shuffledRules) {
+        const eligibleGames = allGames.filter((g) => rule.filter(g) && !chosenGameIds.has(g.id));
+        if (eligibleGames.length >= 4) {
+          const shuffledGames = [...eligibleGames].sort(() => rand() - 0.5);
+          const selected = shuffledGames.slice(0, 4);
+          selected.forEach((g) => chosenGameIds.add(g.id));
+
           categories.push({
             id: `${rule.id}-${dateStr}-fallback`,
             label: rule.label,

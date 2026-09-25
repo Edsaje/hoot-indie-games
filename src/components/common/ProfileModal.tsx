@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -32,7 +32,7 @@ import {
   Zap,
   LogIn,
 } from 'lucide-react';
-import { useFriends } from '../../context/useFriends';
+import { FriendsContext } from '../../context/FriendsContext';
 import { SteamIcon } from './SteamIcon';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useAchievements } from '../../context/useAchievements';
@@ -42,6 +42,7 @@ import {
   fetchSteamProxyStatus,
   saveMasterSteamApiKey,
 } from '../../services/steamService';
+import { getOrCreateCloudSyncKey, setCloudSyncKey } from '../../services/userCloudSyncService';
 import { formatFeathers } from '../../utils/featherEconomy';
 import { INDIE_AVATARS } from '../../data/avatars';
 import type { IndieAvatarId } from '../../types/user';
@@ -108,22 +109,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
-  const [syncStatus, setSyncStatus] = useState<string | null>(null);
+  const [syncFeedback, setSyncFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [cloudSyncKey, setCloudSyncKeyVal] = useState<string>(() => getOrCreateCloudSyncKey());
+  const [importSyncKeyInput, setImportSyncKeyInput] = useState<string>('');
+  const [hasCopiedSyncKey, setHasCopiedSyncKey] = useState<boolean>(false);
+  const [showSyncKey, setShowSyncKey] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Friend code state - Uniquement disponible pour les utilisateurs connectés
-  let myFriendCode = (isAuthenticated && profile.friendCode) ? profile.friendCode : '';
-  let totalFriendsCount = 0;
-  try {
-    const friendsCtx = useFriends();
-    if (friendsCtx) {
-      myFriendCode = isAuthenticated ? friendsCtx.myFriendCode : '';
-      totalFriendsCount = friendsCtx.totalFriendsCount;
-    }
-  } catch {
-    // If rendered outside FriendsProvider
-  }
+  const friendsCtx = useContext(FriendsContext);
+  const myFriendCode = (isAuthenticated && profile.friendCode) ? profile.friendCode : (friendsCtx?.myFriendCode || '');
+  const totalFriendsCount = friendsCtx?.totalFriendsCount || 0;
   const [copiedFriendCode, setCopiedFriendCode] = useState(false);
 
   // Steam state
@@ -148,6 +145,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       });
     }
   }, [isOpen, activeTab]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen]);
 
   const ownedGemsCount = useMemo(() => {
     return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
@@ -206,10 +213,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         const res = importSaveData(content);
         if (res.success) {
           soundFx.playVictory();
-          setSyncStatus('Sauvegarde restaurée avec succès !');
+          setSyncFeedback({ type: 'success', message: 'Sauvegarde restaurée avec succès !' });
         } else {
           soundFx.playError();
-          setSyncStatus(res.error || 'Erreur lors de l’importation.');
+          setSyncFeedback({ type: 'error', message: res.error || 'Erreur lors de l’importation.' });
         }
       }
     };
@@ -228,7 +235,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       setAuthError(res.error || 'Échec de connexion');
     } else {
       soundFx.playVictory();
-      setSyncStatus('Connexion réussie !');
+      setSyncFeedback({ type: 'success', message: 'Connexion réussie !' });
     }
   };
 
@@ -244,22 +251,71 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       setAuthError(res.error || 'Échec de création de compte');
     } else {
       soundFx.playVictory();
-      setSyncStatus('Compte créé avec succès !');
+      setSyncFeedback({ type: 'success', message: 'Compte créé avec succès !' });
     }
   };
 
   const handleSyncCloud = async () => {
     soundFx.playClick();
     setIsAuthLoading(true);
-    setSyncStatus(null);
+    setSyncFeedback(null);
     const res = await syncCloud();
     setIsAuthLoading(false);
     if (res.success) {
       soundFx.playVictory();
+      setSyncFeedback({
+        type: 'success',
+        message: res.message || 'Vos données sont synchronisées avec le Cloud Souverain !',
+      });
     } else {
       soundFx.playError();
+      setSyncFeedback({
+        type: 'error',
+        message: res.message || 'Échec de la synchronisation cloud.',
+      });
     }
-    setSyncStatus(res.message);
+  };
+
+  const handleImportSyncKey = async () => {
+    const key = importSyncKeyInput.trim();
+    if (!key) return;
+    if (key.length < 16) {
+      soundFx.playError();
+      setSyncFeedback({
+        type: 'error',
+        message: 'La clé de synchronisation doit contenir au moins 16 caractères.',
+      });
+      return;
+    }
+    soundFx.playClick();
+    setCloudSyncKey(key);
+    setCloudSyncKeyVal(key);
+    setImportSyncKeyInput('');
+    setIsAuthLoading(true);
+    setSyncFeedback(null);
+    const res = await syncCloud();
+    setIsAuthLoading(false);
+    if (res.success) {
+      soundFx.playVictory();
+      setSyncFeedback({
+        type: 'success',
+        message: 'Clé de synchronisation associée ! Vos données ont été synchronisées.',
+      });
+    } else {
+      soundFx.playError();
+      setSyncFeedback({
+        type: 'error',
+        message: res.message || 'Échec de synchronisation avec cette clé.',
+      });
+    }
+  };
+
+  const handleCopySyncKey = () => {
+    if (!cloudSyncKey) return;
+    navigator.clipboard.writeText(cloudSyncKey);
+    setHasCopiedSyncKey(true);
+    soundFx.playClick();
+    setTimeout(() => setHasCopiedSyncKey(false), 2500);
   };
 
   const handleSteamOpenId = () => {
@@ -320,16 +376,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     setSteamImportText('');
     setShowImportBox(false);
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      const prevOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = prevOverflow;
-      };
-    }
-  }, [isOpen]);
 
   if (typeof document === 'undefined') return null;
 
@@ -1378,12 +1424,99 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     </p>
                   </div>
 
-                  {syncStatus && (
-                    <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-900/50">
-                      <CheckCircle2 className="w-4 h-4 shrink-0" />
-                      <span>{syncStatus}</span>
+                  {/* Status Feedback Banner */}
+                  {syncFeedback && (
+                    <div
+                      className={`flex items-start gap-2.5 text-xs p-3 rounded-xl border transition-all ${
+                        syncFeedback.type === 'success'
+                          ? 'text-emerald-300 bg-emerald-950/50 border-emerald-800/60 shadow-lg shadow-emerald-950/20'
+                          : 'text-rose-300 bg-rose-950/50 border-rose-800/60 shadow-lg shadow-rose-950/20'
+                      }`}
+                    >
+                      {syncFeedback.type === 'success' ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      ) : (
+                        <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold">
+                          {syncFeedback.type === 'success' ? 'Synchronisation réussie' : 'Erreur de synchronisation'}
+                        </div>
+                        <div className="text-[11px] opacity-90 break-words mt-0.5">{syncFeedback.message}</div>
+                      </div>
                     </div>
                   )}
+
+                  {/* Clé secrète de synchronisation cloud (Multi-PC) */}
+                  <div className="p-3.5 bg-slate-900/60 border border-slate-800/80 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Key className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-bold text-white">Clé de Synchronisation Cloud</span>
+                      </div>
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        Multi-PC
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                      Cette clé protège votre sauvegarde contre toute usurpation. Elle vous permet de synchroniser ou transférer immédiatement vos données (plumes, succès, records) sur un autre PC ou smartphone.
+                    </p>
+
+                    {/* Display current key */}
+                    <div className="flex items-center gap-2 bg-[#0b0f19] p-2 rounded-xl border border-slate-800">
+                      <code className="flex-1 text-[11px] font-mono text-amber-300 truncate">
+                        {showSyncKey ? cloudSyncKey : `${cloudSyncKey.slice(0, 8)}••••••••••••••••`}
+                      </code>
+                      <button
+                        type="button"
+                        onClick={() => setShowSyncKey(!showSyncKey)}
+                        className="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white rounded bg-slate-800/60 cursor-pointer transition-colors"
+                      >
+                        {showSyncKey ? 'Masquer' : 'Voir'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCopySyncKey}
+                        className="px-2.5 py-1 text-[10px] font-bold text-amber-400 hover:text-amber-300 rounded bg-amber-500/10 border border-amber-500/30 flex items-center gap-1 cursor-pointer transition-colors"
+                      >
+                        {hasCopiedSyncKey ? (
+                          <>
+                            <Check className="w-3 h-3 text-emerald-400" />
+                            <span className="text-emerald-400">Copiée !</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3" />
+                            <span>Copier</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Import / Transfer key from another device */}
+                    <div className="pt-2 border-t border-slate-800/60 space-y-1.5">
+                      <div className="text-[11px] font-semibold text-slate-300">
+                        Associer une clé existante depuis un autre PC :
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={importSyncKeyInput}
+                          onChange={(e) => setImportSyncKeyInput(e.target.value)}
+                          placeholder="Collez ici la clé de votre premier appareil..."
+                          className="flex-1 px-3 py-1.5 bg-[#0b0f19] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleImportSyncKey}
+                          disabled={isAuthLoading || !importSyncKeyInput.trim()}
+                          className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition-all disabled:opacity-40 cursor-pointer shrink-0"
+                        >
+                          Appliquer
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Supabase Optional Section if active */}
                   {isSupabaseActive && (
