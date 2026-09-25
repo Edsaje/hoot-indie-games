@@ -47,6 +47,9 @@ export const MicroIndieHub: React.FC = () => {
   const [authNotice, setAuthNotice] = useState<string | null>(null);
   const [likedIds, setLikedIds] = useState<Set<string>>(() => {
     try {
+      const userKey = profile?.steam?.steamId || profile?.id || profile?.username;
+      const savedUser = userKey ? localStorage.getItem(`hoot_liked_micro_indies_${userKey}`) : null;
+      if (savedUser) return new Set(JSON.parse(savedUser));
       const saved = localStorage.getItem('hoot_liked_micro_indies');
       return saved ? new Set(JSON.parse(saved)) : new Set();
     } catch {
@@ -55,7 +58,7 @@ export const MicroIndieHub: React.FC = () => {
   });
   const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set());
 
-  // Charger les propositions communautaires depuis l'API PHP
+  // Charger les propositions communautaires et les likes persistés depuis l'API PHP
   useEffect(() => {
     const params = new URLSearchParams({ action: 'list' });
     if (profile?.id) params.set('userId', profile.id);
@@ -65,26 +68,46 @@ export const MicroIndieHub: React.FC = () => {
     fetch(`/api/micro_indies.php?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.success && Array.isArray(data.microIndies) && data.microIndies.length > 0) {
+        if (data.success) {
           setGames((prev) => {
             const map = new Map<string, MicroIndieGame>();
             // Ajouter d'abord les jeux existants (déjà mélangés)
             prev.forEach((g) => map.set(g.id, g));
             let hasNew = false;
             // Ajouter les jeux communautaires approuvés
-            data.microIndies.forEach((g: MicroIndieGame) => {
-              if (!map.has(g.id)) {
-                hasNew = true;
+            if (Array.isArray(data.microIndies)) {
+              data.microIndies.forEach((g: MicroIndieGame) => {
+                if (!map.has(g.id)) {
+                  hasNew = true;
+                }
+                map.set(g.id, g);
+              });
+            }
+            // Appliquer les compteurs de likes persistés sur le serveur
+            if (data.likesMap && typeof data.likesMap === 'object' && !Array.isArray(data.likesMap)) {
+              for (const [id, count] of Object.entries(data.likesMap)) {
+                const existing = map.get(id);
+                if (existing && typeof count === 'number') {
+                  map.set(id, { ...existing, likesCount: count });
+                }
               }
-              map.set(g.id, g);
-            });
+            }
             const allGames = Array.from(map.values());
             // Si de nouveaux jeux sont intégrés, on remélange pour conserver la surprise de découverte
             return hasNew ? shuffleArray(allGames) : allGames;
           });
         }
-        if (data.success && Array.isArray(data.userLikedIds) && data.userLikedIds.length > 0) {
-          setLikedIds((prev) => new Set([...Array.from(prev), ...data.userLikedIds]));
+        if (data.success && Array.isArray(data.userLikedIds)) {
+          setLikedIds(new Set(data.userLikedIds));
+          try {
+            const userKey = profile?.steam?.steamId || profile?.id || profile?.username;
+            if (userKey) {
+              localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(data.userLikedIds));
+            }
+            localStorage.setItem('hoot_liked_micro_indies', JSON.stringify(data.userLikedIds));
+          } catch {
+            // Ignorer
+          }
         }
       })
       .catch(() => {
@@ -105,15 +128,25 @@ export const MicroIndieHub: React.FC = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.likedIds)) {
-          setLikedIds((prev) => new Set([...Array.from(prev), ...data.likedIds]));
+          setLikedIds(new Set(data.likedIds));
           try {
             const userKey = profile.steam?.steamId || profile.id || profile.username;
             if (userKey) {
               localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(data.likedIds));
             }
+            localStorage.setItem('hoot_liked_micro_indies', JSON.stringify(data.likedIds));
           } catch {
             // Ignorer
           }
+        }
+        if (data.success && data.likesMap && typeof data.likesMap === 'object' && !Array.isArray(data.likesMap)) {
+          setGames((prev) =>
+            prev.map((g) =>
+              typeof data.likesMap[g.id] === 'number'
+                ? { ...g, likesCount: data.likesMap[g.id] }
+                : g
+            )
+          );
         }
       })
       .catch(() => {});
@@ -135,6 +168,8 @@ export const MicroIndieHub: React.FC = () => {
 
     soundFx.playClick();
     const isCurrentlyLiked = likedIds.has(gameId);
+    const currentGame = games.find((g) => g.id === gameId);
+    const prevCount = currentGame?.likesCount ?? 1;
 
     // Mettre à jour l'état local (optimistic toggle)
     const nextLiked = new Set(likedIds);
@@ -150,15 +185,17 @@ export const MicroIndieHub: React.FC = () => {
       if (userKey) {
         localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(Array.from(nextLiked)));
       }
+      localStorage.setItem('hoot_liked_micro_indies', JSON.stringify(Array.from(nextLiked)));
     } catch {
       // Ignorer
     }
 
-    // Incrémenter ou décrémenter localement
+    // Incrémenter ou décrémenter localement (optimiste)
+    const optimisticCount = isCurrentlyLiked ? Math.max(0, prevCount - 1) : prevCount + 1;
     setGames((prev) =>
       prev.map((g) =>
         g.id === gameId
-          ? { ...g, likesCount: isCurrentlyLiked ? Math.max(0, (g.likesCount || 1) - 1) : (g.likesCount || 0) + 1 }
+          ? { ...g, likesCount: optimisticCount }
           : g
       )
     );
@@ -171,30 +208,43 @@ export const MicroIndieHub: React.FC = () => {
         body: JSON.stringify({
           action: isCurrentlyLiked ? 'unlike' : 'like',
           id: gameId,
+          currentCount: prevCount,
           userId: profile.id,
           steamId: profile.steam?.steamId || undefined,
           username: profile.username,
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.success) {
-        if (data.requireAuth) {
-          soundFx.playError();
-          setAuthNotice(data.error || 'Connexion requise pour voter.');
-          window.dispatchEvent(new CustomEvent('hoot_open_auth'));
-          // Restaurer l'état précédent en cas d'erreur
-          setLikedIds(likedIds);
+      if (res.ok && data.success) {
+        if (typeof data.likesCount === 'number') {
           setGames((prev) =>
             prev.map((g) =>
-              g.id === gameId
-                ? { ...g, likesCount: isCurrentlyLiked ? (g.likesCount || 0) + 1 : Math.max(0, (g.likesCount || 1) - 1) }
-                : g
+              g.id === gameId ? { ...g, likesCount: data.likesCount } : g
             )
           );
         }
+      } else {
+        // Restaurer l'état précédent en cas d'erreur
+        setLikedIds(likedIds);
+        setGames((prev) =>
+          prev.map((g) =>
+            g.id === gameId ? { ...g, likesCount: prevCount } : g
+          )
+        );
+        if (data?.requireAuth) {
+          soundFx.playError();
+          setAuthNotice(data.error || 'Connexion requise pour voter.');
+          window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+        }
       }
     } catch {
-      // Ignorer
+      // Restaurer l'état précédent en cas d'erreur réseau
+      setLikedIds(likedIds);
+      setGames((prev) =>
+        prev.map((g) =>
+          g.id === gameId ? { ...g, likesCount: prevCount } : g
+        )
+      );
     }
   };
 

@@ -133,6 +133,61 @@ function healAndLoadMicroIndies($dataFile) {
     return $items;
 }
 
+function getBaseLikesCount($gameId, $clientCount = null, $items = []) {
+    // 1. Chercher dans les items dynamiques (micro_indies.json)
+    if (is_array($items)) {
+        foreach ($items as $item) {
+            if (($item['id'] ?? '') === $gameId) {
+                return (int)($item['likesCount'] ?? 1);
+            }
+        }
+    }
+    // 2. Si le client a envoyé un compte valide > 0, l'utiliser comme base
+    if ($clientCount !== null && (int)$clientCount > 0) {
+        return (int)$clientCount;
+    }
+    // 3. Comptes initiaux des pépites natives (src/data/microIndies.ts)
+    static $baseCounts = [
+        "celeste-classic-pico8" => 142,
+        "micro-crescent-bloom-2d61c0" => 8,
+        "buckshot-roulette-itch" => 98,
+        "holocure-micro" => 165,
+        "grimms-hollow-micro" => 84,
+        "a-short-hike-micro" => 119,
+        "the-looker-micro" => 76,
+        "itch-our-life-beginnings-amp-always" => 1,
+        "itch-adventures-with-anxiety" => 1,
+        "itch-a-date-with-death" => 1,
+        "itch-blooming-panic" => 1,
+        "itch-don-039-t-eat-the-cashier" => 1,
+        "itch-quot-voices-of-the-void-quot-alpha" => 1,
+        "itch-14-days-with-you" => 1,
+        "itch-our-life-now-amp-forever" => 1,
+        "itch-serenitrove" => 1,
+        "itch-doki-doki-literature-club" => 1,
+        "itch-killer-chat-original-edition" => 1,
+        "itch-butterfly-soup" => 1,
+        "friday-night-funkin" => 230,
+        "minit-itch" => 115,
+        "sort-the-court" => 95,
+        "windowkill-itch" => 88,
+        "anatomy-itch" => 140,
+        "lost-constellation" => 102,
+        "a-good-snowman-itch" => 76,
+        "baba-is-you-prototype" => 198,
+        "the-hex-itch" => 82,
+        "vvvvvv-itch" => 160,
+        "super-hexagon-itch" => 130,
+        "nuclear-throne-itch" => 155,
+        "vampire-survivors-itch" => 210,
+        "birdsong-linssen" => 94,
+        "reap-linssen" => 91,
+        "itch-we-become-what-we-behold" => 1,
+        "itch-mushroom-oasis" => 1
+    ];
+    return $baseCounts[$gameId] ?? 1;
+}
+
 function getAuthenticatedUserVoteKey($params) {
     if (!is_array($params)) return null;
     $steamId = trim($params['steamId'] ?? '');
@@ -223,16 +278,30 @@ if ($action === 'list' || ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action
     $userKey = getAuthenticatedUserVoteKey($_GET);
     $userLikedIds = [];
     $votesFile = __DIR__ . '/micro_indies_votes.json';
-    if ($userKey && file_exists($votesFile)) {
+    $likesMap = [];
+    if (file_exists($votesFile)) {
         $vRaw = @file_get_contents($votesFile);
         $vData = json_decode($vRaw, true) ?: [];
-        $userLikedIds = $vData['users'][$userKey] ?? [];
+        if ($userKey) {
+            $userLikedIds = $vData['users'][$userKey] ?? [];
+        }
+        $likesMap = $vData['counts'] ?? [];
     }
+
+    // Appliquer likesMap aux jeux communautaires approuvés s'ils ont un compte personnalisé
+    foreach ($approved as &$apprItem) {
+        $aid = $apprItem['id'] ?? '';
+        if (isset($likesMap[$aid])) {
+            $apprItem['likesCount'] = $likesMap[$aid];
+        }
+    }
+    unset($apprItem);
 
     echo json_encode([
         'success' => true,
         'microIndies' => $approved,
-        'userLikedIds' => array_values(array_unique($userLikedIds))
+        'userLikedIds' => array_values(array_unique($userLikedIds)),
+        'likesMap' => !empty($likesMap) ? $likesMap : new stdClass(),
     ]);
     exit;
 }
@@ -240,18 +309,22 @@ if ($action === 'list' || ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action
 // 1.1 Récupérer les jeux likés par un compte connecté
 if ($action === 'user_likes') {
     $userKey = getAuthenticatedUserVoteKey($_GET);
-    if (!$userKey) {
-        echo json_encode(['success' => true, 'likedIds' => []]);
-        exit;
-    }
     $votesFile = __DIR__ . '/micro_indies_votes.json';
     $userLikes = [];
+    $likesMap = [];
     if (file_exists($votesFile)) {
         $raw = @file_get_contents($votesFile);
         $vData = json_decode($raw, true) ?: [];
-        $userLikes = $vData['users'][$userKey] ?? [];
+        if ($userKey) {
+            $userLikes = $vData['users'][$userKey] ?? [];
+        }
+        $likesMap = $vData['counts'] ?? [];
     }
-    echo json_encode(['success' => true, 'likedIds' => array_values(array_unique($userLikes))]);
+    echo json_encode([
+        'success' => true,
+        'likedIds' => array_values(array_unique($userLikes)),
+        'likesMap' => !empty($likesMap) ? $likesMap : new stdClass(),
+    ]);
     exit;
 }
 
@@ -388,13 +461,14 @@ if ($action === 'like' || $action === 'unlike' || $action === 'toggle_like') {
     }
 
     $votesFile = __DIR__ . '/micro_indies_votes.json';
-    $vData = ['users' => [], 'games' => []];
+    $vData = ['users' => [], 'games' => [], 'counts' => []];
     if (file_exists($votesFile)) {
         $vRaw = @file_get_contents($votesFile);
-        $vData = json_decode($vRaw, true) ?: ['users' => [], 'games' => []];
+        $vData = json_decode($vRaw, true) ?: ['users' => [], 'games' => [], 'counts' => []];
     }
     if (!isset($vData['games'])) $vData['games'] = [];
     if (!isset($vData['users'])) $vData['users'] = [];
+    if (!isset($vData['counts'])) $vData['counts'] = [];
 
     $alreadyLiked = !empty($vData['games'][$targetId][$userKey]);
 
@@ -406,8 +480,8 @@ if ($action === 'like' || $action === 'unlike' || $action === 'toggle_like') {
         $raw = @file_get_contents($dataFile);
         $items = json_decode($raw, true) ?: [];
     }
-    $found = false;
-    $newLikes = 0;
+
+    $clientCount = isset($postData['currentCount']) ? (int)$postData['currentCount'] : null;
 
     if ($isUnlike) {
         // Retirer le vote
@@ -417,30 +491,48 @@ if ($action === 'like' || $action === 'unlike' || $action === 'toggle_like') {
                 return $id !== $targetId;
             }));
         }
+
+        // Calcul du compte de likes
+        if (isset($vData['counts'][$targetId])) {
+            $newLikes = max(0, $vData['counts'][$targetId] - 1);
+        } else {
+            $base = getBaseLikesCount($targetId, $clientCount, $items);
+            $newLikes = max(0, $alreadyLiked ? ($base > 1 ? $base - 1 : $base) : max(0, $base - 1));
+        }
+        $vData['counts'][$targetId] = $newLikes;
         @file_put_contents($votesFile, json_encode($vData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
+        // Si le jeu est dans micro_indies.json, synchroniser aussi
+        $foundInItems = false;
         foreach ($items as &$item) {
             if (($item['id'] ?? '') === $targetId) {
-                $item['likesCount'] = max(0, ($item['likesCount'] ?? 1) - 1);
-                $newLikes = $item['likesCount'];
-                $found = true;
+                $item['likesCount'] = $newLikes;
+                $foundInItems = true;
                 break;
             }
         }
         unset($item);
-        if ($found) {
+        if ($foundInItems) {
             @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         }
-        echo json_encode(['success' => true, 'likesCount' => $newLikes, 'liked' => false]);
+
+        echo json_encode([
+            'success' => true,
+            'likesCount' => $newLikes,
+            'liked' => false,
+            'likesMap' => $vData['counts'],
+        ]);
         exit;
     } else {
         // Ajouter le vote
         if ($alreadyLiked) {
+            $existingCount = $vData['counts'][$targetId] ?? getBaseLikesCount($targetId, $clientCount, $items);
             echo json_encode([
                 'success' => true,
                 'alreadyLiked' => true,
-                'likesCount' => 1,
-                'liked' => true
+                'likesCount' => $existingCount,
+                'liked' => true,
+                'likesMap' => $vData['counts'],
             ]);
             exit;
         }
@@ -449,23 +541,37 @@ if ($action === 'like' || $action === 'unlike' || $action === 'toggle_like') {
         if (!isset($vData['users'][$userKey])) $vData['users'][$userKey] = [];
         $vData['users'][$userKey][] = $targetId;
         $vData['users'][$userKey] = array_values(array_unique($vData['users'][$userKey]));
+
+        // Calcul du nouveau compte
+        if (isset($vData['counts'][$targetId])) {
+            $newLikes = $vData['counts'][$targetId] + 1;
+        } else {
+            $base = getBaseLikesCount($targetId, $clientCount, $items);
+            $newLikes = $base + 1;
+        }
+        $vData['counts'][$targetId] = $newLikes;
         @file_put_contents($votesFile, json_encode($vData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
+        // Si le jeu est dans micro_indies.json, synchroniser aussi
+        $foundInItems = false;
         foreach ($items as &$item) {
             if (($item['id'] ?? '') === $targetId) {
-                $item['likesCount'] = ($item['likesCount'] ?? 0) + 1;
-                $newLikes = $item['likesCount'];
-                $found = true;
+                $item['likesCount'] = $newLikes;
+                $foundInItems = true;
                 break;
             }
         }
         unset($item);
-        if ($found) {
+        if ($foundInItems) {
             @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-            echo json_encode(['success' => true, 'likesCount' => $newLikes, 'liked' => true]);
-        } else {
-            echo json_encode(['success' => true, 'likesCount' => 1, 'liked' => true]);
         }
+
+        echo json_encode([
+            'success' => true,
+            'likesCount' => $newLikes,
+            'liked' => true,
+            'likesMap' => $vData['counts'],
+        ]);
         exit;
     }
 }
@@ -478,6 +584,19 @@ if ($action === 'admin_list') {
         exit;
     }
     $items = healAndLoadMicroIndies($dataFile);
+    $votesFile = __DIR__ . '/micro_indies_votes.json';
+    if (file_exists($votesFile)) {
+        $vRaw = @file_get_contents($votesFile);
+        $vData = json_decode($vRaw, true) ?: [];
+        $countsMap = $vData['counts'] ?? [];
+        foreach ($items as &$adminItem) {
+            $aid = $adminItem['id'] ?? '';
+            if (isset($countsMap[$aid])) {
+                $adminItem['likesCount'] = $countsMap[$aid];
+            }
+        }
+        unset($adminItem);
+    }
     $total = count($items);
     $pending = count(array_filter($items, function($item) {
         return empty($item['approved']);
