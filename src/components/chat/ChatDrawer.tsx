@@ -36,6 +36,7 @@ import { translateChatMessage } from '../../services/translationService';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { getFrameDefinition } from '../../utils/featherEconomy';
 import { soundFx } from '../../utils/audio';
+import { ChatUserModerationModal } from './ChatUserModerationModal';
 
 const QUICK_EMOJIS = ['🦉', '🎮', '💎', '🏆', '✨', '❤️', '🔥', '👏', '👋', '🎉'];
 
@@ -166,8 +167,23 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     setModLogs((prev) => prev.filter((l) => l.id !== logId));
   };
 
+  // Modale de modération d'un profil utilisateur (accessible pour Hibouxe et les modérateurs)
+  const [userToModerate, setUserToModerate] = useState<{
+    username: string;
+    userId?: string;
+    steamId?: string;
+    avatarId?: string;
+    title?: string;
+    activeFrame?: string;
+    isCreator?: boolean;
+    isModerator?: boolean;
+  } | null>(null);
+
+  // Modale d'action de suppression / effacement d'un message
+  const [messageToDelete, setMessageToDelete] = useState<ChatMessage | null>(null);
+
   const canDeleteMessage = (msg: ChatMessage): boolean => {
-    if (msg.isDeleted || !isAuthenticated) return false;
+    if (!isAuthenticated) return false;
 
     const isMe = Boolean(
       (profile.username && msg.username && msg.username.toLowerCase() === profile.username.toLowerCase()) ||
@@ -175,7 +191,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       (profile.steam?.steamId && msg.steamId && msg.steamId === profile.steam.steamId)
     );
 
-    // 1. Admin / Créateur : peut supprimer TOUS les messages (les siens, ceux des modos, ceux des utilisateurs)
+    // 1. Admin / Créateur : peut supprimer ou effacer TOUS les messages (les siens, ceux des modos, ceux des utilisateurs)
     if (isStrictAdmin) {
       return true;
     }
@@ -194,7 +210,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       return true;
     }
 
-    // 3. Utilisateur standard : peut supprimer son propre message
+    // 3. Utilisateur standard : peut supprimer ou faire disparaître son propre message
     if (isMe) {
       return true;
     }
@@ -202,30 +218,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     return false;
   };
 
-  const handleDeleteMessage = async (msg: ChatMessage) => {
+  const handleDeleteMessage = (msg: ChatMessage) => {
     soundFx.playClick();
-    const isMe = Boolean(
-      (profile.username && msg.username && msg.username.toLowerCase() === profile.username.toLowerCase()) ||
-      (profile.id && msg.userId && msg.userId === profile.id) ||
-      (profile.steam?.steamId && msg.steamId && msg.steamId === profile.steam.steamId)
-    );
-
-    let confirmPrompt = `Voulez-vous retirer ce message de ${msg.username} de la discussion ?`;
-    if (isMe) {
-      confirmPrompt = 'Voulez-vous supprimer votre message de la discussion ?';
-    } else if (isStrictAdmin) {
-      confirmPrompt = `Voulez-vous retirer ce message de ${msg.username} (action administrateur) ?`;
-    } else if (isStrictModerator) {
-      confirmPrompt = `Voulez-vous retirer ce message de ${msg.username} (action modérateur) ?`;
-    }
-
-    if (window.confirm(confirmPrompt)) {
-      const res = await deleteMessage(msg.id);
-      if (!res.success && res.message) {
-        setErrorMessage(res.message);
-        setTimeout(() => setErrorMessage(null), 4000);
-      }
-    }
+    setMessageToDelete(msg);
   };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -741,10 +736,27 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                 >
                   {/* Avatar avec cadre éventuel */}
                   <div
+                    onClick={() => {
+                      if (canModerate) {
+                        soundFx.playClick();
+                        setUserToModerate({
+                          username: isCreatorMsg && msg.username.startsWith('Explorateur_') ? 'Hibouxe' : msg.username,
+                          userId: msg.userId,
+                          steamId: msg.steamId,
+                          avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                          title: msg.title,
+                          activeFrame: msg.activeFrame,
+                          isCreator: isCreatorMsg,
+                          isModerator: msg.isModerator,
+                        });
+                      }
+                    }}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 bg-gradient-to-br ${
                       avatar.bgGradient
-                    } ${frameDef.borderClass} ${frameDef.glowClass || ''} shadow-md overflow-hidden`}
-                    title={avatar.name}
+                    } ${frameDef.borderClass} ${frameDef.glowClass || ''} shadow-md overflow-hidden ${
+                      canModerate ? 'cursor-pointer hover:ring-2 hover:ring-amber-400 transition-all hover:scale-105' : ''
+                    }`}
+                    title={canModerate ? `Modérer le profil de ${msg.username}` : avatar.name}
                   >
                     {avatar.imageUrl ? (
                       <img
@@ -773,8 +785,29 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         );
                         const authorDisplayName = (isCreatorMsg && msg.username.startsWith('Explorateur_')) ? 'Hibouxe' : msg.username;
                         return (
-                          <span className="font-bold text-[11px] text-amber-100 flex items-center gap-1">
-                            {authorDisplayName}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (canModerate) {
+                                soundFx.playClick();
+                                setUserToModerate({
+                                  username: authorDisplayName,
+                                  userId: msg.userId,
+                                  steamId: msg.steamId,
+                                  avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                                  title: msg.title,
+                                  activeFrame: msg.activeFrame,
+                                  isCreator: isCreatorMsg,
+                                  isModerator: msg.isModerator,
+                                });
+                              }
+                            }}
+                            className={`font-bold text-[11px] text-amber-100 flex items-center gap-1 text-left ${
+                              canModerate ? 'cursor-pointer hover:underline hover:text-amber-300' : ''
+                            }`}
+                            title={canModerate ? `Modérer le profil de ${authorDisplayName}` : undefined}
+                          >
+                            <span>{authorDisplayName}</span>
                             {isCreatorMsg && (
                               <span
                                 className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold"
@@ -793,7 +826,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                                 Modérateur
                               </span>
                             )}
-                          </span>
+                          </button>
                         );
                       })()}
 
@@ -907,17 +940,23 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         <button
                           type="button"
                           onClick={() => handleDeleteMessage(msg)}
-                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded transition cursor-pointer self-center shrink-0"
+                          className={`p-1 rounded transition cursor-pointer self-center shrink-0 ${
+                            msg.isDeleted
+                              ? 'opacity-60 hover:opacity-100 text-slate-500 hover:text-red-400 hover:bg-red-500/10'
+                              : 'opacity-0 group-hover/bubble:opacity-100 focus:opacity-100 text-slate-500 hover:text-red-400 hover:bg-red-500/10'
+                          }`}
                           title={
-                            isStrictAdmin
+                            msg.isDeleted
+                              ? 'Faire disparaître définitivement ce message retiré'
+                              : isStrictAdmin
                               ? msg.username === profile.username
-                                ? 'Supprimer mon message (Action Administrateur)'
-                                : `Supprimer ce message de ${msg.username} (Action Administrateur)`
+                                ? 'Supprimer ou faire disparaître mon message'
+                                : `Modérer ce message de ${msg.username}`
                               : msg.username === profile.username
-                              ? 'Supprimer mon message'
-                              : `Retirer ce message de ${msg.username} (Action Modérateur)`
+                              ? 'Supprimer ou faire disparaître mon message'
+                              : `Modérer ce message de ${msg.username}`
                           }
-                          aria-label="Supprimer le message"
+                          aria-label="Supprimer ou faire disparaître le message"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -1192,6 +1231,148 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modale de modération d'un profil joueur (clic sur pseudo / avatar pour Hibouxe et modérateurs) */}
+      <ChatUserModerationModal
+        isOpen={Boolean(userToModerate)}
+        onClose={() => setUserToModerate(null)}
+        targetUser={userToModerate}
+        onUserPurged={() => {
+          setTimeout(() => setUserToModerate(null), 1000);
+        }}
+      />
+
+      {/* Modale de confirmation de suppression / effacement d'un message */}
+      {messageToDelete && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm animate-fade-in"
+          onClick={() => setMessageToDelete(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl bg-[#04120e] border border-emerald-500/40 p-4 shadow-2xl space-y-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2.5">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                <Trash2 className="w-4 h-4 text-rose-400" />
+                <span>{messageToDelete.isDeleted ? 'Effacement définitif' : 'Gestion du message'}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMessageToDelete(null)}
+                className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="text-xs text-slate-300">
+              <p className="font-semibold text-amber-200 mb-1">
+                Auteur : {messageToDelete.username}
+              </p>
+              <div className="p-2 rounded-lg bg-black/40 border border-slate-800 text-[11px] text-slate-400 italic break-words line-clamp-3">
+                "{messageToDelete.text}"
+              </div>
+            </div>
+
+            {messageToDelete.isDeleted ? (
+              <div className="space-y-2 pt-1">
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Ce message a déjà été masqué. Souhaitez-vous le faire disparaître définitivement de la base et du salon ?
+                </p>
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setMessageToDelete(null)}
+                    className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-medium cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const msg = messageToDelete;
+                      setMessageToDelete(null);
+                      const res = await deleteMessage(msg.id, true);
+                      if (!res.success && res.message) {
+                        setErrorMessage(res.message);
+                        setTimeout(() => setErrorMessage(null), 4000);
+                      }
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition cursor-pointer"
+                  >
+                    Faire disparaître
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 pt-1">
+                <p className="text-[11px] text-slate-300">
+                  Choisissez l'action à appliquer :
+                </p>
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const msg = messageToDelete;
+                      setMessageToDelete(null);
+                      const res = await deleteMessage(msg.id, true);
+                      if (!res.success && res.message) {
+                        setErrorMessage(res.message);
+                        setTimeout(() => setErrorMessage(null), 4000);
+                      }
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl bg-rose-950/40 hover:bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs transition cursor-pointer flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="font-bold flex items-center gap-1.5">
+                        <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+                        <span>Faire disparaître complètement</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">
+                        Efface physiquement le message du salon pour tout le monde.
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const msg = messageToDelete;
+                      setMessageToDelete(null);
+                      const res = await deleteMessage(msg.id, false);
+                      if (!res.success && res.message) {
+                        setErrorMessage(res.message);
+                        setTimeout(() => setErrorMessage(null), 4000);
+                      }
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 text-slate-300 text-xs transition cursor-pointer flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="font-bold flex items-center gap-1.5">
+                        <span>Masquer le texte uniquement</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">
+                        Remplace le texte par [Message retiré], la bulle reste visible.
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setMessageToDelete(null)}
+                    className="px-3 py-1 rounded-lg text-xs text-slate-400 hover:text-white cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

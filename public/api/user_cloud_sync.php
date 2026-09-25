@@ -91,7 +91,10 @@ function mergeSaveData($existing, $incoming) {
     if (!empty($incoming['steamId'])) $merged['steamId'] = $incoming['steamId'];
     if (!empty($incoming['userId'])) $merged['userId'] = $incoming['userId'];
     if (!empty($incoming['username']) && $incoming['username'] !== 'Hibou Mystère') {
-        $merged['username'] = $incoming['username'];
+        $cleanUName = preg_replace('/[^a-zA-Z0-9_\-]/', '', trim($incoming['username']));
+        if (!empty($cleanUName) && strlen($cleanUName) <= 24) {
+            $merged['username'] = $cleanUName;
+        }
     }
     if (!empty($incoming['avatarId'])) $merged['avatarId'] = $incoming['avatarId'];
     if (!empty($incoming['title'])) $merged['title'] = $incoming['title'];

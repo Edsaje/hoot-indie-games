@@ -10,6 +10,7 @@ import {
   fetchChatMessages,
   sendChatMessage,
   deleteChatMessage,
+  purgeUserChatMessages,
 } from '../services/chatService';
 import { soundFx } from '../utils/audio';
 
@@ -332,9 +333,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     [isAuthenticated, cooldownSeconds, currentChannel, profile]
   );
 
-  // Modération / suppression de message
+  // Modération / suppression de message (avec support du masquage et de l'effacement complet)
   const deleteMessage = useCallback(
-    async (messageId: string): Promise<{ success: boolean; message?: string }> => {
+    async (messageId: string, hardDelete: boolean = false): Promise<{ success: boolean; message?: string; hardDeleted?: boolean }> => {
       if (!isAuthenticated) {
         return { success: false, message: 'Vous devez être connecté pour supprimer un message.' };
       }
@@ -342,47 +343,101 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const isActualAdmin = Boolean(isAdmin || isCreator || profile.isAdmin || profile.role === 'admin');
       const isActualMod = Boolean(isModerator || profile.isModerator || profile.role === 'moderator');
 
-      const res = await deleteChatMessage(messageId, {
-        steamId: profile.steam?.steamId,
-        userId: profile.id,
-        email: profile.email,
-        username: profile.username,
-        role: profile.role,
-        isAdmin: isActualAdmin,
-        isModerator: isActualMod,
-      });
+      const res = await deleteChatMessage(
+        messageId,
+        {
+          steamId: profile.steam?.steamId,
+          userId: profile.id,
+          email: profile.email,
+          username: profile.username,
+          role: profile.role,
+          isAdmin: isActualAdmin,
+          isModerator: isActualMod,
+        },
+        hardDelete
+      );
+
+      if (res.success) {
+        soundFx.playClick();
+        const reallyHardDeleted = Boolean(res.hardDeleted ?? hardDelete);
+        setAllMessages((prev) => {
+          const next = { ...prev };
+          for (const ch of Object.keys(next) as ChatChannel[]) {
+            if (reallyHardDeleted) {
+              next[ch] = next[ch].filter((m) => m.id !== messageId);
+            } else {
+              next[ch] = next[ch].map((m) => {
+                if (m.id !== messageId) return m;
+                const isAuthor = Boolean(
+                  (profile.username && m.username && m.username.toLowerCase() === profile.username.toLowerCase()) ||
+                  (profile.id && m.userId && m.userId === profile.id) ||
+                  (profile.steam?.steamId && m.steamId && m.steamId === profile.steam.steamId)
+                );
+                return {
+                  ...m,
+                  isDeleted: true,
+                  text: isAuthor
+                    ? '[Message retiré par l\'auteur]'
+                    : (isActualAdmin
+                        ? '[Message retiré par l\'administrateur]'
+                        : '[Message retiré par la modération]'),
+                };
+              });
+            }
+          }
+          return next;
+        });
+        return { success: true, message: res.message, hardDeleted: reallyHardDeleted };
+      }
+
+      return { success: false, message: res.message || 'Erreur lors de la modération du message.' };
+    },
+    [profile, isAdmin, isCreator, isModerator, isAuthenticated]
+  );
+
+  // Purge de tous les messages d'un utilisateur
+  const purgeUserMessages = useCallback(
+    async (targetUsername: string, targetUserId?: string): Promise<{ success: boolean; count?: number; message?: string }> => {
+      if (!isAuthenticated) {
+        return { success: false, message: 'Vous devez être connecté.' };
+      }
+
+      const isActualAdmin = Boolean(isAdmin || isCreator || profile.isAdmin || profile.role === 'admin');
+      const isActualMod = Boolean(isModerator || profile.isModerator || profile.role === 'moderator');
+      if (!isActualAdmin && !isActualMod) {
+        return { success: false, message: 'Action réservée aux modérateurs et administrateurs.' };
+      }
+
+      const res = await purgeUserChatMessages(
+        { username: targetUsername, userId: targetUserId },
+        {
+          steamId: profile.steam?.steamId,
+          userId: profile.id,
+          username: profile.username,
+          role: profile.role,
+          isAdmin: isActualAdmin,
+        }
+      );
 
       if (res.success) {
         soundFx.playClick();
         setAllMessages((prev) => {
           const next = { ...prev };
           for (const ch of Object.keys(next) as ChatChannel[]) {
-            next[ch] = next[ch].map((m) => {
-              if (m.id !== messageId) return m;
-              const isAuthor = Boolean(
-                (profile.username && m.username && m.username.toLowerCase() === profile.username.toLowerCase()) ||
-                (profile.id && m.userId && m.userId === profile.id) ||
-                (profile.steam?.steamId && m.steamId && m.steamId === profile.steam.steamId)
-              );
-              return {
-                ...m,
-                isDeleted: true,
-                text: isAuthor
-                  ? '[Message retiré par l\'auteur]'
-                  : (isActualAdmin
-                      ? '[Message retiré par l\'administrateur]'
-                      : '[Message retiré par la modération]'),
-              };
-            });
+            next[ch] = next[ch].filter(
+              (m) =>
+                !(
+                  (targetUsername && m.username?.toLowerCase() === targetUsername.toLowerCase()) ||
+                  (targetUserId && m.userId === targetUserId)
+                )
+            );
           }
           return next;
         });
-        return { success: true, message: res.message };
       }
-
-      return { success: false, message: res.message || 'Erreur lors de la modération du message.' };
+      return res;
     },
-    [profile, isAdmin, isCreator, isModerator, isAuthenticated]
+    [isAuthenticated, isAdmin, isCreator, isModerator, profile]
   );
 
   const activeMessages = useMemo(() => {
@@ -405,6 +460,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       cooldownSeconds,
       sendMessage,
       deleteMessage,
+      purgeUserMessages,
       moderationWarning,
       setModerationWarning,
       refreshMessages,
@@ -424,6 +480,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       cooldownSeconds,
       sendMessage,
       deleteMessage,
+      purgeUserMessages,
       moderationWarning,
       setModerationWarning,
       refreshMessages,

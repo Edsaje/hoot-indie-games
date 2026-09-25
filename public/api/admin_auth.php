@@ -146,12 +146,15 @@ if (!function_exists('validateAdminCsrfToken')) {
  * Vérifie si la requête actuelle est légitimement autorisée en tant qu'administrateur créateur.
  * Sécurité absolue : Aucun en-tête client (Host, User-Agent, Referer, etc.) ne peut contourner cette vérification.
  */
-function isCreatorAdminAuthorized() {
+function isCreatorAdminAuthorized($explicitKey = null) {
     // 1. Session PHP vérifiée (obtenue lors du login Steam OpenID officiel sur track.php validé par Valve)
     if (session_status() === PHP_SESSION_NONE) {
         @session_start();
     }
     if (!empty($_SESSION['admin_auth']) && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID) {
+        return true;
+    }
+    if (!empty($_SESSION['steam_id']) && strval($_SESSION['steam_id']) === ADMIN_STEAM_ID) {
         return true;
     }
 
@@ -166,8 +169,32 @@ function isCreatorAdminAuthorized() {
 
     $secret = trim(@file_get_contents($adminPassFile) ?: '');
     if (!empty($secret)) {
-        // [CWE-598] Seul l'en-tête HTTP X-Admin-Key est autorisé (interdiction stricte des paramètres d'URL GET/POST)
-        $inputKey = trim($_SERVER['HTTP_X_ADMIN_KEY'] ?? '');
+        $inputKey = '';
+        if (!empty($explicitKey) && is_string($explicitKey)) {
+            $inputKey = trim($explicitKey);
+        } elseif (!empty($_SERVER['HTTP_X_ADMIN_KEY'])) {
+            $inputKey = trim($_SERVER['HTTP_X_ADMIN_KEY']);
+        } elseif (!empty($_SERVER['REDIRECT_HTTP_X_ADMIN_KEY'])) {
+            $inputKey = trim($_SERVER['REDIRECT_HTTP_X_ADMIN_KEY']);
+        } elseif (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            foreach ($headers as $k => $v) {
+                if (strcasecmp($k, 'X-Admin-Key') === 0) {
+                    $inputKey = trim($v);
+                    break;
+                }
+            }
+        }
+
+        // Si non trouvé dans les en-têtes HTTP, vérifier dans le corps de requête JSON chiffré POST
+        if (empty($inputKey) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!empty($GLOBALS['parsedJsonBody']['adminKey']) && is_string($GLOBALS['parsedJsonBody']['adminKey'])) {
+                $inputKey = trim($GLOBALS['parsedJsonBody']['adminKey']);
+            } elseif (!empty($_POST['adminKey']) && is_string($_POST['adminKey'])) {
+                $inputKey = trim($_POST['adminKey']);
+            }
+        }
+
         if (!empty($inputKey) && hash_equals($secret, $inputKey)) {
             return true;
         }

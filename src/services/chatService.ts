@@ -379,7 +379,8 @@ export async function sendChatMessage(payload: {
  */
 function deleteLocalFallbackMessage(
   messageId: string,
-  auth?: { steamId?: string; userId?: string; username?: string; isAdmin?: boolean; isModerator?: boolean }
+  auth?: { steamId?: string; userId?: string; username?: string; isAdmin?: boolean; isModerator?: boolean },
+  hardDelete: boolean = false
 ): boolean {
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_CHAT_KEY);
@@ -400,14 +401,18 @@ function deleteLocalFallbackMessage(
     const isAuthorized = Boolean(auth?.isAdmin || (auth?.isModerator && !target.isCreator) || isMe);
     if (!isAuthorized) return false;
 
-    list[idx] = {
-      ...target,
-      isDeleted: true,
-      text: isMe
-        ? '[Message retiré par l\'auteur]'
-        : (auth?.isAdmin ? '[Message retiré par l\'administrateur]' : '[Message retiré par la modération]'),
-      scoreData: null,
-    };
+    if (hardDelete) {
+      list.splice(idx, 1);
+    } else {
+      list[idx] = {
+        ...target,
+        isDeleted: true,
+        text: isMe
+          ? '[Message retiré par l\'auteur]'
+          : (auth?.isAdmin ? '[Message retiré par l\'administrateur]' : '[Message retiré par la modération]'),
+        scoreData: null,
+      };
+    }
     localStorage.setItem(LOCAL_STORAGE_CHAT_KEY, JSON.stringify(list));
     return true;
   } catch {
@@ -417,6 +422,7 @@ function deleteLocalFallbackMessage(
 
 /**
  * Supprime ou modère un message de la discussion (Auteur, Modérateur ou Admin)
+ * Supporte le masquage simple (soft-delete) ou l'effacement définitif (hard-delete / purge).
  */
 export async function deleteChatMessage(
   messageId: string,
@@ -428,8 +434,9 @@ export async function deleteChatMessage(
     role?: string;
     isAdmin?: boolean;
     isModerator?: boolean;
-  }
-): Promise<{ success: boolean; message?: string }> {
+  },
+  hardDelete: boolean = false
+): Promise<{ success: boolean; message?: string; hardDeleted?: boolean }> {
   const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
   const payload = {
     action: 'delete_message',
@@ -439,6 +446,7 @@ export async function deleteChatMessage(
     email: auth.email || '',
     username: auth.username || '',
     adminKey,
+    hardDelete: Boolean(hardDelete),
   };
 
   try {
@@ -456,16 +464,20 @@ export async function deleteChatMessage(
     const data = await res.json().catch(() => null);
 
     if (res.ok && data?.success) {
-      deleteLocalFallbackMessage(messageId, auth);
-      return { success: true, message: data.message || 'Message supprimé avec succès.' };
+      deleteLocalFallbackMessage(messageId, auth, hardDelete);
+      return {
+        success: true,
+        message: data.message || (hardDelete ? 'Message supprimé définitivement.' : 'Message retiré avec succès.'),
+        hardDeleted: Boolean(data.hardDeleted ?? hardDelete),
+      };
     }
 
     // Réponse avec message d'erreur explicite renvoyé par l'API
     if (data && (data.message || data.error)) {
       if (data.error === 'not_found') {
-        const localDeleted = deleteLocalFallbackMessage(messageId, auth);
+        const localDeleted = deleteLocalFallbackMessage(messageId, auth, hardDelete);
         if (localDeleted) {
-          return { success: true, message: 'Message retiré localement.' };
+          return { success: true, message: 'Message retiré localement.', hardDeleted: hardDelete };
         }
       }
       return { success: false, message: data.message || data.error };
@@ -477,9 +489,9 @@ export async function deleteChatMessage(
         return { success: false, message: 'Vous n\'avez pas les permissions pour supprimer ce message.' };
       }
       if (res.status === 404) {
-        const localDeleted = deleteLocalFallbackMessage(messageId, auth);
+        const localDeleted = deleteLocalFallbackMessage(messageId, auth, hardDelete);
         if (localDeleted) {
-          return { success: true, message: 'Message retiré localement.' };
+          return { success: true, message: 'Message retiré localement.', hardDeleted: hardDelete };
         }
         return { success: false, message: 'Message introuvable ou déjà supprimé.' };
       }
@@ -489,9 +501,9 @@ export async function deleteChatMessage(
     return { success: false, message: 'Réponse inattendue du serveur.' };
   } catch (err: any) {
     // Mode hors-ligne ou dev sans backend : tentative de suppression locale
-    const localDeleted = deleteLocalFallbackMessage(messageId, auth);
+    const localDeleted = deleteLocalFallbackMessage(messageId, auth, hardDelete);
     if (localDeleted) {
-      return { success: true, message: 'Message retiré du stockage local.' };
+      return { success: true, message: 'Message retiré du stockage local.', hardDeleted: hardDelete };
     }
     return { success: false, message: err?.message || 'Erreur lors de la modération du message.' };
   }
@@ -607,5 +619,150 @@ export async function dismissChatModerationLog(
     return data;
   } catch {
     return { success: false };
+  }
+}
+
+/**
+ * Purge tous les messages d'un utilisateur cible (Admin ou Modérateur)
+ */
+export async function purgeUserChatMessages(
+  target: { username?: string; userId?: string },
+  auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
+): Promise<{ success: boolean; count?: number; message?: string }> {
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+  const payload = {
+    action: 'purge_user_messages',
+    targetUsername: target.username || '',
+    targetUserId: target.userId || '',
+    steamId: auth.steamId || '',
+    userId: auth.userId || '',
+    username: auth.username || '',
+    adminKey,
+  };
+
+  try {
+    const res = await fetch('/api/chat.php?action=purge_user_messages', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data?.success) {
+      return { success: true, count: data.count, message: data.message };
+    }
+    return { success: false, message: data?.message || data?.error || 'Erreur lors de la purge des messages.' };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Erreur réseau lors de la purge.' };
+  }
+}
+
+export interface UserModerationProfile {
+  username: string;
+  role: 'admin' | 'moderator' | 'vip' | 'user';
+  isBanned: boolean;
+  banReason?: string;
+  bannedAt?: number;
+  steamId?: string;
+  avatarId?: string;
+  title?: string;
+  activeFrame?: string;
+  registeredAt?: number;
+  isCreator?: boolean;
+  isModerator?: boolean;
+}
+
+export interface UserModerationInfoResult {
+  success: boolean;
+  user?: UserModerationProfile;
+  messageCount?: number;
+  recentMessages?: Array<{ id: string; channel: string; text: string; timestamp: number; isDeleted: boolean }>;
+  message?: string;
+}
+
+/**
+ * Récupère le profil et l'historique d'un utilisateur pour la modération
+ */
+export async function getUserModerationInfo(
+  target: { username?: string; userId?: string },
+  auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
+): Promise<UserModerationInfoResult> {
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+  const params = new URLSearchParams();
+  params.append('action', 'get_user_moderation_info');
+  if (target.username) params.append('targetUsername', target.username);
+  if (target.userId) params.append('targetUserId', target.userId);
+  if (auth.steamId) params.append('steamId', auth.steamId);
+  if (auth.userId) params.append('userId', auth.userId);
+  if (auth.username) params.append('username', auth.username);
+
+  try {
+    const res = await fetch(`/api/chat.php?${params.toString()}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      },
+    });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data?.success) {
+      return data;
+    }
+    return { success: false, message: data?.message || data?.error || 'Impossible de récupérer les informations de modération.' };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Erreur réseau.' };
+  }
+}
+
+export interface UserModerationActionPayload {
+  subAction: 'toggle_ban' | 'set_role' | 'reset_username';
+  targetUsername?: string;
+  targetUserId?: string;
+  ban?: boolean;
+  reason?: string;
+  role?: 'admin' | 'moderator' | 'vip' | 'user';
+  newUsername?: string;
+}
+
+/**
+ * Exécute une action de modération sur un utilisateur (bannissement, changement de rôle, réinitialisation de pseudo)
+ */
+export async function executeUserModeration(
+  actionPayload: UserModerationActionPayload,
+  auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
+): Promise<{ success: boolean; message?: string }> {
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+  const payload = {
+    action: 'moderate_chat_user',
+    ...actionPayload,
+    steamId: auth.steamId || '',
+    userId: auth.userId || '',
+    username: auth.username || '',
+    adminKey,
+  };
+
+  try {
+    const res = await fetch('/api/chat.php?action=moderate_chat_user', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data?.success) {
+      return { success: true, message: data.message };
+    }
+    return { success: false, message: data?.message || data?.error || 'Erreur lors de l\'action de modération.' };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Erreur réseau lors de la modération.' };
   }
 }
