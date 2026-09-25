@@ -37,6 +37,7 @@ import { INDIE_AVATARS } from '../../data/avatars';
 import { getFrameDefinition } from '../../utils/featherEconomy';
 import { soundFx } from '../../utils/audio';
 import { ChatUserModerationModal } from './ChatUserModerationModal';
+import { SUPPORTED_LANGUAGES, getAppLanguage } from '../../utils/localization';
 
 const QUICK_EMOJIS = ['🦉', '🎮', '💎', '🏆', '✨', '❤️', '🔥', '👏', '👋', '🎉'];
 
@@ -86,6 +87,11 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   const getCategoryLabel = (catId: string, fallback: string) =>
     t(`chat.categories.${catId}`, fallback);
 
+  // Langue active du site et métadonnées correspondantes
+  const currentLangCode = getAppLanguage(i18n.language);
+  const currentLangMeta =
+    SUPPORTED_LANGUAGES.find((l) => l.id === currentLangCode) || SUPPORTED_LANGUAGES[0];
+
   // Traduction automatique et par message
   const [isAutoTranslate, setIsAutoTranslate] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -100,33 +106,46 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   const [translations, setTranslations] = useState<Record<string, string>>({});
   const [translatingMsgIds, setTranslatingMsgIds] = useState<Record<string, boolean>>({});
   const [showOriginalMsgIds, setShowOriginalMsgIds] = useState<Record<string, boolean>>({});
+  const [manualTranslatedMsgIds, setManualTranslatedMsgIds] = useState<Record<string, boolean>>({});
+
+  // Réinitialiser les traductions quand la langue du site change pour adapter immédiatement
+  const prevLangRef = useRef(currentLangCode);
+  useEffect(() => {
+    if (prevLangRef.current !== currentLangCode) {
+      prevLangRef.current = currentLangCode;
+      setTranslations({});
+      setShowOriginalMsgIds({});
+      setManualTranslatedMsgIds({});
+    }
+  }, [currentLangCode]);
 
   const handleTranslateSingleMessage = async (msg: { id: string; text: string; channel: string }) => {
     if (translatingMsgIds[msg.id] || !msg.text) return;
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: true }));
     soundFx.playClick();
-    const res = await translateChatMessage(msg.text, i18n.language, msg.channel);
+    const res = await translateChatMessage(msg.text, currentLangCode, msg.channel);
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: false }));
     if (res.success && res.translatedText !== msg.text) {
       setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
       setShowOriginalMsgIds((prev) => ({ ...prev, [msg.id]: false }));
+      setManualTranslatedMsgIds((prev) => ({ ...prev, [msg.id]: true }));
     }
   };
 
-  // Auto-traduction des messages si le mode est activé
+  // Auto-traduction des messages si le mode est activé, vers la langue active du site
   useEffect(() => {
     if (!isAutoTranslate || !isOpen || messages.length === 0) return;
-    const userLang = i18n.language;
+    const targetLang = currentLangCode;
 
     messages.forEach((msg) => {
       if (msg.isDeleted || !msg.text || translations[msg.id] || translatingMsgIds[msg.id]) return;
-      translateChatMessage(msg.text, userLang, msg.channel).then((res) => {
+      translateChatMessage(msg.text, targetLang, msg.channel).then((res) => {
         if (res.success && res.translatedText !== msg.text) {
           setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
         }
       });
     });
-  }, [isAutoTranslate, isOpen, messages, i18n.language, translations, translatingMsgIds]);
+  }, [isAutoTranslate, isOpen, messages, currentLangCode, translations, translatingMsgIds]);
 
   // Guide de prévention & anti-hameçonnage
   const [showSecurityGuide, setShowSecurityGuide] = useState(false);
@@ -414,16 +433,31 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                   return next;
                 });
               }}
-              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                 isAutoTranslate
                   ? 'bg-amber-500/25 text-amber-300 border border-amber-500/50 shadow-sm shadow-amber-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/40 border border-transparent'
               }`}
-              title={isAutoTranslate ? t('chat.autoTranslateActive') : t('chat.autoTranslate')}
-              aria-label={t('chat.autoTranslate')}
+              title={
+                isAutoTranslate
+                  ? `${t('chat.autoTranslateActive')} → ${currentLangMeta.label} (${currentLangMeta.shortCode})`
+                  : `${t('chat.autoTranslate')} → ${currentLangMeta.label} (${currentLangMeta.shortCode})`
+              }
+              aria-label={`${t('chat.autoTranslate')} (${currentLangMeta.shortCode})`}
             >
               <Languages className={`w-3.5 h-3.5 ${isAutoTranslate ? 'text-amber-400' : 'text-slate-400'}`} />
               <span className="text-[10px] hidden sm:inline">{t('chat.autoTranslate')}</span>
+              <span
+                className={`text-[9px] px-1 py-0.2 rounded font-mono font-bold flex items-center gap-0.5 ${
+                  isAutoTranslate
+                    ? 'bg-amber-400/20 text-amber-200 border border-amber-400/40'
+                    : 'bg-black/40 text-slate-400 border border-slate-700/60'
+                }`}
+                title={`Traduction adaptée à la langue du site : ${currentLangMeta.nativeLabel} (${currentLangMeta.shortCode})`}
+              >
+                <span>{currentLangMeta.flag}</span>
+                <span>{currentLangMeta.shortCode}</span>
+              </span>
             </button>
 
             {/* Bouton Journal de Modération (si admin ou modérateur) */}
@@ -877,9 +911,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         }`}
                       >
                         {(() => {
-                          const isTranslated = Boolean(translations[msg.id]) && !showOriginalMsgIds[msg.id];
-                          const textToRender = isTranslated ? translations[msg.id] : msg.text;
                           const hasTranslation = Boolean(translations[msg.id]);
+                          const isTranslated = hasTranslation && (isAutoTranslate || Boolean(manualTranslatedMsgIds[msg.id])) && !showOriginalMsgIds[msg.id];
+                          const textToRender = isTranslated ? translations[msg.id] : msg.text;
 
                           return (
                             <>
@@ -891,19 +925,19 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                               {hasTranslation && !msg.isDeleted && (
                                 <div className="flex items-center gap-1 mt-1 text-[10px] text-amber-300/80 font-mono">
                                   <Languages className="w-3 h-3 text-amber-400" />
-                                  <span>{isTranslated ? t('chat.translated') : 'Original'}</span>
+                                  <span>{isTranslated ? `${t('chat.translated')} (${currentLangMeta.shortCode})` : 'Original'}</span>
                                   <span>•</span>
                                   <button
                                     type="button"
                                     onClick={() =>
                                       setShowOriginalMsgIds((prev) => ({
                                         ...prev,
-                                        [msg.id]: !prev[msg.id],
+                                        [msg.id]: isTranslated ? true : false,
                                       }))
                                     }
                                     className="underline hover:text-white cursor-pointer"
                                   >
-                                    {isTranslated ? t('chat.showOriginal') : t('chat.translated')}
+                                    {isTranslated ? t('chat.showOriginal') : `${t('chat.translated')} (${currentLangMeta.shortCode})`}
                                   </button>
                                 </div>
                               )}
@@ -924,13 +958,13 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                       </div>
 
                       {/* Bouton de traduction manuelle par message */}
-                      {!msg.isDeleted && !translations[msg.id] && (
+                      {!msg.isDeleted && (!translations[msg.id] || (!isAutoTranslate && !manualTranslatedMsgIds[msg.id])) && (
                         <button
                           type="button"
                           onClick={() => handleTranslateSingleMessage(msg)}
                           disabled={translatingMsgIds[msg.id]}
                           className="opacity-0 group-hover/bubble:opacity-100 focus:opacity-100 p-1 text-slate-400 hover:text-amber-300 hover:bg-amber-500/10 rounded transition cursor-pointer self-center shrink-0"
-                          title={t('chat.translate')}
+                          title={`${t('chat.translate')} (${currentLangMeta.shortCode})`}
                         >
                           <Languages className={`w-3.5 h-3.5 ${translatingMsgIds[msg.id] ? 'animate-spin text-amber-400' : ''}`} />
                         </button>
