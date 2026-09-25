@@ -576,6 +576,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
   const relayLastMsgIdRef = useRef<number>(0);
   const relayPollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isHostRef = useRef<boolean>(false);
+  const opponentRef = useRef<OpponentData | null>(null);
   const currentRoundGameRef = useRef<Game>(INDIE_GAMES[0]);
   const playerScoreRef = useRef<number>(0);
   const opponentScoreRef = useRef<number>(0);
@@ -600,7 +601,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     playerScoreRef.current = playerScore;
     opponentScoreRef.current = opponentScore;
     roundNumRef.current = currentRoundNumber;
-  }, [currentRoundGame, playerScore, opponentScore, currentRoundNumber]);
+    opponentRef.current = opponent;
+  }, [currentRoundGame, playerScore, opponentScore, currentRoundNumber, opponent]);
 
   const filteredGames = guessQuery.trim().length > 0
     ? gamePool.filter((g) =>
@@ -951,31 +953,41 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     soundFx.playClick();
     cleanupP2P();
     setPhase('queueing');
+    isHostRef.current = true; // Mode solo contre bot : le joueur local est l'hôte arbitre
 
     setTimeout(() => {
-      setOpponent(getRandomBot(profile.versusStats.eloRating));
-      startCountdownScreen();
+      const bot = getRandomBot(profile.versusStats.eloRating);
+      setOpponent(bot);
+      opponentRef.current = bot;
+      startCountdownScreen(bot);
     }, 1500);
   };
 
   // Compte à rebours 3-2-1
-  const startCountdownScreen = () => {
+  const startCountdownScreen = (activeOpponent?: OpponentData) => {
+    const opp = activeOpponent || opponentRef.current || opponent;
+    if (activeOpponent) {
+      setOpponent(activeOpponent);
+      opponentRef.current = activeOpponent;
+    }
+
     setPhase('countdown');
     setCountdown(3);
     setPlayerScore(0);
     setOpponentScore(0);
     setCurrentRoundNumber(1);
 
-    telemetry.track('versus', 'versus_play', opponent?.name || 'Duel 1v1', undefined, {
-      opponentElo: opponent?.elo || 1000,
-      isBot: Boolean(opponent?.isBot),
+    telemetry.track('versus', 'versus_play', opp?.name || 'Duel 1v1', undefined, {
+      opponentElo: opp?.elo || 1000,
+      isBot: Boolean(opp?.isBot),
     });
 
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          if (isHostRef.current || opponent?.isBot) {
+          const isBot = Boolean(opp?.isBot || opponentRef.current?.isBot);
+          if (isHostRef.current || isBot) {
             // L'hôte choisit le jeu initial, la discipline et les 4 choix
             const disc = pickRoundDiscipline(1);
             const game = pickRandomGame(gamePool);
@@ -995,15 +1007,17 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
               playVersusAudio(btp);
             }
 
-            sendP2P({
-              type: 'round_start',
-              gameId: game.id,
-              roundNum: 1,
-              discipline: disc,
-              choiceIds: choices.map((c) => c.id),
-              puzzleSeed: seed,
-            });
-            beginRoundExecution(1, 0, 0);
+            if (!isBot) {
+              sendP2P({
+                type: 'round_start',
+                gameId: game.id,
+                roundNum: 1,
+                discipline: disc,
+                choiceIds: choices.map((c) => c.id),
+                puzzleSeed: seed,
+              });
+            }
+            beginRoundExecution(1, 0, 0, isBot);
           }
           return 0;
         }
@@ -1017,7 +1031,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
   const beginRoundExecution = (
     roundNum: number,
     currentPScore: number,
-    currentOScore: number
+    currentOScore: number,
+    isBotMatchParam?: boolean
   ) => {
     clearAllTimers();
     roundResolvedRef.current = false;
@@ -1029,13 +1044,17 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     setIsLockedOut(false);
     setOpponentPenaltyNotice(null);
 
+    const isBotMatch = isBotMatchParam ?? Boolean(opponentRef.current?.isBot || opponent?.isBot);
+
     // Timer du round
     roundTimerRef.current = setInterval(() => {
       setTimerSeconds((prev) => {
         if (prev <= 1) {
           clearInterval(roundTimerRef.current!);
-          if (isHostRef.current || opponent?.isBot) {
-            sendP2P({ type: 'round_timeout' });
+          if (isHostRef.current || isBotMatch) {
+            if (!isBotMatch) {
+              sendP2P({ type: 'round_timeout' });
+            }
             handleRoundTimeout(currentPScore, currentOScore, roundNum);
           }
           return 0;
@@ -1045,7 +1064,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     }, 1000);
 
     // Si on joue contre le bot IA, déclencher sa décision simulée
-    if (opponent?.isBot) {
+    if (isBotMatch) {
       const bot = getBotDecision();
       if (bot.willGuess) {
         botTimerRef.current = setTimeout(() => {
@@ -1148,7 +1167,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     if (pScore >= 2 || oScore >= 2 || roundNum >= 3) {
       endMatch(pScore, oScore);
     } else {
-      if (isHostRef.current || opponent?.isBot) {
+      const isBotMatch = Boolean(opponentRef.current?.isBot || opponent?.isBot);
+      if (isHostRef.current || isBotMatch) {
         const nextDisc = pickRoundDiscipline(roundNum + 1);
         const nextGame = pickRandomGame(gamePool);
         const choices = generateRoundChoices(nextGame, gamePool);
@@ -1167,15 +1187,17 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
           playVersusAudio(btp);
         }
 
-        sendP2P({
-          type: 'round_start',
-          gameId: nextGame.id,
-          roundNum: roundNum + 1,
-          discipline: nextDisc,
-          choiceIds: choices.map((c) => c.id),
-          puzzleSeed: seed,
-        });
-        beginRoundExecution(roundNum + 1, pScore, oScore);
+        if (!isBotMatch) {
+          sendP2P({
+            type: 'round_start',
+            gameId: nextGame.id,
+            roundNum: roundNum + 1,
+            discipline: nextDisc,
+            choiceIds: choices.map((c) => c.id),
+            puzzleSeed: seed,
+          });
+        }
+        beginRoundExecution(roundNum + 1, pScore, oScore, isBotMatch);
       }
     }
   };
@@ -2417,7 +2439,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
               onClick={() => {
                 soundFx.playClick();
                 if (opponent.isBot) {
-                  startCountdownScreen();
+                  isHostRef.current = true;
+                  startCountdownScreen(opponent);
                 } else {
                   launchMatchP2P();
                 }

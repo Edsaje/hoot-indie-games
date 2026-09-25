@@ -147,6 +147,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   const touchStartPosRef = useRef<{ x: number; y: number }>({ x: 200, y: 200 });
   const scoreRef = useRef<number>(0);
   const highScoreRef = useRef<number>(highScore);
+  const scoreSpanRef = useRef<HTMLSpanElement | null>(null);
+  const highScoreSpanRef = useRef<HTMLSpanElement | null>(null);
 
   const selectGame = (gameId: ArcadeGameId) => {
     soundFx.playClick();
@@ -157,6 +159,10 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     scoreRef.current = 0;
     setHighScore(hs);
     setScore(0);
+    if (scoreSpanRef.current) scoreSpanRef.current.textContent = '0';
+    if (highScoreSpanRef.current) {
+      highScoreSpanRef.current.textContent = (gameId === 'vectrex' && isVectrexPhosphor) ? 'HIB - 999 990' : String(hs);
+    }
     setIsGameOver(false);
     setSelectedGame(gameId);
     setIsGameMenuOpen(false);
@@ -171,10 +177,14 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   const saveHighScore = useCallback((val: number) => {
     if (val > highScoreRef.current) {
       highScoreRef.current = val;
-      setHighScore(val);
-      localStorage.setItem(`hoot_arcade_hs_${selectedGame}`, String(val));
+      if (highScoreSpanRef.current) {
+        highScoreSpanRef.current.textContent = (selectedGame === 'vectrex' && isVectrexPhosphor) ? 'HIB - 999 990' : String(val);
+      }
+      try {
+        localStorage.setItem(`hoot_arcade_hs_${selectedGame}`, String(val));
+      } catch {}
     }
-  }, [selectedGame]);
+  }, [selectedGame, isVectrexPhosphor]);
 
   const stopAllLoops = () => {
     if (animFrameIdRef.current !== null) {
@@ -193,6 +203,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     setIsGameOver(false);
     setScore(0);
     scoreRef.current = 0;
+    if (scoreSpanRef.current) scoreSpanRef.current.textContent = '0';
     setGameKey((k) => k + 1);
   };
 
@@ -208,6 +219,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     setIsGameOver(false);
     setScore(0);
     scoreRef.current = 0;
+    if (scoreSpanRef.current) scoreSpanRef.current.textContent = '0';
     setGameKey((k) => k + 1);
   };
 
@@ -315,11 +327,15 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     const addScore = (pts: number) => {
       const scaled = Math.max(1, Math.round(pts * scoreMultiplier));
       scoreRef.current += scaled;
-      setScore(scoreRef.current);
+      if (scoreSpanRef.current) {
+        scoreSpanRef.current.textContent = String(scoreRef.current);
+      }
       saveHighScore(scoreRef.current);
     };
 
     const triggerGameOver = () => {
+      setScore(scoreRef.current);
+      setHighScore(highScoreRef.current);
       setIsGameOver(true);
       soundFx.playError();
       stopAllLoops();
@@ -348,19 +364,24 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       const runner = (now: number) => {
         if (!isActive()) return;
         if (isPausedByVisibility || document.hidden) {
+          lastTime = now;
           animFrameIdRef.current = requestAnimationFrame(runner);
           return;
         }
 
-        let elapsed = now - lastTime;
-        // Clamp huge lag spikes (e.g. background tab or CPU throttle)
-        if (elapsed > 120) {
-          elapsed = targetInterval;
-          lastTime = now;
-        }
-
-        if (elapsed >= targetInterval - 1.5) {
-          lastTime = now - (elapsed % targetInterval);
+        const elapsed = now - lastTime;
+        // Frame pacing with 3ms jitter allowance for solid 60fps across 60Hz, 90Hz, 120Hz, 144Hz
+        if (elapsed >= targetInterval - 3.0) {
+          if (elapsed > 100) {
+            // Tab switch, heavy throttle or GC freeze: reset baseline
+            lastTime = now;
+          } else {
+            // Advance by fixed timestep
+            lastTime += targetInterval;
+            if (now - lastTime > targetInterval) {
+              lastTime = now;
+            }
+          }
           updateAndRender();
         }
 
@@ -3382,13 +3403,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
-  const currentGameMeta =
-    ARCADE_GAMES.find((g) => g.id === selectedGame) || ARCADE_GAMES[0];
-
   // Continuous touch / mouse press handlers for virtual controls
-  const handleVirtualPress = (code: string) => {
+  const handleVirtualPress = useCallback((code: string) => {
     // Annuler tout timer de relâchement en attente pour cette touche
     const pendingRelease = virtualReleaseTimersRef.current.get(code);
     if (pendingRelease) {
@@ -3415,9 +3431,9 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       virtualRepeatTimersRef.current.set(code, interval);
     }, 220);
     virtualReleaseTimersRef.current.set(`repeat_start_${code}`, startRepeat);
-  };
+  }, []);
 
-  const handleVirtualRelease = (code: string) => {
+  const handleVirtualRelease = useCallback((code: string) => {
     const repeatStart = virtualReleaseTimersRef.current.get(`repeat_start_${code}`);
     if (repeatStart) {
       clearTimeout(repeatStart);
@@ -3447,32 +3463,56 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     } else {
       doRelease();
     }
-  };
+  }, []);
 
-  const bindVirtualTouch = (code: string) => ({
-    onPointerDown: (e: React.PointerEvent) => {
-      try {
-        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-      } catch {}
-      handleVirtualPress(code);
-    },
-    onPointerUp: (e: React.PointerEvent) => {
-      try {
-        (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
-      } catch {}
-      handleVirtualRelease(code);
-    },
-    onPointerCancel: (e: React.PointerEvent) => {
-      try {
-        (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
-      } catch {}
-      handleVirtualRelease(code);
-    },
-    onTouchStart: (e: React.TouchEvent) => {
-      e.preventDefault();
-    },
-    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
-  });
+  const virtualHandlersMapRef = useRef<Map<string, {
+    onPointerDown: (e: React.PointerEvent) => void;
+    onPointerUp: (e: React.PointerEvent) => void;
+    onPointerCancel: (e: React.PointerEvent) => void;
+    onTouchStart: (e: React.TouchEvent) => void;
+    onContextMenu: (e: React.MouseEvent) => void;
+  }>>(new Map());
+
+  const bindVirtualTouch = useCallback((code: string) => {
+    let handlers = virtualHandlersMapRef.current.get(code);
+    if (!handlers) {
+      handlers = {
+        onPointerDown: (e: React.PointerEvent) => {
+          try {
+            (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+          } catch {}
+          handleVirtualPress(code);
+        },
+        onPointerUp: (e: React.PointerEvent) => {
+          try {
+            if ((e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) {
+              (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+            }
+          } catch {}
+          handleVirtualRelease(code);
+        },
+        onPointerCancel: (e: React.PointerEvent) => {
+          try {
+            if ((e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) {
+              (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+            }
+          } catch {}
+          handleVirtualRelease(code);
+        },
+        onTouchStart: (e: React.TouchEvent) => {
+          e.preventDefault();
+        },
+        onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+      };
+      virtualHandlersMapRef.current.set(code, handlers);
+    }
+    return handlers;
+  }, [handleVirtualPress, handleVirtualRelease]);
+
+  if (!isOpen) return null;
+
+  const currentGameMeta =
+    ARCADE_GAMES.find((g) => g.id === selectedGame) || ARCADE_GAMES[0];
 
   const getCanvasCoords = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
@@ -3764,7 +3804,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         <div className="w-full max-w-[380px] flex items-center justify-between px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl mb-2 text-xs">
           <div className="flex items-center gap-1.5 font-bold text-slate-200">
             <span>Score :</span>
-            <span className="font-mono text-amber-400 text-sm font-black">{score}</span>
+            <span ref={scoreSpanRef} className="font-mono text-amber-400 text-sm font-black">{score}</span>
           </div>
 
           <button
@@ -3774,7 +3814,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           >
             <Trophy className={`w-3.5 h-3.5 ${selectedGame === 'vectrex' && isVectrexPhosphor ? 'text-emerald-400' : 'text-amber-400'}`} />
             <span>Record :</span>
-            <span className={`font-mono font-bold ${selectedGame === 'vectrex' && isVectrexPhosphor ? 'text-emerald-400' : 'text-white'}`}>
+            <span ref={highScoreSpanRef} className={`font-mono font-bold ${selectedGame === 'vectrex' && isVectrexPhosphor ? 'text-emerald-400' : 'text-white'}`}>
               {selectedGame === 'vectrex' && isVectrexPhosphor ? 'HIB - 999 990' : highScore}
             </span>
           </button>
