@@ -199,6 +199,19 @@ $saveFile = $savesDir . '/' . $userKey . '.json';
 $action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : 'load';
 $inputSyncKey = trim($_SERVER['HTTP_X_SYNC_KEY'] ?? $_REQUEST['syncKey'] ?? '');
 
+// [SÉCURITÉ CWE-639 IDOR] Authentification obligatoire via clé secrète de synchronisation
+if (!isCreatorAdminAuthorized()) {
+    if (empty($inputSyncKey) || strlen($inputSyncKey) < 16) {
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'error' => 'auth_required',
+            'message' => 'Une clé secrète de synchronisation valide (syncKey >= 16 caractères) est obligatoire pour charger ou sauvegarder ce profil.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+}
+
 switch ($action) {
     // -------------------------------------------------------------
     // CHARGEMENT DE LA SAUVEGARDE CLOUD DISTANTE
@@ -282,6 +295,12 @@ switch ($action) {
                 ]);
                 exit;
             }
+        }
+
+        // Auto-verrouillage immédiat des sauvegardes historiques sans clé
+        if (empty($data['syncKeyHash']) && !empty($inputSyncKey)) {
+            $data['syncKeyHash'] = hash('sha256', $inputSyncKey);
+            @file_put_contents($saveFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         }
 
         $clientData = $data;
@@ -398,6 +417,6 @@ switch ($action) {
 
     default:
         http_response_code(400);
-        echo json_encode(['success' => false, 'message' => "Action inconnue '$action'."]);
+        echo json_encode(['success' => false, 'message' => 'Action inconnue ou non prise en charge.']);
         break;
 }

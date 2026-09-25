@@ -190,6 +190,31 @@ if (!isCreatorAdminAuthorized()) {
     exit;
 }
 
+// [SÉCURITÉ CWE-352] Imposer POST et valider le jeton CSRF pour toute action d'administration mutante
+$readOnlyActions = ['get_all', 'list', 'public_overrides'];
+if (!in_array($action, $readOnlyActions, true)) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Requête POST obligatoire pour cette opération d\'administration (Protection anti-CSRF CWE-352).'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if (!empty($_SESSION['admin_auth'])) {
+        $csrfToken = trim($_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+        if (!validateAdminCsrfToken($csrfToken)) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Jeton de protection CSRF manquant ou invalide. Veuillez recharger la page.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+    }
+}
+
 $overrides = loadGameOverrides($overrideFile);
 
 // Helper : Nettoyage d'une chaîne

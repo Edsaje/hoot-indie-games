@@ -98,15 +98,19 @@ $masterKey = getMasterSteamApiKey($steamKeyFile);
 // ACTION 1 : STATUT DU PROXY & DISPONIBILITÉ DE LA CLÉ MAÎTRESSE
 // =============================================================
 if ($action === 'status') {
+    $isAdmin = isCreatorAdminAuthorized();
     $hasKey = !empty($masterKey);
-    $maskedKey = $hasKey ? substr($masterKey, 0, 4) . '••••••••' . substr($masterKey, -4) : '';
-    echo json_encode([
+    $response = [
         'success' => true,
         'hasMasterKey' => $hasKey,
-        'maskedKey' => $maskedKey,
-        'adminSteamId' => ADMIN_STEAM_ID,
         'serverTime' => date('c'),
-    ], JSON_UNESCAPED_UNICODE);
+    ];
+    // Masquage et ID admin réservés strictement à l'administrateur authentifié
+    if ($isAdmin) {
+        $response['maskedKey'] = $hasKey ? substr($masterKey, 0, 4) . '••••••••' . substr($masterKey, -4) : '';
+        $response['adminSteamId'] = ADMIN_STEAM_ID;
+    }
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -114,18 +118,23 @@ if ($action === 'status') {
 // ACTION 2 : ENREGISTREMENT SÉCURISÉ DE LA CLÉ MAÎTRESSE (ADMIN)
 // =============================================================
 if ($action === 'set_master_key') {
-    $inputKey = trim($_POST['apiKey'] ?? $_GET['apiKey'] ?? '');
-    $adminId = trim($_POST['adminSteamId'] ?? $_GET['adminSteamId'] ?? '');
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'METHOD_NOT_ALLOWED', 'message' => 'Requête POST requise.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 
-    // Sécurité : autoriser si .steam_key n'existe pas encore OU si authentifié en tant qu'administrateur
-    $isAuthorized = empty($masterKey) || isCreatorAdminAuthorized();
+    $inputKey = trim($_POST['apiKey'] ?? '');
+
+    // Sécurité stricte (CWE-284) : autoriser UNIQUEMENT si authentifié en tant qu'administrateur
+    $isAuthorized = isCreatorAdminAuthorized();
 
     if (!$isAuthorized) {
         http_response_code(403);
         echo json_encode([
             'success' => false,
             'error' => 'UNAUTHORIZED',
-            'message' => 'Action réservée au créateur du site (Steam ID ' . ADMIN_STEAM_ID . ').'
+            'message' => 'Action réservée exclusivement à l\'administrateur créateur authentifié.'
         ], JSON_UNESCAPED_UNICODE);
         exit;
     }

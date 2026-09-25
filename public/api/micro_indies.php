@@ -189,7 +189,7 @@ if ($action === 'submit') {
         'coverImage' => $coverImage ?: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420510/header.jpg',
         'screenshots' => $coverImage ? [$coverImage] : [],
         'dateAdded' => date('Y-m-d'),
-        'approved' => true, // Immédiatement visible dans la Clairière communautaire avec modération a posteriori
+        'approved' => false, // Requiert impérativement validation par l'administrateur avant affichage public
         'ipHash' => $ipHash,
     ];
 
@@ -203,7 +203,7 @@ if ($action === 'submit') {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Merci ! Votre proposition a été ajoutée à La Clairière des Micro-Indés.',
+        'message' => 'Merci ! Votre proposition a été enregistrée et sera soumise à validation modérateur avant publication.',
         'game' => $newEntry,
     ]);
     exit;
@@ -211,6 +211,14 @@ if ($action === 'submit') {
 
 // 3. Voter / Aimer un micro-indé
 if ($action === 'like') {
+    $ipHash = getClientIpHash($secret);
+    // [CWE-799] Rate limiting strict sur les votes
+    if (!checkRateLimit($rateLimitFile, $ipHash . '_likes', 25, 600)) {
+        http_response_code(429);
+        echo json_encode(['success' => false, 'error' => 'Veuillez patienter avant de voter à nouveau.']);
+        exit;
+    }
+
     $targetId = sanitizeText($postData['id'] ?? '', 100);
     if (empty($targetId)) {
         http_response_code(400);

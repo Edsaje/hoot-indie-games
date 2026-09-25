@@ -107,6 +107,16 @@ if ($action === 'create_room') {
         exit;
     }
 
+    // [SÉCURITÉ CWE-639] Empêcher l'écrasement ou le détournement d'un salon actif existant
+    if (isset($rooms[$roomCode])) {
+        $existingRoom = $rooms[$roomCode];
+        $lastActivity = $existingRoom['updatedAt'] ?? ($existingRoom['createdAt'] ?? 0);
+        if (time() - $lastActivity < 600) {
+            echo json_encode(['success' => false, 'message' => 'Ce code de salon est actuellement utilisé. Veuillez en choisir un autre.']);
+            exit;
+        }
+    }
+
     $rawProfile = $_POST['playerProfile'] ?? $jsonData['playerProfile'] ?? [];
     if (is_string($rawProfile)) {
         $rawProfile = json_decode($rawProfile, true) ?: [];
@@ -116,7 +126,8 @@ if ($action === 'create_room') {
     $hostAvatar = trim($rawProfile['avatarId'] ?? 'owl');
     $hostElo = intval($rawProfile['elo'] ?? 1000);
 
-    $hostId = 'host_' . substr(md5(uniqid(mt_rand(), true)), 0, 10);
+    // [CWE-330] Génération cryptographique forte d'identifiant joueur
+    $hostId = 'host_' . bin2hex(random_bytes(8));
     $now = time();
 
     $rooms[$roomCode] = [
@@ -176,7 +187,8 @@ if ($action === 'join_room') {
     $guestAvatar = trim($rawProfile['avatarId'] ?? 'owl');
     $guestElo = intval($rawProfile['elo'] ?? 1000);
 
-    $guestId = !empty($playerId) ? $playerId : ('guest_' . substr(md5(uniqid(mt_rand(), true)), 0, 10));
+    // [CWE-330] Génération cryptographique forte d'identifiant invité
+    $guestId = !empty($playerId) ? $playerId : ('guest_' . bin2hex(random_bytes(8)));
 
     $room['guest'] = [
         'id' => $guestId,
@@ -296,6 +308,13 @@ if ($action === 'poll_events') {
     $now = time();
     $isHost = (!empty($room['host']) && $room['host']['id'] === $playerId);
     $isGuest = (!empty($room['guest']) && $room['guest']['id'] === $playerId);
+
+    // [SÉCURITÉ CWE-862] Interdire formellement aux tiers non-participants d'espionner les événements du salon
+    if (!$isHost && !$isGuest) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Accès refusé : vous n\'êtes pas participant de ce salon.']);
+        exit;
+    }
 
     if ($isHost) {
         $room['host']['lastSeen'] = $now;

@@ -1,8 +1,8 @@
 # Interdire le listage des répertoires
 Options -Indexes
 
-# Interdire l'accès direct aux fichiers sensibles
-<FilesMatch "(\.json|\.secret|\.steam_key|\.admin_pass|\.log|\.env|\.bak|\.tmp.*|\.tmp)$">
+# Interdire l'accès direct aux fichiers sensibles, fichiers cachés et sauvegardes
+<FilesMatch "(^\..*|\.json|\.secret|\.steam_key|\.admin_pass|\.log|\.env|\.bak|\.tmp.*|\.tmp|\.swp|\.swo|~$|\.php\.bak)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

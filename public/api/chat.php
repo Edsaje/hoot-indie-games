@@ -241,50 +241,36 @@ function normalizeChatUsername($name) {
     return preg_replace('/[^a-z0-9]/', '', $clean);
 }
 
-// Vérifie si un utilisateur est Administrateur ou Modérateur
+// Vérifie si un utilisateur est Administrateur ou Modérateur de manière stricte et certifiée
 function checkIsUserAdminOrModerator($steamId, $userId, $username = '', $email = '') {
-    // 1. Session OpenID officielle Valve ou Clé Secrète Maître (.admin_pass / X-Admin-Key)
+    // 1. Administrateur Créateur officiel : UNIQUEMENT via session OpenID Valve ou X-Admin-Key maître
     if (isCreatorAdminAuthorized()) {
         return ['authorized' => true, 'role' => 'admin'];
     }
 
     $normUser = normalizeChatUsername($username);
-    $cleanSteam = trim(strval($steamId));
-    $cleanEmail = mb_strtolower(trim($email), 'UTF-8');
 
-    // Sécurité stricte : Edsaje est formellement interdit comme admin
-    if ($normUser === 'edsaje') {
+    // Sécurité stricte : Les pseudonymes protégés ne peuvent JAMAIS obtenir de droits via le client
+    if (in_array($normUser, ['edsaje', 'hibouxe'], true)) {
         return ['authorized' => false, 'role' => 'user'];
     }
 
-    // 2. Administrateur Créateur officiel unique (Steam ID officiel ou email officiel)
-    if (
-        $cleanSteam === ADMIN_STEAM_ID ||
-        $cleanEmail === 'quentin.beaud@hotmail.fr' ||
-        ($normUser === 'hibouxe' && ($cleanSteam === ADMIN_STEAM_ID || $cleanEmail === 'quentin.beaud@hotmail.fr'))
-    ) {
-        return ['authorized' => true, 'role' => 'admin'];
+    // 2. Modérateurs enregistrés : vérification obligatoire contre la session serveur
+    if (session_status() === PHP_SESSION_NONE) {
+        @session_start();
     }
+    $sessionSteam = strval($_SESSION['admin_steam_id'] ?? $_SESSION['steam_id'] ?? '');
 
-    // 3. Modérateurs enregistrés dans registered_usernames.json
     $usernamesFile = __DIR__ . '/registered_usernames.json';
-    if (file_exists($usernamesFile)) {
+    if (!empty($sessionSteam) && file_exists($usernamesFile)) {
         $raw = @file_get_contents($usernamesFile);
         if ($raw) {
             $uData = json_decode($raw, true);
-            if (is_array($uData) && isset($uData['usernames'])) {
-                if (!empty($normUser) && isset($uData['usernames'][$normUser])) {
+            if (is_array($uData) && isset($uData['usernames']) && !empty($normUser)) {
+                if (isset($uData['usernames'][$normUser])) {
                     $entry = $uData['usernames'][$normUser];
-                    $entryRole = $entry['role'] ?? 'user';
-                    if ($entryRole === 'admin' && $normUser === 'hibouxe' && ($cleanSteam === ADMIN_STEAM_ID || $cleanEmail === 'quentin.beaud@hotmail.fr')) {
-                        return ['authorized' => true, 'role' => 'admin'];
-                    }
-                    if ($entryRole === 'moderator') {
-                        $matchUser = !empty($userId) && ($entry['userId'] ?? '') === $userId;
-                        $matchSteam = !empty($cleanSteam) && ($entry['steamId'] ?? '') === $cleanSteam;
-                        if ($matchUser || $matchSteam) {
-                            return ['authorized' => true, 'role' => 'moderator'];
-                        }
+                    if (($entry['role'] ?? '') === 'moderator' && ($entry['steamId'] ?? '') === $sessionSteam) {
+                        return ['authorized' => true, 'role' => 'moderator'];
                     }
                 }
             }
@@ -493,13 +479,8 @@ if ($action === 'send_message') {
         $isModerator = true;
     }
 
-    // Vérification stricte et souveraine du statut Créateur officiel
-    $isOfficialCreator = (
-        isCreatorAdminAuthorized() ||
-        $authInfo['role'] === 'admin' ||
-        $cleanSteam === ADMIN_STEAM_ID ||
-        $cleanEmail === 'quentin.beaud@hotmail.fr'
-    );
+    // Vérification stricte et souveraine du statut Créateur officiel (aucun champ client ne peut l'usurper)
+    $isOfficialCreator = isCreatorAdminAuthorized();
 
     // Sécurité stricte : Edsaje ne peut jamais être créateur ni admin
     if ($normUser === 'edsaje') {
@@ -758,6 +739,15 @@ if ($action === 'delete_message') {
     $isOwnMessage = (!empty($callerNorm) && $targetNorm === $callerNorm)
                  || (!empty($userId) && !empty($targetMsg['userId']) && $targetMsg['userId'] === $userId)
                  || (!empty($cleanSteam) && !empty($targetMsg['steamId']) && $targetMsg['steamId'] === $cleanSteam);
+
+    // [DÉFENSE EN PROFONDEUR] Les messages officiels du créateur et des modérateurs ne peuvent JAMAIS
+    // être supprimés via une simple revendication de pseudo sans authentification serveur certifiée
+    if ($targetIsCreator && !$isCallerAdmin) {
+        $isOwnMessage = false;
+    }
+    if ($targetIsModerator && !$isCallerAdmin && !$isCallerModerator) {
+        $isOwnMessage = false;
+    }
 
     // RÈGLES DE PERMISSIONS :
     // 1. L'Admin / Créateur (Hibouxe) peut supprimer TOUS les messages

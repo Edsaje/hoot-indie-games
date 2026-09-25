@@ -442,7 +442,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                     <p>Ce compte Steam n'a pas les droits d'administration pour consulter les métriques de <strong>Hoot Indie Games</strong>.</p>
                     <div class="steam-box">
                         Votre Steam ID : <?= htmlspecialchars($steamId ?: 'Indéterminé') ?><br>
-                        Compte requis : <?= ADMIN_STEAM_ID ?>
+                        Compte administrateur officiel requis
                     </div>
                     <p style="font-size: 0.8rem; color: #64748b;">Seul le compte administrateur officiel du créateur est habilité à consulter ce tableau de bord.</p>
                     <a href="track.php?action=logout" class="btn">Réessayer avec le compte officiel</a>
@@ -564,6 +564,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                 'message' => 'Cette action administrative de modification requiert impérativement une requête POST (Protection anti-CSRF CWE-352).'
             ]);
             exit;
+        }
+
+        // [SÉCURITÉ CWE-352] Validation du jeton CSRF pour les sessions web d'administration
+        if (!empty($_SESSION['admin_auth'])) {
+            $csrfToken = trim($_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+            if (!validateAdminCsrfToken($csrfToken)) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'csrf_invalid',
+                    'message' => 'Jeton de protection CSRF invalide ou expiré. Veuillez recharger la page.'
+                ]);
+                exit;
+            }
         }
     }
 

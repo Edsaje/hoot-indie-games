@@ -246,18 +246,24 @@ if ($method === 'POST') {
         $updatedCount = 0;
         $normOldNick = mb_strtolower(trim($oldNickname), 'UTF-8');
 
+        // [SÉCURITÉ CWE-639 IDOR] Un profil ne peut être mis à jour que si un accountId est fourni ou par l'admin
+        if (empty($accountId) && !isCreatorAdminAuthorized()) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Identifiant de compte (accountId) obligatoire pour actualiser un profil.']);
+            exit;
+        }
+
         foreach ($data as $catKey => &$catGames) {
             if (!is_array($catGames)) continue;
             foreach ($catGames as $gameKey => &$entries) {
                 if (!is_array($entries)) continue;
                 foreach ($entries as &$entry) {
                     $eAcc = trim($entry['accountId'] ?? '');
-                    $eNick = mb_strtolower(trim($entry['nickname'] ?? ''), 'UTF-8');
 
+                    // Seul l'identifiant exact de compte permet de mettre à jour les scores (pas de correspondance arbitraire par pseudo)
                     $matchAcc = !empty($accountId) && !empty($eAcc) && ($eAcc === $accountId);
-                    $matchOldNick = !empty($normOldNick) && ($eNick === $normOldNick);
 
-                    if ($matchAcc || $matchOldNick) {
+                    if ($matchAcc || isCreatorAdminAuthorized()) {
                         $entry['nickname'] = $cleanNick;
                         $entry['avatar'] = $newAvatar;
                         if (!empty($accountId)) {

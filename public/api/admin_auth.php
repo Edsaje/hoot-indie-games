@@ -15,54 +15,83 @@ if (!defined('ADMIN_STEAM_ID')) {
 }
 
 /**
+ * Vérifie si une adresse IP distante provient du réseau certifié de Cloudflare (IPv4)
+ */
+if (!function_exists('isCloudflareIp')) {
+    function isCloudflareIp($ip) {
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return false;
+        }
+        $cfRanges = [
+            '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',
+            '141.101.64.0/18', '108.162.192.0/18', '190.93.240.0/20', '188.114.96.0/20',
+            '197.234.240.0/22', '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
+            '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22'
+        ];
+        $longIp = ip2long($ip);
+        if ($longIp === false) return false;
+
+        foreach ($cfRanges as $range) {
+            list($subnet, $bits) = explode('/', $range);
+            $subnetLong = ip2long($subnet);
+            $mask = -1 << (32 - (int)$bits);
+            if (($longIp & $mask) === ($subnetLong & $mask)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+/**
  * Récupère l'IP réelle et fiable du client (Protection anti-usurpation IP CWE-290)
- * On ne fait confiance à CF-Connecting-IP que si présent. Sinon, seule REMOTE_ADDR est fiable.
+ * On ne fait confiance à CF-Connecting-IP QUE si la requête émane directement de Cloudflare.
  */
 if (!function_exists('getAuthClientIp')) {
     function getAuthClientIp() {
-        if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        if (!empty($_SERVER['HTTP_CF_CONNECTING_IP']) && isCloudflareIp($remoteAddr)) {
             $parts = explode(',', $_SERVER['HTTP_CF_CONNECTING_IP']);
             $ip = trim($parts[0]);
             if (filter_var($ip, FILTER_VALIDATE_IP)) {
                 return $ip;
             }
         }
-        return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        return $remoteAddr;
     }
 }
 
 /**
- * Envoie des en-têtes CORS stricts limités aux domaines autorisés (CWE-942)
+ * Envoie des en-têtes CORS stricts limités aux domaines explicitement autorisés (CWE-942)
+ * Pas de wildcard sur les sous-domaines (protection contre Subdomain Takeover).
  */
 if (!function_exists('sendCorsHeaders')) {
     function sendCorsHeaders() {
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-        $isAllowed = false;
+        $allowedOrigins = [
+            'https://hootindiegames.com',
+            'https://www.hootindiegames.com',
+        ];
 
-        if (!empty($origin)) {
-            $parsed = parse_url($origin);
-            $host = $parsed['host'] ?? '';
-            if (
-                $host === 'hootindiegames.com' ||
-                $host === 'www.hootindiegames.com' ||
-                (is_string($host) && substr($host, -18) === '.hootindiegames.com') ||
-                $host === 'localhost' ||
-                $host === '127.0.0.1'
-            ) {
-                $isAllowed = true;
-            }
+        // Environnement de développement local sécurisé
+        $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+        $isLocalDev = in_array($remoteIp, ['127.0.0.1', '::1'], true) || php_sapi_name() === 'cli-server';
+        if ($isLocalDev) {
+            $allowedOrigins[] = 'http://localhost:5173';
+            $allowedOrigins[] = 'http://localhost:3000';
+            $allowedOrigins[] = 'http://127.0.0.1:5173';
+            $allowedOrigins[] = 'http://127.0.0.1:3000';
         }
 
-        if ($isAllowed && !empty($origin)) {
+        if (in_array($origin, $allowedOrigins, true)) {
             header("Access-Control-Allow-Origin: $origin");
             header('Vary: Origin');
             header('Access-Control-Allow-Credentials: true');
         } else {
             header('Access-Control-Allow-Origin: https://hootindiegames.com');
-            header('Access-Control-Allow-Credentials: true');
         }
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Admin-Key, X-Sync-Key');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Admin-Key, X-Sync-Key, X-CSRF-Token');
     }
 }
 
@@ -115,7 +144,8 @@ function isCreatorAdminAuthorized() {
 
     $secret = trim(@file_get_contents($adminPassFile) ?: '');
     if (!empty($secret)) {
-        $inputKey = trim($_SERVER['HTTP_X_ADMIN_KEY'] ?? $_REQUEST['adminKey'] ?? '');
+        // [CWE-598] Seul l'en-tête HTTP X-Admin-Key est autorisé (interdiction stricte des paramètres d'URL GET/POST)
+        $inputKey = trim($_SERVER['HTTP_X_ADMIN_KEY'] ?? '');
         if (!empty($inputKey) && hash_equals($secret, $inputKey)) {
             return true;
         }

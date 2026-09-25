@@ -269,6 +269,34 @@ if ($action === 'register') {
         $playerEntry['isCreator'] = true;
     }
 
+    // [SÉCURITÉ CWE-639] Protection contre l'écrasement ou l'usurpation d'un code ami existant
+    if (isset($db['players'][$friendCode])) {
+        $existing = $db['players'][$friendCode];
+        $isOwner = false;
+
+        if (isCreatorAdminAuthorized()) {
+            $isOwner = true;
+        } elseif (!empty($existing['steamId']) && !empty($steamId) && $existing['steamId'] === $steamId) {
+            $isOwner = true;
+        } elseif (empty($existing['steamId']) && empty($steamId)) {
+            // Pour les profils sans Steam, autoriser la mise à jour si le nom correspond
+            $normExisting = normalizeUsername($existing['username'] ?? '');
+            if (empty($normExisting) || $normExisting === normalizeUsername($cleanUsername)) {
+                $isOwner = true;
+            }
+        }
+
+        if (!$isOwner) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => 'code_already_claimed',
+                'message' => 'Ce code ami est déjà associé à un autre compte de joueur.'
+            ]);
+            exit;
+        }
+    }
+
     $db['players'][$friendCode] = $playerEntry;
 
     // Indexation inversée
@@ -374,7 +402,22 @@ if ($action === 'lookup') {
 // 4. ACTION: sync_steam_friends (Détecte les amis Steam inscrits)
 // -------------------------------------------------------------
 if ($action === 'sync_steam_friends') {
-    $steamId = preg_match('/^\d{17}$/', (string)($body['steamId'] ?? ($_GET['steamId'] ?? ''))) ? (string)($body['steamId'] ?? $_GET['steamId']) : null;
+    // [CWE-352] Imposer une requête POST
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'Requête POST obligatoire pour la synchronisation Steam.']);
+        exit;
+    }
+
+    // [CWE-799] Rate-limiting strict pour éviter l'abus comme proxy d'énumération Steam
+    $clientIp = getClientIp();
+    if (!checkFriendsRateLimit($rateLimitFile, $clientIp)) {
+        http_response_code(429);
+        echo json_encode(['success' => false, 'error' => 'Trop de requêtes de synchronisation. Veuillez patienter.']);
+        exit;
+    }
+
+    $steamId = preg_match('/^\d{17}$/', (string)($body['steamId'] ?? '')) ? (string)$body['steamId'] : null;
     if (!$steamId) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'SteamID64 manquant ou invalide.']);

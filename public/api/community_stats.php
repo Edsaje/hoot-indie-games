@@ -46,7 +46,7 @@ function checkRateLimit($rateLimitFile, $ip) {
         }
     }
 
-    $ipKey = md5($ip . 'hoot_cs_salt');
+    $ipKey = hash('sha256', $ip . '_hoot_stats_salt_secure_2026');
     if (!isset($limits[$ipKey]) || $now > $limits[$ipKey]['reset']) {
         $limits[$ipKey] = ['count' => 1, 'reset' => $now + 60];
     } else {
@@ -241,6 +241,14 @@ if ($method === 'POST') {
     if (!in_array($game, $validGames, true)) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Jeu invalide.']);
+        exit;
+    }
+
+    // [CWE-20] Validation stricte des limites d'essais selon la discipline
+    $maxAttempts = ['screenle' => 6, 'indledle' => 6, 'linkle' => 7, 'profille' => 3, 'chrono' => 3, 'pixel' => 5, 'review' => 5, 'blindtest' => 5];
+    if ($won && ($attempts < 1 || $attempts > ($maxAttempts[$game] ?? 6))) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Nombre d\'essais invalide pour ce jeu.']);
         exit;
     }
 
