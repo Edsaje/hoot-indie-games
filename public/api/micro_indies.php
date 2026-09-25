@@ -86,6 +86,42 @@ function sanitizeUrl($url) {
     return $trimmed;
 }
 
+function healAndLoadMicroIndies($dataFile) {
+    $items = [];
+    if (!file_exists($dataFile)) return $items;
+    $raw = @file_get_contents($dataFile);
+    if (!$raw) return $items;
+    $items = json_decode($raw, true) ?: [];
+    $dirty = false;
+    foreach ($items as &$item) {
+        $cover = $item['coverImage'] ?? '';
+        $steamUrl = $item['steamUrl'] ?? '';
+        $isDefaultOrBroken = empty($cover) || strpos($cover, '2420510') !== false;
+
+        // Auto-détection de l'image de couverture Steam si absente ou par défaut
+        if ($isDefaultOrBroken && !empty($steamUrl)) {
+            if (preg_match('#/app/(\d+)#', $steamUrl, $matches)) {
+                $item['coverImage'] = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$matches[1]}/header.jpg";
+                $dirty = true;
+            }
+        }
+
+        // Correction spécifique pour Crescent Bloom (AppID 1953920)
+        if (($item['id'] ?? '') === 'micro-crescent-bloom-2d61c0' || stripos($item['title'] ?? '', 'Crescent Bloom') !== false) {
+            $properImg = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg';
+            if (($item['coverImage'] ?? '') !== $properImg) {
+                $item['coverImage'] = $properImg;
+                $dirty = true;
+            }
+        }
+    }
+    unset($item);
+    if ($dirty) {
+        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+    return $items;
+}
+
 $action = $_GET['action'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rawInput = file_get_contents('php://input');
@@ -95,11 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // 1. Lister les micro-indés approuvés
 if ($action === 'list' || ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action))) {
-    $items = [];
-    if (file_exists($dataFile)) {
-        $raw = @file_get_contents($dataFile);
-        $items = json_decode($raw, true) ?: [];
-    }
+    $items = healAndLoadMicroIndies($dataFile);
     // Filtrer pour n'afficher que les éléments approuvés côté public
     $approved = array_values(array_filter($items, function($item) {
         return !empty($item['approved']);
@@ -152,6 +184,13 @@ if ($action === 'submit') {
     $slug = trim($slug, '-');
     $id = 'micro-' . $slug . '-' . substr(bin2hex(random_bytes(4)), 0, 6);
 
+    // Auto-détection Steam si aucune image de couverture n'a été spécifiée
+    if (empty($coverImage) && !empty($steamUrl)) {
+        if (preg_match('#/app/(\d+)#', $steamUrl, $mSteam)) {
+            $coverImage = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$mSteam[1]}/header.jpg";
+        }
+    }
+
     $newEntry = [
         'id' => $id,
         'title' => $title,
@@ -186,18 +225,14 @@ if ($action === 'submit') {
         'jam' => $jam ?: null,
         'discoveredBy' => $submittedBy,
         'likesCount' => 1,
-        'coverImage' => $coverImage ?: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420510/header.jpg',
+        'coverImage' => $coverImage,
         'screenshots' => $coverImage ? [$coverImage] : [],
         'dateAdded' => date('Y-m-d'),
         'approved' => false, // Requiert impérativement validation par l'administrateur avant affichage public
         'ipHash' => $ipHash,
     ];
 
-    $items = [];
-    if (file_exists($dataFile)) {
-        $raw = @file_get_contents($dataFile);
-        $items = json_decode($raw, true) ?: [];
-    }
+    $items = healAndLoadMicroIndies($dataFile);
     array_unshift($items, $newEntry);
     @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
@@ -256,11 +291,7 @@ if ($action === 'admin_list') {
         echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
         exit;
     }
-    $items = [];
-    if (file_exists($dataFile)) {
-        $raw = @file_get_contents($dataFile);
-        $items = json_decode($raw, true) ?: [];
-    }
+    $items = healAndLoadMicroIndies($dataFile);
     $total = count($items);
     $pending = count(array_filter($items, function($item) {
         return empty($item['approved']);
@@ -372,6 +403,59 @@ if ($action === 'delete' || $action === 'admin_delete') {
     }));
     @file_put_contents($dataFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
     echo json_encode(['success' => true, 'message' => 'Jeu retiré de La Clairière.']);
+    exit;
+}
+
+// 8. Modération administrateur : Modifier les métadonnées (titre, dev, jaquette, liens, pitch...)
+if ($action === 'admin_update') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $targetId = sanitizeText($postData['id'] ?? $_GET['id'] ?? '', 100);
+    $updates = $postData['updates'] ?? [];
+    if (empty($targetId) || !is_array($updates)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Paramètres invalides.']);
+        exit;
+    }
+
+    $items = healAndLoadMicroIndies($dataFile);
+    $found = false;
+    $updatedGame = null;
+    foreach ($items as &$item) {
+        if (($item['id'] ?? '') === $targetId) {
+            if (isset($updates['title'])) $item['title'] = sanitizeText($updates['title'], 80);
+            if (isset($updates['developer'])) $item['developer'] = sanitizeText($updates['developer'], 80);
+            if (isset($updates['coverImage'])) $item['coverImage'] = sanitizeUrl($updates['coverImage']);
+            if (isset($updates['steamUrl'])) $item['steamUrl'] = sanitizeUrl($updates['steamUrl']) ?: null;
+            if (isset($updates['itchUrl'])) $item['itchUrl'] = sanitizeUrl($updates['itchUrl']) ?: null;
+            if (isset($updates['playInBrowserUrl'])) $item['playInBrowserUrl'] = sanitizeUrl($updates['playInBrowserUrl']) ?: null;
+            if (isset($updates['pitch'])) {
+                $p = sanitizeText($updates['pitch'], 300);
+                $item['tagline'] = ['fr' => $p, 'en' => $p];
+                $item['description'] = ['fr' => $p, 'en' => $p];
+            }
+            if (isset($updates['discoveredBy'])) $item['discoveredBy'] = sanitizeText($updates['discoveredBy'], 50);
+            if (isset($updates['approved'])) $item['approved'] = !empty($updates['approved']);
+            $found = true;
+            $updatedGame = $item;
+            break;
+        }
+    }
+    unset($item);
+    if ($found) {
+        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Micro-indé mis à jour avec succès.',
+            'game' => $updatedGame,
+        ]);
+    } else {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Jeu introuvable.']);
+    }
     exit;
 }
 

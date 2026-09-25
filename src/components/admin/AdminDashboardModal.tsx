@@ -51,6 +51,7 @@ import {
   deleteCommunitySuggestion,
   approveAdminMicroIndie,
   deleteAdminMicroIndie,
+  updateAdminMicroIndie,
   saveAdminGame,
   resetServerStats,
   editAdminUser,
@@ -153,6 +154,19 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   const [validatingSuggestionId, setValidatingSuggestionId] = useState<string | null>(null);
   const [validatingMicroIndieId, setValidatingMicroIndieId] = useState<string | null>(null);
   const [microIndieFilter, setMicroIndieFilter] = useState<'all' | 'pending' | 'approved'>('pending');
+
+  // Modale d'édition micro-indé
+  const [editingMicroIndie, setEditingMicroIndie] = useState<AdminMicroIndieEntry | null>(null);
+  const [editMicroTitle, setEditMicroTitle] = useState<string>('');
+  const [editMicroDev, setEditMicroDev] = useState<string>('');
+  const [editMicroCover, setEditMicroCover] = useState<string>('');
+  const [editMicroSteamUrl, setEditMicroSteamUrl] = useState<string>('');
+  const [editMicroItchUrl, setEditMicroItchUrl] = useState<string>('');
+  const [editMicroPlayUrl, setEditMicroPlayUrl] = useState<string>('');
+  const [editMicroPitch, setEditMicroPitch] = useState<string>('');
+  const [editMicroDiscoveredBy, setEditMicroDiscoveredBy] = useState<string>('');
+  const [isSavingMicroIndie, setIsSavingMicroIndie] = useState<boolean>(false);
+
   const [prefilledGameForCatalog, setPrefilledGameForCatalog] = useState<{
     game: Partial<Game>;
     suggestionId?: string;
@@ -646,6 +660,68 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       }
     } catch {
       showNotice('error', 'Erreur réseau lors de la suppression.');
+    }
+  };
+
+  // Modération Micro-Indés : Ouvrir l'éditeur
+  const handleOpenEditMicroIndie = (m: AdminMicroIndieEntry) => {
+    soundFx.playClick();
+    setEditingMicroIndie(m);
+    setEditMicroTitle(m.title || '');
+    setEditMicroDev(m.developer || '');
+    setEditMicroCover(m.coverImage || '');
+    setEditMicroSteamUrl(m.steamUrl || '');
+    setEditMicroItchUrl(m.itchUrl || '');
+    setEditMicroPlayUrl(m.playInBrowserUrl || '');
+    setEditMicroPitch(m.pitch || m.tagline?.fr || m.tagline?.en || m.description?.fr || '');
+    setEditMicroDiscoveredBy(m.discoveredBy || '');
+  };
+
+  // Modération Micro-Indés : Auto-détection de la jaquette Steam
+  const handleAutoDetectSteamCover = () => {
+    soundFx.playClick();
+    const url = editMicroSteamUrl.trim();
+    const match = url.match(/\/app\/(\d+)/);
+    if (match && match[1]) {
+      const steamCover = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${match[1]}/header.jpg`;
+      setEditMicroCover(steamCover);
+      showNotice('success', `Jaquette Steam officielle détectée pour l'AppID ${match[1]} !`);
+    } else {
+      showNotice('error', 'Aucun AppID Steam valide trouvé dans le lien.');
+    }
+  };
+
+  // Modération Micro-Indés : Enregistrer les modifications
+  const handleSaveMicroIndie = async () => {
+    if (!editingMicroIndie) return;
+    soundFx.playClick();
+    setIsSavingMicroIndie(true);
+    try {
+      const res = await updateAdminMicroIndie(
+        editingMicroIndie.id,
+        {
+          title: editMicroTitle.trim() || editingMicroIndie.title,
+          developer: editMicroDev.trim() || editingMicroIndie.developer,
+          coverImage: editMicroCover.trim(),
+          steamUrl: editMicroSteamUrl.trim() || undefined,
+          itchUrl: editMicroItchUrl.trim() || undefined,
+          playInBrowserUrl: editMicroPlayUrl.trim() || undefined,
+          pitch: editMicroPitch.trim() || undefined,
+          discoveredBy: editMicroDiscoveredBy.trim() || undefined,
+        },
+        currentSteamId
+      );
+      if (res.success) {
+        showNotice('success', 'Fiche micro-indé mise à jour avec succès !');
+        setEditingMicroIndie(null);
+        await loadData();
+      } else {
+        showNotice('error', res.message || 'Échec de la modification.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de la mise à jour.');
+    } finally {
+      setIsSavingMicroIndie(false);
     }
   };
 
@@ -2192,6 +2268,16 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                   </div>
 
                                   <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleOpenEditMicroIndie(m)}
+                                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-xs font-bold text-amber-300 hover:bg-amber-500/25 transition cursor-pointer"
+                                      title="Modifier les informations ou corriger l'image de couverture"
+                                    >
+                                      <Edit3 className="w-3.5 h-3.5" />
+                                      <span>Éditer</span>
+                                    </button>
+
                                     {isPending ? (
                                       <button
                                         type="button"
@@ -2967,6 +3053,188 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     >
                       {isPurgingScores ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                       <span>Purger Définitivement</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE 5 : MODIFICATION D'UN MICRO-INDÉ (IMAGE, TITRE, DEV...) */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {editingMicroIndie && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setEditingMicroIndie(null)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-xl bg-[#0c1220] border border-amber-500/40 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10 max-h-[90vh] overflow-y-auto"
+                >
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                        <Edit3 className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Modifier le Micro-Indé</h3>
+                        <p className="text-xs text-amber-300/80 font-mono">{editingMicroIndie.title}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setEditingMicroIndie(null)}
+                      className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 text-xs">
+                    {/* Prévisualisation Jaquette & Input */}
+                    <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 space-y-3">
+                      <label className="block text-xs font-bold text-amber-300 uppercase tracking-wider">
+                        Image de Couverture / Jaquette
+                      </label>
+                      <div className="flex items-center gap-3">
+                        {editMicroCover ? (
+                          <img
+                            src={editMicroCover}
+                            alt="Aperçu"
+                            referrerPolicy="no-referrer"
+                            className="w-20 h-20 rounded-xl object-cover border border-white/15 bg-slate-900 shrink-0"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLElement).style.opacity = '0.3';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-20 h-20 rounded-xl bg-slate-900 border border-white/15 flex items-center justify-center text-slate-500 shrink-0 text-[10px]">
+                            Pas d'image
+                          </div>
+                        )}
+                        <div className="flex-1 space-y-2">
+                          <input
+                            type="url"
+                            value={editMicroCover}
+                            onChange={(e) => setEditMicroCover(e.target.value)}
+                            placeholder="https://... URL de l'image (JPG, PNG, GIF)"
+                            className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400"
+                          />
+                          {editMicroSteamUrl && (
+                            <button
+                              type="button"
+                              onClick={handleAutoDetectSteamCover}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/25 font-bold text-[11px] transition cursor-pointer"
+                            >
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span>Récupérer l'image Steam officielle</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Titre & Développeur */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Titre du jeu</label>
+                        <input
+                          type="text"
+                          value={editMicroTitle}
+                          onChange={(e) => setEditMicroTitle(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Créateur / Développeur</label>
+                        <input
+                          type="text"
+                          value={editMicroDev}
+                          onChange={(e) => setEditMicroDev(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Liens : Steam, Itch, Web */}
+                    <div className="space-y-2">
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Lien Steam</label>
+                        <input
+                          type="url"
+                          value={editMicroSteamUrl}
+                          onChange={(e) => setEditMicroSteamUrl(e.target.value)}
+                          placeholder="https://store.steampowered.com/app/..."
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-cyan-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Lien Itch.io</label>
+                        <input
+                          type="url"
+                          value={editMicroItchUrl}
+                          onChange={(e) => setEditMicroItchUrl(e.target.value)}
+                          placeholder="https://createur.itch.io/nom-du-jeu"
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-rose-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Lien direct navigateur (HTML5/WebGL)</label>
+                        <input
+                          type="url"
+                          value={editMicroPlayUrl}
+                          onChange={(e) => setEditMicroPlayUrl(e.target.value)}
+                          placeholder="https://..."
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Pitch & Déniché par */}
+                    <div>
+                      <label className="block font-bold text-slate-300 mb-1">Pitch / Description</label>
+                      <textarea
+                        rows={2}
+                        value={editMicroPitch}
+                        onChange={(e) => setEditMicroPitch(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 resize-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-300 mb-1">Déniché par</label>
+                      <input
+                        type="text"
+                        value={editMicroDiscoveredBy}
+                        onChange={(e) => setEditMicroDiscoveredBy(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setEditingMicroIndie(null)}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSavingMicroIndie}
+                      onClick={handleSaveMicroIndie}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isSavingMicroIndie ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                      <span>Enregistrer les Modifications</span>
                     </button>
                   </div>
                 </motion.div>

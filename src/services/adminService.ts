@@ -293,6 +293,51 @@ export async function deleteAdminMicroIndie(
 }
 
 /**
+ * Met à jour les métadonnées d'un micro-indé (jaquette, titre, développeur, liens...)
+ */
+export async function updateAdminMicroIndie(
+  id: string,
+  updates: {
+    coverImage?: string;
+    title?: string;
+    developer?: string;
+    steamUrl?: string;
+    itchUrl?: string;
+    playInBrowserUrl?: string;
+    pitch?: string;
+    discoveredBy?: string;
+    approved?: boolean;
+  },
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string; game?: AdminMicroIndieEntry }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'update_micro_indie');
+  formData.append('id', id);
+  formData.append('steamId', steamId);
+  if (updates.coverImage !== undefined) formData.append('coverImage', updates.coverImage);
+  if (updates.title !== undefined) formData.append('title', updates.title);
+  if (updates.developer !== undefined) formData.append('developer', updates.developer);
+  if (updates.steamUrl !== undefined) formData.append('steamUrl', updates.steamUrl);
+  if (updates.itchUrl !== undefined) formData.append('itchUrl', updates.itchUrl);
+  if (updates.playInBrowserUrl !== undefined) formData.append('playInBrowserUrl', updates.playInBrowserUrl);
+  if (updates.pitch !== undefined) formData.append('pitch', updates.pitch);
+  if (updates.discoveredBy !== undefined) formData.append('discoveredBy', updates.discoveredBy);
+
+  const response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    },
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+  return data;
+}
+
+/**
  * Réinitialise les métriques d'analytics
  */
 export async function resetServerStats(

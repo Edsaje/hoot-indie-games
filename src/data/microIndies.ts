@@ -67,6 +67,61 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "dateAdded": "2026-09-21"
   },
   {
+    "id": "micro-crescent-bloom-2d61c0",
+    "title": "Crescent Bloom",
+    "developer": "Nox Metrica",
+    "releaseYear": 2022,
+    "platform": "steam",
+    "steamUrl": "https://store.steampowered.com/app/1953920/Crescent_Bloom/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "Payant / Steam 💎",
+      "en": "Paid / Steam 💎",
+      "es": "De pago / Steam 💎",
+      "de": "Kostenpflichtig / Steam 💎",
+      "ja": "有料 / Steam 💎",
+      "pt-BR": "Pago / Steam 💎"
+    },
+    "genre": [
+      "Aventure",
+      "Platformer",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "Hand-drawn 2D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Une aventure narrative 2D sur les pas d'Ignis à la recherche de son frère dans un empire fantastique mystérieux.",
+      "en": "A story-rich 2D adventure following Ignis on a perilous journey to rescue her missing brother.",
+      "es": "Una aventura narrativa en 2D que sigue el peligroso viaje de Ignis en busca de su hermano desaparecido.",
+      "de": "Ein geschichtenreiches 2D-Abenteuer über Ignis' gefährliche Reise auf der Suche nach ihrem verschwundenen Bruder.",
+      "ja": "失踪した兄を探すイグニスの危険に満ちた旅を描く、物語重視の2Dアドベンチャー。",
+      "pt-BR": "Uma aventura 2D rica em história seguindo a perigosa jornada de Ignis em busca de seu irmão desaparecido."
+    },
+    "description": {
+      "fr": "Incarnez la jeune pyromancienne Ignis dans l'Empire Constantin. Lancez de puissants sorts, résolvez des énigmes de couleurs et de sons et élucidez l'invasion des redoutables créatures végétales Trians.",
+      "en": "Play as the young pyromancer Ignis in the Constantin Empire. Cast powerful spells, solve clever color and sound puzzles, and unravel the invasion of the plant-lizard Trians.",
+      "es": "Juega como la joven piromante Ignis en el Imperio Constantin. Lanza poderosos hechizos, resuelve acertijos y detén a los invasores.",
+      "de": "Schlüpfe in die Rolle der jungen Pyromantin Ignis im Konstantinischen Reich. Löse Rätsel und entdecke das Geheimnis der Trian-Invasion.",
+      "ja": "コンスタンティン帝国の若き火術師イグニスとなり、魔法を駆使して色彩と音のパズルを解き明かせ。",
+      "pt-BR": "Jogue como a jovem piromante Ignis no Império Constantin. Lance feitiços poderosos e resolva quebra-cabeças."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 8,
+    "featured": true,
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg"
+    ],
+    "dateAdded": "2026-09-25",
+    "approved": true
+  },
+  {
     "id": "buckshot-roulette-itch",
     "title": "Buckshot Roulette",
     "developer": "Mike Klubnika",

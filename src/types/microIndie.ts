@@ -30,6 +30,8 @@ export interface MicroIndieGame {
   likesCount?: number;
   featured?: boolean;
   dateAdded: string;
+  approved?: boolean;
+  approvedAt?: string;
 }
 
 export interface MicroIndieSubmission {

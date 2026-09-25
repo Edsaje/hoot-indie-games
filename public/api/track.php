@@ -966,6 +966,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         exit;
     }
 
+    // Modération : Mettre à jour les métadonnées d'un micro-indé (jaquette, titre, dev...)
+    if ($action === 'update_micro_indie') {
+        $mId = trim($_POST['id'] ?? $_GET['id'] ?? '');
+        $mCover = trim($_POST['coverImage'] ?? $_GET['coverImage'] ?? '');
+        $mTitle = trim($_POST['title'] ?? $_GET['title'] ?? '');
+        $mDev = trim($_POST['developer'] ?? $_GET['developer'] ?? '');
+        $mSteamUrl = trim($_POST['steamUrl'] ?? $_GET['steamUrl'] ?? '');
+        $mItchUrl = trim($_POST['itchUrl'] ?? $_GET['itchUrl'] ?? '');
+        $mPlayUrl = trim($_POST['playInBrowserUrl'] ?? $_GET['playInBrowserUrl'] ?? '');
+        $mPitch = trim($_POST['pitch'] ?? $_GET['pitch'] ?? '');
+        $mDiscoveredBy = trim($_POST['discoveredBy'] ?? $_GET['discoveredBy'] ?? '');
+
+        $mFile = __DIR__ . '/micro_indies.json';
+        if (file_exists($mFile)) {
+            $items = json_decode(@file_get_contents($mFile), true) ?: [];
+            $found = false;
+            foreach ($items as &$item) {
+                if (($item['id'] ?? '') === $mId) {
+                    if (!empty($mCover)) $item['coverImage'] = $mCover;
+                    if (!empty($mTitle)) $item['title'] = $mTitle;
+                    if (!empty($mDev)) $item['developer'] = $mDev;
+                    if (!empty($mSteamUrl)) $item['steamUrl'] = $mSteamUrl;
+                    if (!empty($mItchUrl)) $item['itchUrl'] = $mItchUrl;
+                    if (!empty($mPlayUrl)) $item['playInBrowserUrl'] = $mPlayUrl;
+                    if (!empty($mPitch)) {
+                        $item['tagline'] = ['fr' => $mPitch, 'en' => $mPitch];
+                        $item['description'] = ['fr' => $mPitch, 'en' => $mPitch];
+                    }
+                    if (!empty($mDiscoveredBy)) $item['discoveredBy'] = $mDiscoveredBy;
+                    $found = true;
+                    break;
+                }
+            }
+            unset($item);
+            if ($found) {
+                @file_put_contents($mFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                echo json_encode(['success' => true, 'message' => 'Micro-indé mis à jour avec succès.']);
+                exit;
+            }
+        }
+        echo json_encode(['success' => false, 'message' => 'Jeu introuvable dans les micro-indés.']);
+        exit;
+    }
+
     // Réinitialisation des statistiques
     if ($action === 'reset_stats') {
         $blankStats = [
@@ -1201,6 +1245,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             if ($mRaw) {
                 $mDec = json_decode($mRaw, true);
                 if (is_array($mDec)) {
+                    $mModified = false;
+                    foreach ($mDec as &$mItem) {
+                        $cover = $mItem['coverImage'] ?? '';
+                        $steamUrl = $mItem['steamUrl'] ?? '';
+                        $isDefaultCover = empty($cover) || strpos($cover, '2420510') !== false;
+                        if ($isDefaultCover && !empty($steamUrl)) {
+                            if (preg_match('#/app/(\d+)#', $steamUrl, $matches)) {
+                                $mItem['coverImage'] = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$matches[1]}/header.jpg";
+                                $mModified = true;
+                            }
+                        }
+                        if (($mItem['id'] ?? '') === 'micro-crescent-bloom-2d61c0' || stripos($mItem['title'] ?? '', 'Crescent Bloom') !== false) {
+                            $proper = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg';
+                            if (($mItem['coverImage'] ?? '') !== $proper) {
+                                $mItem['coverImage'] = $proper;
+                                $mModified = true;
+                            }
+                        }
+                    }
+                    unset($mItem);
+                    if ($mModified) {
+                        @file_put_contents($mFile, json_encode($mDec, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                    }
+
                     $mPending = count(array_filter($mDec, function($item) { return empty($item['approved']); }));
                     $mApproved = count(array_filter($mDec, function($item) { return !empty($item['approved']); }));
                     $microIndiesData = [
