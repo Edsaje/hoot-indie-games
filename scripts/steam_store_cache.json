@@ -1,4 +1,21 @@
 {
+  "4000": {
+    "appId": 4000,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1093788,
+    "totalPositive": 1060753,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "22000": {
     "appId": 22000,
     "isFree": false,
@@ -42,6 +59,57 @@
     "totalReviews": 62115,
     "totalPositive": 57273,
     "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "57300": {
+    "appId": 57300,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 20448,
+    "totalPositive": 19518,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "80330": {
+    "appId": 80330,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 449,
+    "finalPriceCents": 449,
+    "discountPercent": 0,
+    "formattedFinalPrice": "4,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1342,
+    "totalPositive": 1199,
+    "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "94400": {
+    "appId": 94400,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 975,
+    "finalPriceCents": 975,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,75€",
+    "formattedInitialPrice": "",
+    "totalReviews": 5717,
+    "totalPositive": 5189,
+    "positivePercent": 91,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -127,6 +195,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "207140": {
+    "appId": 207140,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 295,
+    "discountPercent": 80,
+    "formattedFinalPrice": "2,95€",
+    "formattedInitialPrice": "14,79€",
+    "totalReviews": 22838,
+    "totalPositive": 21617,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "210970": {
     "appId": 210970,
     "isFree": false,
@@ -176,6 +261,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "214770": {
+    "appId": 214770,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1549,
+    "finalPriceCents": 387,
+    "discountPercent": 75,
+    "formattedFinalPrice": "3,87€",
+    "formattedInitialPrice": "15,49€",
+    "totalReviews": 3159,
+    "totalPositive": 2952,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "219150": {
     "appId": 219150,
     "isFree": false,
@@ -208,6 +310,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "219890": {
+    "appId": 219890,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 13663,
+    "totalPositive": 13028,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "223710": {
     "appId": 223710,
     "isFree": true,
@@ -216,12 +335,12 @@
     "finalPriceCents": 0,
     "discountPercent": 0,
     "formattedFinalPrice": "Gratuit",
-    "totalReviews": 87521,
-    "totalPositive": 77636,
-    "positivePercent": 89,
+    "totalReviews": 296,
+    "totalPositive": 231,
+    "positivePercent": 78,
     "reviewScoreDesc": {
-      "fr": "Très positifs",
-      "en": "Very Positive"
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
     }
   },
   "224760": {
@@ -235,6 +354,23 @@
     "totalReviews": 16258,
     "totalPositive": 15061,
     "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "230700": {
+    "appId": 230700,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2076,
+    "totalPositive": 1655,
+    "positivePercent": 80,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -320,6 +456,74 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "240720": {
+    "appId": 240720,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 699,
+    "finalPriceCents": 699,
+    "discountPercent": 0,
+    "formattedFinalPrice": "6,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 75162,
+    "totalPositive": 62090,
+    "positivePercent": 83,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "242680": {
+    "appId": 242680,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1179,
+    "finalPriceCents": 1179,
+    "discountPercent": 0,
+    "formattedFinalPrice": "11,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 15049,
+    "totalPositive": 14517,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "242760": {
+    "appId": 242760,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 581529,
+    "totalPositive": 555798,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "242920": {
+    "appId": 242920,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 37892,
+    "totalPositive": 34152,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "247080": {
     "appId": 247080,
     "isFree": false,
@@ -335,6 +539,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "248820": {
+    "appId": 248820,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 20763,
+    "totalPositive": 19315,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "250760": {
@@ -369,6 +590,57 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "251470": {
+    "appId": 251470,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1399,
+    "finalPriceCents": 1399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "13,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2945,
+    "totalPositive": 2817,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "252110": {
+    "appId": 252110,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3370,
+    "totalPositive": 3141,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "252410": {
+    "appId": 252410,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 149,
+    "discountPercent": 85,
+    "formattedFinalPrice": "1,49€",
+    "formattedInitialPrice": "9,99€",
+    "totalReviews": 6509,
+    "totalPositive": 6158,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "252490": {
     "appId": 252490,
     "isFree": false,
@@ -381,6 +653,23 @@
     "totalReviews": 1400613,
     "totalPositive": 1214503,
     "positivePercent": 87,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "252610": {
+    "appId": 252610,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 9125,
+    "totalPositive": 8485,
+    "positivePercent": 93,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -411,8 +700,8 @@
     "discountPercent": 75,
     "formattedFinalPrice": "3,74€",
     "formattedInitialPrice": "14,99€",
-    "totalReviews": 19181,
-    "totalPositive": 17824,
+    "totalReviews": 15557,
+    "totalPositive": 14524,
     "positivePercent": 93,
     "reviewScoreDesc": {
       "fr": "Très positifs",
@@ -491,12 +780,47 @@
     "finalPriceCents": 1479,
     "discountPercent": 0,
     "formattedFinalPrice": "14,79€",
-    "totalReviews": 61007,
-    "totalPositive": 59124,
+    "formattedInitialPrice": "",
+    "totalReviews": 49519,
+    "totalPositive": 48028,
     "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "274520": {
+    "appId": 274520,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 22265,
+    "totalPositive": 21146,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "282070": {
+    "appId": 282070,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 81830,
+    "totalPositive": 76784,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "282140": {
@@ -526,6 +850,23 @@
     "totalReviews": 21918,
     "totalPositive": 19586,
     "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "285900": {
+    "appId": 285900,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 54921,
+    "totalPositive": 47221,
+    "positivePercent": 86,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -563,6 +904,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "304650": {
+    "appId": 304650,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7623,
+    "totalPositive": 6399,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "311690": {
     "appId": 311690,
     "isFree": false,
@@ -587,8 +945,9 @@
     "finalPriceCents": 2379,
     "discountPercent": 0,
     "formattedFinalPrice": "23,79€",
-    "totalReviews": 57371,
-    "totalPositive": 53755,
+    "formattedInitialPrice": "",
+    "totalReviews": 47015,
+    "totalPositive": 44241,
     "positivePercent": 94,
     "reviewScoreDesc": {
       "fr": "Très positifs",
@@ -603,12 +962,30 @@
     "finalPriceCents": 1299,
     "discountPercent": 0,
     "formattedFinalPrice": "12,99€",
-    "totalReviews": 39065,
-    "totalPositive": 37724,
+    "formattedInitialPrice": "",
+    "totalReviews": 25268,
+    "totalPositive": 24552,
     "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "322190": {
+    "appId": 322190,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 224,
+    "discountPercent": 85,
+    "formattedFinalPrice": "2,24€",
+    "formattedInitialPrice": "14,99€",
+    "totalReviews": 4235,
+    "totalPositive": 3972,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "322330": {
@@ -652,8 +1029,8 @@
     "discountPercent": 80,
     "formattedFinalPrice": "5,99€",
     "formattedInitialPrice": "29,99€",
-    "totalReviews": 137511,
-    "totalPositive": 127532,
+    "totalReviews": 114477,
+    "totalPositive": 106151,
     "positivePercent": 93,
     "reviewScoreDesc": {
       "fr": "Très positifs",
@@ -693,6 +1070,23 @@
       "en": "Very Positive"
     }
   },
+  "333640": {
+    "appId": 333640,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3049,
+    "finalPriceCents": 3049,
+    "discountPercent": 0,
+    "formattedFinalPrice": "30,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 11907,
+    "totalPositive": 11306,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "335670": {
     "appId": 335670,
     "isFree": false,
@@ -704,6 +1098,23 @@
     "formattedInitialPrice": "19,99€",
     "totalReviews": 15191,
     "totalPositive": 14496,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "336140": {
+    "appId": 336140,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2313,
+    "totalPositive": 2208,
     "positivePercent": 95,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -726,6 +1137,74 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "341800": {
+    "appId": 341800,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 14338,
+    "totalPositive": 13957,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "347800": {
+    "appId": 347800,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 989,
+    "totalPositive": 834,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "353540": {
+    "appId": 353540,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2899,
+    "finalPriceCents": 2899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "28,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1590,
+    "totalPositive": 1531,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "356400": {
+    "appId": 356400,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4059,
+    "totalPositive": 3724,
+    "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "358960": {
     "appId": 358960,
     "isFree": false,
@@ -737,6 +1216,40 @@
     "totalReviews": 307,
     "totalPositive": 272,
     "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "360740": {
+    "appId": 360740,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 299,
+    "finalPriceCents": 74,
+    "discountPercent": 75,
+    "formattedFinalPrice": "0,74€",
+    "formattedInitialPrice": "2,99€",
+    "totalReviews": 7901,
+    "totalPositive": 7626,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "361420": {
+    "appId": 361420,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 118854,
+    "totalPositive": 109337,
+    "positivePercent": 92,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -756,6 +1269,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "365360": {
+    "appId": 365360,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 26141,
+    "totalPositive": 23001,
+    "positivePercent": 88,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "367520": {
@@ -782,8 +1312,43 @@
     "finalPriceCents": 1999,
     "discountPercent": 0,
     "formattedFinalPrice": "19,99€",
-    "totalReviews": 18460,
-    "totalPositive": 17052,
+    "formattedInitialPrice": "",
+    "totalReviews": 16387,
+    "totalPositive": 15082,
+    "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "368620": {
+    "appId": 368620,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2049,
+    "finalPriceCents": 2049,
+    "discountPercent": 0,
+    "formattedFinalPrice": "20,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2828,
+    "totalPositive": 2437,
+    "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "381780": {
+    "appId": 381780,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1079,
+    "finalPriceCents": 1079,
+    "discountPercent": 0,
+    "formattedFinalPrice": "10,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1176,
+    "totalPositive": 1077,
     "positivePercent": 92,
     "reviewScoreDesc": {
       "fr": "Très positifs",
@@ -804,6 +1369,40 @@
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "384630": {
+    "appId": 384630,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1155,
+    "totalPositive": 1092,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "386940": {
+    "appId": 386940,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1299,
+    "finalPriceCents": 1299,
+    "discountPercent": 0,
+    "formattedFinalPrice": "12,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 41073,
+    "totalPositive": 39418,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "387290": {
@@ -849,6 +1448,23 @@
     "totalReviews": 341947,
     "totalPositive": 329996,
     "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "400910": {
+    "appId": 400910,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1749,
+    "finalPriceCents": 1749,
+    "discountPercent": 0,
+    "formattedFinalPrice": "17,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10769,
+    "totalPositive": 10255,
+    "positivePercent": 95,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
@@ -934,6 +1550,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "422970": {
+    "appId": 422970,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 715,
+    "finalPriceCents": 715,
+    "discountPercent": 0,
+    "formattedFinalPrice": "7,15€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7445,
+    "totalPositive": 7162,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "423230": {
     "appId": 423230,
     "isFree": false,
@@ -950,6 +1583,23 @@
       "en": "Very Positive"
     }
   },
+  "427410": {
+    "appId": 427410,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3399,
+    "finalPriceCents": 3399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "33,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 42165,
+    "totalPositive": 40444,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "427520": {
     "appId": 427520,
     "isFree": false,
@@ -964,6 +1614,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "428550": {
+    "appId": 428550,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10522,
+    "totalPositive": 9836,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "433340": {
@@ -983,6 +1650,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "440880": {
+    "appId": 440880,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 949,
+    "finalPriceCents": 949,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2465,
+    "totalPositive": 2316,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "445980": {
     "appId": 445980,
     "isFree": false,
@@ -998,6 +1682,23 @@
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "447150": {
+    "appId": 447150,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3734,
+    "totalPositive": 3531,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "447530": {
@@ -1016,6 +1717,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "448510": {
+    "appId": 448510,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1599,
+    "finalPriceCents": 1599,
+    "discountPercent": 0,
+    "formattedFinalPrice": "15,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 13535,
+    "totalPositive": 12145,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "457140": {
     "appId": 457140,
     "isFree": false,
@@ -1024,8 +1742,9 @@
     "finalPriceCents": 2299,
     "discountPercent": 0,
     "formattedFinalPrice": "22,99€",
-    "totalReviews": 143881,
-    "totalPositive": 139165,
+    "formattedInitialPrice": "",
+    "totalReviews": 135333,
+    "totalPositive": 130977,
     "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -1056,12 +1775,47 @@
     "finalPriceCents": 3499,
     "discountPercent": 0,
     "formattedFinalPrice": "34,99€",
-    "totalReviews": 68752,
-    "totalPositive": 58611,
+    "formattedInitialPrice": "",
+    "totalReviews": 54466,
+    "totalPositive": 46418,
     "positivePercent": 85,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "473950": {
+    "appId": 473950,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7730,
+    "totalPositive": 7367,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "477160": {
+    "appId": 477160,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 599,
+    "discountPercent": 70,
+    "formattedFinalPrice": "5,99€",
+    "formattedInitialPrice": "19,99€",
+    "totalReviews": 174950,
+    "totalPositive": 165497,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "480490": {
@@ -1094,6 +1848,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "496300": {
+    "appId": 496300,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10163,
+    "totalPositive": 8755,
+    "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "499180": {
@@ -1144,6 +1915,57 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "508440": {
+    "appId": 508440,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 144072,
+    "totalPositive": 141077,
+    "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "510420": {
+    "appId": 510420,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 819,
+    "finalPriceCents": 819,
+    "discountPercent": 0,
+    "formattedFinalPrice": "8,19€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4498,
+    "totalPositive": 4247,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "512900": {
+    "appId": 512900,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 17229,
+    "totalPositive": 16578,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "519860": {
     "appId": 519860,
     "isFree": false,
@@ -1177,6 +1999,40 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "528230": {
+    "appId": 528230,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10109,
+    "totalPositive": 9522,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "530320": {
+    "appId": 530320,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2185,
+    "totalPositive": 2105,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "534550": {
     "appId": 534550,
     "isFree": false,
@@ -1188,6 +2044,23 @@
     "totalReviews": 3388,
     "totalPositive": 3086,
     "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "535520": {
+    "appId": 535520,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1025,
+    "totalPositive": 841,
+    "positivePercent": 82,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -1241,6 +2114,23 @@
       "en": "Very Positive"
     }
   },
+  "555220": {
+    "appId": 555220,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1199,
+    "finalPriceCents": 1199,
+    "discountPercent": 0,
+    "formattedFinalPrice": "11,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10382,
+    "totalPositive": 9940,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "557340": {
     "appId": 557340,
     "isFree": false,
@@ -1266,8 +2156,9 @@
     "finalPriceCents": 1399,
     "discountPercent": 0,
     "formattedFinalPrice": "13,99€",
-    "totalReviews": 20807,
-    "totalPositive": 20277,
+    "formattedInitialPrice": "",
+    "totalReviews": 19170,
+    "totalPositive": 18683,
     "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -1285,6 +2176,40 @@
     "totalReviews": 7263,
     "totalPositive": 7064,
     "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "562860": {
+    "appId": 562860,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 2499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 5655,
+    "totalPositive": 5268,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "571310": {
+    "appId": 571310,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 299,
+    "discountPercent": 85,
+    "formattedFinalPrice": "2,99€",
+    "formattedInitialPrice": "19,99€",
+    "totalReviews": 5701,
+    "totalPositive": 5449,
+    "positivePercent": 96,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
@@ -1339,6 +2264,74 @@
       "en": "Very Positive"
     }
   },
+  "593280": {
+    "appId": 593280,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1299,
+    "finalPriceCents": 1299,
+    "discountPercent": 0,
+    "formattedFinalPrice": "12,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8374,
+    "totalPositive": 7950,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "594330": {
+    "appId": 594330,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8758,
+    "totalPositive": 7448,
+    "positivePercent": 85,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "596970": {
+    "appId": 596970,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2299,
+    "finalPriceCents": 2299,
+    "discountPercent": 0,
+    "formattedFinalPrice": "22,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2662,
+    "totalPositive": 2241,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "597760": {
+    "appId": 597760,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1619,
+    "finalPriceCents": 1619,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,19€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8020,
+    "totalPositive": 7636,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "599140": {
     "appId": 599140,
     "isFree": false,
@@ -1384,6 +2377,23 @@
     "totalReviews": 24474,
     "totalPositive": 19915,
     "positivePercent": 81,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "607050": {
+    "appId": 607050,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1699,
+    "finalPriceCents": 1699,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4012,
+    "totalPositive": 3349,
+    "positivePercent": 83,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -1519,6 +2529,74 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "666140": {
+    "appId": 666140,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 34840,
+    "totalPositive": 31870,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "673130": {
+    "appId": 673130,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1949,
+    "finalPriceCents": 1949,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 6658,
+    "totalPositive": 6222,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "674940": {
+    "appId": 674940,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 475,
+    "finalPriceCents": 475,
+    "discountPercent": 0,
+    "formattedFinalPrice": "4,75€",
+    "formattedInitialPrice": "",
+    "totalReviews": 99941,
+    "totalPositive": 93536,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "677120": {
+    "appId": 677120,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7510,
+    "totalPositive": 6560,
+    "positivePercent": 87,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "683320": {
     "appId": 683320,
     "isFree": false,
@@ -1533,6 +2611,57 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "688420": {
+    "appId": 688420,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 12359,
+    "totalPositive": 11587,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "690830": {
+    "appId": 690830,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3399,
+    "finalPriceCents": 3399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "33,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 23046,
+    "totalPositive": 19942,
+    "positivePercent": 87,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "692850": {
+    "appId": 692850,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3999,
+    "finalPriceCents": 3999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "39,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 29605,
+    "totalPositive": 27654,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "692890": {
@@ -1591,9 +2720,10 @@
     "finalPriceCents": 1999,
     "discountPercent": 0,
     "formattedFinalPrice": "19,99€",
-    "totalReviews": 39813,
-    "totalPositive": 35900,
-    "positivePercent": 90,
+    "formattedInitialPrice": "",
+    "totalReviews": 31269,
+    "totalPositive": 28333,
+    "positivePercent": 91,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -1625,6 +2755,57 @@
     "formattedFinalPrice": "16,79€",
     "totalReviews": 14178,
     "totalPositive": 13092,
+    "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "718670": {
+    "appId": 718670,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10518,
+    "totalPositive": 8656,
+    "positivePercent": 82,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "728880": {
+    "appId": 728880,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2299,
+    "finalPriceCents": 574,
+    "discountPercent": 75,
+    "formattedFinalPrice": "5,74€",
+    "formattedInitialPrice": "22,99€",
+    "totalReviews": 62018,
+    "totalPositive": 56306,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "729000": {
+    "appId": 729000,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4036,
+    "totalPositive": 3732,
     "positivePercent": 92,
     "reviewScoreDesc": {
       "fr": "Très positifs",
@@ -1711,6 +2892,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "774201": {
+    "appId": 774201,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2199,
+    "finalPriceCents": 2199,
+    "discountPercent": 0,
+    "formattedFinalPrice": "21,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1958,
+    "totalPositive": 1665,
+    "positivePercent": 85,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "774361": {
     "appId": 774361,
     "isFree": false,
@@ -1743,6 +2941,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "784150": {
+    "appId": 784150,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3999,
+    "finalPriceCents": 3999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "39,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 24855,
+    "totalPositive": 22674,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "813230": {
     "appId": 813230,
     "isFree": false,
@@ -1757,6 +2972,74 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "814370": {
+    "appId": 814370,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10424,
+    "totalPositive": 9535,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "815370": {
+    "appId": 815370,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2099,
+    "finalPriceCents": 2099,
+    "discountPercent": 0,
+    "formattedFinalPrice": "20,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 79568,
+    "totalPositive": 67612,
+    "positivePercent": 85,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "824600": {
+    "appId": 824600,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 5313,
+    "totalPositive": 5133,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "835430": {
+    "appId": 835430,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2099,
+    "finalPriceCents": 2099,
+    "discountPercent": 0,
+    "formattedFinalPrice": "20,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 820,
+    "totalPositive": 687,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "835960": {
@@ -1792,6 +3075,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "844590": {
+    "appId": 844590,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4833,
+    "totalPositive": 4667,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "848450": {
     "appId": 848450,
     "isFree": false,
@@ -1819,6 +3119,40 @@
     "totalReviews": 5436,
     "totalPositive": 4667,
     "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "867210": {
+    "appId": 867210,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 12123,
+    "totalPositive": 10375,
+    "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "880940": {
+    "appId": 880940,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 46133,
+    "totalPositive": 41022,
+    "positivePercent": 89,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -1888,6 +3222,57 @@
       "en": "Very Positive"
     }
   },
+  "905340": {
+    "appId": 905340,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 975,
+    "finalPriceCents": 975,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,75€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2021,
+    "totalPositive": 1849,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "913740": {
+    "appId": 913740,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8996,
+    "totalPositive": 8053,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "914710": {
+    "appId": 914710,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 5858,
+    "totalPositive": 5574,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "914800": {
     "appId": 914800,
     "isFree": false,
@@ -1905,6 +3290,91 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "916730": {
+    "appId": 916730,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 779,
+    "finalPriceCents": 779,
+    "discountPercent": 0,
+    "formattedFinalPrice": "7,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4367,
+    "totalPositive": 4126,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "940910": {
+    "appId": 940910,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 585,
+    "discountPercent": 70,
+    "formattedFinalPrice": "5,85€",
+    "formattedInitialPrice": "19,50€",
+    "totalReviews": 1828,
+    "totalPositive": 1514,
+    "positivePercent": 83,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "946030": {
+    "appId": 946030,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 799,
+    "totalPositive": 630,
+    "positivePercent": 79,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
+    }
+  },
+  "953490": {
+    "appId": 953490,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 33316,
+    "totalPositive": 31462,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "960690": {
+    "appId": 960690,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 6037,
+    "totalPositive": 5693,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "963000": {
     "appId": 963000,
     "isFree": false,
@@ -1916,6 +3386,23 @@
     "totalReviews": 5548,
     "totalPositive": 5095,
     "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "963710": {
+    "appId": 963710,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3688,
+    "totalPositive": 3374,
+    "positivePercent": 91,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -1938,6 +3425,23 @@
       "en": "Very Positive"
     }
   },
+  "965680": {
+    "appId": 965680,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1808,
+    "totalPositive": 1767,
+    "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "966320": {
     "appId": 966320,
     "isFree": false,
@@ -1946,8 +3450,9 @@
     "finalPriceCents": 1499,
     "discountPercent": 0,
     "formattedFinalPrice": "14,99€",
-    "totalReviews": 3085,
-    "totalPositive": 2956,
+    "formattedInitialPrice": "",
+    "totalReviews": 2752,
+    "totalPositive": 2648,
     "positivePercent": 96,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -1962,8 +3467,26 @@
     "finalPriceCents": 3049,
     "discountPercent": 0,
     "formattedFinalPrice": "30,49€",
-    "totalReviews": 53356,
-    "totalPositive": 50638,
+    "formattedInitialPrice": "",
+    "totalReviews": 47187,
+    "totalPositive": 44774,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "975370": {
+    "appId": 975370,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3049,
+    "finalPriceCents": 3049,
+    "discountPercent": 0,
+    "formattedFinalPrice": "30,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 29307,
+    "totalPositive": 27783,
     "positivePercent": 95,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -1978,9 +3501,27 @@
     "finalPriceCents": 2499,
     "discountPercent": 0,
     "formattedFinalPrice": "24,99€",
-    "totalReviews": 16627,
-    "totalPositive": 13949,
+    "formattedInitialPrice": "",
+    "totalReviews": 14433,
+    "totalPositive": 12080,
     "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "977950": {
+    "appId": 977950,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 499,
+    "finalPriceCents": 499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "4,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 78790,
+    "totalPositive": 74248,
+    "positivePercent": 94,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -2010,12 +3551,64 @@
     "finalPriceCents": 2499,
     "discountPercent": 0,
     "formattedFinalPrice": "24,99€",
-    "totalReviews": 17810,
-    "totalPositive": 14617,
+    "formattedInitialPrice": "",
+    "totalReviews": 14665,
+    "totalPositive": 12090,
     "positivePercent": 82,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "996770": {
+    "appId": 996770,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2299,
+    "finalPriceCents": 229,
+    "discountPercent": 90,
+    "formattedFinalPrice": "2,29€",
+    "formattedInitialPrice": "22,99€",
+    "totalReviews": 1675,
+    "totalPositive": 1381,
+    "positivePercent": 82,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "999220": {
+    "appId": 999220,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2899,
+    "finalPriceCents": 2899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "28,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7901,
+    "totalPositive": 6155,
+    "positivePercent": 78,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
+    }
+  },
+  "1000410": {
+    "appId": 1000410,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 2499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1979,
+    "totalPositive": 1489,
+    "positivePercent": 75,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
     }
   },
   "1002300": {
@@ -2029,6 +3622,23 @@
     "totalReviews": 22858,
     "totalPositive": 21519,
     "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1028310": {
+    "appId": 1028310,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2450,
+    "finalPriceCents": 2450,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4130,
+    "totalPositive": 3702,
+    "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -2066,6 +3676,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1049410": {
+    "appId": 1049410,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 28438,
+    "totalPositive": 26962,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1052990": {
     "appId": 1052990,
     "isFree": false,
@@ -2074,8 +3701,9 @@
     "finalPriceCents": 1999,
     "discountPercent": 0,
     "formattedFinalPrice": "19,99€",
-    "totalReviews": 1752,
-    "totalPositive": 1660,
+    "formattedInitialPrice": "",
+    "totalReviews": 1601,
+    "totalPositive": 1517,
     "positivePercent": 95,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -2130,6 +3758,125 @@
       "en": "Very Positive"
     }
   },
+  "1061910": {
+    "appId": 1061910,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 13994,
+    "totalPositive": 13463,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1062090": {
+    "appId": 1062090,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3399,
+    "finalPriceCents": 3399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "33,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 38622,
+    "totalPositive": 37076,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1062110": {
+    "appId": 1062110,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1868,
+    "totalPositive": 1740,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1062810": {
+    "appId": 1062810,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 2499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3591,
+    "totalPositive": 3106,
+    "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1079830": {
+    "appId": 1079830,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3999,
+    "finalPriceCents": 3999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "39,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 392,
+    "totalPositive": 260,
+    "positivePercent": 66,
+    "reviewScoreDesc": {
+      "fr": "Variables",
+      "en": "Mixed"
+    }
+  },
+  "1082710": {
+    "appId": 1082710,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 5203,
+    "totalPositive": 5059,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1084600": {
+    "appId": 1084600,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3499,
+    "finalPriceCents": 3499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "34,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 24118,
+    "totalPositive": 21247,
+    "positivePercent": 88,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1092790": {
     "appId": 1092790,
     "isFree": false,
@@ -2163,6 +3910,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1122720": {
+    "appId": 1122720,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1199,
+    "finalPriceCents": 1199,
+    "discountPercent": 0,
+    "formattedFinalPrice": "11,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8024,
+    "totalPositive": 7752,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1123450": {
     "appId": 1123450,
     "isFree": false,
@@ -2171,9 +3935,27 @@
     "finalPriceCents": 1950,
     "discountPercent": 0,
     "formattedFinalPrice": "19,50€",
-    "totalReviews": 3995,
-    "totalPositive": 3892,
+    "formattedInitialPrice": "",
+    "totalReviews": 3409,
+    "totalPositive": 3320,
     "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1127400": {
+    "appId": 1127400,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 24645,
+    "totalPositive": 23600,
+    "positivePercent": 96,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
@@ -2195,18 +3977,52 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1129580": {
+    "appId": 1129580,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 43126,
+    "totalPositive": 38888,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1135690": {
     "appId": 1135690,
     "isFree": false,
     "currency": "EUR",
     "initialPriceCents": 1999,
-    "finalPriceCents": 799,
-    "discountPercent": 60,
-    "formattedFinalPrice": "7,99€",
-    "formattedInitialPrice": "19,99€",
-    "totalReviews": 40811,
-    "totalPositive": 38048,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 35156,
+    "totalPositive": 32828,
     "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1136370": {
+    "appId": 1136370,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4581,
+    "totalPositive": 4097,
+    "positivePercent": 89,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -2293,6 +4109,40 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1147890": {
+    "appId": 1147890,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 285,
+    "totalPositive": 266,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1148760": {
+    "appId": 1148760,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2450,
+    "finalPriceCents": 2450,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4446,
+    "totalPositive": 4276,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1150690": {
     "appId": 1150690,
     "isFree": false,
@@ -2307,6 +4157,40 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1158160": {
+    "appId": 1158160,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 21856,
+    "totalPositive": 19498,
+    "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1161580": {
+    "appId": 1161580,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3499,
+    "finalPriceCents": 3499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "34,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 19426,
+    "totalPositive": 17402,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "1164940": {
@@ -2353,6 +4237,23 @@
     "totalReviews": 14614,
     "totalPositive": 14399,
     "positivePercent": 99,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1179080": {
+    "appId": 1179080,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1299,
+    "finalPriceCents": 324,
+    "discountPercent": 75,
+    "formattedFinalPrice": "3,24€",
+    "formattedInitialPrice": "12,99€",
+    "totalReviews": 8045,
+    "totalPositive": 7649,
+    "positivePercent": 95,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
@@ -2406,6 +4307,57 @@
       "en": "Mixed"
     }
   },
+  "1199030": {
+    "appId": 1199030,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7592,
+    "totalPositive": 6840,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1201540": {
+    "appId": 1201540,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2450,
+    "finalPriceCents": 2450,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3369,
+    "totalPositive": 2908,
+    "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1202900": {
+    "appId": 1202900,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 749,
+    "finalPriceCents": 187,
+    "discountPercent": 75,
+    "formattedFinalPrice": "1,87€",
+    "formattedInitialPrice": "7,49€",
+    "totalReviews": 9484,
+    "totalPositive": 8550,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1203620": {
     "appId": 1203620,
     "isFree": false,
@@ -2417,6 +4369,23 @@
     "totalReviews": 105847,
     "totalPositive": 90795,
     "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1207650": {
+    "appId": 1207650,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10593,
+    "totalPositive": 9809,
+    "positivePercent": 93,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -2434,6 +4403,23 @@
     "totalReviews": 103727,
     "totalPositive": 96545,
     "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1218210": {
+    "appId": 1218210,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1849,
+    "finalPriceCents": 1849,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 6327,
+    "totalPositive": 5407,
+    "positivePercent": 85,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -2522,6 +4508,57 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1231880": {
+    "appId": 1231880,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2577,
+    "totalPositive": 2338,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1233070": {
+    "appId": 1233070,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1543,
+    "totalPositive": 1418,
+    "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1240060": {
+    "appId": 1240060,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1599,
+    "finalPriceCents": 1599,
+    "discountPercent": 0,
+    "formattedFinalPrice": "15,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 554,
+    "totalPositive": 483,
+    "positivePercent": 87,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1244090": {
     "appId": 1244090,
     "isFree": false,
@@ -2604,6 +4641,40 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1266030": {
+    "appId": 1266030,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1862,
+    "totalPositive": 1681,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1272320": {
+    "appId": 1272320,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2899,
+    "finalPriceCents": 2899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "28,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10913,
+    "totalPositive": 9358,
+    "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1280930": {
     "appId": 1280930,
     "isFree": false,
@@ -2668,6 +4739,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1286350": {
+    "appId": 1286350,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 9598,
+    "totalPositive": 8823,
+    "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1286990": {
     "appId": 1286990,
     "isFree": false,
@@ -2693,12 +4781,47 @@
     "finalPriceCents": 599,
     "discountPercent": 0,
     "formattedFinalPrice": "5,99€",
-    "totalReviews": 21651,
-    "totalPositive": 20629,
-    "positivePercent": 95,
+    "formattedInitialPrice": "",
+    "totalReviews": 20091,
+    "totalPositive": 19216,
+    "positivePercent": 96,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1295320": {
+    "appId": 1295320,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 566,
+    "totalPositive": 562,
+    "positivePercent": 99,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1295920": {
+    "appId": 1295920,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2099,
+    "finalPriceCents": 2099,
+    "discountPercent": 0,
+    "formattedFinalPrice": "20,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7276,
+    "totalPositive": 6706,
+    "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "1296610": {
@@ -2709,9 +4832,10 @@
     "finalPriceCents": 1950,
     "discountPercent": 0,
     "formattedFinalPrice": "19,50€",
-    "totalReviews": 17696,
-    "totalPositive": 14806,
-    "positivePercent": 84,
+    "formattedInitialPrice": "",
+    "totalReviews": 16620,
+    "totalPositive": 13843,
+    "positivePercent": 83,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -2741,12 +4865,30 @@
     "finalPriceCents": 999,
     "discountPercent": 0,
     "formattedFinalPrice": "9,99€",
-    "totalReviews": 15940,
-    "totalPositive": 15287,
+    "formattedInitialPrice": "",
+    "totalReviews": 14281,
+    "totalPositive": 13731,
     "positivePercent": 96,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1319460": {
+    "appId": 1319460,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 487,
+    "discountPercent": 75,
+    "formattedFinalPrice": "4,87€",
+    "formattedInitialPrice": "19,50€",
+    "totalReviews": 874,
+    "totalPositive": 794,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "1321440": {
@@ -2783,6 +4925,40 @@
       "en": "Very Positive"
     }
   },
+  "1326470": {
+    "appId": 1326470,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2899,
+    "finalPriceCents": 2899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "28,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 284893,
+    "totalPositive": 252364,
+    "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1328350": {
+    "appId": 1328350,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 6419,
+    "totalPositive": 6052,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1328990": {
     "appId": 1328990,
     "isFree": false,
@@ -2794,6 +4970,23 @@
     "totalReviews": 867,
     "totalPositive": 810,
     "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1329500": {
+    "appId": 1329500,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3928,
+    "totalPositive": 3690,
+    "positivePercent": 94,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -2815,6 +5008,57 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1335530": {
+    "appId": 1335530,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1500,
+    "finalPriceCents": 1500,
+    "discountPercent": 0,
+    "formattedFinalPrice": "15,--€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1354,
+    "totalPositive": 1211,
+    "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1336490": {
+    "appId": 1336490,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 33320,
+    "totalPositive": 31562,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1337010": {
+    "appId": 1337010,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1619,
+    "finalPriceCents": 323,
+    "discountPercent": 80,
+    "formattedFinalPrice": "3,23€",
+    "formattedInitialPrice": "16,19€",
+    "totalReviews": 6816,
+    "totalPositive": 6671,
+    "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1337520": {
     "appId": 1337520,
     "isFree": false,
@@ -2829,6 +5073,23 @@
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "1337760": {
+    "appId": 1337760,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4384,
+    "totalPositive": 3455,
+    "positivePercent": 79,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
     }
   },
   "1340480": {
@@ -2847,6 +5108,23 @@
       "en": "Very Positive"
     }
   },
+  "1346020": {
+    "appId": 1346020,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1949,
+    "finalPriceCents": 1949,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 404,
+    "totalPositive": 282,
+    "positivePercent": 70,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
+    }
+  },
   "1363080": {
     "appId": 1363080,
     "isFree": false,
@@ -2861,6 +5139,23 @@
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "1366540": {
+    "appId": 1366540,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 83568,
+    "totalPositive": 81409,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "1369630": {
@@ -2894,6 +5189,23 @@
     "reviewScoreDesc": {
       "fr": "Plutôt positifs",
       "en": "Mostly Positive"
+    }
+  },
+  "1372320": {
+    "appId": 1372320,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2104,
+    "totalPositive": 2001,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "1373960": {
@@ -2962,6 +5274,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1395030": {
+    "appId": 1395030,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1367,
+    "totalPositive": 1270,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1404850": {
     "appId": 1404850,
     "isFree": false,
@@ -2973,6 +5302,57 @@
     "totalReviews": 11544,
     "totalPositive": 10762,
     "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1422440": {
+    "appId": 1422440,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 2999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "29,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3896,
+    "totalPositive": 3460,
+    "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1432860": {
+    "appId": 1432860,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2450,
+    "finalPriceCents": 735,
+    "discountPercent": 70,
+    "formattedFinalPrice": "7,35€",
+    "formattedInitialPrice": "24,50€",
+    "totalReviews": 22112,
+    "totalPositive": 17676,
+    "positivePercent": 80,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1436590": {
+    "appId": 1436590,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1799,
+    "finalPriceCents": 1799,
+    "discountPercent": 0,
+    "formattedFinalPrice": "17,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2758,
+    "totalPositive": 2288,
+    "positivePercent": 83,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -3019,12 +5399,30 @@
     "finalPriceCents": 1299,
     "discountPercent": 0,
     "formattedFinalPrice": "12,99€",
-    "totalReviews": 29626,
-    "totalPositive": 28536,
-    "positivePercent": 96,
+    "formattedInitialPrice": "",
+    "totalReviews": 27452,
+    "totalPositive": 26501,
+    "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1458100": {
+    "appId": 1458100,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 7513,
+    "totalPositive": 6702,
+    "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "1458140": {
@@ -3059,6 +5457,23 @@
       "en": "Very Positive"
     }
   },
+  "1488200": {
+    "appId": 1488200,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1849,
+    "finalPriceCents": 1849,
+    "discountPercent": 0,
+    "formattedFinalPrice": "18,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 12893,
+    "totalPositive": 12216,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1497440": {
     "appId": 1497440,
     "isFree": false,
@@ -3073,6 +5488,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1509960": {
+    "appId": 1509960,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 399,
+    "finalPriceCents": 399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "3,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 23753,
+    "totalPositive": 21727,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "1519710": {
@@ -3116,9 +5548,10 @@
     "finalPriceCents": 3499,
     "discountPercent": 0,
     "formattedFinalPrice": "34,99€",
-    "totalReviews": 35963,
-    "totalPositive": 30746,
-    "positivePercent": 85,
+    "formattedInitialPrice": "",
+    "totalReviews": 32224,
+    "totalPositive": 27743,
+    "positivePercent": 86,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -3135,6 +5568,74 @@
     "totalReviews": 20850,
     "totalPositive": 20407,
     "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1546920": {
+    "appId": 1546920,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1249,
+    "finalPriceCents": 1249,
+    "discountPercent": 0,
+    "formattedFinalPrice": "12,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 572,
+    "totalPositive": 518,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1549550": {
+    "appId": 1549550,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 849,
+    "finalPriceCents": 849,
+    "discountPercent": 0,
+    "formattedFinalPrice": "8,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 893,
+    "totalPositive": 848,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1555140": {
+    "appId": 1555140,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 2499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 460,
+    "totalPositive": 366,
+    "positivePercent": 80,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1557740": {
+    "appId": 1557740,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 549,
+    "finalPriceCents": 549,
+    "discountPercent": 0,
+    "formattedFinalPrice": "5,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 35768,
+    "totalPositive": 34135,
+    "positivePercent": 95,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
@@ -3206,21 +5707,140 @@
       "en": "Very Positive"
     }
   },
+  "1586800": {
+    "appId": 1586800,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 975,
+    "discountPercent": 50,
+    "formattedFinalPrice": "9,75€",
+    "formattedInitialPrice": "19,50€",
+    "totalReviews": 4517,
+    "totalPositive": 4468,
+    "positivePercent": 99,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1590910": {
+    "appId": 1590910,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3720,
+    "totalPositive": 3135,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1592280": {
+    "appId": 1592280,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2450,
+    "finalPriceCents": 2450,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4783,
+    "totalPositive": 4465,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1593030": {
+    "appId": 1593030,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 624,
+    "discountPercent": 75,
+    "formattedFinalPrice": "6,24€",
+    "formattedInitialPrice": "24,99€",
+    "totalReviews": 8044,
+    "totalPositive": 7013,
+    "positivePercent": 87,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1594320": {
+    "appId": 1594320,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3399,
+    "finalPriceCents": 3399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "33,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 11053,
+    "totalPositive": 9973,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1599020": {
     "appId": 1599020,
     "isFree": false,
     "currency": "EUR",
     "initialPriceCents": 2450,
-    "finalPriceCents": 490,
-    "discountPercent": 80,
-    "formattedFinalPrice": "4,90€",
-    "formattedInitialPrice": "24,50€",
-    "totalReviews": 4333,
-    "totalPositive": 4238,
+    "finalPriceCents": 2450,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2886,
+    "totalPositive": 2822,
     "positivePercent": 98,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1599600": {
+    "appId": 1599600,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 18505,
+    "totalPositive": 17539,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1601580": {
+    "appId": 1601580,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 4499,
+    "finalPriceCents": 2249,
+    "discountPercent": 50,
+    "formattedFinalPrice": "22,49€",
+    "formattedInitialPrice": "44,99€",
+    "totalReviews": 20914,
+    "totalPositive": 15526,
+    "positivePercent": 74,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
     }
   },
   "1604030": {
@@ -3237,6 +5857,23 @@
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "1607680": {
+    "appId": 1607680,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4220,
+    "totalPositive": 3332,
+    "positivePercent": 79,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
     }
   },
   "1608230": {
@@ -3271,6 +5908,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1614440": {
+    "appId": 1614440,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1411,
+    "totalPositive": 1167,
+    "positivePercent": 83,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "1621690": {
@@ -3322,6 +5976,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1624540": {
+    "appId": 1624540,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1399,
+    "finalPriceCents": 1399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "13,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8176,
+    "totalPositive": 7241,
+    "positivePercent": 89,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1625450": {
     "appId": 1625450,
     "isFree": true,
@@ -3363,8 +6034,8 @@
     "discountPercent": 60,
     "formattedFinalPrice": "5,99€",
     "formattedInitialPrice": "14,99€",
-    "totalReviews": 19146,
-    "totalPositive": 17536,
+    "totalReviews": 16949,
+    "totalPositive": 15548,
     "positivePercent": 92,
     "reviewScoreDesc": {
       "fr": "Très positifs",
@@ -3379,12 +6050,115 @@
     "finalPriceCents": 1499,
     "discountPercent": 0,
     "formattedFinalPrice": "14,99€",
-    "totalReviews": 8296,
-    "totalPositive": 8107,
+    "formattedInitialPrice": "",
+    "totalReviews": 7825,
+    "totalPositive": 7648,
     "positivePercent": 98,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "1637320": {
+    "appId": 1637320,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1799,
+    "finalPriceCents": 1799,
+    "discountPercent": 0,
+    "formattedFinalPrice": "17,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 18996,
+    "totalPositive": 17578,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1657630": {
+    "appId": 1657630,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2849,
+    "finalPriceCents": 2849,
+    "discountPercent": 0,
+    "formattedFinalPrice": "28,49€",
+    "formattedInitialPrice": "",
+    "totalReviews": 43669,
+    "totalPositive": 41259,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1658150": {
+    "appId": 1658150,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4069,
+    "totalPositive": 3429,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1669420": {
+    "appId": 1669420,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1842,
+    "totalPositive": 1755,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1670870": {
+    "appId": 1670870,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3499,
+    "finalPriceCents": 3499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "34,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3010,
+    "totalPositive": 2623,
+    "positivePercent": 87,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1674780": {
+    "appId": 1674780,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 749,
+    "totalPositive": 641,
+    "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "1675830": {
@@ -3419,6 +6193,40 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "1677770": {
+    "appId": 1677770,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1799,
+    "finalPriceCents": 1799,
+    "discountPercent": 0,
+    "formattedFinalPrice": "17,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 9792,
+    "totalPositive": 9569,
+    "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1684930": {
+    "appId": 1684930,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 975,
+    "finalPriceCents": 975,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,75€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8034,
+    "totalPositive": 7812,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1703340": {
     "appId": 1703340,
     "isFree": false,
@@ -3433,6 +6241,23 @@
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "1740300": {
+    "appId": 1740300,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2102,
+    "totalPositive": 2084,
+    "positivePercent": 99,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "1740720": {
@@ -3451,6 +6276,40 @@
       "en": "Very Positive"
     }
   },
+  "1743850": {
+    "appId": 1743850,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1075,
+    "finalPriceCents": 1075,
+    "discountPercent": 0,
+    "formattedFinalPrice": "10,75€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3090,
+    "totalPositive": 2918,
+    "positivePercent": 94,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1775490": {
+    "appId": 1775490,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 879,
+    "finalPriceCents": 879,
+    "discountPercent": 0,
+    "formattedFinalPrice": "8,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2483,
+    "totalPositive": 2404,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1794680": {
     "appId": 1794680,
     "isFree": false,
@@ -3462,6 +6321,23 @@
     "totalReviews": 265844,
     "totalPositive": 261358,
     "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1808680": {
+    "appId": 1808680,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3299,
+    "finalPriceCents": 1649,
+    "discountPercent": 50,
+    "formattedFinalPrice": "16,49€",
+    "formattedInitialPrice": "32,99€",
+    "totalReviews": 3379,
+    "totalPositive": 3279,
+    "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
@@ -3510,6 +6386,40 @@
     "totalReviews": 11272,
     "totalPositive": 10344,
     "positivePercent": 92,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1863430": {
+    "appId": 1863430,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 1749,
+    "discountPercent": 30,
+    "formattedFinalPrice": "17,49€",
+    "formattedInitialPrice": "24,99€",
+    "totalReviews": 2242,
+    "totalPositive": 1633,
+    "positivePercent": 73,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
+    }
+  },
+  "1867530": {
+    "appId": 1867530,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 3699,
+    "finalPriceCents": 3699,
+    "discountPercent": 0,
+    "formattedFinalPrice": "36,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1354,
+    "totalPositive": 1221,
+    "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -3595,6 +6505,23 @@
       "en": "Very Positive"
     }
   },
+  "1889040": {
+    "appId": 1889040,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 899,
+    "finalPriceCents": 899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "8,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4008,
+    "totalPositive": 3839,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1911950": {
     "appId": 1911950,
     "isFree": false,
@@ -3611,6 +6538,23 @@
       "en": "Positive"
     }
   },
+  "1927720": {
+    "appId": 1927720,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 749,
+    "finalPriceCents": 262,
+    "discountPercent": 65,
+    "formattedFinalPrice": "2,62€",
+    "formattedInitialPrice": "7,49€",
+    "totalReviews": 7595,
+    "totalPositive": 7463,
+    "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1931770": {
     "appId": 1931770,
     "isFree": false,
@@ -3621,6 +6565,23 @@
     "formattedFinalPrice": "19,99€",
     "totalReviews": 34759,
     "totalPositive": 34149,
+    "positivePercent": 98,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "1935660": {
+    "appId": 1935660,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 399,
+    "finalPriceCents": 399,
+    "discountPercent": 0,
+    "formattedFinalPrice": "3,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2884,
+    "totalPositive": 2816,
     "positivePercent": 98,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -3691,6 +6652,23 @@
       "en": "Very Positive"
     }
   },
+  "1959390": {
+    "appId": 1959390,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1211,
+    "totalPositive": 1173,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "1963690": {
     "appId": 1963690,
     "isFree": false,
@@ -3731,8 +6709,9 @@
     "finalPriceCents": 499,
     "discountPercent": 0,
     "formattedFinalPrice": "4,99€",
-    "totalReviews": 29147,
-    "totalPositive": 26318,
+    "formattedInitialPrice": "",
+    "totalReviews": 27882,
+    "totalPositive": 25170,
     "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",
@@ -3779,12 +6758,30 @@
     "finalPriceCents": 1999,
     "discountPercent": 0,
     "formattedFinalPrice": "19,99€",
-    "totalReviews": 4115,
-    "totalPositive": 3818,
+    "formattedInitialPrice": "",
+    "totalReviews": 3593,
+    "totalPositive": 3329,
     "positivePercent": 93,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "1984020": {
+    "appId": 1984020,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2206,
+    "totalPositive": 1642,
+    "positivePercent": 74,
+    "reviewScoreDesc": {
+      "fr": "Plutôt positifs",
+      "en": "Mostly Positive"
     }
   },
   "1985690": {
@@ -3828,8 +6825,9 @@
     "finalPriceCents": 1950,
     "discountPercent": 0,
     "formattedFinalPrice": "19,50€",
-    "totalReviews": 8325,
-    "totalPositive": 8162,
+    "formattedInitialPrice": "",
+    "totalReviews": 7761,
+    "totalPositive": 7604,
     "positivePercent": 98,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -3868,6 +6866,23 @@
       "en": "Very Positive"
     }
   },
+  "2067920": {
+    "appId": 2067920,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1479,
+    "discountPercent": 0,
+    "formattedFinalPrice": "14,79€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8121,
+    "totalPositive": 7377,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "2072450": {
     "appId": 2072450,
     "isFree": false,
@@ -3898,6 +6913,23 @@
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
+    }
+  },
+  "2088570": {
+    "appId": 2088570,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 975,
+    "finalPriceCents": 975,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,75€",
+    "formattedInitialPrice": "",
+    "totalReviews": 10255,
+    "totalPositive": 9853,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "2111190": {
@@ -3934,6 +6966,23 @@
       "en": "Very Positive"
     }
   },
+  "2134770": {
+    "appId": 2134770,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 499,
+    "discountPercent": 80,
+    "formattedFinalPrice": "4,99€",
+    "formattedInitialPrice": "24,99€",
+    "totalReviews": 1891,
+    "totalPositive": 1584,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "2138710": {
     "appId": 2138710,
     "isFree": false,
@@ -3958,8 +7007,9 @@
     "finalPriceCents": 1379,
     "discountPercent": 0,
     "formattedFinalPrice": "13,79€",
-    "totalReviews": 35082,
-    "totalPositive": 34043,
+    "formattedInitialPrice": "",
+    "totalReviews": 32241,
+    "totalPositive": 31250,
     "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -3983,6 +7033,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "2162800": {
+    "appId": 2162800,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2899,
+    "finalPriceCents": 2899,
+    "discountPercent": 0,
+    "formattedFinalPrice": "28,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 13903,
+    "totalPositive": 13475,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "2171440": {
     "appId": 2171440,
     "isFree": false,
@@ -3997,6 +7064,57 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "2179850": {
+    "appId": 2179850,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 4071,
+    "totalPositive": 3907,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "2187290": {
+    "appId": 2187290,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 689,
+    "finalPriceCents": 103,
+    "discountPercent": 85,
+    "formattedFinalPrice": "1,03€",
+    "formattedInitialPrice": "6,89€",
+    "totalReviews": 11391,
+    "totalPositive": 10344,
+    "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "2195120": {
+    "appId": 2195120,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2599,
+    "finalPriceCents": 2599,
+    "discountPercent": 0,
+    "formattedFinalPrice": "25,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 2482,
+    "totalPositive": 2312,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "2198150": {
@@ -4047,6 +7165,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "2272250": {
+    "appId": 2272250,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 2499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 1511,
+    "totalPositive": 1233,
+    "positivePercent": 82,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "2276930": {
     "appId": 2276930,
     "isFree": false,
@@ -4079,6 +7214,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "2303350": {
+    "appId": 2303350,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 6007,
+    "totalPositive": 5748,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "2321470": {
     "appId": 2321470,
     "isFree": false,
@@ -4090,6 +7242,23 @@
     "totalReviews": 48327,
     "totalPositive": 41674,
     "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "2334730": {
+    "appId": 2334730,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 689,
+    "finalPriceCents": 689,
+    "discountPercent": 0,
+    "formattedFinalPrice": "6,89€",
+    "formattedInitialPrice": "",
+    "totalReviews": 20942,
+    "totalPositive": 18856,
+    "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -4144,6 +7313,23 @@
       "en": "Overwhelmingly Positive"
     }
   },
+  "2396240": {
+    "appId": 2396240,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2999,
+    "finalPriceCents": 749,
+    "discountPercent": 75,
+    "formattedFinalPrice": "7,49€",
+    "formattedInitialPrice": "29,99€",
+    "totalReviews": 2209,
+    "totalPositive": 2064,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "2403830": {
     "appId": 2403830,
     "isFree": false,
@@ -4159,6 +7345,23 @@
     "reviewScoreDesc": {
       "fr": "Plutôt positifs",
       "en": "Mostly Positive"
+    }
+  },
+  "2408820": {
+    "appId": 2408820,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1999,
+    "finalPriceCents": 1199,
+    "discountPercent": 40,
+    "formattedFinalPrice": "11,99€",
+    "formattedInitialPrice": "19,99€",
+    "totalReviews": 11209,
+    "totalPositive": 9423,
+    "positivePercent": 84,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "2415010": {
@@ -4290,6 +7493,23 @@
       "en": "Very Positive"
     }
   },
+  "2567870": {
+    "appId": 2567870,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 499,
+    "finalPriceCents": 499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "4,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 54818,
+    "totalPositive": 49252,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "2666510": {
     "appId": 2666510,
     "isFree": false,
@@ -4298,8 +7518,9 @@
     "finalPriceCents": 699,
     "discountPercent": 0,
     "formattedFinalPrice": "6,99€",
-    "totalReviews": 14858,
-    "totalPositive": 14368,
+    "formattedInitialPrice": "",
+    "totalReviews": 13905,
+    "totalPositive": 13454,
     "positivePercent": 97,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
@@ -4322,6 +7543,57 @@
       "en": "Very Positive"
     }
   },
+  "2678990": {
+    "appId": 2678990,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 499,
+    "finalPriceCents": 249,
+    "discountPercent": 50,
+    "formattedFinalPrice": "2,49€",
+    "formattedInitialPrice": "4,99€",
+    "totalReviews": 6122,
+    "totalPositive": 5962,
+    "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "2716400": {
+    "appId": 2716400,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 3793,
+    "totalPositive": 3515,
+    "positivePercent": 93,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "2742830": {
+    "appId": 2742830,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 2499,
+    "finalPriceCents": 2499,
+    "discountPercent": 0,
+    "formattedFinalPrice": "24,99€",
+    "formattedInitialPrice": "",
+    "totalReviews": 8660,
+    "totalPositive": 8249,
+    "positivePercent": 95,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
   "2751490": {
     "appId": 2751490,
     "isFree": false,
@@ -4336,6 +7608,23 @@
     "reviewScoreDesc": {
       "fr": "Positifs",
       "en": "Positive"
+    }
+  },
+  "2754380": {
+    "appId": 2754380,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1950,
+    "discountPercent": 0,
+    "formattedFinalPrice": "19,50€",
+    "formattedInitialPrice": "",
+    "totalReviews": 9723,
+    "totalPositive": 9371,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "2818800": {
@@ -4519,6 +7808,22 @@
       "en": "Very Positive"
     }
   },
+  "3106270": {
+    "appId": 3106270,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9.99€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 85,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "3124020": {
     "appId": 3124020,
     "isFree": false,
@@ -4547,6 +7852,23 @@
     "totalReviews": 70456,
     "totalPositive": 68578,
     "positivePercent": 97,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "3235170": {
+    "appId": 3235170,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 975,
+    "finalPriceCents": 975,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,75€",
+    "formattedInitialPrice": "",
+    "totalReviews": 130,
+    "totalPositive": 123,
+    "positivePercent": 95,
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
@@ -4644,9 +7966,9 @@
     "discountPercent": 10,
     "formattedFinalPrice": "8,99€",
     "formattedInitialPrice": "9,99€",
-    "totalReviews": 128,
-    "totalPositive": 112,
-    "positivePercent": 88,
+    "totalReviews": 118,
+    "totalPositive": 103,
+    "positivePercent": 87,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
