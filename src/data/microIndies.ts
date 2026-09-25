@@ -3,6 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
+ * Total de pépites sélectionnées : 35
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -317,7 +318,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
   },
   {
     "id": "itch-our-life-beginnings-amp-always",
-    "title": "​Our Life: Beginnings &amp; Always",
+    "title": "Our Life: Beginnings & Always",
     "developer": "gbpatch",
     "releaseYear": 2026,
     "platform": "itch",
@@ -494,7 +495,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
   },
   {
     "id": "itch-don-039-t-eat-the-cashier",
-    "title": "Don&#039;t eat the cashier!",
+    "title": "Don't eat the cashier!",
     "developer": "detcc",
     "releaseYear": 2026,
     "platform": "itch",
@@ -538,7 +539,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
   },
   {
     "id": "itch-quot-voices-of-the-void-quot-alpha",
-    "title": "&quot;Voices Of The Void&quot; Alpha",
+    "title": "\"Voices Of The Void\" Alpha",
     "developer": "mrdrnose",
     "releaseYear": 2026,
     "platform": "itch",
@@ -612,8 +613,8 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "pt-BR": "Um encontro perturbador que se transforma em uma obsessão perigosa ao longo de 14 dias."
     },
     "description": {
-      "fr": "He&#039;s always going to be with you...",
-      "en": "He&#039;s always going to be with you..."
+      "fr": "He's always going to be with you...",
+      "en": "He's always going to be with you..."
     },
     "discoveredBy": "Hoot Bot (Itch Moissonnage)",
     "likesCount": 1,
@@ -626,7 +627,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
   },
   {
     "id": "itch-our-life-now-amp-forever",
-    "title": "Our Life: Now &amp; Forever",
+    "title": "Our Life: Now & Forever",
     "developer": "gbpatch",
     "releaseYear": 2026,
     "platform": "itch",
@@ -773,12 +774,12 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "en": "2D Side-scroller"
     },
     "tagline": {
-      "fr": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh.",
-      "en": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh."
+      "fr": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh.",
+      "en": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh."
     },
     "description": {
-      "fr": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh.",
-      "en": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh."
+      "fr": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh.",
+      "en": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh."
     },
     "discoveredBy": "Hoot Bot (Itch Moissonnage)",
     "likesCount": 1,
@@ -826,6 +827,739 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "coverImage": "https://img.itch.zone/aW1hZ2UvMTQzODk5LzgzMTY0OC5wbmc=/315x250%23c/Q6ST2A.png",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvMTQzODk5LzgzMTY0OC5wbmc=/315x250%23c/Q6ST2A.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "friday-night-funkin",
+    "title": "Friday Night Funkin'",
+    "developer": "ninjamuffin99, PhantomArcade, evilsk8r & Kawai Sprite",
+    "releaseYear": 2020,
+    "platform": "itch",
+    "itchUrl": "https://ninja-muffin24.itch.io/funkin",
+    "playInBrowserUrl": "https://ninja-muffin24.itch.io/funkin",
+    "isFree": true,
+    "pricingText": {
+      "fr": "100% Gratuit / Jouable en direct 🌐",
+      "en": "100% Free / Playable in Browser 🌐"
+    },
+    "jam": "Ludum Dare 47",
+    "genre": [
+      "Rythme",
+      "Musique",
+      "Rétro"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Le phénomène mondial de jeu de rythme open-source né lors de la Ludum Dare 47.",
+      "en": "The worldwide open-source rhythm game sensation born during Ludum Dare 47."
+    },
+    "description": {
+      "fr": "Affrontez le père de votre petite amie et une ribambelle d’adversaires charismatiques dans des duels musicaux effrénés au clavier. Jouable directement dans votre navigateur !",
+      "en": "Rap battle against charismatic opponents in rhythm-fueled musical showdowns. Playable directly in your browser!"
+    },
+    "developerMessage": {
+      "fr": "Conçu en quelques jours pour la Ludum Dare 47 sous le thème \"Stuck in a loop\". L'énergie de la communauté a propulsé le jeu vers les sommets.",
+      "en": "Made in a single weekend for Ludum Dare 47. The open-source community support turned it into an instant cultural touchstone."
+    },
+    "discoveredBy": "Quentin Beaud",
+    "likesCount": 230,
+    "featured": true,
+    "coverImage": "https://img.itch.zone/aW1nLzQ1MTU3MzAucG5n/original/52aZ4D.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvNzk2NjA2LzQ1MTU3MzcucG5n/original/Jk6xP3.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "minit-itch",
+    "title": "Minit",
+    "developer": "JW, Kitty, Jukio, Dom",
+    "releaseYear": 2018,
+    "platform": "both",
+    "itchUrl": "https://devolverdigital.itch.io/minit",
+    "steamUrl": "https://store.steampowered.com/app/609490/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "9,99 € sur Itch.io & Steam",
+      "en": "$9.99 on Itch.io & Steam"
+    },
+    "genre": [
+      "Aventure",
+      "Puzzle",
+      "Rétro"
+    ],
+    "artStyle": {
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Une aventure singulière jouée 60 secondes à la fois, dans un style 1-bit culte.",
+      "en": "A peculiar little adventure played sixty seconds at a time in iconic 1-bit monochrome."
+    },
+    "description": {
+      "fr": "Quittez le confort de votre maison pour aider les habitants, percer d’innombrables secrets et briser une malédiction qui termine chaque journée après 60 secondes.",
+      "en": "Journey outside the comfort of your home to help unusual folks, uncover secrets, and overcome dangerous foes, all in 60-second bursts."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 115,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzExMTY4NzYucG5n/original/23nK3e.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/609490/ss_8e5352c3c90cb64670c50bc596328a90ec4db1d9.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "sort-the-court",
+    "title": "Sort the Court!",
+    "developer": "Graebor",
+    "releaseYear": 2015,
+    "platform": "itch",
+    "itchUrl": "https://graebor.itch.io/sort-the-court",
+    "playInBrowserUrl": "https://graebor.itch.io/sort-the-court",
+    "isFree": true,
+    "pricingText": {
+      "fr": "100% Gratuit / Jouable en direct 🌐",
+      "en": "100% Free / Playable in Browser 🌐"
+    },
+    "jam": "Ludum Dare 34",
+    "genre": [
+      "Gestion",
+      "Simulation",
+      "Narratif"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Régnez sur votre royaume médiéval en répondant simplement par Oui ou par Non à vos sujets.",
+      "en": "Rule your medieval realm by simply answering Yes or No to requests from your subjects."
+    },
+    "description": {
+      "fr": "Un jeu de gestion narratif charmant conçu pour la Ludum Dare 34 où chaque décision impacte l’or, le bonheur et la population de votre cour.",
+      "en": "A delightful narrative management gem created for Ludum Dare 34 where every decree balances gold, population, and happiness."
+    },
+    "discoveredBy": "Communauté Hoot",
+    "likesCount": 95,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNDcxODIvMjAzMjU3LnBuZw==/original/2pW7g3.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvNDcxODIvMjA2NjM0LnBuZw==/original/Hw4wO3.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "windowkill-itch",
+    "title": "Windowkill",
+    "developer": "torcado",
+    "releaseYear": 2024,
+    "platform": "both",
+    "itchUrl": "https://torcado.itch.io/windowkill",
+    "steamUrl": "https://store.steampowered.com/app/2726450/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "3,99 €",
+      "en": "$3.99"
+    },
+    "genre": [
+      "Action",
+      "Twin-stick",
+      "Expérimental"
+    ],
+    "artStyle": {
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Un twin-stick shooter subversif où la fenêtre du jeu rétrécit constamment sur votre bureau.",
+      "en": "A subversive twin-stick shooter where the game window itself constantly shrinks on your desktop."
+    },
+    "description": {
+      "fr": "Tirez sur les bords de la fenêtre d’application pour l’agrandir et repousser les vagues d’ennemis dans un concept méta réjouissant.",
+      "en": "Shoot the borders of the operating system window to push them back, dodge enemies, and upgrade your abilities in this clever meta concept."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 88,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE0NzY4OTY1LnBuZw==/original/jFq2K%2B.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2726450/ss_225a66699cfef0ff86a51d18476b7b252084c759.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "anatomy-itch",
+    "title": "Anatomy",
+    "developer": "Kitty Horrorshow",
+    "releaseYear": 2016,
+    "platform": "itch",
+    "itchUrl": "https://kittyhorrorshow.itch.io/anatomy",
+    "isFree": false,
+    "pricingText": {
+      "fr": "2,99 $ (~2,75 €)",
+      "en": "$2.99"
+    },
+    "genre": [
+      "Horreur",
+      "Psychologique",
+      "Exploration"
+    ],
+    "artStyle": {
+      "fr": "3D Rétro Low-poly",
+      "en": "Retro Low-poly 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "tagline": {
+      "fr": "Le chef-d’œuvre de l’horreur psychologique lo-fi explorant l’anatomie d’une maison hantée.",
+      "en": "The iconic lo-fi psychological horror masterpiece dissecting the anatomy of a suburban house."
+    },
+    "description": {
+      "fr": "Parcourez une maison plongée dans le noir à la recherche de cassettes audio décortiquant la relation terrifiante entre l’architecture domestique et le corps humain.",
+      "en": "A short lo-fi psychological horror game about wandering an empty house in the dark, collecting cassette tapes, and listening to what they have to say."
+    },
+    "discoveredBy": "Quentin Beaud",
+    "likesCount": 140,
+    "featured": true,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNTM1ODIvMjQxMDgzLmpwZw==/original/M4Y4Jv.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvNTM1ODIvMjQxMDgxLmpwZw==/original/GZ1M4E.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "lost-constellation",
+    "title": "Night in the Woods: Lost Constellation",
+    "developer": "Finji / Infinite Fall",
+    "releaseYear": 2014,
+    "platform": "itch",
+    "itchUrl": "https://finji.itch.io/lost-constellation",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Prix libre / Gratuit 🆓",
+      "en": "Name your own price / Free 🆓"
+    },
+    "genre": [
+      "Aventure",
+      "Narratif",
+      "Poétique"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Le conte hivernal et poétique précurseur du chef-d’œuvre Night in the Woods.",
+      "en": "The poetic winter ghost story and narrative precursor to Night in the Woods."
+    },
+    "description": {
+      "fr": "Incarnez l’astronome Adina Astra traversant la Forêt Gelée lors de la plus longue nuit de l’année. Dialogue avec des bonhommes de neige et énigmes mélancoliques.",
+      "en": "Travel into the Frozen Woods on the longest night of the year in this narrative ghost story companion to Night in the Woods."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 102,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTQ2OTkvNDQwNDQucG5n/original/U82e07.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvMTQ2OTkvNDQwNDYucG5n/original/tD0H9%2B.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "a-good-snowman-itch",
+    "title": "A Good Snowman Is Hard To Build",
+    "developer": "Draknek & Friends",
+    "releaseYear": 2015,
+    "platform": "both",
+    "itchUrl": "https://draknek.itch.io/a-good-snowman",
+    "steamUrl": "https://store.steampowered.com/app/316610/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "9,99 €",
+      "en": "$9.99"
+    },
+    "genre": [
+      "Puzzle",
+      "Réflexion",
+      "Cozy"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Un jeu de puzzle adorable sur un monstre qui construit des bonhommes de neige.",
+      "en": "An adorable puzzle game about being a monster and making snowmen."
+    },
+    "description": {
+      "fr": "Roulez des boules de neige à travers des labyrinthes de haies soigneusement conçus. Une mécanique sokoban épurée et réconfortante.",
+      "en": "Roll balls of snow through beautifully crafted garden mazes in this charming and relaxing sokoban puzzle adventure."
+    },
+    "discoveredBy": "Communauté Hoot",
+    "likesCount": 76,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE2OTExNDYucG5n/original/j1F81W.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/316610/ss_e1e17bc84b5c777d19cfb30349f7d3077eb4fa4a.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "baba-is-you-prototype",
+    "title": "BABA IS YOU (Game Jam Prototype)",
+    "developer": "Arvi Teikari (Hempuli)",
+    "releaseYear": 2017,
+    "platform": "itch",
+    "itchUrl": "https://hempuli.itch.io/baba-is-you",
+    "playInBrowserUrl": "https://hempuli.itch.io/baba-is-you",
+    "isFree": true,
+    "pricingText": {
+      "fr": "100% Gratuit / Jouable en direct 🌐",
+      "en": "100% Free / Playable in Browser 🌐"
+    },
+    "jam": "Nordic Game Jam 2017",
+    "genre": [
+      "Puzzle",
+      "Réflexion",
+      "Expérimental"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Le prototype historique vainqueur de la Nordic Game Jam 2017 réinventant les règles de la logique.",
+      "en": "The historic Nordic Game Jam 2017 winning prototype where you rewrite the rules of logic."
+    },
+    "description": {
+      "fr": "Poussez des blocs de mots pour changer la nature même des objets : FLAG IS WIN, WALL IS STOP, BABA IS YOU. Jouable directement dans votre navigateur.",
+      "en": "Push word blocks to rewrite reality: WALL IS STOP, ROCK IS PUSH, BABA IS YOU. Playable directly in your browser!"
+    },
+    "discoveredBy": "Quentin Beaud",
+    "likesCount": 198,
+    "featured": true,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTM2Mjc1LzYyMzU4MS5wbmc=/original/zZ2rA5.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvMTM2Mjc1LzYyMzU4My5wbmc=/original/Q5j2yq.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "the-hex-itch",
+    "title": "The Hex",
+    "developer": "Daniel Mullins Games",
+    "releaseYear": 2018,
+    "platform": "both",
+    "itchUrl": "https://danielmullinsgames.itch.io/the-hex",
+    "steamUrl": "https://store.steampowered.com/app/510420/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "7,99 €",
+      "en": "$9.99"
+    },
+    "genre": [
+      "Mystère",
+      "Aventure",
+      "Expérimental"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Six protagonistes de jeux vidéo enfermés dans une auberge sous la pluie, par le créateur d’Inscryption.",
+      "en": "Six video game protagonists trapped in a stormy tavern, from the creator of Inscryption and Pony Island."
+    },
+    "description": {
+      "fr": "Un meurtre est sur le point d’être commis. Revivez les souvenirs des suspects à travers 6 styles de gameplay radicalement différents (RPG, plateforme, tactique, combat).",
+      "en": "Six game protagonists reside in an old inn. Someone is planning a murder. Uncover the culprit by diving into their dark pasts across multiple genres."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 82,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMzA4MTkyLzE1MDY1OTYucG5n/original/U3wYlW.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_8d34346fa0dbd7a7ff2908f02f928e4e7e60058e.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "vvvvvv-itch",
+    "title": "VVVVVV",
+    "developer": "Terry Cavanagh",
+    "releaseYear": 2010,
+    "platform": "both",
+    "itchUrl": "https://terrycavanagh.itch.io/vvvvvv",
+    "steamUrl": "https://store.steampowered.com/app/70110/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "4,99 €",
+      "en": "$4.99"
+    },
+    "genre": [
+      "Plateforme",
+      "Rétro",
+      "Précision"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Le chef-d’œuvre rétro où l’on inverse la gravité au lieu de sauter.",
+      "en": "The beloved retro platformer where you invert gravity instead of jumping."
+    },
+    "description": {
+      "fr": "Contrôlez le Capitaine Viridian à travers une dimension hostile pour secourir votre équipage sur l’inoubliable bande-son chiptune de Magnus Pålsson (SoulEye).",
+      "en": "Control Captain Viridian as you flip gravity to traverse a dangerous dimension and rescue your scattered crew to SoulEye’s chiptune soundtrack."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 160,
+    "featured": true,
+    "coverImage": "https://img.itch.zone/aW1nLzE3MjAyMDIucG5n/original/s4Uv4g.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70110/ss_37000e318cf1bfa49c3ce36735168434771638bc.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "super-hexagon-itch",
+    "title": "Super Hexagon",
+    "developer": "Terry Cavanagh & Chipzel",
+    "releaseYear": 2012,
+    "platform": "both",
+    "itchUrl": "https://terrycavanagh.itch.io/super-hexagon",
+    "steamUrl": "https://store.steampowered.com/app/221640/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "2,99 €",
+      "en": "$2.99"
+    },
+    "genre": [
+      "Action",
+      "Arcade",
+      "Rythme"
+    ],
+    "artStyle": {
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Le jeu d’action minimaliste hypnotique et frénétique au rythme d’une chiptune endiablée.",
+      "en": "A hyper-fast minimalist action game that will test your reflexes and rhythm."
+    },
+    "description": {
+      "fr": "Pivotez autour d’un hexagone central pour esquiver des murs convergents dans un tourbillon visuel et sonore ultra-addictif.",
+      "en": "Rotate around a central shape to avoid incoming geometric walls to the relentless beats of Chipzel’s chiptune."
+    },
+    "discoveredBy": "Communauté Hoot",
+    "likesCount": 130,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE3MjAyMDUucG5n/original/u20wOq.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/221640/ss_164b73b5f25ae87747e4eb1e6d1976bb58972b22.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "nuclear-throne-itch",
+    "title": "Nuclear Throne",
+    "developer": "Vlambeer",
+    "releaseYear": 2015,
+    "platform": "both",
+    "itchUrl": "https://vlambeer.itch.io/nuclear-throne",
+    "steamUrl": "https://store.steampowered.com/app/242680/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "11,99 €",
+      "en": "$11.99"
+    },
+    "genre": [
+      "Roguelike",
+      "Action",
+      "Twin-stick"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Le rogue-like post-apocalyptique nerveux et viscéral développé en direct par Vlambeer.",
+      "en": "The iconic post-apocalyptic roguelike-like top-down shooter developed live by Vlambeer."
+    },
+    "description": {
+      "fr": "Frayez-vous un chemin à travers des terres désolées irradiées avec des mutants aux pouvoirs destructeurs pour atteindre le Trône Nucléaire.",
+      "en": "Fight your way through the post-apocalyptic wastelands with powerful mutant abilities and heavy weaponry to reach the Nuclear Throne."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 155,
+    "featured": true,
+    "coverImage": "https://img.itch.zone/aW1nLzI4NTY1MjgucG5n/original/cT8b7S.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/ss_07b9ad0964724a9191d4e028b122f4bda7b2f676.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "vampire-survivors-itch",
+    "title": "Vampire Survivors (Original Web Prototype)",
+    "developer": "poncle (Luca Galante)",
+    "releaseYear": 2021,
+    "platform": "both",
+    "itchUrl": "https://poncle.itch.io/vampire-survivors",
+    "playInBrowserUrl": "https://poncle.itch.io/vampire-survivors",
+    "steamUrl": "https://store.steampowered.com/app/1794680/",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit en direct 🌐 / 4,99 € sur Steam",
+      "en": "Free in Browser 🌐 / $4.99 on Steam"
+    },
+    "genre": [
+      "Roguelite",
+      "Survie",
+      "Bullet Hell"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "La version Web originelle jouable en direct qui a lancé la déferlante mondiale des \"survivors-like\".",
+      "en": "The original browser prototype that sparked the worldwide survivor-like gaming phenomenon."
+    },
+    "description": {
+      "fr": "Fauchez des milliers de créatures nocturnes et survivez jusqu’à l’aube. Directement jouable dans votre navigateur !",
+      "en": "Mow down thousands of night creatures and survive until dawn. Playable directly in your web browser!"
+    },
+    "discoveredBy": "Quentin Beaud",
+    "likesCount": 210,
+    "featured": true,
+    "coverImage": "https://img.itch.zone/aW1nLzc3MTYwODMucG5n/original/6x3KqF.png",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_f8cfc38a16db49fe8e0e98031d77759ad45ad2b9.1920x1080.jpg"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "birdsong-linssen",
+    "title": "Birdsong",
+    "developer": "Daniel Linssen (managore)",
+    "releaseYear": 2016,
+    "platform": "itch",
+    "itchUrl": "https://managore.itch.io/birdsong",
+    "playInBrowserUrl": "https://managore.itch.io/birdsong",
+    "isFree": true,
+    "pricingText": {
+      "fr": "100% Gratuit / Jouable en direct 🌐",
+      "en": "100% Free / Playable in Browser 🌐"
+    },
+    "genre": [
+      "Metroidvania",
+      "Poétique",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Une pépite minimaliste et contemplative par le maître des micro-metroidvanias de Game Jam.",
+      "en": "A contemplative minimalist micro-metroidvania by the master of game jam game design."
+    },
+    "description": {
+      "fr": "Guidez un petit oiseau à travers une forêt de cavernes interconnectées. Explorez, chantez pour activer des mécanismes et trouvez vos oisillons.",
+      "en": "Fly through an interconnected maze of caves, sing to activate mystical mechanisms, and reunite your bird family."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 94,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNjk5NzcvMzIxMDY0LnBuZw==/original/M7CqN9.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvNjk5NzcvMzIxMDY2LnBuZw==/original/Ocmx6v.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "reap-linssen",
+    "title": "Reap",
+    "developer": "Daniel Linssen (managore)",
+    "releaseYear": 2015,
+    "platform": "itch",
+    "itchUrl": "https://managore.itch.io/reap",
+    "playInBrowserUrl": "https://managore.itch.io/reap",
+    "isFree": true,
+    "pricingText": {
+      "fr": "100% Gratuit / Jouable en direct 🌐",
+      "en": "100% Free / Playable in Browser 🌐"
+    },
+    "jam": "Ludum Dare 34",
+    "genre": [
+      "Survie",
+      "Gestion",
+      "Minimaliste"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Un micro-jeu de survie et d’agriculture insulaire conçu pour la Ludum Dare 34.",
+      "en": "A poignant island survival and farming micro-game crafted for Ludum Dare 34."
+    },
+    "description": {
+      "fr": "Échoué sur un archipel désert, plantez des graines, entretenez vos feux et gérez votre endurance jour après jour.",
+      "en": "Stranded on an empty island, plant crops, tend to fires, and manage your daily energy in this poetic micro-survival."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 91,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNDczMTMvMjA0MTU4LnBuZw==/original/2wTqB0.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvNDczMTMvMjA0MTYwLnBuZw==/original/g4T5g6.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "itch-we-become-what-we-behold",
+    "title": "We Become What We Behold",
+    "developer": "ncase",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://ncase.itch.io/wbwwb",
+    "playInBrowserUrl": "https://ncase.itch.io/wbwwb",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "a game about news cycles, vicious cycles, infinite cycles",
+      "en": "a game about news cycles, vicious cycles, infinite cycles"
+    },
+    "description": {
+      "fr": "a game about news cycles, vicious cycles, infinite cycles",
+      "en": "a game about news cycles, vicious cycles, infinite cycles"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvOTIxMTUvNDU0MDMxLnBuZw==/315x250%23c/cxthdQ.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvOTIxMTUvNDU0MDMxLnBuZw==/315x250%23c/cxthdQ.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "itch-mushroom-oasis",
+    "title": "Mushroom Oasis",
+    "developer": "deerspherestudios",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://deerspherestudios.itch.io/mushroom-oasis",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "beware of toxic fungi. a slow burn yandere vn (in development)",
+      "en": "beware of toxic fungi. a slow burn yandere vn (in development)"
+    },
+    "description": {
+      "fr": "beware of toxic fungi. a slow burn yandere vn (in development)",
+      "en": "beware of toxic fungi. a slow burn yandere vn (in development)"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzExNTkxMzIxLmdpZg==/original/pECVwW.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzExNTkxMzIxLmdpZg==/original/pECVwW.gif"
     ],
     "dateAdded": "2026-09-25"
   }

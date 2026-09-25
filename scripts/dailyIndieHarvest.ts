@@ -5,7 +5,7 @@ import { INDIE_GAMES } from '../src/data/games';
 import { UPCOMING_INDIE_GAMES, type UpcomingGame } from '../src/data/upcomingGames';
 import { INITIAL_MICRO_INDIES } from '../src/data/microIndies';
 import type { MicroIndieGame } from '../src/types/microIndie';
-import { BANNED_APP_IDS, checkAdultContent, validateSingleGame } from './auditRules';
+import { BANNED_APP_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
 
 /**
  * 🦉 Hoot Indie Games — Script d'Alimentation & Synchronisation Quotidienne Automatique
@@ -31,6 +31,18 @@ const CONFIG = {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function decodeXmlEntities(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/&amp;/g, '&')
+    .replace(/&#039;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/^\u200B/, '');
+}
+
 function slugify(text: string, fallbackId?: number): string {
   const s = text
     .toLowerCase()
@@ -55,9 +67,11 @@ function isReadableLatinText(text: string): boolean {
   return Boolean(latinMatches && latinMatches.length / text.length >= 0.55);
 }
 
-// Filtre strict anti-contenu adulte / NSFW / shovelware / drogues
+// Filtre strict anti-contenu adulte / NSFW / shovelware / drogues / éditeurs AAA non-indés
 function isAdultOrInappropriate(details: SteamDetails): boolean {
   if (BANNED_APP_IDS.has(details.steam_appid)) return true;
+  const devPub = (details.developers || []).join(' ') + ' ' + (details.publishers || []).join(' ');
+  if (isNonIndieOrAAA(devPub)) return true;
   const text = details.name + ' ' + details.short_description + ' ' + (details.detailed_description || '');
   const check = checkAdultContent(text);
   return check.hasAdult;
@@ -585,8 +599,68 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = `;
   fs.writeFileSync(filePath, content, 'utf8');
 }
 
+function loadCurrentGamesDatabase(): Game[] {
+  const targetPath = path.join(process.cwd(), 'src/data/games.ts');
+  if (fs.existsSync(targetPath)) {
+    try {
+      const content = fs.readFileSync(targetPath, 'utf8');
+      const match = content.match(/export const INDIE_GAMES: Game\[\] = (\[[\s\S]*?\]);\n\n\/\/ Pool/);
+      if (match) {
+        return JSON.parse(match[1]);
+      }
+    } catch (err) {
+      console.warn('⚠️ Erreur lecture dynamique de src/data/games.ts :', err);
+    }
+  }
+  return INDIE_GAMES;
+}
+
 function saveGamesDatabase(gamesList: Game[]) {
   const targetPath = path.join(process.cwd(), 'src/data/games.ts');
+  const currentGames = loadCurrentGamesDatabase();
+
+  // Fusion défensive : s'assurer que chaque jeu existant dans games.ts est conservé sans régression
+  const mergedMap = new Map<string, Game>();
+  const appIdMap = new Map<number, string>();
+
+  for (const g of currentGames) {
+    mergedMap.set(g.id, g);
+    const appId = g.steamAppId || (g.steamUrl?.match(/\/app\/(\d+)/)?.[1] ? parseInt(g.steamUrl.match(/\/app\/(\d+)/)[1], 10) : null);
+    if (appId) appIdMap.set(appId, g.id);
+  }
+
+  for (const g of gamesList) {
+    const appId = g.steamAppId || (g.steamUrl?.match(/\/app\/(\d+)/)?.[1] ? parseInt(g.steamUrl.match(/\/app\/(\d+)/)[1], 10) : null);
+    if (appId && appIdMap.has(appId)) {
+      const existingId = appIdMap.get(appId)!;
+      mergedMap.set(existingId, { ...mergedMap.get(existingId)!, ...g });
+    } else {
+      mergedMap.set(g.id, g);
+      if (appId) appIdMap.set(appId, g.id);
+    }
+  }
+
+  // Vérifier également si des surcharges de jeux personnalisés sont présentes
+  try {
+    const overrideFile = path.join(process.cwd(), 'public/api/games_override.json');
+    if (fs.existsSync(overrideFile)) {
+      const overrides = JSON.parse(fs.readFileSync(overrideFile, 'utf8'));
+      if (Array.isArray(overrides.customAdminGames)) {
+        overrides.customAdminGames.forEach((cg: Game) => {
+          if (!mergedMap.has(cg.id)) mergedMap.set(cg.id, cg);
+        });
+      }
+    }
+  } catch {}
+
+  const finalGamesList = Array.from(mergedMap.values());
+
+  // Règle d'or anti-régression : le nombre de jeux dans le panthéon ne doit JAMAIS régresser
+  if (finalGamesList.length < currentGames.length) {
+    console.error(`🚨 [SÉCURITÉ DATA] Tentative de réduction anormale du panthéon : ${finalGamesList.length} < ${currentGames.length}. Sauvegarde annulée.`);
+    return;
+  }
+
   const fileHeader = `import type { Game } from '../types/game';
 import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlyScheduler';
 
@@ -594,7 +668,7 @@ import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlySchedule
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : ${gamesList.length}
+ * Total de jeux : ${finalGamesList.length}
  */
 export const INDIE_GAMES: Game[] = `;
 
@@ -640,19 +714,35 @@ export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
 export { getScheduledDailyGame, getScheduledDay };
 `;
 
-  fs.writeFileSync(targetPath, fileHeader + JSON.stringify(gamesList, null, 2) + fileFooter, 'utf8');
+  fs.writeFileSync(targetPath, fileHeader + JSON.stringify(finalGamesList, null, 2) + fileFooter, 'utf8');
 }
 
 function saveMicroIndiesDatabase(list: MicroIndieGame[]) {
   const targetPath = path.join(process.cwd(), 'src/data/microIndies.ts');
+  const existingMap = new Map<string, MicroIndieGame>();
+  if (fs.existsSync(targetPath)) {
+    try {
+      const content = fs.readFileSync(targetPath, 'utf8');
+      const match = content.match(/export const INITIAL_MICRO_INDIES: MicroIndieGame\[\] = (\[[\s\S]*?\]);\n/);
+      if (match) {
+        const curList: MicroIndieGame[] = JSON.parse(match[1]);
+        curList.forEach((g) => existingMap.set(g.id, g));
+      }
+    } catch {}
+  }
+  for (const g of list) {
+    existingMap.set(g.id, g);
+  }
+  const merged = Array.from(existingMap.values());
   const content = `import type { MicroIndieGame } from '../types/microIndie';
 
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
+ * Total de pépites sélectionnées : ${merged.length}
  */
 
-export const INITIAL_MICRO_INDIES: MicroIndieGame[] = ${JSON.stringify(list, null, 2)};
+export const INITIAL_MICRO_INDIES: MicroIndieGame[] = ${JSON.stringify(merged, null, 2)};
 `;
   fs.writeFileSync(targetPath, content, 'utf8');
 }
@@ -679,11 +769,21 @@ function saveSteamCatalogDatabase(newGames: any[], promotedGameIds: Set<string> 
   }
 
   const existingIds = new Set(current.map((g) => g.id));
+  const existingAppIds = new Set(current.map((g) => g.steamAppId || (g.steamUrl?.match(/\/app\/(\d+)/)?.[1] ? parseInt(g.steamUrl.match(/\/app\/(\d+)/)[1], 10) : null)).filter(Boolean));
+
   let added = 0;
   for (const g of newGames) {
-    if (!existingIds.has(g.id)) {
+    const appId = g.steamAppId || (g.steamUrl?.match(/\/app\/(\d+)/)?.[1] ? parseInt(g.steamUrl.match(/\/app\/(\d+)/)[1], 10) : null);
+    // Filtrer les jeux sans titre latin, les playtests ou les éditeurs AAA
+    if (!/[a-zA-Z]/.test(g.title)) continue;
+    if (g.title.toLowerCase().includes('playtest')) continue;
+    if (isNonIndieOrAAA(g.developer)) continue;
+    if (appId && BANNED_APP_IDS.has(appId)) continue;
+
+    if (!existingIds.has(g.id) && (!appId || !existingAppIds.has(appId))) {
       current.push(g);
       existingIds.add(g.id);
+      if (appId) existingAppIds.add(appId);
       added++;
     }
   }
@@ -729,7 +829,7 @@ async function harvestItchMicroIndies(
         const hasHtmlPlatform = itemXml.includes('<html>yes</html>');
 
         const itchLink = linkMatch ? linkMatch[1].trim() : '';
-        const title = plainTitleMatch ? plainTitleMatch[1].replace(/\[.*?\]/g, '').trim() : '';
+        const title = plainTitleMatch ? decodeXmlEntities(plainTitleMatch[1].replace(/\[.*?\]/g, '').trim()) : '';
         const cover = imageMatch ? imageMatch[1].trim() : '';
         const priceStr = priceMatch ? priceMatch[1].trim() : '$0.00';
         const isFree =
@@ -740,9 +840,9 @@ async function harvestItchMicroIndies(
         if (!itchLink || !title || currentUrls.has(itchLink) || !cover) continue;
 
         const creatorMatch = itchLink.match(/https:\/\/([a-zA-Z0-9\-_]+)\.itch\.io/);
-        const creator = creatorMatch ? creatorMatch[1] : 'Créateur Indé';
+        const creator = creatorMatch ? decodeXmlEntities(creatorMatch[1]) : 'Créateur Indé';
 
-        const rawDesc = descMatch ? descMatch[1].replace(/<[^>]*>?/gm, '').trim() : '';
+        const rawDesc = descMatch ? decodeXmlEntities(descMatch[1].replace(/<[^>]*>?/gm, '').trim()) : '';
         if (rawDesc.length < 10) continue;
 
         const adultCheck = checkAdultContent(`${title} ${rawDesc}`);
@@ -808,7 +908,8 @@ export async function runDailyHarvest() {
   console.log('🦉 HOOT INDIE GAMES — MOISSONNAGE & SYNCHRONISATION AUTOMATIQUE');
   console.log('🦉 ===============================================================\n');
 
-  // 0. Charger le catalogue étendu existant
+  // 0. Charger le catalogue étendu existant et la base actuelle des pépites
+  const currentPepites = loadCurrentGamesDatabase();
   const catalogPath = path.join(process.cwd(), 'public/data/steam_catalog.json');
   let existingCatalog: any[] = [];
   if (fs.existsSync(catalogPath)) {
@@ -825,7 +926,7 @@ export async function runDailyHarvest() {
   const existingSlugs = new Set<string>();
   const existingNormalizedGenres = new Map<string, string>();
 
-  for (const game of INDIE_GAMES) {
+  for (const game of currentPepites) {
     existingSlugs.add(game.id);
     if (game.steamUrl) {
       const match = game.steamUrl.match(/\/app\/(\d+)/);
@@ -848,7 +949,7 @@ export async function runDailyHarvest() {
     }
   }
 
-  console.log(`📦 Base actuelle des Pépites d'Or : ${INDIE_GAMES.length} chefs-d'œuvre certifiés.`);
+  console.log(`📦 Base actuelle des Pépites d'Or : ${currentPepites.length} chefs-d'œuvre certifiés.`);
   console.log(`📖 Catalogue Étendu : ${existingCatalog.length} jeux indépendants.`);
   console.log(`🔭 Radar actuel de sorties : ${UPCOMING_INDIE_GAMES.length} jeux en surveillance.\n`);
 
@@ -1054,10 +1155,11 @@ export async function runDailyHarvest() {
   const allNewCatalog = [...radarSync.promotedCatalog, ...newlyHarvestedCatalog];
 
   if (allNewPepites.length > 0) {
-    const updatedGamesList = [...INDIE_GAMES, ...allNewPepites];
+    const currentPepitesList = loadCurrentGamesDatabase();
+    const updatedGamesList = [...currentPepitesList, ...allNewPepites];
     saveGamesDatabase(updatedGamesList);
     console.log(`\n🎉 [4/4] Base des Pépites mise à jour ! ${allNewPepites.length} pépite(s) ajoutée(s) (dont ${radarSync.promotedPepites.length} issue(s) du Radar).`);
-    console.log(`📚 Nouveau panthéon des Pépites : ${updatedGamesList.length} chefs-d'œuvre certifiés.`);
+    console.log(`📚 Nouveau panthéon des Pépites : ${loadCurrentGamesDatabase().length} chefs-d'œuvre certifiés.`);
   } else {
     console.log('\n☕ [4/4] Aucune nouvelle Pépite majeure à intégrer aujourd\'hui. Le sanctuaire reste sélectif et pur.');
   }
@@ -1073,6 +1175,8 @@ export async function runDailyHarvest() {
     console.log(`🌱 [Itch.io] ${itchHarvest.addedCount} pépite(s) Itch.io ajoutée(s) à La Clairière.`);
   }
 
+  const finalPepites = loadCurrentGamesDatabase();
+
   return {
     promotedFromRadarToPepite: radarSync.promotedPepites.map((g) => g.title),
     promotedFromRadarToCatalog: radarSync.promotedCatalog.map((g) => g.title),
@@ -1081,7 +1185,7 @@ export async function runDailyHarvest() {
     newlyHarvestedCatalog: newlyHarvestedCatalog.map((g) => g.title),
     newlyHarvestedItch: itchHarvest.addedCount,
     totalUpcoming: updatedUpcoming.length,
-    totalPepites: INDIE_GAMES.length + allNewPepites.length,
+    totalPepites: finalPepites.length,
     totalCatalog: existingCatalog.length + allNewCatalog.length - promotedFromCatalogIds.size,
   };
 }

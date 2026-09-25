@@ -4274,41 +4274,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1321440/header.jpg?t=1789482081"
   },
   {
-    "id": "nioh-2-the-complete-edition",
-    "title": "Nioh 2 – The Complete Edition",
-    "releaseYear": 2021,
-    "genre": [
-      "Action",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "KOEI TECMO GAMES CO., LTD.",
-    "steamUrl": "https://store.steampowered.com/app/1325200/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_c8ad5efb3acdb4099f77b8b611289e2aa00cd19c.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_bb996dea7ada75409e8c328b4f60e1f262e165d9.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_7fcca74473ea2678e90ee4cff018392007b8f1c0.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_bdb077e9fcfabe5eca01571b8fd1bdbf03440d68.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_6335545598363d44156664e20f92aea3d5aaa0fb.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_899a1bef5a95596f54139852a4e6585309ae66c4.1920x1080.jpg?t=1775540023"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Combattez des hordes de yokai dans ce jeu de rôle d'action ultra exigeant. Créez votre protagoniste et embarquez pour une aventure à travers le Japon de l'époque Sengoku. Servez-vous de votre nouvelle compétence Mutation yokai pour vaincre les plus féroces yokai, et préparez-vous à braver les Royaumes obscurs créés par vos ennemis.",
-        "en": "Battle hordes of yokai in this masocore Action RPG. Create your protagonist and embark on an adventure through a myriad of locales across Japan during the Sengoku period. Utilize the new Yokai Shift ability to defeat even the most ferocious yokai and be prepared to brave through Dark Realms created by your enemies."
-      }
-    },
-    "steamAppId": 1325200,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/header.jpg?t=1775540023"
-  },
-  {
     "id": "godsworn",
     "title": "Godsworn",
     "releaseYear": 2024,
@@ -5587,75 +5552,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1887020/header.jpg?t=1759653151"
   },
   {
-    "id": "armored-core-vi-fires-of-rubicon",
-    "title": "ARMORED CORE™ VI FIRES OF RUBICON™",
-    "releaseYear": 2023,
-    "genre": [
-      "Action"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "FromSoftware, Inc.",
-    "steamUrl": "https://store.steampowered.com/app/1888160/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888160/ss_549f55589c10866bc31243d277324e31ad155b29.1920x1080.jpg?t=1748630736",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888160/ss_dcd98899647b45246cfb296aa5a3b40b2ae87e9e.1920x1080.jpg?t=1748630736",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888160/ss_c92110c39a9c64376af5e8da31a0e6ffa9747334.1920x1080.jpg?t=1748630736",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888160/ss_6648f7e39998ae173b2271c6a325d4295e6db785.1920x1080.jpg?t=1748630736",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888160/ss_f441df5b6d02d0cbc2635f29ec502d93058e025c.1920x1080.jpg?t=1748630736",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888160/ss_88767c4785d5b7e839a5434e988a8aee1836e1ad.1920x1080.jpg?t=1748630736"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Un nouveau jeu d'action de la licence ARMORED CORE, qui tire parti de l'expérience acquise par FromSoftware lors de la production de ses autres jeux d'action récents.",
-        "en": "A new action game based on the concept of the ARMORED CORE series that uses the knowledge gained from FromSoftware's recent action game development."
-      }
-    },
-    "steamAppId": 1888160,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888160/header.jpg?t=1748630736"
-  },
-  {
-    "id": "every-day-we-fight-playtest",
-    "title": "Every Day We Fight Playtest",
-    "releaseYear": 2023,
-    "genre": [
-      "Aventure",
-      "Action"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Studio Indépendant",
-    "steamUrl": "https://store.steampowered.com/app/1911950/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/ss_b9cb7ad9e3383e546d09f7fe2b2bb5175f090b15.1920x1080.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Every Day We Fight Playtest est un jeu indépendant remarquable développé par Studio Indépendant.",
-        "en": "Every Day We Fight Playtest is a remarkable indie game developed by Studio Indépendant."
-      }
-    },
-    "steamAppId": 1911950,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911"
-  },
-  {
     "id": "chants-of-sennaar",
     "title": "Chants of Sennaar",
     "releaseYear": 2023,
@@ -5977,42 +5873,6 @@
     },
     "steamAppId": 1989270,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1989270/74a54248cfec29144de5e867a333c30e6d62801d/header.jpg?t=1775751748"
-  },
-  {
-    "id": "like-a-dragon-infinite-wealth",
-    "title": "Like a Dragon: Infinite Wealth",
-    "releaseYear": 2024,
-    "genre": [
-      "Action",
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "RGG Studio",
-    "steamUrl": "https://store.steampowered.com/app/2072450/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/ss_615e436b89587d0685578972f946ee2880bb847b.1920x1080.jpg?t=1781262996",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/ss_9b4b2dcd253762e5c7fd5dc620bc57d342bbada5.1920x1080.jpg?t=1781262996",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/ss_b45521ff0f42ad4c3ac57d0b37fee51364f543c1.1920x1080.jpg?t=1781262996",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/ss_a8bf355f28619cdb8b7a3db96e7ab411261cc1b6.1920x1080.jpg?t=1781262996",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/ss_f1c79d3f7e5bae02d0302bda412f145d07c5627a.1920x1080.jpg?t=1781262996",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/ss_105febf52ac97f161b99e785d04571868f9c327a.1920x1080.jpg?t=1781262996"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Deux héros hors du commun réunis par un coup du sort, ou peut-être par quelque chose de plus sinistre… Menez la grande vie au Japon et explorez tout ce que Hawaï a à offrir dans une aventure si vaste qu'elle s'étend sur tout le Pacifique.",
-        "en": "Two larger-than-life heroes, Ichiban Kasuga and Kazuma Kiryu are brought together by the hand of fate, or perhaps something more sinister… Live it up in Japan and explore all that Hawaii has to offer in an RPG adventure so big it spans the Pacific."
-      }
-    },
-    "steamAppId": 2072450,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2072450/header.jpg?t=1781262996"
   },
   {
     "id": "mullet-madjack",
@@ -7174,5 +7034,41 @@
     },
     "steamAppId": 3936270,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3936270/51c36d1ba7b271c68ab3e20c164b55f4a7109459/header.jpg?t=1790225431"
+  },
+  {
+    "id": "rivage",
+    "title": "Rivage",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Exnilo Studio",
+    "steamUrl": "https://store.steampowered.com/app/4094660/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4094660/6a8aef20e8fecd3e8bb59abc17891f06653a96c1/ss_6a8aef20e8fecd3e8bb59abc17891f06653a96c1.1920x1080.jpg?t=1790085874",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4094660/e34edd0eff7034e82fa5bd845fc025292b1a0820/ss_e34edd0eff7034e82fa5bd845fc025292b1a0820.1920x1080.jpg?t=1790085874",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4094660/41b4be4a7b4d7740f272fe8b3b66632130c5f851/ss_41b4be4a7b4d7740f272fe8b3b66632130c5f851.1920x1080.jpg?t=1790085874",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4094660/339292f06b49ceb030fee3ec0cb305e9927d9e43/ss_339292f06b49ceb030fee3ec0cb305e9927d9e43.1920x1080.jpg?t=1790085874",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4094660/de12153985b26351e2a4eb90c52c67deac2faf73/ss_de12153985b26351e2a4eb90c52c67deac2faf73.1920x1080.jpg?t=1790085874",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4094660/b0ffc513c17b4f45fe5502e358cec98217f8b88c/ss_b0ffc513c17b4f45fe5502e358cec98217f8b88c.1920x1080.jpg?t=1790085874"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Rivage est un jeu d'aventure et de réflexion dans un univers de science-fiction immersif. Incarnez Miranda à bord d'A.R.E.S., une station spatiale piégée dans une anomalie spatiale. Explorez et résolvez des énigmes complexes pour découvrir ce qui est arrivé au reste de votre équipage.",
+        "en": "Rivage is an immersive sci-fi puzzle adventure set aboard the A.R.E.S. space station trapped in a space phenomenon. Wake up as Miranda, forced to explore, solve intricate puzzles to unravel the fate of your missing crew."
+      }
+    },
+    "addedAt": "2026-09-25",
+    "steamAppId": 4094660,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4094660/789daec85b18ff8d8dfbe6e074b2190d61494846/header_alt_assets_1_french.jpg?t=1790085874"
   }
 ]

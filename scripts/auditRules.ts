@@ -5,7 +5,52 @@ import type { Game } from '../src/types/game';
  */
 export const BANNED_APP_IDS = new Set<number>([
   4739660, // Drag'n Wash (contenu adulte déguisé)
+  1888160, // ARMORED CORE VI (AAA FromSoftware / Bandai Namco)
+  1325200, // Nioh 2 (AAA Team Ninja / Koei Tecmo)
+  2072450, // Like a Dragon: Infinite Wealth (AAA SEGA)
 ]);
+
+/**
+ * Éditeurs et studios AAA non-indépendants interdits de moissonnage dans le sanctuaire
+ */
+export const BANNED_AAA_PUBLISHERS = [
+  'bandai namco',
+  'electronic arts',
+  'ubisoft',
+  'activision',
+  'blizzard',
+  'sony interactive entertainment',
+  'playstation pc llc',
+  'xbox game studios',
+  'microsoft',
+  'square enix',
+  'capcom',
+  'sega',
+  'koei tecmo',
+  'bethesda',
+  'take-two interactive',
+  'warner bros',
+  'konami',
+  'fromsoftware',
+  'tencent',
+  'riot games',
+  'netmarble',
+  'ncsoft',
+];
+
+const COMPILED_AAA_REGEXES = [
+  /\belectronic arts\b/i,
+  /\bea games\b/i,
+  /\bea sports\b/i,
+  /\b2k\b/i,
+  ...BANNED_AAA_PUBLISHERS.map((pub) => new RegExp(`\\b${pub.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}\\b`, 'i')),
+];
+
+export function isNonIndieOrAAA(text: string): boolean {
+  if (!text) return false;
+  return COMPILED_AAA_REGEXES.some((rx) => rx.test(text));
+}
+
 
 /**
  * Mots-clés interdits pour le filtrage strict anti-contenu adulte / hentai / NSFW
@@ -146,6 +191,8 @@ export function validateSingleGame(
   // 4. Vérification Développeur & Compositeur
   if (!game.developer || game.developer.trim() === '') {
     errors.push(`[Erreur Développeur] ${game.title} : développeur manquant.`);
+  } else if (isNonIndieOrAAA(game.developer)) {
+    errors.push(`[Erreur Non-Indé / AAA] ${game.title} : studio/éditeur AAA détecté ("${game.developer}").`);
   }
   if (!game.hints?.composer || game.hints.composer.trim() === '') {
     warnings.push(`⚠️ [Avertissement Compositeur] ${game.title} : compositeur non spécifié.`);

@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlySchedule
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 185
+ * Total de jeux : 214
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -7384,10 +7384,1005 @@ export const INDIE_GAMES: Game[] = [
       },
       "composer": "Jaybooty"
     }
+  },
+  {
+    "id": "phasmophobia",
+    "title": "Phasmophobia",
+    "releaseYear": 2020,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Réaliste",
+      "en": "Realistic 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Kinetic Games",
+    "steamUrl": "https://store.steampowered.com/app/739630/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/ec30a770064ea10c2bcfb1b3002a3dbd086be516/ss_ec30a770064ea10c2bcfb1b3002a3dbd086be516.1920x1080.jpg?t=1789487643",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/e9b67c7a3744a36cd5cc29adc13c6caaa4172e26/ss_e9b67c7a3744a36cd5cc29adc13c6caaa4172e26.1920x1080.jpg?t=1789487643",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/1ec54d1d45005e5ddd8360b05e5bbdea3a9090f2/ss_1ec54d1d45005e5ddd8360b05e5bbdea3a9090f2.1920x1080.jpg?t=1789487643",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/71f1c151812f056bdbf1aa0c0d5779bb12f31a2a/ss_71f1c151812f056bdbf1aa0c0d5779bb12f31a2a.1920x1080.jpg?t=1789487643",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/36bacb3935192ddacb4259cc964ab6e6f4be2d44/ss_36bacb3935192ddacb4259cc964ab6e6f4be2d44.1920x1080.jpg?t=1789487643",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/a1a0840e05ff4007115fa2e51f725d1f1a9860c9/ss_a1a0840e05ff4007115fa2e51f725d1f1a9860c9.1920x1080.jpg?t=1789487643"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Phasmophobia est un jeu d'horreur psychologique en coopération à 4 joueurs en ligne. L'activité paranormale augmente : à vous et votre équipe d'utiliser l'équipement de chasse aux fantômes pour récolter un maximum de preuves.",
+        "en": "Phasmophobia is a 4 player online co-op psychological horror. Paranormal activity is on the rise and it’s up to you and your team to use all the ghost-hunting equipment at your disposal in order to gather as much evidence as you can."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "v-rising",
+    "title": "V Rising",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Massivement multijoueur"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
+    },
+    "developer": "Stunlock Studios",
+    "steamUrl": "https://store.steampowered.com/app/1604030/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1604030/ss_19d6b903fd65c410af902a8c5f62c820cfe09292.1920x1080.jpg?t=1787038382",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1604030/ss_4a88ba3b0353f3d43f045e5230c9d600e19daae8.1920x1080.jpg?t=1787038382",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1604030/ss_262496a8c3ed1335d63398fe06f8dd4d43d311cf.1920x1080.jpg?t=1787038382",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1604030/3101acbd497584ac6f8ecb91c05cbb66378d62a1/ss_3101acbd497584ac6f8ecb91c05cbb66378d62a1.1920x1080.jpg?t=1787038382",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1604030/ss_712d9885b750317ab0be515158e51c03cf5944b6.1920x1080.jpg?t=1787038382",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1604030/ss_e3ea47bf147b505e628dda2d607cf81eb9d56b3b.1920x1080.jpg?t=1787038382"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Réveille le vampire qui est en toi. Chasse le sang dans les colonies voisines pour retrouver tes forces et fuis le soleil brûlant pour survivre. Bâtis ton château et prospère dans un monde ouvert en constante évolution plein de mystère. Gagne des alliés en ligne et conquiers la terre des vivants.",
+        "en": "Awaken as a Vampire. Hunt for blood in nearby settlements to regain your strength and evade the scorching sun to survive. Raise your castle and thrive in an ever-changing, open world full of mystery. Gain allies online and conquer the land of the living."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "restory-chill-electronics-repairs",
+    "title": "ReStory: Chill Electronics Repairs",
+    "releaseYear": 2024,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Mandragora",
+    "steamUrl": "https://store.steampowered.com/app/3812600/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3812600/388a09ba420abd16546e16570567e83cc6d55590/ss_388a09ba420abd16546e16570567e83cc6d55590.1920x1080.jpg?t=1790169325",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3812600/c01f56d4015e380a942b101297b4b7f4d5c03e18/ss_c01f56d4015e380a942b101297b4b7f4d5c03e18.1920x1080.jpg?t=1790169325",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3812600/5f5d54a9d11c2461dde84fcf3eae4ec3e95e8493/ss_5f5d54a9d11c2461dde84fcf3eae4ec3e95e8493.1920x1080.jpg?t=1790169325",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3812600/c8f30b0f37aaaac1263e405122fb212400116678/ss_c8f30b0f37aaaac1263e405122fb212400116678.1920x1080.jpg?t=1790169325",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3812600/dc7803dbd526115ed8e0cd8befcd6110e314e990/ss_dc7803dbd526115ed8e0cd8befcd6110e314e990.1920x1080.jpg?t=1790169325",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3812600/cb3ebbf4888bcf0b7ad9f5fec7b9009b90a95820/ss_cb3ebbf4888bcf0b7ad9f5fec7b9009b90a95820.1920x1080.jpg?t=1790169325"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Développez votre petit magasin de réparations électroniques dans le Tokyo des années 2000. Restaurez des consoles de jeu, des téléphones portables et autres objets nostalgiques. Écoutez les histoires de vos clients et observez l’impact de vos décisions sur leurs vies et votre boutique.",
+        "en": "Run a quaint electronics repair shop in mid-2000s Tokyo. Grow your business by carefully restoring iconic video game consoles, cell phones, music players, and other nostalgic devices. Talk to customers, hear their stories, and see how your decisions impact both their lives and your shop."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "dungeon-bodega-simulator",
+    "title": "Dungeon Bodega Simulator",
+    "releaseYear": 2024,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Alien Fruit",
+    "steamUrl": "https://store.steampowered.com/app/3458180/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3458180/eab482ce04fbab3b0f8c173eb8a53e7a28589433/ss_eab482ce04fbab3b0f8c173eb8a53e7a28589433.1920x1080.jpg?t=1790272628",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3458180/76a8dc7db084533956b2d755a6f0e27a685cf798/ss_76a8dc7db084533956b2d755a6f0e27a685cf798.1920x1080.jpg?t=1790272628",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3458180/de88241b5ec66a13b23370f4d08266e6c231efeb/ss_de88241b5ec66a13b23370f4d08266e6c231efeb.1920x1080.jpg?t=1790272628",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3458180/f34d51bc20ac2dea72ce62882558b91146c6700b/ss_f34d51bc20ac2dea72ce62882558b91146c6700b.1920x1080.jpg?t=1790272628",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3458180/f79d11eb6ad04440d41dd7191b777bfe77fe19ef/ss_f79d11eb6ad04440d41dd7191b777bfe77fe19ef.1920x1080.jpg?t=1790272628",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3458180/f1548e31f7d46e2f32362b9baac259b18a21be4f/ss_f1548e31f7d46e2f32362b9baac259b18a21be4f.1920x1080.jpg?t=1790272628"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dans ce jeu de fantasy rétro, vous cultivez votre potager, préparez des potions, vendez des articles et élevez des slimes dans votre échoppe ! Saurez-vous transformer ce petit commerce en étape incontournable pour les aventuriers tout en perçant les mystères du donjon ?",
+        "en": "Dungeon Bodega Simulator is a retro styled fantasy shop game where you can grow crops, brew potions, sell items and raise slimes as pets! Can you build up your bodega into a one stop adventuring shop while solving the mysteries of the dungeon beneath you?"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "dont-sleep-with-the-fishes",
+    "title": "Don't Sleep With The Fishes",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Taiki",
+    "steamUrl": "https://store.steampowered.com/app/4834070/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4834070/8587f0ab97b9ae3dc2fb8695d9aca7b06669cc60/ss_8587f0ab97b9ae3dc2fb8695d9aca7b06669cc60.1920x1080.jpg?t=1782468658",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4834070/8c9232fdf8a5c043e4803b214561e819c9f0f0be/ss_8c9232fdf8a5c043e4803b214561e819c9f0f0be.1920x1080.jpg?t=1782468658",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4834070/41ab94b094d1b25cad2ade59029b50d01076add0/ss_41ab94b094d1b25cad2ade59029b50d01076add0.1920x1080.jpg?t=1782468658",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4834070/d98c933a9ad84d3b17eb586d0a7d363775524a2a/ss_d98c933a9ad84d3b17eb586d0a7d363775524a2a.1920x1080.jpg?t=1782468658",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4834070/9a850ca146f99c5a782827d634f3d1f740b0e1b9/ss_9a850ca146f99c5a782827d634f3d1f740b0e1b9.1920x1080.jpg?t=1782468658",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4834070/affc397bbdad26d866f5baf1420f2124b89a7233/ss_affc397bbdad26d866f5baf1420f2124b89a7233.1920x1080.jpg?t=1782468658"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Combien d'objets précieux pourrez-vous récupérer avant que le navire ne sombre ? Agissez vite et faites les bons choix pour échapper aux profondeurs sous-marines.",
+        "en": "How much can you collect before the ship goes under? How will you use what you have? Act fast and make constant choices to escape the sea or become its next victim."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "papers-please",
+    "title": "Papers, Please",
+    "releaseYear": 2013,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Lucas Pope",
+    "steamUrl": "https://store.steampowered.com/app/239030/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239030/ss_4cd77e3ef5b147b011a5cf8f96b8bcbcd79b3e15.1920x1080.jpg?t=1678266428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239030/ss_a1d08145ac2d3e85e8db440ccfeb7f7ad3c8247a.1920x1080.jpg?t=1678266428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239030/ss_4b50458fbc4afe2917803b59a35afb3e5d61c960.1920x1080.jpg?t=1678266428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239030/ss_958285f31774906eb4def9d98a83e7926ceb3be2.1920x1080.jpg?t=1678266428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239030/ss_d24155eecb65aaff7367b791bc7d4910fe59b303.1920x1080.jpg?t=1678266428",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239030/ss_6c095a8ff86f9ebf8f796d23b1186c176fd21991.1920x1080.jpg?t=1678266428"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Félicitations !Votre nom a été sélectionné lors de la loterie du Ministère du Travail du mois d'octobre.Pour prendre vos fonctions, présentez-vous immédiatement au Ministère des Admissions du poste-frontière de Grestin.Un appartement de classe 8 vous a été affecté à Grestin Est. Vous pourrez vous y installer avec votre famille.",
+        "en": "Congratulations. The October labor lottery is complete. Your name was pulled. For immediate placement, report to the Ministry of Admission at Grestin Border Checkpoint. An apartment will be provided for you and your family in East Grestin. Expect a Class-8 dwelling."
+      },
+      "composer": "Lucas Pope"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "content-warning",
+    "title": "Content Warning",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Zorro, Wilnyl, Philip, thePetHen, Skog",
+    "steamUrl": "https://store.steampowered.com/app/2881650/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2881650/ss_5df7377699e11b22ffbb604f2b3cc74d39d9bb2f.1920x1080.jpg?t=1785137321",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2881650/ss_0639604a881c0a0c9e02960b61d108c1f643809d.1920x1080.jpg?t=1785137321",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2881650/ss_f7f450f42db587f4e143ad1178500ad786c965a3.1920x1080.jpg?t=1785137321",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2881650/ss_ae459a02056e53665b20270b3b2c2ec74e6c4963.1920x1080.jpg?t=1785137321",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2881650/ss_86404e1606ca67a485e20c71cddd3cffdc511c71.1920x1080.jpg?t=1785137321",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2881650/ss_35c0fbe15af6816fd0d53156f0330e78a73c533d.1920x1080.jpg?t=1785137321"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Filmez vos amis en train de faire des choses terrifiantes pour devenir célèbre sur SpöökTube ! (on ne vous conseille vraiment pas d'y aller en solo)",
+        "en": "Film your friends doing scary things to become SpöökTube famous! (strongly advised to not go alone)"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "tcg-card-shop-simulator",
+    "title": "TCG Card Shop Simulator",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "OPNeon Games",
+    "steamUrl": "https://store.steampowered.com/app/3070070/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/ss_3f2209fd8ff2a2eabdaf76764769505a8031297c.1920x1080.jpg?t=1789528213",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/afca7f365bb6c9590a0b2d7038d78296d9497e1f/ss_afca7f365bb6c9590a0b2d7038d78296d9497e1f.1920x1080.jpg?t=1789528213",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/b0d2200e01a96a6e699dac98564bac109ca55186/ss_b0d2200e01a96a6e699dac98564bac109ca55186.1920x1080.jpg?t=1789528213",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/277018a212651833a34dc1246d5a79f43634d9ab/ss_277018a212651833a34dc1246d5a79f43634d9ab.1920x1080.jpg?t=1789528213",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/72fc67315a64add23487d0edc49eac44425c27e5/ss_72fc67315a64add23487d0edc49eac44425c27e5.1920x1080.jpg?t=1789528213",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/7a86303f9860d8e638d40c4559630b2ce4946de4/ss_7a86303f9860d8e638d40c4559630b2ce4946de4.1920x1080.jpg?t=1789528213"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Ouvrez votre propre magasin de jeux local. Remplissez vos rayons avec les derniers boosters, ou craquez-les et collectionnez les cartes. Fixez vos propres prix, recrutez du personnel, organisez des événements et développez votre boutique de cartes.",
+        "en": "Open your own local game store. Stock shelves with the latest booster packs, or crack them and collect the cards for yourself. Set your own prices, hire staff, host events, and expand your card shop."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "liars-bar",
+    "title": "Liar's Bar",
+    "releaseYear": 2024,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Curve Animation",
+    "steamUrl": "https://store.steampowered.com/app/3097560/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3097560/c60c40ba98123b4cbc6fb02184eb23bdefdaecf1/ss_c60c40ba98123b4cbc6fb02184eb23bdefdaecf1.1920x1080.jpg?t=1783933354",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3097560/bd5a66c1045fa8d93bd329d952bffb3e6c1b01d5/ss_bd5a66c1045fa8d93bd329d952bffb3e6c1b01d5.1920x1080.jpg?t=1783933354",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3097560/4da12455cb9ea3dc9c5450cfff1cb965fe937b3e/ss_4da12455cb9ea3dc9c5450cfff1cb965fe937b3e.1920x1080.jpg?t=1783933354",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3097560/314b98119c9b61abd085cf8428eb31f36ec6153f/ss_314b98119c9b61abd085cf8428eb31f36ec6153f.1920x1080.jpg?t=1783933354",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3097560/499a9f989e779b6096123d9c6966611bb0983193/ss_499a9f989e779b6096123d9c6966611bb0983193.1920x1080.jpg?t=1783933354",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3097560/ss_0216226b59d5938a3265d877ae32925daaf78597.1920x1080.jpg?t=1783933354"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Plongez dans un bar louche et clandestin où les jeux sont aussi dangereux que les clients. Prenez place à une table de 4 menteurs et testez vos talents de bluff aux dés et aux cartes.",
+        "en": "Dive into this multiplayer online experience set in a sketchy bar where the games are as dangerous as the patrons. Join a table of 4 and test your skills in Liar's Dice and Liar's Deck, where lying and bluffing are key to victory. Ready for a night at Liar's Bar?"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "webfishing",
+    "title": "WEBFISHING",
+    "releaseYear": 2024,
+    "genre": [
+      "Massivement multijoueur"
+    ],
+    "artStyle": {
+      "fr": "3D Rétro Low-poly",
+      "en": "Retro Low-poly 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "lamedeveloper",
+    "steamUrl": "https://store.steampowered.com/app/3146520/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3146520/ss_d1fdc753a7dc005896e239ea5ea055618a744bb6.1920x1080.jpg?t=1728673229",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3146520/ss_93c1c90ce81dbf0fd3ca2aada73e1ff4c5e62a9a.1920x1080.jpg?t=1728673229",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3146520/ss_8f5fe32a52b871c584f11416baf40634d17e72ee.1920x1080.jpg?t=1728673229",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3146520/ss_15bdf6913c68f13e4769d950ac563e2d5706022b.1920x1080.jpg?t=1728673229",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3146520/ss_70029d85f6aef4143b58a55b27824c278e14cbd9.1920x1080.jpg?t=1728673229",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3146520/ss_2b7785879e4c75cd35f240140507b06d71d9b1da.1920x1080.jpg?t=1728673229"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "WEBFISHING est un jeu de pêche relaxant et communautaire axé sur le bavardage en ligne ! Détendez-vous, attrapez des dizaines de poissons et discutez entre amis au bord de l'eau.",
+        "en": "WEBFISHING a multiplayer chatroom-focused fishing game! Relax and fish (on the web!)"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "tiny-glade",
+    "title": "Tiny Glade",
+    "releaseYear": 2024,
+    "genre": [
+      "Occasionnel",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
+    },
+    "developer": "Pounce Light",
+    "steamUrl": "https://store.steampowered.com/app/2198150/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2198150/ss_1a98b0d5e8111f100b3ececda8f682333337e3cb.1920x1080.jpg?t=1788786547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2198150/ss_6a8c7a510715796a659bd9fd828cc02cf73e11de.1920x1080.jpg?t=1788786547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2198150/ss_c9086858afd32f9c2bd49c164ddc2494af1e7f31.1920x1080.jpg?t=1788786547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2198150/ss_83248b45f1431127f94ab7bcfc246e5efb26848e.1920x1080.jpg?t=1788786547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2198150/ss_ed5a338f98da1acd76d232e581e7ca0c2e088958.1920x1080.jpg?t=1788786547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2198150/ss_533b0699cd1d6692cfa332f234ce03a36c547480.1920x1080.jpg?t=1788786547"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Tiny Glade est un jeu relaxant dans lequel on érige des châteaux. Découvrez un système de construction sans grille et regardez le jeu assembler briques, planches et pierres. Pas de gestion, pas de combat, pas de mauvaises approches : détendez-vous en transformant des prairies en jolis dioramas.",
+        "en": "Tiny Glade is a small diorama builder where you doodle whimsical castles, cozy cottages & romantic ruins. Explore gridless building chemistry as the game adorns your glades with procedural detail. No management, combat or goals: just kick back and turn forgotten meadows into lovable dioramas."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "deep-rock-galactic",
+    "title": "Deep Rock Galactic",
+    "releaseYear": 2024,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Ghost Ship Games",
+    "steamUrl": "https://store.steampowered.com/app/548430/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/548430/49a57d16c55b74a6f835c590421d299d417af4f8/ss_49a57d16c55b74a6f835c590421d299d417af4f8.1920x1080.jpg?t=1790248272",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/548430/5ffa803484da48da16db9006d7f4313db8999c2a/ss_5ffa803484da48da16db9006d7f4313db8999c2a.1920x1080.jpg?t=1790248272",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/548430/cf8c347fac940f99a9a256730aca3cb647cb563f/ss_cf8c347fac940f99a9a256730aca3cb647cb563f.1920x1080.jpg?t=1790248272",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/548430/9fad579c755e0c3ed249f581537da3c634d141bb/ss_9fad579c755e0c3ed249f581537da3c634d141bb.1920x1080.jpg?t=1790248272",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/548430/5de4ec4baa28c5df1cecb676be0f399f470beb75/ss_5de4ec4baa28c5df1cecb676be0f399f470beb75.1920x1080.jpg?t=1790248272",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/548430/03ac295f55defe10866d07a6f81329751c5abfb7/ss_03ac295f55defe10866d07a6f81329751c5abfb7.1920x1080.jpg?t=1790248272"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Deep Rock Galactic est un FPS de SF en co-op mettant en scène des nains de l'espace durs à cuire, des environnements 100% destructibles, des grottes générées de façon procédurale et des hordes infinies de monstres extraterrestres.",
+        "en": "Deep Rock Galactic is a 1-4 player co-op FPS featuring dwarven space miners, procedurally-generated destructible environments, and endless hordes of alien monsters. Explore cave systems, mine for minerals, and work together to survive!"
+      },
+      "composer": "Sophus Alf Agerbæk-Larsen"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "raft",
+    "title": "Raft",
+    "releaseYear": 2022,
+    "genre": [
+      "Aventure",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Redbeet Interactive",
+    "steamUrl": "https://store.steampowered.com/app/648800/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/648800/ss_c22b2ff5ba5609f74e61b5feaa5b7a1d7fd1dbd3.1920x1080.jpg?t=1727184011",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/648800/ss_2adb248f4d501cf58344d9af1d8a9e56c74647ee.1920x1080.jpg?t=1727184011",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/648800/ss_56914c026da8c8411974bd0e2e8cb81a0331ba99.1920x1080.jpg?t=1727184011",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/648800/ss_ef26440dc87e4d571139f5c64a22035d86723442.1920x1080.jpg?t=1727184011",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/648800/ss_dddecb78ba5ae9eecbe17a22f09f5281609d63a0.1920x1080.jpg?t=1727184011",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/648800/ss_594b5fab052123e5f96088df3ec3c9b7cec62e88.1920x1080.jpg?t=1727184011"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Seul ou avec des amis, votre mission est de survivre à une périlleuse aventure océanique ! Récoltez des débris flottants, développez votre radeau et méfiez-vous des requins mangeurs d'hommes.",
+        "en": "Raft™ throws you and your friends into an epic oceanic adventure! Alone or together, players battle to survive a perilous voyage across a vast sea! Gather debris, scavenge reefs and build your own floating home, but be wary of the man-eating sharks!"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "dont-starve-together",
+    "title": "Don't Starve Together",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG",
+      "Simulation",
+      "Stratégie",
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
+    },
+    "developer": "Klei Entertainment",
+    "steamUrl": "https://store.steampowered.com/app/322330/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_d053a7220a03ab689da9312c6d15fe8211401f55.1920x1080.jpg?t=1789497030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_37e30c4cf8c945f1958890c8fa7346af6bea547d.1920x1080.jpg?t=1789497030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_f863729856b94b3485ee80e6fd11289595f6634c.1920x1080.jpg?t=1789497030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_92f4145bd510f66d63028e1cdf27eb30bd44cea1.1920x1080.jpg?t=1789497030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_9a7730946f2e060457b5c19ac2d870a78ab0f20b.1920x1080.jpg?t=1789497030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_7f2ad9be835040a8995cd3653cd521553ef776cf.1920x1080.jpg?t=1789497030"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Don't Starve Together est l’extension multijoueur autonome du jeu de survie intransigeant Don't Starve.",
+        "en": "Fight, Farm, Build and Explore Together in the standalone multiplayer expansion to the uncompromising wilderness survival game, Don't Starve."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "noita",
+    "title": "Noita",
+    "releaseYear": 2020,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG",
+      "Simulation",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Nolla Games",
+    "steamUrl": "https://store.steampowered.com/app/881100/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_626b401fd6d78ab335ecb8ff1e4b0a8ce7d25f66.1920x1080.jpg?t=1675987871",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_96308c4c5951740a0e46e0aa66e67bd04e99286a.1920x1080.jpg?t=1675987871",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c02b4406a18dc2e3fe213a6c1948d975ba191985.1920x1080.jpg?t=1675987871",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c9c81f5abbc75b9e5408c23d44bfab14e6759cb7.1920x1080.jpg?t=1675987871",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c65fea857e3a2168c0c103952f0955094aacf329.1920x1080.jpg?t=1675987871",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_56b342c3dbddae9409f6af8582cfa804de3e1229.1920x1080.jpg?t=1675987871"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Noita est un roguelite d'action magique dans un monde où chaque pixel est simulé physiquement. Combattez, explorez, faites fondre, brûlez, gelez et évaporez tout sur votre chemin dans un monde entièrement destructible avec des sorts que vous aurez créés. Ou bien faites le maximum de bêtises !",
+        "en": "Noita is a magical action roguelite set in a world where every pixel is physically simulated. Fight, explore, melt, burn, freeze and evaporate your way through the procedurally generated world using spells you've created yourself."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "satisfactory",
+    "title": "Satisfactory",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Coffee Stain Studios",
+    "steamUrl": "https://store.steampowered.com/app/526870/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_9083ccf8fbb22c4068a6e233e3de343f815f9dc1.1920x1080.jpg?t=1788349095",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_6f456011887f970dc230af5e1720065ca3430aae.1920x1080.jpg?t=1788349095",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_b1104309f1c22c85de6ad6c401e6d889411c14d2.1920x1080.jpg?t=1788349095",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_3f47e401fc3e09fd86500d2026da954de08a015b.1920x1080.jpg?t=1788349095",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_077e7ea98621faeb5b4a73ea0aaa91f41c6f66c9.1920x1080.jpg?t=1788349095",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_cff8791f06839134d09f4c865758193a7023b92f.1920x1080.jpg?t=1788349095"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Satisfactory est un jeu de construction d’usines en vue à la première personne dans un monde ouvert avec une touche d’exploration et de combats. Jouez seul ou entre amis, explorez une planète inconnue, construisez des usines à plusieurs niveaux et des tapis roulants à l’infini !",
+        "en": "Satisfactory is a first-person open-world factory building game with a dash of exploration and combat. Play alone or with friends, explore an alien planet, create multi-story factories, and enter conveyor belt heaven!"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "blasphemous-2",
+    "title": "Blasphemous 2",
+    "releaseYear": 2023,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "The Game Kitchen",
+    "steamUrl": "https://store.steampowered.com/app/2114740/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2114740/bf451315c76040de3472e7b95cafe2fb09a315b0/ss_bf451315c76040de3472e7b95cafe2fb09a315b0.1920x1080.jpg?t=1789551802",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2114740/194e6bccd0a9db2a5b80d5cef9c0c694ba8a8eaf/ss_194e6bccd0a9db2a5b80d5cef9c0c694ba8a8eaf.1920x1080.jpg?t=1789551802",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2114740/e736189232810f8477e51fd5abb3e00373deee15/ss_e736189232810f8477e51fd5abb3e00373deee15.1920x1080.jpg?t=1789551802",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2114740/74e27f35ff29a24f35a4c3e73d125451d8668a97/ss_74e27f35ff29a24f35a4c3e73d125451d8668a97.1920x1080.jpg?t=1789551802",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2114740/ss_08bf3eb43590566cc39cde50fff8305026b3d569.1920x1080.jpg?t=1789551802",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2114740/ss_06ae2ee0a20de1d4c698ff247c7b2d1caa4dfd08.1920x1080.jpg?t=1789551802"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le Pénitent se réveille lorsque Blasphemous 2 le rejoint à nouveau dans une lutte sans fin contre le Miracle. Plongez dans un nouveau monde foisonnant de mystères et de secrets, et affrontez des ennemis farouchement déterminés à vous empêcher de mettre fin au cycle une bonne fois pour toutes.",
+        "en": "The Penitent One awakens as Blasphemous 2 joins him once again in an endless struggle against The Miracle. Dive into a perilous new world filled with mysteries and secrets to discover, and tear your way through monstrous foes that stand between you and your quest to end the cycle once and for all."
+      },
+      "composer": "Carlos Viola"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "rogue-legacy-2",
+    "title": "Rogue Legacy 2",
+    "releaseYear": 2022,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Cellar Door Games",
+    "steamUrl": "https://store.steampowered.com/app/1253920/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1253920/ss_38e3dcba9ad2a6c8d6defb69ae1b3137f9eb2907.1920x1080.jpg?t=1710829748",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1253920/ss_21e41442a39177a8785cb4bce39ff65f0f74672c.1920x1080.jpg?t=1710829748",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1253920/ss_387ee5bf5e2faffadfb7b6925b90ca9e767ee595.1920x1080.jpg?t=1710829748",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1253920/ss_0371a24285fb03b09b40e595773dd243222128df.1920x1080.jpg?t=1710829748",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1253920/ss_46a4a19ec64f5c7b06faa6614f9de2f3e1fd657b.1920x1080.jpg?t=1710829748",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1253920/ss_ef42f4012a6ed6ccda423d5460f083823dcd8148.1920x1080.jpg?t=1710829748"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Vos enfants reprendront votre flambeau chaque fois que vous mourrez. Votre fille sera peut-être une rôdeuse daltonienne et votre fils un chef cuisinier pacifiste... une seule chose est sûre, l'un des deux ira au casse-pipe.",
+        "en": "Rogue Legacy 2 is what you'd get if you mashed Rogue Legacy and a sequel together. Every time you die, your children will succeed you, and each child is unique. Your daughter might be a Colourblind Archer, and your son could be a Pacifistic Chef. Either way, one of them is getting conscripted."
+      },
+      "composer": "Gordon McGladdery & Judson Cowan"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "the-planet-crafter",
+    "title": "The Planet Crafter",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Miju Games",
+    "steamUrl": "https://store.steampowered.com/app/1284190/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1284190/ss_4d9dc40278682339d3687ab7489935e2fc2ad2f8.1920x1080.jpg?t=1788266415",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1284190/ss_f212f88a36949b32fe343348f78fef1b78c93b2e.1920x1080.jpg?t=1788266415",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1284190/ss_59b42b52f5bda0118ab0337665e66fa7ea1fc034.1920x1080.jpg?t=1788266415",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1284190/ss_fa893e550c816e6ac478a6909ea6b420d81dbc16.1920x1080.jpg?t=1788266415",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1284190/ss_f3b233e3c5f7640678e1021626f8bf639df0f0ec.1920x1080.jpg?t=1788266415",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1284190/ss_36eda137febffc643aea3e2cfc3a2c0f20e594a3.1920x1080.jpg?t=1788266415"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu de survie et de terraformation en solo ou avec jusqu'à 10 amis ! Transformez l'écosystème d'une planète hostile pour le rendre compatible avec la vie humaine. Récoltez des ressources et construisez une base pour développer l'oxygène, la chaleur et la pression de ce monde ouvert.",
+        "en": "A space survival open world terraforming crafting game, designed for 1 to 10 players. Alter the ecosystem of an inhospitable planet to render it habitable for humanity. Survive, gather resources, and build your base. Then, generate oxygen, warmth, and pressure to create a brand new biosphere."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "halls-of-torment",
+    "title": "Halls of Torment",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "RPG",
+      "Roguelike",
+      "Survie",
+      "Horreur"
+    ],
+    "artStyle": {
+      "fr": "3D Rétro Low-poly",
+      "en": "Retro Low-poly 3D"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Chasing Carrots",
+    "steamUrl": "https://store.steampowered.com/app/2218750/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2218750/ss_75fc37b9c2a3b30c01c03d2f3cb86cf6a754ccc2.1920x1080.jpg?t=1779993327",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2218750/ss_2d104ee2c73776ba9019f3a5050c4d5942a56e93.1920x1080.jpg?t=1779993327",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2218750/ss_c5b5ec37d6b00c5b2ccbcb1fccf48aaef8bfb20f.1920x1080.jpg?t=1779993327",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2218750/ss_7bb48f7c67941509b73fc36929440fe663b5b85d.1920x1080.jpg?t=1779993327",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2218750/ss_6e32e4aa9261c60115c89fc608c5e156839b2709.1920x1080.jpg?t=1779993327",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2218750/ss_16c8797ca5624cf52eac0c7a212c385aed1d0d87.1920x1080.jpg?t=1779993327"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Des hordes de monstres vous attendent dans ce roguelite effréné. Arpentez les salles du tourment et vainquez leurs terrifiants seigneurs grâce aux trésors, talismans et personnages héroïques que vous déverrouillez en chemin. Combien de temps survivrez-vous dans les profondeurs ?",
+        "en": "Slay hordes of terrifying monsters in this horde survival roguelite. Descend into the Halls of Torment where the Lords of the underworld await you. Treasures, magical trinkets, and a growing cast of heroes will grant you the power to vanquish these horrors from beyond. How long can you survive?"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "backpack-battles",
+    "title": "Backpack Battles",
+    "releaseYear": 2025,
+    "genre": [
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "PlayWithFurcifer",
+    "steamUrl": "https://store.steampowered.com/app/2427700/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2427700/9f13e6549c1b38635a03cf3b7941843424ed96cd/ss_9f13e6549c1b38635a03cf3b7941843424ed96cd.1920x1080.jpg?t=1778121458",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2427700/1dba72e799e0b9a760450761e90c727c43071d30/ss_1dba72e799e0b9a760450761e90c727c43071d30.1920x1080.jpg?t=1778121458",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2427700/ss_890b9067455b70f8fabf299d65bba1e23a30f195.1920x1080.jpg?t=1778121458",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2427700/ss_2e3b924ccf1d2aeed2e56f7a7d066d30accc0ad6.1920x1080.jpg?t=1778121458",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2427700/09faa569f22e610890ef86ce860fe8492e0bbb3b/ss_09faa569f22e610890ef86ce860fe8492e0bbb3b.1920x1080.jpg?t=1778121458",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2427700/ss_bc70f0d943e1b3f0af758a23aa3272a9faf26e9c.1920x1080.jpg?t=1778121458"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu de combat automatique avec gestion d'inventaire en PvP ! Achetez et fabriquez de puissants objets, puis rangez-les soigneusement dans votre sac à dos.",
+        "en": "A PvP inventory management auto battler! Buy and craft powerful items, then carefully arrange them in your backpack."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "untitled-goose-game",
+    "title": "Untitled Goose Game",
+    "releaseYear": 2020,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
+    },
+    "developer": "House House",
+    "steamUrl": "https://store.steampowered.com/app/837470/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/837470/ss_deb5b83b07d3f7c1050ea46b51117109da06952b.1920x1080.jpg?t=1699052664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/837470/ss_7576323f465966792d0fb021acf5a8a81a16e9f9.1920x1080.jpg?t=1699052664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/837470/ss_f77f22299e196a9e8e702bd36fbba9951a6c0a01.1920x1080.jpg?t=1699052664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/837470/ss_4f8a37c4fe9882876c891333dc2a76060a3e5652.1920x1080.jpg?t=1699052664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/837470/ss_df679de6ce524a4d3c3d452a29593adbd88c38bb.1920x1080.jpg?t=1699052664",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/837470/ss_f85be4e268c984bcdec7c35138830fe1a7e50484.1920x1080.jpg?t=1699052664"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "La journée s’annonce superbe au village et vous êtes une oie insupportable.",
+        "en": "It's a lovely morning in the village and you are a horrible goose."
+      },
+      "composer": "Dan Golding"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "trombone-champ",
+    "title": "Trombone Champ",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Holy Wow Studios LLC",
+    "steamUrl": "https://store.steampowered.com/app/1059990/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/bf0ad6ced4e98415f9db9fab9f354f447bbbf68c/ss_bf0ad6ced4e98415f9db9fab9f354f447bbbf68c.1920x1080.jpg?t=1789361594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/8df015cc7f9147d8785709bd96f8f20e077765d1/ss_8df015cc7f9147d8785709bd96f8f20e077765d1.1920x1080.jpg?t=1789361594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/5d853a70d97d4ff7dbd3c1a44691f9067415394b/ss_5d853a70d97d4ff7dbd3c1a44691f9067415394b.1920x1080.jpg?t=1789361594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/e8d75c3143d9b18734fc09c432291d0d362cad16/ss_e8d75c3143d9b18734fc09c432291d0d362cad16.1920x1080.jpg?t=1789361594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/1262ddd47797bf2c138406e64be2486bd52f9ae5/ss_1262ddd47797bf2c138406e64be2486bd52f9ae5.1920x1080.jpg?t=1789361594",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/9a01ffea804d34e965026c0fc902eaf7d8f80679/ss_9a01ffea804d34e965026c0fc902eaf7d8f80679.1920x1080.jpg?t=1789361594"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Trombone Champ est le tout premier jeu musical de rythme basé sur le trombone. Klaxonnez, glissez et jouez plus de 50 morceaux avec une liberté de note totale !",
+        "en": "Honk, blow, &amp; toot your way through over 60 songs, collect all 50 unique Tromboner Cards, and uncover the mysteries of the Trombiverse. Do you have what it takes to become the true Trombone Champ?"
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "patricks-parabox",
+    "title": "Patrick's Parabox",
+    "releaseYear": 2022,
+    "genre": [
+      "Occasionnel",
+      "Stratégie",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "Monochrome / Minimaliste",
+      "en": "Monochrome"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Patrick Traynor",
+    "steamUrl": "https://store.steampowered.com/app/1260520/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1260520/ss_fc9994b3d063276aaaeacbc86c6d740dabeebdc0.1920x1080.jpg?t=1745611653",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1260520/ss_0b19edb1240691a90ac5ec0b47391c605ce05f8a.1920x1080.jpg?t=1745611653",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1260520/ss_c7326d5f22aa95fd47ab08be5a2241a1425f0642.1920x1080.jpg?t=1745611653",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1260520/ss_ac61cbb0165921ab91eb36f0dbbdf85b6d70bd36.1920x1080.jpg?t=1745611653",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1260520/ss_f277dd3eae68b4689497a95a0a1618d0e99da0d7.1920x1080.jpg?t=1745611653",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1260520/ss_31a8a907ea4450af21570b9c57e07d24bdb40b81.1920x1080.jpg?t=1745611653"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu de casse-tête récursif sur des boîtes dans des boîtes dans des boîtes dans des boîtes. Apprenez à utiliser l'infini à votre avantage en explorant un système riche et élégant.",
+        "en": "A mind-bending recursive puzzle game about boxes within boxes within boxes within boxes. Learn to use infinity to your advantage as you explore a deep and elegant system."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "risk-of-rain-returns",
+    "title": "Risk of Rain Returns",
+    "releaseYear": 2023,
+    "genre": [
+      "Action",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Hopoo Games",
+    "steamUrl": "https://store.steampowered.com/app/1337520/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1337520/ss_d2d457ccd93e9c59b9fe5fe37bd2b85bfcf5f8e4.1920x1080.jpg?t=1782157557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1337520/ss_7db68cef7a37fd405697f1939e6fd90e7d4783d1.1920x1080.jpg?t=1782157557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1337520/ss_d93ca3de78363c7ab4546a4f12736b8cb3a4eb7f.1920x1080.jpg?t=1782157557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1337520/ss_9e340980c5a26713a14b895685224cf6a2f9ae0f.1920x1080.jpg?t=1782157557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1337520/ss_675af80ddb27a9e1737316ae69d80472707e0479.1920x1080.jpg?t=1782157557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1337520/ss_05e4494275e18190004d39994369c19925653141.1920x1080.jpg?t=1782157557"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Design soigné, graphismes améliorés, nouvelles fonctionnalités... Risk of Rain  fait son grand retour ! (Re)découvrez ce roguelike mythique aux combinaisons de butin uniques, avec de nouveaux survivants, un multijoueur repensé, du contenu apprécié de Risk of Rain 2, et plus encore !",
+        "en": "Carefully designed, beautifully remastered, and loaded with new ways to play—Risk of Rain is back and better than ever! Dive into the iconic roguelike full of unique loot combinations, enhanced with new Survivors, overhauled multiplayer, fan favorite content from Risk of Rain 2, and more!"
+      },
+      "composer": "Chris Christodoulou"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "the-cosmic-wheel-sisterhood",
+    "title": "The Cosmic Wheel Sisterhood",
+    "releaseYear": 2023,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Deconstructeam",
+    "steamUrl": "https://store.steampowered.com/app/1340480/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_0a4b74eb8dcd857d4ea1ba745240346a6bafb628.1920x1080.jpg?t=1765878706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_9c7c68a96bcc0a6627df91c898dad89615358d6b.1920x1080.jpg?t=1765878706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_202fda9f73ada18292724378c0db9a37915e7dd7.1920x1080.jpg?t=1765878706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_b8887e4dbe5687ecd1e258e0f128c193eed4f0ff.1920x1080.jpg?t=1765878706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_2a342c131f62dbe8887f33822d60754d33283da1.1920x1080.jpg?t=1765878706",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_900d503b9ba05eb073131ff7fd42f945ac219f4a.1920x1080.jpg?t=1765878706"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Plongez dans un récit envoûtant en incarnant Fortuna, une cartomancienne condamnée à l'exil sur son astéroïde. Fabriquez votre jeu de tarot, retrouvez votre liberté et déterminez le destin de la communauté cosmique des sorcières.",
+        "en": "Immerse yourself in an enchanting narrative experience as Fortuna, a fortune-teller Witch condemned to exile on her asteroid home. Craft your own Tarot deck, regain your freedom, and shape the fate of the cosmic Witch society."
+      },
+      "composer": "fingerspit"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "ender-lilies-quietus-of-the-knights",
+    "title": "ENDER LILIES: Quietus of the Knights",
+    "releaseYear": 2021,
+    "genre": [
+      "Action",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Live Wire",
+    "steamUrl": "https://store.steampowered.com/app/1369630/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_1c2bf22139c82d0c46ccee075e1e71e08b88ab44.1920x1080.jpg?t=1788931074",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_a3d8c04253e525da1907fd8028ab66a318c1f0c1.1920x1080.jpg?t=1788931074",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_0076f81d06eb547dbec80d06a3148c1c614f540b.1920x1080.jpg?t=1788931074",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_c1180c9d99d525508066f4d919e280d1a4f8bb8e.1920x1080.jpg?t=1788931074",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_ae62391706e55f64eac21d81c9862e8f635662a8.1920x1080.jpg?t=1788931074",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_9b18286c32d4851f07ef2c17b4774962147b87cb.1920x1080.jpg?t=1788931074"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Découvrez l'histoire de Lily et des chevaliers immortels au royaume de Lointerre, touché par une pluie de mort. Dans cet action-RPG à défilement horizontal où les ennemis ne vous laisseront pas le moindre répit, percez les mystères d'un monde beau et tragique aux côtés de vos camarades.",
+        "en": "ENDER LILIES is a dark fantasy 2D action RPG about unraveling the mysteries of a destroyed kingdom. On this sorrowful journey, encounter horrific enemies against whom a moment of inattention could be fatal. Overcome these hardships and seek the truth with the help of fallen knights."
+      },
+      "composer": "Mili"
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "viewfinder",
+    "title": "Viewfinder",
+    "releaseYear": 2023,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Sad Owl Studios",
+    "steamUrl": "https://store.steampowered.com/app/1382070/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1382070/ss_504c7776817cb8a36104b31d803d18acf52b669f.1920x1080.jpg?t=1764842475",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1382070/ss_6ab66f69441e3168c97bbe8020603faa75fffa48.1920x1080.jpg?t=1764842475",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1382070/ss_1392613d4ff0f7c3f989cc899cb40ce93b3ff8fb.1920x1080.jpg?t=1764842475",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1382070/ss_080379206cfd1972567fce770bb79ee4b6b35d6c.1920x1080.jpg?t=1764842475",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1382070/ss_d1a7f46de9bee3cf60f938f82ca80046802f17ca.1920x1080.jpg?t=1764842475",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1382070/ss_9c9a0cdfda4c09caa0e01db6d78dbafcae657291.1920x1080.jpg?t=1764842475"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Défiez la perception, redéfinissez la réalité et remodelez le monde qui vous entoure avec un appareil photo instantané. Viewfinder est un nouveau jeu solo offrant aux joueurs des heures d'expériences passionnantes et l'occasion de percer des mystères oubliés.",
+        "en": "Challenge perception, redefine reality, and reshape the world around you with an instant camera. Viewfinder is a new single player game offering gamers hours of interesting and fun experiences while uncovering the mysteries left behind."
+      }
+    },
+    "addedAt": "2026-09-25"
+  },
+  {
+    "id": "doki-doki-literature-club-plus",
+    "title": "Doki Doki Literature Club Plus!",
+    "releaseYear": 2021,
+    "genre": [
+      "Occasionnel",
+      "Horreur"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Team Salvato",
+    "steamUrl": "https://store.steampowered.com/app/1388880/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1388880/ss_cb187541437380ddf83c5195402d81f9895f34fb.1920x1080.jpg?t=1769459840",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1388880/ss_550d1ca934898f83c3cadd6587dd26010c0079c2.1920x1080.jpg?t=1769459840",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1388880/ss_d9bff154a32051d6d3b6b1c7492ce7c56e9d2231.1920x1080.jpg?t=1769459840",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1388880/ss_188001a5bfcfede5be35099f06f7b5ced2d2bcec.1920x1080.jpg?t=1769459840",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1388880/ss_8fd9449411f571d8d97ed1bb4c2349224612228e.1920x1080.jpg?t=1769459840",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1388880/ss_dcc176c13ca069affbc3d9fc134d8fa265e69eae.1920x1080.jpg?t=1769459840"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Bienvenue au club ! Écrivez des poèmes à l'élue de votre cœur et découvrez toute la terreur qui se cache derrière une amourette de lycée, dans cette histoire d'horreur psychologique encensée par la critique.",
+        "en": "Welcome to the club! Write poems for your crush and experience the terror of school romance in this critically-acclaimed psychological horror story."
+      },
+      "composer": "Dan Salvato"
+    },
+    "addedAt": "2026-09-25"
   }
 ];
 
-// Pool dynamique pour les jeux quotidiens (permet d'inclure les pépites promues via l'admin et exclure les jeux retirés)
 // Pool stable pour les jeux quotidiens (sanctuarisé sur INDIE_GAMES pour garantir l'immutabilité stricte des défis du jour et du jeu mis en avant)
 export function getActiveDailyPool(): Game[] {
   return INDIE_GAMES;
@@ -7426,5 +8421,3 @@ export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
 }
 
 export { getScheduledDailyGame, getScheduledDay };
-
-
