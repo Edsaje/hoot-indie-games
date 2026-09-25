@@ -6,9 +6,19 @@
 User-agent: *
 Allow: /
 
-# Directives d'indexation
+# Autorisation explicite des ressources statiques, médias et favicons pour Googlebot / Googlebot-Image
+Allow: /favicon*.png
+Allow: /favicon.ico
+Allow: /apple-touch-icon.png
+Allow: /logo*.png
+Allow: /og-banner.*
+Allow: /manifest.webmanifest
+Allow: /assets/
+Allow: /audio/
+
+# Protection des données et endpoints d'API privées
 Disallow: /api/
 Disallow: /data/
 
-# Déclaration du Sitemap XML officiel
+# Déclaration officielle du Sitemap XML
 Sitemap: https://hootindiegames.com/sitemap.xml

@@ -4,7 +4,7 @@
   <!-- Page d'Accueil & Explorateur de Pépites Certifiées -->
   <url>
     <loc>https://hootindiegames.com/</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://hootindiegames.com/" />
@@ -15,7 +15,7 @@
   <!-- Hub des Mini-Jeux : 8 Disciplines Quotidiennes, Time Attack & Arène Versus -->
   <url>
     <loc>https://hootindiegames.com/#minigames</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -23,7 +23,7 @@
   <!-- Screenle : Défi Quotidien d'Identification par Capture d'Écran HD -->
   <url>
     <loc>https://hootindiegames.com/#screenle</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -31,7 +31,7 @@
   <!-- Indledle : Défi Quotidien de Déduction par Indices et Propriétés -->
   <url>
     <loc>https://hootindiegames.com/#indledle</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -39,7 +39,7 @@
   <!-- Linkle : Le Jeu des 16 Connexions Thématiques Secrètes -->
   <url>
     <loc>https://hootindiegames.com/#linkle</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -47,7 +47,7 @@
   <!-- Profille : Fiche d'Identité du Jeu Indé (Année, Studio, Genre) -->
   <url>
     <loc>https://hootindiegames.com/#profille</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -55,7 +55,7 @@
   <!-- Chrono : Frise Chronologique Quotidienne du Jeu Vidéo Indépendant -->
   <url>
     <loc>https://hootindiegames.com/#chrono</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -63,7 +63,7 @@
   <!-- Pixel & Silhouette : Dé-pixellisation et Ombre Quotidienne -->
   <url>
     <loc>https://hootindiegames.com/#pixel</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -71,7 +71,7 @@
   <!-- Steam Review : Déduction de Critiques Caviardées -->
   <url>
     <loc>https://hootindiegames.com/#review</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -79,7 +79,7 @@
   <!-- Blind Test OST : Quiz Musical et Extraits Audio de Pépites Indés -->
   <url>
     <loc>https://hootindiegames.com/#blindtest</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -87,7 +87,7 @@
   <!-- Time Attack : Sprints Contre-la-Montre sur les 8 Disciplines de Déduction -->
   <url>
     <loc>https://hootindiegames.com/#timeattack</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -95,7 +95,7 @@
   <!-- Arène Versus 1v1 : Duels en Temps Réel P2P et Décathlon Mixte -->
   <url>
     <loc>https://hootindiegames.com/#versus</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -103,7 +103,7 @@
   <!-- Salle d'Arcade Rétro : 8 Jeux Rétro Culte & Véritable Vectrex 1982 -->
   <url>
     <loc>https://hootindiegames.com/#arcade</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -111,7 +111,7 @@
   <!-- Boîte à Outils : Radar de Sorties 2025-2026 & Outils Joueurs -->
   <url>
     <loc>https://hootindiegames.com/#toolbox</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -119,7 +119,7 @@
   <!-- Le Perchoir : Portfolio Créatif et Projets de Quentin Beaud (Hibouxe) -->
   <url>
     <loc>https://hootindiegames.com/#roost</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
