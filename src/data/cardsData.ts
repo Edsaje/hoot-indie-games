@@ -1,6 +1,6 @@
 /**
  * cardsData.ts
- * Catalogue des 185 Cartes à Collectionner du Sanctuaire et algorithme d'ouverture de booster.
+ * Catalogue des 250 Cartes à Collectionner du Sanctuaire et algorithme d'ouverture de booster.
  */
 
 import { INDIE_GAMES } from './games';
@@ -29,6 +29,13 @@ const LEGENDARY_GAME_IDS = new Set([
   'subnautica',
   'terraria',
   'factorio',
+  'the-forest',
+  'garrys-mod',
+  'human-fall-flat',
+  'totally-accurate-battle-simulator',
+  'outlast',
+  'astroneer',
+  'gunfire-reborn',
 ]);
 
 // Chefs-d'œuvre majeurs acclamés (Épiques)
@@ -98,6 +105,31 @@ const EPIC_GAME_IDS = new Set([
   'noita',
   'raft',
   'dont-starve-together',
+  'stick-fight-the-game',
+  'dyson-sphere-program',
+  'this-war-of-mine',
+  'hotline-miami-2-wrong-number',
+  'a-dance-of-fire-and-ice',
+  'oneshot',
+  'overcooked-2',
+  'needy-girl-overdose',
+  'skul-the-hero-slayer',
+  'chained-together',
+  'slime-rancher-2',
+  'medieval-dynasty',
+  'abiotic-factor',
+  'ultimate-chicken-horse',
+  'va-11-hall-a',
+  'timberborn',
+  'banished',
+  'rounds',
+  'against-the-storm',
+  'carrion',
+  'crab-champions',
+  'bloodstained-ritual-of-the-night',
+  'dwarf-fortress',
+  'my-friend-pedro',
+  'superliminal',
 ]);
 
 // Pépites primées et reconnues (Rares)
@@ -227,6 +259,10 @@ const RARE_GAME_IDS = new Set([
   'owlboy',
   'graveyard-keeper',
   'starbound',
+  'roboquest',
+  'fran-bow',
+  'darkwood',
+  'speedrunners',
 ]);
 
 /**
