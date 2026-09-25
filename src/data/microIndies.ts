@@ -75,12 +75,12 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "steamUrl": "https://store.steampowered.com/app/1953920/Crescent_Bloom/",
     "isFree": false,
     "pricingText": {
-      "fr": "Payant / Steam 💎",
-      "en": "Paid / Steam 💎",
-      "es": "De pago / Steam 💎",
-      "de": "Kostenpflichtig / Steam 💎",
-      "ja": "有料 / Steam 💎",
-      "pt-BR": "Pago / Steam 💎"
+      "fr": "1,99 € sur Steam 💎",
+      "en": "$1.99 on Steam 💎",
+      "es": "1,99 € en Steam 💎",
+      "de": "1,99 € auf Steam 💎",
+      "ja": "Steamにて1.99ドル 💎",
+      "pt-BR": "R$ 10,79 no Steam 💎"
     },
     "genre": [
       "Aventure",
@@ -111,7 +111,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "ja": "コンスタンティン帝国の若き火術師イグニスとなり、魔法を駆使して色彩と音のパズルを解き明かせ。",
       "pt-BR": "Jogue como a jovem piromante Ignis no Império Constantin. Lance feitiços poderosos e resolva quebra-cabeças."
     },
-    "discoveredBy": "Hibouxe",
+    "discoveredBy": "Erozah",
     "likesCount": 8,
     "featured": true,
     "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg",

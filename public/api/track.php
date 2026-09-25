@@ -977,6 +977,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         $mPlayUrl = trim($_POST['playInBrowserUrl'] ?? $_GET['playInBrowserUrl'] ?? '');
         $mPitch = trim($_POST['pitch'] ?? $_GET['pitch'] ?? '');
         $mDiscoveredBy = trim($_POST['discoveredBy'] ?? $_GET['discoveredBy'] ?? '');
+        $mPrice = trim($_POST['price'] ?? $_GET['price'] ?? '');
+        $mPricingTextRaw = trim($_POST['pricingText'] ?? $_GET['pricingText'] ?? '');
 
         $mFile = __DIR__ . '/micro_indies.json';
         if (file_exists($mFile)) {
@@ -995,6 +997,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                         $item['description'] = ['fr' => $mPitch, 'en' => $mPitch];
                     }
                     if (!empty($mDiscoveredBy)) $item['discoveredBy'] = $mDiscoveredBy;
+                    if (!empty($mPrice)) {
+                        $item['pricingText'] = ['fr' => $mPrice, 'en' => $mPrice];
+                        $item['isFree'] = (stripos($mPrice, 'gratuit') !== false || stripos($mPrice, 'free') !== false || $mPrice === '0' || $mPrice === '0€');
+                    } elseif (!empty($mPricingTextRaw)) {
+                        $pt = json_decode($mPricingTextRaw, true);
+                        if (is_array($pt)) {
+                            $item['pricingText'] = $pt;
+                        } else {
+                            $item['pricingText'] = ['fr' => $mPricingTextRaw, 'en' => $mPricingTextRaw];
+                        }
+                    }
                     $found = true;
                     break;
                 }

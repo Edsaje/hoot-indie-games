@@ -165,6 +165,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   const [editMicroPlayUrl, setEditMicroPlayUrl] = useState<string>('');
   const [editMicroPitch, setEditMicroPitch] = useState<string>('');
   const [editMicroDiscoveredBy, setEditMicroDiscoveredBy] = useState<string>('');
+  const [editMicroPrice, setEditMicroPrice] = useState<string>('');
   const [isSavingMicroIndie, setIsSavingMicroIndie] = useState<boolean>(false);
 
   const [prefilledGameForCatalog, setPrefilledGameForCatalog] = useState<{
@@ -675,9 +676,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     setEditMicroPlayUrl(m.playInBrowserUrl || '');
     setEditMicroPitch(m.pitch || m.tagline?.fr || m.tagline?.en || m.description?.fr || '');
     setEditMicroDiscoveredBy(m.discoveredBy || '');
+    setEditMicroPrice(m.pricingText?.fr || m.pricingText?.en || (m.isFree ? 'Gratuit 🆓' : ''));
   };
 
-  // Modération Micro-Indés : Auto-détection de la jaquette Steam
+  // Modération Micro-Indés : Auto-détection de la jaquette Steam et du prix
   const handleAutoDetectSteamCover = () => {
     soundFx.playClick();
     const url = editMicroSteamUrl.trim();
@@ -685,7 +687,16 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     if (match && match[1]) {
       const steamCover = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${match[1]}/header.jpg`;
       setEditMicroCover(steamCover);
-      showNotice('success', `Jaquette Steam officielle détectée pour l'AppID ${match[1]} !`);
+      fetch(`/api/micro_indies.php?action=get_steam_info&appId=${match[1]}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.success) {
+            if (data.priceFormatted) setEditMicroPrice(data.priceFormatted);
+            if (!editMicroTitle.trim() && data.name) setEditMicroTitle(data.name);
+          }
+        })
+        .catch(() => {});
+      showNotice('success', `Jaquette et données Steam officielles détectées pour l'AppID ${match[1]} !`);
     } else {
       showNotice('error', 'Aucun AppID Steam valide trouvé dans le lien.');
     }
@@ -708,6 +719,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           playInBrowserUrl: editMicroPlayUrl.trim() || undefined,
           pitch: editMicroPitch.trim() || undefined,
           discoveredBy: editMicroDiscoveredBy.trim() || undefined,
+          price: editMicroPrice.trim() || undefined,
         },
         currentSteamId
       );
@@ -2211,9 +2223,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                           Par <strong className="text-slate-200">{m.developer}</strong>
                                           {m.releaseYear ? ` (${m.releaseYear})` : ''}
                                         </p>
-                                        <div className="flex items-center gap-2 mt-1">
+                                        <div className="flex flex-wrap items-center gap-2 mt-1">
                                           <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-white/5 text-slate-300 border border-white/10">
                                             {platformLabel}
+                                          </span>
+                                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                                            {m.pricingText?.fr || m.pricingText?.en || (m.isFree ? 'Gratuit 🆓' : 'Payant 💎')}
                                           </span>
                                           {m.discoveredBy && (
                                             <span className="text-[10px] text-amber-300/80">
@@ -3215,6 +3230,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         value={editMicroDiscoveredBy}
                         onChange={(e) => setEditMicroDiscoveredBy(e.target.value)}
                         className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-300 mb-1">Prix réel / Modèle de tarification</label>
+                      <input
+                        type="text"
+                        value={editMicroPrice}
+                        onChange={(e) => setEditMicroPrice(e.target.value)}
+                        placeholder="Ex: 1,99 €, 4,99 $, Gratuit 🆓..."
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-amber-200 text-xs focus:outline-none focus:border-amber-400"
                       />
                     </div>
                   </div>

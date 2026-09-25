@@ -306,6 +306,8 @@ export async function updateAdminMicroIndie(
     playInBrowserUrl?: string;
     pitch?: string;
     discoveredBy?: string;
+    price?: string;
+    pricingText?: Record<string, string>;
     approved?: boolean;
   },
   steamId: string = ADMIN_STEAM_ID
@@ -322,6 +324,8 @@ export async function updateAdminMicroIndie(
   if (updates.playInBrowserUrl !== undefined) formData.append('playInBrowserUrl', updates.playInBrowserUrl);
   if (updates.pitch !== undefined) formData.append('pitch', updates.pitch);
   if (updates.discoveredBy !== undefined) formData.append('discoveredBy', updates.discoveredBy);
+  if (updates.price !== undefined) formData.append('price', updates.price);
+  if (updates.pricingText !== undefined) formData.append('pricingText', JSON.stringify(updates.pricingText));
 
   const response = await fetch('/api/track.php', {
     method: 'POST',

@@ -8,7 +8,8 @@ import {
   Search, 
   Trophy, 
   Gamepad2,
-  Shield
+  Shield,
+  Shuffle
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { soundFx } from '../../utils/audio';
@@ -20,16 +21,30 @@ import type { MicroIndieGame } from '../../types/microIndie';
 
 type FilterType = 'all' | 'itch' | 'steam' | 'web' | 'free' | 'jam';
 
+/**
+ * Mélange aléatoire d'un tableau (Fisher-Yates) sans muter le tableau d'origine.
+ */
+function shuffleArray<T>(array: T[]): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 export const MicroIndieHub: React.FC = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || 'fr';
-  const { isAdmin } = useUserAccount();
+  const { isAdmin, isAuthenticated, profile } = useUserAccount();
 
-  const [games, setGames] = useState<MicroIndieGame[]>(INITIAL_MICRO_INDIES);
+  // Initialisation avec les jeux mélangés aléatoirement à l'arrivée sur la page
+  const [games, setGames] = useState<MicroIndieGame[]>(() => shuffleArray(INITIAL_MICRO_INDIES));
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
+  const [authNotice, setAuthNotice] = useState<string | null>(null);
   const [likedIds, setLikedIds] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem('hoot_liked_micro_indies');
@@ -42,33 +57,90 @@ export const MicroIndieHub: React.FC = () => {
 
   // Charger les propositions communautaires depuis l'API PHP
   useEffect(() => {
-    fetch('/api/micro_indies.php?action=list')
+    const params = new URLSearchParams({ action: 'list' });
+    if (profile?.id) params.set('userId', profile.id);
+    if (profile?.steam?.steamId) params.set('steamId', profile.steam.steamId);
+    if (profile?.username) params.set('username', profile.username);
+
+    fetch(`/api/micro_indies.php?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.microIndies) && data.microIndies.length > 0) {
           setGames((prev) => {
             const map = new Map<string, MicroIndieGame>();
-            // Ajouter d'abord les jeux initiaux
+            // Ajouter d'abord les jeux existants (déjà mélangés)
             prev.forEach((g) => map.set(g.id, g));
+            let hasNew = false;
             // Ajouter les jeux communautaires approuvés
-            data.microIndies.forEach((g: MicroIndieGame) => map.set(g.id, g));
-            return Array.from(map.values());
+            data.microIndies.forEach((g: MicroIndieGame) => {
+              if (!map.has(g.id)) {
+                hasNew = true;
+              }
+              map.set(g.id, g);
+            });
+            const allGames = Array.from(map.values());
+            // Si de nouveaux jeux sont intégrés, on remélange pour conserver la surprise de découverte
+            return hasNew ? shuffleArray(allGames) : allGames;
           });
+        }
+        if (data.success && Array.isArray(data.userLikedIds) && data.userLikedIds.length > 0) {
+          setLikedIds((prev) => new Set([...Array.from(prev), ...data.userLikedIds]));
         }
       })
       .catch(() => {
         // Mode hors-ligne : conserve INITIAL_MICRO_INDIES
       });
-  }, []);
+  }, [profile?.id, profile?.steam?.steamId, profile?.username]);
+
+  // Synchronisation des likes du compte connecté
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const params = new URLSearchParams({
+      action: 'user_likes',
+      userId: profile.id || '',
+      steamId: profile.steam?.steamId || '',
+      username: profile.username || '',
+    });
+    fetch(`/api/micro_indies.php?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.likedIds)) {
+          setLikedIds((prev) => new Set([...Array.from(prev), ...data.likedIds]));
+          try {
+            const userKey = profile.steam?.steamId || profile.id || profile.username;
+            if (userKey) {
+              localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(data.likedIds));
+            }
+          } catch {
+            // Ignorer
+          }
+        }
+      })
+      .catch(() => {});
+  }, [isAuthenticated, profile.id, profile.steam?.steamId, profile.username]);
 
   const handleLike = async (gameId: string) => {
+    // [Anti-triche] Obliger la connexion à un compte pour voter (empêche le spam en navigation privée)
+    if (!isAuthenticated) {
+      soundFx.playError();
+      setAuthNotice(
+        t(
+          'micro.authRequiredToLike',
+          'Connexion requise : Veuillez vous connecter à votre compte Hoot pour voter et soutenir un jeu (anti-triche navigation privée) !'
+        )
+      );
+      window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+      return;
+    }
+
     if (likedIds.has(gameId)) return;
     soundFx.playClick();
 
     const nextLiked = new Set(likedIds).add(gameId);
     setLikedIds(nextLiked);
     try {
-      localStorage.setItem('hoot_liked_micro_indies', JSON.stringify(Array.from(nextLiked)));
+      const userKey = profile.steam?.steamId || profile.id || profile.username;
+      localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(Array.from(nextLiked)));
     } catch {
       // Ignorer
     }
@@ -80,11 +152,34 @@ export const MicroIndieHub: React.FC = () => {
 
     // Synchroniser avec l'API
     try {
-      await fetch('/api/micro_indies.php', {
+      const res = await fetch('/api/micro_indies.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'like', id: gameId }),
+        body: JSON.stringify({
+          action: 'like',
+          id: gameId,
+          userId: profile.id,
+          steamId: profile.steam?.steamId || undefined,
+          username: profile.username,
+        }),
       });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        if (data.requireAuth) {
+          soundFx.playError();
+          setAuthNotice(data.error || 'Connexion requise pour voter.');
+          window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+          // Annuler le vote local
+          setLikedIds((prev) => {
+            const rolled = new Set(prev);
+            rolled.delete(gameId);
+            return rolled;
+          });
+          setGames((prev) =>
+            prev.map((g) => (g.id === gameId ? { ...g, likesCount: Math.max(0, (g.likesCount || 1) - 1) } : g))
+          );
+        }
+      }
     } catch {
       // Ignorer
     }
@@ -92,6 +187,11 @@ export const MicroIndieHub: React.FC = () => {
 
   const handleGameAdded = (newGame: MicroIndieGame) => {
     setGames((prev) => [newGame, ...prev]);
+  };
+
+  const handleShuffle = () => {
+    soundFx.playClick();
+    setGames((prev) => shuffleArray(prev));
   };
 
   const filteredGames = useMemo(() => {
@@ -263,16 +363,27 @@ export const MicroIndieHub: React.FC = () => {
           </button>
         </div>
 
-        {/* Barre de recherche */}
-        <div className="relative w-full md:w-72">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('micro.searchPlaceholder', 'Rechercher un créateur, un jeu...')}
-            className="w-full pl-10 pr-4 py-2 bg-[#06241b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-colors"
-          />
+        {/* Barre de recherche et bouton de mélange aléatoire */}
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="relative flex-1 md:w-72">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('micro.searchPlaceholder', 'Rechercher un créateur, un jeu...')}
+              className="w-full pl-10 pr-4 py-2 bg-[#06241b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-colors"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleShuffle}
+            className="px-3.5 py-2 bg-[#06241b] hover:bg-emerald-900/40 text-amber-300 hover:text-amber-200 border border-emerald-900 hover:border-amber-400/50 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap active:scale-95"
+            title={t('micro.shuffleTooltip', 'Mélanger aléatoirement les jeux pour en découvrir d’autres')}
+          >
+            <Shuffle className="w-4 h-4 text-amber-400" />
+            <span className="hidden sm:inline">{t('micro.shuffleBtn', 'Mélanger')}</span>
+          </button>
         </div>
       </div>
 
@@ -384,7 +495,14 @@ export const MicroIndieHub: React.FC = () => {
                   {/* Bouton Like / Coeur */}
                   <button
                     onClick={() => handleLike(game.id)}
-                    className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 ${
+                    title={
+                      !isAuthenticated
+                        ? t('micro.loginToVote', 'Connexion requise pour voter (anti-triche)')
+                        : isLiked
+                        ? t('micro.alreadyVoted', 'Vous avez voté pour cette pépite')
+                        : t('micro.voteForGame', 'Voter pour cette pépite')
+                    }
+                    className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
                       isLiked
                         ? 'bg-rose-600 text-white shadow-lg shadow-rose-950/50'
                         : 'bg-black/50 text-white/80 hover:text-rose-400 hover:bg-black/70'
@@ -499,6 +617,35 @@ export const MicroIndieHub: React.FC = () => {
           onClose={() => setIsAdminDashboardOpen(false)}
           initialTab="microIndies"
         />
+      )}
+
+      {/* Bannière Toast Connexion requise (Anti-triche) */}
+      {authNotice && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[90%] bg-gradient-to-r from-amber-950 via-[#06241b] to-amber-950 border-2 border-amber-400 p-4 rounded-2xl shadow-2xl flex items-center justify-between gap-3 text-amber-100 animate-slideUp">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🔒</span>
+            <p className="text-xs sm:text-sm font-semibold">{authNotice}</p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthNotice(null);
+                window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+              }}
+              className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-xl text-xs transition cursor-pointer"
+            >
+              Connexion
+            </button>
+            <button
+              type="button"
+              onClick={() => setAuthNotice(null)}
+              className="p-1 text-amber-300 hover:text-white text-xs cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

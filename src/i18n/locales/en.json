@@ -971,6 +971,12 @@
     "proposeBtn": "Submit a Micro-Indie",
     "playOnline": "Play in Browser 🌐",
     "searchPlaceholder": "Search a creator, game...",
+    "shuffleBtn": "Shuffle",
+    "shuffleTooltip": "Shuffle games randomly to discover new ones",
+    "authRequiredToLike": "Login required: Please log in to your Hoot account to vote and support this game (incognito anti-cheat)!",
+    "loginToVote": "Login required to vote (anti-cheat)",
+    "alreadyVoted": "You already voted for this gem",
+    "voteForGame": "Vote for this gem",
     "noGamesTitle": "No micro-indies match these criteria",
     "noGamesDesc": "Be the first to submit an overlooked gem or reset your filters!",
     "filters": {

@@ -971,6 +971,12 @@
     "proposeBtn": "Proposer un Micro-Indé",
     "playOnline": "Jouer en direct 🌐",
     "searchPlaceholder": "Rechercher un créateur, un jeu...",
+    "shuffleBtn": "Mélanger",
+    "shuffleTooltip": "Mélanger aléatoirement les jeux pour en découvrir d’autres",
+    "authRequiredToLike": "Connexion requise : Veuillez vous connecter à votre compte Hoot pour voter et soutenir un jeu (anti-triche navigation privée) !",
+    "loginToVote": "Connexion requise pour voter (anti-triche)",
+    "alreadyVoted": "Vous avez voté pour cette pépite",
+    "voteForGame": "Voter pour cette pépite",
     "noGamesTitle": "Aucun micro-indé ne correspond à ces critères",
     "noGamesDesc": "Soyez le premier à proposer une pépite méconnue ou réinitialisez les filtres !",
     "filters": {

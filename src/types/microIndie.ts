@@ -43,6 +43,7 @@ export interface MicroIndieSubmission {
   steamUrl?: string;
   playInBrowserUrl?: string;
   isFree: boolean;
+  price?: string;
   genre: string;
   artStyle: string;
   jam?: string;

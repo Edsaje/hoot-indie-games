@@ -971,6 +971,8 @@
     "proposeBtn": "Proponer un Microindie",
     "playOnline": "Jugar en directo 🌐",
     "searchPlaceholder": "Buscar creador, juego...",
+    "shuffleBtn": "Mezclar",
+    "shuffleTooltip": "Mezclar juegos al azar para descubrir otros",
     "noGamesTitle": "Ningún microindie coincide con estos criterios",
     "noGamesDesc": "¡Sé el primero en proponer una joya oculta o restablece los filtros!",
     "filters": {

@@ -971,6 +971,8 @@
     "proposeBtn": "Propor um Micro-Indie",
     "playOnline": "Jogar online 🌐",
     "searchPlaceholder": "Buscar criador, jogo...",
+    "shuffleBtn": "Embaralhar",
+    "shuffleTooltip": "Embaralhar jogos aleatoriamente para descobrir novos",
     "noGamesTitle": "Nenhum micro-indie corresponde a esses critérios",
     "noGamesDesc": "Seja o primeiro a propor uma joia escondida ou redefina os filtros!",
     "filters": {

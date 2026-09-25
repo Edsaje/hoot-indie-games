@@ -28,6 +28,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
   const [playUrl, setPlayUrl] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [isFree, setIsFree] = useState(true);
+  const [priceInput, setPriceInput] = useState('');
   const [genre, setGenre] = useState('Aventure');
   const [artStyle, setArtStyle] = useState('Pixel Art');
   const [jam, setJam] = useState('');
@@ -75,6 +76,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
           playInBrowserUrl: playUrl.trim() || undefined,
           coverImage: coverImage.trim() || undefined,
           isFree,
+          price: isFree ? undefined : (priceInput.trim() || undefined),
           genre,
           artStyle,
           jam: jam.trim() || undefined,
@@ -106,8 +108,8 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
         playInBrowserUrl: playUrl.trim() || undefined,
         isFree,
         pricingText: {
-          fr: isFree ? 'Gratuit / Free 🆓' : 'Prix libre / Payant',
-          en: isFree ? '100% Free 🆓' : 'Paid / Name your price',
+          fr: isFree ? 'Gratuit / Free 🆓' : (priceInput.trim() || 'Payant / Prix libre'),
+          en: isFree ? '100% Free 🆓' : (priceInput.trim() || 'Paid / Name your price'),
         },
         genre: [genre],
         artStyle: { fr: artStyle, en: artStyle },
@@ -293,9 +295,20 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                           : 'bg-[#02100b] border-emerald-900 text-emerald-500 hover:text-emerald-300'
                       }`}
                     >
-                      Payant / Prix libre 💎
+                      Payant / Prix réel 💎
                     </button>
                   </div>
+                  {!isFree && (
+                    <div className="mt-2 animate-fadeIn">
+                      <input
+                        type="text"
+                        value={priceInput}
+                        onChange={(e) => setPriceInput(e.target.value)}
+                        placeholder="Prix réel (ex: 1,99 €, 4,99 $, Prix libre...)"
+                        className="w-full px-3 py-1.5 bg-[#02100b] border border-amber-500/50 rounded-xl text-amber-200 placeholder:text-emerald-700 focus:outline-none focus:border-amber-400 text-xs"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -321,8 +334,29 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                       const val = e.target.value;
                       setSteamUrl(val);
                       const m = val.match(/\/app\/(\d+)/);
-                      if (m && m[1] && !coverImage) {
-                        setCoverImage(`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${m[1]}/header.jpg`);
+                      if (m && m[1]) {
+                        if (!coverImage) {
+                          setCoverImage(`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${m[1]}/header.jpg`);
+                        }
+                        // Récupération automatique du prix Steam et du titre
+                        fetch(`/api/micro_indies.php?action=get_steam_info&appId=${m[1]}`)
+                          .then((r) => r.json())
+                          .then((data) => {
+                            if (data && data.success) {
+                              if (data.isFree) {
+                                setIsFree(true);
+                              } else {
+                                setIsFree(false);
+                                if (!priceInput && data.priceFormatted) {
+                                  setPriceInput(data.priceFormatted);
+                                }
+                              }
+                              if (!title.trim() && data.name) {
+                                setTitle(data.name);
+                              }
+                            }
+                          })
+                          .catch(() => {});
                       }
                     }}
                     placeholder="https://store.steampowered.com/app/123456/..."
