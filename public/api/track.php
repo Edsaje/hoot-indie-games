@@ -1711,10 +1711,10 @@ $defaultStats = [
 ];
 
 // Ouverture transactionnelle et verrouillage exclusif
-$fp = fopen($statsFile, 'c+');
+$fp = @fopen($statsFile, 'c+');
 if (!$fp) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Erreur accès fichier stats']);
+    // Échec gracieux : ne pas exposer d'erreur HTTP 500 sur le tracking analytics non critique
+    echo json_encode(['success' => true, 'tracked' => false, 'notice' => 'storage_temporarily_unavailable']);
     exit;
 }
 flock($fp, LOCK_EX);

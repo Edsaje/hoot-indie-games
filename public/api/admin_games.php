@@ -165,6 +165,15 @@ function saveGameOverrides($filePath, $data) {
 $action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : 'get_all';
 $steamId = isset($_REQUEST['steamId']) ? trim($_REQUEST['steamId']) : '';
 
+// Validation stricte du paramètre cache-buster t (neutralise les faux-positifs DAST)
+if (isset($_GET['t'])) {
+    if (!is_numeric($_GET['t']) || strlen((string)$_GET['t']) > 20) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Format d\'horodatage invalide.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+}
+
 // 1. Route publique de synchronisation (accessible sans être authentifié en admin)
 if ($action === 'public_overrides') {
     $overrides = loadGameOverrides($overrideFile);

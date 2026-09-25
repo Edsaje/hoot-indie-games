@@ -32,4 +32,5 @@ public/api/*.log
 .env
 .env.*
 *.bak
+zap-report*
 
