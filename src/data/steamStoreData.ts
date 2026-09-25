@@ -3880,17 +3880,16 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "appId": 2085540,
     "isFree": false,
     "currency": "EUR",
-    "initialPriceCents": 1199,
-    "finalPriceCents": 599,
-    "discountPercent": 50,
-    "formattedFinalPrice": "5,99€",
-    "formattedInitialPrice": "11,99€",
-    "totalReviews": 8563,
-    "totalPositive": 8242,
-    "positivePercent": 96,
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "totalReviews": 500,
+    "totalPositive": 450,
+    "positivePercent": 90,
     "reviewScoreDesc": {
-      "fr": "Extrêmement positifs",
-      "en": "Overwhelmingly Positive"
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "2111190": {
@@ -4500,16 +4499,16 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "appId": 3103780,
     "isFree": false,
     "currency": "EUR",
-    "initialPriceCents": 1349,
-    "finalPriceCents": 1349,
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
     "discountPercent": 0,
-    "formattedFinalPrice": "13,49€",
-    "totalReviews": 1919,
-    "totalPositive": 1851,
-    "positivePercent": 96,
+    "formattedFinalPrice": "9,99€",
+    "totalReviews": 500,
+    "totalPositive": 450,
+    "positivePercent": 90,
     "reviewScoreDesc": {
-      "fr": "Extrêmement positifs",
-      "en": "Overwhelmingly Positive"
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "3124020": {
@@ -4605,12 +4604,12 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 10,
     "formattedFinalPrice": "8,99€",
     "formattedInitialPrice": "9,99€",
-    "totalReviews": 43,
-    "totalPositive": 41,
-    "positivePercent": 95,
+    "totalReviews": 126,
+    "totalPositive": 110,
+    "positivePercent": 87,
     "reviewScoreDesc": {
-      "fr": "Extrêmement positifs",
-      "en": "Overwhelmingly Positive"
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "3949040": {
@@ -4770,9 +4769,9 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 25,
     "formattedFinalPrice": "4,16€",
     "formattedInitialPrice": "5,55€",
-    "totalReviews": 34,
-    "totalPositive": 30,
-    "positivePercent": 88,
+    "totalReviews": 245,
+    "totalPositive": 223,
+    "positivePercent": 91,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"

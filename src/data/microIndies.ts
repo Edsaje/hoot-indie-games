@@ -748,5 +748,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1hZ2UvMTA2NTk5LzU4NjAxMi5naWY=/original/%2Fz0let.gif"
     ],
     "dateAdded": "2026-09-24"
+  },
+  {
+    "id": "itch-killer-chat-original-edition",
+    "title": "Killer Chat! Original Edition",
+    "developer": "rosesrot",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://rosesrot.itch.io/killer-chat",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh.",
+      "en": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh."
+    },
+    "description": {
+      "fr": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh.",
+      "en": "You&#039;re a writer that&#039;s been (mistakenly) invited to a serial killer server. Uh oh."
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE4MDAyMzYzLnBuZw==/315x250%23c/ASJcG4.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE4MDAyMzYzLnBuZw==/315x250%23c/ASJcG4.png"
+    ],
+    "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "itch-butterfly-soup",
+    "title": "Butterfly Soup",
+    "developer": "brianna-lei",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://brianna-lei.itch.io/butterfly-soup",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Gay girls playing baseball and falling in love",
+      "en": "Gay girls playing baseball and falling in love"
+    },
+    "description": {
+      "fr": "Gay girls playing baseball and falling in love",
+      "en": "Gay girls playing baseball and falling in love"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTQzODk5LzgzMTY0OC5wbmc=/315x250%23c/Q6ST2A.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvMTQzODk5LzgzMTY0OC5wbmc=/315x250%23c/Q6ST2A.png"
+    ],
+    "dateAdded": "2026-09-25"
   }
 ];
