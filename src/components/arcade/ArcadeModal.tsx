@@ -17,6 +17,10 @@ import {
   MousePointer,
   Zap,
   Tv,
+  Menu,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { ARCADE_GAMES, type ArcadeGameId, type ArcadeGameMeta } from '../../data/arcadeGames';
@@ -25,6 +29,17 @@ import { useGamepadStatus, useGamepadArcadeLoop } from '../../utils/gamepad';
 import { useAchievements } from '../../context/useAchievements';
 export type { ArcadeGameId, ArcadeGameMeta };
 export type ArcadeDifficulty = 'detente' | 'normal' | 'expert';
+
+const ARCADE_SUBTITLES: Record<ArcadeGameId, string> = {
+  snake: 'Classique 1976 • Réflexes',
+  pong: 'Pionnier 1972 • 2 Joueurs / IA',
+  breakout: 'Casse-Briques 1976 • Bonus',
+  flappy: 'Flappy Hibou 2013 • Vol Précis',
+  invaders: 'Space Invaders 1978 • Shoot',
+  run: 'Course Sylvestre 2014 • Runner',
+  tetris: 'Tetris 1984 • Puzzle Blocs',
+  vectrex: 'Mine Storm 1982 • Cathodique CRT',
+};
 
 // Static constant key arrays for zero-allocation key testing in 60fps loops
 const KEY_CODES_UP = ['ArrowUp', 'KeyW', 'KeyZ'] as const;
@@ -94,6 +109,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   });
   const [soundMuted, setSoundMuted] = useState<boolean>(!soundFx.isEnabled());
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [isGameMenuOpen, setIsGameMenuOpen] = useState<boolean>(false);
   const [isVectrexUnlocked, setIsVectrexUnlocked] = useState<boolean>(() => {
     try {
       return (
@@ -143,6 +159,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     setScore(0);
     setIsGameOver(false);
     setSelectedGame(gameId);
+    setIsGameMenuOpen(false);
   };
 
   // Sync initialGame if prop changed from outside
@@ -205,6 +222,34 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     const prevIdx = (currentIndex - 1 + ARCADE_GAMES.length) % ARCADE_GAMES.length;
     selectGame(ARCADE_GAMES[prevIdx].id);
   }, [selectedGame]);
+
+  const toggleGameMenu = () => {
+    soundFx.playClick();
+    if (!isGameMenuOpen) {
+      stopAllLoops();
+    }
+    setIsGameMenuOpen((prev) => !prev);
+  };
+
+  const getGameHighScore = useCallback((gameId: ArcadeGameId): number => {
+    try {
+      const val = localStorage.getItem(`hoot_arcade_hs_${gameId}`);
+      return val ? parseInt(val, 10) : 0;
+    } catch {
+      return 0;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isGameMenuOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsGameMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isGameMenuOpen]);
 
   const { isConnected: isGamepadConnected, gamepadName, labels } = useGamepadStatus();
 
@@ -3556,42 +3601,164 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
           </div>
         </div>
 
-        {/* Game Tabs Selector */}
-        <div className="w-full flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-thin scrollbar-thumb-amber-500/30">
-          {isGamepadConnected && (
-            <span
-              className="shrink-0 px-2 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-[10px] font-mono font-bold"
-              title={`Gâchette ${labels.lb} : Borne précédente`}
-            >
-              {labels.lb}
-            </span>
-          )}
-          {ARCADE_GAMES.map((game) => {
-            const active = selectedGame === game.id;
-            return (
-              <button
-                key={game.id}
-                onClick={() => selectGame(game.id)}
-                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  active
-                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 scale-105'
-                    : 'bg-[#0b0f19] text-slate-300 border border-[#1e293b] hover:border-amber-500/40 hover:text-white'
-                }`}
-              >
-                <span>{game.icon}</span>
-                <span>{game.name}</span>
-              </button>
-            );
-          })}
-          {isGamepadConnected && (
-            <span
-              className="shrink-0 px-2 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-[10px] font-mono font-bold"
-              title={`Gâchette ${labels.rb} : Borne suivante`}
-            >
-              {labels.rb}
-            </span>
-          )}
+        {/* Compact Game Selector with Burger Menu */}
+        <div className="w-full max-w-[380px] flex items-center justify-between gap-1.5 mb-2.5">
+          {/* Bouton Précédent */}
+          <button
+            type="button"
+            onClick={selectPrevGame}
+            className="flex items-center justify-center p-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition active:scale-95 cursor-pointer shrink-0"
+            title={isGamepadConnected ? `Borne précédente (${labels.lb})` : 'Borne précédente'}
+          >
+            {isGamepadConnected ? (
+              <span className="text-[10px] font-mono font-bold px-1">{labels.lb}</span>
+            ) : (
+              <ChevronLeft className="w-4 h-4" />
+            )}
+          </button>
+
+          {/* Bouton Burger Central : Borne Actuelle & Dérouleur */}
+          <button
+            type="button"
+            onClick={toggleGameMenu}
+            className={`flex-1 flex items-center justify-between px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer active:scale-[0.99] ${
+              isGameMenuOpen
+                ? 'bg-amber-500/20 border-amber-500 text-amber-300 shadow-md shadow-amber-500/10'
+                : 'bg-[#0b0f19] border-[#1e293b] text-slate-200 hover:border-amber-500/40 hover:text-white'
+            }`}
+            title="Changer de borne d'arcade (Menu des 8 jeux)"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="p-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-400 shrink-0">
+                <Menu className="w-3.5 h-3.5" />
+              </span>
+              <span className="text-base shrink-0">{currentGameMeta.icon}</span>
+              <span className="font-black text-sm text-white truncate">{currentGameMeta.name}</span>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] text-amber-400 font-bold shrink-0 ml-1">
+              <span className="hidden xs:inline sm:inline">Changer</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isGameMenuOpen ? 'rotate-180 text-amber-300' : ''}`} />
+            </div>
+          </button>
+
+          {/* Bouton Suivant */}
+          <button
+            type="button"
+            onClick={selectNextGame}
+            className="flex items-center justify-center p-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition active:scale-95 cursor-pointer shrink-0"
+            title={isGamepadConnected ? `Borne suivante (${labels.rb})` : 'Borne suivante'}
+          >
+            {isGamepadConnected ? (
+              <span className="text-[10px] font-mono font-bold px-1">{labels.rb}</span>
+            ) : (
+              <ChevronRight className="w-4 h-4" />
+            )}
+          </button>
         </div>
+
+        {/* Burger Drawer Modal Overlay */}
+        {isGameMenuOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-150"
+            onClick={() => setIsGameMenuOpen(false)}
+          >
+            <div
+              className="relative w-full max-w-md bg-[#06241b] border-2 border-amber-500/60 rounded-3xl p-4 sm:p-5 shadow-2xl text-slate-100 animate-in zoom-in-95 duration-150 flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <SylvestreIvyFrame density="delicate" />
+
+              {/* Menu Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-[#0d543e] mb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    <Menu className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
+                      Bornes d'Arcade
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-bold uppercase">
+                        8 Jeux
+                      </span>
+                    </h3>
+                    <p className="text-[11px] text-slate-300">
+                      Sélectionnez une borne pour lancer la partie
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsGameMenuOpen(false)}
+                  className="p-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
+                  title="Fermer le menu"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Cabinets Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-amber-500/30">
+                {ARCADE_GAMES.map((game) => {
+                  const active = selectedGame === game.id;
+                  const bestScore = getGameHighScore(game.id);
+                  return (
+                    <button
+                      key={game.id}
+                      type="button"
+                      onClick={() => selectGame(game.id)}
+                      className={`flex items-center gap-2.5 p-2.5 rounded-2xl border text-left transition-all cursor-pointer group ${
+                        active
+                          ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/20 scale-[1.01]'
+                          : 'bg-[#031711] border-[#0d543e] text-slate-200 hover:border-amber-500/50 hover:bg-[#093a2b]'
+                      }`}
+                    >
+                      <div
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0 ${
+                          active
+                            ? 'bg-slate-950/20'
+                            : 'bg-[#06241b] border border-[#0d543e] group-hover:border-amber-500/40'
+                        }`}
+                      >
+                        {game.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <span
+                            className={`font-black text-xs truncate ${
+                              active ? 'text-slate-950' : 'text-white group-hover:text-amber-300'
+                            }`}
+                          >
+                            {game.name}
+                          </span>
+                          {active && (
+                            <span className="text-[8px] font-black uppercase px-1.5 py-0.2 rounded bg-slate-950 text-amber-400 shrink-0">
+                              En cours
+                            </span>
+                          )}
+                        </div>
+                        <div
+                          className={`text-[10px] truncate ${
+                            active ? 'text-slate-900/80 font-medium' : 'text-slate-400'
+                          }`}
+                        >
+                          {ARCADE_SUBTITLES[game.id]}
+                        </div>
+                        <div
+                          className={`text-[10px] font-mono mt-0.5 flex items-center gap-1 ${
+                            active ? 'text-slate-950 font-bold' : 'text-amber-400'
+                          }`}
+                        >
+                          <Trophy className="w-2.5 h-2.5" />
+                          <span>Record : {bestScore > 0 ? bestScore.toLocaleString() : '—'}</span>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Score & Controls Bar */}
         <div className="w-full max-w-[380px] flex items-center justify-between px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl mb-2 text-xs">
