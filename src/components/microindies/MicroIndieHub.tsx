@@ -133,21 +133,34 @@ export const MicroIndieHub: React.FC = () => {
       return;
     }
 
-    if (likedIds.has(gameId)) return;
     soundFx.playClick();
+    const isCurrentlyLiked = likedIds.has(gameId);
 
-    const nextLiked = new Set(likedIds).add(gameId);
+    // Mettre à jour l'état local (optimistic toggle)
+    const nextLiked = new Set(likedIds);
+    if (isCurrentlyLiked) {
+      nextLiked.delete(gameId);
+    } else {
+      nextLiked.add(gameId);
+    }
     setLikedIds(nextLiked);
+
     try {
       const userKey = profile.steam?.steamId || profile.id || profile.username;
-      localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(Array.from(nextLiked)));
+      if (userKey) {
+        localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(Array.from(nextLiked)));
+      }
     } catch {
       // Ignorer
     }
 
-    // Incrémenter localement
+    // Incrémenter ou décrémenter localement
     setGames((prev) =>
-      prev.map((g) => (g.id === gameId ? { ...g, likesCount: (g.likesCount || 0) + 1 } : g))
+      prev.map((g) =>
+        g.id === gameId
+          ? { ...g, likesCount: isCurrentlyLiked ? Math.max(0, (g.likesCount || 1) - 1) : (g.likesCount || 0) + 1 }
+          : g
+      )
     );
 
     // Synchroniser avec l'API
@@ -156,7 +169,7 @@ export const MicroIndieHub: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'like',
+          action: isCurrentlyLiked ? 'unlike' : 'like',
           id: gameId,
           userId: profile.id,
           steamId: profile.steam?.steamId || undefined,
@@ -169,14 +182,14 @@ export const MicroIndieHub: React.FC = () => {
           soundFx.playError();
           setAuthNotice(data.error || 'Connexion requise pour voter.');
           window.dispatchEvent(new CustomEvent('hoot_open_auth'));
-          // Annuler le vote local
-          setLikedIds((prev) => {
-            const rolled = new Set(prev);
-            rolled.delete(gameId);
-            return rolled;
-          });
+          // Restaurer l'état précédent en cas d'erreur
+          setLikedIds(likedIds);
           setGames((prev) =>
-            prev.map((g) => (g.id === gameId ? { ...g, likesCount: Math.max(0, (g.likesCount || 1) - 1) } : g))
+            prev.map((g) =>
+              g.id === gameId
+                ? { ...g, likesCount: isCurrentlyLiked ? (g.likesCount || 0) + 1 : Math.max(0, (g.likesCount || 1) - 1) }
+                : g
+            )
           );
         }
       }
@@ -499,7 +512,7 @@ export const MicroIndieHub: React.FC = () => {
                       !isAuthenticated
                         ? t('micro.loginToVote', 'Connexion requise pour voter (anti-triche)')
                         : isLiked
-                        ? t('micro.alreadyVoted', 'Vous avez voté pour cette pépite')
+                        ? t('micro.removeVote', 'Cliquer pour retirer votre vote')
                         : t('micro.voteForGame', 'Voter pour cette pépite')
                     }
                     className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${

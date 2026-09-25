@@ -115,12 +115,12 @@ function healAndLoadMicroIndies($dataFile) {
             }
             if (!isset($item['pricingText']) || !isset($item['pricingText']['fr']) || strpos($item['pricingText']['fr'], 'Payant /') !== false) {
                 $item['pricingText'] = [
-                    'fr' => '1,99 € sur Steam 💎',
-                    'en' => '$1.99 on Steam 💎',
-                    'es' => '1,99 € en Steam 💎',
-                    'de' => '1,99 € auf Steam 💎',
-                    'ja' => 'Steamにて1.99ドル 💎',
-                    'pt-BR' => 'R$ 10,79 no Steam 💎',
+                    'fr' => '1,99 € sur Steam',
+                    'en' => '$1.99 on Steam',
+                    'es' => '1,99 € en Steam',
+                    'de' => '1,99 € auf Steam',
+                    'ja' => 'Steamにて1.99ドル',
+                    'pt-BR' => 'R$ 10,79 no Steam',
                 ];
                 $dirty = true;
             }
@@ -195,7 +195,7 @@ if ($action === 'get_steam_info') {
             if ($isFree) {
                 $finalPrice = 'Gratuit 🆓';
             } elseif (isset($gameData['price_overview']['final_formatted'])) {
-                $finalPrice = $gameData['price_overview']['final_formatted'] . ' sur Steam 💎';
+                $finalPrice = $gameData['price_overview']['final_formatted'] . ' sur Steam';
             }
             echo json_encode([
                 'success' => true,
@@ -359,22 +359,22 @@ if ($action === 'submit') {
     exit;
 }
 
-// 3. Voter / Aimer un micro-indé (Réservé aux comptes connectés - anti-triche navigation privée)
-if ($action === 'like') {
+// 3. Voter / Aimer ou Retirer son vote (Réservé aux comptes connectés - anti-triche navigation privée)
+if ($action === 'like' || $action === 'unlike' || $action === 'toggle_like') {
     $userKey = getAuthenticatedUserVoteKey($postData);
     if (!$userKey) {
         http_response_code(401);
         echo json_encode([
             'success' => false,
             'requireAuth' => true,
-            'error' => 'Connexion à un compte requise pour voter et soutenir un jeu (anti-triche navigation privée).'
+            'error' => 'Connexion à un compte requise pour voter ou retirer son vote.'
         ]);
         exit;
     }
 
     $ipHash = getClientIpHash($secret);
     // [CWE-799] Rate limiting sur les votes
-    if (!checkRateLimit($rateLimitFile, $ipHash . '_likes', 25, 600)) {
+    if (!checkRateLimit($rateLimitFile, $ipHash . '_likes', 30, 600)) {
         http_response_code(429);
         echo json_encode(['success' => false, 'error' => 'Veuillez patienter avant de voter à nouveau.']);
         exit;
@@ -396,22 +396,10 @@ if ($action === 'like') {
     if (!isset($vData['games'])) $vData['games'] = [];
     if (!isset($vData['users'])) $vData['users'] = [];
 
-    // Vérifier si ce compte a déjà voté pour ce jeu
-    if (!empty($vData['games'][$targetId][$userKey])) {
-        echo json_encode([
-            'success' => false,
-            'alreadyLiked' => true,
-            'error' => 'Vous avez déjà voté pour cette pépite avec votre compte.'
-        ]);
-        exit;
-    }
+    $alreadyLiked = !empty($vData['games'][$targetId][$userKey]);
 
-    // Enregistrer le vote pour ce compte
-    $vData['games'][$targetId][$userKey] = time();
-    if (!isset($vData['users'][$userKey])) $vData['users'][$userKey] = [];
-    $vData['users'][$userKey][] = $targetId;
-    $vData['users'][$userKey] = array_values(array_unique($vData['users'][$userKey]));
-    @file_put_contents($votesFile, json_encode($vData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    // Déterminer s'il s'agit d'un like ou d'un unlike
+    $isUnlike = ($action === 'unlike') || ($action === 'toggle_like' && $alreadyLiked) || ($action === 'like' && !empty($postData['unlike']));
 
     $items = [];
     if (file_exists($dataFile)) {
@@ -420,21 +408,66 @@ if ($action === 'like') {
     }
     $found = false;
     $newLikes = 0;
-    foreach ($items as &$item) {
-        if (($item['id'] ?? '') === $targetId) {
-            $item['likesCount'] = ($item['likesCount'] ?? 0) + 1;
-            $newLikes = $item['likesCount'];
-            $found = true;
-            break;
+
+    if ($isUnlike) {
+        // Retirer le vote
+        unset($vData['games'][$targetId][$userKey]);
+        if (isset($vData['users'][$userKey])) {
+            $vData['users'][$userKey] = array_values(array_filter($vData['users'][$userKey], function($id) use ($targetId) {
+                return $id !== $targetId;
+            }));
         }
-    }
-    if ($found) {
-        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-        echo json_encode(['success' => true, 'likesCount' => $newLikes, 'liked' => true]);
+        @file_put_contents($votesFile, json_encode($vData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        foreach ($items as &$item) {
+            if (($item['id'] ?? '') === $targetId) {
+                $item['likesCount'] = max(0, ($item['likesCount'] ?? 1) - 1);
+                $newLikes = $item['likesCount'];
+                $found = true;
+                break;
+            }
+        }
+        unset($item);
+        if ($found) {
+            @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+        echo json_encode(['success' => true, 'likesCount' => $newLikes, 'liked' => false]);
+        exit;
     } else {
-        echo json_encode(['success' => true, 'likesCount' => 1, 'liked' => true]);
+        // Ajouter le vote
+        if ($alreadyLiked) {
+            echo json_encode([
+                'success' => true,
+                'alreadyLiked' => true,
+                'likesCount' => 1,
+                'liked' => true
+            ]);
+            exit;
+        }
+
+        $vData['games'][$targetId][$userKey] = time();
+        if (!isset($vData['users'][$userKey])) $vData['users'][$userKey] = [];
+        $vData['users'][$userKey][] = $targetId;
+        $vData['users'][$userKey] = array_values(array_unique($vData['users'][$userKey]));
+        @file_put_contents($votesFile, json_encode($vData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        foreach ($items as &$item) {
+            if (($item['id'] ?? '') === $targetId) {
+                $item['likesCount'] = ($item['likesCount'] ?? 0) + 1;
+                $newLikes = $item['likesCount'];
+                $found = true;
+                break;
+            }
+        }
+        unset($item);
+        if ($found) {
+            @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            echo json_encode(['success' => true, 'likesCount' => $newLikes, 'liked' => true]);
+        } else {
+            echo json_encode(['success' => true, 'likesCount' => 1, 'liked' => true]);
+        }
+        exit;
     }
-    exit;
 }
 
 // 4. Modération administrateur : Liste complète des propositions (avec stats)

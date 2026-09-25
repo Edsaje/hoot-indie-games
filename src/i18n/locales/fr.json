@@ -976,6 +976,7 @@
     "authRequiredToLike": "Connexion requise : Veuillez vous connecter à votre compte Hoot pour voter et soutenir un jeu (anti-triche navigation privée) !",
     "loginToVote": "Connexion requise pour voter (anti-triche)",
     "alreadyVoted": "Vous avez voté pour cette pépite",
+    "removeVote": "Cliquer pour retirer votre vote",
     "voteForGame": "Voter pour cette pépite",
     "noGamesTitle": "Aucun micro-indé ne correspond à ces critères",
     "noGamesDesc": "Soyez le premier à proposer une pépite méconnue ou réinitialisez les filtres !",

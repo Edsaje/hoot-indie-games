@@ -75,12 +75,12 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "steamUrl": "https://store.steampowered.com/app/1953920/Crescent_Bloom/",
     "isFree": false,
     "pricingText": {
-      "fr": "1,99 € sur Steam 💎",
-      "en": "$1.99 on Steam 💎",
-      "es": "1,99 € en Steam 💎",
-      "de": "1,99 € auf Steam 💎",
-      "ja": "Steamにて1.99ドル 💎",
-      "pt-BR": "R$ 10,79 no Steam 💎"
+      "fr": "1,99 € sur Steam",
+      "en": "$1.99 on Steam",
+      "es": "1,99 € en Steam",
+      "de": "1,99 € auf Steam",
+      "ja": "Steamにて1.99ドル",
+      "pt-BR": "R$ 10,79 no Steam"
     },
     "genre": [
       "Aventure",

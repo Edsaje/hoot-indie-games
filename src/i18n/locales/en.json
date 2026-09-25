@@ -976,6 +976,7 @@
     "authRequiredToLike": "Login required: Please log in to your Hoot account to vote and support this game (incognito anti-cheat)!",
     "loginToVote": "Login required to vote (anti-cheat)",
     "alreadyVoted": "You already voted for this gem",
+    "removeVote": "Click to remove your vote",
     "voteForGame": "Vote for this gem",
     "noGamesTitle": "No micro-indies match these criteria",
     "noGamesDesc": "Be the first to submit an overlooked gem or reset your filters!",

@@ -295,7 +295,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                           : 'bg-[#02100b] border-emerald-900 text-emerald-500 hover:text-emerald-300'
                       }`}
                     >
-                      Payant / Prix réel 💎
+                      Payant / Prix réel
                     </button>
                   </div>
                   {!isFree && (

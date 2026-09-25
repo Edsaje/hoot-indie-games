@@ -2228,7 +2228,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                             {platformLabel}
                                           </span>
                                           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                                            {m.pricingText?.fr || m.pricingText?.en || (m.isFree ? 'Gratuit 🆓' : 'Payant 💎')}
+                                            {m.pricingText?.fr || m.pricingText?.en || (m.isFree ? 'Gratuit 🆓' : 'Payant')}
                                           </span>
                                           {m.discoveredBy && (
                                             <span className="text-[10px] text-amber-300/80">
