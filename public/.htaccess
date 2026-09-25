@@ -5,8 +5,9 @@ Options -Indexes
   RewriteEngine On
   RewriteBase /
 
-  # Redirection HTTPS 301 stricte pour le référencement (évite le duplicate content HTTP/HTTPS)
+  # Redirection HTTPS 301 stricte (compatible Cloudflare & hébergement direct)
   RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
   # Règles de compatibilité pour l'API et le tracker

@@ -19,25 +19,47 @@ if (!defined('ADMIN_STEAM_ID')) {
  */
 if (!function_exists('isCloudflareIp')) {
     function isCloudflareIp($ip) {
-        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            return false;
-        }
-        $cfRanges = [
-            '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',
-            '141.101.64.0/18', '108.162.192.0/18', '190.93.240.0/20', '188.114.96.0/20',
-            '197.234.240.0/22', '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
-            '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22'
-        ];
-        $longIp = ip2long($ip);
-        if ($longIp === false) return false;
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $cfRanges = [
+                '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',
+                '141.101.64.0/18', '108.162.192.0/18', '190.93.240.0/20', '188.114.96.0/20',
+                '197.234.240.0/22', '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
+                '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22'
+            ];
+            $longIp = ip2long($ip);
+            if ($longIp === false) return false;
 
-        foreach ($cfRanges as $range) {
-            list($subnet, $bits) = explode('/', $range);
-            $subnetLong = ip2long($subnet);
-            $mask = -1 << (32 - (int)$bits);
-            if (($longIp & $mask) === ($subnetLong & $mask)) {
+            foreach ($cfRanges as $range) {
+                list($subnet, $bits) = explode('/', $range);
+                $subnetLong = ip2long($subnet);
+                $mask = -1 << (32 - (int)$bits);
+                if (($longIp & $mask) === ($subnetLong & $mask)) {
+                    return true;
+                }
+            }
+            return false;
+        } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            $cfIpv6 = [
+                '2400:cb00::/32', '2606:4700::/32', '2803:f800::/32', '2405:b500::/32',
+                '2405:8100::/32', '2a06:98c0::/29', '2c0f:f248::/32'
+            ];
+            $ipBinary = inet_pton($ip);
+            if ($ipBinary === false) return false;
+            foreach ($cfIpv6 as $range) {
+                list($subnet, $bits) = explode('/', $range);
+                $subnetBinary = inet_pton($subnet);
+                if ($subnetBinary === false) continue;
+                $bits = (int)$bits;
+                $bytes = intdiv($bits, 8);
+                $remainder = $bits % 8;
+                if (substr($ipBinary, 0, $bytes) !== substr($subnetBinary, 0, $bytes)) continue;
+                if ($remainder > 0) {
+                    $mask = 0xFF << (8 - $remainder);
+                    if ((ord($ipBinary[$bytes]) & $mask) !== (ord($subnetBinary[$bytes]) & $mask)) continue;
+                }
                 return true;
             }
+            return false;
         }
         return false;
     }
