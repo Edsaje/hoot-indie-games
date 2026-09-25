@@ -9643,9 +9643,28 @@ export const INDIE_GAMES: Game[] = [
 }
 ];
 
-// Pool stable pour les jeux quotidiens (sanctuarisé sur INDIE_GAMES pour garantir l'immutabilité stricte des défis du jour et du jeu mis en avant)
+// Liste d'exclusion des micro-jeux confidentiels / prototypes itch.io pour les mini-jeux quotidiens
+// (Permet de garantir que 100% des jeux proposés dans Screenle, Indledle, Chrono, Critique, Pixel, BlindTest sont connus du public)
+export const EXCLUDED_FROM_MINI_GAMES: string[] = [
+  'kernel-hearts',
+  'bugarden',
+  'igtap-an-incremental-game-that-s-also-a-platformer',
+  'openfront',
+  'drapline',
+  'restory-chill-electronics-repairs',
+  'dungeon-bodega-simulator',
+  'dont-sleep-with-the-fishes',
+  'celeste-classic-pico8',
+  'adventures-with-anxiety',
+  'blooming-panic',
+  'bombanana',
+  'stick-it-to-the-stickman',
+];
+
+// Pool sain et reconnu pour tous les défis quotidiens et mini-jeux
 export function getActiveDailyPool(): Game[] {
-  return INDIE_GAMES;
+  const excludedSet = new Set(EXCLUDED_FROM_MINI_GAMES);
+  return INDIE_GAMES.filter((g) => !excludedSet.has(g.id));
 }
 
 export function setCustomDailyPool(_pool: Game[] | null) {

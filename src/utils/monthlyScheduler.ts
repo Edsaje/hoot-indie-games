@@ -1,5 +1,5 @@
 import type { Game } from '../types/game';
-import { INDIE_GAMES } from '../data/games';
+import { INDIE_GAMES, EXCLUDED_FROM_MINI_GAMES } from '../data/games';
 
 /**
  * 🦉 Hoot Indie Games — Générateur Automatique de Saisons Mensuelles
@@ -25,8 +25,8 @@ export interface DailyScheduleDay {
 // Cache mémoire des plannings mensuels générés
 const monthlySchedulesCache = new Map<string, Map<string, DailyScheduleDay>>();
 
-// Clé de stockage local pour la persistance hors-ligne
-const STORAGE_PREFIX = 'hoot_season_schedule_v1_';
+// Clé de stockage local pour la persistance hors-ligne (v2 : régénération avec jeux connus garantis)
+const STORAGE_PREFIX = 'hoot_season_schedule_v2_';
 
 /**
  * Hash déterministe d'une chaîne de caractères (32 bits)
@@ -71,14 +71,16 @@ function seededShuffle<T>(array: T[], random: () => number): T[] {
  * pour ce mois, ce qui garantit que le mois ne change jamais une fois démarré.
  */
 export function getEligibleMonthlyPool(allGems: Game[], monthKey: string): Game[] {
-  const pool = allGems && allGems.length > 0 ? allGems : INDIE_GAMES;
+  const excludedSet = new Set(EXCLUDED_FROM_MINI_GAMES);
+  const rawPool = allGems && allGems.length > 0 ? allGems : INDIE_GAMES;
+  const pool = rawPool.filter((game) => !excludedSet.has(game.id));
   const firstDayOfMonth = `${monthKey}-01`;
 
   const eligible = pool.filter((game) => {
     // Si pas de date d'ajout (base fondatrice certifiée) -> éligible
     if (!game.addedAt) return true;
-    // Si date d'ajout antérieure ou égale à la date de référence initiale
-    if (game.addedAt <= '2026-09-24') return true;
+    // Si date d'ajout antérieure ou égale à la date de référence (inclut la promo v1.2.6)
+    if (game.addedAt <= '2026-09-25') return true;
     // Sinon, le jeu doit avoir été intégré AVANT le début du mois en question
     return game.addedAt < firstDayOfMonth;
   });

@@ -1,4 +1,4 @@
-import { INDIE_GAMES } from './games';
+import { INDIE_GAMES, getActiveDailyPool } from './games';
 import type { Game } from '../types/game';
 
 export interface NoteEvent {
@@ -1014,6 +1014,1386 @@ const CURATED_OSTS: CuratedOST[] = [
       { note: 'C', octave: 4, duration: 2.0 },
     ],
   },
+  {
+    gameId: 'vampire-survivors',
+    trackTitle: "Reincarnation on a Meadow",
+    composer: "Lorenzo Silva & Daniele Zandara",
+    instrument: 'chiptune',
+    bpm: 130,
+    melody: [
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.2
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "Bb",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "C#",
+            "octave": 5,
+            "duration": 0.8
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 1.2
+      }
+]
+  },
+  {
+    gameId: 'subnautica',
+    trackTitle: "Abandon Ship",
+    composer: "Simon Chylinski",
+    instrument: 'synth',
+    bpm: 128,
+    melody: [
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.2
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.2
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "A",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 1.2
+      }
+]
+  },
+  {
+    gameId: 'cult-of-the-lamb',
+    trackTitle: "Praise the Lamb",
+    composer: "Narayana Johnson (River Boy)",
+    instrument: 'bell',
+    bpm: 104,
+    melody: [
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "Ab",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "Bb",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "Ab",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "Ab",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "Db",
+            "octave": 5,
+            "duration": 0.5
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.5
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 1.4
+      }
+]
+  },
+  {
+    gameId: 'pizza-tower',
+    trackTitle: "It's Pizza Time!",
+    composer: "Ronan de Castel (Mr. Sauceman)",
+    instrument: 'synth',
+    bpm: 135,
+    melody: [
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "Bb",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 1
+      }
+]
+  },
+  {
+    gameId: 'dave-the-diver',
+    trackTitle: "The Blue Hole",
+    composer: "Dook",
+    instrument: 'guitar',
+    bpm: 102,
+    melody: [
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 1.2
+      }
+]
+  },
+  {
+    gameId: 'chants-of-sennaar',
+    trackTitle: "Devotion",
+    composer: "Thomas Brunet",
+    instrument: 'bell',
+    bpm: 86,
+    melody: [
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 1
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 1.5
+      }
+]
+  },
+  {
+    gameId: 'return-of-the-obra-dinn',
+    trackTitle: "Soldier's Tale",
+    composer: "Lucas Pope",
+    instrument: 'bass',
+    bpm: 112,
+    melody: [
+      {
+            "note": "C",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "C",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "G",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "Ab",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 3,
+            "duration": 0.5
+      },
+      {
+            "note": "Eb",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 3,
+            "duration": 0.8
+      },
+      {
+            "note": "F",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "Eb",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.6
+      },
+      {
+            "note": "C",
+            "octave": 3,
+            "duration": 1.5
+      }
+]
+  },
+  {
+    gameId: 'disco-elysium',
+    trackTitle: "Whirling-in-Rags 8 AM",
+    composer: "British Sea Power",
+    instrument: 'synth',
+    bpm: 78,
+    melody: [
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "F#",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 1
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "F#",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 1.2
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 1.8
+      }
+]
+  },
+  {
+    gameId: 'furi',
+    trackTitle: "You're Mine",
+    composer: "Carpenter Brut",
+    instrument: 'synth',
+    bpm: 125,
+    melody: [
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.2
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.2
+      },
+      {
+            "note": "F",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "G",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "Ab",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "F",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.8
+      }
+]
+  },
+  {
+    gameId: 'baba-is-you',
+    trackTitle: "Map Theme",
+    composer: "Arvi Teikari",
+    instrument: 'chiptune',
+    bpm: 105,
+    melody: [
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "G",
+            "octave": 5,
+            "duration": 0.5
+      },
+      {
+            "note": "F",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.8
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 1
+      }
+]
+  },
+  {
+    gameId: 'dredge',
+    trackTitle: "The Marrows",
+    composer: "David Mason",
+    instrument: 'piano',
+    bpm: 82,
+    melody: [
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 1.6
+      }
+]
+  },
+  {
+    gameId: 'animal-well',
+    trackTitle: "Subterranean Descent",
+    composer: "Billy Basso",
+    instrument: 'bell',
+    bpm: 74,
+    melody: [
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.8
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "F#",
+            "octave": 4,
+            "duration": 1
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 1.8
+      }
+]
+  },
+  {
+    gameId: 'lethal-company',
+    trackTitle: "Ice Cream Truck",
+    composer: "Zeekerss",
+    instrument: 'bell',
+    bpm: 110,
+    melody: [
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "G",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "A",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 1
+      }
+]
+  },
+  {
+    gameId: 'stray',
+    trackTitle: "Rooftops",
+    composer: "Yann van der Cruyssen",
+    instrument: 'synth',
+    bpm: 96,
+    melody: [
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "Ab",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "Bb",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "Ab",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 1
+      },
+      {
+            "note": "Eb",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 1.4
+      }
+]
+  },
+  {
+    gameId: 'dont-starve',
+    trackTitle: "Main Theme",
+    composer: "Vince de Roco",
+    instrument: 'piano',
+    bpm: 120,
+    melody: [
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.25
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.25
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.5
+      },
+      {
+            "note": "C#",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "Bb",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 1
+      }
+]
+  },
+  {
+    gameId: 'firewatch',
+    trackTitle: "Ol' Shoshone",
+    composer: "Chris Remo",
+    instrument: 'guitar',
+    bpm: 84,
+    melody: [
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.8
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 1.4
+      }
+]
+  },
+  {
+    gameId: 'omori',
+    trackTitle: "Final Duet",
+    composer: "Pedro Silva & Jami Lyman",
+    instrument: 'piano',
+    bpm: 80,
+    melody: [
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "F#",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "F#",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 1.5
+      }
+]
+  },
+  {
+    gameId: 'blasphemous',
+    trackTitle: "Proclamation of the Penitent",
+    composer: "Carlos Viola",
+    instrument: 'guitar',
+    bpm: 88,
+    melody: [
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "G#",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "G#",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 4,
+            "duration": 1.2
+      }
+]
+  },
+  {
+    gameId: 'ori-and-the-blind-forest',
+    trackTitle: "Lost in the Storm",
+    composer: "Gareth Coker",
+    instrument: 'piano',
+    bpm: 76,
+    melody: [
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.8
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.8
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 1.6
+      }
+]
+  },
+  {
+    gameId: 'risk-of-rain-2',
+    trackTitle: "The Rain Formerly Known as Purple",
+    composer: "Chris Christodoulou",
+    instrument: 'synth',
+    bpm: 110,
+    melody: [
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.6
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "B",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "A",
+            "octave": 4,
+            "duration": 1.2
+      }
+]
+  },
+  {
+    gameId: 'super-meat-boy',
+    trackTitle: "Forest Funk",
+    composer: "Danny Baranowsky",
+    instrument: 'guitar',
+    bpm: 130,
+    melody: [
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.2
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "Ab",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 4,
+            "duration": 0.8
+      }
+]
+  },
+  {
+    gameId: 'ftl-faster-than-light',
+    trackTitle: "MilkyWay (Explore)",
+    composer: "Ben Prunty",
+    instrument: 'synth',
+    bpm: 94,
+    melody: [
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "Bb",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "Ab",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 4,
+            "duration": 0.4
+      },
+      {
+            "note": "F",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "Eb",
+            "octave": 4,
+            "duration": 0.6
+      },
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 1.5
+      }
+]
+  },
+  {
+    gameId: 'papers-please',
+    trackTitle: "Arstotzka Anthem",
+    composer: "Lucas Pope",
+    instrument: 'bass',
+    bpm: 90,
+    melody: [
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.35
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.35
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.35
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.5
+      },
+      {
+            "note": "F",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "E",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 0.6
+      },
+      {
+            "note": "C#",
+            "octave": 3,
+            "duration": 0.5
+      },
+      {
+            "note": "D",
+            "octave": 3,
+            "duration": 1.2
+      }
+]
+  },
+  {
+    gameId: 'enter-the-gungeon',
+    trackTitle: "Enter the Gungeon Theme",
+    composer: "Doseone",
+    instrument: 'synth',
+    bpm: 120,
+    melody: [
+      {
+            "note": "F",
+            "octave": 3,
+            "duration": 0.25
+      },
+      {
+            "note": "F",
+            "octave": 3,
+            "duration": 0.25
+      },
+      {
+            "note": "Ab",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "Bb",
+            "octave": 3,
+            "duration": 0.4
+      },
+      {
+            "note": "C",
+            "octave": 4,
+            "duration": 0.5
+      },
+      {
+            "note": "Bb",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "Ab",
+            "octave": 3,
+            "duration": 0.3
+      },
+      {
+            "note": "F",
+            "octave": 3,
+            "duration": 0.8
+      }
+]
+  },
+  {
+    gameId: 'doki-doki-literature-club',
+    trackTitle: "Doki Doki Literature Club!",
+    composer: "Dan Salvato",
+    instrument: 'bell',
+    bpm: 110,
+    melody: [
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.3
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "G",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "A",
+            "octave": 5,
+            "duration": 0.5
+      },
+      {
+            "note": "G",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "E",
+            "octave": 5,
+            "duration": 0.4
+      },
+      {
+            "note": "D",
+            "octave": 5,
+            "duration": 0.5
+      },
+      {
+            "note": "C",
+            "octave": 5,
+            "duration": 1
+      }
+]
+  },
 ];
 
 // Simple deterministic hash
@@ -1174,8 +2554,9 @@ export function getDailyBlindTestPuzzle(dateString: string): BlindTestPuzzle {
     const idx = Math.floor(rand() * eligibleGames.length);
     targetGame = eligibleGames[idx];
   } else {
-    const idx = Math.floor(rand() * INDIE_GAMES.length);
-    targetGame = INDIE_GAMES[idx];
+    const pool = getActiveDailyPool();
+    const idx = Math.floor(rand() * pool.length);
+    targetGame = pool[idx];
   }
 
   const ostData = createSoundtrackForGame(targetGame);
@@ -1208,8 +2589,9 @@ export function getRandomBlindTestPuzzle(seedSuffix = Date.now().toString()): Bl
     const idx = Math.floor(rand() * eligibleGames.length);
     targetGame = eligibleGames[idx];
   } else {
-    const idx = Math.floor(rand() * INDIE_GAMES.length);
-    targetGame = INDIE_GAMES[idx];
+    const pool = getActiveDailyPool();
+    const idx = Math.floor(rand() * pool.length);
+    targetGame = pool[idx];
   }
 
   const ostData = createSoundtrackForGame(targetGame);
