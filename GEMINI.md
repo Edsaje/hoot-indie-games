@@ -3,9 +3,9 @@
 Ce document consigne l'ensemble des règles invariantes, directives de design, contraintes techniques et structures de données régissant le développement de la plateforme **Hoot Indie Games**.
 
 > [!IMPORTANT]
-> ### 🛡️ RÈGLE PRIMORDIALE : La sécurité est notre priorité sur ce site.
-> **La sécurité est la priorité absolue, cardinale et non négociable du sanctuaire Hoot Indie Games.**
-> Aucune fonctionnalité, optimisation cosmétique ou facilité de développement ne doit compromettre l'intégrité, la résilience et la confidentialité du site.
+> ### 🛡️ RÈGLES PRIMORDIALES : Sécurité Absolue & Respect Inconditionnel des Standards Industriels
+> **La sécurité, la résilience et le respect strict des standards des grands sites sont la priorité absolue, cardinale et non négociable du sanctuaire Hoot Indie Games.**
+> Aucune fonctionnalité, optimisation cosmétique, bricolage ou facilité de développement ne doit compromettre l'intégrité, la robustesse, la pérennité et la confidentialité du site.
 > 
 > 1. **Protection Anti-Triche & Zéro Fuite (Anti-F12 / Anti-Spoiler)** :
 >    - Les réponses secrètes (jeux du jour, années, studios, catégories Linkle, tags Profille) ne doivent jamais transiter en clair sur le réseau ou être exposées dans le bundle/state avant la fin de partie.
@@ -20,6 +20,10 @@ Ce document consigne l'ensemble des règles invariantes, directives de design, c
 >    - Endpoints PHP sécurisés avec rate-limiting par IP, hachage Bcrypt pour l'administration et verrous atomiques (`LOCK_EX`).
 > 4. **Respect de la Vie Privée (RGPD & CNIL)** :
 >    - Architecture 100% Cookieless (zéro cookie tiers traceur), anonymisation des adresses IP via hachage SHA-256 avec sel dynamique quotidien.
+> 5. **Respect à Tout Prix des Standards des Grands Sites & Proscription des "Solutions Miracles"** :
+>    - Adhérer rigoureusement aux standards, protocoles et patterns éprouvés de l'industrie web (RFC, OWASP, standard OpenID 2.0 officiel Valve, Bcrypt standard, sessions `HttpOnly`/`SameSite`, isolation stricte des contextes sur machines partagées).
+>    - **Proscription formelle de toute "solution miracle"** : interdiction des bricolages fragiles, des contournements obscurs, des hacks rapides, des rustines temporaires et de la sécurité par l'obscurité qui créent des failles cachées ou de la dette technique.
+>    - Chaque système (authentification, persistance, réconciliation de données, gestion d'état) doit être pérenne, prévisible, documenté, typé strictement et auditable.
 
 ---
 
@@ -345,5 +349,37 @@ La sécurité du sanctuaire Hoot Indie Games est notre priorité absolue, une ex
 5. **Respect de la Vie Privée (RGPD & CNIL)** :
    - Architecture 100% Cookieless (zéro cookie tiers traceur).
    - Adresses IP systématiquement anonymisées par hachage SHA-256 avec sel quotidien tournant.
+
+---
+
+## 16. Règle Primordiale : Respect des Standards des Grands Sites & Proscription des "Solutions Miracles"
+
+Le sanctuaire Hoot Indie Games refuse tout bricolage précaire ou raccourci de façade. La plateforme doit impérativement respecter les standards industriels et les patterns d'ingénierie adoptés par les grandes plateformes web (Steam, GitHub, Discord, New York Times / Wordle, Reddit) :
+
+1. **Rejet Catégorique des "Solutions Miracles"** :
+   - Proscription formelle de tout contournement opaque, hack rapide ou rustine temporaire visant à "faire marcher les choses vite".
+   - Aucune "sécurité par l'obscurité" : la sécurité et la cohérence doivent reposer sur des mécanismes formels (cryptographie, sessions sécurisées, verrous atomiques), jamais sur le fait de masquer un élément ou d'espérer que l'utilisateur n'ira pas voir.
+   - Si une fonctionnalité requiert une synchronisation, une persistance ou une authentification, elle doit être bâtie selon les RFC et protocoles universels, et non selon une logique maison fragile ou improvisée.
+
+2. **Standards d'Authentification & Sessions (RFC 6265bis & OWASP)** :
+   - **Hachage Cryptographique Fort** : Chiffrement natif Bcrypt (`PASSWORD_BCRYPT` avec coût adapté) et vérification sécurisée (`password_verify()`). Interdiction formelle du stockage de mots de passe en clair, d'algorithmes dépréciés (MD5, SHA1) ou de chiffrements réversibles.
+   - **Gestion de Session par Cookies Sécurisés** : Cookies de session marqués `HttpOnly` (hermétiques aux scripts JavaScript, immunisant contre le vol de session XSS), `SameSite=Lax` ou `Strict` (protection anti-CSRF native) et `Secure` en HTTPS.
+   - **Authentification Tierce Standardisée (OpenID 2.0)** : Utilisation stricte de la validation cryptographique officielle de Valve (`check_authentication`), sans dérivation non standard.
+
+3. **Standard d'Isolation Multi-Utilisateurs & Gestion des Ordinateurs Partagés** :
+   - **Problématique des machines partagées (Cybercafé, PC familial, bibliothèque)** :
+     - **Connexion à un compte existant** : Stratégie `replace` stricte. Remplacement atomique de l'état local par la sauvegarde officielle du serveur. Interdiction formelle d'écraser le compte distant avec des données locales orphelines, ou de fusionner aveuglément les parties de deux personnes différentes.
+     - **Création d'un nouveau compte** : Stratégie `merge` contrôlée pour transférer le progrès de la première session d'invité vers le profil nouvellement créé.
+     - **Déconnexion Hermétique (`clearAllUserConnectedData`)** : Nettoyage intégral de toutes les données sensibles et d'historique (`localStorage`, puzzle states quotidiens, streaks, inventaires, clés de session) pour laisser le poste 100% vierge et sans spoilers pour l'utilisateur suivant.
+
+4. **Standards de Persistance & Concurrence Données** :
+   - **Concurrence & Intégrité Serveur** : Toute écriture sur disque ou base de données doit être protégée par verrou exclusif `flock($fp, LOCK_EX)` pour prévenir les corruptions de données et les conditions de concurrence (TOCTOU).
+   - **Résilience Réseau & Local-First** : Persistance locale robuste avec fallbacks gracieux en cas de perte de connexion réseau. Les jeux restent 100% jouables même hors-ligne.
+   - **Normalisation des Réponses API** : Codes d'état HTTP sémantiques (200, 400, 401, 403, 404, 429, 500) et formats de réponse JSON rigoureusement typés `{ success: boolean, data?: ..., error?: string }`.
+
+5. **Discipline de Code & Zéro Dette Technique** :
+   - **TypeScript Strict** : Interdiction du type `any`. Tous les modèles de données, payloads réseau et états de jeu doivent être explicitement typés.
+   - **Architecture Propre & Découplage** : Séparation claire entre couche de présentation (React), couche d'accès aux données / services (`*Service.ts`) et contexte applicatif (`*Provider.tsx`).
+   - **Audits Automatisés Continus** : Validation systématique de la base de données (`npm run audit-db`) et compilation rigoureuse (`tsc -b && vite build`) avant tout déploiement en production.
 
 
