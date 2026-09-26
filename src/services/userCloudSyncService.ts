@@ -170,10 +170,17 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
 }
 
 /**
+ * /**
  * Applique une sauvegarde cloud dans le localStorage local
+ * @param cloudData Données reçues du serveur
+ * @param options Stratégie : 'replace' pour connexion à un compte existant (isolation étanche PC partagé), 'merge' pour nouvelle inscription ou fusion
  */
-export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): void {
+export function applyCloudSaveToLocalStorage(
+  cloudData: UserCloudSavePayload,
+  options?: { strategy?: 'merge' | 'replace' }
+): void {
   if (typeof window === 'undefined' || !window.localStorage || !cloudData) return;
+  const isReplace = options?.strategy === 'replace';
 
   try {
     // 1. Plumes d'Or
@@ -186,129 +193,169 @@ export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): v
         localStorage.setItem(STORAGE_SPENT_FEATHERS, String(cloudData.feathers.spent));
       }
       if (cloudData.feathers.claimedDaily) {
-        const localRaw = localStorage.getItem(STORAGE_CLAIMED_DAILY);
-        let localClaimed: Record<string, any> = {};
-        if (localRaw) {
-          try {
-            const parsed = JSON.parse(localRaw);
-            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-              localClaimed = parsed;
-            }
-          } catch {
-            // Ignore
+        if (isReplace) {
+          localStorage.setItem(STORAGE_CLAIMED_DAILY, JSON.stringify(cloudData.feathers.claimedDaily));
+        } else {
+          const localRaw = localStorage.getItem(STORAGE_CLAIMED_DAILY);
+          let localClaimed: Record<string, any> = {};
+          if (localRaw) {
+            try {
+              const parsed = JSON.parse(localRaw);
+              if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                localClaimed = parsed;
+              }
+            } catch {}
           }
-        }
-        const cloudClaimed =
-          cloudData.feathers.claimedDaily &&
-          typeof cloudData.feathers.claimedDaily === 'object' &&
-          !Array.isArray(cloudData.feathers.claimedDaily)
-            ? cloudData.feathers.claimedDaily
-            : {};
+          const cloudClaimed =
+            cloudData.feathers.claimedDaily &&
+            typeof cloudData.feathers.claimedDaily === 'object' &&
+            !Array.isArray(cloudData.feathers.claimedDaily)
+              ? cloudData.feathers.claimedDaily
+              : {};
 
-        const mergedClaimed = { ...localClaimed };
-        for (const [dateKey, cloudRecord] of Object.entries(cloudClaimed as Record<string, any>)) {
-          if (!mergedClaimed[dateKey]) {
-            mergedClaimed[dateKey] = cloudRecord;
-          } else {
-            const localGames = Array.isArray(mergedClaimed[dateKey].claimedGames)
-              ? mergedClaimed[dateKey].claimedGames
-              : [];
-            const cloudGames = Array.isArray(cloudRecord?.claimedGames)
-              ? cloudRecord.claimedGames
-              : [];
-            mergedClaimed[dateKey] = {
-              claimedGames: Array.from(new Set([...localGames, ...cloudGames])),
-              grandSlamClaimed: Boolean(
-                mergedClaimed[dateKey].grandSlamClaimed || cloudRecord?.grandSlamClaimed
-              ),
-            };
+          const mergedClaimed = { ...localClaimed };
+          for (const [dateKey, cloudRecord] of Object.entries(cloudClaimed as Record<string, any>)) {
+            if (!mergedClaimed[dateKey]) {
+              mergedClaimed[dateKey] = cloudRecord;
+            } else {
+              const localGames = Array.isArray(mergedClaimed[dateKey].claimedGames)
+                ? mergedClaimed[dateKey].claimedGames
+                : [];
+              const cloudGames = Array.isArray(cloudRecord?.claimedGames)
+                ? cloudRecord.claimedGames
+                : [];
+              mergedClaimed[dateKey] = {
+                claimedGames: Array.from(new Set([...localGames, ...cloudGames])),
+                grandSlamClaimed: Boolean(
+                  mergedClaimed[dateKey].grandSlamClaimed || cloudRecord?.grandSlamClaimed
+                ),
+              };
+            }
           }
+          localStorage.setItem(STORAGE_CLAIMED_DAILY, JSON.stringify(mergedClaimed));
         }
-        localStorage.setItem(STORAGE_CLAIMED_DAILY, JSON.stringify(mergedClaimed));
       }
     }
 
     // 2. Succès débloqués
     if (Array.isArray(cloudData.achievements)) {
-      const existingAchRaw = localStorage.getItem('hoot_unlocked_achievements_v1') || localStorage.getItem(STORAGE_ACHIEVEMENTS);
-      let existingAch: string[] = [];
-      if (existingAchRaw) {
-        try {
-          const parsed = JSON.parse(existingAchRaw);
-          if (Array.isArray(parsed)) existingAch = parsed;
-          else if (parsed && typeof parsed === 'object') existingAch = Object.keys(parsed);
-        } catch {
-          existingAch = [];
-        }
-      }
       const validAchSet = new Set(ACHIEVEMENTS_LIST.map((a) => a.id));
-      const mergedAch = Array.from(
-        new Set([...existingAch, ...cloudData.achievements])
-      ).filter((id) => validAchSet.has(id));
-      localStorage.setItem('hoot_unlocked_achievements_v1', JSON.stringify(mergedAch));
+      if (isReplace) {
+        const cleanAchievements = cloudData.achievements.filter((id) => validAchSet.has(id));
+        localStorage.setItem('hoot_unlocked_achievements_v1', JSON.stringify(cleanAchievements));
+      } else {
+        const existingAchRaw = localStorage.getItem('hoot_unlocked_achievements_v1') || localStorage.getItem(STORAGE_ACHIEVEMENTS);
+        let existingAch: string[] = [];
+        if (existingAchRaw) {
+          try {
+            const parsed = JSON.parse(existingAchRaw);
+            if (Array.isArray(parsed)) existingAch = parsed;
+            else if (parsed && typeof parsed === 'object') existingAch = Object.keys(parsed);
+          } catch {
+            existingAch = [];
+          }
+        }
+        const mergedAch = Array.from(
+          new Set([...existingAch, ...cloudData.achievements])
+        ).filter((id) => validAchSet.has(id));
+        localStorage.setItem('hoot_unlocked_achievements_v1', JSON.stringify(mergedAch));
+      }
       try {
         localStorage.removeItem(STORAGE_ACHIEVEMENTS);
-      } catch {
-        // Ignore
-      }
+      } catch {}
     }
 
     // 3. Stats des jeux (8 mini-jeux & séries de victoires)
     if (cloudData.stats && typeof cloudData.stats === 'object' && Object.keys(cloudData.stats).length > 0) {
-      const existingStatsRaw = localStorage.getItem(STORAGE_INDIE_STATS) || localStorage.getItem(STORAGE_GAME_STATS);
-      const existingStats = existingStatsRaw ? JSON.parse(existingStatsRaw) : {};
-      const modes = ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'];
+      if (isReplace) {
+        localStorage.setItem(STORAGE_INDIE_STATS, JSON.stringify(cloudData.stats));
+        localStorage.setItem(STORAGE_GAME_STATS, JSON.stringify(cloudData.stats));
+        window.dispatchEvent(new CustomEvent('hoot_stats_updated', { detail: cloudData.stats }));
+      } else {
+        const existingStatsRaw = localStorage.getItem(STORAGE_INDIE_STATS) || localStorage.getItem(STORAGE_GAME_STATS);
+        const existingStats = existingStatsRaw ? JSON.parse(existingStatsRaw) : {};
+        const modes = ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'];
 
-      let isModeBased = false;
-      for (const m of modes) {
-        if (cloudData.stats[m] || existingStats[m]) {
-          isModeBased = true;
-          break;
-        }
-      }
-
-      let mergedStats: any = {};
-      if (isModeBased) {
-        mergedStats = { ...existingStats };
+        let isModeBased = false;
         for (const m of modes) {
-          const exM = existingStats[m] || {};
-          const cM = cloudData.stats[m] || {};
-          const dist = { ...(exM.guessDistribution || {}) };
-          if (cM.guessDistribution && typeof cM.guessDistribution === 'object') {
-            for (const [guesses, count] of Object.entries(cM.guessDistribution)) {
-              dist[guesses] = Math.max(Number(dist[guesses] || 0), Number(count || 0));
-            }
+          if (cloudData.stats[m] || existingStats[m]) {
+            isModeBased = true;
+            break;
           }
-          mergedStats[m] = {
-            ...exM,
-            ...cM,
-            played: Math.max(Number(exM.played || 0), Number(cM.played || 0)),
-            won: Math.max(Number(exM.won || 0), Number(cM.won || 0)),
-            currentStreak: Math.max(Number(exM.currentStreak || 0), Number(cM.currentStreak || 0)),
-            maxStreak: Math.max(Number(exM.maxStreak || 0), Number(cM.maxStreak || 0)),
-            guessDistribution: dist,
-            lastPlayedDate: (exM.lastPlayedDate || '') > (cM.lastPlayedDate || '') ? exM.lastPlayedDate : (cM.lastPlayedDate || ''),
-            lastWonDate: (exM.lastWonDate || '') > (cM.lastWonDate || '') ? exM.lastWonDate : (cM.lastWonDate || ''),
-            streakRescued: Boolean(exM.streakRescued || cM.streakRescued),
+        }
+
+        let mergedStats: any = {};
+        if (isModeBased) {
+          mergedStats = { ...existingStats };
+          for (const m of modes) {
+            const exM = existingStats[m] || {};
+            const cM = cloudData.stats[m] || {};
+            const dist = { ...(exM.guessDistribution || {}) };
+            if (cM.guessDistribution && typeof cM.guessDistribution === 'object') {
+              for (const [guesses, count] of Object.entries(cM.guessDistribution)) {
+                dist[guesses] = Math.max(Number(dist[guesses] || 0), Number(count || 0));
+              }
+            }
+            mergedStats[m] = {
+              ...exM,
+              ...cM,
+              played: Math.max(Number(exM.played || 0), Number(cM.played || 0)),
+              won: Math.max(Number(exM.won || 0), Number(cM.won || 0)),
+              currentStreak: Math.max(Number(exM.currentStreak || 0), Number(cM.currentStreak || 0)),
+              maxStreak: Math.max(Number(exM.maxStreak || 0), Number(cM.maxStreak || 0)),
+              guessDistribution: dist,
+              lastPlayedDate: (exM.lastPlayedDate || '') > (cM.lastPlayedDate || '') ? exM.lastPlayedDate : (cM.lastPlayedDate || ''),
+              lastWonDate: (exM.lastWonDate || '') > (cM.lastWonDate || '') ? exM.lastWonDate : (cM.lastWonDate || ''),
+              streakRescued: Boolean(exM.streakRescued || cM.streakRescued),
+            };
+          }
+        } else {
+          mergedStats = {
+            ...existingStats,
+            ...cloudData.stats,
+            gamesPlayed: Math.max(existingStats.gamesPlayed || 0, cloudData.stats.gamesPlayed || 0),
+            gamesWon: Math.max(existingStats.gamesWon || 0, cloudData.stats.gamesWon || 0),
+            currentStreak: Math.max(existingStats.currentStreak || 0, cloudData.stats.currentStreak || 0),
+            maxStreak: Math.max(existingStats.maxStreak || 0, cloudData.stats.maxStreak || 0),
           };
         }
-      } else {
-        mergedStats = {
-          ...existingStats,
-          ...cloudData.stats,
-          gamesPlayed: Math.max(existingStats.gamesPlayed || 0, cloudData.stats.gamesPlayed || 0),
-          gamesWon: Math.max(existingStats.gamesWon || 0, cloudData.stats.gamesWon || 0),
-          currentStreak: Math.max(existingStats.currentStreak || 0, cloudData.stats.currentStreak || 0),
-          maxStreak: Math.max(existingStats.maxStreak || 0, cloudData.stats.maxStreak || 0),
-        };
+        localStorage.setItem(STORAGE_INDIE_STATS, JSON.stringify(mergedStats));
+        localStorage.setItem(STORAGE_GAME_STATS, JSON.stringify(mergedStats));
+        window.dispatchEvent(new CustomEvent('hoot_stats_updated', { detail: mergedStats }));
       }
-      localStorage.setItem(STORAGE_INDIE_STATS, JSON.stringify(mergedStats));
-      localStorage.setItem(STORAGE_GAME_STATS, JSON.stringify(mergedStats));
-      window.dispatchEvent(new CustomEvent('hoot_stats_updated', { detail: mergedStats }));
     }
 
     // 3b. Historique Quotidien du Calendrier (Daily Game States)
-    if (cloudData.dailyGameStates && typeof cloudData.dailyGameStates === 'object') {
+    if (isReplace) {
+      // Nettoyage complet des puzzles résolus locaux pour charger strictement ceux du compte connecté
+      const modePrefixes = [
+        'screenle_state_',
+        'indledle_state_',
+        'linkle_state_',
+        'profille_state_',
+        'chrono_state_',
+        'pixel_state_',
+        'review_state_',
+        'blindtest_state_',
+      ];
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && modePrefixes.some((p) => k.startsWith(p))) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+
+      if (cloudData.dailyGameStates && typeof cloudData.dailyGameStates === 'object') {
+        for (const [stateKey, cloudState] of Object.entries(cloudData.dailyGameStates)) {
+          if (cloudState && typeof cloudState === 'object') {
+            localStorage.setItem(stateKey, JSON.stringify(cloudState));
+          }
+        }
+      }
+      window.dispatchEvent(new CustomEvent('hoot_daily_states_updated'));
+    } else if (cloudData.dailyGameStates && typeof cloudData.dailyGameStates === 'object') {
       let hasDailyChanges = false;
       for (const [stateKey, cloudState] of Object.entries(cloudData.dailyGameStates)) {
         if (!cloudState || typeof cloudState !== 'object') continue;
@@ -346,30 +393,40 @@ export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): v
 
     // 4. Time Attack
     if (cloudData.timeAttackStats && Object.keys(cloudData.timeAttackStats).length > 0) {
-      const existingTaRaw = localStorage.getItem(STORAGE_TIME_ATTACK);
-      const existingTa = existingTaRaw ? JSON.parse(existingTaRaw) : {};
-      const mergedTa: Record<string, any> = { ...existingTa };
-      for (const [mode, s] of Object.entries(cloudData.timeAttackStats)) {
-        const cur = mergedTa[mode] || { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 };
-        const inc = s as any;
-        mergedTa[mode] = {
-          highScore: Math.max(cur.highScore || 0, inc.highScore || 0),
-          bestCombo: Math.max(cur.bestCombo || 0, inc.bestCombo || 0),
-          gamesPlayed: Math.max(cur.gamesPlayed || 0, inc.gamesPlayed || 0),
-          totalAnswered: Math.max(cur.totalAnswered || 0, inc.totalAnswered || 0),
-          lastPlayed: inc.lastPlayed || cur.lastPlayed || new Date().toISOString(),
-        };
+      if (isReplace) {
+        localStorage.setItem(STORAGE_TIME_ATTACK, JSON.stringify(cloudData.timeAttackStats));
+      } else {
+        const existingTaRaw = localStorage.getItem(STORAGE_TIME_ATTACK);
+        const existingTa = existingTaRaw ? JSON.parse(existingTaRaw) : {};
+        const mergedTa: Record<string, any> = { ...existingTa };
+        for (const [mode, s] of Object.entries(cloudData.timeAttackStats)) {
+          const cur = mergedTa[mode] || { highScore: 0, bestCombo: 0, gamesPlayed: 0, totalAnswered: 0 };
+          const inc = s as any;
+          mergedTa[mode] = {
+            highScore: Math.max(cur.highScore || 0, inc.highScore || 0),
+            bestCombo: Math.max(cur.bestCombo || 0, inc.bestCombo || 0),
+            gamesPlayed: Math.max(cur.gamesPlayed || 0, inc.gamesPlayed || 0),
+            totalAnswered: Math.max(cur.totalAnswered || 0, inc.totalAnswered || 0),
+            lastPlayed: inc.lastPlayed || cur.lastPlayed || new Date().toISOString(),
+          };
+        }
+        localStorage.setItem(STORAGE_TIME_ATTACK, JSON.stringify(mergedTa));
       }
-      localStorage.setItem(STORAGE_TIME_ATTACK, JSON.stringify(mergedTa));
     }
 
     // 5. Profil utilisateur
     const rawProfile = localStorage.getItem(STORAGE_USER_PROFILE);
     if (rawProfile) {
       const currentProfile = JSON.parse(rawProfile);
-      const mergedAvatars = Array.from(new Set([...(currentProfile.unlockedAvatars || []), ...(cloudData.unlockedAvatars || [])]));
-      const mergedTitles = Array.from(new Set([...(currentProfile.unlockedTitles || []), ...(cloudData.unlockedTitles || [])]));
-      const mergedFrames = Array.from(new Set([...(currentProfile.unlockedFrames || []), ...(cloudData.unlockedFrames || [])]));
+      const mergedAvatars = isReplace
+        ? (cloudData.unlockedAvatars || ['owl'])
+        : Array.from(new Set([...(currentProfile.unlockedAvatars || []), ...(cloudData.unlockedAvatars || [])]));
+      const mergedTitles = isReplace
+        ? (cloudData.unlockedTitles || ['Oisillon du Perchoir'])
+        : Array.from(new Set([...(currentProfile.unlockedTitles || []), ...(cloudData.unlockedTitles || [])]));
+      const mergedFrames = isReplace
+        ? (cloudData.unlockedFrames || ['frame_wood'])
+        : Array.from(new Set([...(currentProfile.unlockedFrames || []), ...(cloudData.unlockedFrames || [])]));
 
       const updatedProfile = {
         ...currentProfile,
@@ -387,33 +444,38 @@ export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): v
 
     // 6. Collection de cartes
     if (cloudData.cardCollection && typeof cloudData.cardCollection === 'object') {
-      try {
-        const localCardsRaw = localStorage.getItem('hoot_cards_collection_v1');
-        const localCards = localCardsRaw ? JSON.parse(localCardsRaw) : {};
-        const mergedCards: Record<string, any> = { ...localCards };
+      if (isReplace) {
+        localStorage.setItem('hoot_cards_collection_v1', JSON.stringify(cloudData.cardCollection));
+        window.dispatchEvent(new CustomEvent('hoot_cards_updated', { detail: cloudData.cardCollection }));
+      } else {
+        try {
+          const localCardsRaw = localStorage.getItem('hoot_cards_collection_v1');
+          const localCards = localCardsRaw ? JSON.parse(localCardsRaw) : {};
+          const mergedCards: Record<string, any> = { ...localCards };
 
-        for (const [cardId, cloudEntry] of Object.entries(cloudData.cardCollection)) {
-          const localEntry = mergedCards[cardId] || { count: 0, countHolo: 0 };
-          mergedCards[cardId] = {
-            count: Math.max(localEntry.count || 0, (cloudEntry as any).count || 0),
-            countHolo: Math.max(localEntry.countHolo || 0, (cloudEntry as any).countHolo || 0),
-            firstObtainedAt: localEntry.firstObtainedAt || (cloudEntry as any).firstObtainedAt || new Date().toISOString(),
-          };
-        }
-        localStorage.setItem('hoot_cards_collection_v1', JSON.stringify(mergedCards));
-        window.dispatchEvent(new CustomEvent('hoot_cards_updated', { detail: mergedCards }));
-      } catch {
-        // Ignore
+          for (const [cardId, cloudEntry] of Object.entries(cloudData.cardCollection)) {
+            const localEntry = mergedCards[cardId] || { count: 0, countHolo: 0 };
+            mergedCards[cardId] = {
+              count: Math.max(localEntry.count || 0, (cloudEntry as any).count || 0),
+              countHolo: Math.max(localEntry.countHolo || 0, (cloudEntry as any).countHolo || 0),
+              firstObtainedAt: localEntry.firstObtainedAt || (cloudEntry as any).firstObtainedAt || new Date().toISOString(),
+            };
+          }
+          localStorage.setItem('hoot_cards_collection_v1', JSON.stringify(mergedCards));
+          window.dispatchEvent(new CustomEvent('hoot_cards_updated', { detail: mergedCards }));
+        } catch {}
       }
     }
     if (cloudData.lastDailyBoosterClaim) {
-      try {
-        const localClaim = localStorage.getItem('hoot_last_daily_booster_claim_v1');
-        if (!localClaim || cloudData.lastDailyBoosterClaim > localClaim) {
-          localStorage.setItem('hoot_last_daily_booster_claim_v1', cloudData.lastDailyBoosterClaim);
-        }
-      } catch {
-        // Ignore
+      if (isReplace) {
+        localStorage.setItem('hoot_last_daily_booster_claim_v1', cloudData.lastDailyBoosterClaim);
+      } else {
+        try {
+          const localClaim = localStorage.getItem('hoot_last_daily_booster_claim_v1');
+          if (!localClaim || cloudData.lastDailyBoosterClaim > localClaim) {
+            localStorage.setItem('hoot_last_daily_booster_claim_v1', cloudData.lastDailyBoosterClaim);
+          }
+        } catch {}
       }
     }
 
@@ -544,7 +606,7 @@ export async function syncUserCloudSave(
     userId?: string;
     username?: string;
   },
-  options?: { force?: boolean }
+  options?: { force?: boolean; strategy?: 'merge' | 'replace' }
 ): Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> {
   if (!identifiers.steamId && !identifiers.userId && !identifiers.username) {
     return { success: false, message: 'Aucun identifiant utilisateur disponible pour la synchronisation.' };
@@ -573,12 +635,26 @@ export async function syncUserCloudSave(
 
   inFlightSyncPromise = (async () => {
     try {
+      const isReplace = options?.strategy === 'replace';
+
       // 1. Récupération des données distantes
       const cloudRes = await fetchUserCloudSave(identifiers);
 
-      // Si des données distantes existent, on les applique d'abord localement
+      // Si des données distantes existent et qu'on est en mode replace (connexion à un compte existant sur PC partagé)
+      if (cloudRes.success && cloudRes.exists && cloudRes.data && isReplace) {
+        applyCloudSaveToLocalStorage(cloudRes.data, { strategy: 'replace' });
+        lastSyncTimestamp = Date.now();
+        lastSyncedDataHash = computeSaveFingerprint(cloudRes.data);
+        return {
+          success: true,
+          message: 'Compte chargé depuis le Cloud Souverain !',
+          data: cloudRes.data,
+        };
+      }
+
+      // Si des données distantes existent en mode merge
       if (cloudRes.success && cloudRes.exists && cloudRes.data) {
-        applyCloudSaveToLocalStorage(cloudRes.data);
+        applyCloudSaveToLocalStorage(cloudRes.data, { strategy: 'merge' });
       }
 
       // 3. On envoie l'état local fusionné au serveur pour persistance
@@ -589,7 +665,7 @@ export async function syncUserCloudSave(
       lastSyncedDataHash = computeSaveFingerprint(updatedLocal);
 
       if (pushRes.success && pushRes.data) {
-        applyCloudSaveToLocalStorage(pushRes.data);
+        applyCloudSaveToLocalStorage(pushRes.data, { strategy: 'merge' });
         return { success: true, message: 'Compte synchronisé avec succès sur le Cloud Souverain !', data: pushRes.data };
       }
 

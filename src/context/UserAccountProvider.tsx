@@ -79,6 +79,7 @@ export function clearAllUserConnectedData(): void {
   localStorage.removeItem('hoot_cards_collection_v1');
   localStorage.removeItem('hoot_cards_stats_v1');
   localStorage.removeItem('hoot_cards_pack_history_v1');
+  localStorage.removeItem('hoot_last_daily_booster_claim_v1');
 
   // 4. Liste d'amis
   localStorage.removeItem('hoot_friends_list_v2');
@@ -94,17 +95,44 @@ export function clearAllUserConnectedData(): void {
   localStorage.removeItem('hoot_achievements_v1');
   localStorage.removeItem('hoot_unlocked_achievements');
 
-  // 7. Clés administrateur et de modération
+  // 7. Statistiques et Puzzles Quotidiens (Nettoyage étanche pour PC partagé)
+  const modePrefixes = [
+    'screenle_state_',
+    'indledle_state_',
+    'linkle_state_',
+    'profille_state_',
+    'chrono_state_',
+    'pixel_state_',
+    'review_state_',
+    'blindtest_state_',
+  ];
+  const keysToRemove: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && modePrefixes.some((p) => k.startsWith(p))) {
+      keysToRemove.push(k);
+    }
+  }
+  keysToRemove.forEach((k) => localStorage.removeItem(k));
+
+  localStorage.removeItem('hoot_indie_stats_v1');
+  localStorage.removeItem('hoot_game_stats_v1');
+  localStorage.removeItem('hoot_time_attack_stats_v1');
+  localStorage.removeItem('hoot_cloud_sync_key_v1');
+
+  // 8. Clés administrateur et de modération
   localStorage.removeItem('hoot_admin_key');
   localStorage.removeItem('hoot_dev_admin');
 
-  // 8. Déclenchement des événements souverains de réinitialisation réactive
+  // 9. Déclenchement des événements souverains de réinitialisation réactive
   try {
     window.dispatchEvent(new CustomEvent('hoot_cards_updated', { detail: {} }));
     window.dispatchEvent(new CustomEvent('hoot_feathers_updated'));
     window.dispatchEvent(new CustomEvent('hoot_achievements_updated'));
     window.dispatchEvent(new CustomEvent('hoot_friends_updated'));
     window.dispatchEvent(new CustomEvent('hoot_profile_updated'));
+    window.dispatchEvent(new CustomEvent('hoot_daily_states_updated'));
+    window.dispatchEvent(new CustomEvent('hoot_stats_updated', { detail: null }));
     window.dispatchEvent(new CustomEvent('hoot_cloud_reset'));
   } catch {}
 }
@@ -280,14 +308,14 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           isCloudSynced: true,
         }));
 
-        // Synchroniser automatiquement les sauvegardes cloud
+        // Synchroniser automatiquement les sauvegardes cloud (isolation compte existant)
         syncUserCloudSave(
           {
             userId: user.id,
             steamId: user.steamId || undefined,
             username: user.username,
           },
-          { force: true }
+          { force: true, strategy: 'replace' }
         ).catch(() => {});
       }
     }).catch(() => {});
@@ -690,14 +718,14 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
             isCloudSynced: true,
           }));
 
-          // Synchronisation cloud immédiate avec le compte chargé
+          // Synchronisation cloud immédiate avec le compte chargé (remplacement propre sans aspirer les données d'un autre invité)
           syncUserCloudSave(
             {
               userId: user.id,
               steamId: user.steamId || undefined,
               username: user.username,
             },
-            { force: true }
+            { force: true, strategy: 'replace' }
           ).catch(() => {});
 
           return { success: true };
@@ -769,14 +797,14 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
             isCloudSynced: true,
           }));
 
-          // Envoi de la sauvegarde vers le cloud pour initialiser le profil distant
+          // Envoi de la sauvegarde locale vers le cloud pour initialiser le profil distant (promotion de la session d'essai)
           syncUserCloudSave(
             {
               userId: user.id,
               steamId: user.steamId || undefined,
               username: user.username,
             },
-            { force: true }
+            { force: true, strategy: 'merge' }
           ).catch(() => {});
 
           return { success: true };
@@ -1065,7 +1093,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           apiLinkSteam(details.steamId).catch(() => {});
         }
 
-        syncUserCloudSave({ userId: profile.id, steamId: details.steamId, username: isOfficialAdmin ? 'Hibouxe' : details.personaName }, { force: true }).then((syncResCloud) => {
+        syncUserCloudSave({ userId: profile.id, steamId: details.steamId, username: isOfficialAdmin ? 'Hibouxe' : details.personaName }, { force: true, strategy: 'replace' }).then((syncResCloud) => {
           if (syncResCloud.success && syncResCloud.data) {
             const cloudData = syncResCloud.data;
             setProfile((prev) => ({

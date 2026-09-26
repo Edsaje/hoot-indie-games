@@ -244,19 +244,28 @@ Pour prévenir toute fausse déduction ou frustration dans Indledle :
 
 ---
 
-## 10. Système de Compte & Sauvegarde Hybride (Local-First + Supabase)
+## 10. Système de Comptes Souverain & Gestion des PC Partagés (Standard Industrie)
 
-1. **Local-First par défaut** :
-   - Chaque joueur dispose d'un profil opérationnel immédiat en local sans obligation d'inscription.
-   - 8 Avatars Indés emblématiques (*The Knight*, *Madeline*, *Zagreus*, *The Lamb*, *Jimbo*, *Stray Cat*, *Untitled Goose*, *Hootie*).
-   - Suivi du rang ELO (départ 1000 ELO), des séries de victoires et des Plumes Dorées.
-2. **Synchronisation Cloud Supabase** :
-   - Activée si `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` sont renseignées.
-   - Authentification email/mot de passe sécurisée.
-   - Sauvegarde et synchronisation multi-écrans des succès et statistiques.
-3. **Souveraineté des Données** :
-   - Bouton d'exportation d'une sauvegarde complète en fichier JSON (`hoot-save-*.json`).
-   - Bouton d'importation pour restaurer sa progression sur n'importe quel navigateur, même en navigation privée.
+1. **Local-First par défaut (Zéro friction)** :
+   - Chaque visiteur dispose d'une session locale complète et immédiate sans obligation d'inscription.
+   - Les 8 mini-jeux quotidiens, l'historique du calendrier (`*_state_YYYY-MM-DD`), les séries de victoires (*streaks*), la collection de cartes et les plumes d'or sont persistés en `localStorage`.
+
+2. **Authentification Souveraine Hybride (Steam OpenID 2.0 + Email / Bcrypt)** :
+   - **Compte Hoot Souverain** : Endpoint [`public/api/user_auth.php`](file:///public/api/user_auth.php), mots de passe chiffrés en Bcrypt (`PASSWORD_BCRYPT`), sessions PHP `HttpOnly` / `SameSite=Lax`, rate-limiting anti-bruteforce (15 requêtes / 10 min) et verrous atomiques `LOCK_EX`.
+   - **Connexion 1-clic Steam** : Validation officielle Valve OpenID 2.0 avec liaison possible au compte Email pour unifier la progression.
+   - **Synchronisation Cloud Silencieuse** : Tout joueur authentifié bénéficie d'une synchronisation automatique sans avoir à manipuler de clé manuelle.
+
+3. **Standard d'Isolation des Sessions & Ordinateurs Partagés** :
+   - **Création de compte (Inscription / Sign-up)** :
+     - Stratégie `merge` : la session locale d'invité est immédiatement transmise et injectée dans le nouveau compte cloud pour ne perdre aucune partie d'essai.
+   - **Connexion à un compte existant (Sign-in / Login / Steam)** :
+     - Stratégie `replace` : le stockage local est **proprement remplacé** par la sauvegarde cloud officielle du compte connecté. Cela évite rigoureusement qu'un joueur B n'absorbe ou ne pollue son compte avec les parties d'un joueur invité A ayant joué sur le même PC.
+   - **Déconnexion Hermétique (Clean Logout)** :
+     - La fonction `clearAllUserConnectedData()` réinitialise l'intégralité du `localStorage` : profil, plumes, cartes, mais aussi les puzzles résolus du jour (`*_state_YYYY-MM-DD`), les streaks et les statistiques. Le joueur invité suivant retrouve ainsi un jeu 100% vierge sans spoilers.
+
+4. **Souveraineté des Données & Clé de Secours** :
+   - Exportation/Importation de fichier JSON (`hoot-save-*.json`) pour sauvegarde locale pérenne.
+   - Clé de synchronisation cloud de secours accessible dans les options avancées pour les joueurs invités sans compte souhaitant synchroniser manuellement deux appareils.
 
 ---
 
