@@ -26,6 +26,7 @@ export interface UserCloudSavePayload {
   versusStats?: any;
   cardCollection?: Record<string, { count: number; countHolo: number; firstObtainedAt?: string }>;
   lastDailyBoosterClaim?: string;
+  dailyGameStates?: Record<string, any>;
   syncedAt?: string;
 }
 
@@ -34,6 +35,7 @@ const STORAGE_SPENT_FEATHERS = 'hoot_spent_feathers_v1';
 const STORAGE_CLAIMED_DAILY = 'hoot_claimed_daily_feathers_v1';
 const STORAGE_ACHIEVEMENTS = 'hoot_achievements_v1';
 const STORAGE_GAME_STATS = 'hoot_game_stats_v1';
+const STORAGE_INDIE_STATS = 'hoot_indie_stats_v1';
 const STORAGE_TIME_ATTACK = 'hoot_time_attack_stats_v1';
 const STORAGE_USER_PROFILE = 'hoot_user_profile_v1';
 const STORAGE_SYNC_KEY = 'hoot_cloud_sync_key_v1';
@@ -100,8 +102,32 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
     const validAchSet = new Set(ACHIEVEMENTS_LIST.map((a) => a.id));
     const cleanAchievements = Array.from(new Set(parsedAch.filter((id) => validAchSet.has(id))));
 
-    const rawStats = localStorage.getItem(STORAGE_GAME_STATS);
+    const rawStats = localStorage.getItem(STORAGE_INDIE_STATS) || localStorage.getItem(STORAGE_GAME_STATS);
     const stats = rawStats ? JSON.parse(rawStats) : {};
+
+    // Collecter l'historique complet du calendrier de tous les mini-jeux quotidiens
+    const dailyGameStates: Record<string, any> = {};
+    const modePrefixes = [
+      'screenle_state_',
+      'indledle_state_',
+      'linkle_state_',
+      'profille_state_',
+      'chrono_state_',
+      'pixel_state_',
+      'review_state_',
+      'blindtest_state_',
+    ];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && modePrefixes.some((p) => k.startsWith(p))) {
+        try {
+          const val = localStorage.getItem(k);
+          if (val) {
+            dailyGameStates[k] = JSON.parse(val);
+          }
+        } catch {}
+      }
+    }
 
     const rawTa = localStorage.getItem(STORAGE_TIME_ATTACK);
     const timeAttackStats = rawTa ? JSON.parse(rawTa) : {};
@@ -123,6 +149,7 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
       },
       achievements: cleanAchievements,
       stats,
+      dailyGameStates,
       timeAttackStats,
       versusStats: profile.versusStats,
       cardCollection: (() => {
@@ -226,19 +253,95 @@ export function applyCloudSaveToLocalStorage(cloudData: UserCloudSavePayload): v
       }
     }
 
-    // 3. Stats des jeux
-    if (cloudData.stats && Object.keys(cloudData.stats).length > 0) {
-      const existingStatsRaw = localStorage.getItem(STORAGE_GAME_STATS);
+    // 3. Stats des jeux (8 mini-jeux & séries de victoires)
+    if (cloudData.stats && typeof cloudData.stats === 'object' && Object.keys(cloudData.stats).length > 0) {
+      const existingStatsRaw = localStorage.getItem(STORAGE_INDIE_STATS) || localStorage.getItem(STORAGE_GAME_STATS);
       const existingStats = existingStatsRaw ? JSON.parse(existingStatsRaw) : {};
-      const mergedStats = {
-        ...existingStats,
-        ...cloudData.stats,
-        gamesPlayed: Math.max(existingStats.gamesPlayed || 0, cloudData.stats.gamesPlayed || 0),
-        gamesWon: Math.max(existingStats.gamesWon || 0, cloudData.stats.gamesWon || 0),
-        currentStreak: Math.max(existingStats.currentStreak || 0, cloudData.stats.currentStreak || 0),
-        maxStreak: Math.max(existingStats.maxStreak || 0, cloudData.stats.maxStreak || 0),
-      };
+      const modes = ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'];
+
+      let isModeBased = false;
+      for (const m of modes) {
+        if (cloudData.stats[m] || existingStats[m]) {
+          isModeBased = true;
+          break;
+        }
+      }
+
+      let mergedStats: any = {};
+      if (isModeBased) {
+        mergedStats = { ...existingStats };
+        for (const m of modes) {
+          const exM = existingStats[m] || {};
+          const cM = cloudData.stats[m] || {};
+          const dist = { ...(exM.guessDistribution || {}) };
+          if (cM.guessDistribution && typeof cM.guessDistribution === 'object') {
+            for (const [guesses, count] of Object.entries(cM.guessDistribution)) {
+              dist[guesses] = Math.max(Number(dist[guesses] || 0), Number(count || 0));
+            }
+          }
+          mergedStats[m] = {
+            ...exM,
+            ...cM,
+            played: Math.max(Number(exM.played || 0), Number(cM.played || 0)),
+            won: Math.max(Number(exM.won || 0), Number(cM.won || 0)),
+            currentStreak: Math.max(Number(exM.currentStreak || 0), Number(cM.currentStreak || 0)),
+            maxStreak: Math.max(Number(exM.maxStreak || 0), Number(cM.maxStreak || 0)),
+            guessDistribution: dist,
+            lastPlayedDate: (exM.lastPlayedDate || '') > (cM.lastPlayedDate || '') ? exM.lastPlayedDate : (cM.lastPlayedDate || ''),
+            lastWonDate: (exM.lastWonDate || '') > (cM.lastWonDate || '') ? exM.lastWonDate : (cM.lastWonDate || ''),
+            streakRescued: Boolean(exM.streakRescued || cM.streakRescued),
+          };
+        }
+      } else {
+        mergedStats = {
+          ...existingStats,
+          ...cloudData.stats,
+          gamesPlayed: Math.max(existingStats.gamesPlayed || 0, cloudData.stats.gamesPlayed || 0),
+          gamesWon: Math.max(existingStats.gamesWon || 0, cloudData.stats.gamesWon || 0),
+          currentStreak: Math.max(existingStats.currentStreak || 0, cloudData.stats.currentStreak || 0),
+          maxStreak: Math.max(existingStats.maxStreak || 0, cloudData.stats.maxStreak || 0),
+        };
+      }
+      localStorage.setItem(STORAGE_INDIE_STATS, JSON.stringify(mergedStats));
       localStorage.setItem(STORAGE_GAME_STATS, JSON.stringify(mergedStats));
+      window.dispatchEvent(new CustomEvent('hoot_stats_updated', { detail: mergedStats }));
+    }
+
+    // 3b. Historique Quotidien du Calendrier (Daily Game States)
+    if (cloudData.dailyGameStates && typeof cloudData.dailyGameStates === 'object') {
+      let hasDailyChanges = false;
+      for (const [stateKey, cloudState] of Object.entries(cloudData.dailyGameStates)) {
+        if (!cloudState || typeof cloudState !== 'object') continue;
+        const localRaw = localStorage.getItem(stateKey);
+        if (!localRaw) {
+          localStorage.setItem(stateKey, JSON.stringify(cloudState));
+          hasDailyChanges = true;
+        } else {
+          try {
+            const localState = JSON.parse(localRaw);
+            const isWon = Boolean(localState.isWon || (cloudState as any).isWon);
+            const isCompleted = Boolean(localState.isCompleted || (cloudState as any).isCompleted);
+            const localGuesses = Array.isArray(localState.guesses) ? localState.guesses : [];
+            const cloudGuesses = Array.isArray((cloudState as any).guesses) ? (cloudState as any).guesses : [];
+            const guesses = cloudGuesses.length >= localGuesses.length ? cloudGuesses : localGuesses;
+            const mergedDailyState = {
+              ...localState,
+              ...(cloudState as any),
+              isWon,
+              isCompleted,
+              guesses,
+            };
+            localStorage.setItem(stateKey, JSON.stringify(mergedDailyState));
+            hasDailyChanges = true;
+          } catch {
+            localStorage.setItem(stateKey, JSON.stringify(cloudState));
+            hasDailyChanges = true;
+          }
+        }
+      }
+      if (hasDailyChanges) {
+        window.dispatchEvent(new CustomEvent('hoot_daily_states_updated'));
+      }
     }
 
     // 4. Time Attack
@@ -425,7 +528,8 @@ function computeSaveFingerprint(data: UserCloudSavePayload): string {
     avatarId: data.avatarId,
     title: data.title,
     frame: data.activeFrame,
-    statsGamesPlayed: data.stats?.gamesPlayed,
+    stats: data.stats,
+    dailyCount: Object.keys(data.dailyGameStates || {}).length,
     taPlayed: Object.keys(data.timeAttackStats || {}).length,
   });
 }

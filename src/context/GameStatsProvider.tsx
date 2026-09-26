@@ -44,6 +44,28 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   }, [stats]);
 
+  // Synchronisation dynamique lors de la restauration cloud
+  useEffect(() => {
+    const handleStatsUpdated = (e: any) => {
+      if (e?.detail) {
+        setStats((prev) => ({
+          screenle: { ...prev.screenle, ...(e.detail.screenle || {}) },
+          indledle: { ...prev.indledle, ...(e.detail.indledle || {}) },
+          linkle: { ...prev.linkle, ...(e.detail.linkle || {}) },
+          profille: { ...prev.profille, ...(e.detail.profille || {}) },
+          chrono: { ...prev.chrono, ...(e.detail.chrono || {}) },
+          pixel: { ...prev.pixel, ...(e.detail.pixel || {}) },
+          review: { ...prev.review, ...(e.detail.review || {}) },
+          blindtest: { ...prev.blindtest, ...(e.detail.blindtest || {}) },
+        }));
+      }
+    };
+    window.addEventListener('hoot_stats_updated', handleStatsUpdated as any);
+    return () => {
+      window.removeEventListener('hoot_stats_updated', handleStatsUpdated as any);
+    };
+  }, []);
+
   const recordGameResult = (
     mode: DailyGameMode,
     dateStr: string,

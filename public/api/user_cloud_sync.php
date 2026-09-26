@@ -40,9 +40,16 @@ if (!is_dir($savesDir)) {
 
 // Nettoyage et détermination de la clé utilisateur sécurisée
 function getUserStorageKey() {
-    $steamId = isset($_REQUEST['steamId']) ? trim($_REQUEST['steamId']) : '';
-    $userId = isset($_REQUEST['userId']) ? trim($_REQUEST['userId']) : '';
+    $sessionUserId = $_SESSION['hoot_user_id'] ?? '';
+    $sessionSteamId = $_SESSION['steam_id'] ?? '';
+
+    $steamId = isset($_REQUEST['steamId']) ? trim($_REQUEST['steamId']) : $sessionSteamId;
+    $userId = isset($_REQUEST['userId']) ? trim($_REQUEST['userId']) : $sessionUserId;
     $username = isset($_REQUEST['username']) ? trim($_REQUEST['username']) : '';
+
+    if (!empty($sessionUserId)) {
+        return 'user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionUserId);
+    }
 
     if (!empty($steamId)) {
         $clean = preg_replace('/[^a-zA-Z0-9_\-]/', '', $steamId);
@@ -51,7 +58,7 @@ function getUserStorageKey() {
         }
     }
 
-    // Si userId est un vrai compte authentifié (ex: UUID Supabase) et pas un identifiant local temporaire
+    // Si userId est un vrai compte authentifié (ex: user_xxx) et pas un identifiant local temporaire
     if (!empty($userId) && strpos($userId, 'local_') !== 0) {
         $clean = preg_replace('/[^a-zA-Z0-9_\-]/', '', $userId);
         if (!empty($clean)) return 'user_' . $clean;
@@ -137,17 +144,52 @@ function mergeSaveData($existing, $incoming) {
     $allAch = array_unique(array_merge($exAch, $inAch));
     $merged['achievements'] = array_values($allAch);
 
-    // 5. Statistiques de Jeu & Streaks (Conserver les scores maximaux)
+    // 5. Statistiques de Jeu & Streaks (Conserver les scores maximaux pour chaque mode)
     $exStats = $existing['stats'] ?? [];
     $inStats = $incoming['stats'] ?? [];
-    $merged['stats'] = [
-        'gamesPlayed' => max(intval($exStats['gamesPlayed'] ?? 0), intval($inStats['gamesPlayed'] ?? 0)),
-        'gamesWon' => max(intval($exStats['gamesWon'] ?? 0), intval($inStats['gamesWon'] ?? 0)),
-        'currentStreak' => max(intval($exStats['currentStreak'] ?? 0), intval($inStats['currentStreak'] ?? 0)),
-        'maxStreak' => max(intval($exStats['maxStreak'] ?? 0), intval($inStats['maxStreak'] ?? 0)),
-        'guessDistribution' => !empty($inStats['guessDistribution']) ? $inStats['guessDistribution'] : ($exStats['guessDistribution'] ?? []),
-        'gameHistory' => array_merge($exStats['gameHistory'] ?? [], $inStats['gameHistory'] ?? []),
-    ];
+    $modes = ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'];
+    $mergedStats = [];
+
+    $isModeBased = false;
+    foreach ($modes as $m) {
+        if (isset($inStats[$m]) || isset($exStats[$m])) {
+            $isModeBased = true;
+            break;
+        }
+    }
+
+    if ($isModeBased) {
+        foreach ($modes as $m) {
+            $exM = $exStats[$m] ?? [];
+            $inM = $inStats[$m] ?? [];
+            $dist = $exM['guessDistribution'] ?? [];
+            if (!empty($inM['guessDistribution']) && is_array($inM['guessDistribution'])) {
+                foreach ($inM['guessDistribution'] as $guesses => $count) {
+                    $dist[$guesses] = max(intval($dist[$guesses] ?? 0), intval($count));
+                }
+            }
+            $mergedStats[$m] = [
+                'played' => max(intval($exM['played'] ?? 0), intval($inM['played'] ?? 0)),
+                'won' => max(intval($exM['won'] ?? 0), intval($inM['won'] ?? 0)),
+                'currentStreak' => max(intval($exM['currentStreak'] ?? 0), intval($inM['currentStreak'] ?? 0)),
+                'maxStreak' => max(intval($exM['maxStreak'] ?? 0), intval($inM['maxStreak'] ?? 0)),
+                'guessDistribution' => $dist,
+                'lastPlayedDate' => max((string)($exM['lastPlayedDate'] ?? ''), (string)($inM['lastPlayedDate'] ?? '')),
+                'lastWonDate' => max((string)($exM['lastWonDate'] ?? ''), (string)($inM['lastWonDate'] ?? '')),
+                'streakRescued' => !empty($inM['streakRescued']) || !empty($exM['streakRescued']),
+            ];
+        }
+        $merged['stats'] = $mergedStats;
+    } else {
+        $merged['stats'] = [
+            'gamesPlayed' => max(intval($exStats['gamesPlayed'] ?? 0), intval($inStats['gamesPlayed'] ?? 0)),
+            'gamesWon' => max(intval($exStats['gamesWon'] ?? 0), intval($inStats['gamesWon'] ?? 0)),
+            'currentStreak' => max(intval($exStats['currentStreak'] ?? 0), intval($inStats['currentStreak'] ?? 0)),
+            'maxStreak' => max(intval($exStats['maxStreak'] ?? 0), intval($inStats['maxStreak'] ?? 0)),
+            'guessDistribution' => !empty($inStats['guessDistribution']) ? $inStats['guessDistribution'] : ($exStats['guessDistribution'] ?? []),
+            'gameHistory' => array_merge($exStats['gameHistory'] ?? [], $inStats['gameHistory'] ?? []),
+        ];
+    }
 
     // 6. Time Attack Records (Prendre le high score maximal pour chaque discipline)
     $exTa = $existing['timeAttackStats'] ?? [];
@@ -177,6 +219,54 @@ function mergeSaveData($existing, $incoming) {
         'bestStreak' => max(intval($exVersus['bestStreak'] ?? 0), intval($inVersus['bestStreak'] ?? 0)),
         'eloRating' => max(intval($exVersus['eloRating'] ?? 1000), intval($inVersus['eloRating'] ?? 1000)),
     ];
+
+    // 8. Collection de Cartes (Fusion des cartes normales et holographiques)
+    $exCards = is_array($existing['cardCollection'] ?? null) ? $existing['cardCollection'] : [];
+    $inCards = is_array($incoming['cardCollection'] ?? null) ? $incoming['cardCollection'] : [];
+    $mergedCards = $exCards;
+    foreach ($inCards as $cardId => $cardData) {
+        if (!is_array($cardData)) continue;
+        if (!isset($mergedCards[$cardId])) {
+            $mergedCards[$cardId] = $cardData;
+        } else {
+            $exCard = $mergedCards[$cardId];
+            $mergedCards[$cardId] = [
+                'count' => max(intval($exCard['count'] ?? 0), intval($cardData['count'] ?? 0)),
+                'countHolo' => max(intval($exCard['countHolo'] ?? 0), intval($cardData['countHolo'] ?? 0)),
+                'firstObtainedAt' => !empty($exCard['firstObtainedAt']) ? $exCard['firstObtainedAt'] : ($cardData['firstObtainedAt'] ?? date('c')),
+            ];
+        }
+    }
+    $merged['cardCollection'] = $mergedCards;
+
+    // Dernier booster quotidien réclamé (date la plus récente)
+    $exBooster = (string)($existing['lastDailyBoosterClaim'] ?? '');
+    $inBooster = (string)($incoming['lastDailyBoosterClaim'] ?? '');
+    $merged['lastDailyBoosterClaim'] = max($exBooster, $inBooster);
+
+    // 9. Historique Quotidien du Calendrier (Daily Game States)
+    $exDaily = is_array($existing['dailyGameStates'] ?? null) ? $existing['dailyGameStates'] : [];
+    $inDaily = is_array($incoming['dailyGameStates'] ?? null) ? $incoming['dailyGameStates'] : [];
+    $mergedDaily = $exDaily;
+    foreach ($inDaily as $stateKey => $inState) {
+        if (!is_array($inState)) continue;
+        if (!isset($mergedDaily[$stateKey])) {
+            $mergedDaily[$stateKey] = $inState;
+        } else {
+            $exState = $mergedDaily[$stateKey];
+            $isWon = !empty($exState['isWon']) || !empty($inState['isWon']);
+            $isCompleted = !empty($exState['isCompleted']) || !empty($inState['isCompleted']);
+            $guesses = !empty($inState['guesses']) && count($inState['guesses']) >= count($exState['guesses'] ?? [])
+                ? $inState['guesses']
+                : ($exState['guesses'] ?? []);
+            $mergedDaily[$stateKey] = array_merge($exState, $inState, [
+                'isWon' => $isWon,
+                'isCompleted' => $isCompleted,
+                'guesses' => $guesses,
+            ]);
+        }
+    }
+    $merged['dailyGameStates'] = $mergedDaily;
 
     $merged['syncedAt'] = date('c');
     return $merged;
@@ -308,7 +398,10 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $reqSteamId = trim($_REQUEST['steamId'] ?? '');
 $sessionSteamId = trim($_SESSION['steam_id'] ?? '');
-$isSteamSessionOwner = (!empty($sessionSteamId) && !empty($reqSteamId) && hash_equals($sessionSteamId, $reqSteamId));
+$sessionHootUserId = trim($_SESSION['hoot_user_id'] ?? '');
+
+$isHootSessionOwner = (!empty($sessionHootUserId) && ($userKey === 'user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionHootUserId)));
+$isSteamSessionOwner = (!empty($sessionSteamId) && ($userKey === 'steam_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionSteamId) || (!empty($reqSteamId) && hash_equals($sessionSteamId, $reqSteamId))));
 $isCreatorAdmin = isCreatorAdminAuthorized();
 
 // Protection absolue du compte créateur souverain (interdiction totale d'accès aux non-administrateurs)
@@ -328,8 +421,8 @@ $saveFile = $savesDir . '/' . $userKey . '.json';
 $inputSyncKey = trim($_SERVER['HTTP_X_SYNC_KEY'] ?? $_REQUEST['syncKey'] ?? '');
 
 // [SÉCURITÉ CWE-639 IDOR] Authentification obligatoire via clé secrète de synchronisation
-// Si l'utilisateur est authentifié via Steam session ou est créateur admin, la clé secrète n'est pas bloquante
-if (!$isCreatorAdmin && !$isSteamSessionOwner) {
+// Si l'utilisateur est authentifié via Steam session ou compte Hoot ou est créateur admin, la clé secrète n'est pas bloquante
+if (!$isCreatorAdmin && !$isSteamSessionOwner && !$isHootSessionOwner) {
     if (empty($inputSyncKey) || strlen($inputSyncKey) < 16) {
         http_response_code(401);
         echo json_encode([
@@ -411,9 +504,9 @@ switch ($action) {
             if (!empty($inputHash) && hash_equals($data['syncKeyHash'], $inputHash)) {
                 $isAuthorized = true;
             }
-            if (!$isAuthorized && ($isCreatorAdmin || $isSteamSessionOwner)) {
+            if (!$isAuthorized && ($isCreatorAdmin || $isSteamSessionOwner || $isHootSessionOwner)) {
                 $isAuthorized = true;
-                // Si l'utilisateur Steam vérifié ou le créateur se connecte depuis un nouveau PC avec une nouvelle clé,
+                // Si l'utilisateur vérifié (Steam ou Hoot) ou le créateur se connecte depuis un nouveau PC avec une nouvelle clé,
                 // on met à jour l'empreinte pour que ses futures requêtes d'arrière-plan restent autorisées
                 if (!empty($inputSyncKey) && strlen($inputSyncKey) >= 16) {
                     $data['syncKeyHash'] = hash('sha256', $inputSyncKey);
@@ -485,7 +578,7 @@ switch ($action) {
             if (!empty($inputHash) && hash_equals($existing['syncKeyHash'], $inputHash)) {
                 $isAuthorized = true;
             }
-            if (!$isAuthorized && ($isCreatorAdmin || $isSteamSessionOwner)) {
+            if (!$isAuthorized && ($isCreatorAdmin || $isSteamSessionOwner || $isHootSessionOwner)) {
                 $isAuthorized = true;
             }
 

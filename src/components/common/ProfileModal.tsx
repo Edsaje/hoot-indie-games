@@ -73,7 +73,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     isAuthenticated,
     isAdmin,
     isCreator,
-    isSupabaseActive,
     setAvatar,
     setUsername,
     renameCooldown,
@@ -114,6 +113,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [importSyncKeyInput, setImportSyncKeyInput] = useState<string>('');
   const [hasCopiedSyncKey, setHasCopiedSyncKey] = useState<boolean>(false);
   const [showSyncKey, setShowSyncKey] = useState<boolean>(false);
+  const [showAdvancedKey, setShowAdvancedKey] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -1349,64 +1349,98 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </p>
 
                   {/* Connected Identifier Card */}
-                  <div className="p-3.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      {isSteamConnected && steamAccount ? (
-                        <>
-                          {steamAccount.avatarUrl ? (
-                            <img
-                              src={steamAccount.avatarUrl}
-                              alt={steamAccount.personaName}
-                              className="w-10 h-10 rounded-xl border border-cyan-500/50 object-cover shrink-0 shadow-md"
-                            />
-                          ) : (
-                            <div className="w-10 h-10 rounded-xl bg-cyan-950/50 border border-cyan-500/40 flex items-center justify-center shrink-0">
-                              <SteamIcon className="w-5 h-5 text-cyan-400" />
+                  <div className="p-3.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl flex flex-col gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {isSteamConnected && steamAccount ? (
+                          <>
+                            {steamAccount.avatarUrl ? (
+                              <img
+                                src={steamAccount.avatarUrl}
+                                alt={steamAccount.personaName}
+                                className="w-10 h-10 rounded-xl border border-cyan-500/50 object-cover shrink-0 shadow-md"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 rounded-xl bg-cyan-950/50 border border-cyan-500/40 flex items-center justify-center shrink-0">
+                                <SteamIcon className="w-5 h-5 text-cyan-400" />
+                              </div>
+                            )}
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-xs font-bold text-white truncate">{steamAccount.personaName}</span>
+                                <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/40 shrink-0">
+                                  SteamID: {steamAccount.steamId}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
+                                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                Synchronisation Cloud automatique active (Compte Steam lié)
+                              </div>
                             </div>
-                          )}
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-xs font-bold text-white truncate">{steamAccount.personaName}</span>
-                              <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/40 shrink-0">
-                                SteamID: {steamAccount.steamId}
-                              </span>
+                          </>
+                        ) : profile.email ? (
+                          <>
+                            <div className="w-10 h-10 rounded-xl bg-amber-950/40 border border-amber-500/40 flex items-center justify-center shrink-0">
+                              <User className="w-5 h-5 text-amber-400" />
                             </div>
-                            <div className="text-[11px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
-                              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                              Compte lié pour synchronisation multi-PC automatique
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-xs font-bold text-white truncate">{profile.username || 'Joueur Hoot'}</span>
+                                <span className="text-[10px] text-amber-300 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/40 shrink-0">
+                                  {profile.email}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
+                                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                Synchronisation Cloud automatique active (Compte Hoot)
+                              </div>
                             </div>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="w-10 h-10 rounded-xl bg-amber-950/40 border border-amber-500/40 flex items-center justify-center shrink-0">
-                            <User className="w-5 h-5 text-amber-400" />
-                          </div>
-                          <div className="min-w-0">
-                            <div className="text-xs font-bold text-white truncate">
-                              {profile.username || 'Hibou Mystère'}
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0">
+                              <User className="w-5 h-5 text-slate-400" />
                             </div>
-                            <div className="text-[11px] text-slate-400">
-                              Associez votre compte Steam pour garantir la synchronisation automatique immédiate sur n'importe quel autre PC.
+                            <div className="min-w-0">
+                              <div className="text-xs font-bold text-white truncate">
+                                {profile.username || 'Hibou Mystère'} (Session locale)
+                              </div>
+                              <div className="text-[11px] text-slate-400">
+                                Connectez-vous avec Steam ou créez un compte Hoot pour synchroniser automatiquement vos données entre vos appareils.
+                              </div>
                             </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
+                          </>
+                        )}
+                      </div>
 
-                    {!isSteamConnected && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          soundFx.playClick();
-                          setActiveTab('steam');
-                        }}
-                        className="px-3 py-1.5 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shrink-0 cursor-pointer"
-                      >
-                        <SteamIcon className="w-3.5 h-3.5" />
-                        Associer Steam
-                      </button>
-                    )}
+                      <div className="flex items-center gap-2 shrink-0">
+                        {!isSteamConnected && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              soundFx.playClick();
+                              connectSteamWithOpenId();
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                          >
+                            <SteamIcon className="w-3.5 h-3.5" />
+                            {profile.email ? 'Lier Steam' : 'Connexion Steam 1-Clic'}
+                          </button>
+                        )}
+                        {(profile.email || isSteamConnected) && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              soundFx.playClick();
+                              logout();
+                            }}
+                            className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition-colors cursor-pointer"
+                          >
+                            Déconnexion
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Sync Action Button */}
@@ -1417,10 +1451,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/10 disabled:opacity-50 cursor-pointer active:scale-[0.99]"
                     >
                       <RefreshCw className={`w-4 h-4 ${isAuthLoading ? 'animate-spin' : ''}`} />
-                      <span>{isAuthLoading ? 'Synchronisation en cours...' : '🔄 Synchroniser & Fusionner Maintenant'}</span>
+                      <span>{isAuthLoading ? 'Synchronisation en cours...' : '🔄 Forcer la Synchronisation & Fusion Cloud'}</span>
                     </button>
                     <p className="text-[11px] text-slate-500 text-center">
-                      La fusion intelligente conserve le maximum de vos plumes, succès débloqués et records sans jamais écraser vos progrès.
+                      La fusion intelligente conserve le maximum de vos plumes, succès débloqués, cartes, calendrier et records sans jamais écraser vos progrès.
                     </p>
                   </div>
 
@@ -1447,142 +1481,143 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     </div>
                   )}
 
-                  {/* Clé secrète de synchronisation cloud (Multi-PC) */}
-                  <div className="p-3.5 bg-slate-900/60 border border-slate-800/80 rounded-2xl space-y-3">
-                    <div className="flex items-center justify-between">
+                  {/* Compte Hoot Souverain (Email + Mot de passe) */}
+                  {!profile.email && !isSteamConnected && (
+                    <div className="border border-slate-800/80 bg-slate-900/60 rounded-2xl p-3.5 space-y-3">
                       <div className="flex items-center gap-2">
-                        <Key className="w-4 h-4 text-amber-400" />
-                        <span className="text-xs font-bold text-white">Clé de Synchronisation Cloud</span>
+                        <User className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-bold text-white">Créer ou Connecter un Compte Hoot</span>
                       </div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                        Multi-PC
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-400 leading-relaxed">
-                      Cette clé protège votre sauvegarde contre toute usurpation. Elle vous permet de synchroniser ou transférer immédiatement vos données (plumes, succès, records) sur un autre PC ou smartphone.
-                    </p>
-
-                    {/* Display current key */}
-                    <div className="flex items-center gap-2 bg-[#0b0f19] p-2 rounded-xl border border-slate-800">
-                      <code className="flex-1 text-[11px] font-mono text-amber-300 truncate">
-                        {showSyncKey ? cloudSyncKey : `${cloudSyncKey.slice(0, 8)}••••••••••••••••`}
-                      </code>
-                      <button
-                        type="button"
-                        onClick={() => setShowSyncKey(!showSyncKey)}
-                        className="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white rounded bg-slate-800/60 cursor-pointer transition-colors"
-                      >
-                        {showSyncKey ? 'Masquer' : 'Voir'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleCopySyncKey}
-                        className="px-2.5 py-1 text-[10px] font-bold text-amber-400 hover:text-amber-300 rounded bg-amber-500/10 border border-amber-500/30 flex items-center gap-1 cursor-pointer transition-colors"
-                      >
-                        {hasCopiedSyncKey ? (
-                          <>
-                            <Check className="w-3 h-3 text-emerald-400" />
-                            <span className="text-emerald-400">Copiée !</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3 h-3" />
-                            <span>Copier</span>
-                          </>
+                      <p className="text-[11px] text-slate-400">
+                        Associez une adresse e-mail et un mot de passe pour retrouver automatiquement vos parties sur tous vos appareils sans manipulation.
+                      </p>
+                      <form className="space-y-2.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <input
+                            type="email"
+                            value={emailInput}
+                            onChange={(e) => setEmailInput(e.target.value)}
+                            placeholder="joueur@exemple.com"
+                            className="px-3 py-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                          />
+                          <input
+                            type="password"
+                            value={passwordInput}
+                            onChange={(e) => setPasswordInput(e.target.value)}
+                            placeholder="••••••••"
+                            className="px-3 py-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                          />
+                        </div>
+                        {authError && (
+                          <div className="flex items-center gap-2 text-xs text-rose-400 bg-rose-950/40 p-2 rounded-xl border border-rose-900/50">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                            <span>{authError}</span>
+                          </div>
                         )}
-                      </button>
-                    </div>
-
-                    {/* Import / Transfer key from another device */}
-                    <div className="pt-2 border-t border-slate-800/60 space-y-1.5">
-                      <div className="text-[11px] font-semibold text-slate-300">
-                        Associer une clé existante depuis un autre PC :
-                      </div>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={importSyncKeyInput}
-                          onChange={(e) => setImportSyncKeyInput(e.target.value)}
-                          placeholder="Collez ici la clé de votre premier appareil..."
-                          className="flex-1 px-3 py-1.5 bg-[#0b0f19] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleImportSyncKey}
-                          disabled={isAuthLoading || !importSyncKeyInput.trim()}
-                          className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition-all disabled:opacity-40 cursor-pointer shrink-0"
-                        >
-                          Appliquer
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Supabase Optional Section if active */}
-                  {isSupabaseActive && (
-                    <div className="border-t border-slate-800/80 pt-3">
-                      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                        Connexion Supabase (Optionnel)
-                      </div>
-                      {!isAuthenticated ? (
-                        <form className="space-y-2.5">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <input
-                              type="email"
-                              value={emailInput}
-                              onChange={(e) => setEmailInput(e.target.value)}
-                              placeholder="joueur@exemple.com"
-                              className="px-3 py-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
-                            />
-                            <input
-                              type="password"
-                              value={passwordInput}
-                              onChange={(e) => setPasswordInput(e.target.value)}
-                              placeholder="••••••••"
-                              className="px-3 py-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
-                            />
-                          </div>
-                          {authError && (
-                            <div className="flex items-center gap-2 text-xs text-rose-400 bg-rose-950/40 p-2 rounded-xl border border-rose-900/50">
-                              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                              <span>{authError}</span>
-                            </div>
-                          )}
-                          <div className="flex gap-2">
-                            <button
-                              type="button"
-                              onClick={handleLogin}
-                              disabled={isAuthLoading}
-                              className="flex-1 py-1.5 px-3 rounded-lg bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold text-xs transition-colors disabled:opacity-50"
-                            >
-                              Se Connecter
-                            </button>
-                            <button
-                              type="button"
-                              onClick={handleSignUp}
-                              disabled={isAuthLoading}
-                              className="flex-1 py-1.5 px-3 rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 font-bold text-xs transition-colors disabled:opacity-50"
-                            >
-                              Créer un Compte
-                            </button>
-                          </div>
-                        </form>
-                      ) : (
-                        <div className="flex items-center justify-between p-2 rounded-lg bg-[#0b0f19] border border-[#1e293b] text-xs">
-                          <span className="text-slate-300 font-mono">{profile.email}</span>
+                        <div className="flex gap-2">
                           <button
-                            onClick={() => {
-                              soundFx.playClick();
-                              logout();
-                            }}
-                            className="px-2 py-1 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 font-bold text-[11px]"
+                            type="button"
+                            onClick={handleLogin}
+                            disabled={isAuthLoading}
+                            className="flex-1 py-1.5 px-3 rounded-lg bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold text-xs transition-colors disabled:opacity-50 cursor-pointer"
                           >
-                            Déconnexion Supabase
+                            Se Connecter
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleSignUp}
+                            disabled={isAuthLoading}
+                            className="flex-1 py-1.5 px-3 rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-colors disabled:opacity-50 cursor-pointer"
+                          >
+                            Créer un Compte
                           </button>
                         </div>
-                      )}
+                      </form>
                     </div>
                   )}
+
+                  {/* Clé secrète de synchronisation cloud (Multi-PC) - Section avancée / Secours */}
+                  <div className="border border-slate-800/80 rounded-2xl overflow-hidden bg-slate-900/40">
+                    <button
+                      type="button"
+                      onClick={() => setShowAdvancedKey(!showAdvancedKey)}
+                      className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Key className="w-4 h-4 text-slate-400" />
+                        <div>
+                          <span className="text-xs font-bold text-slate-300">Options avancées — Clé de secours manuelle</span>
+                          <p className="text-[10px] text-slate-500">Pour transférer manuellement votre sauvegarde sans créer de compte</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-bold text-amber-400/80 shrink-0">
+                        {showAdvancedKey ? 'Masquer ▲' : 'Afficher ▼'}
+                      </span>
+                    </button>
+
+                    {showAdvancedKey && (
+                      <div className="p-3.5 pt-0 border-t border-slate-800/60 space-y-3 mt-2">
+                        <p className="text-[11px] text-slate-400 leading-relaxed pt-2">
+                          Cette clé protège votre sauvegarde contre toute usurpation. Elle n'est pas nécessaire si vous êtes connecté avec votre compte Steam ou Hoot.
+                        </p>
+
+                        {/* Display current key */}
+                        <div className="flex items-center gap-2 bg-[#0b0f19] p-2 rounded-xl border border-slate-800">
+                          <code className="flex-1 text-[11px] font-mono text-amber-300 truncate">
+                            {showSyncKey ? cloudSyncKey : `${cloudSyncKey.slice(0, 8)}••••••••••••••••`}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={() => setShowSyncKey(!showSyncKey)}
+                            className="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white rounded bg-slate-800/60 cursor-pointer transition-colors"
+                          >
+                            {showSyncKey ? 'Masquer' : 'Voir'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleCopySyncKey}
+                            className="px-2.5 py-1 text-[10px] font-bold text-amber-400 hover:text-amber-300 rounded bg-amber-500/10 border border-amber-500/30 flex items-center gap-1 cursor-pointer transition-colors"
+                          >
+                            {hasCopiedSyncKey ? (
+                              <>
+                                <Check className="w-3 h-3 text-emerald-400" />
+                                <span className="text-emerald-400">Copiée !</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>Copier</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+
+                        {/* Import / Transfer key from another device */}
+                        <div className="pt-2 border-t border-slate-800/60 space-y-1.5">
+                          <div className="text-[11px] font-semibold text-slate-300">
+                            Associer une clé existante depuis un autre PC :
+                          </div>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={importSyncKeyInput}
+                              onChange={(e) => setImportSyncKeyInput(e.target.value)}
+                              placeholder="Collez ici la clé de votre premier appareil..."
+                              className="flex-1 px-3 py-1.5 bg-[#0b0f19] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleImportSyncKey}
+                              disabled={isAuthLoading || !importSyncKeyInput.trim()}
+                              className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition-all disabled:opacity-40 cursor-pointer shrink-0"
+                            >
+                              Appliquer
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Local JSON Export/Import */}

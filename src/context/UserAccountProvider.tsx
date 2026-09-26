@@ -22,6 +22,13 @@ import {
   SHOP_TITLES,
 } from '../utils/featherEconomy';
 import { syncUserCloudSave } from '../services/userCloudSyncService';
+import {
+  apiGetSession,
+  apiRegister,
+  apiLogin,
+  apiLogout,
+  apiLinkSteam,
+} from '../services/userAuthService';
 
 const STORAGE_KEY = 'hoot_user_profile_v1';
 
@@ -241,7 +248,52 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
   }, [profile.steam?.steamId, profile.id, profile.username]);
 
-  // Écoute de session Supabase si configuré
+  // Vérification de la session serveur souveraine Hoot au démarrage (Cookie HttpOnly)
+  useEffect(() => {
+    apiGetSession().then((res) => {
+      if (res.success && res.authenticated && res.user) {
+        const user = res.user;
+        const isOfficialAdmin = Boolean(
+          (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
+          (user.email && user.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+        );
+        setIsAuthenticated(true);
+        setProfile((prev) => ({
+          ...prev,
+          id: user.id,
+          email: user.email || prev.email,
+          username: user.username && user.username !== 'Hibou Mystère' ? user.username : prev.username,
+          steam: user.steamId ? {
+            ...(prev.steam || {
+              profileUrl: '',
+              lastSyncedAt: new Date().toISOString(),
+              ownedAppIds: [],
+              gamesCount: 0,
+            }),
+            steamId: user.steamId,
+            personaName: prev.steam?.personaName || user.username,
+          } : prev.steam,
+          isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+          role: isOfficialAdmin ? 'admin' : prev.role,
+          avatarId: isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId,
+          title: isOfficialAdmin ? '👑 Créateur du Site' : prev.title,
+          isCloudSynced: true,
+        }));
+
+        // Synchroniser automatiquement les sauvegardes cloud
+        syncUserCloudSave(
+          {
+            userId: user.id,
+            steamId: user.steamId || undefined,
+            username: user.username,
+          },
+          { force: true }
+        ).catch(() => {});
+      }
+    }).catch(() => {});
+  }, []);
+
+  // Écoute de session Supabase si configuré (fallback)
   useEffect(() => {
     if (!supabase || !isSupabaseConfigured) return;
 
@@ -602,84 +654,168 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, []);
 
-  const loginWithEmail = useCallback(async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
-    const defaultName = email.split('@')[0];
-    if (!supabase || !isSupabaseConfigured) {
-      // Mode simulation hors-ligne
-      setProfile((prev) => ({
-        ...prev,
-        email,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: false,
-      }));
-      setIsAuthenticated(true);
-      claimUsernameOnServer(defaultName, profile.id, profile.steam?.steamId).catch(() => {});
-      return { success: true };
-    }
+  const loginWithEmail = useCallback(
+    async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+      try {
+        const res = await apiLogin(email, pass);
+        if (res.success && res.user) {
+          const user = res.user;
+          const isOfficialAdmin = Boolean(
+            (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
+            (user.email && user.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+          );
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password: pass,
-    });
+          setIsAuthenticated(true);
+          setProfile((prev) => ({
+            ...prev,
+            id: user.id,
+            email: user.email || email,
+            username: user.username || prev.username,
+            steam: user.steamId
+              ? {
+                  ...(prev.steam || {
+                    profileUrl: '',
+                    lastSyncedAt: new Date().toISOString(),
+                    ownedAppIds: [],
+                    gamesCount: 0,
+                  }),
+                  steamId: user.steamId,
+                  personaName: prev.steam?.personaName || user.username,
+                }
+              : prev.steam,
+            isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+            role: isOfficialAdmin ? 'admin' : prev.role,
+            avatarId: isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId,
+            title: isOfficialAdmin ? '👑 Créateur du Site' : prev.title,
+            isCloudSynced: true,
+          }));
 
-    if (error) {
-      return { success: false, error: error.message };
-    }
+          // Synchronisation cloud immédiate avec le compte chargé
+          syncUserCloudSave(
+            {
+              userId: user.id,
+              steamId: user.steamId || undefined,
+              username: user.username,
+            },
+            { force: true }
+          ).catch(() => {});
 
-    const authUser = data?.user;
-    if (authUser) {
-      setIsAuthenticated(true);
-      setProfile((prev) => ({
-        ...prev,
-        id: authUser.id,
-        email: authUser.email ?? undefined,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: true,
-      }));
-      claimUsernameOnServer(defaultName, authUser.id, profile.steam?.steamId).catch(() => {});
-    }
+          return { success: true };
+        }
 
-    return { success: true };
-  }, [profile.id, profile.steam?.steamId]);
+        if (supabase && isSupabaseConfigured) {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password: pass,
+          });
+          if (error) {
+            return { success: false, error: res.message || error.message };
+          }
+          const authUser = data?.user;
+          if (authUser) {
+            setIsAuthenticated(true);
+            setProfile((prev) => ({
+              ...prev,
+              id: authUser.id,
+              email: authUser.email ?? undefined,
+              isCloudSynced: true,
+            }));
+            return { success: true };
+          }
+        }
 
-  const signUpWithEmail = useCallback(async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
-    const defaultName = email.split('@')[0];
-    if (!supabase || !isSupabaseConfigured) {
-      setProfile((prev) => ({
-        ...prev,
-        email,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: false,
-      }));
-      setIsAuthenticated(true);
-      claimUsernameOnServer(defaultName, profile.id, profile.steam?.steamId).catch(() => {});
-      return { success: true };
-    }
+        return {
+          success: false,
+          error: res.message || 'Adresse e-mail ou mot de passe incorrect.',
+        };
+      } catch (err: any) {
+        return {
+          success: false,
+          error: err.message || 'Erreur réseau lors de la connexion.',
+        };
+      }
+    },
+    []
+  );
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password: pass,
-    });
+  const signUpWithEmail = useCallback(
+    async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+      try {
+        const preferredUsername =
+          profile.username && profile.username !== 'Hibou Mystère' ? profile.username : undefined;
+        const currentSteamId =
+          profile.steam?.steamId && !profile.steam.steamId.startsWith('local_')
+            ? profile.steam.steamId
+            : undefined;
 
-    if (error) {
-      return { success: false, error: error.message };
-    }
+        const res = await apiRegister(email, pass, preferredUsername, currentSteamId);
+        if (res.success && res.user) {
+          const user = res.user;
+          const isOfficialAdmin = Boolean(
+            (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
+            (user.email && user.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+          );
 
-    const authUser = data?.user;
-    if (authUser) {
-      setIsAuthenticated(true);
-      setProfile((prev) => ({
-        ...prev,
-        id: authUser.id,
-        email: authUser.email ?? undefined,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: true,
-      }));
-      claimUsernameOnServer(defaultName, authUser.id, profile.steam?.steamId).catch(() => {});
-    }
+          setIsAuthenticated(true);
+          setProfile((prev) => ({
+            ...prev,
+            id: user.id,
+            email: user.email || email,
+            username: user.username || prev.username,
+            isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+            role: isOfficialAdmin ? 'admin' : prev.role,
+            avatarId: isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId,
+            title: isOfficialAdmin ? '👑 Créateur du Site' : prev.title,
+            isCloudSynced: true,
+          }));
 
-    return { success: true };
-  }, [profile.id, profile.steam?.steamId]);
+          // Envoi de la sauvegarde vers le cloud pour initialiser le profil distant
+          syncUserCloudSave(
+            {
+              userId: user.id,
+              steamId: user.steamId || undefined,
+              username: user.username,
+            },
+            { force: true }
+          ).catch(() => {});
+
+          return { success: true };
+        }
+
+        if (supabase && isSupabaseConfigured) {
+          const { data, error } = await supabase.auth.signUp({
+            email,
+            password: pass,
+          });
+          if (error) {
+            return { success: false, error: res.message || error.message };
+          }
+          const authUser = data?.user;
+          if (authUser) {
+            setIsAuthenticated(true);
+            setProfile((prev) => ({
+              ...prev,
+              id: authUser.id,
+              email: authUser.email ?? undefined,
+              isCloudSynced: true,
+            }));
+            return { success: true };
+          }
+        }
+
+        return {
+          success: false,
+          error: res.message || 'Impossible de créer le compte.',
+        };
+      } catch (err: any) {
+        return {
+          success: false,
+          error: err.message || 'Erreur réseau lors de l\'inscription.',
+        };
+      }
+    },
+    [profile.username, profile.steam?.steamId]
+  );
 
   const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     if (!supabase || !isSupabaseConfigured) {
@@ -709,6 +845,9 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
   }, [profile.id, profile.username, profile.steam?.steamId]);
 
   const logout = useCallback(async () => {
+    try {
+      await apiLogout();
+    } catch {}
     if (supabase && isSupabaseConfigured) {
       try {
         await supabase.auth.signOut();
@@ -922,8 +1061,11 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
         // Enregistrement automatique sur le serveur souverain et synchronisation cloud
         claimUsernameOnServer(isOfficialAdmin ? 'Hibouxe' : details.personaName, profile.id, details.steamId).catch(() => {});
+        if (profile.id && profile.id.startsWith('user_')) {
+          apiLinkSteam(details.steamId).catch(() => {});
+        }
 
-        syncUserCloudSave({ steamId: details.steamId, username: isOfficialAdmin ? 'Hibouxe' : details.personaName }, { force: true }).then((syncResCloud) => {
+        syncUserCloudSave({ userId: profile.id, steamId: details.steamId, username: isOfficialAdmin ? 'Hibouxe' : details.personaName }, { force: true }).then((syncResCloud) => {
           if (syncResCloud.success && syncResCloud.data) {
             const cloudData = syncResCloud.data;
             setProfile((prev) => ({

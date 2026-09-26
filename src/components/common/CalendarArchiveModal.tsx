@@ -34,6 +34,17 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
   // State for browsing months (viewMonth is 0-indexed)
   const [viewYear, setViewYear] = useState(() => parseInt(currentDate.split('-')[0], 10));
   const [viewMonth, setViewMonth] = useState(() => parseInt(currentDate.split('-')[1], 10) - 1);
+  const [, setUpdateTrigger] = useState(0);
+
+  React.useEffect(() => {
+    const handleUpdate = () => setUpdateTrigger((n) => n + 1);
+    window.addEventListener('hoot_daily_states_updated', handleUpdate);
+    window.addEventListener('hoot_stats_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('hoot_daily_states_updated', handleUpdate);
+      window.removeEventListener('hoot_stats_updated', handleUpdate);
+    };
+  }, []);
 
   if (!isOpen) return null;
 
