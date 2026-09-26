@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 35
+ * Total de pépites sélectionnées : 38
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -1617,5 +1617,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzExNTkxMzIxLmdpZg==/original/pECVwW.gif"
     ],
     "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "itch-goodbye-doggy",
+    "title": "goodbye, doggy",
+    "developer": "picogram",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://picogram.itch.io/goodbye-doggy",
+    "playInBrowserUrl": "https://picogram.itch.io/goodbye-doggy",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Help your family cope with your death as a ghostly dog!",
+      "en": "Help your family cope with your death as a ghostly dog!"
+    },
+    "description": {
+      "fr": "Help your family cope with your death as a ghostly dog!",
+      "en": "Help your family cope with your death as a ghostly dog!"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE4MTkwMTMuZ2lm/original/qwkxRK.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE4MTkwMTMuZ2lm/original/qwkxRK.gif"
+    ],
+    "dateAdded": "2026-09-26"
+  },
+  {
+    "id": "itch-six-cats-under",
+    "title": "Six Cats Under",
+    "developer": "teambeanloop",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://teambeanloop.itch.io/six-cats-under",
+    "playInBrowserUrl": "https://teambeanloop.itch.io/six-cats-under",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "You died. Your unfinished business? The fate of your many cats!",
+      "en": "You died. Your unfinished business? The fate of your many cats!"
+    },
+    "description": {
+      "fr": "You died. Your unfinished business? The fate of your many cats!",
+      "en": "You died. Your unfinished business? The fate of your many cats!"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzM0NjMwNjMucG5n/315x250%23c/obcSPz.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzM0NjMwNjMucG5n/315x250%23c/obcSPz.png"
+    ],
+    "dateAdded": "2026-09-26"
   }
 ];
