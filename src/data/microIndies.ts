@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 38
+ * Total de pépites sélectionnées : 40
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -1699,5 +1699,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzM0NjMwNjMucG5n/315x250%23c/obcSPz.png"
     ],
     "dateAdded": "2026-09-26"
+  },
+  {
+    "id": "itch-touchstarved-a-dark-romance-visual-novel",
+    "title": "TOUCHSTARVED: A Dark Romance Visual Novel",
+    "developer": "redspringstudio",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://redspringstudio.itch.io/touchstarved",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests",
+      "en": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests"
+    },
+    "description": {
+      "fr": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests",
+      "en": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzExNTk1Nzk5LmpwZw==/315x250%23c/M3tL3R.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzExNTk1Nzk5LmpwZw==/315x250%23c/M3tL3R.jpg"
+    ],
+    "dateAdded": "2026-09-27"
+  },
+  {
+    "id": "itch-last-seen-online",
+    "title": "last seen online",
+    "developer": "qwook",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://qwook.itch.io/last-seen-online",
+    "playInBrowserUrl": "https://qwook.itch.io/last-seen-online",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Look through a stranger's computer. A horror puzzle game.",
+      "en": "Look through a stranger's computer. A horror puzzle game."
+    },
+    "description": {
+      "fr": "Look through a stranger's computer. A horror puzzle game.",
+      "en": "Look through a stranger's computer. A horror puzzle game."
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE5MjQ0NDc5LnBuZw==/315x250%23c/wtflM3.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE5MjQ0NDc5LnBuZw==/315x250%23c/wtflM3.png"
+    ],
+    "dateAdded": "2026-09-27"
   }
 ];
