@@ -47,7 +47,7 @@ export const ChatUserModerationModal: React.FC<ChatUserModerationModalProps> = (
   onUserPurged,
 }) => {
   const { profile, isAdmin, isCreator, isModerator } = useUserAccount();
-  const { purgeUserMessages } = useChat();
+  const { purgeUserMessages, openPrivateChat } = useChat();
 
   const isStrictAdmin = Boolean(isAdmin || isCreator || profile.role === 'admin' || profile.isAdmin);
   const isStrictModerator = Boolean(!isStrictAdmin && (isModerator || profile.role === 'moderator' || profile.isModerator));
@@ -374,6 +374,27 @@ export const ChatUserModerationModal: React.FC<ChatUserModerationModalProps> = (
               </div>
             </div>
           </div>
+
+          {/* Bouton Message Privé direct */}
+          {profile.username && targetUser.username.toLowerCase() !== profile.username.toLowerCase() && (
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                onClose();
+                openPrivateChat(targetUser.username, {
+                  avatarId: targetUser.avatarId,
+                  title: targetUser.title,
+                  activeFrame: targetUser.activeFrame,
+                  steamId: targetUser.steamId,
+                });
+              }}
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-98 cursor-pointer"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-emerald-200" />
+              <span>Envoyer un message privé à {targetUser.username}</span>
+            </button>
+          )}
 
           {/* Si la cible est protégée (créateur ou modérateur pour un modo) */}
           {!canModerateTarget ? (

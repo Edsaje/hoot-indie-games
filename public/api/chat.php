@@ -1158,4 +1158,463 @@ if ($action === 'dismiss_moderation_log') {
     exit;
 }
 
+// =============================================================
+// 🦉 MESSAGERIE PRIVÉE SOUVERAINE & DIRECTE (HOOT DIRECT CHAT)
+// =============================================================
+
+$privateConversationsFile = __DIR__ . '/private_conversations.json';
+
+function getCanonicalConversationKey($userA, $userB) {
+    $normA = normalizeChatUsername($userA);
+    $normB = normalizeChatUsername($userB);
+    if (strcmp($normA, $normB) <= 0) {
+        return $normA . '__' . $normB;
+    }
+    return $normB . '__' . $normA;
+}
+
+function getPrivateChatStore($file) {
+    if (!file_exists($file)) {
+        $init = ['conversations' => [], 'messages' => []];
+        @file_put_contents($file, json_encode($init, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        return $init;
+    }
+    $raw = @file_get_contents($file);
+    if (!$raw) {
+        return ['conversations' => [], 'messages' => []];
+    }
+    $decoded = json_decode($raw, true);
+    if (!is_array($decoded)) {
+        return ['conversations' => [], 'messages' => []];
+    }
+    if (!isset($decoded['conversations']) || !is_array($decoded['conversations'])) {
+        $decoded['conversations'] = [];
+    }
+    if (!isset($decoded['messages']) || !is_array($decoded['messages'])) {
+        $decoded['messages'] = [];
+    }
+    return $decoded;
+}
+
+function savePrivateChatStore($file, $data) {
+    return @file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+}
+
+// -------------------------------------------------------------
+// 1. LISTER LES CONVERSATIONS PRIVÉES D'UN UTILISATEUR
+// -------------------------------------------------------------
+if ($action === 'get_private_conversations') {
+    $username = trim($body['username'] ?? $_REQUEST['username'] ?? '');
+    if (empty($username)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Pseudonyme requis.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $normUser = normalizeChatUsername($username);
+    $store = getPrivateChatStore($privateConversationsFile);
+
+    $userConversations = [];
+    $totalUnread = 0;
+
+    foreach ($store['conversations'] as $cId => $conv) {
+        $parts = explode('__', $cId);
+        if (count($parts) === 2 && in_array($normUser, $parts, true)) {
+            $otherNorm = ($parts[0] === $normUser) ? $parts[1] : $parts[0];
+            $otherMeta = $conv['participants'][$otherNorm] ?? [
+                'username' => $otherNorm,
+                'avatarId' => 'owl',
+                'title' => 'Explorateur'
+            ];
+            $unreadForMe = (int)($conv['unread'][$normUser] ?? 0);
+            $totalUnread += $unreadForMe;
+
+            $userConversations[] = [
+                'conversationId' => $cId,
+                'participantUsernames' => [$parts[0], $parts[1]],
+                'otherParticipant' => $otherMeta,
+                'lastMessage' => $conv['lastMessage'] ?? null,
+                'unreadCount' => $unreadForMe,
+                'updatedAt' => $conv['updatedAt'] ?? 0
+            ];
+        }
+    }
+
+    usort($userConversations, function($a, $b) {
+        return ($b['updatedAt'] ?? 0) - ($a['updatedAt'] ?? 0);
+    });
+
+    echo json_encode([
+        'success' => true,
+        'conversations' => $userConversations,
+        'totalUnread' => $totalUnread,
+        'serverTime' => time()
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// -------------------------------------------------------------
+// 2. RÉCUPÉRER LES MESSAGES D'UNE CONVERSATION PRIVÉE
+// -------------------------------------------------------------
+if ($action === 'get_private_messages') {
+    $username = trim($body['username'] ?? $_REQUEST['username'] ?? '');
+    $convId = trim($body['conversationId'] ?? $_REQUEST['conversationId'] ?? '');
+    $withUser = trim($body['withUser'] ?? $_REQUEST['withUser'] ?? '');
+    $since = (int)($body['since'] ?? $_REQUEST['since'] ?? 0);
+    $markRead = !empty($body['markRead'] ?? $_REQUEST['markRead'] ?? true);
+
+    if (empty($username)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Pseudonyme requis.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $normUser = normalizeChatUsername($username);
+
+    if (empty($convId) && !empty($withUser)) {
+        $convId = getCanonicalConversationKey($username, $withUser);
+    }
+
+    if (empty($convId)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Identifiant de conversation manquant.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $parts = explode('__', $convId);
+    $isAuthorized = (count($parts) === 2 && in_array($normUser, $parts, true));
+
+    $adminAuth = checkIsUserAdminOrModerator($_REQUEST['steamId'] ?? '', $_REQUEST['userId'] ?? '', $username);
+    if (!$isAuthorized && !$adminAuth['authorized']) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Accès non autorisé à cette conversation.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $store = getPrivateChatStore($privateConversationsFile);
+    $messages = $store['messages'][$convId] ?? [];
+
+    $otherNorm = (count($parts) === 2 && $parts[0] === $normUser) ? $parts[1] : (count($parts) === 2 ? $parts[0] : '');
+    $otherMeta = $store['conversations'][$convId]['participants'][$otherNorm] ?? null;
+
+    $updated = false;
+    if ($markRead && isset($store['conversations'][$convId])) {
+        if (!empty($store['conversations'][$convId]['unread'][$normUser])) {
+            $store['conversations'][$convId]['unread'][$normUser] = 0;
+            $updated = true;
+        }
+        foreach ($messages as &$m) {
+            if (normalizeChatUsername($m['recipientUsername'] ?? '') === $normUser && empty($m['read'])) {
+                $m['read'] = true;
+                $updated = true;
+            }
+        }
+        unset($m);
+        if ($updated) {
+            $store['messages'][$convId] = $messages;
+            savePrivateChatStore($privateConversationsFile, $store);
+        }
+    }
+
+    if ($since > 0) {
+        $messages = array_values(array_filter($messages, function($m) use ($since) {
+            return ($m['timestamp'] ?? 0) > $since;
+        }));
+    }
+
+    echo json_encode([
+        'success' => true,
+        'conversationId' => $convId,
+        'messages' => $messages,
+        'otherParticipant' => $otherMeta,
+        'serverTime' => time()
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// -------------------------------------------------------------
+// 3. ENVOYER UN MESSAGE PRIVÉ DIRECT
+// -------------------------------------------------------------
+if ($action === 'send_private_message') {
+    $ip = getClientIp();
+
+    // Rate limiting
+    if (!checkRateLimit($rateLimitFile, $ip)) {
+        http_response_code(429);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Veuillez patienter quelques secondes avant d\'envoyer un nouveau message privé.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $senderUsername = trim($body['username'] ?? '');
+    $recipientUsername = trim($body['recipientUsername'] ?? '');
+    $rawText = trim($body['text'] ?? '');
+
+    if (empty($senderUsername) || empty($recipientUsername)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Expéditeur et destinataire requis.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $normSender = normalizeChatUsername($senderUsername);
+    $normRecipient = normalizeChatUsername($recipientUsername);
+
+    if ($normSender === $normRecipient) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Vous ne pouvez pas vous envoyer de message à vous-même.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if (empty($rawText) || mb_strlen($rawText, 'UTF-8') < 1) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Le message ne peut pas être vide.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if (mb_strlen($rawText, 'UTF-8') > 400) {
+        $rawText = mb_substr($rawText, 0, 400, 'UTF-8');
+    }
+
+    $userId = trim($body['userId'] ?? '');
+    $email = trim($body['email'] ?? '');
+    $steamId = trim($body['steamId'] ?? '');
+    $senderAvatarId = trim($body['avatarId'] ?? 'owl');
+    $senderTitle = trim($body['title'] ?? 'Explorateur');
+    $senderActiveFrame = trim($body['activeFrame'] ?? '');
+
+    $authInfo = checkIsUserAdminOrModerator($steamId, $userId, $senderUsername, $email);
+    $isOfficialCreator = isCreatorAdminAuthorized();
+
+    if ($isOfficialCreator) {
+        $senderUsername = 'Hibouxe';
+        $senderAvatarId = 'hibouxe_creator';
+        $senderTitle = 'Fondateur du Perchoir';
+    } else if (in_array($normSender, ['hibouxe', 'edsaje'], true)) {
+        $senderUsername = 'Explorateur_' . substr(md5($ip), 0, 4);
+    }
+
+    $isStaff = ($isOfficialCreator || $authInfo['role'] === 'admin' || $authInfo['role'] === 'moderator');
+    $flaggedPhishing = detectPhishingAndSuspiciousLinks($rawText, $isStaff);
+    if (!empty($flaggedPhishing)) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'phishing_detected',
+            'warning' => '🛡️ Bouclier Sécurité & Anti-Hameçonnage : Les liens externes suspects ou demandes de données sensibles sont interdits.',
+            'flaggedWords' => $flaggedPhishing
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $flaggedProfanities = detectProfanities($rawText);
+    if (!empty($flaggedProfanities)) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'profanity_detected',
+            'warning' => '⚠️ Respect & Bienveillance : Votre message contient des termes inappropriés non conformes à la charte sylvestre.',
+            'flaggedWords' => $flaggedProfanities
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $canonicalId = getCanonicalConversationKey($senderUsername, $recipientUsername);
+    $store = getPrivateChatStore($privateConversationsFile);
+
+    $now = time();
+    $msgId = 'pmsg_' . $now . '_' . substr(md5(uniqid($ip, true)), 0, 6);
+
+    $cleanRecipient = preg_replace('/[^a-zA-Z0-9_\-]/', '', htmlspecialchars(strip_tags($recipientUsername), ENT_QUOTES, 'UTF-8'));
+    $recipientAvatarId = trim($body['recipientAvatarId'] ?? 'owl');
+    $recipientTitle = trim($body['recipientTitle'] ?? 'Explorateur');
+    $recipientSteamId = trim($body['recipientSteamId'] ?? '');
+
+    $message = [
+        'id' => $msgId,
+        'conversationId' => $canonicalId,
+        'senderUsername' => $senderUsername,
+        'senderAvatarId' => $senderAvatarId,
+        'senderTitle' => $senderTitle,
+        'senderActiveFrame' => $senderActiveFrame,
+        'senderSteamId' => $steamId,
+        'senderUserId' => $userId,
+        'recipientUsername' => $cleanRecipient,
+        'recipientAvatarId' => $recipientAvatarId,
+        'recipientTitle' => $recipientTitle,
+        'recipientSteamId' => $recipientSteamId,
+        'text' => htmlspecialchars(strip_tags($rawText), ENT_QUOTES, 'UTF-8'),
+        'timestamp' => $now,
+        'read' => false
+    ];
+
+    if (!isset($store['messages'][$canonicalId])) {
+        $store['messages'][$canonicalId] = [];
+    }
+    $store['messages'][$canonicalId][] = $message;
+
+    // Pruning à 100 messages max par fil
+    if (count($store['messages'][$canonicalId]) > 100) {
+        $store['messages'][$canonicalId] = array_slice($store['messages'][$canonicalId], -100);
+    }
+
+    if (!isset($store['conversations'][$canonicalId])) {
+        $store['conversations'][$canonicalId] = [
+            'id' => $canonicalId,
+            'participants' => [],
+            'unread' => [
+                $normSender => 0,
+                $normRecipient => 0
+            ]
+        ];
+    }
+
+    $store['conversations'][$canonicalId]['participants'][$normSender] = [
+        'username' => $senderUsername,
+        'avatarId' => $senderAvatarId,
+        'title' => $senderTitle,
+        'activeFrame' => $senderActiveFrame,
+        'steamId' => $steamId,
+        'userId' => $userId
+    ];
+
+    if (!isset($store['conversations'][$canonicalId]['participants'][$normRecipient])) {
+        $store['conversations'][$canonicalId]['participants'][$normRecipient] = [
+            'username' => $cleanRecipient,
+            'avatarId' => $recipientAvatarId,
+            'title' => $recipientTitle,
+            'steamId' => $recipientSteamId
+        ];
+    } else {
+        if (!empty($recipientAvatarId) && $recipientAvatarId !== 'owl') {
+            $store['conversations'][$canonicalId]['participants'][$normRecipient]['avatarId'] = $recipientAvatarId;
+        }
+        if (!empty($recipientTitle) && $recipientTitle !== 'Explorateur') {
+            $store['conversations'][$canonicalId]['participants'][$normRecipient]['title'] = $recipientTitle;
+        }
+    }
+
+    $store['conversations'][$canonicalId]['lastMessage'] = [
+        'id' => $msgId,
+        'senderUsername' => $senderUsername,
+        'text' => $message['text'],
+        'timestamp' => $now,
+        'read' => false
+    ];
+
+    $store['conversations'][$canonicalId]['updatedAt'] = $now;
+
+    $currentUnread = (int)($store['conversations'][$canonicalId]['unread'][$normRecipient] ?? 0);
+    $store['conversations'][$canonicalId]['unread'][$normRecipient] = $currentUnread + 1;
+
+    savePrivateChatStore($privateConversationsFile, $store);
+
+    echo json_encode([
+        'success' => true,
+        'message' => $message,
+        'conversationId' => $canonicalId,
+        'serverTime' => $now
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// -------------------------------------------------------------
+// 4. MARQUER UNE CONVERSATION PRIVÉE COMME LUE
+// -------------------------------------------------------------
+if ($action === 'mark_private_read') {
+    $username = trim($body['username'] ?? $_REQUEST['username'] ?? '');
+    $convId = trim($body['conversationId'] ?? $_REQUEST['conversationId'] ?? '');
+    $withUser = trim($body['withUser'] ?? $_REQUEST['withUser'] ?? '');
+
+    if (empty($username)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Pseudonyme requis.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $normUser = normalizeChatUsername($username);
+    if (empty($convId) && !empty($withUser)) {
+        $convId = getCanonicalConversationKey($username, $withUser);
+    }
+
+    if (!empty($convId)) {
+        $store = getPrivateChatStore($privateConversationsFile);
+        if (isset($store['conversations'][$convId])) {
+            $store['conversations'][$convId]['unread'][$normUser] = 0;
+            if (isset($store['messages'][$convId])) {
+                foreach ($store['messages'][$convId] as &$m) {
+                    if (normalizeChatUsername($m['recipientUsername'] ?? '') === $normUser) {
+                        $m['read'] = true;
+                    }
+                }
+                unset($m);
+            }
+            savePrivateChatStore($privateConversationsFile, $store);
+        }
+    }
+
+    echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// -------------------------------------------------------------
+// 5. SUPPRIMER OU RETIRER UN MESSAGE PRIVÉ
+// -------------------------------------------------------------
+if ($action === 'delete_private_message') {
+    $username = trim($body['username'] ?? $_REQUEST['username'] ?? '');
+    $msgId = trim($body['messageId'] ?? $_REQUEST['messageId'] ?? '');
+    $convId = trim($body['conversationId'] ?? $_REQUEST['conversationId'] ?? '');
+    $hardDelete = !empty($body['hardDelete'] ?? $_REQUEST['hardDelete'] ?? false);
+
+    if (empty($msgId) || empty($convId) || empty($username)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Paramètres invalides.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $normUser = normalizeChatUsername($username);
+    $store = getPrivateChatStore($privateConversationsFile);
+
+    if (!isset($store['messages'][$convId])) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Conversation introuvable.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $found = false;
+    if ($hardDelete) {
+        $store['messages'][$convId] = array_values(array_filter($store['messages'][$convId], function($m) use ($msgId, $normUser, &$found) {
+            if (($m['id'] ?? '') === $msgId) {
+                if (normalizeChatUsername($m['senderUsername'] ?? '') === $normUser) {
+                    $found = true;
+                    return false;
+                }
+            }
+            return true;
+        }));
+    } else {
+        foreach ($store['messages'][$convId] as &$m) {
+            if (($m['id'] ?? '') === $msgId && normalizeChatUsername($m['senderUsername'] ?? '') === $normUser) {
+                $m['isDeleted'] = true;
+                $m['text'] = '[Message retiré par l\'auteur]';
+                $found = true;
+                break;
+            }
+        }
+        unset($m);
+    }
+
+    if ($found) {
+        savePrivateChatStore($privateConversationsFile, $store);
+        echo json_encode(['success' => true, 'messageId' => $msgId, 'hardDeleted' => $hardDelete], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Non autorisé ou message introuvable.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 echo json_encode(['error' => 'Action inconnue'], JSON_UNESCAPED_UNICODE);
+

@@ -185,11 +185,15 @@
 
 ## 🔵 Phase 4 : Systèmes Avancés & Refactorisation Lourde (Priorité P3)
 
-### 13. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[⏳ À faire]`
-- **Constat :** Le tchat actuel est exclusivement un salon public global. Les joueurs ne peuvent pas s'envoyer de messages directs privés.
-- **Actions à réaliser :**
-  - [ ] **Backend PHP (`chat.php` / nouveau point d'entrée)** : Créer les endpoints d'envoi et de réception de messages privés sécurisés avec isolation stricte par identifiant d'expéditeur et de destinataire (`private_conversations`).
-  - [ ] **Frontend & UI** : Intégrer un onglet ou volet « Messages Privés » dans `ChatDrawer.tsx` ou depuis la liste d'amis (`FriendsModal.tsx`), avec notifications de nouveau message non lu et son discret.
+### 13. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[✅ 100% Terminé]`
+- **Constat :** Le tchat était jusqu'alors exclusivement un salon public global. Les joueurs ne pouvaient pas correspondre en privé.
+- **Actions réalisées :**
+  - [x] **Backend PHP Souverain (`public/api/chat.php`)** : Endpoints de messagerie directe `get_private_conversations`, `get_private_messages`, `send_private_message`, `mark_private_read`, `delete_private_message` avec génération de clés canoniques déterministes symétriques (`getCanonicalConversationKey`), stockage atomique sous verrouillage `LOCK_EX` dans `private_conversations.json`, bouclier anti-hameçonnage et modération anti-injures intégrés.
+  - [x] **Service Frontend & Résilience Hors-ligne (`src/services/chatService.ts`)** : Typages stricts TypeScript sans aucun `any` (`PrivateMessage`, `PrivateConversation`, `PrivateParticipant`), résilience complète avec fallback LocalStorage automatique en environnement de développement ou déconnecté.
+  - [x] **Gestion d'État & Compteurs Réactifs (`src/context/ChatContext.tsx` & `src/context/ChatProvider.tsx`)** : Synchronisation des onglets, gestion de l'interlocuteur actif, calcul du total des notifications non-lues (`unreadCount = publicUnreadCount + privateUnreadCount`), polling intelligent en arrière-plan et carillon audio discret (`soundFx.playChime()`) lors de l'arrivée d'un message direct.
+  - [x] **Interface Graphique Moderne & Onglets Dédiés (`src/components/chat/ChatDrawer.tsx` & `src/components/chat/ChatPrivateView.tsx`)** : Barre d'onglets ergonomique (« Salons Publics » / « Messages Privés »), vue liste des correspondances avec indicateur en ligne, cadres de boutique et aperçu du dernier message, fil de discussion direct avec bulles sylvestres distinctives, accusés de lecture (« ✓ » / « ✓✓ ») et modale de suppression.
+  - [x] **Interconnexion Sociale (`FriendsModal.tsx` & `ChatUserModerationModal.tsx`)** : Bouton « Message » sur chaque carte de compagnon ouvrant instantanément le tchat privé avec celui-ci, et bouton d'envoi de message privé depuis le profil ou au clic sur le pseudonyme/avatar d'un joueur dans le salon public.
+  - [x] **Suite de Tests Validée (`scripts/testPrivateMessaging.ts`)** : 6/6 tests réussis (clé canonique symétrique, insensibilité casse/accents, arithmétique des badges de notifications).
 
 ### 14. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
 - **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.

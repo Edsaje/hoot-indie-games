@@ -19,6 +19,7 @@ import {
   ExternalLink,
   Lock,
   Languages,
+  Globe,
 } from 'lucide-react';
 import { useChat } from '../../context/useChat';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -37,6 +38,7 @@ import { INDIE_AVATARS } from '../../data/avatars';
 import { getFrameDefinition } from '../../utils/featherEconomy';
 import { soundFx } from '../../utils/audio';
 import { ChatUserModerationModal } from './ChatUserModerationModal';
+import { ChatPrivateView } from './ChatPrivateView';
 import { SUPPORTED_LANGUAGES, getAppLanguage } from '../../utils/localization';
 
 const QUICK_EMOJIS = ['🦉', '🎮', '💎', '🏆', '✨', '❤️', '🔥', '👏', '👋', '🎉'];
@@ -52,17 +54,22 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     isOpen,
     openChat,
     closeChat,
+    activeTab,
+    setActiveTab,
     currentChannel,
     setChannel,
     messages,
     isLoading,
     isSending,
     unreadCount,
+    publicUnreadCount,
+    privateUnreadCount,
     cooldownSeconds,
     sendMessage,
     deleteMessage,
     moderationWarning,
     setModerationWarning,
+    openPrivateChat,
   } = useChat();
 
   const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
@@ -499,76 +506,123 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
           </div>
         </div>
 
-        {/* Barre du sélecteur de Salon / Langue */}
-        <div className="relative">
+        {/* Barre des Onglets : Salons Publics vs Messages Privés */}
+        <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-[#020d0a] border border-[#78350f]/60">
           <button
             type="button"
-            onClick={() => setShowChannelDropdown((prev) => !prev)}
-            className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#020d0a] border border-[#78350f]/60 hover:border-amber-500/60 text-xs font-medium transition-colors"
+            onClick={() => {
+              soundFx.playClick();
+              setActiveTab('public');
+            }}
+            className={`py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              activeTab === 'public'
+                ? 'bg-gradient-to-r from-emerald-700 to-teal-800 text-white shadow-sm border border-emerald-500/40'
+                : 'text-slate-400 hover:text-white hover:bg-emerald-950/40'
+            }`}
           >
-            <div className="flex items-center gap-2 truncate">
-              <span className="text-sm">{currentChannelInfo.icon}</span>
-              <span className="text-amber-100 font-bold">
-                {getChannelName(currentChannelInfo.id, currentChannelInfo.name)}
+            <Globe className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Salons Publics</span>
+            {publicUnreadCount > 0 && (
+              <span className="min-w-[16px] h-[16px] px-1 rounded-full bg-emerald-500 text-slate-950 text-[9px] font-mono font-bold flex items-center justify-center">
+                {publicUnreadCount > 9 ? '9+' : publicUnreadCount}
               </span>
-              <span className="text-[11px] text-emerald-400/70 truncate hidden sm:inline">
-                — {getChannelDesc(currentChannelInfo.id, currentChannelInfo.description)}
-              </span>
-            </div>
-            <ChevronDown
-              className={`w-3.5 h-3.5 text-amber-400 shrink-0 transition-transform ${
-                showChannelDropdown ? 'rotate-180' : ''
-              }`}
-            />
+            )}
           </button>
 
-          {/* Menu déroulant des Salons */}
-          {showChannelDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-[#03150f] border-2 border-[#78350f] rounded-xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 max-h-64 overflow-y-auto">
-              <div className="px-2 py-0.5 text-[10px] font-bold text-amber-400/80 uppercase tracking-wider">
-                {t('chat.channelsDropdownTitle', 'Salons & Retours')}
-              </div>
-              {CHAT_CHANNELS.map((ch) => {
-                const isSelected = ch.id === currentChannel;
-                return (
-                  <button
-                    key={ch.id}
-                    type="button"
-                    onClick={() => {
-                      setChannel(ch.id);
-                      setShowChannelDropdown(false);
-                    }}
-                    className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs transition-all ${
-                      isSelected
-                        ? 'bg-[#059669]/30 text-amber-200 font-bold border border-emerald-500/50'
-                        : 'text-slate-300 hover:bg-emerald-950/60 hover:text-white'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 truncate">
-                      <span className="text-sm shrink-0">{ch.icon}</span>
-                      <div className="truncate">
-                        <div className="font-semibold text-slate-100">
-                          {getChannelName(ch.id, ch.label)}
-                        </div>
-                        <div className="text-[10px] text-emerald-400/70 truncate">
-                          {getChannelDesc(ch.id, ch.description)}
-                        </div>
-                      </div>
-                    </div>
-                    {isSelected && (
-                      <span className="text-[10px] text-emerald-400 bg-emerald-900/60 px-1 py-0.2 rounded font-bold shrink-0">
-                        {t('chat.activeChannel', 'Actif')}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              setActiveTab('private');
+            }}
+            className={`py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              activeTab === 'private'
+                ? 'bg-gradient-to-r from-amber-600 to-amber-700 text-slate-950 shadow-sm border border-amber-400/50'
+                : 'text-slate-400 hover:text-white hover:bg-emerald-950/40'
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5 text-amber-300" />
+            <span>Messages Privés</span>
+            {privateUnreadCount > 0 && (
+              <span className="min-w-[16px] h-[16px] px-1 rounded-full bg-amber-500 text-slate-950 text-[9px] font-mono font-bold flex items-center justify-center animate-pulse">
+                {privateUnreadCount > 9 ? '9+' : privateUnreadCount}
+              </span>
+            )}
+          </button>
         </div>
 
+        {/* Barre du sélecteur de Salon / Langue (visible en mode salons publics) */}
+        {activeTab === 'public' && (
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowChannelDropdown((prev) => !prev)}
+              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#020d0a] border border-[#78350f]/60 hover:border-amber-500/60 text-xs font-medium transition-colors"
+            >
+              <div className="flex items-center gap-2 truncate">
+                <span className="text-sm">{currentChannelInfo.icon}</span>
+                <span className="text-amber-100 font-bold">
+                  {getChannelName(currentChannelInfo.id, currentChannelInfo.name)}
+                </span>
+                <span className="text-[11px] text-emerald-400/70 truncate hidden sm:inline">
+                  — {getChannelDesc(currentChannelInfo.id, currentChannelInfo.description)}
+                </span>
+              </div>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-amber-400 shrink-0 transition-transform ${
+                  showChannelDropdown ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+
+            {/* Menu déroulant des Salons */}
+            {showChannelDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-[#03150f] border-2 border-[#78350f] rounded-xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 max-h-64 overflow-y-auto">
+                <div className="px-2 py-0.5 text-[10px] font-bold text-amber-400/80 uppercase tracking-wider">
+                  {t('chat.channelsDropdownTitle', 'Salons & Retours')}
+                </div>
+                {CHAT_CHANNELS.map((ch) => {
+                  const isSelected = ch.id === currentChannel;
+                  return (
+                    <button
+                      key={ch.id}
+                      type="button"
+                      onClick={() => {
+                        setChannel(ch.id);
+                        setShowChannelDropdown(false);
+                      }}
+                      className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs transition-all ${
+                        isSelected
+                          ? 'bg-[#059669]/30 text-amber-200 font-bold border border-emerald-500/50'
+                          : 'text-slate-300 hover:bg-emerald-950/60 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <span className="text-sm shrink-0">{ch.icon}</span>
+                        <div className="truncate">
+                          <div className="font-semibold text-slate-100">
+                            {getChannelName(ch.id, ch.label)}
+                          </div>
+                          <div className="text-[10px] text-emerald-400/70 truncate">
+                            {getChannelDesc(ch.id, ch.description)}
+                          </div>
+                        </div>
+                      </div>
+                      {isSelected && (
+                        <span className="text-[10px] text-emerald-400 bg-emerald-900/60 px-1 py-0.2 rounded font-bold shrink-0">
+                          {t('chat.activeChannel', 'Actif')}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Bandeau contextuel / Catégories pour Feedback (Conteneur fluide sans dépassement) */}
-        {currentChannel === 'feedback' && (
+        {activeTab === 'public' && currentChannel === 'feedback' && (
           <div className="flex flex-col gap-1 pt-0.5 w-full max-w-full overflow-hidden">
             <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1">
               <Lightbulb className="w-3 h-3 text-amber-400" />
@@ -725,9 +779,12 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
             })
           )}
         </div>
+      ) : activeTab === 'private' ? (
+        <ChatPrivateView onOpenAuth={onOpenAuth} />
       ) : (
-        /* Fil des messages */
-        <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
+        <>
+          {/* Fil des messages */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
           {isLoading && messages.length === 0 ? (
             <div className="flex items-center justify-center h-36 text-emerald-400 text-xs animate-pulse">
               Chargement de la discussion...
@@ -771,10 +828,11 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                   {/* Avatar avec cadre éventuel */}
                   <div
                     onClick={() => {
+                      const cleanAuthor = isCreatorMsg && msg.username.startsWith('Explorateur_') ? 'Hibouxe' : msg.username;
                       if (canModerate) {
                         soundFx.playClick();
                         setUserToModerate({
-                          username: isCreatorMsg && msg.username.startsWith('Explorateur_') ? 'Hibouxe' : msg.username,
+                          username: cleanAuthor,
                           userId: msg.userId,
                           steamId: msg.steamId,
                           avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
@@ -783,14 +841,28 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                           isCreator: isCreatorMsg,
                           isModerator: msg.isModerator,
                         });
+                      } else if (!isMe) {
+                        soundFx.playClick();
+                        openPrivateChat(cleanAuthor, {
+                          avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                          title: msg.title,
+                          activeFrame: msg.activeFrame,
+                          steamId: msg.steamId,
+                        });
                       }
                     }}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 bg-gradient-to-br ${
                       avatar.bgGradient
                     } ${frameDef.borderClass} ${frameDef.glowClass || ''} shadow-md overflow-hidden ${
-                      canModerate ? 'cursor-pointer hover:ring-2 hover:ring-amber-400 transition-all hover:scale-105' : ''
+                      canModerate || !isMe ? 'cursor-pointer hover:ring-2 hover:ring-amber-400 transition-all hover:scale-105' : ''
                     }`}
-                    title={canModerate ? `Modérer le profil de ${msg.username}` : avatar.name}
+                    title={
+                      canModerate
+                        ? `Modérer le profil de ${msg.username}`
+                        : !isMe
+                        ? `Envoyer un message privé à ${msg.username}`
+                        : avatar.name
+                    }
                   >
                     {avatar.imageUrl ? (
                       <img
@@ -834,12 +906,26 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                                   isCreator: isCreatorMsg,
                                   isModerator: msg.isModerator,
                                 });
+                              } else if (!isMe) {
+                                soundFx.playClick();
+                                openPrivateChat(authorDisplayName, {
+                                  avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                                  title: msg.title,
+                                  activeFrame: msg.activeFrame,
+                                  steamId: msg.steamId,
+                                });
                               }
                             }}
                             className={`font-bold text-[11px] text-amber-100 flex items-center gap-1 text-left ${
-                              canModerate ? 'cursor-pointer hover:underline hover:text-amber-300' : ''
+                              canModerate || !isMe ? 'cursor-pointer hover:underline hover:text-amber-300' : ''
                             }`}
-                            title={canModerate ? `Modérer le profil de ${authorDisplayName}` : undefined}
+                            title={
+                              canModerate
+                                ? `Modérer le profil de ${authorDisplayName}`
+                                : !isMe
+                                ? `Envoyer un message privé à ${authorDisplayName}`
+                                : undefined
+                            }
                           >
                             <span>{authorDisplayName}</span>
                             {isCreatorMsg && (
@@ -1003,7 +1089,6 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
           )}
           <div ref={messagesEndRef} />
         </div>
-      )}
 
       {/* Avertissement visible de modération (anti-injure ou anti-phishing) */}
       {moderationWarning && (
@@ -1149,6 +1234,8 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
             <span>{t('chat.signIn')}</span>
           </button>
         </div>
+      )}
+        </>
       )}
 
       {/* Volet / Modale du Guide de Prévention & Anti-Hameçonnage */}

@@ -714,8 +714,9 @@ export async function getUserModerationInfo(
       return data;
     }
     return { success: false, message: data?.message || data?.error || 'Impossible de récupérer les informations de modération.' };
-  } catch (err: any) {
-    return { success: false, message: err?.message || 'Erreur réseau.' };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Erreur réseau.';
+    return { success: false, message: errorMsg };
   }
 }
 
@@ -762,7 +763,536 @@ export async function executeUserModeration(
       return { success: true, message: data.message };
     }
     return { success: false, message: data?.message || data?.error || 'Erreur lors de l\'action de modération.' };
-  } catch (err: any) {
-    return { success: false, message: err?.message || 'Erreur réseau lors de la modération.' };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Erreur réseau lors de la modération.';
+    return { success: false, message: errorMsg };
   }
 }
+
+// =============================================================
+// 🦉 TYPES & SERVICES DE TCHAT PRIVÉ (MESSAGERIE DIRECTE)
+// =============================================================
+
+export interface PrivateParticipant {
+  username: string;
+  avatarId: string;
+  title?: string;
+  activeFrame?: string;
+  steamId?: string;
+  userId?: string;
+  friendCode?: string;
+  isOnline?: boolean;
+}
+
+export interface PrivateMessage {
+  id: string;
+  conversationId: string;
+  senderUsername: string;
+  senderAvatarId: string;
+  senderTitle?: string;
+  senderActiveFrame?: string;
+  senderSteamId?: string;
+  senderUserId?: string;
+  recipientUsername: string;
+  recipientAvatarId?: string;
+  recipientTitle?: string;
+  recipientSteamId?: string;
+  text: string;
+  timestamp: number;
+  read: boolean;
+  isDeleted?: boolean;
+}
+
+export interface PrivateConversation {
+  conversationId: string;
+  participantUsernames: [string, string];
+  otherParticipant: PrivateParticipant;
+  lastMessage?: {
+    id: string;
+    senderUsername: string;
+    text: string;
+    timestamp: number;
+    read: boolean;
+  } | null;
+  unreadCount: number;
+  updatedAt: number;
+}
+
+const LOCAL_STORAGE_PRIVATE_CHAT_KEY = 'hoot_local_private_chat_v1';
+
+export function getCanonicalConvKey(userA: string, userB: string): string {
+  const normA = userA.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const normB = userB.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return normA.localeCompare(normB) <= 0 ? `${normA}__${normB}` : `${normB}__${normA}`;
+}
+
+interface LocalPrivateStore {
+  conversations: Record<string, {
+    id: string;
+    participants: Record<string, PrivateParticipant>;
+    unread: Record<string, number>;
+    updatedAt: number;
+    lastMessage?: {
+      id: string;
+      senderUsername: string;
+      text: string;
+      timestamp: number;
+      read: boolean;
+    } | null;
+  }>;
+  messages: Record<string, PrivateMessage[]>;
+}
+
+function getLocalPrivateStore(): LocalPrivateStore {
+  if (typeof window === 'undefined') return { conversations: {}, messages: {} };
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_PRIVATE_CHAT_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        return {
+          conversations: parsed.conversations || {},
+          messages: parsed.messages || {},
+        };
+      }
+    }
+  } catch {
+    // Ignore fallback errors
+  }
+  return { conversations: {}, messages: {} };
+}
+
+function saveLocalPrivateStore(store: LocalPrivateStore): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_PRIVATE_CHAT_KEY, JSON.stringify(store));
+  } catch {
+    // Ignore
+  }
+}
+
+/**
+ * Récupère la liste des conversations privées d'un utilisateur
+ */
+export async function fetchPrivateConversations(auth: {
+  username: string;
+  steamId?: string;
+  userId?: string;
+}): Promise<{ success: boolean; conversations: PrivateConversation[]; totalUnread: number; serverTime: number }> {
+  const cleanUsername = auth.username?.trim();
+  if (!cleanUsername) {
+    return { success: false, conversations: [], totalUnread: 0, serverTime: Math.floor(Date.now() / 1000) };
+  }
+
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+  const params = new URLSearchParams({
+    action: 'get_private_conversations',
+    username: cleanUsername,
+  });
+  if (auth.steamId) params.append('steamId', auth.steamId);
+  if (auth.userId) params.append('userId', auth.userId);
+
+  try {
+    const res = await fetch(`/api/chat.php?${params.toString()}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      },
+    });
+
+    if (res.ok) {
+      const data = await res.json().catch(() => null);
+      if (data && data.success && Array.isArray(data.conversations)) {
+        return {
+          success: true,
+          conversations: data.conversations,
+          totalUnread: data.totalUnread || 0,
+          serverTime: data.serverTime || Math.floor(Date.now() / 1000),
+        };
+      }
+    }
+  } catch {
+    // Fallback hors-ligne / localhost
+  }
+
+  // Fallback LocalStorage
+  const store = getLocalPrivateStore();
+  const normUser = cleanUsername.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const userConversations: PrivateConversation[] = [];
+  let totalUnread = 0;
+
+  for (const [cId, conv] of Object.entries(store.conversations)) {
+    const parts = cId.split('__');
+    if (parts.length === 2 && parts.includes(normUser)) {
+      const otherNorm = parts[0] === normUser ? parts[1] : parts[0];
+      const otherMeta = conv.participants[otherNorm] || {
+        username: otherNorm,
+        avatarId: 'owl',
+        title: 'Explorateur',
+      };
+      const unreadForMe = conv.unread[normUser] || 0;
+      totalUnread += unreadForMe;
+
+      userConversations.push({
+        conversationId: cId,
+        participantUsernames: [parts[0], parts[1]],
+        otherParticipant: otherMeta,
+        lastMessage: conv.lastMessage,
+        unreadCount: unreadForMe,
+        updatedAt: conv.updatedAt || 0,
+      });
+    }
+  }
+
+  userConversations.sort((a, b) => b.updatedAt - a.updatedAt);
+
+  return {
+    success: true,
+    conversations: userConversations,
+    totalUnread,
+    serverTime: Math.floor(Date.now() / 1000),
+  };
+}
+
+/**
+ * Récupère les messages d'une conversation privée
+ */
+export async function fetchPrivateMessages(
+  conversationIdOrWithUser: string,
+  auth: { username: string; steamId?: string; userId?: string },
+  since: number = 0,
+  markRead: boolean = true
+): Promise<{
+  success: boolean;
+  messages: PrivateMessage[];
+  otherParticipant?: PrivateParticipant;
+  conversationId: string;
+  serverTime: number;
+}> {
+  const cleanUsername = auth.username?.trim();
+  const cleanTarget = conversationIdOrWithUser?.trim();
+  const convId = cleanTarget.includes('__') ? cleanTarget : getCanonicalConvKey(cleanUsername, cleanTarget);
+
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+  const params = new URLSearchParams({
+    action: 'get_private_messages',
+    username: cleanUsername,
+    conversationId: convId,
+    since: String(since),
+    markRead: markRead ? '1' : '0',
+  });
+  if (auth.steamId) params.append('steamId', auth.steamId);
+  if (auth.userId) params.append('userId', auth.userId);
+
+  try {
+    const res = await fetch(`/api/chat.php?${params.toString()}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      },
+    });
+
+    if (res.ok) {
+      const data = await res.json().catch(() => null);
+      if (data && data.success && Array.isArray(data.messages)) {
+        return {
+          success: true,
+          messages: data.messages,
+          otherParticipant: data.otherParticipant,
+          conversationId: convId,
+          serverTime: data.serverTime || Math.floor(Date.now() / 1000),
+        };
+      }
+    }
+  } catch {
+    // Fallback hors-ligne / localhost
+  }
+
+  // Fallback LocalStorage
+  const store = getLocalPrivateStore();
+  let msgs = store.messages[convId] || [];
+  const normUser = cleanUsername.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  if (markRead && store.conversations[convId]) {
+    store.conversations[convId].unread[normUser] = 0;
+    msgs = msgs.map((m) => {
+      if (m.recipientUsername.toLowerCase().replace(/[^a-z0-9]/g, '') === normUser) {
+        return { ...m, read: true };
+      }
+      return m;
+    });
+    store.messages[convId] = msgs;
+    saveLocalPrivateStore(store);
+  }
+
+  if (since > 0) {
+    msgs = msgs.filter((m) => m.timestamp > since);
+  }
+
+  const parts = convId.split('__');
+  const otherNorm = parts[0] === normUser ? parts[1] : parts[0];
+  const otherMeta = store.conversations[convId]?.participants[otherNorm];
+
+  return {
+    success: true,
+    messages: msgs,
+    otherParticipant: otherMeta,
+    conversationId: convId,
+    serverTime: Math.floor(Date.now() / 1000),
+  };
+}
+
+/**
+ * Envoie un message privé à un autre joueur
+ */
+export async function sendPrivateMessage(payload: {
+  recipientUsername: string;
+  text: string;
+  username: string;
+  avatarId: string;
+  title?: string;
+  activeFrame?: string;
+  steamId?: string;
+  userId?: string;
+  recipientAvatarId?: string;
+  recipientTitle?: string;
+  recipientSteamId?: string;
+}): Promise<{
+  success: boolean;
+  message?: PrivateMessage;
+  conversationId?: string;
+  error?: string;
+  warning?: string;
+  flaggedWords?: string[];
+}> {
+  const cleanText = payload.text.trim();
+  if (!cleanText) {
+    return { success: false, error: 'Le message ne peut pas être vide.' };
+  }
+
+  const cleanRecipient = payload.recipientUsername.trim();
+  if (!cleanRecipient) {
+    return { success: false, error: 'Le destinataire doit être précisé.' };
+  }
+
+  const adminKey = typeof localStorage !== 'undefined' ? localStorage.getItem('hoot_admin_key') || '' : '';
+  const postBody = {
+    action: 'send_private_message',
+    recipientUsername: cleanRecipient,
+    text: cleanText,
+    username: payload.username,
+    avatarId: payload.avatarId,
+    title: payload.title,
+    activeFrame: payload.activeFrame,
+    steamId: payload.steamId,
+    userId: payload.userId,
+    recipientAvatarId: payload.recipientAvatarId,
+    recipientTitle: payload.recipientTitle,
+    recipientSteamId: payload.recipientSteamId,
+  };
+
+  try {
+    const res = await fetch('/api/chat.php?action=send_private_message', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
+      },
+      body: JSON.stringify(postBody),
+    });
+
+    const data = await res.json().catch(() => null);
+    if (res.ok && data?.success && data?.message) {
+      return {
+        success: true,
+        message: data.message,
+        conversationId: data.conversationId,
+      };
+    }
+
+    if (data?.warning || data?.error) {
+      return {
+        success: false,
+        error: data.error,
+        warning: data.warning,
+        flaggedWords: data.flaggedWords,
+      };
+    }
+  } catch {
+    // Fallback hors-ligne / localhost
+  }
+
+  // Fallback LocalStorage
+  const convId = getCanonicalConvKey(payload.username, cleanRecipient);
+  const now = Math.floor(Date.now() / 1000);
+  const msgId = `pmsg_loc_${now}_${Math.random().toString(36).slice(2, 7)}`;
+
+  const localMsg: PrivateMessage = {
+    id: msgId,
+    conversationId: convId,
+    senderUsername: payload.username,
+    senderAvatarId: payload.avatarId,
+    senderTitle: payload.title || 'Explorateur',
+    senderActiveFrame: payload.activeFrame,
+    senderSteamId: payload.steamId,
+    senderUserId: payload.userId,
+    recipientUsername: cleanRecipient,
+    recipientAvatarId: payload.recipientAvatarId || 'owl',
+    recipientTitle: payload.recipientTitle || 'Explorateur',
+    recipientSteamId: payload.recipientSteamId,
+    text: cleanText,
+    timestamp: now,
+    read: false,
+  };
+
+  const store = getLocalPrivateStore();
+  if (!store.messages[convId]) {
+    store.messages[convId] = [];
+  }
+  store.messages[convId].push(localMsg);
+  if (store.messages[convId].length > 100) {
+    store.messages[convId] = store.messages[convId].slice(-100);
+  }
+
+  const normSender = payload.username.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const normRecipient = cleanRecipient.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  if (!store.conversations[convId]) {
+    store.conversations[convId] = {
+      id: convId,
+      participants: {},
+      unread: { [normSender]: 0, [normRecipient]: 0 },
+      updatedAt: now,
+    };
+  }
+
+  store.conversations[convId].participants[normSender] = {
+    username: payload.username,
+    avatarId: payload.avatarId,
+    title: payload.title,
+    activeFrame: payload.activeFrame,
+    steamId: payload.steamId,
+    userId: payload.userId,
+  };
+
+  if (!store.conversations[convId].participants[normRecipient]) {
+    store.conversations[convId].participants[normRecipient] = {
+      username: cleanRecipient,
+      avatarId: payload.recipientAvatarId || 'owl',
+      title: payload.recipientTitle || 'Explorateur',
+      steamId: payload.recipientSteamId,
+    };
+  }
+
+  store.conversations[convId].lastMessage = {
+    id: msgId,
+    senderUsername: payload.username,
+    text: cleanText,
+    timestamp: now,
+    read: false,
+  };
+
+  store.conversations[convId].updatedAt = now;
+  store.conversations[convId].unread[normRecipient] = (store.conversations[convId].unread[normRecipient] || 0) + 1;
+
+  saveLocalPrivateStore(store);
+
+  return {
+    success: true,
+    message: localMsg,
+    conversationId: convId,
+  };
+}
+
+/**
+ * Marque tous les messages d'une conversation privée comme lus
+ */
+export async function markPrivateConversationRead(
+  conversationId: string,
+  auth: { username: string; steamId?: string; userId?: string }
+): Promise<{ success: boolean }> {
+  const cleanUsername = auth.username?.trim();
+  if (!cleanUsername || !conversationId) return { success: false };
+
+  try {
+    await fetch('/api/chat.php?action=mark_private_read', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'mark_private_read',
+        conversationId,
+        username: cleanUsername,
+      }),
+    });
+  } catch {
+    // Fallback local
+    const store = getLocalPrivateStore();
+    const normUser = cleanUsername.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (store.conversations[conversationId]) {
+      store.conversations[conversationId].unread[normUser] = 0;
+      if (store.messages[conversationId]) {
+        store.messages[conversationId] = store.messages[conversationId].map((m) => {
+          if (m.recipientUsername.toLowerCase().replace(/[^a-z0-9]/g, '') === normUser) {
+            return { ...m, read: true };
+          }
+          return m;
+        });
+      }
+      saveLocalPrivateStore(store);
+    }
+  }
+
+  return { success: true };
+}
+
+/**
+ * Supprime ou retire un message privé
+ */
+export async function deletePrivateMessage(
+  messageId: string,
+  conversationId: string,
+  auth: { username: string; steamId?: string; userId?: string },
+  hardDelete: boolean = false
+): Promise<{ success: boolean }> {
+  try {
+    const res = await fetch('/api/chat.php?action=delete_private_message', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'delete_private_message',
+        messageId,
+        conversationId,
+        username: auth.username,
+        hardDelete,
+      }),
+    });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data?.success) {
+      return { success: true };
+    }
+  } catch {
+    // Fallback local
+    const store = getLocalPrivateStore();
+    if (store.messages[conversationId]) {
+      if (hardDelete) {
+        store.messages[conversationId] = store.messages[conversationId].filter((m) => m.id !== messageId);
+      } else {
+        store.messages[conversationId] = store.messages[conversationId].map((m) =>
+          m.id === messageId ? { ...m, isDeleted: true, text: '[Message retiré]' } : m
+        );
+      }
+      saveLocalPrivateStore(store);
+      return { success: true };
+    }
+  }
+  return { success: false };
+}
+

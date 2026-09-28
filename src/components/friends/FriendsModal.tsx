@@ -71,7 +71,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
   } = useFriends();
 
   const { isSteamConnected, isAuthenticated } = useUserAccount();
-  const { openChat } = useChat();
+  const { openPrivateChat } = useChat();
 
   const [addInput, setAddInput] = useState(() => {
     if (typeof window !== 'undefined' && window.location.hash.toLowerCase().startsWith('#friend=')) {
@@ -533,13 +533,19 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                           onClick={() => {
                             soundFx.playClick();
                             onClose();
-                            openChat('global');
+                            openPrivateChat(friend.username, {
+                              avatarId: friend.avatarId,
+                              title: friend.title,
+                              steamId: friend.steamId,
+                              friendCode: friend.friendCode,
+                              isOnline: friend.isOnline,
+                            });
                           }}
                           className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-emerald-900/40 hover:bg-emerald-800/60 border border-emerald-500/30 text-emerald-300 hover:text-white font-bold text-xs transition flex items-center gap-1 cursor-pointer"
-                          title={`Discuter sur Le Perchoir avec ${friend.username}`}
+                          title={`Envoyer un message privé à ${friend.username}`}
                         >
                           <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="hidden sm:inline">Tchat</span>
+                          <span className="hidden sm:inline">Message</span>
                         </button>
 
                         {friend.friendCode !== 'HOOT-HIBOU' && (
