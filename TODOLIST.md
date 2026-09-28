@@ -143,12 +143,13 @@
   - [x] Refonte de l'interface de l'Album des Cartes (`CardsBinderView.tsx`) avec badges de stock (`1/2` ou `2/2`), barre de progression de la recharge 12h, minuteur interactif et boutons réactifs.
   - [x] Bouton d'enchaînement direct dans la modale d'ouverture (`BoosterOpeningModal.tsx`) indiquant clairement le nombre de boosters gratuits restants en réserve.
 
-### 9. 👥 Correction de l'affichage « Progression du jour de mes amis » `[⏳ À faire]`
-- **Constat :** L'encart de suivi de la progression quotidienne des amis (qui a réussi l'Indledle, le Pixel, le Screenle, le Linkle, etc. aujourd'hui) ne s'affiche pas correctement ou n'actualise pas les scores en temps réel.
-- **Actions à réaliser :**
-  - [ ] Auditer le composant et la récupération des statuts dans `FriendsModal.tsx` et `friendsService.ts`.
-  - [ ] Vérifier la structure des payloads envoyés et reçus pour la progression quotidienne des amis (`dailySummary` / `friendDailyStatus`).
-  - [ ] Corriger le mapping des icônes de jeux et l'état de complétion du jour pour chaque ami.
+### 9. 👥 Correction de l'affichage « Progression du jour de mes amis » `[✅ 100% Terminé]`
+- **Constat :** L'encart de suivi de la progression quotidienne des amis (qui a réussi l'Indledle, le Pixel, le Screenle, le Linkle, etc. aujourd'hui) ne s'affichait pas correctement ou n'actualisait pas les scores en temps réel.
+- **Actions réalisées :**
+  - [x] Correction de l'extraction multi-formats dans `extractCurrentDailyScores` (`friendsService.ts`) pour capturer correctement `guessIds` (Screenle, Indledle), `previousGuesses` (Linkle), `attemptsCount` (Pixel, Review, BlindTest), `correctPlacements` (Chrono) et `score` (Profille).
+  - [x] Ajout de l'écoute réactive dans `FriendsProvider.tsx` (`hoot_daily_game_completed`, `hoot_daily_states_updated`, `hoot_stats_updated`) pour propager immédiatement la complétion de jeu sur le serveur souverain.
+  - [x] Rafraîchissement automatique de la liste des compagnons (`refreshFriends`) dès l'ouverture de `FriendsModal.tsx`.
+  - [x] Filtrage temporel strict dans `FriendsModal.tsx` comparant `daily.date === todayStr` pour afficher « Non débuté aujourd’hui » avec les tirets neutres si l'ami n'a pas encore joué aujourd'hui, empêchant l'affichage erroné des scores de la veille.
 
 ### 10. 🎴 Synchronisation Pépites & Cartes : Création / Suppression automatique `[⏳ À faire]`
 - **Constat :** Chaque pépite du catalogue doit posséder sa carte à collectionner correspondante dans le système de cartes.

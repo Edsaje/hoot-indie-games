@@ -154,6 +154,22 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => clearInterval(timer);
   }, [syncSelf, myFriendCode]);
 
+  // Écoute de complétion de jeu quotidien pour mise à jour immédiate du statut public
+  useEffect(() => {
+    const handleGameCompleted = () => {
+      syncSelf();
+    };
+
+    window.addEventListener('hoot_daily_game_completed', handleGameCompleted);
+    window.addEventListener('hoot_daily_states_updated', handleGameCompleted);
+    window.addEventListener('hoot_stats_updated', handleGameCompleted);
+    return () => {
+      window.removeEventListener('hoot_daily_game_completed', handleGameCompleted);
+      window.removeEventListener('hoot_daily_states_updated', handleGameCompleted);
+      window.removeEventListener('hoot_stats_updated', handleGameCompleted);
+    };
+  }, [syncSelf]);
+
   // Écoute de réinitialisation lors d'une déconnexion
   useEffect(() => {
     const handleReset = () => {

@@ -1,4 +1,4 @@
-import type { FriendPlayer, FriendDailyScores, FriendPlayStatus } from '../types/friends';
+import type { FriendPlayer, FriendDailyScores, FriendPlayStatus, FriendDailyDiscipline } from '../types/friends';
 import type { UserProfile } from '../types/user';
 import { getTodayDateString, getChallengeStatusForDate } from '../utils/streakManager';
 import { ADMIN_STEAM_ID } from '../utils/usernameValidation';
@@ -38,9 +38,18 @@ export function extractCurrentDailyScores(dateStr = getTodayDateString()): Frien
   const statusSummary = getChallengeStatusForDate(dateStr);
   const disciplines = ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'] as const;
 
-  const result: any = {
+  const defaultDiscipline: FriendDailyDiscipline = { status: 'unplayed' };
+  const result: FriendDailyScores = {
     date: dateStr,
     totalWonToday: 0,
+    screenle: { ...defaultDiscipline },
+    indledle: { ...defaultDiscipline },
+    linkle: { ...defaultDiscipline },
+    profille: { ...defaultDiscipline },
+    chrono: { ...defaultDiscipline },
+    pixel: { ...defaultDiscipline },
+    review: { ...defaultDiscipline },
+    blindtest: { ...defaultDiscipline },
   };
 
   disciplines.forEach((disc) => {
@@ -54,6 +63,14 @@ export function extractCurrentDailyScores(dateStr = getTodayDateString()): Frien
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed.guesses)) {
             guessCount = parsed.guesses.length;
+          } else if (Array.isArray(parsed.guessIds)) {
+            guessCount = parsed.guessIds.length;
+          } else if (Array.isArray(parsed.previousGuesses)) {
+            guessCount = parsed.previousGuesses.length;
+          } else if (typeof parsed.attemptsCount === 'number') {
+            guessCount = parsed.attemptsCount;
+          } else if (typeof parsed.correctPlacements === 'number') {
+            guessCount = parsed.correctPlacements;
           } else if (typeof parsed.score === 'number') {
             guessCount = parsed.score;
           }
@@ -73,7 +90,7 @@ export function extractCurrentDailyScores(dateStr = getTodayDateString()): Frien
     };
   });
 
-  return result as FriendDailyScores;
+  return result;
 }
 
 /**
@@ -158,8 +175,9 @@ export async function registerSelfOnServer(
 
     const data = await res.json();
     return data;
-  } catch (err: any) {
-    return { success: false, error: err.message || 'Réseau indisponible.' };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Réseau indisponible.';
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -232,8 +250,9 @@ export async function lookupFriend(query: string): Promise<{
     const res = await fetch(`${API_BASE}?action=lookup&query=${encodeURIComponent(clean)}`);
     const data = await res.json();
     return data;
-  } catch (err: any) {
-    return { success: false, error: err.message || 'Serveur momentanément indisponible.' };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Serveur momentanément indisponible.';
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -261,11 +280,12 @@ export async function syncSteamFriendsList(mySteamId: string): Promise<{
       matchedFriends: [],
       error: data.error || 'Aucun ami Steam trouvé pour le moment.',
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Erreur réseau lors de la synchronisation Steam.';
     return {
       success: false,
       matchedFriends: [],
-      error: err.message || 'Erreur réseau lors de la synchronisation Steam.',
+      error: errorMsg,
     };
   }
 }

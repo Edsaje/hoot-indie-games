@@ -30,6 +30,7 @@ import { INDIE_AVATARS } from '../../data/avatars';
 import { SteamIcon } from '../common/SteamIcon';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { soundFx } from '../../utils/audio';
+import { getTodayDateString } from '../../utils/streakManager';
 
 interface FriendsModalProps {
   isOpen: boolean;
@@ -98,15 +99,18 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
     }
   }, [isOpen, myFriendCode]);
 
+  const todayStr = getTodayDateString();
+
   useEffect(() => {
     if (isOpen) {
+      refreshFriends();
       const prevOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
         document.body.style.overflow = prevOverflow;
       };
     }
-  }, [isOpen]);
+  }, [isOpen, refreshFriends]);
 
   if (!isOpen || typeof document === 'undefined') return null;
 
@@ -562,18 +566,21 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                           Progression du jour :
                         </span>
                         <span className="text-xs font-mono font-bold text-emerald-400">
-                          {daily ? `${daily.totalWonToday}/8 réussis` : 'Non synchronisé'}
+                          {daily && daily.date === todayStr
+                            ? `${daily.totalWonToday}/8 réussis`
+                            : 'Non débuté aujourd’hui'}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
                         {DISCIPLINES.map((d) => {
-                          const discScore = daily ? (daily as any)[d.id] : null;
+                          const isToday = daily && daily.date === todayStr;
+                          const discScore = isToday && daily ? daily[d.id] : null;
                           const status = discScore ? discScore.status : 'unplayed';
                           const guesses = discScore ? discScore.guessCount : null;
 
                           let bgClass = 'bg-[#06140e] border-[#163627] text-slate-500';
-                          let statusLabel = 'Non tenté';
+                          let statusLabel = isToday ? 'Non tenté' : 'Pas encore joué aujourd’hui';
 
                           if (status === 'won') {
                             bgClass = 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300 shadow-sm';
