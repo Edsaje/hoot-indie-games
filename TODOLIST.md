@@ -151,24 +151,27 @@
   - [x] Rafraîchissement automatique de la liste des compagnons (`refreshFriends`) dès l'ouverture de `FriendsModal.tsx`.
   - [x] Filtrage temporel strict dans `FriendsModal.tsx` comparant `daily.date === todayStr` pour afficher « Non débuté aujourd’hui » avec les tirets neutres si l'ami n'a pas encore joué aujourd'hui, empêchant l'affichage erroné des scores de la veille.
 
-### 10. 🎴 Synchronisation Pépites & Cartes : Création / Suppression automatique `[⏳ À faire]`
+### 10. 🎴 Synchronisation Pépites & Cartes : Création / Suppression automatique `[✅ 100% Terminé]`
 - **Constat :** Chaque pépite du catalogue doit posséder sa carte à collectionner correspondante dans le système de cartes.
-- **Actions à réaliser :**
-  - [ ] Écrire un test / script d'audit vérifiant la parité 1:1 entre la base des pépites (`src/data/steamGems.ts` / catalogue) et les cartes définies (`src/data/cardsData.ts`).
-  - [ ] Automatiser ou sécuriser l'ajout d'une nouvelle carte dès qu'un jeu est ajouté en pépite certifiée via l'admin.
-  - [ ] S'assurer de la gestion propre lors de la suppression d'une pépite (gestion des cartes déjà possédées par les joueurs pour éviter les références orphelines).
+- **Actions réalisées :**
+  - [x] Script d'audit automatisé `scripts/auditGemsCardsSync.ts` et commande dédiée `npm run audit-cards` validant la parité 1:1 exacte entre les pépites certifiées et les cartes du Sanctuaire (250/250).
+  - [x] Intégration du contrôle de parité 1:1 directement dans `scripts/verifySteamDatabase.ts` (`npm run audit-db`).
+  - [x] Synchronisation réactive globale du pool dynamique de cartes dans `SteamCatalogProvider.tsx` (`setDynamicCardsPool(buildCardsFromGames(gems))`) dès le chargement initial et à chaque événement `hoot_steam_catalog_updated`.
+  - [x] Ajout des fonctions de résolution et repli sûres `getCardById(cardId)` et `createFallbackCard(cardId)` dans `cardsData.ts` pour garantir la rétrocompatibilité des inventaires de joueurs même si une pépite est exclue ou masquée par l'administrateur.
+  - [x] Gestion gracieuse des cartes orphelines dans `CardsBinderView.tsx` (conservées et affichées dans l'album si possédées), `CardView.tsx` (badge `ARCHIVE`), `CardDetailModal.tsx` et `disenchantCard` (recyclage sécurisé de doublons sans erreur).
+  - [x] Remplacement du total de cartes en dur (« sur 185 ») par le décompte dynamique en temps réel (`getDynamicCardsPool().length`).
 
 ---
 
 ## 🟡 Phase 3 : Outils de Super-Admin & Internationalisation (Priorité P2)
 
-### 9. 👑 Privilèges & Commandes Super-Admin pour Hibouxe (Distribution de récompenses) `[⏳ À faire]`
+### 11. 👑 Privilèges & Commandes Super-Admin pour Hibouxe (Distribution de récompenses) `[⏳ À faire]`
 - **Constat :** Le super-administrateur Hibouxe a besoin d'outils d'animation communautaire et de support pour récompenser directement des joueurs (concours, dédommagements, fidélité).
 - **Actions à réaliser :**
   - [ ] Créer une action backend sécurisée (sous vérification `ADMIN_STEAM_ID`) permettant de créditer des plumes (`giveFeathers`) ou d'ajouter une carte spécifique de la collection (`giveCard`) sur la sauvegarde d'un joueur ciblé par son pseudo / steamId.
   - [ ] Intégrer l'interface de distribution dans l'onglet modération des utilisateurs (`UsernamesTab.tsx`) du panneau d'administration avec saisie du montant de plumes, sélection de carte et confirmation.
 
-### 10. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[⏳ À faire]`
+### 12. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[⏳ À faire]`
 - **Objectif :** Afficher et convertir automatiquement les prix des jeux Steam et Itch.io dans la devise et le format correspondant à la langue ou au pays sélectionné par le visiteur sur le site (exemple : prix en Yen `¥` pour le Japon / langue `ja`, Dollar `$` pour `en`, Real `R$` pour `pt-BR`, Euro `€` pour `fr`, `de`, `es`).
 - **Actions à réaliser :**
   - [ ] **Backend Steam API (`get_steam_info`)** : Passer le code pays Steam `cc` (`cc=jp`, `cc=us`, `cc=br`, `cc=fr`, etc.) et la langue `l` (`japanese`, `english`, `brazilian`, `french`, etc.) lors des requêtes à l'API Steam Store `store.steampowered.com/api/appdetails` et sauvegarder les prix dans `pricingText`.
@@ -179,7 +182,7 @@
 
 ## 🔵 Phase 4 : Systèmes Avancés & Refactorisation Lourde (Priorité P3)
 
-### 11. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[⏳ À faire]`
+### 13. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[⏳ À faire]`
 - **Constat :** Le tchat actuel est exclusivement un salon public global. Les joueurs ne peuvent pas s'envoyer de messages directs privés.
 - **Actions à réaliser :**
   - [ ] **Backend PHP (`chat.php` / nouveau point d'entrée)** : Créer les endpoints d'envoi et de réception de messages privés sécurisés avec isolation stricte par identifiant d'expéditeur et de destinataire (`private_conversations`).

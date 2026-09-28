@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import type { CardItem, CardOwnership } from '../../types/cards';
 import { RARITY_CONFIG, DISENCHANT_VALUES } from '../../types/cards';
+import { getDynamicCardsPool } from '../../data/cardsData';
 import { disenchantCard } from '../../services/cardCollectionService';
 import { soundFx } from '../../utils/audio';
 import { useTranslation } from 'react-i18next';
@@ -460,7 +461,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                   {/* Top: Card Number & Rarity */}
                   <div className="relative z-20 flex items-center justify-between text-xs font-mono">
                     <span className="font-bold text-slate-300">
-                      #{String(card.cardNumber).padStart(3, '0')}
+                      {card.cardNumber > 0 ? `#${String(card.cardNumber).padStart(3, '0')}` : 'ARCHIVE'}
                     </span>
                     <div className="flex items-center gap-1">
                       {holoCount > 0 && (
@@ -734,7 +735,9 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                       {rarityName}
                     </span>
                     <span className="text-[11px] font-mono text-slate-400">
-                      Carte #{card.cardNumber} sur 185
+                      {card.cardNumber > 0
+                        ? `Carte #${card.cardNumber} sur ${getDynamicCardsPool().length || 250}`
+                        : "Carte d’Archive du Sanctuaire"}
                     </span>
                   </div>
 
@@ -900,7 +903,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           >
             <div className="flex items-center gap-2">
               <span className="font-mono font-bold text-amber-400 text-sm">
-                #{String(card.cardNumber).padStart(3, '0')}
+                {card.cardNumber > 0 ? `#${String(card.cardNumber).padStart(3, '0')}` : 'ARCHIVE'}
               </span>
               <h2 className="text-white font-black text-sm sm:text-base line-clamp-1">
                 {card.title}
@@ -961,7 +964,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
               {/* Top: Card Number & Rarity */}
               <div className="relative z-20 flex items-center justify-between text-xs font-mono">
                 <span className="font-bold text-slate-300">
-                  #{String(card.cardNumber).padStart(3, '0')}
+                  {card.cardNumber > 0 ? `#${String(card.cardNumber).padStart(3, '0')}` : 'ARCHIVE'}
                 </span>
                 <div className="flex items-center gap-1">
                   {holoCount > 0 && (

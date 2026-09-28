@@ -8,7 +8,7 @@ import {
   RefreshCw,
   ShoppingBag,
 } from 'lucide-react';
-import { ALL_CARDS, buildCardsFromGames, setDynamicCardsPool } from '../../data/cardsData';
+import { ALL_CARDS, buildCardsFromGames, setDynamicCardsPool, getCardById, createFallbackCard } from '../../data/cardsData';
 import type { CardItem, CardRarity, BoosterOpenResult, UserCardCollection } from '../../types/cards';
 import { BOOSTER_COST } from '../../types/cards';
 import {
@@ -45,7 +45,9 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
   const isSuperAdmin = Boolean(isAdmin || isCreator || isLocalAdminProfile());
   const { curatedGems } = useSteamCatalog();
 
-  const allCards = useMemo(() => {
+  const [collection, setCollection] = useState<UserCardCollection>(() => getCardCollection());
+
+  const baseCards = useMemo(() => {
     if (curatedGems && curatedGems.length > 0) {
       return buildCardsFromGames(curatedGems);
     }
@@ -53,10 +55,22 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
   }, [curatedGems]);
 
   useEffect(() => {
-    setDynamicCardsPool(allCards);
-  }, [allCards]);
+    setDynamicCardsPool(baseCards);
+  }, [baseCards]);
 
-  const [collection, setCollection] = useState<UserCardCollection>(() => getCardCollection());
+  const allCards = useMemo(() => {
+    const activeIds = new Set(baseCards.map((c) => c.id));
+    const extraOrphanCards: CardItem[] = [];
+    if (collection) {
+      for (const [cardId, entry] of Object.entries(collection)) {
+        if (!activeIds.has(cardId) && entry && ((entry.count || 0) > 0 || (entry.countHolo || 0) > 0)) {
+          const resolved = getCardById(cardId) || createFallbackCard(cardId);
+          extraOrphanCards.push(resolved);
+        }
+      }
+    }
+    return extraOrphanCards.length > 0 ? [...baseCards, ...extraOrphanCards] : baseCards;
+  }, [baseCards, collection]);
   const boostersStock = useFreeBoostersStock(isSuperAdmin);
 
   // Modals state

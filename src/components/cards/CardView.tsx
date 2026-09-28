@@ -126,7 +126,7 @@ export const CardView: React.FC<CardViewProps> = ({
       {/* En-tête : Numéro, Rareté & Badge d'exemplaires */}
       <div className="relative z-20 flex items-center justify-between gap-1 text-[10px]">
         <span className="font-mono font-bold text-slate-300">
-          #{String(card.cardNumber).padStart(3, '0')}
+          {card.cardNumber > 0 ? `#${String(card.cardNumber).padStart(3, '0')}` : 'ARCHIVE'}
         </span>
 
         <div className="flex items-center gap-1">

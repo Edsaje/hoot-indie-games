@@ -3,6 +3,7 @@ import { SteamCatalogContext } from './SteamCatalogContext';
 import { steamCatalog } from '../services/steamCatalog';
 import type { SteamCatalogGame } from '../services/steamCatalog';
 import type { Game } from '../types/game';
+import { buildCardsFromGames, setDynamicCardsPool } from '../data/cardsData';
 
 interface SteamCatalogProviderProps {
   children: React.ReactNode;
@@ -11,7 +12,11 @@ interface SteamCatalogProviderProps {
 export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ children }) => {
   const [catalog, setCatalog] = useState<SteamCatalogGame[]>([]);
   const [allGames, setAllGames] = useState<Game[]>(() => steamCatalog.getAllPlayableGames());
-  const [curatedGems, setCuratedGems] = useState<Game[]>(() => steamCatalog.getCuratedGems());
+  const [curatedGems, setCuratedGems] = useState<Game[]>(() => {
+    const initialGems = steamCatalog.getCuratedGems();
+    setDynamicCardsPool(buildCardsFromGames(initialGems));
+    return initialGems;
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [version, setVersion] = useState(0);
 
@@ -21,15 +26,21 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
     steamCatalog.loadCatalog().then((items) => {
       if (isMounted) {
         setCatalog(items);
-        setAllGames(steamCatalog.getAllPlayableGames());
-        setCuratedGems(steamCatalog.getCuratedGems());
+        const playable = steamCatalog.getAllPlayableGames();
+        const gems = steamCatalog.getCuratedGems();
+        setAllGames(playable);
+        setCuratedGems(gems);
+        setDynamicCardsPool(buildCardsFromGames(gems));
         setIsLoading(false);
       }
     });
 
     const handleUpdate = () => {
-      setAllGames(steamCatalog.getAllPlayableGames());
-      setCuratedGems(steamCatalog.getCuratedGems());
+      const playable = steamCatalog.getAllPlayableGames();
+      const gems = steamCatalog.getCuratedGems();
+      setAllGames(playable);
+      setCuratedGems(gems);
+      setDynamicCardsPool(buildCardsFromGames(gems));
       setVersion((v) => v + 1);
     };
 

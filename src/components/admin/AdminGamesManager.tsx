@@ -124,7 +124,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       const data = await fetchAdminGameOverrides(currentSteamId);
       setOverrides(data);
       steamCatalogService.setServerOverrides(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erreur chargement surcharges catalogue:', err);
       if (onNotice) onNotice('error', 'Impossible de récupérer les surcharges serveur du catalogue.');
     } finally {
@@ -249,7 +249,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
 
       const isModified = !!modifiedMap[catGame.id];
       const isHidden = hiddenSet.has(catGame.id);
-      const isGem = (promotedGemSet.has(catGame.id) || (catGame as any).isGem === true) && !excludedGemSet.has(catGame.id);
+      const isGem = (promotedGemSet.has(catGame.id) || Boolean((catGame as { isGem?: boolean }).isGem)) && !excludedGemSet.has(catGame.id);
       const mod = modifiedMap[catGame.id];
 
       const merged: EnrichedAdminGame = {
@@ -287,7 +287,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     // 3. Jeux personnalisés ajoutés par l'admin
     for (const customGame of customList) {
       const isHidden = hiddenSet.has(customGame.id);
-      const isGem = promotedGemSet.has(customGame.id) || (customGame as any).isGem === true;
+      const isGem = promotedGemSet.has(customGame.id) || Boolean((customGame as { isGem?: boolean }).isGem);
       map.set(customGame.id, {
         ...customGame,
         genre: Array.isArray(customGame.genre) ? customGame.genre : [],
@@ -494,19 +494,40 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     soundFx.playClick();
     setIsFetchingSteam(true);
     try {
-      let dataFR: any = null;
-      let dataEN: any = null;
+      interface SteamAppDetails {
+        name?: string;
+        developers?: string[];
+        publishers?: string[];
+        release_date?: { date?: string };
+        header_image?: string;
+        short_description?: string;
+        detailed_description?: string;
+        genres?: Array<{ description: string }>;
+        categories?: Array<{ description: string }>;
+        screenshots?: Array<{ path_full: string }>;
+        is_free?: boolean;
+      }
 
-      let fetchedReviews: any = null;
+      interface SteamReviewsData {
+        totalReviews: number;
+        totalPositive: number;
+        positivePercent: number;
+        reviewScoreDesc?: string;
+      }
+
+      let dataFR: SteamAppDetails | null = null;
+      let dataEN: SteamAppDetails | null = null;
+
+      let fetchedReviews: SteamReviewsData | null = null;
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${appId}`);
         if (lookupRes.ok) {
           const lookupJson = await lookupRes.json();
           if (lookupJson.status === 'success' && lookupJson.dataFR) {
-            dataFR = lookupJson.dataFR;
-            dataEN = lookupJson.dataEN || lookupJson.dataFR;
+            dataFR = lookupJson.dataFR as SteamAppDetails;
+            dataEN = (lookupJson.dataEN || lookupJson.dataFR) as SteamAppDetails;
             if (lookupJson.reviews) {
-              fetchedReviews = lookupJson.reviews;
+              fetchedReviews = lookupJson.reviews as SteamReviewsData;
             }
           }
         }
@@ -520,8 +541,8 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         const corsUrlEN = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`)}`;
         const [frRes, enRes] = await Promise.all([fetch(corsUrlFR), fetch(corsUrlEN)]);
         const [frJson, enJson] = await Promise.all([frRes.json(), enRes.json()]);
-        dataFR = frJson?.[appId]?.data;
-        dataEN = enJson?.[appId]?.data || dataFR;
+        dataFR = frJson?.[appId]?.data as SteamAppDetails;
+        dataEN = (enJson?.[appId]?.data || dataFR) as SteamAppDetails;
       }
 
       if (!dataFR || !dataFR.name) {
@@ -573,6 +594,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       }
 
       if (fetchedReviews) {
+        const descText = fetchedReviews.reviewScoreDesc || 'Très positives';
         registerSteamStoreData({
           appId: parseInt(appId, 10),
           isFree: !!dataFR.is_free,
@@ -584,17 +606,25 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
           totalReviews: fetchedReviews.totalReviews,
           totalPositive: fetchedReviews.totalPositive,
           positivePercent: fetchedReviews.positivePercent,
-          reviewScoreDesc: fetchedReviews.reviewScoreDesc,
+          reviewScoreDesc: {
+            fr: descText,
+            en: descText,
+          },
         });
-        setSteamReviewsInfo(fetchedReviews);
+        setSteamReviewsInfo({
+          totalReviews: fetchedReviews.totalReviews,
+          positivePercent: fetchedReviews.positivePercent,
+          desc: fetchedReviews.reviewScoreDesc,
+        });
       }
       setFormCardRarity('auto');
 
       soundFx.playVictory();
       if (onNotice) onNotice('success', `✨ Fiche Steam auto-remplie avec succès pour « ${title} » !`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       soundFx.playError();
-      if (onNotice) onNotice('error', err.message || "Erreur lors de la récupération Steam.");
+      const errMsg = err instanceof Error ? err.message : "Erreur lors de la récupération Steam.";
+      if (onNotice) onNotice('error', errMsg);
     } finally {
       setIsFetchingSteam(false);
     }
@@ -835,7 +865,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
               key={pill.id}
               onClick={() => {
                 soundFx.playClick();
-                setStatusFilter(pill.id as any);
+                setStatusFilter(pill.id as 'all' | 'gems' | 'catalog_only' | 'steam' | 'base' | 'custom' | 'modified' | 'hidden');
               }}
               className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap cursor-pointer ${
                 statusFilter === pill.id
@@ -1479,7 +1509,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       <button
                         key={opt.key}
                         type="button"
-                        onClick={() => setFormCardRarity(opt.key as any)}
+                        onClick={() => setFormCardRarity(opt.key as CardRarity | 'auto')}
                         className={`p-2 rounded-lg border text-left transition cursor-pointer flex flex-col justify-between ${
                           formCardRarity === opt.key
                             ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm shadow-amber-500/10'

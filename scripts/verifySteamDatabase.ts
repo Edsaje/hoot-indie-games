@@ -34,9 +34,19 @@ async function auditDatabase() {
     console.log('----------------------------------------------------');
   }
 
+  // Vérification de la parité 1:1 avec les cartes du Sanctuaire
+  const { buildCardsFromGames } = await import('../src/data/cardsData');
+  const cards = buildCardsFromGames(INDIE_GAMES);
+  if (cards.length !== INDIE_GAMES.length) {
+    console.error(`❌ Échec parité cartes : ${INDIE_GAMES.length} jeux vs ${cards.length} cartes.`);
+    errors++;
+  } else {
+    console.log(`🎴 Parité 1:1 Pépites & Cartes vérifiée : ${cards.length}/${INDIE_GAMES.length} cartes conformes.`);
+  }
+
   if (errors === 0) {
     console.log(`✅ AUDIT RÉUSSI : 100% des ${INDIE_GAMES.length} jeux sont vérifiés, canoniques et sans incohérence !`);
-    console.log(`✨ Règle 0 Hallucination respectée.`);
+    console.log(`✨ Règle 0 Hallucination & Synchronisation Cartes respectées.`);
   } else {
     console.error(`❌ AUDIT ÉCHOUÉ : ${errors} erreurs détectées.`);
     process.exit(1);

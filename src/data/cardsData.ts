@@ -424,11 +424,66 @@ let dynamicCardsPool: CardItem[] = ALL_CARDS;
 export function setDynamicCardsPool(pool: CardItem[]): void {
   if (Array.isArray(pool) && pool.length > 0) {
     dynamicCardsPool = pool;
+    // Maintenir le registre global CARDS_BY_ID à jour
+    for (const card of pool) {
+      if (card && card.id) {
+        CARDS_BY_ID.set(card.id, card);
+      }
+    }
   }
 }
 
 export function getDynamicCardsPool(): CardItem[] {
   return dynamicCardsPool;
+}
+
+/**
+ * Recherche une carte par son ID dans le pool dynamique en cours ou dans le registre global
+ */
+export function getCardById(cardId: string): CardItem | undefined {
+  if (!cardId) return undefined;
+  const inDynamic = dynamicCardsPool.find((c) => c && c.id === cardId);
+  if (inDynamic) return inDynamic;
+  if (CARDS_BY_ID.has(cardId)) {
+    return CARDS_BY_ID.get(cardId);
+  }
+  return undefined;
+}
+
+/**
+ * Crée une carte de repli gracieuse pour une pépite retirée ou orpheline
+ */
+export function createFallbackCard(cardId: string, fallbackTitle?: string, fallbackRarity?: CardRarity): CardItem {
+  const cleanTitle =
+    fallbackTitle ||
+    cardId
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  return {
+    id: cardId,
+    gameId: cardId,
+    title: cleanTitle,
+    cardNumber: 0,
+    rarity: fallbackRarity || 'common',
+    releaseYear: 2024,
+    developer: 'Studio Indé',
+    genres: ['Indépendant'],
+    imageUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/header.jpg',
+    tagline: {
+      fr: 'Carte d’archive du Sanctuaire',
+      en: 'Sanctuary Archive Card',
+    },
+  };
+}
+
+/**
+ * Récupère une carte existante ou génère une carte de repli sûre
+ */
+export function getOrCreateCard(cardId: string, fallbackTitle?: string, fallbackRarity?: CardRarity): CardItem {
+  const existing = getCardById(cardId);
+  if (existing) return existing;
+  return createFallbackCard(cardId, fallbackTitle, fallbackRarity);
 }
 
 /**

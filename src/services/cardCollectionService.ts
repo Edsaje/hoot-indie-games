@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import type { UserCardCollection, BoosterOpenResult, CardItem } from '../types/cards';
 import { BOOSTER_COST, DISENCHANT_VALUES } from '../types/cards';
-import { CARDS_BY_ID, generateBoosterCards, getDynamicCardsPool } from '../data/cardsData';
+import { generateBoosterCards, getDynamicCardsPool, getCardById, createFallbackCard } from '../data/cardsData';
 import { addBonusFeathers, spendFeathers, isLocalAdminProfile } from '../utils/featherEconomy';
 import { getTodayDateString } from '../utils/streakManager';
 
@@ -355,12 +355,12 @@ export function disenchantCard(
   cardId: string,
   isHolo: boolean
 ): { success: boolean; feathersGained: number; error?: string } {
-  const card = CARDS_BY_ID.get(cardId);
-  if (!card) return { success: false, feathersGained: 0, error: 'Carte introuvable.' };
-
   const collection = getCardCollection();
   const entry = collection[cardId];
   if (!entry) return { success: false, feathersGained: 0, error: 'Vous ne possédez pas cette carte.' };
+
+  const card = getCardById(cardId) || createFallbackCard(cardId);
+  if (!card) return { success: false, feathersGained: 0, error: 'Carte introuvable.' };
 
   const totalCopies = (entry.count || 0) + (entry.countHolo || 0);
   if (totalCopies <= 1) {
@@ -379,7 +379,7 @@ export function disenchantCard(
     return { success: false, feathersGained: 0, error: 'Vous ne possédez aucun exemplaire standard de cette carte.' };
   }
 
-  const values = DISENCHANT_VALUES[card.rarity];
+  const values = DISENCHANT_VALUES[card.rarity] || DISENCHANT_VALUES.common;
   const feathersGained = isHolo ? values.holo : values.normal;
 
   const nextEntry = {
@@ -438,8 +438,12 @@ export function getCollectionStats(
 
   const safeCollection = collection && typeof collection === 'object' && !Array.isArray(collection) ? collection : {};
 
+  // Traiter les cartes du pool
+  const processedCardIds = new Set<string>();
+
   for (const card of cardsPool) {
     if (!card || !card.id) continue;
+    processedCardIds.add(card.id);
     const rarity = (card.rarity && byRarity[card.rarity]) ? card.rarity : 'common';
     byRarity[rarity].total += 1;
 
@@ -461,7 +465,35 @@ export function getCollectionStats(
     }
   }
 
-  const completionPercent = cardsPool.length > 0 ? Math.min(100, Math.round((totalUnique / cardsPool.length) * 100)) : 0;
+  // Traiter également les éventuelles cartes orphelines présentes dans la collection du joueur
+  for (const [cardId, entry] of Object.entries(safeCollection)) {
+    if (processedCardIds.has(cardId) || !entry || typeof entry !== 'object') continue;
+    const normalCount = Number(entry.count) || 0;
+    const holoCount = Number(entry.countHolo) || 0;
+    const totalForCard = normalCount + holoCount;
+
+    if (totalForCard > 0) {
+      const orphanCard = getCardById(cardId) || createFallbackCard(cardId);
+      const rarity = (orphanCard.rarity && byRarity[orphanCard.rarity]) ? orphanCard.rarity : 'common';
+      byRarity[rarity].total += 1;
+      byRarity[rarity].owned += 1;
+      totalUnique += 1;
+      totalCards += totalForCard;
+      totalHolo += holoCount;
+      if (totalForCard > 1) {
+        totalDuplicates += totalForCard - 1;
+      }
+    }
+  }
+
+  const officialPool = cardsPool.filter((c) => c && c.cardNumber > 0);
+  const totalSlots = officialPool.length > 0 ? officialPool.length : cardsPool.length;
+  const officialOwned = officialPool.filter((c) => {
+    const e = safeCollection[c.id];
+    return e && ((Number(e.count) || 0) > 0 || (Number(e.countHolo) || 0) > 0);
+  }).length;
+
+  const completionPercent = totalSlots > 0 ? Math.min(100, Math.round((officialOwned / totalSlots) * 100)) : 0;
 
   return {
     totalUnique,
