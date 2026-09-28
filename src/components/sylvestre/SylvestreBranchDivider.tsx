@@ -37,13 +37,9 @@ export const SylvestreBranchDivider: React.FC<SylvestreBranchDividerProps> = ({
   withLeaves = true,
   glow = 'emerald',
 }) => {
-  let unlockAchievement: ((id: string) => void) | undefined;
-  try {
-    const ach = useAchievements();
-    unlockAchievement = ach.unlockAchievement;
-  } catch {
-    // Graceful fallback outside provider
-  }
+  const ach = useAchievements();
+  let unlockAchievement = ach?.unlockAchievement;
+  
 
   const [activeNotePopup, setActiveNotePopup] = useState<{ id: string; note: string } | null>(null);
   const [easterEggUnlocked, setEasterEggUnlocked] = useState<boolean>(false);

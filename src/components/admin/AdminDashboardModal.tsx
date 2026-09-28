@@ -94,11 +94,8 @@ type AdminTab = 'overview' | 'catalog' | 'games' | 'usernames' | 'suggestions' |
 export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen, onClose, initialTab }) => {
   const { profile, isAuthenticated, isAdmin } = useUserAccount();
 
-  if (!isOpen || !isAuthenticated || !isAdmin) {
-    return null;
-  }
 
-  const currentSteamId = profile.steam?.steamId || ADMIN_STEAM_ID;
+  const currentSteamId = profile?.steam?.steamId || ADMIN_STEAM_ID;
 
   const [activeTab, setActiveTab] = useState<AdminTab>(initialTab || 'overview');
   const [data, setData] = useState<AdminOverviewPayload | null>(null);
@@ -816,6 +813,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       ? Math.round((summary.games_won / summary.games_played) * 100)
       : 0;
 
+  if (!isOpen || !isAuthenticated || !isAdmin) return null;
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 overflow-y-auto">

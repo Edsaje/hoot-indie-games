@@ -83,7 +83,6 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
     };
   }, []);
 
-  if (!isOpen || !result) return null;
 
   const handleFlipCard = (index: number) => {
     if (revealedIndices.includes(index) || !result?.cards?.[index]) return;
@@ -131,6 +130,7 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
       }
     }
   }, [allRevealed]);
+  if (!isOpen || !result) return null;
 
   return (
     <AnimatePresence>

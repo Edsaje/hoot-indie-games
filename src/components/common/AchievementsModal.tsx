@@ -159,8 +159,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
   const challengeStatus = useMemo(() => getChallengeStatusForDate(todayStr), [todayStr]);
   const claimedRecord = useMemo(() => getClaimedDailyFeathers(todayStr), [todayStr, feathersCount]);
 
-  if (!isOpen) return null;
-
+  
   // Calculs Succès Permanents
   const filteredAchievements = allAchievements.filter((ach) => {
     if (filter === 'all') return true;
@@ -172,6 +171,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
     const validSet = new Set(allAchievements.map((a) => a.id));
     return Array.from(new Set(unlockedIds.filter((id) => validSet.has(id))));
   }, [unlockedIds, allAchievements]);
+  if (!isOpen) return null;
 
   const totalPossibleFeathers = allAchievements.reduce((acc, a) => acc + a.feathersReward, 0);
   const unlockedAchievementFeathers = validUnlockedIds.reduce((sum, id) => {
