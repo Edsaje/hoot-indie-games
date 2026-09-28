@@ -195,18 +195,66 @@
   - [x] **Interconnexion Sociale (`FriendsModal.tsx` & `ChatUserModerationModal.tsx`)** : Bouton « Message » sur chaque carte de compagnon ouvrant instantanément le tchat privé avec celui-ci, et bouton d'envoi de message privé depuis le profil ou au clic sur le pseudonyme/avatar d'un joueur dans le salon public.
   - [x] **Suite de Tests Validée (`scripts/testPrivateMessaging.ts`)** : 6/6 tests réussis (clé canonique symétrique, insensibilité casse/accents, arithmétique des badges de notifications).
 
-### 14. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+### 14. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
+- **Priorité :** P1 (Haute priorité — Confiance, social & socle anti-spam)
+- **Difficulté :** Moyenne-Élevée (Gestion atomique des demandes côté serveur PHP et réactivité UI)
+- **Constat :** Actuellement, lorsqu'un joueur saisit le code ami d'un autre utilisateur, l'ajout est unilatéral et immédiat sur son client local sans consentement ni notification pour le joueur ciblé. Pour instaurer un véritable réseau social de confiance et bloquer les messages non sollicités, l'amitié doit devenir bilatérale et mutuellement consentie.
+- **Actions à réaliser :**
+  - [ ] **Protocole Backend Souverain (`public/api/friends.php`) :**
+    - Stockage atomique sous verrouillage `LOCK_EX` des requêtes d'amitié avec statut (`pending`, `accepted`, `declined`, `canceled`).
+    - Endpoint `send_friend_request` : Vérification de l'existence du destinataire, interdiction d'auto-invitation, interdiction de requêtes doublon ou si les deux joueurs sont déjà amis mutuels.
+    - Endpoint `get_friend_requests` : Récupération des demandes reçues en attente et des demandes envoyées pour un code ami donné.
+    - Endpoint `respond_friend_request` : Actions `accept` (lie les deux joueurs de façon réciproque dans leur liste mutuelle) et `decline` (retrait propre de la requête).
+    - Endpoint `remove_friend` : Retrait bilatéral synchronisé de la relation d'amitié.
+    - Préservation du statut du Fondateur Hibouxe (`HOOT-HIBOU`) comme guide d'accueil universel du Sanctuaire.
+  - [ ] **Types & Services Frontend (`src/types/friends.ts`, `src/services/friendsService.ts`) :**
+    - Définition des structures TypeScript strictes : `FriendRequest`, `FriendRequestStatus` (`pending` | `accepted` | `declined`).
+    - Fonctions clientes typées : `sendFriendRequestApi`, `fetchFriendRequestsApi`, `respondFriendRequestApi`.
+  - [ ] **Gestion d'État Réactive (`src/context/FriendsContext.ts`, `src/context/FriendsProvider.tsx`) :**
+    - Stockage réactif des requêtes en attente reçues (`pendingRequests`) et envoyées (`sentRequests`).
+    - Badges dynamiques de notifications signalant les nouvelles invitations reçues.
+    - Rafraîchissement automatique et écoute des mises à jour.
+  - [ ] **Interface Graphique Ergonomique (`src/components/friends/FriendsModal.tsx`) :**
+    - Système d'onglets : « Mes Compagnons (N) » et « Demandes reçues (N) » avec pastille visuelle alertant des nouvelles invitations.
+    - Carte d'invitation avec avatar, pseudo, série de flamme, date d'envoi et boutons en 1 clic : « Accepter » (vert) et « Refuser » (gris/rose discret).
+    - Retour visuel immédiat lors de l'envoi d'une demande avec message clair : « Demande d'amitié envoyée à [Pseudo] ! En attente de son acceptation. »
+
+---
+
+### 15. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
+- **Priorité :** P1 (Haute priorité — Sécurité primordiale & protection des utilisateurs)
+- **Difficulté :** Moyenne (Vérification croisée backend + guidage ergonomique frontend)
+- **Constat :** Pour éviter tout risque de spam automatisé, de faux messages de phishing (faux comptes se faisant passer pour des tiers ou envoyant des arnaques en message direct), la messagerie directe doit être strictement réservée aux compagnons mutuellement confirmés, à l'exception du Super-Admin / Fondateur Hibouxe pour le support officiel.
+- **Actions à réaliser :**
+  - [ ] **Contrôle d'Accès Backend Infranchissable (`public/api/chat.php`) :**
+    - Dans l'action `send_private_message` : Vérification serveur impérative de la relation d'amitié mutuelle entre l'expéditeur et le destinataire avant tout enregistrement de message.
+    - Exception de sécurité : Communication directe toujours autorisée si l'un des participants est le Fondateur Hibouxe (`ADMIN_STEAM_ID` / `hibouxe_creator` / session admin authentifiée).
+    - En cas de tentative d'envoi hors amitié mutuelle : Rejet HTTP 403 avec message sécurisé : *« Pour protéger la communauté contre le spam et les arnaques, vous devez être compagnons mutuels pour échanger des messages privés. »*
+  - [ ] **Interface & Expérience Utilisateur (`src/components/chat/ChatPrivateView.tsx`, `ChatDrawer.tsx`) :**
+    - Dans la liste de sélection pour démarrer un nouveau tchat privé : filtrer pour ne proposer que les amis mutuels validés et Hibouxe.
+    - Affichage d'un badge de confiance « Compagnon Mutuel Certifié » ou « Fondateur Officiel ».
+    - Si un joueur tente de contacter un explorateur depuis son profil ou le tchat public sans être encore ami : affichage d'une boîte de dialogue bienveillante invitant à lui envoyer d'abord une demande d'amitié en 1 clic.
+
+---
+
+### 16. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+- **Priorité :** P2 (Priorité moyenne — Économie du jeu de cartes & collection)
+- **Difficulté :** Élevée (Transactions atomiques sécurisées, double validation, cohérence des inventaires)
 - **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
 - **Actions à réaliser :**
-  - [ ] **Menu d'Échange dédié (`TradeModal.tsx`)** :
+  - [ ] **Menu d'Échange dédié (`TradeModal.tsx`) :**
     - Concevoir une interface d'échange claire (choix du destinataire ami, sélection visuelle de la carte à offrir et de la carte souhaitée).
     - Système d'invitation d'échange depuis la liste d'amis (`FriendsModal.tsx`) ou le tchat avec notification visuelle et sonore.
-  - [ ] **Sécurisation des Inventaires & Transaction Atomique** :
+  - [ ] **Sécurisation des Inventaires & Transaction Atomique :**
     - Vérification stricte : s'assurer que le joueur possède au moins un exemplaire (standard ou holo) de la carte qu'il s'apprête à céder.
     - Exécution bilatérale atomique : à la confirmation mutuelle des deux joueurs, retirer la carte envoyée de l'inventaire du joueur A pour l'ajouter chez le joueur B, et inversement pour la carte reçue.
     - Historique et gestion des propositions (`en attente`, `acceptée`, `refusée`, `expirée`).
 
-### 15. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
+---
+
+### 17. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
+- **Priorité :** P3 (Maintenance & propreté architecturale — 0 dette technique)
+- **Difficulté :** Élevée (Composants de grande taille avec logique d'état complexe)
 - **Constat :** Bien que les règles de hooks et les types `any` aient été corrigés, et que l'immense `ArcadeModal.tsx` ait été découpé avec succès, il reste plusieurs composants React de plus de 1500 lignes qui violent le principe de Responsabilité Unique (Single Responsibility).
 - **Actions à réaliser :**
   - [ ] **Nettoyage de `AdminDashboardModal.tsx` (3200+ lignes) :** Vérifier l'intégration finale des sous-onglets générés (`src/components/admin/tabs/`) et supprimer tout le code mort ou redondant qui n'aurait pas été retiré de la modale principale lors de l'extraction.
