@@ -60,6 +60,20 @@ function loadGameOverrides($filePath) {
     }
     if (!isset($decoded['customAdminGames']) || !is_array($decoded['customAdminGames'])) {
         $decoded['customAdminGames'] = [];
+    } else {
+        $legendaryMatches = ['spelunky', 'speluncky', 'spelunky-2', 'hollow-knight', 'celeste', 'hades', 'balatro'];
+        foreach ($decoded['customAdminGames'] as &$cg) {
+            if (is_array($cg)) {
+                $cgId = isset($cg['id']) ? strtolower(trim($cg['id'])) : '';
+                $cgTitle = isset($cg['title']) ? strtolower(trim($cg['title'])) : '';
+                if (empty($cg['cardRarity']) || $cg['cardRarity'] === null) {
+                    if (in_array($cgId, $legendaryMatches, true) || strpos($cgTitle, 'spelunky') !== false || strpos($cgTitle, 'speluncky') !== false) {
+                        $cg['cardRarity'] = 'legendary';
+                    }
+                }
+            }
+        }
+        unset($cg);
     }
     if (!isset($decoded['excludedFromGems']) || !is_array($decoded['excludedFromGems'])) {
         $decoded['excludedFromGems'] = ['kernel-hearts'];
@@ -407,7 +421,17 @@ switch ($action) {
             ],
             'addedAt' => isset($payload['addedAt']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $payload['addedAt']) ? $payload['addedAt'] : date('Y-m-d'),
             'steamAppId' => isset($payload['steamAppId']) && is_numeric($payload['steamAppId']) ? intval($payload['steamAppId']) : null,
-            'cardRarity' => isset($payload['cardRarity']) && in_array($payload['cardRarity'], ['common', 'rare', 'epic', 'legendary'], true) ? $payload['cardRarity'] : null,
+            'cardRarity' => (function() use ($payload, $gameId, $title) {
+                if (isset($payload['cardRarity']) && in_array($payload['cardRarity'], ['common', 'rare', 'epic', 'legendary'], true)) {
+                    return $payload['cardRarity'];
+                }
+                $normId = strtolower($gameId);
+                $normTitle = strtolower($title);
+                if (in_array($normId, ['spelunky', 'speluncky', 'spelunky-2', 'hollow-knight', 'celeste', 'hades', 'balatro'], true) || strpos($normTitle, 'spelunky') !== false || strpos($normTitle, 'speluncky') !== false) {
+                    return 'legendary';
+                }
+                return 'common';
+            })(),
         ];
 
         // Vérifier si le jeu existe déjà dans customAdminGames

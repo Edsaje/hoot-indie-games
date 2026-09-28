@@ -69,7 +69,8 @@ import {
   type AdminCommunitySuggestion,
   type AdminMicroIndieEntry,
 } from '../../services/adminService';
-import { getDynamicCardsPool } from '../../data/cardsData';
+import { getDynamicCardsPool, computeGameRarity } from '../../data/cardsData';
+import { registerSteamStoreData } from '../../data/steamStoreData';
 import { RARITY_CONFIG } from '../../types/cards';
 import {
   inferCanonicalArtStyle,
@@ -527,6 +528,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     try {
       let dataFR: any = null;
       let dataEN: any = null;
+      let fetchedReviews: { totalReviews: number; totalPositive: number; positivePercent: number; reviewScoreDesc?: string } | null = null;
 
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${s.appId}`);
@@ -535,6 +537,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           if (lookupJson.status === 'success' && lookupJson.dataFR) {
             dataFR = lookupJson.dataFR;
             dataEN = lookupJson.dataEN || lookupJson.dataFR;
+            if (lookupJson.reviews) {
+              fetchedReviews = lookupJson.reviews;
+            }
           }
         }
       } catch (err) {
@@ -568,7 +573,38 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       const taglineFR = (dataFR?.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '').trim();
       const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '').trim();
 
-      const gameToSave: Partial<Game> & { isCustomAdmin: boolean } = {
+      if (fetchedReviews && s.appId) {
+        const descText = fetchedReviews.reviewScoreDesc || 'Très positives';
+        registerSteamStoreData({
+          appId: s.appId,
+          isFree: false,
+          currency: 'EUR',
+          initialPriceCents: 0,
+          finalPriceCents: 0,
+          discountPercent: 0,
+          formattedFinalPrice: '',
+          totalReviews: fetchedReviews.totalReviews,
+          totalPositive: fetchedReviews.totalPositive,
+          positivePercent: fetchedReviews.positivePercent,
+          reviewScoreDesc: {
+            fr: descText,
+            en: descText,
+          },
+        });
+      }
+
+      const computedCardRarity = computeGameRarity(
+        slug,
+        {
+          id: slug,
+          title,
+          steamAppId: s.appId,
+          steamUrl: s.steamUrl || `https://store.steampowered.com/app/${s.appId}/`,
+        },
+        fetchedReviews || undefined
+      );
+
+      const gameToSave: Partial<Game> & { isCustomAdmin: boolean; isGem?: boolean } = {
         id: slug,
         title,
         developer,
@@ -583,7 +619,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
         hints: {
           tagline: { fr: taglineFR, en: taglineEN },
         },
+        cardRarity: computedCardRarity,
         isCustomAdmin: true,
+        isGem: true,
       };
 
       const saveRes = await saveAdminGame(gameToSave, currentSteamId);
@@ -625,6 +663,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     try {
       let dataFR: any = null;
       let dataEN: any = null;
+      let fetchedReviews: { totalReviews: number; totalPositive: number; positivePercent: number; reviewScoreDesc?: string } | null = null;
 
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${s.appId}`);
@@ -633,6 +672,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           if (lookupJson.status === 'success' && lookupJson.dataFR) {
             dataFR = lookupJson.dataFR;
             dataEN = lookupJson.dataEN || lookupJson.dataFR;
+            if (lookupJson.reviews) {
+              fetchedReviews = lookupJson.reviews;
+            }
           }
         }
       } catch (err) {
@@ -666,6 +708,37 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       const taglineFR = (dataFR?.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '').trim();
       const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '').trim();
 
+      if (fetchedReviews && s.appId) {
+        const descText = fetchedReviews.reviewScoreDesc || 'Très positives';
+        registerSteamStoreData({
+          appId: s.appId,
+          isFree: false,
+          currency: 'EUR',
+          initialPriceCents: 0,
+          finalPriceCents: 0,
+          discountPercent: 0,
+          formattedFinalPrice: '',
+          totalReviews: fetchedReviews.totalReviews,
+          totalPositive: fetchedReviews.totalPositive,
+          positivePercent: fetchedReviews.positivePercent,
+          reviewScoreDesc: {
+            fr: descText,
+            en: descText,
+          },
+        });
+      }
+
+      const computedCardRarity = computeGameRarity(
+        slug,
+        {
+          id: slug,
+          title,
+          steamAppId: s.appId,
+          steamUrl: s.steamUrl || `https://store.steampowered.com/app/${s.appId}/`,
+        },
+        fetchedReviews || undefined
+      );
+
       const gameToPrefill: Partial<Game> = {
         id: slug,
         title,
@@ -681,6 +754,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
         hints: {
           tagline: { fr: taglineFR, en: taglineEN },
         },
+        cardRarity: computedCardRarity,
       };
 
       setPrefilledGameForCatalog({ game: gameToPrefill, suggestionId: s.id });

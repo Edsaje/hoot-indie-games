@@ -199,11 +199,28 @@
   - [x] **Correction Backend (`public/api/track.php`) :** Extraction universelle et sécurisée de l'identifiant (`$_POST['id']`, `$_GET['id']`, payload JSON brut `php://input` et `appId`), avec filtrage atomique sous verrouillage `LOCK_EX` garantissant la suppression effective dans `suggestions.json`.
   - [x] **Mise à jour Optimiste Frontend (`src/components/admin/AdminDashboardModal.tsx`) :** Retrait immédiat de l'élément dans `data.suggestions.list` et décrémentation du compteur `data.suggestions.total` lors de `handleDeleteSuggestion`, `handleQuickApproveSuggestion` et `onGameSaved`, offrant un retour visuel instantané sans latence réseau.
 
+### 15. 🎴 Algorithme & Attribution Fiable de Rareté des Cartes pour les Nouvelles Pépites (Spelunky & Masterpieces) `[✅ 100% Terminé]`
+- **Priorité :** P1 (Haute priorité — Économie de cartes, fidélité & équité du jeu)
+- **Difficulté :** Moyenne (Calibration multi-critères, passage de métadonnées Steam en temps réel et auto-réparation)
+- **Constat :** Lors de l'ajout d'une nouvelle pépite au catalogue depuis le panneau d'administration ou la validation en 1-clic des suggestions communautaires (exemple : *Spelunky*), la carte créée était arbitrairement reléguée au rang « Commune ». Trois causes majeures ont été identifiées :
+  1. `handleQuickApproveSuggestion` n'extrayait pas les données d'avis Steam et ne définissait aucun `cardRarity` dans l'objet de jeu sauvegardé, entraînant une valeur `null` persistée sur le serveur.
+  2. `computeGameRarity` s'appuyait uniquement sur le dictionnaire statique `steamStoreData.ts`, qui ne contenait pas les nouvelles pépites récemment ajoutées, et ignorait les avis Steam dynamiques récupérés en direct.
+  3. Les seuils de rareté étaient décalés de la réalité du jeu vidéo indépendant (100 000 avis exigés pour Légendaire, inaccessible pour des chefs-d'œuvre cultes comme *Spelunky* avec ~17k avis à 92% positifs). De plus, *Spelunky* (1 & 2) n'était pas inclus dans le Panthéon sacré intemporel `LEGENDARY_GAME_IDS`.
+- **Actions réalisées :**
+  - [x] **Panthéon Sacré & Masterpieces (`src/data/cardsData.ts`) :** Ajout des identifiants et variantes phonétiques (`'spelunky'`, `'speluncky'`, `'spelunky-2'`) directement dans `LEGENDARY_GAME_IDS`, avec normalisation insensible à la casse et vérification croisée du titre (`normTitle`).
+  - [x] **Étalonnage Équilibré des Seuils Indés (`STEAM_RARITY_THRESHOLDS`) :** Réajustement rigoureux des seuils Steam Store pour préserver une économie de boosters équilibrée (Légendaire : ≥ 90 000 avis ou ≥ 60 000 avec 95%+ ; Épique : ≥ 25 000 avis ou ≥ 15 000 avec 92%+ ; Rare : ≥ 4 000 avis ou ≥ 2 000 avec 88%+ ; Commune : < 4 000 avis).
+  - [x] **Support d'Avis Dynamiques en Direct (`computeGameRarity`) :** Prise en charge du paramètre direct `reviewsData?: SteamReviewMetrics` et de `game.steamReviews`, permettant le calcul immédiat de la rareté exacte dès l'interrogation de l'API Steam sans attendre une recompilation du bundle statique.
+  - [x] **Enregistrement Immédiat Store Data (`src/data/steamStoreData.ts`) :** Intégration officielle des métadonnées certifiées de *Spelunky* (AppID 239350 : 16 679 avis, 92% positifs, 14,99 €) et appel systématique à `registerSteamStoreData()` lors de la validation.
+  - [x] **Validation 1-Clic Sécurisée (`src/components/admin/AdminDashboardModal.tsx`) :** Extraction automatique de `lookupJson.reviews`, calcul réactif de `computedCardRarity` et injection impérative de `cardRarity: computedCardRarity` dans `gameToSave` et `gameToPrefill`.
+  - [x] **Interface Administrateur Enrichie (`src/components/admin/AdminGamesManager.tsx`) :** Remplissage automatique de la rareté suggérée dès le clic sur « Auto-remplir depuis Steam », affichage dynamique de la rareté déduite en temps réel dans les boutons de sélection et transmission des avis Steam lors de la sauvegarde.
+  - [x] **Résilience & Auto-Réparation Backend (`public/api/admin_games.php` & `src/services/steamCatalog.ts`) :** Auto-guérison instantanée au chargement pour toute pépite existante présentant `cardRarity === null` (réparation automatique de Spelunky en Légendaire), et interdiction serveur de persister une rareté `null`.
+  - [x] **Audit & Tests Validés :** 8/8 tests unitaires de rareté réussis, parité 1:1 certifiée à 250/250 cartes (`npm run audit-cards`), 250/250 jeux validés (`npm run audit-db`) et build réussi à 100%.
+
 ---
 
 ## 🔵 Phase 4 : Systèmes Avancés & Refactorisation Lourde (Priorité P3)
 
-### 15. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[✅ 100% Terminé]`
+### 16. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[✅ 100% Terminé]`
 - **Constat :** Le tchat était jusqu'alors exclusivement un salon public global. Les joueurs ne pouvaient pas correspondre en privé.
 - **Actions réalisées :**
   - [x] **Backend PHP Souverain (`public/api/chat.php`)** : Endpoints de messagerie directe `get_private_conversations`, `get_private_messages`, `send_private_message`, `mark_private_read`, `delete_private_message` avec génération de clés canoniques déterministes symétriques (`getCanonicalConversationKey`), stockage atomique sous verrouillage `LOCK_EX` dans `private_conversations.json`, bouclier anti-hameçonnage et modération anti-injures intégrés.
@@ -213,7 +230,7 @@
   - [x] **Interconnexion Sociale (`FriendsModal.tsx` & `ChatUserModerationModal.tsx`)** : Bouton « Message » sur chaque carte de compagnon ouvrant instantanément le tchat privé avec celui-ci, et bouton d'envoi de message privé depuis le profil ou au clic sur le pseudonyme/avatar d'un joueur dans le salon public.
   - [x] **Suite de Tests Validée (`scripts/testPrivateMessaging.ts`)** : 6/6 tests réussis (clé canonique symétrique, insensibilité casse/accents, arithmétique des badges de notifications).
 
-### 16. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
+### 17. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
 - **Priorité :** P1 (Haute priorité — Confiance, social & socle anti-spam)
 - **Difficulté :** Moyenne-Élevée (Gestion atomique des demandes côté serveur PHP et réactivité UI)
 - **Constat :** Actuellement, lorsqu'un joueur saisit le code ami d'un autre utilisateur, l'ajout est unilatéral et immédiat sur son client local sans consentement ni notification pour le joueur ciblé. Pour instaurer un véritable réseau social de confiance et bloquer les messages non sollicités, l'amitié doit devenir bilatérale et mutuellement consentie.
@@ -239,7 +256,7 @@
 
 ---
 
-### 17. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
+### 18. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
 - **Priorité :** P1 (Haute priorité — Sécurité primordiale & protection des utilisateurs)
 - **Difficulté :** Moyenne (Vérification croisée backend + guidage ergonomique frontend)
 - **Constat :** Pour éviter tout risque de spam automatisé, de faux messages de phishing (faux comptes se faisant passer pour des tiers ou envoyant des arnaques en message direct), la messagerie directe doit être strictement réservée aux compagnons mutuellement confirmés, à l'exception du Super-Admin / Fondateur Hibouxe pour le support officiel.
@@ -255,7 +272,7 @@
 
 ---
 
-### 18. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+### 19. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
 - **Priorité :** P2 (Priorité moyenne — Économie du jeu de cartes & collection)
 - **Difficulté :** Élevée (Transactions atomiques sécurisées, double validation, cohérence des inventaires)
 - **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
@@ -270,7 +287,7 @@
 
 ---
 
-### 19. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
+### 20. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
 - **Priorité :** P3 (Maintenance & propreté architecturale — 0 dette technique)
 - **Difficulté :** Élevée (Composants de grande taille avec logique d'état complexe)
 - **Constat :** Bien que les règles de hooks et les types `any` aient été corrigés, et que l'immense `ArcadeModal.tsx` ait été découpé avec succès, il reste plusieurs composants React de plus de 1500 lignes qui violent le principe de Responsabilité Unique (Single Responsibility).

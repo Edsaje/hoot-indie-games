@@ -43,7 +43,6 @@ import type { CardRarity } from '../../types/cards';
 import {
   computeGameRarity,
   extractSteamAppId,
-  STEAM_RARITY_THRESHOLDS,
 } from '../../data/cardsData';
 import { getSteamStoreData, registerSteamStoreData } from '../../data/steamStoreData';
 
@@ -165,6 +164,26 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       setFormTaglineFr(initialPrefillGame.hints?.tagline?.fr || '');
       setFormTaglineEn(initialPrefillGame.hints?.tagline?.en || '');
       setFormComposer(initialPrefillGame.hints?.composer || '');
+
+      if (initialPrefillGame.cardRarity) {
+        setFormCardRarity(initialPrefillGame.cardRarity);
+      } else {
+        const cleanAppId = extractSteamAppId(initialPrefillGame);
+        const store = cleanAppId ? getSteamStoreData(cleanAppId) : null;
+        if (store && store.totalReviews > 0) {
+          setSteamReviewsInfo({
+            totalReviews: store.totalReviews,
+            positivePercent: store.positivePercent,
+            desc: store.reviewScoreDesc?.fr,
+          });
+        }
+        const autoRarity = computeGameRarity(
+          initialPrefillGame.id || '',
+          initialPrefillGame,
+          store ? { totalReviews: store.totalReviews, positivePercent: store.positivePercent } : undefined
+        );
+        setFormCardRarity(autoRarity);
+      }
 
       onPrefillConsumed?.();
     }
@@ -616,8 +635,27 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
           positivePercent: fetchedReviews.positivePercent,
           desc: fetchedReviews.reviewScoreDesc,
         });
+
+        const suggestedRarity = computeGameRarity(
+          slug,
+          {
+            id: slug,
+            title,
+            steamAppId: parseInt(appId, 10),
+            steamUrl: `https://store.steampowered.com/app/${appId}/`,
+          },
+          fetchedReviews
+        );
+        setFormCardRarity(suggestedRarity);
+      } else {
+        const fallbackRarity = computeGameRarity(slug, {
+          id: slug,
+          title,
+          steamAppId: parseInt(appId, 10),
+          steamUrl: `https://store.steampowered.com/app/${appId}/`,
+        });
+        setFormCardRarity(fallbackRarity);
       }
-      setFormCardRarity('auto');
 
       soundFx.playVictory();
       if (onNotice) onNotice('success', `✨ Fiche Steam auto-remplie avec succès pour « ${title} » !`);
@@ -655,11 +693,16 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     const finalRarity: CardRarity =
       formCardRarity !== 'auto'
         ? formCardRarity
-        : computeGameRarity(formId.trim(), {
-            id: formId.trim(),
-            steamAppId: cleanAppId || undefined,
-            steamUrl: formSteamUrl.trim() || undefined,
-          });
+        : computeGameRarity(
+            formId.trim(),
+            {
+              id: formId.trim(),
+              title: formTitle.trim(),
+              steamAppId: cleanAppId || undefined,
+              steamUrl: formSteamUrl.trim() || undefined,
+            },
+            steamReviewsInfo || undefined
+          );
 
     const gamePayload: Partial<Game> & { isCustomAdmin?: boolean; isGem?: boolean } = {
       id: formId.trim() || undefined,
@@ -1466,11 +1509,16 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       const activeRarity =
                         formCardRarity !== 'auto'
                           ? formCardRarity
-                          : computeGameRarity(formId.trim(), {
-                              id: formId.trim(),
-                              steamAppId: tempAppId || undefined,
-                              steamUrl: formSteamUrl.trim() || undefined,
-                            });
+                          : computeGameRarity(
+                              formId.trim(),
+                              {
+                                id: formId.trim(),
+                                title: formTitle.trim(),
+                                steamAppId: tempAppId || undefined,
+                                steamUrl: formSteamUrl.trim() || undefined,
+                              },
+                              steamReviewsInfo || undefined
+                            );
                       const rarityMeta: Record<CardRarity, { label: string; bg: string; icon: string }> = {
                         legendary: { label: 'Légendaire', bg: 'bg-amber-500/20 text-amber-300 border-amber-500/40', icon: '🟡' },
                         epic: { label: 'Épique', bg: 'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: '🟣' },
@@ -1499,27 +1547,52 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
 
                   {/* Sélecteur de rareté */}
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 pt-1">
-                    {[
-                      { key: 'auto', label: '⚡ Auto (Steam)', desc: 'Calcul dynamique' },
-                      { key: 'common', label: '⚪ Commune', desc: `< ${Math.round(STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS / 1000)}k avis` },
-                      { key: 'rare', label: '🔵 Rare', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS / 1000)}k avis` },
-                      { key: 'epic', label: '🟣 Épique', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.EPIC_MIN_REVIEWS / 1000)}k avis` },
-                      { key: 'legendary', label: '🟡 Légendaire', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.LEGENDARY_MIN_REVIEWS / 1000)}k avis` },
-                    ].map((opt) => (
-                      <button
-                        key={opt.key}
-                        type="button"
-                        onClick={() => setFormCardRarity(opt.key as CardRarity | 'auto')}
-                        className={`p-2 rounded-lg border text-left transition cursor-pointer flex flex-col justify-between ${
-                          formCardRarity === opt.key
-                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm shadow-amber-500/10'
-                            : 'bg-white/[0.03] text-slate-300 border-white/5 hover:bg-white/[0.07] hover:text-white'
-                        }`}
-                      >
-                        <span className="text-[11px] font-bold block">{opt.label}</span>
-                        <span className="text-[9px] text-slate-400 block">{opt.desc}</span>
-                      </button>
-                    ))}
+                    {(() => {
+                      const tempAppId = extractSteamAppId({ steamAppId: (editingGame as Game)?.steamAppId, steamUrl: formSteamUrl });
+                      const currentAutoRarity = computeGameRarity(
+                        formId.trim(),
+                        {
+                          id: formId.trim(),
+                          title: formTitle.trim(),
+                          steamAppId: tempAppId || undefined,
+                          steamUrl: formSteamUrl.trim() || undefined,
+                        },
+                        steamReviewsInfo || undefined
+                      );
+                      const rarityMeta: Record<CardRarity, { label: string; icon: string }> = {
+                        legendary: { label: 'Légendaire', icon: '🟡' },
+                        epic: { label: 'Épique', icon: '🟣' },
+                        rare: { label: 'Rare', icon: '🔵' },
+                        common: { label: 'Commune', icon: '⚪' },
+                      };
+                      const autoInfo = rarityMeta[currentAutoRarity];
+
+                      return [
+                        {
+                          key: 'auto',
+                          label: '⚡ Auto (Steam)',
+                          desc: autoInfo ? `${autoInfo.icon} ${autoInfo.label}` : 'Calcul dynamique',
+                        },
+                        { key: 'common', label: '⚪ Commune', desc: '< 4k avis' },
+                        { key: 'rare', label: '🔵 Rare', desc: '≥ 4k avis' },
+                        { key: 'epic', label: '🟣 Épique', desc: '≥ 25k avis' },
+                        { key: 'legendary', label: '🟡 Légendaire', desc: '≥ 90k avis' },
+                      ].map((opt) => (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => setFormCardRarity(opt.key as CardRarity | 'auto')}
+                          className={`p-2 rounded-lg border text-left transition cursor-pointer flex flex-col justify-between ${
+                            formCardRarity === opt.key
+                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm shadow-amber-500/10'
+                              : 'bg-white/[0.03] text-slate-300 border-white/5 hover:bg-white/[0.07] hover:text-white'
+                          }`}
+                        >
+                          <span className="text-[11px] font-bold block">{opt.label}</span>
+                          <span className="text-[9px] text-slate-400 block">{opt.desc}</span>
+                        </button>
+                      ));
+                    })()}
                   </div>
                 </div>
 

@@ -33,8 +33,24 @@ class SteamCatalogService {
       if (overridesRaw) {
         const data = JSON.parse(overridesRaw);
         if (data.hiddenGameIds) this.serverHiddenIds = new Set(data.hiddenGameIds);
-        if (data.modifiedGames) this.serverModifiedGames = new Map(Object.entries(data.modifiedGames));
-        if (data.customAdminGames) this.serverCustomGames = data.customAdminGames;
+        if (data.customAdminGames && Array.isArray(data.customAdminGames)) {
+          this.serverCustomGames = data.customAdminGames.map((g: Game) => {
+            if (!g.cardRarity || (g.cardRarity as unknown) === null) {
+              const normId = (g.id || '').toLowerCase().trim();
+              const normTitle = (g.title || '').toLowerCase().trim();
+              if (
+                normId === 'spelunky' ||
+                normId === 'speluncky' ||
+                normId === 'spelunky-2' ||
+                normTitle.includes('spelunky') ||
+                normTitle.includes('speluncky')
+              ) {
+                return { ...g, cardRarity: 'legendary' as const };
+              }
+            }
+            return g;
+          });
+        }
         if (data.excludedFromGems) this.serverExcludedGemIds = new Set(data.excludedFromGems);
         if (data.promotedToGems) this.serverPromotedGemIds = new Set(data.promotedToGems);
       }
@@ -66,8 +82,23 @@ class SteamCatalogService {
     if (overrides.modifiedGames) {
       this.serverModifiedGames = new Map(Object.entries(overrides.modifiedGames));
     }
-    if (overrides.customAdminGames) {
-      this.serverCustomGames = overrides.customAdminGames;
+    if (overrides.customAdminGames && Array.isArray(overrides.customAdminGames)) {
+      this.serverCustomGames = overrides.customAdminGames.map((g: Game) => {
+        if (!g.cardRarity || (g.cardRarity as unknown) === null) {
+          const normId = (g.id || '').toLowerCase().trim();
+          const normTitle = (g.title || '').toLowerCase().trim();
+          if (
+            normId === 'spelunky' ||
+            normId === 'speluncky' ||
+            normId === 'spelunky-2' ||
+            normTitle.includes('spelunky') ||
+            normTitle.includes('speluncky')
+          ) {
+            return { ...g, cardRarity: 'legendary' as const };
+          }
+        }
+        return g;
+      });
     }
     if (overrides.excludedFromGems) {
       this.serverExcludedGemIds = new Set(overrides.excludedFromGems);
