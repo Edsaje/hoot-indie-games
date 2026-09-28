@@ -132,10 +132,31 @@ if (!function_exists('getAdminCsrfToken')) {
     }
 }
 
+if (!function_exists('extractCsrfTokenFromRequest')) {
+    function extractCsrfTokenFromRequest() {
+        $token = trim($_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+        if (!empty($token)) {
+            return $token;
+        }
+        // Tentative de lecture depuis le flux JSON brut pour les requêtes POST application/json
+        $raw = @file_get_contents('php://input');
+        if (!empty($raw)) {
+            $json = @json_decode($raw, true);
+            if (is_array($json) && !empty($json['csrf_token'])) {
+                return trim(strval($json['csrf_token']));
+            }
+        }
+        return '';
+    }
+}
+
 if (!function_exists('validateAdminCsrfToken')) {
-    function validateAdminCsrfToken($token) {
+    function validateAdminCsrfToken($token = null) {
         if (session_status() === PHP_SESSION_NONE) {
             @session_start();
+        }
+        if ($token === null || $token === '') {
+            $token = extractCsrfTokenFromRequest();
         }
         $expected = $_SESSION['admin_csrf_token'] ?? '';
         return !empty($expected) && !empty($token) && hash_equals($expected, $token);

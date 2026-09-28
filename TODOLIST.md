@@ -74,44 +74,59 @@
 
 ## 🔴 Phase 1 : Urgences Critiques, Intégrité du Jeu & Image (Priorité P0)
 
-### 1. 🛡️ Résolution de l'erreur « Jeton CSRF invalide ou expiré » sur les suggestions de jeux `[⏳ À faire]`
-- **Constat :** Lorsque l'administrateur valide ou gère une proposition de jeu dans le tableau de bord, une erreur apparaît : *« Jeton de protection CSRF invalide ou expiré, Veuillez recharger la page »*, bloquant la modération.
-- **Actions à réaliser :**
-  - [ ] Identifier l'endpoint incriminé (`suggest_game.php`, `micro_indies.php` ou `track.php`).
-  - [ ] Vérifier la génération, le stockage en session/header et l'envoi du jeton CSRF côté client dans `adminService.ts`.
-  - [ ] Assurer le renouvellement automatique ou la persistance cohérente du jeton de session lors des actions administratives sans obliger à recharger la page.
+### 1. 🛡️ Résolution de l'erreur « Jeton CSRF invalide ou expiré » sur les suggestions de jeux `[✅ 100% Terminé]`
+- **Constat :** Lorsque l'administrateur validait ou gérait une proposition de jeu dans le tableau de bord, une erreur apparaissait : *« Jeton de protection CSRF invalide ou expiré, Veuillez recharger la page »*, bloquant la modération.
+- **Actions réalisées :**
+  - [x] Correction dans `public/api/admin_auth.php`, `public/api/track.php` et `public/api/admin_games.php` pour fournir `getAdminCsrfToken()` dans toutes les réponses JSON administratives.
+  - [x] Ajout de l'extraction multi-formats (en-tête `X-CSRF-Token`, formulaires POST et corps JSON brut `php://input`).
+  - [x] Refonte de `src/services/adminService.ts` avec routage centralisé `postAdminTrack` et `postAdminGames`, injection systématique du jeton CSRF et mécanisme de rafraîchissement transparent auto-retry sur code 403.
 
-### 2. 🔗 Mini-jeu « Connections » (Linkle) : Uniformisation des jeux entre utilisateurs `[⏳ À faire]`
-- **Constat :** Les joueurs ne rencontrent pas toujours la même grille de 16 jeux ou les mêmes catégories le même jour dans Linkle, rompant l'expérience du jeu quotidien partagé.
-- **Actions à réaliser :**
-  - [ ] Auditer la sélection du puzzle du jour dans `src/components/linkle/LinkleGame.tsx` et `src/data/linklePuzzles.ts`.
-  - [ ] Garantir que le choix du puzzle quotidien s'appuie sur une graine temporelle déterministe universelle (ex: date YYYY-MM-DD UTC) identique pour tous les visiteurs, indépendamment du statut de connexion ou de l'historique local.
+### 2. 🔗 Mini-jeu « Connections » (Linkle) : Uniformisation des jeux entre utilisateurs `[✅ 100% Terminé]`
+- **Constat :** Les joueurs ne rencontraient pas toujours la même grille de 16 jeux ou les mêmes catégories le même jour dans Linkle, rompant l'expérience du jeu quotidien partagé.
+- **Actions réalisées :**
+  - [x] Remplacement du tri non standard `.sort(() => rand() - 0.5)` par un algorithme de mélange de Fisher-Yates déterministe `shuffleWithRand` dans `src/data/connectionsPuzzles.ts`.
+  - [x] Pré-tri canonique stable des règles et de la bibliothèque de jeux par identifiant (`id.localeCompare`) avant filtrage pour garantir une parité 100% absolue et déterministe entre tous les navigateurs (Chrome, Safari iOS, Firefox).
 
-### 3. 🖼️ Remplacement du logo Google Search & SEO par le logo actuel `[⏳ À faire]`
-- **Constat :** Lors d'une recherche sur Google, le snippet de résultat affiche encore l'ancien logo ou favicon du site au lieu du logo officiel actuel de Hoot Indie Games.
-- **Actions à réaliser :**
-  - [ ] Mettre à jour l'ensemble des balises méta d'images dans `index.html` (`og:image`, `twitter:image`, `favicon.svg`, `favicon.ico`, `apple-touch-icon`).
-  - [ ] Vérifier et mettre à jour le script de pré-rendu SEO (`scripts/generateSeoIndex.ts`) et les schémas JSON-LD (`Organization.logo`, `WebSite.image`) avec l'URL canonique absolue du logo actuel.
-  - [ ] Vérifier le fichier `public/manifest.json` pour s'assurer que les icônes PWA pointent vers la version actuelle.
+### 3. 🖼️ Remplacement du logo Google Search & SEO par le logo actuel `[✅ 100% Terminé]`
+- **Constat :** Lors d'une recherche sur Google, le snippet de résultat affichait encore l'ancien logo ou favicon du site au lieu du logo officiel actuel de Hoot Indie Games.
+- **Actions réalisées :**
+  - [x] Régénération complète de toutes les résolutions d'icônes à partir du master `public/logo.png` haute définition (4000x4000) : `logo-512.png`, `apple-touch-icon.png` (180x180), `favicon-192x192.png`, `favicon-96x96.png`, `favicon-48x48.png` (cible Google Search), `favicon-32x32.png`, `favicon-16x16.png`, et `favicon.svg`.
+  - [x] Génération d'un véritable conteneur ICO multi-résolutions (`favicon.ico` 256x256 multi-calques).
+  - [x] Synchronisation des métadonnées du pré-rendu SEO (`scripts/generateSeoIndex.ts`) et régénération automatique de `index.html`.
 
-### 4. 🎵 Mini-jeu Blind-Test : Correction des musiques & de la piste sonore `[⏳ À faire]`
-- **Constat :** Des incohérences ont été constatées dans le Blind-Test : des morceaux associés sont erronés (ex: la piste audio de *Cult of the Lamb* ne correspondait pas au vrai morceau du jeu), et la piste sonore présente un affichage erroné de la durée / progression temporelle.
-- **Actions à réaliser :**
-  - [ ] **Vérification des morceaux (`blindtestPuzzles.ts`)** : Vérifier la bibliothèque audio de puzzles, écouter et remplacer la piste sonore de *Cult of the Lamb* ainsi que toute autre piste défectueuse par des extraits officiels certifiés.
-  - [ ] **Réparation de la piste sonore & du chrono (`BlindTestGame.tsx`)** : Corriger le calcul du temps écoulé / durée totale (`currentTime` vs `duration`), l'affichage du format mm:ss et la barre de progression pour refléter la lecture réelle sans glitch.
+### 4. 🎵 Mini-jeu Blind-Test : Correction des musiques & de la piste sonore `[✅ 100% Terminé]`
+- **Constat :** Des incohérences ont été constatées dans le Blind-Test : des morceaux associés étaient erronés (la piste audio de *Cult of the Lamb* ne correspondait pas au vrai morceau du jeu en fallback synthé et le fichier MP3 manquait), et la barre temporelle présentait un décalage visuel majeur entre les repères d'écoute et les libellés de secondes.
+- **Actions réalisées :**
+  - [x] **Intégration de la piste officielle (`cult-of-the-lamb.mp3`)** : Encodage de l'extrait officiel de *Cult of the Lamb* ("Praise the Lamb" par River Boy) au format MP3 standard 128 kbps avec tags ID3v2 dans `public/audio/blindtest/cult-of-the-lamb.mp3`.
+  - [x] **Harmonisation de la mélodie de secours (`blindtestPuzzles.ts`)** : Remplacement de l'instrument (`synth`), du tempo (112 BPM) et de la tablature harmonique de repli en Ré mineur pour correspondre fidèlement au thème de River Boy.
+  - [x] **Synchronisation absolue de l'horloge audio (`BlindTestGame.tsx`)** : Remplacement du calcul approximatif basé sur `performance.now()` par l'horloge matérielle Web Audio `ctx.currentTime - handle.startTime`, éliminant tout décalage d'affichage ou latence de lecture.
+  - [x] **Alignement exact de la barre Heardle & des graduations** : Positionnement en pourcentages stricts (`leftPct`) de chaque marqueur et libellé temporel (0s, 1.5s, 3s, 6s, 11s, 18s) et normalisation de la durée maximale à `TOTAL_MAX_DURATION = 18.0s`.
 
 ---
 
 ## 🟠 Phase 2 : Rétention Quotidienne, Social & Jeu de Cartes (Priorité P1)
 
-### 5. 📅 Vérification du système de « Série de jeu » (Streaks) & synchronisation Calendrier `[⏳ À faire]`
+### 5. 🌾 Adaptation & Automatisation du workflow « Daily Harvest » (Nouveaux jeux & Pépites) `[⏳ À faire]`
+- **Constat :** L'action automatisée « Daily Harvest » doit être adaptée pour être 100% compatible avec la nouvelle architecture refactorisée du site, injecter continuellement de nouveaux jeux chaque jour (y compris des créations émergentes ou moins bien notées) et enrichir la sélection de pépites certifiées.
+- **Actions à réaliser :**
+  - [ ] Auditer le script et l'action GitHub / cron `daily-harvest` (ou scripts d'ingestion Steam / Itch).
+  - [ ] S'assurer de la compatibilité avec `games_override.json` et les types TypeScript sans casser le catalogue existant.
+  - [ ] Élargir les filtres d'ingestion pour intégrer des titres indés variés et pépites méconnues chaque jour.
+
+### 6. ☁️ Synchronisation Cloud Multi-Appareils au chargement du site `[⏳ À faire]`
+- **Constat :** Lorsqu'un joueur connecté arrive sur le site depuis un autre appareil (ex: second PC, smartphone), sa progression locale antérieure peut écraser ou ne pas refléter sa dernière sauvegarde Cloud synchronisée.
+- **Actions à réaliser :**
+  - [ ] Dès le chargement initial de l'application, si l'utilisateur possède un compte actif ou une session Steam, déclencher un fetch prioritaire de `user_cloud_sync.php`.
+  - [ ] Réconcilier intelligemment par horodatage (`timestamp` / version la plus récente) les cartes possédées, les plumes, les streaks et l'historique des parties pour garantir 0 perte de données cross-device.
+
+### 7. 📅 Vérification du système de « Série de jeu » (Streaks) & synchronisation Calendrier `[⏳ À faire]`
 - **Constat :** Le système de décompte des séries consécutives (streaks) et son reflet dans l'archive/calendrier des jours joués nécessite un audit de fiabilité.
 - **Actions à réaliser :**
   - [ ] Auditer le gestionnaire `src/utils/streakManager.ts` et le stockage local / cloud sync.
   - [ ] Contrôler la cohérence entre les dates locales (fuseau horaire du navigateur) et la date de réinitialisation quotidienne du serveur (minuit UTC ou heure de Paris).
   - [ ] Vérifier la modale du calendrier (`CalendarArchiveModal.tsx`) pour garantir que chaque jour complété est correctement coché/coloré sans décalage de date.
 
-### 6. 🃏 Jeu de Cartes : Cumul de 2 boosters gratuits & recharge toutes les 12h `[⏳ À faire]`
+### 8. 🃏 Jeu de Cartes : Cumul de 2 boosters gratuits & recharge toutes les 12h `[⏳ À faire]`
 - **Constat :** Les boosters gratuits doivent récompenser la régularité sans pénaliser les joueurs qui ne peuvent pas se connecter toutes les 12 heures exactes.
 - **Actions à réaliser :**
   - [ ] Mettre en place un plafond de stockage à **2 boosters gratuits maximum**.
@@ -119,14 +134,14 @@
   - [ ] Le compte à rebours de 12h ne démarre ou ne continue que lorsque la réserve de boosters gratuits est inférieure à 2.
   - [ ] Mettre à jour l'interface de la boutique de plumes / boosters (`FeatherShopModal.tsx`, `BoosterOpeningModal.tsx`) avec l'affichage clair du stock (ex: `1/2` ou `2/2`) et du minuteur jusqu'au prochain booster.
 
-### 7. 👥 Correction de l'affichage « Progression du jour de mes amis » `[⏳ À faire]`
+### 9. 👥 Correction de l'affichage « Progression du jour de mes amis » `[⏳ À faire]`
 - **Constat :** L'encart de suivi de la progression quotidienne des amis (qui a réussi l'Indledle, le Pixel, le Screenle, le Linkle, etc. aujourd'hui) ne s'affiche pas correctement ou n'actualise pas les scores en temps réel.
 - **Actions à réaliser :**
   - [ ] Auditer le composant et la récupération des statuts dans `FriendsModal.tsx` et `friendsService.ts`.
   - [ ] Vérifier la structure des payloads envoyés et reçus pour la progression quotidienne des amis (`dailySummary` / `friendDailyStatus`).
   - [ ] Corriger le mapping des icônes de jeux et l'état de complétion du jour pour chaque ami.
 
-### 8. 🎴 Synchronisation Pépites & Cartes : Création / Suppression automatique `[⏳ À faire]`
+### 10. 🎴 Synchronisation Pépites & Cartes : Création / Suppression automatique `[⏳ À faire]`
 - **Constat :** Chaque pépite du catalogue doit posséder sa carte à collectionner correspondante dans le système de cartes.
 - **Actions à réaliser :**
   - [ ] Écrire un test / script d'audit vérifiant la parité 1:1 entre la base des pépites (`src/data/steamGems.ts` / catalogue) et les cartes définies (`src/data/cardsData.ts`).

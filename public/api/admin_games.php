@@ -212,11 +212,12 @@ if (!in_array($action, $readOnlyActions, true)) {
     }
 
     if (!empty($_SESSION['admin_auth'])) {
-        $csrfToken = trim($_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+        $csrfToken = extractCsrfTokenFromRequest();
         if (!validateAdminCsrfToken($csrfToken)) {
             http_response_code(403);
             echo json_encode([
                 'success' => false,
+                'error' => 'csrf_invalid',
                 'message' => 'Jeton de protection CSRF manquant ou invalide. Veuillez recharger la page.'
             ], JSON_UNESCAPED_UNICODE);
             exit;
@@ -238,6 +239,7 @@ switch ($action) {
         echo json_encode([
             'success' => true,
             'admin' => true,
+            'csrfToken' => getAdminCsrfToken(),
             'hiddenGameIds' => $overrides['hiddenGameIds'],
             'modifiedGames' => $overrides['modifiedGames'],
             'customAdminGames' => $overrides['customAdminGames'],

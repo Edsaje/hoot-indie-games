@@ -1196,70 +1196,22 @@ const CURATED_OSTS: CuratedOST[] = [
     gameId: 'cult-of-the-lamb',
     trackTitle: "Praise the Lamb",
     composer: "Narayana Johnson (River Boy)",
-    instrument: 'bell',
-    bpm: 104,
+    instrument: 'synth',
+    bpm: 112,
     melody: [
-      {
-            "note": "F",
-            "octave": 4,
-            "duration": 0.3
-      },
-      {
-            "note": "Ab",
-            "octave": 4,
-            "duration": 0.3
-      },
-      {
-            "note": "C",
-            "octave": 5,
-            "duration": 0.6
-      },
-      {
-            "note": "Bb",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "Ab",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "G",
-            "octave": 4,
-            "duration": 0.6
-      },
-      {
-            "note": "F",
-            "octave": 4,
-            "duration": 0.8
-      },
-      {
-            "note": "Ab",
-            "octave": 4,
-            "duration": 0.3
-      },
-      {
-            "note": "C",
-            "octave": 5,
-            "duration": 0.4
-      },
-      {
-            "note": "Db",
-            "octave": 5,
-            "duration": 0.5
-      },
-      {
-            "note": "C",
-            "octave": 5,
-            "duration": 0.5
-      },
-      {
-            "note": "F",
-            "octave": 4,
-            "duration": 1.4
-      }
-]
+      { note: 'D', octave: 4, duration: 0.35 },
+      { note: 'D', octave: 4, duration: 0.25 },
+      { note: 'F', octave: 4, duration: 0.35 },
+      { note: 'G', octave: 4, duration: 0.35 },
+      { note: 'Ab', octave: 4, duration: 0.45 },
+      { note: 'G', octave: 4, duration: 0.35 },
+      { note: 'F', octave: 4, duration: 0.35 },
+      { note: 'D', octave: 4, duration: 0.6 },
+      { note: 'C', octave: 4, duration: 0.35 },
+      { note: 'D', octave: 4, duration: 0.35 },
+      { note: 'F', octave: 4, duration: 0.4 },
+      { note: 'D', octave: 4, duration: 0.8 },
+    ],
   },
   {
     gameId: 'pizza-tower',

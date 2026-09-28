@@ -550,10 +550,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
     // C. ACTIONS D'ADMINISTRATION
     $action = trim($_POST['action'] ?? $_GET['action'] ?? '');
 
+    // Récupération rapide d'un jeton CSRF valide pour l'administration SPA
+    if ($action === 'get_csrf_token') {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'success' => true,
+            'csrfToken' => getAdminCsrfToken(),
+        ]);
+        exit;
+    }
+
     // [SÉCURITÉ CWE-352] Les actions administratives de modification requièrent impérativement POST
     $mutatingActions = [
         'delete_username', 'edit_user', 'toggle_ban_user', 'purge_user_scores',
-        'manage_forbidden_names', 'create_user', 'delete_suggestion', 'reset_stats'
+        'manage_forbidden_names', 'create_user', 'delete_suggestion', 'reset_stats', 'approve_micro_indie'
     ];
     if (in_array($action, $mutatingActions, true)) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -568,7 +578,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
         // [SÉCURITÉ CWE-352] Validation du jeton CSRF pour les sessions web d'administration
         if (!empty($_SESSION['admin_auth'])) {
-            $csrfToken = trim($_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+            $csrfToken = extractCsrfTokenFromRequest();
             if (!validateAdminCsrfToken($csrfToken)) {
                 http_response_code(403);
                 echo json_encode([
@@ -1307,6 +1317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         echo json_encode([
             'success' => true,
             'admin' => true,
+            'csrfToken' => getAdminCsrfToken(),
             'analytics' => $stats,
             'usernames' => $usernamesData,
             'suggestions' => $suggestionsData,

@@ -148,7 +148,8 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
   const mistakesCount = guesses.length;
   const currentStep = Math.min(mistakesCount, AUDIO_UNLOCK_DURATIONS.length - 1);
-  const maxAllowedDuration = isCompleted ? 20.0 : AUDIO_UNLOCK_DURATIONS[currentStep];
+  const TOTAL_MAX_DURATION = AUDIO_UNLOCK_DURATIONS[AUDIO_UNLOCK_DURATIONS.length - 1];
+  const maxAllowedDuration = isCompleted ? TOTAL_MAX_DURATION : AUDIO_UNLOCK_DURATIONS[currentStep];
 
   // Préchargement transparent de la piste officielle
   useEffect(() => {
@@ -253,7 +254,6 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
     masterGainRef.current = masterGain;
 
     const playDuration = maxAllowedDuration;
-    setIsPlaying(true);
 
     const handle = await playBlindTestAudioClip({
       ctx,
@@ -265,19 +265,18 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
     playbackHandleRef.current = handle;
     setIsOfficialClip(handle.isOfficialClip);
+    setIsPlaying(true);
 
-    const startRealTime = performance.now();
-
-    // Boucle d'animation pour l'égaliseur et la barre de progression
+    // Boucle d'animation synchronisée avec l'horloge matérielle AudioContext pour une précision absolue
     const updateLoop = () => {
-      const elapsed = (performance.now() - startRealTime) / 1000;
+      const elapsed = Math.max(0, ctx.currentTime - handle.startTime);
       if (elapsed >= playDuration) {
         stopAudio();
         return;
       }
 
       setPlaybackSeconds(Number(Math.min(elapsed, playDuration).toFixed(1)));
-      setPlaybackProgress(Math.min(1, elapsed / 18.0));
+      setPlaybackProgress(Math.min(1, elapsed / TOTAL_MAX_DURATION));
 
       if (analyserRef.current) {
         const data = new Uint8Array(analyserRef.current.frequencyBinCount);
@@ -293,7 +292,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
     playbackTimeoutRef.current = setTimeout(() => {
       stopAudio();
-    }, playDuration * 1000 + 100);
+    }, playDuration * 1000 + 120);
   };
 
   // Télémétrie
@@ -668,7 +667,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
               {/* Zone débloquée du palier courant */}
               <div
                 className="absolute top-0.5 bottom-0.5 left-0.5 bg-purple-500/25 rounded-full pointer-events-none transition-all duration-300"
-                style={{ width: `${Math.min(100, (maxAllowedDuration / 18.0) * 100)}%` }}
+                style={{ width: `${Math.min(100, (maxAllowedDuration / TOTAL_MAX_DURATION) * 100)}%` }}
               />
 
               {/* Remplissage de lecture active */}
@@ -679,7 +678,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
               {/* Lignes de découpe des paliers d'écoute */}
               {AUDIO_UNLOCK_DURATIONS.map((dur, i) => {
-                const leftPct = (dur / 18.0) * 100;
+                const leftPct = (dur / TOTAL_MAX_DURATION) * 100;
                 return (
                   <div
                     key={i}
@@ -690,17 +689,31 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
               })}
             </div>
 
-            {/* Paliers temporels sous la barre */}
-            <div className="flex justify-between text-[10px] font-mono text-slate-500 px-1">
-              <span>0s</span>
-              {AUDIO_UNLOCK_DURATIONS.map((dur, i) => (
-                <span
-                  key={i}
-                  className={i <= currentStep ? 'text-purple-300 font-bold' : 'text-slate-600'}
-                >
-                  {dur}s
-                </span>
-              ))}
+            {/* Paliers temporels sous la barre avec alignement exact sur chaque marqueur */}
+            <div className="relative w-full h-4 text-[10px] font-mono text-slate-500 select-none">
+              <span className="absolute left-0 text-slate-500">0s</span>
+              {AUDIO_UNLOCK_DURATIONS.map((dur, i) => {
+                const leftPct = (dur / TOTAL_MAX_DURATION) * 100;
+                const isCurrent = dur === maxAllowedDuration;
+                const isUnlocked = dur <= maxAllowedDuration;
+                const isLast = i === AUDIO_UNLOCK_DURATIONS.length - 1;
+
+                return (
+                  <span
+                    key={i}
+                    className={`absolute transition-colors ${
+                      isCurrent
+                        ? 'text-pink-400 font-bold'
+                        : isUnlocked
+                        ? 'text-purple-300 font-semibold'
+                        : 'text-slate-600'
+                    } ${isLast ? 'right-0' : '-translate-x-1/2'}`}
+                    style={isLast ? undefined : { left: `${leftPct}%` }}
+                  >
+                    {dur}s
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>
