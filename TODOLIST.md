@@ -173,12 +173,13 @@
   - [x] Interface de distribution royale intégrée dans `AdminDashboardModal.tsx` avec bouton d'action `Gift` par joueur, presets de plumes (+50, +100, +250, +500, +1000, +2500, +5000), sélecteur de cartes dynamique filtrable par titre/rareté/développeur, toggle holographique et motifs pré-remplis.
   - [x] Modale de célébration côté joueur `AdminRewardCelebrationModal.tsx` montée dans `App.tsx` affichant le décret royal, les plumes gagnées, la carte reçue (avec animation holographique si applicable) et bouton d'acquittement automatique.
 
-### 12. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[⏳ À faire]`
+### 12. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[✅ 100% Terminé]`
 - **Objectif :** Afficher et convertir automatiquement les prix des jeux Steam et Itch.io dans la devise et le format correspondant à la langue ou au pays sélectionné par le visiteur sur le site (exemple : prix en Yen `¥` pour le Japon / langue `ja`, Dollar `$` pour `en`, Real `R$` pour `pt-BR`, Euro `€` pour `fr`, `de`, `es`).
-- **Actions à réaliser :**
-  - [ ] **Backend Steam API (`get_steam_info`)** : Passer le code pays Steam `cc` (`cc=jp`, `cc=us`, `cc=br`, `cc=fr`, etc.) et la langue `l` (`japanese`, `english`, `brazilian`, `french`, etc.) lors des requêtes à l'API Steam Store `store.steampowered.com/api/appdetails` et sauvegarder les prix dans `pricingText`.
-  - [ ] **Itch.io & conversions de devises** : Définir les règles de conversion ou de formatage selon la monnaie locale (USD / EUR / JPY / BRL).
-  - [ ] **Frontend (`MicroIndieHub.tsx`, cartes de jeux, catalogue)** : Sélectionner dynamiquement le texte de prix selon la locale active issue de `i18n.language` avec repli élégant.
+- **Actions réalisées :**
+  - [x] **Backend Steam API (`public/api/micro_indies.php` & `public/api/track.php`)** : Prise en charge des paramètres `cc` (`cc=jp`, `cc=us`, `cc=br`, `cc=fr`, etc.) et `l` (`japanese`, `english`, `brazilian`, `french`, etc.) lors des requêtes à l'API Steam Store `store.steampowered.com/api/appdetails`, avec calcul et génération automatique de la grille tarifaire complète multilingue (`pricingText` pour `fr`, `en`, `es`, `de`, `ja`, `pt-BR`).
+  - [x] **Itch.io & conversions de devises (`src/utils/currencyFormatter.ts`)** : Module utilitaire dédié avec configuration des devises (EUR, USD, JPY, BRL), taux de conversion Steam régionaux, règles d'arrondi (Yen sans décimales avec séparateur de milliers), libellé "Gratuit / Free / 無料" adapté, et extraction de prix depuis les chaînes arbitraires.
+  - [x] **Frontend réactif (`MicroIndieHub.tsx`, `GemExplorerHome.tsx`, `SteamCatalogExplorer.tsx`, `ToolboxHub.tsx`)** : Sélection dynamique des devises selon `i18n.language` avec repli élégant, badges de soldes et prix barrés convertis.
+  - [x] **Suite de tests unitaires validée (`scripts/testCurrencyFormatting.ts`)** : 6/6 tests réussis (devises, centimes, réductions, jeux gratuits, extraction regex, dictionnaire bilingue).
 
 ---
 
@@ -190,7 +191,7 @@
   - [ ] **Backend PHP (`chat.php` / nouveau point d'entrée)** : Créer les endpoints d'envoi et de réception de messages privés sécurisés avec isolation stricte par identifiant d'expéditeur et de destinataire (`private_conversations`).
   - [ ] **Frontend & UI** : Intégrer un onglet ou volet « Messages Privés » dans `ChatDrawer.tsx` ou depuis la liste d'amis (`FriendsModal.tsx`), avec notifications de nouveau message non lu et son discret.
 
-### 12. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+### 14. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
 - **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
 - **Actions à réaliser :**
   - [ ] **Menu d'Échange dédié (`TradeModal.tsx`)** :
@@ -201,7 +202,7 @@
     - Exécution bilatérale atomique : à la confirmation mutuelle des deux joueurs, retirer la carte envoyée de l'inventaire du joueur A pour l'ajouter chez le joueur B, et inversement pour la carte reçue.
     - Historique et gestion des propositions (`en attente`, `acceptée`, `refusée`, `expirée`).
 
-### 13. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
+### 15. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
 - **Constat :** Bien que les règles de hooks et les types `any` aient été corrigés, et que l'immense `ArcadeModal.tsx` ait été découpé avec succès, il reste plusieurs composants React de plus de 1500 lignes qui violent le principe de Responsabilité Unique (Single Responsibility).
 - **Actions à réaliser :**
   - [ ] **Nettoyage de `AdminDashboardModal.tsx` (3200+ lignes) :** Vérifier l'intégration finale des sous-onglets générés (`src/components/admin/tabs/`) et supprimer tout le code mort ou redondant qui n'aurait pas été retiré de la modale principale lors de l'extraction.

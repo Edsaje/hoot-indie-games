@@ -18,6 +18,7 @@ import { ProposeMicroIndieModal } from './ProposeMicroIndieModal';
 import { AdminDashboardModal } from '../admin/AdminDashboardModal';
 import { useUserAccount } from '../../context/useUserAccount';
 import type { MicroIndieGame } from '../../types/microIndie';
+import { formatMicroIndiePrice } from '../../utils/currencyFormatter';
 
 type FilterType = 'all' | 'itch' | 'steam' | 'web' | 'free' | 'jam';
 
@@ -532,17 +533,24 @@ export const MicroIndieHub: React.FC = () => {
                         Itch + Steam
                       </span>
                     )}
-                    {game.isFree ? (
-                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/30 border border-emerald-400/60 text-emerald-200 text-[10px] font-bold backdrop-blur-sm">
-                        Gratuit 🆓
-                      </span>
-                    ) : (
-                      game.pricingText && (
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-400/40 text-amber-200 text-[10px] font-bold backdrop-blur-sm">
-                          {(game.pricingText && (game.pricingText[currentLang] || game.pricingText.fr)) || ''}
-                        </span>
-                      )
-                    )}
+                    {(() => {
+                      const priceBadge = formatMicroIndiePrice(game.pricingText, game.isFree, currentLang);
+                      if (game.isFree) {
+                        return (
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-500/30 border border-emerald-400/60 text-emerald-200 text-[10px] font-bold backdrop-blur-sm">
+                            {priceBadge || 'Gratuit 🆓'}
+                          </span>
+                        );
+                      }
+                      if (priceBadge) {
+                        return (
+                          <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-400/40 text-amber-200 text-[10px] font-bold backdrop-blur-sm">
+                            {priceBadge}
+                          </span>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
 
                   {/* Game Jam tag */}

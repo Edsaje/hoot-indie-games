@@ -86,6 +86,57 @@ function sanitizeUrl($url) {
     return $trimmed;
 }
 
+function formatLocalizedPricingText($priceStr, $platform = 'steam', $isFree = false) {
+    if ($isFree || preg_match('/gratuit|free|gratis|kostenlos|無料|grátis/i', $priceStr) || $priceStr === '0' || $priceStr === '0€') {
+        return [
+            'fr' => 'Gratuit 🆓',
+            'en' => 'Free 🆓',
+            'es' => 'Gratis 🆓',
+            'de' => 'Kostenlos 🆓',
+            'ja' => '無料 🆓',
+            'pt-BR' => 'Grátis 🆓',
+        ];
+    }
+
+    if (preg_match('/(\d+(?:[.,]\d{1,2})?)/', $priceStr, $m)) {
+        $num = floatval(str_replace(',', '.', $m[1]));
+        $isUsd = (strpos($priceStr, '$') !== false || stripos($priceStr, 'usd') !== false);
+        $eurValue = $isUsd ? ($num / 1.08) : $num;
+
+        $eurFormatted = number_format($eurValue, 2, ',', ' ') . ' €';
+        $usdFormatted = '$' . number_format($eurValue * 1.08, 2, '.', '');
+        $jpyFormatted = '¥' . number_format(round($eurValue * 160));
+        $brlFormatted = 'R$ ' . number_format($eurValue * 5.5, 2, ',', ' ');
+
+        $suffix = [
+            'fr' => ($platform === 'itch' ? 'sur Itch.io' : ($platform === 'both' ? 'sur Steam & Itch.io' : 'sur Steam')),
+            'en' => ($platform === 'itch' ? 'on Itch.io' : ($platform === 'both' ? 'on Steam & Itch.io' : 'on Steam')),
+            'es' => ($platform === 'itch' ? 'en Itch.io' : ($platform === 'both' ? 'en Steam & Itch.io' : 'en Steam')),
+            'de' => ($platform === 'itch' ? 'auf Itch.io' : ($platform === 'both' ? 'auf Steam & Itch.io' : 'auf Steam')),
+            'ja' => ($platform === 'itch' ? 'Itch.ioにて' : ($platform === 'both' ? 'Steam & Itch.ioにて' : 'Steamにて')),
+            'pt-BR' => ($platform === 'itch' ? 'no Itch.io' : ($platform === 'both' ? 'no Steam & Itch.io' : 'no Steam')),
+        ];
+
+        return [
+            'fr' => "{$eurFormatted} {$suffix['fr']}",
+            'en' => "{$usdFormatted} {$suffix['en']}",
+            'es' => "{$eurFormatted} {$suffix['es']}",
+            'de' => "{$eurFormatted} {$suffix['de']}",
+            'ja' => "{$suffix['ja']} {$jpyFormatted}",
+            'pt-BR' => "{$brlFormatted} {$suffix['pt-BR']}",
+        ];
+    }
+
+    return [
+        'fr' => $priceStr,
+        'en' => $priceStr,
+        'es' => $priceStr,
+        'de' => $priceStr,
+        'ja' => $priceStr,
+        'pt-BR' => $priceStr,
+    ];
+}
+
 function healAndLoadMicroIndies($dataFile) {
     $items = [];
     if (!file_exists($dataFile)) return $items;
@@ -233,10 +284,15 @@ if ($action === 'get_steam_info') {
         echo json_encode(['success' => false, 'error' => 'AppID manquant']);
         exit;
     }
-    $url = "https://store.steampowered.com/api/appdetails?appids={$appId}&cc=fr&l=french";
+    $reqCc = strtolower(preg_replace('/[^a-z]/i', '', $_GET['cc'] ?? ($postData['cc'] ?? 'fr')));
+    $reqL = strtolower(preg_replace('/[^a-z]/i', '', $_GET['l'] ?? ($postData['l'] ?? 'french')));
+    if (empty($reqCc)) $reqCc = 'fr';
+    if (empty($reqL)) $reqL = 'french';
+
+    $url = "https://store.steampowered.com/api/appdetails?appids={$appId}&cc={$reqCc}&l={$reqL}";
     $ctx = stream_context_create([
         'http' => [
-            'timeout' => 4,
+            'timeout' => 5,
             'header' => "User-Agent: HootIndieGames-Sync/1.0\r\n"
         ]
     ]);
@@ -247,16 +303,46 @@ if ($action === 'get_steam_info') {
             $gameData = $data[$appId]['data'];
             $isFree = !empty($gameData['is_free']);
             $finalPrice = '';
+            $currency = 'EUR';
+            $finalCents = 0;
+
             if ($isFree) {
                 $finalPrice = 'Gratuit 🆓';
-            } elseif (isset($gameData['price_overview']['final_formatted'])) {
-                $finalPrice = $gameData['price_overview']['final_formatted'] . ' sur Steam';
+                $pricingText = [
+                    'fr' => 'Gratuit 🆓',
+                    'en' => 'Free 🆓',
+                    'es' => 'Gratis 🆓',
+                    'de' => 'Kostenlos 🆓',
+                    'ja' => '無料 🆓',
+                    'pt-BR' => 'Grátis 🆓',
+                ];
+            } else {
+                $priceOverview = $gameData['price_overview'] ?? [];
+                $finalFormatted = $priceOverview['final_formatted'] ?? '';
+                $finalCents = intval($priceOverview['final'] ?? 0);
+                $currency = $priceOverview['currency'] ?? 'EUR';
+                $finalPrice = !empty($finalFormatted) ? $finalFormatted . ' sur Steam' : 'Payant sur Steam';
+
+                // Calcul de la grille multi-devises
+                $eurValue = ($currency === 'USD') ? ($finalCents / 100) / 1.08 : ($finalCents / 100);
+                $pricingText = [
+                    'fr' => ($currency === 'EUR' && !empty($finalFormatted) ? $finalFormatted : number_format($eurValue, 2, ',', ' ') . ' €') . ' sur Steam',
+                    'en' => '$' . number_format($eurValue * 1.08, 2, '.', '') . ' on Steam',
+                    'es' => ($currency === 'EUR' && !empty($finalFormatted) ? $finalFormatted : number_format($eurValue, 2, ',', ' ') . ' €') . ' en Steam',
+                    'de' => ($currency === 'EUR' && !empty($finalFormatted) ? $finalFormatted : number_format($eurValue, 2, ',', ' ') . ' €') . ' auf Steam',
+                    'ja' => 'Steamにて¥' . number_format(round($eurValue * 160)),
+                    'pt-BR' => 'R$ ' . number_format($eurValue * 5.5, 2, ',', ' ') . ' no Steam',
+                ];
             }
+
             echo json_encode([
                 'success' => true,
                 'name' => $gameData['name'] ?? '',
                 'isFree' => $isFree,
                 'priceFormatted' => $finalPrice,
+                'pricingText' => $pricingText,
+                'currency' => $currency,
+                'finalCents' => $finalCents,
                 'coverImage' => "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$appId}/header.jpg",
             ]);
             exit;
@@ -389,10 +475,11 @@ if ($action === 'submit') {
         'steamUrl' => $steamUrl ?: null,
         'playInBrowserUrl' => $playUrl ?: null,
         'isFree' => $isFree,
-        'pricingText' => [
-            'fr' => $isFree ? 'Gratuit / Free 🆓' : (!empty($postData['price']) ? sanitizeText($postData['price'], 100) : 'Payant / Prix libre'),
-            'en' => $isFree ? '100% Free 🆓' : (!empty($postData['price']) ? sanitizeText($postData['price'], 100) : 'Paid / Name your price'),
-        ],
+        'pricingText' => formatLocalizedPricingText(
+            $isFree ? 'Gratuit' : (!empty($postData['price']) ? sanitizeText($postData['price'], 100) : 'Payant'),
+            $platform,
+            $isFree
+        ),
         'genre' => [$genre],
         'artStyle' => [
             'fr' => $artStyle,
@@ -745,8 +832,10 @@ if ($action === 'admin_update') {
             if (isset($updates['discoveredBy'])) $item['discoveredBy'] = sanitizeText($updates['discoveredBy'], 50);
             if (isset($updates['price'])) {
                 $pPrice = sanitizeText($updates['price'], 100);
-                $item['pricingText'] = ['fr' => $pPrice, 'en' => $pPrice];
-                $item['isFree'] = (stripos($pPrice, 'gratuit') !== false || stripos($pPrice, 'free') !== false || $pPrice === '0' || $pPrice === '0€');
+                $plat = (!empty($item['steamUrl']) && !empty($item['itchUrl'])) ? 'both' : (!empty($item['itchUrl']) ? 'itch' : 'steam');
+                $isFreeGame = (stripos($pPrice, 'gratuit') !== false || stripos($pPrice, 'free') !== false || $pPrice === '0' || $pPrice === '0€');
+                $item['pricingText'] = formatLocalizedPricingText($pPrice, $plat, $isFreeGame);
+                $item['isFree'] = $isFreeGame;
             }
             if (isset($updates['pricingText'])) {
                 if (is_array($updates['pricingText'])) {

@@ -24,6 +24,7 @@ import type { Game } from '../../types/game';
 import type { SteamCatalogGame } from '../../services/steamCatalog';
 import { soundFx } from '../../utils/audio';
 import { getSteamStoreData } from '../../data/steamStoreData';
+import { formatSteamPrice } from '../../utils/currencyFormatter';
 import { getAppIdFromSteamUrl } from '../../services/steamService';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { SteamIcon } from '../common/SteamIcon';
@@ -985,6 +986,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             const coverUrl = steamGame.headerImage || game.screenshots[game.screenshots.length - 1];
             const appId = getAppIdFromSteamUrl(game.steamUrl) || steamGame.steamAppId;
             const storeData = getSteamStoreData(appId);
+            const localizedPrice = formatSteamPrice(storeData, i18n.language, Boolean(game.itchUrl));
 
             return (
               <div
@@ -1015,25 +1017,23 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                       </span>
                     </div>
 
-                    {storeData ? (
-                      storeData.discountPercent > 0 ? (
+                    {storeData || game.itchUrl ? (
+                      localizedPrice.discountPercent > 0 ? (
                         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shadow-md">
-                          <span className="line-through text-slate-500 text-[9px]">{storeData.formattedInitialPrice}</span>
-                          <span>{storeData.formattedFinalPrice}</span>
+                          {localizedPrice.formattedInitial && (
+                            <span className="line-through text-slate-500 text-[9px]">{localizedPrice.formattedInitial}</span>
+                          )}
+                          <span>{localizedPrice.formattedFinal}</span>
                         </div>
-                      ) : storeData.isFree ? (
+                      ) : localizedPrice.isFree ? (
                         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
                           {t('catalog.free')}
                         </div>
                       ) : (
                         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-[11px] font-mono font-bold text-slate-200 border border-white/10 shadow-md">
-                          {storeData.formattedFinalPrice}
+                          {localizedPrice.formattedFinal}
                         </div>
                       )
-                    ) : game.itchUrl ? (
-                      <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
-                        {t('catalog.free')}
-                      </div>
                     ) : null}
 
                     <div className="absolute top-2 left-2 flex items-center gap-1">
@@ -1201,17 +1201,24 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                   <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#131a29] border border-[#1e293b]">
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-slate-400 font-bold uppercase">{t('catalog.steamPrice')}</span>
-                      {modalStore.discountPercent > 0 ? (
-                        <div className="flex items-center gap-1.5">
-                          <span className="line-through text-slate-500 text-xs">{modalStore.formattedInitialPrice}</span>
-                          <span className="text-emerald-400 font-black text-sm">{modalStore.formattedFinalPrice}</span>
-                          <span className="px-2 py-0.5 rounded bg-emerald-500 text-black font-black text-xs">-{modalStore.discountPercent}%</span>
-                        </div>
-                      ) : modalStore.isFree ? (
-                        <span className="text-cyan-300 font-black text-sm">{t('catalog.free')}</span>
-                      ) : (
-                        <span className="text-white font-black text-sm">{modalStore.formattedFinalPrice}</span>
-                      )}
+                    {(() => {
+                      const modalPrice = formatSteamPrice(modalStore, i18n.language);
+                      if (modalStore.discountPercent > 0) {
+                        return (
+                          <div className="flex items-center gap-1.5">
+                            {modalPrice.formattedInitial && (
+                              <span className="line-through text-slate-500 text-xs">{modalPrice.formattedInitial}</span>
+                            )}
+                            <span className="text-emerald-400 font-black text-sm">{modalPrice.formattedFinal}</span>
+                            <span className="px-2 py-0.5 rounded bg-emerald-500 text-black font-black text-xs">-{modalStore.discountPercent}%</span>
+                          </div>
+                        );
+                      }
+                      if (modalPrice.isFree) {
+                        return <span className="text-cyan-300 font-black text-sm">{t('catalog.free')}</span>;
+                      }
+                      return <span className="text-white font-black text-sm">{modalPrice.formattedFinal}</span>;
+                    })()}
                     </div>
 
                     {modalStore.totalReviews > 0 && (

@@ -20,6 +20,7 @@ import {
 import { INDIE_GAMES } from '../../data/games';
 import { UPCOMING_INDIE_GAMES } from '../../data/upcomingGames';
 import { STEAM_STORE_DATA } from '../../data/steamStoreData';
+import { formatSteamPrice } from '../../utils/currencyFormatter';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 import { getLocalizedText, getTranslatedGenre } from '../../utils/localization';
@@ -47,7 +48,7 @@ type SortOption =
   | 'price-desc';
 
 // Helper to extract store data safely
-function getStoreDetails(game: Game) {
+function getStoreDetails(game: Game, lang?: string) {
   const match = game.steamUrl ? game.steamUrl.match(/\/app\/(\d+)/) : null;
   const appId = match ? parseInt(match[1], 10) : null;
   const store = appId ? STEAM_STORE_DATA[appId] : null;
@@ -58,6 +59,7 @@ function getStoreDetails(game: Game) {
   const isFree = store ? store.isFree : false;
   const score = store ? store.positivePercent : 92;
   const totalReviews = store ? store.totalReviews : 2500;
+  const localized = formatSteamPrice(store, lang);
 
   return {
     appId,
@@ -68,9 +70,7 @@ function getStoreDetails(game: Game) {
     isFree,
     score,
     totalReviews,
-    formattedPrice: isFree
-      ? 'Gratuit'
-      : store?.formattedFinalPrice || `${finalPrice.toFixed(2)} €`,
+    formattedPrice: localized.formattedFinal || (isFree ? 'Gratuit' : `${finalPrice.toFixed(2)} €`),
   };
 }
 
@@ -1106,7 +1106,7 @@ export const ToolboxHub: React.FC = () => {
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredGems.map((game) => {
-              const store = getStoreDetails(game);
+              const store = getStoreDetails(game, i18n.language);
               const hours = getGameDurationHours(game);
               return (
                 <div

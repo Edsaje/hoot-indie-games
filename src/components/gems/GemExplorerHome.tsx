@@ -37,6 +37,7 @@ import { SteamIcon } from '../common/SteamIcon';
 import { ItchIcon } from '../common/ItchIcon';
 import { soundFx } from '../../utils/audio';
 import { getSteamStoreData } from '../../data/steamStoreData';
+import { formatSteamPrice } from '../../utils/currencyFormatter';
 import { getAppIdFromSteamUrl } from '../../services/steamService';
 import { getChallengeStatusForDate } from '../../utils/streakManager';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
@@ -1418,6 +1419,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
             const owned = isGameOwned(game.steamUrl);
             const appId = getAppIdFromSteamUrl(game.steamUrl);
             const storeData = getSteamStoreData(appId);
+            const localizedPrice = formatSteamPrice(storeData, i18n.language, Boolean(game.itchUrl));
 
             return (
               <div
@@ -1466,27 +1468,25 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
                   {/* Top-Right Badges: Price & Release Year */}
                   <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-                    {storeData ? (
-                      storeData.discountPercent > 0 ? (
+                    {storeData || game.itchUrl ? (
+                      localizedPrice.discountPercent > 0 ? (
                         <div className="px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-xs font-mono font-bold text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shadow-md">
-                          <span className="line-through text-slate-500 text-[10px]">
-                            {storeData.formattedInitialPrice}
-                          </span>
-                          <span>{storeData.formattedFinalPrice}</span>
+                          {localizedPrice.formattedInitial && (
+                            <span className="line-through text-slate-500 text-[10px]">
+                              {localizedPrice.formattedInitial}
+                            </span>
+                          )}
+                          <span>{localizedPrice.formattedFinal}</span>
                         </div>
-                      ) : storeData.isFree ? (
+                      ) : localizedPrice.isFree ? (
                         <div className="px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-xs font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
                           {t('catalog.free')}
                         </div>
                       ) : (
                         <div className="px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-xs font-mono font-bold text-slate-200 border border-white/10 shadow-md">
-                          {storeData.formattedFinalPrice}
+                          {localizedPrice.formattedFinal}
                         </div>
                       )
-                    ) : game.itchUrl ? (
-                      <div className="px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-xs font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
-                        {t('catalog.free')}
-                      </div>
                     ) : null}
 
                     <div className="px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-xs font-mono font-bold text-amber-400 border border-white/10 shadow-md">
@@ -1556,9 +1556,9 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                             {owned
                               ? t('catalog.inYourLibrary')
                               : storeData && storeData.discountPercent > 0
-                              ? `${t('catalog.onSteam')} · ${storeData.formattedFinalPrice} (-${storeData.discountPercent}%)`
+                              ? `${t('catalog.onSteam')} · ${localizedPrice.formattedFinal} (-${storeData.discountPercent}%)`
                               : storeData
-                              ? `${t('catalog.onSteam')} · ${storeData.formattedFinalPrice}`
+                              ? `${t('catalog.onSteam')} · ${localizedPrice.formattedFinal}`
                               : t('catalog.viewOnSteam')}
                           </span>
                           <ExternalLink className="w-3.5 h-3.5 opacity-60 shrink-0" />

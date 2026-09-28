@@ -88,6 +88,58 @@ function getClientIp() {
 
 $clientIp = getClientIp();
 
+function formatLocalizedPricingText($priceStr, $platform = 'steam', $isFree = false) {
+    if ($isFree || preg_match('/gratuit|free|gratis|kostenlos|無料|grátis/i', $priceStr) || $priceStr === '0' || $priceStr === '0€') {
+        return [
+            'fr' => 'Gratuit 🆓',
+            'en' => 'Free 🆓',
+            'es' => 'Gratis 🆓',
+            'de' => 'Kostenlos 🆓',
+            'ja' => '無料 🆓',
+            'pt-BR' => 'Grátis 🆓',
+        ];
+    }
+
+    if (preg_match('/(\d+(?:[.,]\d{1,2})?)/', $priceStr, $m)) {
+        $num = floatval(str_replace(',', '.', $m[1]));
+        $isUsd = (strpos($priceStr, '$') !== false || stripos($priceStr, 'usd') !== false);
+        $eurValue = $isUsd ? ($num / 1.08) : $num;
+
+        $eurFormatted = number_format($eurValue, 2, ',', ' ') . ' €';
+        $usdFormatted = '$' . number_format($eurValue * 1.08, 2, '.', '');
+        $jpyFormatted = '¥' . number_format(round($eurValue * 160));
+        $brlFormatted = 'R$ ' . number_format($eurValue * 5.5, 2, ',', ' ');
+
+        $suffix = [
+            'fr' => ($platform === 'itch' ? 'sur Itch.io' : ($platform === 'both' ? 'sur Steam & Itch.io' : 'sur Steam')),
+            'en' => ($platform === 'itch' ? 'on Itch.io' : ($platform === 'both' ? 'on Steam & Itch.io' : 'on Steam')),
+            'es' => ($platform === 'itch' ? 'en Itch.io' : ($platform === 'both' ? 'en Steam & Itch.io' : 'en Steam')),
+            'de' => ($platform === 'itch' ? 'auf Itch.io' : ($platform === 'both' ? 'auf Steam & Itch.io' : 'auf Steam')),
+            'ja' => ($platform === 'itch' ? 'Itch.ioにて' : ($platform === 'both' ? 'Steam & Itch.ioにて' : 'Steamにて')),
+            'pt-BR' => ($platform === 'itch' ? 'no Itch.io' : ($platform === 'both' ? 'no Steam & Itch.io' : 'no Steam')),
+        ];
+
+        return [
+            'fr' => "{$eurFormatted} {$suffix['fr']}",
+            'en' => "{$usdFormatted} {$suffix['en']}",
+            'es' => "{$eurFormatted} {$suffix['es']}",
+            'de' => "{$eurFormatted} {$suffix['de']}",
+            'ja' => "{$suffix['ja']} {$jpyFormatted}",
+            'pt-BR' => "{$brlFormatted} {$suffix['pt-BR']}",
+        ];
+    }
+
+    return [
+        'fr' => $priceStr,
+        'en' => $priceStr,
+        'es' => $priceStr,
+        'de' => $priceStr,
+        'ja' => $priceStr,
+        'pt-BR' => $priceStr,
+    ];
+}
+
+
 // Normalisation des pseudonymes pour l'administration et l'unicité
 function normalizeUsernameAdmin($name) {
     $clean = mb_strtolower(trim($name), 'UTF-8');
@@ -1166,8 +1218,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                     }
                     if (!empty($mDiscoveredBy)) $item['discoveredBy'] = $mDiscoveredBy;
                     if (!empty($mPrice)) {
-                        $item['pricingText'] = ['fr' => $mPrice, 'en' => $mPrice];
-                        $item['isFree'] = (stripos($mPrice, 'gratuit') !== false || stripos($mPrice, 'free') !== false || $mPrice === '0' || $mPrice === '0€');
+                        $mPlat = (!empty($mSteamUrl) && !empty($mItchUrl)) ? 'both' : (!empty($mItchUrl) ? 'itch' : 'steam');
+                        $isFreeGame = (stripos($mPrice, 'gratuit') !== false || stripos($mPrice, 'free') !== false || $mPrice === '0' || $mPrice === '0€');
+                        $item['pricingText'] = formatLocalizedPricingText($mPrice, $mPlat, $isFreeGame);
+                        $item['isFree'] = $isFreeGame;
                     } elseif (!empty($mPricingTextRaw)) {
                         $pt = json_decode($mPricingTextRaw, true);
                         if (is_array($pt)) {
