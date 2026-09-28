@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 40
+ * Total de pépites sélectionnées : 42
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -1780,5 +1780,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE5MjQ0NDc5LnBuZw==/315x250%23c/wtflM3.png"
     ],
     "dateAdded": "2026-09-27"
+  },
+  {
+    "id": "itch-project-kat",
+    "title": "Project Kat",
+    "developer": "leef6010",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://leef6010.itch.io/projectkat",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A small, unconventional horror rpg.",
+      "en": "A small, unconventional horror rpg."
+    },
+    "description": {
+      "fr": "A small, unconventional horror rpg.",
+      "en": "A small, unconventional horror rpg."
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwOTcyMjIucG5n/315x250%23c/a0NL9j.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwOTcyMjIucG5n/315x250%23c/a0NL9j.png"
+    ],
+    "dateAdded": "2026-09-28"
+  },
+  {
+    "id": "itch-where-eternity-sleeps",
+    "title": "Where Eternity Sleeps",
+    "developer": "livingslime",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://livingslime.itch.io/where-eternity-sleeps",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Your quest has awakened what never sleeps.",
+      "en": "Your quest has awakened what never sleeps."
+    },
+    "description": {
+      "fr": "Your quest has awakened what never sleeps.",
+      "en": "Your quest has awakened what never sleeps."
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIxMzIyOTk2LnBuZw==/315x250%23c/CVV4Oa.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIxMzIyOTk2LnBuZw==/315x250%23c/CVV4Oa.png"
+    ],
+    "dateAdded": "2026-09-28"
   }
 ];
