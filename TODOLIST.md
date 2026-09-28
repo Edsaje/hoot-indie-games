@@ -218,9 +218,29 @@
 
 ---
 
+### 16. 🏷️ Affichage Fiable des Prix & Avis Steam pour les Jeux Issus de Suggestions Communautaires `[✅ 100% Terminé]`
+- **Priorité :** P1 (Haute priorité — Clarté du catalogue, exactitude des prix & avis communautaires)
+- **Difficulté :** Moyenne (Passage de bout en bout des métadonnées Steam Store, cache persistant et auto-réparation)
+- **Constat :** Les jeux ajoutés depuis la « Boîte à pépites » (suggestions communautaires) ou créés manuellement par l'administrateur n'avaient pas leur prix Steam (et éventuelle promotion), ni leur pourcentage et appréciation d'avis affichés sur leurs cartes de catalogue. Les causes identifiées :
+  1. Le dictionnaire statique `steamStoreData.ts` est figé à la compilation et ne contenait que les 494 jeux initiaux. Le cache dynamique en mémoire `DYNAMIC_STORE_CACHE` n'était pas persisté dans le LocalStorage et n'était jamais rechargé au démarrage.
+  2. Lors de la validation d'une suggestion (`handleQuickApproveSuggestion` et `handleEditAndApproveSuggestion`), les champs de prix (`initialPriceCents`, `finalPriceCents`, `formattedFinalPrice`) étaient initialisés à zéro/vide au lieu d'extraire les données réelles de `lookupJson.dataFR.price_overview`.
+  3. L'objet `gameToSave` et le formulaire `AdminGamesManager` n'incluaient pas `steamStoreData`, empêchant le backend d'enregistrer ces métadonnées dans `games_override.json`.
+  4. Les composants `SteamCatalogExplorer.tsx` et `GemExplorerHome.tsx` ne cherchaient les métadonnées que dans `getSteamStoreData(appId)` sans repli sur `game.steamStoreData`, et `GemExplorerHome` n'utilisait pas `game.steamAppId` comme repli si `steamUrl` était absent.
+- **Actions réalisées :**
+  - [x] **Typage Global (`src/types/game.ts`) :** Ajout de la propriété optionnelle `steamStoreData?: SteamStoreGameData` sur l'interface canonique `Game`.
+  - [x] **Cache Dynamique Persistant & Événements (`src/data/steamStoreData.ts`) :** Persistance automatique de `DYNAMIC_STORE_CACHE` dans `localStorage` sous la clé `'hoot_dynamic_steam_store_cache_v1'`, et diffusion de l'événement `'hoot_steam_store_data_updated'` lors de chaque enregistrement.
+  - [x] **Extraction Complète des Prix & Avis (`src/components/admin/AdminDashboardModal.tsx`) :** Parsing complet de `price_overview`, gestion des jeux gratuits (`isFree`), formatage des remises et calcul des avis bilingues dans `handleQuickApproveSuggestion` et `handleEditAndApproveSuggestion`, avec enregistrement immédiat et attachement à `gameToSave` / `gameToPrefill`.
+  - [x] **Intégration au Formulaire Admin (`src/components/admin/AdminGamesManager.tsx`) :** Ajout de l'état `formSteamStoreData`, extraction automatique des données de prix/avis lors du clic sur « Auto-remplir depuis Steam » et inclusion systématique de `steamStoreData` dans le payload de sauvegarde `gamePayload`.
+  - [x] **Persistance & Auto-Guérison Serveur (`public/api/admin_games.php`) :** Assainissement et sauvegarde de `steamStoreData` dans `games_override.json` lors de `save_game`, et auto-guérison rétroactive des métadonnées de *Spelunky* (AppID 239350) dans `loadGameOverrides`.
+  - [x] **Rapatriement en Tâche de Fond (`src/services/steamCatalog.ts`) :** Enregistrement au runtime de tous les `steamStoreData` présents dans les surcharges et méthode de rapatriement automatique `ensureStoreDataForCustomGames()` interrogeant `/api/suggest_game.php?action=lookup` en arrière-plan pour tout jeu personnalisé sans métadonnées.
+  - [x] **Composants d'Exploration & Réactivité UI (`SteamCatalogExplorer.tsx`, `GemExplorerHome.tsx`, `SteamCatalogProvider.tsx`) :** Utilisation systématique de `getSteamStoreData(appId) || game.steamStoreData` avec repli `game.steamAppId`, écoute de l'événement `'hoot_steam_store_data_updated'` pour un rafraîchissement réactif instantané sans rechargement de page.
+  - [x] **Audit & Build :** 250/250 cartes conformes (`npm run audit-cards`), 250/250 jeux validés (`npm run audit-db`) et compilation réussie (`npm run build`).
+
+---
+
 ## 🔵 Phase 4 : Systèmes Avancés & Refactorisation Lourde (Priorité P3)
 
-### 16. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[✅ 100% Terminé]`
+### 17. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[✅ 100% Terminé]`
 - **Constat :** Le tchat était jusqu'alors exclusivement un salon public global. Les joueurs ne pouvaient pas correspondre en privé.
 - **Actions réalisées :**
   - [x] **Backend PHP Souverain (`public/api/chat.php`)** : Endpoints de messagerie directe `get_private_conversations`, `get_private_messages`, `send_private_message`, `mark_private_read`, `delete_private_message` avec génération de clés canoniques déterministes symétriques (`getCanonicalConversationKey`), stockage atomique sous verrouillage `LOCK_EX` dans `private_conversations.json`, bouclier anti-hameçonnage et modération anti-injures intégrés.
@@ -230,7 +250,7 @@
   - [x] **Interconnexion Sociale (`FriendsModal.tsx` & `ChatUserModerationModal.tsx`)** : Bouton « Message » sur chaque carte de compagnon ouvrant instantanément le tchat privé avec celui-ci, et bouton d'envoi de message privé depuis le profil ou au clic sur le pseudonyme/avatar d'un joueur dans le salon public.
   - [x] **Suite de Tests Validée (`scripts/testPrivateMessaging.ts`)** : 6/6 tests réussis (clé canonique symétrique, insensibilité casse/accents, arithmétique des badges de notifications).
 
-### 17. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
+### 18. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
 - **Priorité :** P1 (Haute priorité — Confiance, social & socle anti-spam)
 - **Difficulté :** Moyenne-Élevée (Gestion atomique des demandes côté serveur PHP et réactivité UI)
 - **Constat :** Actuellement, lorsqu'un joueur saisit le code ami d'un autre utilisateur, l'ajout est unilatéral et immédiat sur son client local sans consentement ni notification pour le joueur ciblé. Pour instaurer un véritable réseau social de confiance et bloquer les messages non sollicités, l'amitié doit devenir bilatérale et mutuellement consentie.
@@ -256,7 +276,7 @@
 
 ---
 
-### 18. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
+### 19. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
 - **Priorité :** P1 (Haute priorité — Sécurité primordiale & protection des utilisateurs)
 - **Difficulté :** Moyenne (Vérification croisée backend + guidage ergonomique frontend)
 - **Constat :** Pour éviter tout risque de spam automatisé, de faux messages de phishing (faux comptes se faisant passer pour des tiers ou envoyant des arnaques en message direct), la messagerie directe doit être strictement réservée aux compagnons mutuellement confirmés, à l'exception du Super-Admin / Fondateur Hibouxe pour le support officiel.
@@ -272,7 +292,7 @@
 
 ---
 
-### 19. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+### 20. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
 - **Priorité :** P2 (Priorité moyenne — Économie du jeu de cartes & collection)
 - **Difficulté :** Élevée (Transactions atomiques sécurisées, double validation, cohérence des inventaires)
 - **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
@@ -287,7 +307,7 @@
 
 ---
 
-### 20. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
+### 21. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
 - **Priorité :** P3 (Maintenance & propreté architecturale — 0 dette technique)
 - **Difficulté :** Élevée (Composants de grande taille avec logique d'état complexe)
 - **Constat :** Bien que les règles de hooks et les types `any` aient été corrigés, et que l'immense `ArcadeModal.tsx` ait été découpé avec succès, il reste plusieurs composants React de plus de 1500 lignes qui violent le principe de Responsabilité Unique (Single Responsibility).

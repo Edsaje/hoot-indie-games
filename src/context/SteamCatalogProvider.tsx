@@ -45,9 +45,11 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
     };
 
     window.addEventListener('hoot_steam_catalog_updated', handleUpdate);
+    window.addEventListener('hoot_steam_store_data_updated', handleUpdate);
     return () => {
       isMounted = false;
       window.removeEventListener('hoot_steam_catalog_updated', handleUpdate);
+      window.removeEventListener('hoot_steam_store_data_updated', handleUpdate);
     };
   }, []);
 

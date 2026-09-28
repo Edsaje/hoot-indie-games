@@ -190,8 +190,8 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
         return false;
       }
 
-      const appId = getAppIdFromSteamUrl(game.steamUrl);
-      const storeData = getSteamStoreData(appId);
+      const appId = getAppIdFromSteamUrl(game.steamUrl) || (game as SteamCatalogGame).steamAppId;
+      const storeData = getSteamStoreData(appId) || game.steamStoreData;
 
       // Filtre Prix & Soldes
       if (priceFilter === 'sale') {
@@ -233,8 +233,8 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
     });
 
     list = [...list].sort((a, b) => {
-      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl));
-      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl));
+      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl) || (a as SteamCatalogGame).steamAppId) || a.steamStoreData;
+      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl) || (b as SteamCatalogGame).steamAppId) || b.steamStoreData;
 
       switch (sortBy) {
         case 'yearDesc':
@@ -985,7 +985,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             const steamGame = game as SteamCatalogGame;
             const coverUrl = steamGame.headerImage || game.screenshots[game.screenshots.length - 1];
             const appId = getAppIdFromSteamUrl(game.steamUrl) || steamGame.steamAppId;
-            const storeData = getSteamStoreData(appId);
+            const storeData = getSteamStoreData(appId) || game.steamStoreData;
             const localizedPrice = formatSteamPrice(storeData, i18n.language, Boolean(game.itchUrl));
 
             return (
@@ -1183,7 +1183,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             <div className="p-4 bg-[#0b0f19] border border-[#1e293b] rounded-2xl space-y-3">
               {(() => {
                 const modalAppId = getAppIdFromSteamUrl(selectedGameForModal.steamUrl) || (selectedGameForModal as SteamCatalogGame).steamAppId;
-                const modalStore = getSteamStoreData(modalAppId);
+                const modalStore = getSteamStoreData(modalAppId) || selectedGameForModal.steamStoreData;
                 if (!modalStore) {
                   if (selectedGameForModal.itchUrl) {
                     return (

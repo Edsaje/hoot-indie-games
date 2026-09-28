@@ -70,7 +70,7 @@ import {
   type AdminMicroIndieEntry,
 } from '../../services/adminService';
 import { getDynamicCardsPool, computeGameRarity } from '../../data/cardsData';
-import { registerSteamStoreData } from '../../data/steamStoreData';
+import { registerSteamStoreData, type SteamStoreGameData } from '../../data/steamStoreData';
 import { RARITY_CONFIG } from '../../types/cards';
 import {
   inferCanonicalArtStyle,
@@ -528,7 +528,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     try {
       let dataFR: any = null;
       let dataEN: any = null;
-      let fetchedReviews: { totalReviews: number; totalPositive: number; positivePercent: number; reviewScoreDesc?: string } | null = null;
+      let fetchedReviews: {
+        totalReviews: number;
+        totalPositive: number;
+        positivePercent: number;
+        reviewScoreDesc?: string | { fr?: string; en?: string };
+      } | null = null;
 
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${s.appId}`);
@@ -573,24 +578,42 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       const taglineFR = (dataFR?.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '').trim();
       const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '').trim();
 
-      if (fetchedReviews && s.appId) {
-        const descText = fetchedReviews.reviewScoreDesc || 'Très positives';
-        registerSteamStoreData({
+      let storeDataToSave: SteamStoreGameData | undefined = undefined;
+      if (s.appId) {
+        const priceOverview = dataFR?.price_overview;
+        const isFree = !!dataFR?.is_free || (!priceOverview && dataFR?.is_free);
+        const currency = priceOverview?.currency || 'EUR';
+        const initialPriceCents = typeof priceOverview?.initial === 'number' ? priceOverview.initial : 0;
+        const finalPriceCents = typeof priceOverview?.final === 'number' ? priceOverview.final : 0;
+        const discountPercent = typeof priceOverview?.discount_percent === 'number' ? priceOverview.discount_percent : 0;
+        const formattedFinalPrice = priceOverview?.final_formatted || (isFree ? 'Gratuit' : '');
+        const formattedInitialPrice = priceOverview?.initial_formatted || '';
+
+        const descFr = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.fr || fetchedReviews.reviewScoreDesc.en || 'Très positives')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Très positives');
+        const descEn = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.en || fetchedReviews.reviewScoreDesc.fr || 'Very Positive')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Very Positive');
+
+        storeDataToSave = {
           appId: s.appId,
-          isFree: false,
-          currency: 'EUR',
-          initialPriceCents: 0,
-          finalPriceCents: 0,
-          discountPercent: 0,
-          formattedFinalPrice: '',
-          totalReviews: fetchedReviews.totalReviews,
-          totalPositive: fetchedReviews.totalPositive,
-          positivePercent: fetchedReviews.positivePercent,
+          isFree,
+          currency,
+          initialPriceCents,
+          finalPriceCents,
+          discountPercent,
+          formattedFinalPrice,
+          formattedInitialPrice,
+          totalReviews: fetchedReviews?.totalReviews || 0,
+          totalPositive: fetchedReviews?.totalPositive || 0,
+          positivePercent: fetchedReviews?.positivePercent || 0,
           reviewScoreDesc: {
-            fr: descText,
-            en: descText,
+            fr: descFr,
+            en: descEn,
           },
-        });
+        };
+        registerSteamStoreData(storeDataToSave);
       }
 
       const computedCardRarity = computeGameRarity(
@@ -601,7 +624,16 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           steamAppId: s.appId,
           steamUrl: s.steamUrl || `https://store.steampowered.com/app/${s.appId}/`,
         },
-        fetchedReviews || undefined
+        fetchedReviews
+          ? {
+              totalReviews: fetchedReviews.totalReviews,
+              totalPositive: fetchedReviews.totalPositive,
+              positivePercent: fetchedReviews.positivePercent,
+              reviewScoreDesc: typeof fetchedReviews.reviewScoreDesc === 'object'
+                ? (fetchedReviews.reviewScoreDesc?.fr || fetchedReviews.reviewScoreDesc?.en || 'Très positives')
+                : (fetchedReviews.reviewScoreDesc || 'Très positives'),
+            }
+          : undefined
       );
 
       const gameToSave: Partial<Game> & { isCustomAdmin: boolean; isGem?: boolean } = {
@@ -620,6 +652,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           tagline: { fr: taglineFR, en: taglineEN },
         },
         cardRarity: computedCardRarity,
+        steamStoreData: storeDataToSave,
         isCustomAdmin: true,
         isGem: true,
       };
@@ -663,7 +696,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     try {
       let dataFR: any = null;
       let dataEN: any = null;
-      let fetchedReviews: { totalReviews: number; totalPositive: number; positivePercent: number; reviewScoreDesc?: string } | null = null;
+      let fetchedReviews: {
+        totalReviews: number;
+        totalPositive: number;
+        positivePercent: number;
+        reviewScoreDesc?: string | { fr?: string; en?: string };
+      } | null = null;
 
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${s.appId}`);
@@ -708,24 +746,42 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       const taglineFR = (dataFR?.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '').trim();
       const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '').trim();
 
-      if (fetchedReviews && s.appId) {
-        const descText = fetchedReviews.reviewScoreDesc || 'Très positives';
-        registerSteamStoreData({
+      let storeDataToSave: SteamStoreGameData | undefined = undefined;
+      if (s.appId) {
+        const priceOverview = dataFR?.price_overview;
+        const isFree = !!dataFR?.is_free || (!priceOverview && dataFR?.is_free);
+        const currency = priceOverview?.currency || 'EUR';
+        const initialPriceCents = typeof priceOverview?.initial === 'number' ? priceOverview.initial : 0;
+        const finalPriceCents = typeof priceOverview?.final === 'number' ? priceOverview.final : 0;
+        const discountPercent = typeof priceOverview?.discount_percent === 'number' ? priceOverview.discount_percent : 0;
+        const formattedFinalPrice = priceOverview?.final_formatted || (isFree ? 'Gratuit' : '');
+        const formattedInitialPrice = priceOverview?.initial_formatted || '';
+
+        const descFr = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.fr || fetchedReviews.reviewScoreDesc.en || 'Très positives')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Très positives');
+        const descEn = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.en || fetchedReviews.reviewScoreDesc.fr || 'Very Positive')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Very Positive');
+
+        storeDataToSave = {
           appId: s.appId,
-          isFree: false,
-          currency: 'EUR',
-          initialPriceCents: 0,
-          finalPriceCents: 0,
-          discountPercent: 0,
-          formattedFinalPrice: '',
-          totalReviews: fetchedReviews.totalReviews,
-          totalPositive: fetchedReviews.totalPositive,
-          positivePercent: fetchedReviews.positivePercent,
+          isFree,
+          currency,
+          initialPriceCents,
+          finalPriceCents,
+          discountPercent,
+          formattedFinalPrice,
+          formattedInitialPrice,
+          totalReviews: fetchedReviews?.totalReviews || 0,
+          totalPositive: fetchedReviews?.totalPositive || 0,
+          positivePercent: fetchedReviews?.positivePercent || 0,
           reviewScoreDesc: {
-            fr: descText,
-            en: descText,
+            fr: descFr,
+            en: descEn,
           },
-        });
+        };
+        registerSteamStoreData(storeDataToSave);
       }
 
       const computedCardRarity = computeGameRarity(
@@ -736,7 +792,16 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           steamAppId: s.appId,
           steamUrl: s.steamUrl || `https://store.steampowered.com/app/${s.appId}/`,
         },
-        fetchedReviews || undefined
+        fetchedReviews
+          ? {
+              totalReviews: fetchedReviews.totalReviews,
+              totalPositive: fetchedReviews.totalPositive,
+              positivePercent: fetchedReviews.positivePercent,
+              reviewScoreDesc: typeof fetchedReviews.reviewScoreDesc === 'object'
+                ? (fetchedReviews.reviewScoreDesc?.fr || fetchedReviews.reviewScoreDesc?.en || 'Très positives')
+                : (fetchedReviews.reviewScoreDesc || 'Très positives'),
+            }
+          : undefined
       );
 
       const gameToPrefill: Partial<Game> = {
@@ -755,6 +820,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           tagline: { fr: taglineFR, en: taglineEN },
         },
         cardRarity: computedCardRarity,
+        steamStoreData: storeDataToSave,
       };
 
       setPrefilledGameForCatalog({ game: gameToPrefill, suggestionId: s.id });

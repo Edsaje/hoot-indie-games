@@ -8231,16 +8231,68 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
 };
 
 /**
- * Cache d'extension en mémoire pour les jeux ajoutés dynamiquement
+ * Cache d'extension persistant pour les jeux ajoutés dynamiquement (suggestions, admin, API)
  */
-const DYNAMIC_STORE_CACHE: Record<number, SteamStoreGameData> = {};
+const DYNAMIC_CACHE_KEY = 'hoot_dynamic_steam_store_cache_v1';
+
+function loadDynamicCache(): Record<number, SteamStoreGameData> {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return {};
+  }
+  try {
+    const raw = localStorage.getItem(DYNAMIC_CACHE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      return parsed;
+    }
+  } catch (err) {
+    console.warn('[SteamStoreData] Impossible de charger le cache local:', err);
+  }
+  return {};
+}
+
+function saveDynamicCache(cache: Record<number, SteamStoreGameData>): void {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    localStorage.setItem(DYNAMIC_CACHE_KEY, JSON.stringify(cache));
+  } catch (err) {
+    console.warn('[SteamStoreData] Impossible de sauvegarder le cache local:', err);
+  }
+}
+
+const DYNAMIC_STORE_CACHE: Record<number, SteamStoreGameData> = loadDynamicCache();
 
 /**
- * Permet d'enregistrer des données Steam Store en direct au runtime
+ * Permet d'enregistrer des données Steam Store en direct au runtime avec persistance
  */
 export function registerSteamStoreData(data: SteamStoreGameData): void {
   if (data && data.appId) {
     DYNAMIC_STORE_CACHE[data.appId] = data;
+    saveDynamicCache(DYNAMIC_STORE_CACHE);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('hoot_steam_store_data_updated', { detail: data }));
+    }
+  }
+}
+
+/**
+ * Permet d'enregistrer plusieurs fiches Steam Store en une seule passe atomique
+ */
+export function registerMultipleSteamStoreData(dataList: SteamStoreGameData[]): void {
+  if (!Array.isArray(dataList) || dataList.length === 0) return;
+  let changed = false;
+  for (const item of dataList) {
+    if (item && item.appId) {
+      DYNAMIC_STORE_CACHE[item.appId] = item;
+      changed = true;
+    }
+  }
+  if (changed) {
+    saveDynamicCache(DYNAMIC_STORE_CACHE);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('hoot_steam_store_data_updated'));
+    }
   }
 }
 
@@ -8261,3 +8313,4 @@ export function getSteamStoreData(appId?: number | string | null): SteamStoreGam
 export function getAllSteamStoreData(): Record<number, SteamStoreGameData> {
   return { ...STEAM_STORE_DATA, ...DYNAMIC_STORE_CACHE };
 }
+

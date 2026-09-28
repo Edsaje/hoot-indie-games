@@ -98,6 +98,17 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   const [highlightedGameId, setHighlightedGameId] = useState<string | null>(null);
   const [randomPickedGame, setRandomPickedGame] = useState<Game | null>(null);
   const [randomScreenshotIndex, setRandomScreenshotIndex] = useState<number>(0);
+  const [storeUpdateTrigger, setStoreUpdateTrigger] = useState<number>(0);
+
+  useEffect(() => {
+    const handleStoreUpdate = () => {
+      setStoreUpdateTrigger((prev) => prev + 1);
+    };
+    window.addEventListener('hoot_steam_store_data_updated', handleStoreUpdate);
+    return () => {
+      window.removeEventListener('hoot_steam_store_data_updated', handleStoreUpdate);
+    };
+  }, []);
 
   const catalogGridRef = useRef<HTMLDivElement | null>(null);
 
@@ -172,8 +183,8 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
         (ownershipFilter === 'owned' && isGameOwned(g.steamUrl)) ||
         (ownershipFilter === 'unowned' && !isGameOwned(g.steamUrl));
 
-      const appId = getAppIdFromSteamUrl(g.steamUrl);
-      const storeData = getSteamStoreData(appId);
+      const appId = getAppIdFromSteamUrl(g.steamUrl) || g.steamAppId;
+      const storeData = getSteamStoreData(appId) || g.steamStoreData;
 
       // Price & Sale filter
       let matchesPrice = true;
@@ -224,8 +235,8 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
     // Sorting logic
     list.sort((a, b) => {
-      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl));
-      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl));
+      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl) || a.steamAppId) || a.steamStoreData;
+      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl) || b.steamAppId) || b.steamStoreData;
 
       switch (sortBy) {
         case 'yearDesc':
@@ -279,7 +290,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     });
 
     return list;
-  }, [curatedGems, searchQuery, selectedGenre, ownershipFilter, priceFilter, ratingFilter, storeFilter, sortBy, isGameOwned]);
+  }, [curatedGems, searchQuery, selectedGenre, ownershipFilter, priceFilter, ratingFilter, storeFilter, sortBy, isGameOwned, storeUpdateTrigger]);
 
   // Système de pagination (paramétrable par l'utilisateur, persistant dans localStorage)
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -1417,8 +1428,8 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
             {paginatedGems.map((game) => {
             const isHighlighted = highlightedGameId === game.id;
             const owned = isGameOwned(game.steamUrl);
-            const appId = getAppIdFromSteamUrl(game.steamUrl);
-            const storeData = getSteamStoreData(appId);
+            const appId = getAppIdFromSteamUrl(game.steamUrl) || game.steamAppId;
+            const storeData = getSteamStoreData(appId) || game.steamStoreData;
             const localizedPrice = formatSteamPrice(storeData, i18n.language, Boolean(game.itchUrl));
 
             return (
@@ -1726,8 +1737,8 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
                 {/* Steam Store Score if available */}
                 {(() => {
-                  const appId = getAppIdFromSteamUrl(randomPickedGame.steamUrl);
-                  const store = getSteamStoreData(appId);
+                  const appId = getAppIdFromSteamUrl(randomPickedGame.steamUrl) || randomPickedGame.steamAppId;
+                  const store = getSteamStoreData(appId) || randomPickedGame.steamStoreData;
                   if (store && store.totalReviews > 0) {
                     return (
                       <div className="flex items-center gap-2">

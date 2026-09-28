@@ -44,7 +44,7 @@ import {
   computeGameRarity,
   extractSteamAppId,
 } from '../../data/cardsData';
-import { getSteamStoreData, registerSteamStoreData } from '../../data/steamStoreData';
+import { getSteamStoreData, registerSteamStoreData, type SteamStoreGameData } from '../../data/steamStoreData';
 
 interface AdminGamesManagerProps {
   currentSteamId?: string;
@@ -111,6 +111,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   const [formTaglineEn, setFormTaglineEn] = useState('');
   const [formComposer, setFormComposer] = useState('');
   const [formCardRarity, setFormCardRarity] = useState<'auto' | CardRarity>('auto');
+  const [formSteamStoreData, setFormSteamStoreData] = useState<SteamStoreGameData | null>(null);
   const [steamReviewsInfo, setSteamReviewsInfo] = useState<{
     totalReviews: number;
     positivePercent: number;
@@ -165,11 +166,22 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       setFormTaglineEn(initialPrefillGame.hints?.tagline?.en || '');
       setFormComposer(initialPrefillGame.hints?.composer || '');
 
+      if (initialPrefillGame.steamStoreData) {
+        setFormSteamStoreData(initialPrefillGame.steamStoreData);
+        registerSteamStoreData(initialPrefillGame.steamStoreData);
+      } else {
+        const cleanAppId = extractSteamAppId(initialPrefillGame);
+        const store = cleanAppId ? getSteamStoreData(cleanAppId) : null;
+        if (store) {
+          setFormSteamStoreData(store);
+        }
+      }
+
       if (initialPrefillGame.cardRarity) {
         setFormCardRarity(initialPrefillGame.cardRarity);
       } else {
         const cleanAppId = extractSteamAppId(initialPrefillGame);
-        const store = cleanAppId ? getSteamStoreData(cleanAppId) : null;
+        const store = initialPrefillGame.steamStoreData || (cleanAppId ? getSteamStoreData(cleanAppId) : null);
         if (store && store.totalReviews > 0) {
           setSteamReviewsInfo({
             totalReviews: store.totalReviews,
@@ -458,14 +470,20 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormComposer(game.hints?.composer || '');
 
     const appId = extractSteamAppId(game);
-    const store = appId ? getSteamStoreData(appId) : null;
-    if (store && store.totalReviews > 0) {
-      setSteamReviewsInfo({
-        totalReviews: store.totalReviews,
-        positivePercent: store.positivePercent,
-        desc: store.reviewScoreDesc?.fr,
-      });
+    const store = (game as Game).steamStoreData || (appId ? getSteamStoreData(appId) : null);
+    if (store) {
+      setFormSteamStoreData(store);
+      if (store.totalReviews > 0) {
+        setSteamReviewsInfo({
+          totalReviews: store.totalReviews,
+          positivePercent: store.positivePercent,
+          desc: store.reviewScoreDesc?.fr,
+        });
+      } else {
+        setSteamReviewsInfo(null);
+      }
     } else {
+      setFormSteamStoreData(null);
       setSteamReviewsInfo(null);
     }
     setFormCardRarity(game.cardRarity || 'auto');
@@ -496,6 +514,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormTaglineEn('');
     setFormComposer('');
     setFormCardRarity('auto');
+    setFormSteamStoreData(null);
     setSteamReviewsInfo(null);
   };
 
@@ -525,13 +544,21 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         categories?: Array<{ description: string }>;
         screenshots?: Array<{ path_full: string }>;
         is_free?: boolean;
+        price_overview?: {
+          currency?: string;
+          initial?: number;
+          final?: number;
+          discount_percent?: number;
+          initial_formatted?: string;
+          final_formatted?: string;
+        };
       }
 
       interface SteamReviewsData {
         totalReviews: number;
         totalPositive: number;
         positivePercent: number;
-        reviewScoreDesc?: string;
+        reviewScoreDesc?: string | { fr?: string; en?: string };
       }
 
       let dataFR: SteamAppDetails | null = null;
@@ -612,28 +639,49 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         setFormComposer(extractedComposer);
       }
 
+      const numAppId = parseInt(appId, 10);
+      const priceOverview = dataFR.price_overview;
+      const isFree = !!dataFR.is_free || (!priceOverview && dataFR.is_free);
+      const currency = priceOverview?.currency || 'EUR';
+      const initialPriceCents = typeof priceOverview?.initial === 'number' ? priceOverview.initial : 0;
+      const finalPriceCents = typeof priceOverview?.final === 'number' ? priceOverview.final : 0;
+      const discountPercent = typeof priceOverview?.discount_percent === 'number' ? priceOverview.discount_percent : 0;
+      const formattedFinalPrice = priceOverview?.final_formatted || (isFree ? 'Gratuit' : '');
+      const formattedInitialPrice = priceOverview?.initial_formatted || '';
+
+      const descFr = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+        ? (fetchedReviews.reviewScoreDesc.fr || fetchedReviews.reviewScoreDesc.en || 'Très positives')
+        : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Très positives');
+      const descEn = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+        ? (fetchedReviews.reviewScoreDesc.en || fetchedReviews.reviewScoreDesc.fr || 'Very Positive')
+        : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Very Positive');
+
+      const storeData: SteamStoreGameData = {
+        appId: numAppId,
+        isFree: Boolean(isFree),
+        currency,
+        initialPriceCents,
+        finalPriceCents,
+        discountPercent,
+        formattedFinalPrice,
+        formattedInitialPrice,
+        totalReviews: fetchedReviews?.totalReviews || 0,
+        totalPositive: fetchedReviews?.totalPositive || 0,
+        positivePercent: fetchedReviews?.positivePercent || 0,
+        reviewScoreDesc: {
+          fr: descFr,
+          en: descEn,
+        },
+      };
+
+      setFormSteamStoreData(storeData);
+      registerSteamStoreData(storeData);
+
       if (fetchedReviews) {
-        const descText = fetchedReviews.reviewScoreDesc || 'Très positives';
-        registerSteamStoreData({
-          appId: parseInt(appId, 10),
-          isFree: !!dataFR.is_free,
-          currency: 'EUR',
-          initialPriceCents: 0,
-          finalPriceCents: 0,
-          discountPercent: 0,
-          formattedFinalPrice: '',
-          totalReviews: fetchedReviews.totalReviews,
-          totalPositive: fetchedReviews.totalPositive,
-          positivePercent: fetchedReviews.positivePercent,
-          reviewScoreDesc: {
-            fr: descText,
-            en: descText,
-          },
-        });
         setSteamReviewsInfo({
           totalReviews: fetchedReviews.totalReviews,
           positivePercent: fetchedReviews.positivePercent,
-          desc: fetchedReviews.reviewScoreDesc,
+          desc: descFr,
         });
 
         const suggestedRarity = computeGameRarity(
@@ -641,17 +689,22 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
           {
             id: slug,
             title,
-            steamAppId: parseInt(appId, 10),
+            steamAppId: numAppId,
             steamUrl: `https://store.steampowered.com/app/${appId}/`,
           },
-          fetchedReviews
+          {
+            totalReviews: fetchedReviews.totalReviews,
+            totalPositive: fetchedReviews.totalPositive,
+            positivePercent: fetchedReviews.positivePercent,
+            reviewScoreDesc: descFr,
+          }
         );
         setFormCardRarity(suggestedRarity);
       } else {
         const fallbackRarity = computeGameRarity(slug, {
           id: slug,
           title,
-          steamAppId: parseInt(appId, 10),
+          steamAppId: numAppId,
           steamUrl: `https://store.steampowered.com/app/${appId}/`,
         });
         setFormCardRarity(fallbackRarity);
@@ -733,6 +786,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         composer: formComposer.trim() || undefined,
       },
       cardRarity: finalRarity,
+      steamStoreData: formSteamStoreData || (cleanAppId ? getSteamStoreData(cleanAppId) : undefined),
       addedAt: (editingGame as Game)?.addedAt || new Date().toISOString().split('T')[0],
       isCustomAdmin: isCreatingNew || (editingGame as EnrichedAdminGame)?.isCustomAdmin,
     };
