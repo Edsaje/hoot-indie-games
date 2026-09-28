@@ -5,6 +5,16 @@
 
 import { ACHIEVEMENTS_LIST } from '../data/achievements';
 
+export interface AdminRewardNotification {
+  id: string;
+  feathers: number;
+  cardId?: string | null;
+  isHolo?: boolean;
+  reason?: string;
+  grantedAt: string;
+  grantedBy: string;
+}
+
 export interface UserCloudSavePayload {
   steamId?: string;
   userId?: string;
@@ -28,6 +38,7 @@ export interface UserCloudSavePayload {
   lastDailyBoosterClaim?: string;
   freeBoostersStock?: { count: number; lastRechargeTimestamp: number };
   dailyGameStates?: Record<string, any>;
+  pendingAdminRewards?: AdminRewardNotification[];
   syncedAt?: string;
 }
 
@@ -522,6 +533,13 @@ export function applyCloudSaveToLocalStorage(
     window.dispatchEvent(new CustomEvent('hoot_cloud_save_restored', { detail: cloudData }));
     // Signaler la mise à jour des plumes avec le flag 'fromCloud: true' pour éviter la boucle infinie de re-synchronisation
     window.dispatchEvent(new CustomEvent('hoot_feathers_updated', { detail: { fromCloud: true } }));
+
+    // Déclenchement de la célébration des récompenses souveraines attribuées par Hibouxe
+    if (Array.isArray(cloudData.pendingAdminRewards) && cloudData.pendingAdminRewards.length > 0) {
+      window.dispatchEvent(
+        new CustomEvent('hoot_admin_reward_received', { detail: cloudData.pendingAdminRewards })
+      );
+    }
   } catch (err) {
     console.warn('[UserCloudSync] Erreur lors de l’application locale:', err);
   }
@@ -726,3 +744,39 @@ export async function syncUserCloudSave(
 
   return inFlightSyncPromise;
 }
+
+/**
+ * Confirme et acquitte les récompenses souveraines reçues pour ne plus les réafficher
+ */
+export async function acknowledgeAdminReward(rewardId?: string): Promise<boolean> {
+  try {
+    const rawProfile = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_USER_PROFILE) : null;
+    const profile = rawProfile ? JSON.parse(rawProfile) : {};
+    const steamId = profile.steam?.steamId || '';
+    const userId = profile.id || '';
+    const username = profile.username || '';
+    const syncKey = getOrCreateCloudSyncKey();
+
+    const formData = new URLSearchParams();
+    formData.append('action', 'ack_reward');
+    if (rewardId) formData.append('rewardId', rewardId);
+    if (steamId) formData.append('steamId', steamId);
+    if (userId) formData.append('userId', userId);
+    if (username) formData.append('username', username);
+    if (syncKey) formData.append('syncKey', syncKey);
+
+    const res = await fetch('/api/user_cloud_sync.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Sync-Key': syncKey,
+      },
+      body: formData.toString(),
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn('[UserCloudSync] Erreur acquittement récompense admin:', err);
+    return false;
+  }
+}
+

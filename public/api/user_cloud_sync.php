@@ -266,7 +266,20 @@ function mergeSaveData($existing, $incoming) {
             ]);
         }
     }
-    $merged['dailyGameStates'] = $mergedDaily;
+    // 10. Récompenses Administrateur en attente (pendingAdminRewards)
+    $exRewards = is_array($existing['pendingAdminRewards'] ?? null) ? $existing['pendingAdminRewards'] : [];
+    $inRewards = is_array($incoming['pendingAdminRewards'] ?? null) ? $incoming['pendingAdminRewards'] : [];
+    $rewardMap = [];
+    foreach (array_merge($exRewards, $inRewards) as $r) {
+        if (is_array($r) && !empty($r['id'])) {
+            $rewardMap[$r['id']] = $r;
+        }
+    }
+    if (!empty($rewardMap)) {
+        $merged['pendingAdminRewards'] = array_values($rewardMap);
+    } else {
+        unset($merged['pendingAdminRewards']);
+    }
 
     $merged['syncedAt'] = date('c');
     return $merged;
@@ -719,6 +732,43 @@ switch ($action) {
             'lastSyncedAt' => $merged['syncedAt'],
         ]);
         break;
+
+    // -------------------------------------------------------------
+    // ACQUITTEMENT DES RÉCOMPENSES ADMINISTRATEUR DÉJÀ RÉCEPTIONNÉES
+    // -------------------------------------------------------------
+    case 'ack_reward':
+        $rewardId = trim($_POST['rewardId'] ?? $_GET['rewardId'] ?? '');
+        if (file_exists($saveFile)) {
+            $raw = @file_get_contents($saveFile);
+            $data = json_decode($raw, true);
+            if (is_array($data) && !empty($data['pendingAdminRewards'])) {
+                if (empty($rewardId)) {
+                    $data['pendingAdminRewards'] = [];
+                } else {
+                    $data['pendingAdminRewards'] = array_values(array_filter($data['pendingAdminRewards'], function($r) use ($rewardId) {
+                        return ($r['id'] ?? '') !== $rewardId;
+                    }));
+                }
+                $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                @file_put_contents($saveFile, $json, LOCK_EX);
+                if (!empty($effectiveSteamId)) {
+                    $cleanSteam = preg_replace('/[^a-zA-Z0-9_\-]/', '', $effectiveSteamId);
+                    if (!empty($cleanSteam)) {
+                        $steamAlias = $savesDir . '/steam_' . $cleanSteam . '.json';
+                        if ($steamAlias !== $saveFile) @file_put_contents($steamAlias, $json, LOCK_EX);
+                    }
+                }
+                if (!empty($sessionHootUserId)) {
+                    $cleanUser = preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionHootUserId);
+                    if (!empty($cleanUser)) {
+                        $userAlias = $savesDir . '/user_' . $cleanUser . '.json';
+                        if ($userAlias !== $saveFile) @file_put_contents($userAlias, $json, LOCK_EX);
+                    }
+                }
+            }
+        }
+        echo json_encode(['success' => true]);
+        exit;
 
     default:
         http_response_code(400);

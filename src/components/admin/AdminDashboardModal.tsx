@@ -44,6 +44,7 @@ import {
   MessageSquareText,
   FileSpreadsheet,
   ChevronDown,
+  Gift,
 } from 'lucide-react';
 import {
   fetchAdminOverview,
@@ -59,6 +60,7 @@ import {
   purgeUserLeaderboardScores,
   manageForbiddenNames,
   createAdminUser,
+  giveAdminReward,
   getAdminExportCsvUrl,
   getAdminExportJsonUrl,
   ADMIN_STEAM_ID,
@@ -67,6 +69,8 @@ import {
   type AdminCommunitySuggestion,
   type AdminMicroIndieEntry,
 } from '../../services/adminService';
+import { getDynamicCardsPool } from '../../data/cardsData';
+import { RARITY_CONFIG } from '../../types/cards';
 import {
   inferCanonicalArtStyle,
   inferCanonicalCamera,
@@ -140,6 +144,15 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   // Confirmation de purge des scores
   const [purgingUser, setPurgingUser] = useState<AdminUsernameEntry | null>(null);
   const [isPurgingScores, setIsPurgingScores] = useState<boolean>(false);
+
+  // Modale d'attribution de récompense souveraine (Gift)
+  const [rewardingUser, setRewardingUser] = useState<AdminUsernameEntry | null>(null);
+  const [rewardFeathers, setRewardFeathers] = useState<number>(100);
+  const [rewardCardId, setRewardCardId] = useState<string>('');
+  const [rewardIsHolo, setRewardIsHolo] = useState<boolean>(false);
+  const [rewardReason, setRewardReason] = useState<string>('Récompense souveraine offerte par Hibouxe 👑');
+  const [rewardCardSearch, setRewardCardSearch] = useState<string>('');
+  const [isSubmittingReward, setIsSubmittingReward] = useState<boolean>(false);
 
   // Confirmation de suppression
   const [confirmDeleteUsername, setConfirmDeleteUsername] = useState<string | null>(null);
@@ -337,6 +350,53 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       showNotice('error', 'Erreur réseau lors de la purge.');
     } finally {
       setIsPurgingScores(false);
+    }
+  };
+
+  // Liste des cartes filtrées pour la modale de récompense
+  const availableCards = useMemo(() => {
+    const pool = getDynamicCardsPool();
+    if (!rewardCardSearch.trim()) return pool;
+    const q = rewardCardSearch.toLowerCase().trim();
+    return pool.filter(
+      (c) =>
+        c.title.toLowerCase().includes(q) ||
+        c.developer.toLowerCase().includes(q) ||
+        c.rarity.toLowerCase().includes(q)
+    );
+  }, [rewardCardSearch]);
+
+  // Attribuer une récompense souveraine (plumes / carte) à un utilisateur
+  const handleSendReward = async () => {
+    if (!rewardingUser) return;
+    if (rewardFeathers <= 0 && !rewardCardId) {
+      showNotice('error', 'Veuillez spécifier un montant de plumes ou choisir une carte.');
+      return;
+    }
+    soundFx.playClick();
+    setIsSubmittingReward(true);
+    try {
+      const res = await giveAdminReward(
+        rewardingUser.normalized,
+        {
+          feathers: rewardFeathers > 0 ? rewardFeathers : undefined,
+          cardId: rewardCardId || undefined,
+          isHolo: rewardIsHolo,
+          reason: rewardReason.trim() || undefined,
+        },
+        currentSteamId
+      );
+      if (res.success) {
+        soundFx.playVictory();
+        showNotice('success', res.message || `Récompense attribuée avec succès à « ${rewardingUser.displayName} » !`);
+        setRewardingUser(null);
+      } else {
+        showNotice('error', res.message || 'Impossible d\'attribuer la récompense.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de l\'attribution de la récompense.');
+    } finally {
+      setIsSubmittingReward(false);
     }
   };
 
@@ -1830,6 +1890,23 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                     {/* Colonne 6: Actions */}
                                     <td className="p-3 text-right">
                                       <div className="flex items-center justify-end gap-1">
+                                        {/* Bouton Offrir Cadeau (Plumes / Cartes) */}
+                                        <button
+                                          onClick={() => {
+                                            soundFx.playClick();
+                                            setRewardingUser(u);
+                                            setRewardFeathers(100);
+                                            setRewardCardId('');
+                                            setRewardIsHolo(false);
+                                            setRewardReason('Récompense souveraine offerte par Hibouxe 👑');
+                                            setRewardCardSearch('');
+                                          }}
+                                          className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition cursor-pointer"
+                                          title="Offrir des plumes ou une carte à ce joueur"
+                                        >
+                                          <Gift className="w-3.5 h-3.5" />
+                                        </button>
+
                                         {/* Bouton Éditer */}
                                         <button
                                           onClick={() => handleOpenEditUser(u)}
@@ -3066,6 +3143,259 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     >
                       {isPurgingScores ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                       <span>Purger Définitivement</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE : ATTRIBUTION DE RÉCOMPENSE SOUVERAINE (GIFT)        */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {rewardingUser && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setRewardingUser(null)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-lg bg-[#0d1424] border border-amber-500/40 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10 max-h-[90vh] flex flex-col"
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                        <Gift className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-black text-white flex items-center gap-1.5">
+                          <span>Offrir un Cadeau Souverain</span>
+                          <Crown className="w-3.5 h-3.5 text-amber-400" />
+                        </h3>
+                        <p className="text-xs text-slate-400 font-mono">
+                          Destinataire : <span className="text-amber-300 font-bold">{rewardingUser.displayName}</span> (@{rewardingUser.normalized})
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setRewardingUser(null)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Body (scrollable) */}
+                  <div className="space-y-4 text-xs overflow-y-auto pr-1 flex-1">
+                    {/* Section 1 : Plumes d'Or */}
+                    <div className="p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/20 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                          <span>🪶 Plumes d'Or à Offrir</span>
+                        </label>
+                        <span className="text-[11px] font-mono text-amber-400/90 font-bold">
+                          Total : +{rewardFeathers.toLocaleString()} Plumes
+                        </span>
+                      </div>
+
+                      {/* Presets rapides */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {[0, 50, 100, 250, 500, 1000, 2500, 5000].map((amt) => (
+                          <button
+                            key={amt}
+                            type="button"
+                            onClick={() => setRewardFeathers(amt)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                              rewardFeathers === amt
+                                ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/30'
+                                : 'bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'
+                            }`}
+                          >
+                            {amt === 0 ? '0' : `+${amt}`}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Champ montant personnalisé */}
+                      <input
+                        type="number"
+                        min="0"
+                        max="100000"
+                        step="10"
+                        value={rewardFeathers}
+                        onChange={(e) => setRewardFeathers(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                        className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-amber-400"
+                        placeholder="Montant libre de plumes..."
+                      />
+                    </div>
+
+                    {/* Section 2 : Carte de Collection */}
+                    <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+                          <span>Carte de Collection (Optionnel)</span>
+                        </label>
+                        {rewardCardId && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setRewardCardId('');
+                              setRewardIsHolo(false);
+                            }}
+                            className="text-[10px] text-red-400 hover:underline cursor-pointer"
+                          >
+                            Retirer la carte
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Barre de recherche de carte */}
+                      <div className="relative">
+                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          value={rewardCardSearch}
+                          onChange={(e) => setRewardCardSearch(e.target.value)}
+                          placeholder="Rechercher par nom de jeu, dev, rareté..."
+                          className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* Liste compacte des cartes */}
+                      <div className="max-h-36 overflow-y-auto space-y-1 pr-1 border border-white/5 rounded-xl p-1 bg-black/20">
+                        {availableCards.length === 0 ? (
+                          <div className="text-center py-4 text-slate-500 text-[11px]">
+                            Aucune carte trouvée pour cette recherche
+                          </div>
+                        ) : (
+                          availableCards.slice(0, 50).map((card) => {
+                            const isSelected = rewardCardId === card.id;
+                            const rCfg = RARITY_CONFIG[card.rarity];
+                            return (
+                              <button
+                                key={card.id}
+                                type="button"
+                                onClick={() => {
+                                  if (isSelected) {
+                                    setRewardCardId('');
+                                    setRewardIsHolo(false);
+                                  } else {
+                                    setRewardCardId(card.id);
+                                  }
+                                }}
+                                className={`w-full flex items-center gap-2 p-1.5 rounded-lg text-left transition cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-amber-500/20 border border-amber-400 text-white'
+                                    : 'hover:bg-white/5 text-slate-300'
+                                }`}
+                              >
+                                <img
+                                  src={card.imageUrl}
+                                  alt={card.title}
+                                  className="w-6 h-8 object-cover rounded bg-slate-900 shrink-0"
+                                  loading="lazy"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-bold text-xs truncate flex items-center gap-1.5">
+                                    <span>{card.title}</span>
+                                    <span className={`text-[9px] px-1.5 py-0.2 rounded border ${rCfg?.badgeClass || ''}`}>
+                                      {rCfg?.nameFr || card.rarity}
+                                    </span>
+                                  </div>
+                                  <div className="text-[10px] text-slate-400 truncate">{card.developer}</div>
+                                </div>
+                                {isSelected && <Check className="w-4 h-4 text-amber-400 shrink-0" />}
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+
+                      {/* Option Holographique si une carte est sélectionnée */}
+                      {rewardCardId && (
+                        <div className="flex items-center justify-between p-2.5 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
+                            <div>
+                              <div className="text-xs font-bold text-yellow-200">Variante Holographique (Brillante)</div>
+                              <div className="text-[10px] text-yellow-300/70">Effet arc-en-ciel brillant rare</div>
+                            </div>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={rewardIsHolo}
+                            onChange={(e) => setRewardIsHolo(e.target.checked)}
+                            className="w-4 h-4 accent-amber-400 cursor-pointer"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Section 3 : Motif / Message */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Motif ou Message du Don <span className="text-slate-500 font-normal">(Visible par le joueur)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={rewardReason}
+                        onChange={(e) => setRewardReason(e.target.value)}
+                        placeholder="ex: Récompense souveraine offerte par Hibouxe 👑"
+                        maxLength={80}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400 text-xs"
+                      />
+                      {/* Presets rapides de motif */}
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {[
+                          'Cadeau offert par Hibouxe 👑',
+                          'Vainqueur Tournoi de la Communauté 🏆',
+                          'Remerciement Signalement de Bug 🐛',
+                          'Bienvenue parmi nous ! 🎉',
+                        ].map((m) => (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => setRewardReason(m)}
+                            className="px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-400 text-[10px] cursor-pointer"
+                          >
+                            {m}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setRewardingUser(null)}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleSendReward}
+                      disabled={isSubmittingReward || (rewardFeathers <= 0 && !rewardCardId)}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isSubmittingReward ? (
+                        <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Gift className="w-3.5 h-3.5" />
+                      )}
+                      <span>Envoyer le Cadeau</span>
                     </button>
                   </div>
                 </motion.div>

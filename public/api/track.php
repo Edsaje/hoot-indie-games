@@ -562,7 +562,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
     // [SÉCURITÉ CWE-352] Les actions administratives de modification requièrent impérativement POST
     $mutatingActions = [
-        'delete_username', 'edit_user', 'toggle_ban_user', 'purge_user_scores',
+        'delete_username', 'edit_user', 'toggle_ban_user', 'purge_user_scores', 'give_reward',
         'manage_forbidden_names', 'create_user', 'delete_suggestion', 'reset_stats', 'approve_micro_indie'
     ];
     if (in_array($action, $mutatingActions, true)) {
@@ -808,6 +808,164 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         echo json_encode([
             'success' => true,
             'message' => "Scores de « {$username} » purgés avec succès ({$deletedCount} entrée(s) supprimée(s))."
+        ]);
+        exit;
+    }
+
+    // Super-Admin : Distribution de Récompenses Souveraines (Plumes d'or & Cartes du Sanctuaire)
+    if ($action === 'give_reward') {
+        if (!$isCreatorAdmin) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Action réservée exclusivement au super-administrateur Hibouxe.']);
+            exit;
+        }
+
+        $target = strtolower(trim($_POST['target'] ?? ''));
+        $feathers = max(0, intval($_POST['feathers'] ?? 0));
+        $cardId = sanitizeStr(trim($_POST['cardId'] ?? ''));
+        $isHolo = !empty($_POST['isHolo']);
+        $reason = sanitizeStr(trim($_POST['reason'] ?? 'Cadeau offert par Hibouxe 👑'));
+
+        if (empty($target)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Veuillez spécifier le joueur destinataire.']);
+            exit;
+        }
+
+        if ($feathers <= 0 && empty($cardId)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Veuillez spécifier un montant de plumes ou une carte à offrir.']);
+            exit;
+        }
+
+        // Résolution de l'utilisateur dans registered_usernames.json
+        $uFile = __DIR__ . '/registered_usernames.json';
+        $uData = loadAndEnsureUsernamesDb($uFile);
+
+        $resolvedSteamId = null;
+        $displayName = $target;
+
+        if (isset($uData['usernames'][$target])) {
+            $resolvedSteamId = $uData['usernames'][$target]['steamId'] ?? null;
+            $displayName = $uData['usernames'][$target]['displayName'] ?? $target;
+        } elseif (preg_match('/^\d{15,20}$/', $target)) {
+            $resolvedSteamId = $target;
+            if (isset($uData['userToName'][$target])) {
+                $target = $uData['userToName'][$target];
+                $displayName = $uData['usernames'][$target]['displayName'] ?? $target;
+            }
+        }
+
+        $savesDir = __DIR__ . '/user_saves';
+        if (!is_dir($savesDir)) {
+            @mkdir($savesDir, 0755, true);
+        }
+
+        // Trouver le fichier de sauvegarde existant
+        $candidateFiles = [];
+        if (!empty($resolvedSteamId)) {
+            $candidateFiles[] = $savesDir . '/steam_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $resolvedSteamId) . '.json';
+        }
+        $candidateFiles[] = $savesDir . '/name_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json';
+        $candidateFiles[] = $savesDir . '/user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json';
+
+        $targetSaveFile = null;
+        $saveData = null;
+
+        foreach ($candidateFiles as $cand) {
+            if (file_exists($cand)) {
+                $raw = @file_get_contents($cand);
+                $decoded = json_decode($raw, true);
+                if (is_array($decoded)) {
+                    $targetSaveFile = $cand;
+                    $saveData = $decoded;
+                    break;
+                }
+            }
+        }
+
+        // Si aucune sauvegarde n'existe encore, on en crée une nouvelle
+        if (!$targetSaveFile) {
+            $targetSaveFile = $candidateFiles[0];
+            $saveData = [
+                'username' => $displayName,
+                'steamId' => $resolvedSteamId,
+                'avatarId' => 'owl',
+                'title' => 'Oisillon du Perchoir',
+                'feathers' => ['bonus' => 0, 'spent' => 0, 'claimedDaily' => new stdClass()],
+                'cardCollection' => [],
+                'achievements' => [],
+                'stats' => [],
+                'syncedAt' => date('c'),
+            ];
+        }
+
+        // 1. Créditer les plumes
+        $previousBonus = intval($saveData['feathers']['bonus'] ?? 0);
+        if ($feathers > 0) {
+            $saveData['feathers']['bonus'] = $previousBonus + $feathers;
+        }
+
+        // 2. Créditer la carte
+        $cardDetails = null;
+        if (!empty($cardId)) {
+            if (!isset($saveData['cardCollection']) || !is_array($saveData['cardCollection'])) {
+                $saveData['cardCollection'] = [];
+            }
+            if (!isset($saveData['cardCollection'][$cardId])) {
+                $saveData['cardCollection'][$cardId] = [
+                    'cardId' => $cardId,
+                    'count' => $isHolo ? 0 : 1,
+                    'countHolo' => $isHolo ? 1 : 0,
+                    'firstObtainedAt' => date('c'),
+                ];
+            } else {
+                if ($isHolo) {
+                    $saveData['cardCollection'][$cardId]['countHolo'] = intval($saveData['cardCollection'][$cardId]['countHolo'] ?? 0) + 1;
+                } else {
+                    $saveData['cardCollection'][$cardId]['count'] = intval($saveData['cardCollection'][$cardId]['count'] ?? 0) + 1;
+                }
+            }
+            $cardDetails = [
+                'cardId' => $cardId,
+                'isHolo' => $isHolo,
+            ];
+        }
+
+        // 3. Ajouter une notification en attente (pendingAdminRewards) pour célébration à la prochaine connexion
+        if (!isset($saveData['pendingAdminRewards']) || !is_array($saveData['pendingAdminRewards'])) {
+            $saveData['pendingAdminRewards'] = [];
+        }
+        $saveData['pendingAdminRewards'][] = [
+            'id' => uniqid('rew_', true),
+            'feathers' => $feathers,
+            'cardId' => $cardId ?: null,
+            'isHolo' => $isHolo,
+            'reason' => $reason,
+            'grantedAt' => date('c'),
+            'grantedBy' => 'Hibouxe',
+        ];
+
+        $saveData['syncedAt'] = date('c');
+
+        // Écriture sécurisée sur le fichier de sauvegarde principal et ses miroirs
+        $json = json_encode($saveData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        @file_put_contents($targetSaveFile, $json, LOCK_EX);
+
+        // Sauvegarder également sur les alias pour que la synchro multi-identités le trouve
+        foreach ($candidateFiles as $cand) {
+            if ($cand !== $targetSaveFile) {
+                @file_put_contents($cand, $json, LOCK_EX);
+            }
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => "Récompense attribuée avec succès à « {$displayName} » !",
+            'target' => $displayName,
+            'feathers' => $feathers,
+            'card' => $cardDetails,
+            'reason' => $reason,
         ]);
         exit;
     }

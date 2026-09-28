@@ -165,11 +165,13 @@
 
 ## 🟡 Phase 3 : Outils de Super-Admin & Internationalisation (Priorité P2)
 
-### 11. 👑 Privilèges & Commandes Super-Admin pour Hibouxe (Distribution de récompenses) `[⏳ À faire]`
+### 11. 👑 Privilèges & Commandes Super-Admin pour Hibouxe (Distribution de récompenses) `[✅ 100% Terminé]`
 - **Constat :** Le super-administrateur Hibouxe a besoin d'outils d'animation communautaire et de support pour récompenser directement des joueurs (concours, dédommagements, fidélité).
-- **Actions à réaliser :**
-  - [ ] Créer une action backend sécurisée (sous vérification `ADMIN_STEAM_ID`) permettant de créditer des plumes (`giveFeathers`) ou d'ajouter une carte spécifique de la collection (`giveCard`) sur la sauvegarde d'un joueur ciblé par son pseudo / steamId.
-  - [ ] Intégrer l'interface de distribution dans l'onglet modération des utilisateurs (`UsernamesTab.tsx`) du panneau d'administration avec saisie du montant de plumes, sélection de carte et confirmation.
+- **Actions réalisées :**
+  - [x] Action backend sécurisée `give_reward` dans `public/api/track.php` sous vérification stricte `ADMIN_STEAM_ID` permettant d'attribuer des plumes d'or, une carte de collection avec option de variante holographique, un motif personnalisé et mise à jour atomique de `cardCollection`, `feathers.bonus` et `pendingAdminRewards`.
+  - [x] Service API `giveAdminReward` dans `src/services/adminService.ts` et acquittement `ack_reward` avec `acknowledgeAdminReward` dans `userCloudSyncService.ts`.
+  - [x] Interface de distribution royale intégrée dans `AdminDashboardModal.tsx` avec bouton d'action `Gift` par joueur, presets de plumes (+50, +100, +250, +500, +1000, +2500, +5000), sélecteur de cartes dynamique filtrable par titre/rareté/développeur, toggle holographique et motifs pré-remplis.
+  - [x] Modale de célébration côté joueur `AdminRewardCelebrationModal.tsx` montée dans `App.tsx` affichant le décret royal, les plumes gagnées, la carte reçue (avec animation holographique si applicable) et bouton d'acquittement automatique.
 
 ### 12. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[⏳ À faire]`
 - **Objectif :** Afficher et convertir automatiquement les prix des jeux Steam et Itch.io dans la devise et le format correspondant à la langue ou au pays sélectionné par le visiteur sur le site (exemple : prix en Yen `¥` pour le Japon / langue `ja`, Dollar `$` pour `en`, Real `R$` pour `pt-BR`, Euro `€` pour `fr`, `de`, `es`).

@@ -486,6 +486,39 @@ export async function purgeUserLeaderboardScores(
 }
 
 /**
+ * Attribue des récompenses souveraines (plumes, carte de collection) à un joueur
+ */
+export async function giveAdminReward(
+  target: string,
+  reward: {
+    feathers?: number;
+    cardId?: string;
+    isHolo?: boolean;
+    reason?: string;
+  },
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string; target?: string; feathers?: number }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'give_reward');
+  formData.append('steamId', steamId);
+  formData.append('target', target);
+  if (reward.feathers && reward.feathers > 0) {
+    formData.append('feathers', String(reward.feathers));
+  }
+  if (reward.cardId) {
+    formData.append('cardId', reward.cardId);
+  }
+  if (reward.isHolo) {
+    formData.append('isHolo', '1');
+  }
+  if (reward.reason) {
+    formData.append('reason', reward.reason);
+  }
+
+  return postAdminTrack(formData);
+}
+
+/**
  * Gère la blacklist des pseudonymes interdits (ajout / suppression / liste)
  */
 export async function manageForbiddenNames(

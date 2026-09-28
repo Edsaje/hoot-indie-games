@@ -20,6 +20,7 @@ const AdminDashboardModal = React.lazy(() => import('./components/admin/AdminDas
 const FriendsModal = React.lazy(() => import('./components/friends/FriendsModal').then(module => ({ default: module.FriendsModal })));
 const FeatherShopModal = React.lazy(() => import('./components/shop/FeatherShopModal').then(module => ({ default: module.FeatherShopModal })));
 const ChatDrawer = React.lazy(() => import('./components/chat/ChatDrawer').then(module => ({ default: module.ChatDrawer })));
+const AdminRewardCelebrationModal = React.lazy(() => import('./components/common/AdminRewardCelebrationModal').then(module => ({ default: module.AdminRewardCelebrationModal })));
 
 // Main Views & Hubs (Lazy Loaded)
 const GemExplorerHome = React.lazy(() => import('./components/gems/GemExplorerHome').then(module => ({ default: module.GemExplorerHome })));
@@ -771,6 +772,9 @@ export const AppContent: React.FC = () => {
           onClose={() => setIsAdminDashboardOpen(false)}
         />
       )}
+
+      {/* Célébration Décret Royal / Récompense Souveraine Hibouxe */}
+      <AdminRewardCelebrationModal />
 
       {(() => {
         const isAnyModalOpen = Boolean(
