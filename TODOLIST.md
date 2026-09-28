@@ -70,49 +70,31 @@
 
 ---
 
-### 7. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[⏳ À faire]`
-- **Objectif :** Afficher et convertir automatiquement les prix des jeux Steam et Itch.io dans la devise et le format correspondant à la langue ou au pays sélectionné par le visiteur sur le site (exemple : prix en Yen `¥` pour le Japon / langue `ja`, Dollar `$` pour `en`, Real `R$` pour `pt-BR`, Euro `€` pour `fr`, `de`, `es`).
-- **Pistes d'implémentation :**
-  - [ ] **Backend Steam API (`get_steam_info`)** :
-    - Passer le code pays Steam `cc` (`cc=jp`, `cc=us`, `cc=br`, `cc=fr`, etc.) et la langue `l` (`japanese`, `english`, `brazilian`, `french`, etc.) lors des requêtes à l'API Steam Store `store.steampowered.com/api/appdetails`.
-    - Sauvegarder les prix dans les différentes locales du dictionnaire `pricingText: { fr, en, es, de, ja, pt-BR }`.
-  - [ ] **Itch.io & conversions de devises** :
-    - Définir les règles de conversion ou de formatage selon la monnaie locale (USD / EUR / JPY / BRL).
-  - [ ] **Frontend (`MicroIndieHub.tsx`, cartes de jeux, catalogue)** :
-    - Sélectionner dynamiquement le texte de prix selon la locale active issue de `i18n.language` (`game.pricingText?.[activeLocale] || game.pricingText?.['en']`).
-    - Gérer un repli élégant si une devise spécifique n'est pas encore renseignée.
-
 ---
 
-### 8. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
-- **Constat :** Bien que les règles de hooks et les types `any` aient été corrigés, et que l'immense `ArcadeModal.tsx` ait été découpé avec succès, il reste plusieurs composants React de plus de 1500 lignes qui violent le principe de Responsabilité Unique (Single Responsibility).
+## 🔴 Phase 1 : Urgences Critiques, Intégrité du Jeu & Image (Priorité P0)
+
+### 1. 🛡️ Résolution de l'erreur « Jeton CSRF invalide ou expiré » sur les suggestions de jeux `[⏳ À faire]`
+- **Constat :** Lorsque l'administrateur valide ou gère une proposition de jeu dans le tableau de bord, une erreur apparaît : *« Jeton de protection CSRF invalide ou expiré, Veuillez recharger la page »*, bloquant la modération.
 - **Actions à réaliser :**
-  - [ ] **Nettoyage de `AdminDashboardModal.tsx` (3200+ lignes) :** Vérifier l'intégration finale des sous-onglets générés (`src/components/admin/tabs/`) et supprimer tout le code mort ou redondant qui n'aurait pas été retiré de la modale principale lors de l'extraction.
-  - [ ] **Refactorisation de `VersusArena.tsx` (2470 lignes) :** Séparer la logique de matchmaking (WebSockets / Polling), de la gestion du duel, et du rendu du tchat de l'arène.
-  - [ ] **Découpage de `GemExplorerHome.tsx` (1824 lignes) et `ProfilleGame.tsx` (1815 lignes) :** Extraire les composants d'interface de la logique des jeux de recherche et de devinette.
-  - [ ] **Refactorisation de `ProfileModal.tsx` (1665 lignes) :** Séparer l'affichage des statistiques (onglets Profil), l'inventaire des items (Feathers, cosmétiques) et les paramètres de compte (Settings).
+  - [ ] Identifier l'endpoint incriminé (`suggest_game.php`, `micro_indies.php` ou `track.php`).
+  - [ ] Vérifier la génération, le stockage en session/header et l'envoi du jeton CSRF côté client dans `adminService.ts`.
+  - [ ] Assurer le renouvellement automatique ou la persistance cohérente du jeton de session lors des actions administratives sans obliger à recharger la page.
 
----
+### 2. 🔗 Mini-jeu « Connections » (Linkle) : Uniformisation des jeux entre utilisateurs `[⏳ À faire]`
+- **Constat :** Les joueurs ne rencontrent pas toujours la même grille de 16 jeux ou les mêmes catégories le même jour dans Linkle, rompant l'expérience du jeu quotidien partagé.
+- **Actions à réaliser :**
+  - [ ] Auditer la sélection du puzzle du jour dans `src/components/linkle/LinkleGame.tsx` et `src/data/linklePuzzles.ts`.
+  - [ ] Garantir que le choix du puzzle quotidien s'appuie sur une graine temporelle déterministe universelle (ex: date YYYY-MM-DD UTC) identique pour tous les visiteurs, indépendamment du statut de connexion ou de l'historique local.
 
-### 9. 🖼️ Remplacement du logo Google Search & SEO par le logo actuel `[⏳ À faire]`
+### 3. 🖼️ Remplacement du logo Google Search & SEO par le logo actuel `[⏳ À faire]`
 - **Constat :** Lors d'une recherche sur Google, le snippet de résultat affiche encore l'ancien logo ou favicon du site au lieu du logo officiel actuel de Hoot Indie Games.
 - **Actions à réaliser :**
   - [ ] Mettre à jour l'ensemble des balises méta d'images dans `index.html` (`og:image`, `twitter:image`, `favicon.svg`, `favicon.ico`, `apple-touch-icon`).
   - [ ] Vérifier et mettre à jour le script de pré-rendu SEO (`scripts/generateSeoIndex.ts`) et les schémas JSON-LD (`Organization.logo`, `WebSite.image`) avec l'URL canonique absolue du logo actuel.
   - [ ] Vérifier le fichier `public/manifest.json` pour s'assurer que les icônes PWA pointent vers la version actuelle.
 
----
-
-### 10. 📅 Vérification du système de « Série de jeu » (Streaks) & synchronisation Calendrier `[⏳ À faire]`
-- **Constat :** Le système de décompte des séries consécutives (streaks) et son reflet dans l'archive/calendrier des jours joués nécessite un audit de fiabilité.
-- **Actions à réaliser :**
-  - [ ] Auditer le gestionnaire `src/utils/streakManager.ts` et le stockage local / cloud sync.
-  - [ ] Contrôler la cohérence entre les dates locales (fuseau horaire du navigateur) et la date de réinitialisation quotidienne du serveur (minuit UTC ou heure de Paris).
-  - [ ] Vérifier la modale du calendrier (`CalendarArchiveModal.tsx`) pour garantir que chaque jour complété est correctement coché/coloré sans décalage de date.
-
----
-
-### 11. 🎵 Mini-jeu Blind-Test : Correction des musiques & de la piste sonore `[⏳ À faire]`
+### 4. 🎵 Mini-jeu Blind-Test : Correction des musiques & de la piste sonore `[⏳ À faire]`
 - **Constat :** Des incohérences ont été constatées dans le Blind-Test : des morceaux associés sont erronés (ex: la piste audio de *Cult of the Lamb* ne correspondait pas au vrai morceau du jeu), et la piste sonore présente un affichage erroné de la durée / progression temporelle.
 - **Actions à réaliser :**
   - [ ] **Vérification des morceaux (`blindtestPuzzles.ts`)** : Vérifier la bibliothèque audio de puzzles, écouter et remplacer la piste sonore de *Cult of the Lamb* ainsi que toute autre piste défectueuse par des extraits officiels certifiés.
@@ -120,23 +102,16 @@
 
 ---
 
-### 12. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[⏳ À faire]`
-- **Constat :** Le tchat actuel est exclusivement un salon public global. Les joueurs ne peuvent pas s'envoyer de messages directs privés.
+## 🟠 Phase 2 : Rétention Quotidienne, Social & Jeu de Cartes (Priorité P1)
+
+### 5. 📅 Vérification du système de « Série de jeu » (Streaks) & synchronisation Calendrier `[⏳ À faire]`
+- **Constat :** Le système de décompte des séries consécutives (streaks) et son reflet dans l'archive/calendrier des jours joués nécessite un audit de fiabilité.
 - **Actions à réaliser :**
-  - [ ] **Backend PHP (`chat.php` / nouveau point d'entrée)** : Créer les endpoints d'envoi et de réception de messages privés sécurisés avec isolation stricte par identifiant d'expéditeur et de destinataire (`private_conversations`).
-  - [ ] **Frontend & UI** : Intégrer un onglet ou volet « Messages Privés » dans `ChatDrawer.tsx` ou depuis la liste d'amis (`FriendsModal.tsx`), avec notifications de nouveau message non lu et son discret.
+  - [ ] Auditer le gestionnaire `src/utils/streakManager.ts` et le stockage local / cloud sync.
+  - [ ] Contrôler la cohérence entre les dates locales (fuseau horaire du navigateur) et la date de réinitialisation quotidienne du serveur (minuit UTC ou heure de Paris).
+  - [ ] Vérifier la modale du calendrier (`CalendarArchiveModal.tsx`) pour garantir que chaque jour complété est correctement coché/coloré sans décalage de date.
 
----
-
-### 13. 🔗 Mini-jeu « Connections » (Linkle) : Uniformisation des jeux entre utilisateurs `[⏳ À faire]`
-- **Constat :** Les joueurs ne rencontrent pas toujours la même grille de 16 jeux ou les mêmes catégories le même jour dans Linkle, rompant l'expérience du jeu quotidien partagé.
-- **Actions à réaliser :**
-  - [ ] Auditer la sélection du puzzle du jour dans `src/components/linkle/LinkleGame.tsx` et `src/data/linklePuzzles.ts`.
-  - [ ] Garantir que le choix du puzzle quotidien s'appuie sur une graine temporelle déterministe universelle (ex: date YYYY-MM-DD UTC) identique pour tous les visiteurs, indépendamment du statut de connexion ou de l'historique local.
-
----
-
-### 14. 🃏 Jeu de Cartes : Cumul de 2 boosters gratuits & recharge toutes les 12h `[⏳ À faire]`
+### 6. 🃏 Jeu de Cartes : Cumul de 2 boosters gratuits & recharge toutes les 12h `[⏳ À faire]`
 - **Constat :** Les boosters gratuits doivent récompenser la régularité sans pénaliser les joueurs qui ne peuvent pas se connecter toutes les 12 heures exactes.
 - **Actions à réaliser :**
   - [ ] Mettre en place un plafond de stockage à **2 boosters gratuits maximum**.
@@ -144,35 +119,14 @@
   - [ ] Le compte à rebours de 12h ne démarre ou ne continue que lorsque la réserve de boosters gratuits est inférieure à 2.
   - [ ] Mettre à jour l'interface de la boutique de plumes / boosters (`FeatherShopModal.tsx`, `BoosterOpeningModal.tsx`) avec l'affichage clair du stock (ex: `1/2` ou `2/2`) et du minuteur jusqu'au prochain booster.
 
----
-
-### 15. 👑 Privilèges & Commandes Super-Admin pour Hibouxe (Distribution de récompenses) `[⏳ À faire]`
-- **Constat :** Le super-administrateur Hibouxe a besoin d'outils d'animation communautaire et de support pour récompenser directement des joueurs (concours, dédommagements, fidélité).
-- **Actions à réaliser :**
-  - [ ] Créer une action backend sécurisée (sous vérification `ADMIN_STEAM_ID`) permettant de créditer des plumes (`giveFeathers`) ou d'ajouter une carte spécifique de la collection (`giveCard`) sur la sauvegarde d'un joueur ciblé par son pseudo / steamId.
-  - [ ] Intégrer l'interface de distribution dans l'onglet modération des utilisateurs (`UsernamesTab.tsx`) du panneau d'administration avec saisie du montant de plumes, sélection de carte et confirmation.
-
----
-
-### 16. 👥 Correction de l'affichage « Progression du jour de mes amis » `[⏳ À faire]`
+### 7. 👥 Correction de l'affichage « Progression du jour de mes amis » `[⏳ À faire]`
 - **Constat :** L'encart de suivi de la progression quotidienne des amis (qui a réussi l'Indledle, le Pixel, le Screenle, le Linkle, etc. aujourd'hui) ne s'affiche pas correctement ou n'actualise pas les scores en temps réel.
 - **Actions à réaliser :**
   - [ ] Auditer le composant et la récupération des statuts dans `FriendsModal.tsx` et `friendsService.ts`.
   - [ ] Vérifier la structure des payloads envoyés et reçus pour la progression quotidienne des amis (`dailySummary` / `friendDailyStatus`).
   - [ ] Corriger le mapping des icônes de jeux et l'état de complétion du jour pour chaque ami.
 
----
-
-### 17. 🛡️ Résolution de l'erreur « Jeton CSRF invalide ou expiré » sur les suggestions de jeux `[⏳ À faire]`
-- **Constat :** Lorsque l'administrateur valide ou gère une proposition de jeu dans le tableau de bord, une erreur apparaît : *« Jeton de protection CSRF invalide ou expiré, Veuillez recharger la page »*.
-- **Actions à réaliser :**
-  - [ ] Identifier l'endpoint incriminé (`suggest_game.php`, `micro_indies.php` ou `track.php`).
-  - [ ] Vérifier la génération, le stockage en session/header et l'envoi du jeton CSRF côté client dans `adminService.ts`.
-  - [ ] Assurer le renouvellement automatique ou la persistance cohérente du jeton de session lors des actions administratives sans obliger à recharger la page.
-
----
-
-### 18. 🎴 Synchronisation Pépites & Cartes : Création / Suppression automatique `[⏳ À faire]`
+### 8. 🎴 Synchronisation Pépites & Cartes : Création / Suppression automatique `[⏳ À faire]`
 - **Constat :** Chaque pépite du catalogue doit posséder sa carte à collectionner correspondante dans le système de cartes.
 - **Actions à réaliser :**
   - [ ] Écrire un test / script d'audit vérifiant la parité 1:1 entre la base des pépites (`src/data/steamGems.ts` / catalogue) et les cartes définies (`src/data/cardsData.ts`).
@@ -181,7 +135,32 @@
 
 ---
 
-### 19. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+## 🟡 Phase 3 : Outils de Super-Admin & Internationalisation (Priorité P2)
+
+### 9. 👑 Privilèges & Commandes Super-Admin pour Hibouxe (Distribution de récompenses) `[⏳ À faire]`
+- **Constat :** Le super-administrateur Hibouxe a besoin d'outils d'animation communautaire et de support pour récompenser directement des joueurs (concours, dédommagements, fidélité).
+- **Actions à réaliser :**
+  - [ ] Créer une action backend sécurisée (sous vérification `ADMIN_STEAM_ID`) permettant de créditer des plumes (`giveFeathers`) ou d'ajouter une carte spécifique de la collection (`giveCard`) sur la sauvegarde d'un joueur ciblé par son pseudo / steamId.
+  - [ ] Intégrer l'interface de distribution dans l'onglet modération des utilisateurs (`UsernamesTab.tsx`) du panneau d'administration avec saisie du montant de plumes, sélection de carte et confirmation.
+
+### 10. 🌐 Affichage des prix Steam & Itch.io selon la localisation ou la langue choisie (ex: Yen au Japon) `[⏳ À faire]`
+- **Objectif :** Afficher et convertir automatiquement les prix des jeux Steam et Itch.io dans la devise et le format correspondant à la langue ou au pays sélectionné par le visiteur sur le site (exemple : prix en Yen `¥` pour le Japon / langue `ja`, Dollar `$` pour `en`, Real `R$` pour `pt-BR`, Euro `€` pour `fr`, `de`, `es`).
+- **Actions à réaliser :**
+  - [ ] **Backend Steam API (`get_steam_info`)** : Passer le code pays Steam `cc` (`cc=jp`, `cc=us`, `cc=br`, `cc=fr`, etc.) et la langue `l` (`japanese`, `english`, `brazilian`, `french`, etc.) lors des requêtes à l'API Steam Store `store.steampowered.com/api/appdetails` et sauvegarder les prix dans `pricingText`.
+  - [ ] **Itch.io & conversions de devises** : Définir les règles de conversion ou de formatage selon la monnaie locale (USD / EUR / JPY / BRL).
+  - [ ] **Frontend (`MicroIndieHub.tsx`, cartes de jeux, catalogue)** : Sélectionner dynamiquement le texte de prix selon la locale active issue de `i18n.language` avec repli élégant.
+
+---
+
+## 🔵 Phase 4 : Systèmes Avancés & Refactorisation Lourde (Priorité P3)
+
+### 11. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[⏳ À faire]`
+- **Constat :** Le tchat actuel est exclusivement un salon public global. Les joueurs ne peuvent pas s'envoyer de messages directs privés.
+- **Actions à réaliser :**
+  - [ ] **Backend PHP (`chat.php` / nouveau point d'entrée)** : Créer les endpoints d'envoi et de réception de messages privés sécurisés avec isolation stricte par identifiant d'expéditeur et de destinataire (`private_conversations`).
+  - [ ] **Frontend & UI** : Intégrer un onglet ou volet « Messages Privés » dans `ChatDrawer.tsx` ou depuis la liste d'amis (`FriendsModal.tsx`), avec notifications de nouveau message non lu et son discret.
+
+### 12. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
 - **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
 - **Actions à réaliser :**
   - [ ] **Menu d'Échange dédié (`TradeModal.tsx`)** :
@@ -191,6 +170,14 @@
     - Vérification stricte : s'assurer que le joueur possède au moins un exemplaire (standard ou holo) de la carte qu'il s'apprête à céder.
     - Exécution bilatérale atomique : à la confirmation mutuelle des deux joueurs, retirer la carte envoyée de l'inventaire du joueur A pour l'ajouter chez le joueur B, et inversement pour la carte reçue.
     - Historique et gestion des propositions (`en attente`, `acceptée`, `refusée`, `expirée`).
+
+### 13. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
+- **Constat :** Bien que les règles de hooks et les types `any` aient été corrigés, et que l'immense `ArcadeModal.tsx` ait été découpé avec succès, il reste plusieurs composants React de plus de 1500 lignes qui violent le principe de Responsabilité Unique (Single Responsibility).
+- **Actions à réaliser :**
+  - [ ] **Nettoyage de `AdminDashboardModal.tsx` (3200+ lignes) :** Vérifier l'intégration finale des sous-onglets générés (`src/components/admin/tabs/`) et supprimer tout le code mort ou redondant qui n'aurait pas été retiré de la modale principale lors de l'extraction.
+  - [ ] **Refactorisation de `VersusArena.tsx` (2470 lignes) :** Séparer la logique de matchmaking (WebSockets / Polling), de la gestion du duel, et du rendu du tchat de l'arène.
+  - [ ] **Découpage de `GemExplorerHome.tsx` (1824 lignes) et `ProfilleGame.tsx` (1815 lignes) :** Extraire les composants d'interface de la logique des jeux de recherche et de devinette.
+  - [ ] **Refactorisation de `ProfileModal.tsx` (1665 lignes) :** Séparer l'affichage des statistiques (onglets Profil), l'inventaire des items (Feathers, cosmétiques) et les paramètres de compte (Settings).
 
 ---
 
