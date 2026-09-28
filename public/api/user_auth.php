@@ -110,7 +110,12 @@ switch ($action) {
     case 'me':
     case 'status':
         $userId = $_SESSION['hoot_user_id'] ?? null;
-        $steamId = $_SESSION['steam_id'] ?? null;
+        $steamId = $_SESSION['steam_id'] ?? ($_SESSION['admin_steam_id'] ?? null);
+        $isAdminSession = !empty($_SESSION['admin_auth']) && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID;
+
+        if ($isAdminSession && !$steamId) {
+            $steamId = ADMIN_STEAM_ID;
+        }
 
         if (!$userId && !$steamId) {
             echo json_encode([
@@ -142,14 +147,18 @@ switch ($action) {
             ], JSON_UNESCAPED_UNICODE);
         } else {
             // Utilisateur connecté uniquement avec Steam sans compte email
+            $isHibouxe = ($steamId === ADMIN_STEAM_ID || $isAdminSession);
             echo json_encode([
                 'success' => true,
                 'authenticated' => true,
                 'user' => [
-                    'id' => 'steam_' . $steamId,
+                    'id' => $isHibouxe ? 'admin_hibouxe' : 'steam_' . $steamId,
                     'steamId' => $steamId,
-                    'username' => ($steamId === ADMIN_STEAM_ID) ? 'Hibouxe' : 'Joueur Steam',
-                    'isSteamOnly' => true,
+                    'username' => $isHibouxe ? 'Hibouxe' : 'Explorateur_' . substr($steamId, -4),
+                    'role' => $isHibouxe ? 'admin' : 'user',
+                    'isAdmin' => $isHibouxe,
+                    'avatarId' => $isHibouxe ? 'hibouxe_creator' : 'owl',
+                    'title' => $isHibouxe ? '👑 Créateur du Site' : 'Explorateur',
                 ],
             ], JSON_UNESCAPED_UNICODE);
         }

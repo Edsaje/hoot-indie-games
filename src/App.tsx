@@ -148,7 +148,13 @@ export const AppContent: React.FC = () => {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [leaderboardCategory, setLeaderboardCategory] = useState<LeaderboardCategory>('arcade');
   const [leaderboardGame, setLeaderboardGame] = useState<string>('snake');
-  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState<boolean>(false);
+  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      return hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard');
+    }
+    return false;
+  });
   const [isShopOpen, setIsShopOpen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase();
@@ -312,6 +318,8 @@ export const AppContent: React.FC = () => {
         } else {
           handleOpenLeaderboard('arcade');
         }
+      } else if (hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard')) {
+        setIsAdminDashboardOpen(true);
       } else if (hash.startsWith('#friends') || hash.startsWith('#friend=')) {
         setIsFriendsOpen(true);
       } else if (hash.startsWith('#shop') || hash.startsWith('#boutique')) {
@@ -769,7 +777,15 @@ export const AppContent: React.FC = () => {
       {isAdminDashboardOpen && isAuthenticated && isAdmin && (
         <AdminDashboardModal
           isOpen={isAdminDashboardOpen}
-          onClose={() => setIsAdminDashboardOpen(false)}
+          onClose={() => {
+            setIsAdminDashboardOpen(false);
+            if (typeof window !== 'undefined') {
+              const hash = window.location.hash.toLowerCase();
+              if (hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard')) {
+                history.replaceState(null, '', window.location.pathname + window.location.search);
+              }
+            }
+          }}
         />
       )}
 

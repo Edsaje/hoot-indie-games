@@ -483,6 +483,18 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       if (res.success) {
         showNotice('success', res.message);
         setConfirmDeleteSuggestion(null);
+        setData((prev) => {
+          if (!prev || !prev.suggestions) return prev;
+          const nextList = prev.suggestions.list.filter((s) => s.id !== id && String(s.appId) !== id);
+          return {
+            ...prev,
+            suggestions: {
+              ...prev.suggestions,
+              total: nextList.length,
+              list: nextList,
+            },
+          };
+        });
         await loadData();
       } else {
         showNotice('error', res.message || 'Échec de la suppression.');
@@ -581,6 +593,19 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
 
       // Nettoyer la suggestion approuvée de la file d'attente
       await deleteCommunitySuggestion(s.id, currentSteamId);
+
+      setData((prev) => {
+        if (!prev || !prev.suggestions) return prev;
+        const nextList = prev.suggestions.list.filter((entry) => entry.id !== s.id && entry.appId !== s.appId);
+        return {
+          ...prev,
+          suggestions: {
+            ...prev.suggestions,
+            total: nextList.length,
+            list: nextList,
+          },
+        };
+      });
 
       soundFx.playVictory();
       showNotice('success', `La pépite « ${title} » a été validée et intégrée au catalogue public !`);
@@ -1125,7 +1150,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                 </div>
                 <div className="flex items-center justify-center gap-2.5 flex-wrap pt-2">
                   <a
-                    href="/api/track.php"
+                    href="/api/track.php?redirect=admin"
                     className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition inline-flex items-center gap-2 shadow-md shadow-amber-500/20"
                   >
                     <Crown className="w-4 h-4" />
@@ -1468,7 +1493,20 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     onPrefillConsumed={() => {}}
                     onGameSaved={async () => {
                       if (prefilledGameForCatalog?.suggestionId) {
-                        await deleteCommunitySuggestion(prefilledGameForCatalog.suggestionId, currentSteamId);
+                        const sugId = prefilledGameForCatalog.suggestionId;
+                        await deleteCommunitySuggestion(sugId, currentSteamId);
+                        setData((prev) => {
+                          if (!prev || !prev.suggestions) return prev;
+                          const nextList = prev.suggestions.list.filter((s) => s.id !== sugId);
+                          return {
+                            ...prev,
+                            suggestions: {
+                              ...prev.suggestions,
+                              total: nextList.length,
+                              list: nextList,
+                            },
+                          };
+                        });
                         setPrefilledGameForCatalog(null);
                         await loadData();
                       }

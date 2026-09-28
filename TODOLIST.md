@@ -181,11 +181,29 @@
   - [x] **Frontend réactif (`MicroIndieHub.tsx`, `GemExplorerHome.tsx`, `SteamCatalogExplorer.tsx`, `ToolboxHub.tsx`)** : Sélection dynamique des devises selon `i18n.language` avec repli élégant, badges de soldes et prix barrés convertis.
   - [x] **Suite de tests unitaires validée (`scripts/testCurrencyFormatting.ts`)** : 6/6 tests réussis (devises, centimes, réductions, jeux gratuits, extraction regex, dictionnaire bilingue).
 
+### 13. 👑 Redirection & Retour Automatique vers le Panneau Admin lors de l'activation de Session Steam `[✅ 100% Terminé]`
+- **Priorité :** P1 (Haute priorité — Fluidité d'administration & expérience utilisateur)
+- **Difficulté :** Faible-Moyenne (Gestion du paramètre `redirect=admin` dans le flux OpenID 2.0 Valve + routage `#admin`)
+- **Constat :** Lorsqu'une session administrative expire ou doit être activée et que l'administrateur clique sur « Activer ma Session Steam » dans `AdminDashboardModal.tsx`, la validation OpenID le redirigeait brutalement sur la console PHP brute `/api/track.php` au lieu de le renvoyer automatiquement sur le site avec le panneau d'administration rouvert.
+- **Actions réalisées :**
+  - [x] **Préservation de la cible dans le flux OpenID (`public/api/track.php`) :** Conserver et transmettre le paramètre `redirect=admin` dans `openid.return_to` lors de la redirection vers les serveurs de Valve, et redirection immédiate vers Steam sans afficher de page HTML intermédiaire inutile.
+  - [x] **Redirection automatique vers l'application (`public/api/track.php`) :** Dès que l'assertion Steam de l'administrateur officiel (`$steamId === ADMIN_STEAM_ID`) est validée avec succès, vérifier si `$_GET['redirect'] === 'admin'` et rediriger automatiquement vers `/#admin` (avec session PHP active) au lieu de rediriger vers `track.php`.
+  - [x] **Lien d'activation typé (`src/components/admin/AdminDashboardModal.tsx`) :** Mettre à jour le bouton « Activer ma Session Steam » pour pointer vers `/api/track.php?redirect=admin`.
+  - [x] **Prise en charge du Hash `#admin` (`src/App.tsx`) :** Initialiser `isAdminDashboardOpen` à `true` si le hash au chargement est `#admin` et écouter l'événement `hashchange` pour ouvrir immédiatement le panneau d'administration lors d'une navigation vers `#admin`, avec nettoyage propre de l'URL à la fermeture.
+
+### 14. 💡 Boîte à Pépites : Purge & Retrait automatique des suggestions validées ou supprimées `[✅ 100% Terminé]`
+- **Priorité :** P1 (Haute priorité — Modération & cohérence du panneau administrateur)
+- **Difficulté :** Faible-Moyenne (Extraction robuste de l'ID en POST/GET/JSON dans `track.php` + mise à jour optimiste réactive)
+- **Constat :** Les jeux proposés dans la boîte à pépites restaient affichés dans le panneau d'administration même après avoir été validés (en 1-clic ou après édition de fiche) ou supprimés (icône corbeille). La cause venait de `public/api/track.php` dans l'action `delete_suggestion` qui ne lisait que `$_GET['id']` alors que la requête administrative sécurisée POST envoyait l'identifiant dans le corps `$_POST['id']`, empêchant ainsi toute suppression réelle dans `suggestions.json`.
+- **Actions réalisées :**
+  - [x] **Correction Backend (`public/api/track.php`) :** Extraction universelle et sécurisée de l'identifiant (`$_POST['id']`, `$_GET['id']`, payload JSON brut `php://input` et `appId`), avec filtrage atomique sous verrouillage `LOCK_EX` garantissant la suppression effective dans `suggestions.json`.
+  - [x] **Mise à jour Optimiste Frontend (`src/components/admin/AdminDashboardModal.tsx`) :** Retrait immédiat de l'élément dans `data.suggestions.list` et décrémentation du compteur `data.suggestions.total` lors de `handleDeleteSuggestion`, `handleQuickApproveSuggestion` et `onGameSaved`, offrant un retour visuel instantané sans latence réseau.
+
 ---
 
 ## 🔵 Phase 4 : Systèmes Avancés & Refactorisation Lourde (Priorité P3)
 
-### 13. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[✅ 100% Terminé]`
+### 15. 💬 Système de Tchat Privé (Messagerie Directe entre Joueurs) `[✅ 100% Terminé]`
 - **Constat :** Le tchat était jusqu'alors exclusivement un salon public global. Les joueurs ne pouvaient pas correspondre en privé.
 - **Actions réalisées :**
   - [x] **Backend PHP Souverain (`public/api/chat.php`)** : Endpoints de messagerie directe `get_private_conversations`, `get_private_messages`, `send_private_message`, `mark_private_read`, `delete_private_message` avec génération de clés canoniques déterministes symétriques (`getCanonicalConversationKey`), stockage atomique sous verrouillage `LOCK_EX` dans `private_conversations.json`, bouclier anti-hameçonnage et modération anti-injures intégrés.
@@ -195,7 +213,7 @@
   - [x] **Interconnexion Sociale (`FriendsModal.tsx` & `ChatUserModerationModal.tsx`)** : Bouton « Message » sur chaque carte de compagnon ouvrant instantanément le tchat privé avec celui-ci, et bouton d'envoi de message privé depuis le profil ou au clic sur le pseudonyme/avatar d'un joueur dans le salon public.
   - [x] **Suite de Tests Validée (`scripts/testPrivateMessaging.ts`)** : 6/6 tests réussis (clé canonique symétrique, insensibilité casse/accents, arithmétique des badges de notifications).
 
-### 14. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
+### 16. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
 - **Priorité :** P1 (Haute priorité — Confiance, social & socle anti-spam)
 - **Difficulté :** Moyenne-Élevée (Gestion atomique des demandes côté serveur PHP et réactivité UI)
 - **Constat :** Actuellement, lorsqu'un joueur saisit le code ami d'un autre utilisateur, l'ajout est unilatéral et immédiat sur son client local sans consentement ni notification pour le joueur ciblé. Pour instaurer un véritable réseau social de confiance et bloquer les messages non sollicités, l'amitié doit devenir bilatérale et mutuellement consentie.
@@ -221,7 +239,7 @@
 
 ---
 
-### 15. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
+### 17. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
 - **Priorité :** P1 (Haute priorité — Sécurité primordiale & protection des utilisateurs)
 - **Difficulté :** Moyenne (Vérification croisée backend + guidage ergonomique frontend)
 - **Constat :** Pour éviter tout risque de spam automatisé, de faux messages de phishing (faux comptes se faisant passer pour des tiers ou envoyant des arnaques en message direct), la messagerie directe doit être strictement réservée aux compagnons mutuellement confirmés, à l'exception du Super-Admin / Fondateur Hibouxe pour le support officiel.
@@ -237,7 +255,7 @@
 
 ---
 
-### 16. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+### 18. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
 - **Priorité :** P2 (Priorité moyenne — Économie du jeu de cartes & collection)
 - **Difficulté :** Élevée (Transactions atomiques sécurisées, double validation, cohérence des inventaires)
 - **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
@@ -252,7 +270,7 @@
 
 ---
 
-### 17. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
+### 19. 🧹 Élimination Finale de la Dette Technique (Refactorisation des Monolithes restants) `[⏳ À faire]`
 - **Priorité :** P3 (Maintenance & propreté architecturale — 0 dette technique)
 - **Difficulté :** Élevée (Composants de grande taille avec logique d'état complexe)
 - **Constat :** Bien que les règles de hooks et les types `any` aient été corrigés, et que l'immense `ArcadeModal.tsx` ait été découpé avec succès, il reste plusieurs composants React de plus de 1500 lignes qui violent le principe de Responsabilité Unique (Single Responsibility).

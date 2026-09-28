@@ -450,7 +450,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             session_regenerate_id(true); // Protection contre le Session Fixation (CWE-384)
             $_SESSION['admin_auth'] = true;
             $_SESSION['admin_steam_id'] = $steamId;
+            $_SESSION['steam_id'] = $steamId;
+            $_SESSION['hoot_user_id'] = 'admin_hibouxe';
             $_SESSION['admin_login_at'] = date('c');
+
+            $target = $_GET['redirect'] ?? ($_SESSION['admin_redirect_target'] ?? '');
+            unset($_SESSION['admin_redirect_target']);
+
+            if ($target === 'admin' || $target === 'dashboard' || $target === 'app') {
+                header('Location: /#admin');
+                exit;
+            }
+
             header('Location: track.php');
             exit;
         } else {
@@ -516,6 +527,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
     $isAuth = isCreatorAdminAuthorized();
 
+    if ($isAuth && isset($_GET['redirect']) && in_array($_GET['redirect'], ['admin', 'dashboard', 'app'], true) && !$isJsonReq) {
+        header('Location: /#admin');
+        exit;
+    }
+
     if (!$isAuth) {
         if ($isJsonReq) {
             http_response_code(401);
@@ -532,7 +548,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         $protocol = $isHttps ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'];
         $path = strtok($_SERVER['REQUEST_URI'], '?');
-        $returnTo = $protocol . $host . $path;
+        $returnParams = [];
+        if (!empty($_GET['redirect'])) {
+            $returnParams['redirect'] = $_GET['redirect'];
+            $_SESSION['admin_redirect_target'] = $_GET['redirect'];
+        }
+        $returnQuery = !empty($returnParams) ? '?' . http_build_query($returnParams) : '';
+        $returnTo = $protocol . $host . $path . $returnQuery;
         $realm = $protocol . $host;
 
         $steamLoginUrl = 'https://steamcommunity.com/openid/login?' . http_build_query([
@@ -543,6 +565,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             'openid.identity' => 'http://specs.openid.net/auth/2.0/identifier_select',
             'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
         ]);
+
+        if (isset($_GET['redirect']) && in_array($_GET['redirect'], ['admin', 'dashboard', 'app'], true)) {
+            header('Location: ' . $steamLoginUrl);
+            exit;
+        }
 
         header('Content-Type: text/html; charset=utf-8');
         ?>
@@ -1129,12 +1156,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
     // Modération : Supprimer une suggestion communautaire
     if ($action === 'delete_suggestion') {
-        $sugId = trim($_GET['id'] ?? '');
+        $rawInput = @file_get_contents('php://input');
+        $jsonInput = json_decode($rawInput, true) ?: [];
+        $sugId = trim((string)($_POST['id'] ?? ($_GET['id'] ?? ($jsonInput['id'] ?? ''))));
+        $appId = trim((string)($_POST['appId'] ?? ($_GET['appId'] ?? ($jsonInput['appId'] ?? ''))));
+
         $sugFile = __DIR__ . '/suggestions.json';
         if (file_exists($sugFile)) {
             $suggestions = json_decode(@file_get_contents($sugFile), true) ?: [];
-            $filtered = array_values(array_filter($suggestions, function($s) use ($sugId) {
-                return ($s['id'] ?? '') !== $sugId;
+            $filtered = array_values(array_filter($suggestions, function($s) use ($sugId, $appId) {
+                $curId = strval($s['id'] ?? '');
+                $curAppId = strval($s['appId'] ?? '');
+                if (!empty($sugId) && ($curId === $sugId || $curAppId === $sugId)) {
+                    return false;
+                }
+                if (!empty($appId) && $curAppId === $appId) {
+                    return false;
+                }
+                return true;
             }));
             @file_put_contents($sugFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
             echo json_encode(['success' => true, 'message' => 'Suggestion supprimée avec succès.']);
