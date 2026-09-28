@@ -227,23 +227,30 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     const handleCloudRestored = (e: any) => {
       const cloudData = e.detail;
       if (!cloudData) return;
-      const isOfficialAdmin = Boolean(
-        (profile.steam?.steamId && String(profile.steam.steamId).trim() === ADMIN_STEAM_ID) ||
-        (profile.email && profile.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
-      );
-      setProfile((prev) => ({
-        ...prev,
-        username: isOfficialAdmin ? 'Hibouxe' : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_') ? cloudData.username : prev.username),
-        avatarId: (cloudData.avatarId as any) || (isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId),
-        title: cloudData.title || (isOfficialAdmin ? '👑 Créateur du Site' : prev.title),
-        isAdmin: isOfficialAdmin ? true : false,
-        role: isOfficialAdmin ? 'admin' : (prev.role === 'admin' ? 'user' : prev.role),
-        activeFrame: cloudData.activeFrame || prev.activeFrame,
-        unlockedAvatars: cloudData.unlockedAvatars || prev.unlockedAvatars,
-        unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
-        unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
-        isCloudSynced: true,
-      }));
+      setProfile((prev) => {
+        const isOfficialAdmin = Boolean(
+          (cloudData.steamId && String(cloudData.steamId).trim() === ADMIN_STEAM_ID) ||
+          (prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID) ||
+          (prev.email && prev.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+        );
+        return {
+          ...prev,
+          username: isOfficialAdmin
+            ? 'Hibouxe'
+            : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_')
+                ? cloudData.username
+                : prev.username),
+          avatarId: (cloudData.avatarId as any) || (isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId),
+          title: cloudData.title || (isOfficialAdmin ? '👑 Créateur du Site' : prev.title),
+          isAdmin: isOfficialAdmin ? true : false,
+          role: isOfficialAdmin ? 'admin' : (prev.role === 'admin' ? 'user' : prev.role),
+          activeFrame: cloudData.activeFrame || prev.activeFrame,
+          unlockedAvatars: cloudData.unlockedAvatars || prev.unlockedAvatars,
+          unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
+          unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
+          isCloudSynced: true,
+        };
+      });
     };
 
     window.addEventListener('hoot_cloud_save_restored', handleCloudRestored as any);
@@ -316,7 +323,32 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
             username: user.username,
           },
           { force: true, strategy: 'replace' }
-        ).catch(() => {});
+        ).then((syncRes) => {
+          if (syncRes.success && syncRes.data) {
+            const cloudData = syncRes.data;
+            setProfile((prev) => {
+              const isAdmin = Boolean(
+                isOfficialAdmin ||
+                (cloudData.steamId && String(cloudData.steamId).trim() === ADMIN_STEAM_ID) ||
+                (prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID) ||
+                (prev.email && prev.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+              );
+              return {
+                ...prev,
+                username: isAdmin ? 'Hibouxe' : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_') ? cloudData.username : prev.username),
+                avatarId: (cloudData.avatarId as any) || (isAdmin ? 'hibouxe_creator' : prev.avatarId),
+                title: cloudData.title || (isAdmin ? '👑 Créateur du Site' : prev.title),
+                isAdmin: isAdmin ? true : prev.isAdmin,
+                role: isAdmin ? 'admin' : prev.role,
+                activeFrame: cloudData.activeFrame || prev.activeFrame,
+                unlockedAvatars: (cloudData.unlockedAvatars as any) || prev.unlockedAvatars,
+                unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
+                unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
+                isCloudSynced: true,
+              };
+            });
+          }
+        }).catch(() => {});
       }
     }).catch(() => {});
   }, []);
@@ -726,7 +758,32 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
               username: user.username,
             },
             { force: true, strategy: 'replace' }
-          ).catch(() => {});
+          ).then((syncRes) => {
+            if (syncRes.success && syncRes.data) {
+              const cloudData = syncRes.data;
+              setProfile((prev) => {
+                const isAdmin = Boolean(
+                  isOfficialAdmin ||
+                  (cloudData.steamId && String(cloudData.steamId).trim() === ADMIN_STEAM_ID) ||
+                  (prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID) ||
+                  (prev.email && prev.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+                );
+                return {
+                  ...prev,
+                  username: isAdmin ? 'Hibouxe' : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_') ? cloudData.username : prev.username),
+                  avatarId: (cloudData.avatarId as any) || (isAdmin ? 'hibouxe_creator' : prev.avatarId),
+                  title: cloudData.title || (isAdmin ? '👑 Créateur du Site' : prev.title),
+                  isAdmin: isAdmin ? true : prev.isAdmin,
+                  role: isAdmin ? 'admin' : prev.role,
+                  activeFrame: cloudData.activeFrame || prev.activeFrame,
+                  unlockedAvatars: (cloudData.unlockedAvatars as any) || prev.unlockedAvatars,
+                  unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
+                  unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
+                  isCloudSynced: true,
+                };
+              });
+            }
+          }).catch(() => {});
 
           return { success: true };
         }

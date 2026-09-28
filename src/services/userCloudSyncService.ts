@@ -186,11 +186,15 @@ export function applyCloudSaveToLocalStorage(
     // 1. Plumes d'Or
     if (cloudData.feathers) {
       if (typeof cloudData.feathers.bonus === 'number') {
-        localStorage.setItem(STORAGE_BONUS_FEATHERS, String(cloudData.feathers.bonus));
-        localStorage.setItem('hoot_golden_feathers_v1', String(cloudData.feathers.bonus));
+        const localBonus = Number(localStorage.getItem(STORAGE_BONUS_FEATHERS) || '0');
+        const finalBonus = isReplace ? cloudData.feathers.bonus : Math.max(localBonus, cloudData.feathers.bonus);
+        localStorage.setItem(STORAGE_BONUS_FEATHERS, String(finalBonus));
+        localStorage.setItem('hoot_golden_feathers_v1', String(finalBonus));
       }
       if (typeof cloudData.feathers.spent === 'number') {
-        localStorage.setItem(STORAGE_SPENT_FEATHERS, String(cloudData.feathers.spent));
+        const localSpent = Number(localStorage.getItem(STORAGE_SPENT_FEATHERS) || '0');
+        const finalSpent = isReplace ? cloudData.feathers.spent : Math.max(localSpent, cloudData.feathers.spent);
+        localStorage.setItem(STORAGE_SPENT_FEATHERS, String(finalSpent));
       }
       if (cloudData.feathers.claimedDaily) {
         if (isReplace) {
@@ -612,9 +616,16 @@ export async function syncUserCloudSave(
     return { success: false, message: 'Aucun identifiant utilisateur disponible pour la synchronisation.' };
   }
 
-  // Si une synchronisation est déjà en vol, réutiliser la même promesse pour éviter les requêtes concurrentes
+  // Si une synchronisation est déjà en vol, gérer les requêtes concurrentes
   if (inFlightSyncPromise) {
-    return inFlightSyncPromise;
+    if (options?.force) {
+      // Attendre la fin de la synchronisation en cours pour enchaîner immédiatement la synchronisation forcée
+      try {
+        await inFlightSyncPromise;
+      } catch {}
+    } else {
+      return inFlightSyncPromise;
+    }
   }
 
   const now = Date.now();

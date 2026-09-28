@@ -106,18 +106,21 @@
 
 ## 🟠 Phase 2 : Rétention Quotidienne, Social & Jeu de Cartes (Priorité P1)
 
-### 5. 🌾 Adaptation & Automatisation du workflow « Daily Harvest » (Nouveaux jeux & Pépites) `[⏳ À faire]`
-- **Constat :** L'action automatisée « Daily Harvest » doit être adaptée pour être 100% compatible avec la nouvelle architecture refactorisée du site, injecter continuellement de nouveaux jeux chaque jour (y compris des créations émergentes ou moins bien notées) et enrichir la sélection de pépites certifiées.
-- **Actions à réaliser :**
-  - [ ] Auditer le script et l'action GitHub / cron `daily-harvest` (ou scripts d'ingestion Steam / Itch).
-  - [ ] S'assurer de la compatibilité avec `games_override.json` et les types TypeScript sans casser le catalogue existant.
-  - [ ] Élargir les filtres d'ingestion pour intégrer des titres indés variés et pépites méconnues chaque jour.
+### 5. 🌾 Adaptation & Automatisation du workflow « Daily Harvest » (Nouveaux jeux & Pépites) `[✅ 100% Terminé]`
+- **Constat :** L'action automatisée « Daily Harvest » devait être adaptée pour être 100% compatible avec la nouvelle architecture refactorisée du site, injecter continuellement de nouveaux jeux chaque jour (y compris des créations émergentes ou moins bien notées) et enrichir la sélection de pépites certifiées.
+- **Actions réalisées :**
+  - [x] Révision des seuils dans `scripts/dailyIndieHarvest.ts` : assouplissement de `MIN_CATALOG_REVIEWS` à 5 et `MIN_CATALOG_POSITIVE` à 0.50 pour capturer les jeux émergents et confidentiels ; seuil pépites certifiées ajusté à 350 reviews (82%+ positif).
+  - [x] Décuplement du sourcing : intégration de 403 pépites curatées (`target_appids.json`), requêtes multi-genres Steam (Roguelike, Metroidvania, Deckbuilder, Pixel Art, Platformer, etc.) et pagination étendue.
+  - [x] Préservation automatique de `EXCLUDED_FROM_MINI_GAMES` et des règles d'audit anti-hallucination (`npm run audit-db` à 100%).
+  - [x] Mise à jour du workflow GitHub Actions `.github/workflows/daily-indie-harvest.yml` avec conservation du cache des métadonnées Steam (`steam_cache.json`, `steam_store_cache.json`).
 
-### 6. ☁️ Synchronisation Cloud Multi-Appareils au chargement du site `[⏳ À faire]`
-- **Constat :** Lorsqu'un joueur connecté arrive sur le site depuis un autre appareil (ex: second PC, smartphone), sa progression locale antérieure peut écraser ou ne pas refléter sa dernière sauvegarde Cloud synchronisée.
-- **Actions à réaliser :**
-  - [ ] Dès le chargement initial de l'application, si l'utilisateur possède un compte actif ou une session Steam, déclencher un fetch prioritaire de `user_cloud_sync.php`.
-  - [ ] Réconcilier intelligemment par horodatage (`timestamp` / version la plus récente) les cartes possédées, les plumes, les streaks et l'historique des parties pour garantir 0 perte de données cross-device.
+### 6. ☁️ Synchronisation Cloud Multi-Appareils au chargement du site `[✅ 100% Terminé]`
+- **Constat :** Lorsqu'un joueur connecté arrivait sur le site depuis un autre appareil (ex: second PC, smartphone), sa progression locale antérieure pouvait écraser ou ne pas refléter sa dernière sauvegarde Cloud synchronisée.
+- **Actions réalisées :**
+  - [x] Détection et réconciliation intelligente dans `public/api/user_cloud_sync.php` avec recherche multi-clés candidates (`steam_xxx.json`, `user_xxx.json`, `name_xxx.json`) et miroir automatique entre identifiants liés.
+  - [x] Résolution de la concurrence asynchrone (`inFlightSyncPromise`) dans `src/services/userCloudSyncService.ts` : les synchronisations forcées avec stratégie `replace` ou `merge` attendent la fin des requêtes en cours pour charger les données distantes fraîches.
+  - [x] Application réactive immédiate de l'état distant dans `UserAccountProvider.tsx` (`apiGetSession()`, `login()`, `connectSteamByIdentifier()` et `handleCloudRestored`) sans closure périmée sur les rôles admin.
+  - [x] Algorithme de fusion non-destructif : `Math.max` pour les plumes, séries de victoires et distributions, union dédupliquée pour les succès, puzzles du calendrier, cosmétiques et collection de cartes.
 
 ### 7. 📅 Vérification du système de « Série de jeu » (Streaks) & synchronisation Calendrier `[⏳ À faire]`
 - **Constat :** Le système de décompte des séries consécutives (streaks) et son reflet dans l'archive/calendrier des jours joués nécessite un audit de fiabilité.

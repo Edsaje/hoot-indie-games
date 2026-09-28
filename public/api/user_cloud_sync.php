@@ -400,6 +400,19 @@ $reqSteamId = trim($_REQUEST['steamId'] ?? '');
 $sessionSteamId = trim($_SESSION['steam_id'] ?? '');
 $sessionHootUserId = trim($_SESSION['hoot_user_id'] ?? '');
 
+// Si le compte Hoot a un SteamID associé dans .accounts.json, le récupérer pour lier les sauvegardes
+$accountsFile = $savesDir . '/.accounts.json';
+if (empty($sessionSteamId) && !empty($sessionHootUserId) && file_exists($accountsFile)) {
+    $accountsRaw = @file_get_contents($accountsFile);
+    $accountsData = $accountsRaw ? json_decode($accountsRaw, true) : null;
+    if (!empty($accountsData['users'][$sessionHootUserId]['steamId'])) {
+        $sessionSteamId = $accountsData['users'][$sessionHootUserId]['steamId'];
+        $_SESSION['steam_id'] = $sessionSteamId;
+    }
+}
+
+$effectiveSteamId = !empty($reqSteamId) ? $reqSteamId : $sessionSteamId;
+
 $isHootSessionOwner = (!empty($sessionHootUserId) && ($userKey === 'user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionHootUserId)));
 $isSteamSessionOwner = (!empty($sessionSteamId) && ($userKey === 'steam_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionSteamId) || (!empty($reqSteamId) && hash_equals($sessionSteamId, $reqSteamId))));
 $isCreatorAdmin = isCreatorAdminAuthorized();
@@ -417,7 +430,51 @@ if ($userKey === 'steam_' . ADMIN_STEAM_ID || $userKey === 'name_hibouxe' || $us
     }
 }
 
+// Résolution intelligente du fichier de sauvegarde :
+// Si le fichier primaire n'existe pas encore ou est vide, chercher parmi les clés associées (Steam, User, Name)
 $saveFile = $savesDir . '/' . $userKey . '.json';
+if (!file_exists($saveFile) || filesize($saveFile) <= 10) {
+    $alternateCandidates = [];
+    if (!empty($effectiveSteamId)) {
+        $cleanSteam = preg_replace('/[^a-zA-Z0-9_\-]/', '', $effectiveSteamId);
+        if (!empty($cleanSteam)) {
+            $alternateCandidates['steam_' . $cleanSteam] = $savesDir . '/steam_' . $cleanSteam . '.json';
+        }
+    }
+    if (!empty($sessionHootUserId)) {
+        $cleanUser = preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionHootUserId);
+        if (!empty($cleanUser)) {
+            $alternateCandidates['user_' . $cleanUser] = $savesDir . '/user_' . $cleanUser . '.json';
+        }
+    }
+    $reqUsername = trim($_REQUEST['username'] ?? '');
+    if (!empty($reqUsername)) {
+        $cleanUName = mb_strtolower(trim($reqUsername), 'UTF-8');
+        $cleanUName = preg_replace('/[^a-z0-9]/', '', $cleanUName);
+        if (!empty($cleanUName) && $cleanUName !== 'hiboumystere') {
+            $alternateCandidates['name_' . $cleanUName] = $savesDir . '/name_' . $cleanUName . '.json';
+        }
+    }
+
+    $bestFile = null;
+    $bestKey = null;
+    $maxSize = 10;
+    foreach ($alternateCandidates as $altKey => $altFile) {
+        if (file_exists($altFile)) {
+            $sz = filesize($altFile);
+            if ($sz > $maxSize) {
+                $maxSize = $sz;
+                $bestFile = $altFile;
+                $bestKey = $altKey;
+            }
+        }
+    }
+    if ($bestFile !== null) {
+        $saveFile = $bestFile;
+        $userKey = $bestKey;
+    }
+}
+
 $inputSyncKey = trim($_SERVER['HTTP_X_SYNC_KEY'] ?? $_REQUEST['syncKey'] ?? '');
 
 // [SÉCURITÉ CWE-639 IDOR] Authentification obligatoire via clé secrète de synchronisation
@@ -630,6 +687,26 @@ switch ($action) {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Échec de l\'écriture de la sauvegarde sur le serveur OVH.']);
             exit;
+        }
+
+        // Miroir automatique si le compte possède un SteamID ou un UserID associé pour synchronisation instantanée multi-appareils
+        if (!empty($effectiveSteamId)) {
+            $cleanSteam = preg_replace('/[^a-zA-Z0-9_\-]/', '', $effectiveSteamId);
+            if (!empty($cleanSteam)) {
+                $steamAlias = $savesDir . '/steam_' . $cleanSteam . '.json';
+                if ($steamAlias !== $saveFile) {
+                    @file_put_contents($steamAlias, $json, LOCK_EX);
+                }
+            }
+        }
+        if (!empty($sessionHootUserId)) {
+            $cleanUser = preg_replace('/[^a-zA-Z0-9_\-]/', '', $sessionHootUserId);
+            if (!empty($cleanUser)) {
+                $userAlias = $savesDir . '/user_' . $cleanUser . '.json';
+                if ($userAlias !== $saveFile) {
+                    @file_put_contents($userAlias, $json, LOCK_EX);
+                }
+            }
         }
 
         $clientMerged = $merged;

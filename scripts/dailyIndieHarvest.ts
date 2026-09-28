@@ -17,16 +17,16 @@ import { BANNED_APP_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA 
  *    stricts de qualité (Règle 0 Hallucination, avis positifs > 80%, captures HD certifiées).
  */
 
-// Configuration des seuils de qualité stricts pour le sanctuaire des Pépites d'Or
+// Configuration des seuils de qualité pour le sanctuaire des Pépites d'Or et le Catalogue Étendu
 const CONFIG = {
-  MIN_REVIEWS: 500,          // Seuil de notoriété strict : au moins 500 avis Steam pour Pépites (défis quotidiens)
-  MIN_POSITIVE_RATIO: 0.85, // Seuil d'excellence : au moins 85% d'avis positifs (Très positifs / Extrêmement positifs)
-  MIN_CATALOG_REVIEWS: 30,   // Seuil pour le Catalogue Étendu (jeux émergents, micro-studios)
-  MIN_CATALOG_POSITIVE: 0.70, // 70% d'avis positifs minimum pour le Catalogue Étendu
+  MIN_REVIEWS: 350,          // Seuil d'avis pour Pépites (défis quotidiens) : 350+ avis (capte les perles indés renommées)
+  MIN_POSITIVE_RATIO: 0.82,  // 82%+ d'avis positifs pour Pépite ("Très positifs" ou "Extrêmement positifs")
+  MIN_CATALOG_REVIEWS: 5,    // Dès 5 avis pour le Catalogue Étendu (permet aux créations émergentes d'entrer)
+  MIN_CATALOG_POSITIVE: 0.50, // Dès 50% d'avis positifs pour le Catalogue (même des jeux moins bien notés comme demandé)
   MAX_NEW_PEPITES_PER_DAY: 3, // Nombre max de nouvelles pépites par jour (panthéon sélectif)
-  MAX_NEW_CATALOG_PER_DAY: 10, // Nombre max de nouveaux jeux catalogue par jour
-  TARGET_RADAR_COUNT: 9,    // Nombre cible de jeux à venir dans le Radar
-  REQUEST_DELAY_MS: 350,    // Délai poli entre requêtes Steam API
+  MAX_NEW_CATALOG_PER_DAY: 25, // Nombre max de nouveaux jeux catalogue par jour
+  TARGET_RADAR_COUNT: 12,    // Nombre cible de jeux à venir dans le Radar
+  REQUEST_DELAY_MS: 200,    // Délai poli entre requêtes Steam API
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -235,53 +235,98 @@ async function fetchGameDetails(appId: number, lang: 'french' | 'english'): Prom
   }
 }
 
-// Récupération des AppIDs candidats depuis Steam
+// Récupération des AppIDs candidats depuis Steam (Flux étendus, Pépites de référence & Recherches thématiques)
 async function fetchCandidateAppIds(): Promise<number[]> {
   const candidates = new Set<number>();
 
-  console.log('🔍 [2/4] Interrogation des flux Steam Nouveautés & Tendances Indés...');
+  console.log('🔍 [2/4] Interrogation des flux Steam Nouveautés, Tendances & Pépites Indés...');
 
-  try {
-    const genreUrl = 'https://store.steampowered.com/api/getappsingenre/?genre=Indie&l=french';
-    const genreRes = await fetch(genreUrl);
-    if (genreRes.ok) {
-      const genreData = (await genreRes.json()) as {
-        tabs?: {
-          newreleases?: { items?: Array<{ id: number }> };
-          topsellers?: { items?: Array<{ id: number }> };
-        };
-      };
-
-      const newReleases = genreData.tabs?.newreleases?.items || [];
-      const topSellers = genreData.tabs?.topsellers?.items || [];
-
-      newReleases.forEach((item) => candidates.add(item.id));
-      topSellers.forEach((item) => candidates.add(item.id));
-      console.log(`   ➔ ${candidates.size} candidats trouvés dans les onglets Indés Steam.`);
+  // 1. Réapprovisionner depuis la liste des pépites indés cibles (target_appids.json)
+  const targetPath = path.join(process.cwd(), 'scripts/target_appids.json');
+  if (fs.existsSync(targetPath)) {
+    try {
+      const targetObj = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
+      for (const appIdStr of Object.keys(targetObj)) {
+        const id = parseInt(appIdStr, 10);
+        if (id && !BANNED_APP_IDS.has(id)) {
+          candidates.add(id);
+        }
+      }
+      console.log(`   ➔ ${candidates.size} pépites indés de référence chargées depuis target_appids.json.`);
+    } catch (err) {
+      console.warn('   ⚠️ Erreur lecture target_appids.json :', err);
     }
-  } catch (err) {
-    console.warn('   ⚠️ Erreur lors de l\'interrogation de getappsingenre :', err);
   }
 
+  // 2. Flux getappsingenre pour les genres majeurs du monde indépendant
+  for (const g of ['Indie', 'Action', 'Adventure', 'Strategy', 'RPG']) {
+    try {
+      const genreUrl = `https://store.steampowered.com/api/getappsingenre/?genre=${g}&l=french`;
+      const genreRes = await fetch(genreUrl);
+      if (genreRes.ok) {
+        const genreData = (await genreRes.json()) as {
+          tabs?: Record<string, { items?: Array<{ id: number }> }>;
+        };
+        for (const tab of Object.values(genreData.tabs || {})) {
+          for (const item of tab.items || []) {
+            if (item.id && !BANNED_APP_IDS.has(item.id)) candidates.add(item.id);
+          }
+        }
+      }
+    } catch {}
+    await delay(120);
+  }
+
+  // 3. Steam Search API : Moissonnage riche par tags (Pépites les plus acclamées, sorties récentes et sous-genres)
+  const searchQueries = [
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&sort_by=Reviews_DESC&json=1',
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&sort_by=Released_DESC&json=1',
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&json=1',
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,1662&category1=998&json=1', // Roguelike
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,3871&category1=998&json=1', // 2D Platformer
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,3964&category1=998&json=1', // Pixel Art
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,1664&category1=998&json=1', // Metroidvania
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,32322&category1=998&json=1', // Deckbuilder
+  ];
+
+  for (const sUrl of searchQueries) {
+    try {
+      const res = await fetch(sUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { items?: Array<{ logo?: string; name?: string }> };
+        for (const it of data.items || []) {
+          const match = it.logo?.match(/\/apps\/(\d+)\//);
+          if (match) {
+            const id = parseInt(match[1], 10);
+            if (id && !BANNED_APP_IDS.has(id)) candidates.add(id);
+          }
+        }
+      }
+    } catch {}
+    await delay(150);
+  }
+
+  // 4. Featured categories (nouveautés, meilleures ventes, sélections)
   try {
     const featUrl = 'https://store.steampowered.com/api/featuredcategories';
     const featRes = await fetch(featUrl);
     if (featRes.ok) {
-      const featData = (await featRes.json()) as {
-        new_releases?: { items?: Array<{ id: number }> };
-        top_sellers?: { items?: Array<{ id: number }> };
-      };
-
-      const items = [
-        ...(featData.new_releases?.items || []),
-        ...(featData.top_sellers?.items || []),
-      ];
-      items.forEach((item) => candidates.add(item.id));
+      const featData = (await featRes.json()) as Record<string, { items?: Array<{ id: number }> }>;
+      for (const section of Object.values(featData)) {
+        if (section && Array.isArray(section.items)) {
+          for (const item of section.items) {
+            if (item.id && !BANNED_APP_IDS.has(item.id)) candidates.add(item.id);
+          }
+        }
+      }
     }
   } catch (err) {
     console.warn('   ⚠️ Erreur lors de l\'interrogation de featuredcategories :', err);
   }
 
+  console.log(`   ➔ Au total : ${candidates.size} jeux candidats indés identifiés pour le traitement.`);
   return Array.from(candidates);
 }
 
@@ -604,7 +649,7 @@ function loadCurrentGamesDatabase(): Game[] {
   if (fs.existsSync(targetPath)) {
     try {
       const content = fs.readFileSync(targetPath, 'utf8');
-      const match = content.match(/export const INDIE_GAMES: Game\[\] = (\[[\s\S]*?\]);\n\n\/\/ Pool/);
+      const match = content.match(/export const INDIE_GAMES: Game\[\] = (\[[\s\S]*?\]);\n\n/);
       if (match) {
         return JSON.parse(match[1]);
       }
@@ -613,6 +658,20 @@ function loadCurrentGamesDatabase(): Game[] {
     }
   }
   return INDIE_GAMES;
+}
+
+function loadExcludedGameIds(): string[] {
+  const targetPath = path.join(process.cwd(), 'src/data/games.ts');
+  if (fs.existsSync(targetPath)) {
+    try {
+      const content = fs.readFileSync(targetPath, 'utf8');
+      const match = content.match(/export const EXCLUDED_FROM_MINI_GAMES: string\[\] = (\[[\s\S]*?\]);/);
+      if (match) {
+        return JSON.parse(match[1]);
+      }
+    } catch {}
+  }
+  return [];
 }
 
 function saveGamesDatabase(gamesList: Game[]) {
@@ -661,6 +720,8 @@ function saveGamesDatabase(gamesList: Game[]) {
     return;
   }
 
+  const excludedIds = loadExcludedGameIds();
+
   const fileHeader = `import type { Game } from '../types/game';
 import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlyScheduler';
 
@@ -674,9 +735,14 @@ export const INDIE_GAMES: Game[] = `;
 
   const fileFooter = `;
 
-// Pool stable pour les jeux quotidiens (sanctuarisé sur INDIE_GAMES)
+// Liste d'exclusion des micro-jeux confidentiels / prototypes itch.io pour les mini-jeux quotidiens
+// (Permet de garantir que 100% des jeux proposés dans Screenle, Indledle, Chrono, Critique, Pixel, BlindTest sont connus du public)
+export const EXCLUDED_FROM_MINI_GAMES: string[] = ${JSON.stringify(excludedIds, null, 2)};
+
+// Pool sain et reconnu pour tous les défis quotidiens et mini-jeux
 export function getActiveDailyPool(): Game[] {
-  return INDIE_GAMES;
+  const excludedSet = new Set(EXCLUDED_FROM_MINI_GAMES);
+  return INDIE_GAMES.filter((g) => !excludedSet.has(g.id));
 }
 
 export function setCustomDailyPool(_pool: Game[] | null) {
@@ -878,7 +944,7 @@ async function harvestItchMicroIndies(
             fr: rawDesc,
             en: rawDesc,
           },
-          discoveredBy: 'Hoot Bot (Itch Moissonnage)',
+          discoveredBy: 'Hibouxe',
           likesCount: 1,
           featured: false,
           coverImage: cover,

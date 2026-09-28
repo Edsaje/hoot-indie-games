@@ -47,11 +47,11 @@ jobs:
         run: |
           git config --local user.email "bot@hootindiegames.com"
           git config --local user.name "Hoot Bot (Daily Harvest)"
-          if [ -n "$(git status --porcelain src/data/ public/data/)" ]; then
+          if [ -n "$(git status --porcelain src/data/ public/data/ scripts/steam_cache.json scripts/steam_store_cache.json)" ]; then
             echo "📋 Modifications détectées dans les données. Préparation du commit..."
             git status --short
-            # Inclure l'ensemble des données récoltées (Steam, Itch.io, Catalogue, Radar) ainsi que index.html mis à jour par prebuild (SEO)
-            git add src/data/ public/data/ index.html
+            # Inclure l'ensemble des données récoltées (Steam, Itch.io, Catalogue, Radar, caches) ainsi que index.html mis à jour par prebuild (SEO)
+            git add src/data/ public/data/ scripts/steam_cache.json scripts/steam_store_cache.json index.html
             git commit -m "chore(data): moissonnage nocturne Steam & Itch.io, synchronisation du radar [skip ci]"
             # Nettoyage défensif des fichiers résiduels pour garantir un répertoire de travail 100% propre
             git checkout -- . 2>/dev/null || true
