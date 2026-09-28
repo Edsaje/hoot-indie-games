@@ -181,6 +181,19 @@
 
 ---
 
+### 19. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+- **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
+- **Actions à réaliser :**
+  - [ ] **Menu d'Échange dédié (`TradeModal.tsx`)** :
+    - Concevoir une interface d'échange claire (choix du destinataire ami, sélection visuelle de la carte à offrir et de la carte souhaitée).
+    - Système d'invitation d'échange depuis la liste d'amis (`FriendsModal.tsx`) ou le tchat avec notification visuelle et sonore.
+  - [ ] **Sécurisation des Inventaires & Transaction Atomique** :
+    - Vérification stricte : s'assurer que le joueur possède au moins un exemplaire (standard ou holo) de la carte qu'il s'apprête à céder.
+    - Exécution bilatérale atomique : à la confirmation mutuelle des deux joueurs, retirer la carte envoyée de l'inventaire du joueur A pour l'ajouter chez le joueur B, et inversement pour la carte reçue.
+    - Historique et gestion des propositions (`en attente`, `acceptée`, `refusée`, `expirée`).
+
+---
+
 ## 📦 Historique des Fonctionnalités Déployées & Validées (Archive)
 
 <details>
