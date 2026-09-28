@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { FriendPlayer } from '../types/friends';
+import type { FriendPlayer, FriendRequest } from '../types/friends';
 import { FriendsContext } from './FriendsContext';
 import { useUserAccount } from './useUserAccount';
 import {
@@ -8,8 +8,11 @@ import {
   saveStoredFriendCodes,
   registerSelfOnServer,
   fetchFriendsData,
-  lookupFriend,
   syncSteamFriendsList,
+  sendFriendRequestApi,
+  fetchFriendRequestsApi,
+  respondFriendRequestApi,
+  removeFriendApi,
 } from '../services/friendsService';
 import { getTodayDateString } from '../utils/streakManager';
 import { ADMIN_STEAM_ID } from '../utils/usernameValidation';
@@ -91,6 +94,8 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const [friends, setFriends] = useState<FriendPlayer[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [pendingRequests, setPendingRequests] = useState<FriendRequest[]>([]);
+  const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
 
   // Nettoyage immédiat et garantie :
   // - S'assurer que soi-même n'est JAMAIS stocké dans friendCodes ni dans localStorage
@@ -118,20 +123,37 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [isAuthenticated, myFriendCode]);
 
-  // Chargement des données des amis (en excluant soi-même)
+  // Récupération des demandes d'amitié reçues et envoyées
+  const refreshRequests = useCallback(async () => {
+    if (!myFriendCode) return;
+    try {
+      const res = await fetchFriendRequestsApi(myFriendCode);
+      if (res.success) {
+        setPendingRequests(res.incoming);
+        setSentRequests(res.outgoing);
+      }
+    } catch (err) {
+      console.warn('Erreur rafraîchissement demandes d’amitié :', err);
+    }
+  }, [myFriendCode]);
+
+  // Chargement des données des amis (en excluant soi-même) et des invitations
   const refreshFriends = useCallback(async () => {
     setIsLoading(true);
     try {
       await syncSelf();
       const activeCodes = friendCodesRef.current.filter((c) => !isSelfRef.current(c));
-      const list = await fetchFriendsData(activeCodes, myFriendCode);
+      const [list] = await Promise.all([
+        fetchFriendsData(activeCodes, myFriendCode, myFriendCode),
+        refreshRequests(),
+      ]);
       setFriends(list.filter((f) => !isSelfRef.current(f)));
     } catch (err) {
       console.warn('Erreur rafraîchissement amis :', err);
     } finally {
       setIsLoading(false);
     }
-  }, [syncSelf, myFriendCode]);
+  }, [syncSelf, myFriendCode, refreshRequests]);
 
   // Chargement initial unique au montage
   const hasInitiallyLoadedRef = useRef(false);
@@ -142,17 +164,18 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [refreshFriends]);
 
-  // Synchronisation périodique discrète toutes les 2 minutes
+  // Synchronisation périodique discrète toutes les 2 minutes (amis + invitations)
   useEffect(() => {
     const timer = setInterval(() => {
       syncSelf();
       const activeCodes = friendCodesRef.current.filter((c) => !isSelfRef.current(c));
-      fetchFriendsData(activeCodes, myFriendCode).then((list) => {
+      fetchFriendsData(activeCodes, myFriendCode, myFriendCode).then((list) => {
         setFriends(list.filter((f) => !isSelfRef.current(f)));
       });
+      refreshRequests();
     }, 120000);
     return () => clearInterval(timer);
-  }, [syncSelf, myFriendCode]);
+  }, [syncSelf, myFriendCode, refreshRequests]);
 
   // Écoute de complétion de jeu quotidien pour mise à jour immédiate du statut public
   useEffect(() => {
@@ -176,6 +199,8 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const defaultCodes = ['HOOT-HIBOU'];
       setFriendCodes(defaultCodes);
       setFriends([]);
+      setPendingRequests([]);
+      setSentRequests([]);
       saveStoredFriendCodes(defaultCodes);
     };
 
@@ -187,11 +212,17 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
   }, []);
 
-  // Ajouter un ami (par code ou par pseudo)
-  const addFriend = async (query: string): Promise<{ success: boolean; message?: string; error?: string }> => {
+  // Envoyer une demande d'amitié bilatérale (ou ajout immédiat si Hibouxe ou invitation réciproque existante)
+  const sendFriendRequest = async (
+    query: string
+  ): Promise<{ success: boolean; isImmediate?: boolean; message?: string; error?: string }> => {
     const cleanQuery = query.trim();
     if (!cleanQuery) {
       return { success: false, error: 'Veuillez renseigner un code ami ou un pseudonyme.' };
+    }
+
+    if (!isAuthenticated || !myFriendCode) {
+      return { success: false, error: 'Connectez-vous à votre compte pour envoyer une demande d’amitié.' };
     }
 
     if (isSelf(cleanQuery)) {
@@ -200,44 +231,102 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     setIsLoading(true);
     try {
-      const res = await lookupFriend(cleanQuery);
-      if (!res.success || !res.player) {
-        return { success: false, error: res.error || 'Compagnon introuvable.' };
+      const res = await sendFriendRequestApi(myFriendCode, cleanQuery);
+      if (!res.success) {
+        return { success: false, error: res.error || res.message || 'Impossible d’envoyer la demande.' };
       }
 
-      const targetPlayer = res.player;
-      if (isSelf(targetPlayer)) {
-        return { success: false, error: 'Vous ne pouvez pas vous ajouter vous-même en compagnon.' };
+      if (res.isImmediate && res.player) {
+        const targetPlayer = res.player;
+        if (!isSelf(targetPlayer)) {
+          const updatedCodes = Array.from(
+            new Set([...friendCodes.filter((c) => !isSelf(c)), targetPlayer.friendCode])
+          );
+          setFriendCodes(updatedCodes);
+          saveStoredFriendCodes(updatedCodes);
+          setFriends((prev) => {
+            const without = prev.filter((f) => f.friendCode !== targetPlayer.friendCode && !isSelf(f));
+            return [{ ...targetPlayer, isMutual: true }, ...without];
+          });
+        }
+      } else if (res.request) {
+        setSentRequests((prev) => [res.request!, ...prev.filter((r) => r.id !== res.request!.id)]);
       }
 
-      if (friendCodes.includes(targetPlayer.friendCode)) {
-        return { success: false, error: `${targetPlayer.username} fait déjà partie de vos compagnons.` };
-      }
-
-      const updatedCodes = [...friendCodes.filter((c) => !isSelf(c)), targetPlayer.friendCode];
-      setFriendCodes(updatedCodes);
-      saveStoredFriendCodes(updatedCodes);
-
-      // Ajouter localement à la liste des amis
-      setFriends((prev) => {
-        const withoutTarget = prev.filter((f) => f.friendCode !== targetPlayer.friendCode && !isSelf(f));
-        return [targetPlayer, ...withoutTarget];
-      });
-
+      await refreshRequests();
       return {
         success: true,
-        message: `${targetPlayer.username} a été ajouté à votre Cercle de Compagnons !`,
+        isImmediate: res.isImmediate,
+        message: res.message || 'Demande d’amitié envoyée avec succès !',
       };
     } catch (err: any) {
-      return { success: false, error: err.message || 'Erreur lors de l’ajout du compagnon.' };
+      return { success: false, error: err.message || 'Erreur lors de l’envoi de la demande.' };
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Retirer un ami
-  const removeFriend = (targetCode: string) => {
+  // Répondre à une demande d'amitié (Accepter, Refuser, Annuler)
+  const respondFriendRequest = async (
+    requestId: string,
+    action: 'accept' | 'decline' | 'cancel'
+  ): Promise<{ success: boolean; message?: string; error?: string }> => {
+    if (!myFriendCode) {
+      return { success: false, error: 'Code ami indisponible.' };
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await respondFriendRequestApi(requestId, action, myFriendCode);
+      if (!res.success) {
+        return { success: false, error: res.error || 'Impossible de traiter l’invitation.' };
+      }
+
+      if (action === 'accept') {
+        if (res.newFriend) {
+          const newF = res.newFriend;
+          const updatedCodes = Array.from(
+            new Set([...friendCodes.filter((c) => !isSelf(c)), newF.friendCode])
+          );
+          setFriendCodes(updatedCodes);
+          saveStoredFriendCodes(updatedCodes);
+          setFriends((prev) => [
+            { ...newF, isMutual: true },
+            ...prev.filter((f) => f.friendCode !== newF.friendCode && !isSelf(f)),
+          ]);
+        }
+        setPendingRequests((prev) => prev.filter((r) => r.id !== requestId));
+        refreshFriends();
+      } else if (action === 'decline') {
+        setPendingRequests((prev) => prev.filter((r) => r.id !== requestId));
+      } else if (action === 'cancel') {
+        setSentRequests((prev) => prev.filter((r) => r.id !== requestId));
+      }
+
+      return {
+        success: true,
+        message: res.message || 'Action effectuée avec succès.',
+      };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Erreur lors du traitement de l’invitation.' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Alias pour rétro-compatibilité
+  const addFriend = sendFriendRequest;
+
+  // Retirer un ami (mise à jour locale + notification serveur)
+  const removeFriend = async (targetCode: string) => {
     const clean = targetCode.trim().toUpperCase();
+    if (myFriendCode) {
+      try {
+        await removeFriendApi(myFriendCode, clean);
+      } catch {
+        // Ignorer
+      }
+    }
     const updatedCodes = friendCodes.filter((c) => c !== clean && !isSelf(c));
     setFriendCodes(updatedCodes);
     saveStoredFriendCodes(updatedCodes);
@@ -405,9 +494,15 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         friends: validFriends,
         myFriendCode,
         isLoading,
+        pendingRequests,
+        sentRequests,
+        pendingRequestsCount: pendingRequests.length,
+        sendFriendRequest,
+        respondFriendRequest,
         addFriend,
         removeFriend,
         refreshFriends,
+        refreshRequests,
         syncSteamFriends,
         createVersusChallengeUrl,
         isFriendAdded,
@@ -423,3 +518,4 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     </FriendsContext.Provider>
   );
 };
+

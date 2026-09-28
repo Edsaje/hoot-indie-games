@@ -250,45 +250,49 @@
   - [x] **Interconnexion Sociale (`FriendsModal.tsx` & `ChatUserModerationModal.tsx`)** : Bouton « Message » sur chaque carte de compagnon ouvrant instantanément le tchat privé avec celui-ci, et bouton d'envoi de message privé depuis le profil ou au clic sur le pseudonyme/avatar d'un joueur dans le salon public.
   - [x] **Suite de Tests Validée (`scripts/testPrivateMessaging.ts`)** : 6/6 tests réussis (clé canonique symétrique, insensibilité casse/accents, arithmétique des badges de notifications).
 
-### 18. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[⏳ À faire]`
+### 18. 🤝 Système d'Amis avec Requête / Acceptation (Ajout Mutuel Bilatéral Sécurisé) `[✅ 100% Terminé]`
 - **Priorité :** P1 (Haute priorité — Confiance, social & socle anti-spam)
 - **Difficulté :** Moyenne-Élevée (Gestion atomique des demandes côté serveur PHP et réactivité UI)
-- **Constat :** Actuellement, lorsqu'un joueur saisit le code ami d'un autre utilisateur, l'ajout est unilatéral et immédiat sur son client local sans consentement ni notification pour le joueur ciblé. Pour instaurer un véritable réseau social de confiance et bloquer les messages non sollicités, l'amitié doit devenir bilatérale et mutuellement consentie.
-- **Actions à réaliser :**
-  - [ ] **Protocole Backend Souverain (`public/api/friends.php`) :**
-    - Stockage atomique sous verrouillage `LOCK_EX` des requêtes d'amitié avec statut (`pending`, `accepted`, `declined`, `canceled`).
-    - Endpoint `send_friend_request` : Vérification de l'existence du destinataire, interdiction d'auto-invitation, interdiction de requêtes doublon ou si les deux joueurs sont déjà amis mutuels.
-    - Endpoint `get_friend_requests` : Récupération des demandes reçues en attente et des demandes envoyées pour un code ami donné.
-    - Endpoint `respond_friend_request` : Actions `accept` (lie les deux joueurs de façon réciproque dans leur liste mutuelle) et `decline` (retrait propre de la requête).
-    - Endpoint `remove_friend` : Retrait bilatéral synchronisé de la relation d'amitié.
-    - Préservation du statut du Fondateur Hibouxe (`HOOT-HIBOU`) comme guide d'accueil universel du Sanctuaire.
-  - [ ] **Types & Services Frontend (`src/types/friends.ts`, `src/services/friendsService.ts`) :**
-    - Définition des structures TypeScript strictes : `FriendRequest`, `FriendRequestStatus` (`pending` | `accepted` | `declined`).
-    - Fonctions clientes typées : `sendFriendRequestApi`, `fetchFriendRequestsApi`, `respondFriendRequestApi`.
-  - [ ] **Gestion d'État Réactive (`src/context/FriendsContext.ts`, `src/context/FriendsProvider.tsx`) :**
-    - Stockage réactif des requêtes en attente reçues (`pendingRequests`) et envoyées (`sentRequests`).
-    - Badges dynamiques de notifications signalant les nouvelles invitations reçues.
-    - Rafraîchissement automatique et écoute des mises à jour.
-  - [ ] **Interface Graphique Ergonomique (`src/components/friends/FriendsModal.tsx`) :**
-    - Système d'onglets : « Mes Compagnons (N) » et « Demandes reçues (N) » avec pastille visuelle alertant des nouvelles invitations.
-    - Carte d'invitation avec avatar, pseudo, série de flamme, date d'envoi et boutons en 1 clic : « Accepter » (vert) et « Refuser » (gris/rose discret).
-    - Retour visuel immédiat lors de l'envoi d'une demande avec message clair : « Demande d'amitié envoyée à [Pseudo] ! En attente de son acceptation. »
+- **Constat :** Auparavant, lorsqu'un joueur saisissait le code ami d'un autre utilisateur, l'ajout était unilatéral et immédiat sur son client local sans consentement ni notification pour le joueur ciblé. Pour instaurer un véritable réseau social de confiance et bloquer les messages non sollicités, l'amitié est désormais bilatérale et mutuellement consentie.
+- **Actions réalisées :**
+  - [x] **Protocole Backend Souverain (`public/api/friends.php`) :**
+    - Stockage atomique sous verrouillage `LOCK_EX` et renommage POSIX des requêtes d'amitié avec statut (`pending`, `accepted`, `declined`, `canceled`) et table de réciprocité `'friendships'`.
+    - Endpoint `send_friend_request` / `send_request` : Vérification du destinataire par code ou pseudonyme canonique, interdiction d'auto-invitation, acceptation réciproque automatique si requête croisée préexistante ou vers `HOOT-HIBOU`.
+    - Endpoint `get_friend_requests` / `get_requests` : Récupération des demandes reçues (`incoming`) et envoyées (`outgoing`) enrichies des métadonnées joueur et présence en ligne.
+    - Endpoint `respond_friend_request` / `respond_request` : Actions `accept` (liaison bilatérale mutuelle), `decline` et `cancel` avec nettoyage propre.
+    - Endpoint `remove_friend` : Retrait bilatéral synchronisé de la relation d'amitié mutuelle.
+    - Endpoint `are_friends` : Vérification booléenne externe de l'amitié mutuelle.
+    - Préservation du statut du Fondateur Hibouxe (`HOOT-HIBOU`) comme guide d'accueil universel du Sanctuaire (auto-acceptation et liaison automatique).
+  - [x] **Types & Services Frontend (`src/types/friends.ts`, `src/services/friendsService.ts`) :**
+    - Définition des structures TypeScript strictes : `FriendRequest`, `FriendRequestStatus` (`pending` | `accepted` | `declined` | `canceled`), `isMutual?: boolean` sur `FriendPlayer`.
+    - Fonctions clientes typées : `sendFriendRequestApi`, `fetchFriendRequestsApi`, `respondFriendRequestApi`, `removeFriendApi`, `checkAreFriendsApi`.
+  - [x] **Gestion d'État Réactive (`src/context/FriendsContext.ts`, `src/context/FriendsProvider.tsx`) :**
+    - Stockage réactif des requêtes en attente reçues (`pendingRequests`), envoyées (`sentRequests`) et compteur badge (`pendingRequestsCount`).
+    - Méthodes `sendFriendRequest`, `respondFriendRequest`, `refreshRequests`.
+    - Rafraîchissement automatique périodique (toutes les 2 min) et écoute d'événements (`visibilitychange`, `focus`).
+  - [x] **Interface Graphique Ergonomique (`src/components/friends/FriendsModal.tsx`, `Navbar.tsx`) :**
+    - Système d'onglets : « Mes Compagnons (N) » et « Demandes reçues (N) » avec pastille visuelle animée alertant des nouvelles invitations.
+    - Cartes d'invitation avec avatar, pseudo, titre, date d'envoi et boutons 1-clic : « Accepter » (vert) et « Refuser » (rose).
+    - Section rétractable des « Invitations envoyées (en attente) » avec possibilité d'annuler une demande.
+    - Badges de notification `pendingRequestsCount` réactifs dans la Navbar (icône Compagnons et menu déroulant joueur).
 
 ---
 
-### 19. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[⏳ À faire]`
+### 19. 🛡️ Verrouillage Anti-Bot & Anti-Arnaque du Tchat Privé (Exclusivement entre Amis Mutuels) `[✅ 100% Terminé]`
 - **Priorité :** P1 (Haute priorité — Sécurité primordiale & protection des utilisateurs)
 - **Difficulté :** Moyenne (Vérification croisée backend + guidage ergonomique frontend)
 - **Constat :** Pour éviter tout risque de spam automatisé, de faux messages de phishing (faux comptes se faisant passer pour des tiers ou envoyant des arnaques en message direct), la messagerie directe doit être strictement réservée aux compagnons mutuellement confirmés, à l'exception du Super-Admin / Fondateur Hibouxe pour le support officiel.
-- **Actions à réaliser :**
-  - [ ] **Contrôle d'Accès Backend Infranchissable (`public/api/chat.php`) :**
-    - Dans l'action `send_private_message` : Vérification serveur impérative de la relation d'amitié mutuelle entre l'expéditeur et le destinataire avant tout enregistrement de message.
+- **Actions réalisées :**
+  - [x] **Contrôle d'Accès Backend Infranchissable (`public/api/chat.php`) :**
+    - Dans l'action `send_private_message` : Vérification serveur impérative de la relation d'amitié mutuelle dans `friends_data.json` (`areFriendsMutual`) avant tout enregistrement de message.
     - Exception de sécurité : Communication directe toujours autorisée si l'un des participants est le Fondateur Hibouxe (`ADMIN_STEAM_ID` / `hibouxe_creator` / session admin authentifiée).
-    - En cas de tentative d'envoi hors amitié mutuelle : Rejet HTTP 403 avec message sécurisé : *« Pour protéger la communauté contre le spam et les arnaques, vous devez être compagnons mutuels pour échanger des messages privés. »*
-  - [ ] **Interface & Expérience Utilisateur (`src/components/chat/ChatPrivateView.tsx`, `ChatDrawer.tsx`) :**
-    - Dans la liste de sélection pour démarrer un nouveau tchat privé : filtrer pour ne proposer que les amis mutuels validés et Hibouxe.
-    - Affichage d'un badge de confiance « Compagnon Mutuel Certifié » ou « Fondateur Officiel ».
-    - Si un joueur tente de contacter un explorateur depuis son profil ou le tchat public sans être encore ami : affichage d'une boîte de dialogue bienveillante invitant à lui envoyer d'abord une demande d'amitié en 1 clic.
+    - En cas de tentative d'envoi hors amitié mutuelle : Rejet HTTP 403 avec code `friends_only` et message clair : *« Pour lutter contre le spam et les arnaques, vous devez être amis mutuels pour échanger en privé. Envoyez-lui une demande d'ami ! »*.
+  - [x] **Interface & Expérience Utilisateur (`src/components/chat/ChatPrivateView.tsx`, `chatService.ts`) :**
+    - Dans la modale « Nouvelle Correspondance » : liste 1-clic des compagnons mutuels certifiés et d'Hibouxe, sans avoir besoin de taper de pseudo.
+    - Si un pseudonyme ou code non-ami est cherché : affichage du panneau bienveillant Bouclier Anti-Bot & Anti-Arnaque avec bouton direct « Envoyer une demande d'amitié ».
+    - En-tête du fil de discussion actif avec badges explicites : « 🤝 Compagnon Mutuel », « 👑 Fondateur » ou « ⚠️ Non-ami (Verrouillé) ».
+    - Dans le fil de discussion non-ami : remplacement de la zone de saisie par le Bouclier Anti-Arnaque offrant en 1 clic l'envoi de la demande d'amitié (ou statut en attente / reçu).
+    - Propagation transparente des messages d'erreur serveur dans le service de tchat.
 
 ---
 

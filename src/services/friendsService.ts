@@ -1,4 +1,10 @@
-import type { FriendPlayer, FriendDailyScores, FriendPlayStatus, FriendDailyDiscipline } from '../types/friends';
+import type {
+  FriendPlayer,
+  FriendDailyScores,
+  FriendPlayStatus,
+  FriendDailyDiscipline,
+  FriendRequest,
+} from '../types/friends';
 import type { UserProfile } from '../types/user';
 import { getTodayDateString, getChallengeStatusForDate } from '../utils/streakManager';
 import { ADMIN_STEAM_ID } from '../utils/usernameValidation';
@@ -184,27 +190,46 @@ export async function registerSelfOnServer(
 /**
  * Récupère les profils à jour des amis depuis l'API
  */
-export async function fetchFriendsData(friendCodes: string[], excludeCode?: string): Promise<FriendPlayer[]> {
+export async function fetchFriendsData(
+  friendCodes: string[],
+  excludeCode?: string,
+  myCode?: string
+): Promise<FriendPlayer[]> {
   const normExclude = excludeCode?.trim().toUpperCase();
   const cleanedCodes = friendCodes
     .map((c) => c.trim().toUpperCase())
     .filter((c) => c && (!normExclude || c !== normExclude));
 
-  if (cleanedCodes.length === 0) return [];
+  if (cleanedCodes.length === 0 && !myCode) return [];
 
   try {
     const res = await fetch(`${API_BASE}?action=get_friends`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ codes: cleanedCodes }),
+      body: JSON.stringify({ codes: cleanedCodes, myCode: myCode || undefined }),
     });
 
     if (res.ok) {
       const data = await res.json();
       if (data.success && Array.isArray(data.friends)) {
+        const mutualSet = new Set<string>(
+          Array.isArray(data.mutualCodes)
+            ? data.mutualCodes.map((c: string) => String(c).trim().toUpperCase())
+            : []
+        );
+
+        const processed = data.friends.map((f: FriendPlayer) => {
+          const code = f.friendCode?.trim().toUpperCase();
+          const isMutual = code === 'HOOT-HIBOU' || (code ? mutualSet.has(code) : false);
+          return {
+            ...f,
+            isMutual,
+          };
+        });
+
         return normExclude
-          ? data.friends.filter((f: FriendPlayer) => f.friendCode?.trim().toUpperCase() !== normExclude)
-          : data.friends;
+          ? processed.filter((f: FriendPlayer) => f.friendCode?.trim().toUpperCase() !== normExclude)
+          : processed;
       }
     }
   } catch (err) {
@@ -225,6 +250,7 @@ export async function fetchFriendsData(friendCodes: string[], excludeCode?: stri
         streak: 120,
         lastActive: '2026-01-01T00:00:00Z',
         isOnline: false,
+        isMutual: true,
         dailyScores: extractCurrentDailyScores(),
       },
     ];
@@ -289,3 +315,155 @@ export async function syncSteamFriendsList(mySteamId: string): Promise<{
     };
   }
 }
+
+/**
+ * Envoie une demande d'amitié bilatérale à un compagnon (par code ou par pseudo)
+ */
+export async function sendFriendRequestApi(
+  fromCode: string,
+  targetQuery: string
+): Promise<{
+  success: boolean;
+  isImmediate?: boolean;
+  message?: string;
+  request?: FriendRequest;
+  player?: FriendPlayer;
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${API_BASE}?action=send_request`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fromCode: fromCode.trim().toUpperCase(),
+        targetQuery: targetQuery.trim(),
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Impossible de joindre le serveur d’amis.';
+    return { success: false, error: errorMsg };
+  }
+}
+
+/**
+ * Récupère les demandes d'amitié en attente reçues et envoyées
+ */
+export async function fetchFriendRequestsApi(
+  myCode: string
+): Promise<{
+  success: boolean;
+  incoming: FriendRequest[];
+  outgoing: FriendRequest[];
+  error?: string;
+}> {
+  if (!myCode) return { success: true, incoming: [], outgoing: [] };
+
+  try {
+    const res = await fetch(`${API_BASE}?action=get_requests`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ myCode: myCode.trim().toUpperCase() }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      return {
+        success: true,
+        incoming: Array.isArray(data.incoming) ? data.incoming : [],
+        outgoing: Array.isArray(data.outgoing) ? data.outgoing : [],
+      };
+    }
+    return { success: false, incoming: [], outgoing: [], error: data.error };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Erreur réseau lors de la lecture des invitations.';
+    return { success: false, incoming: [], outgoing: [], error: errorMsg };
+  }
+}
+
+/**
+ * Répond à une demande d'amitié (Accepter, Refuser ou Annuler)
+ */
+export async function respondFriendRequestApi(
+  requestId: string,
+  action: 'accept' | 'decline' | 'cancel',
+  myCode: string
+): Promise<{
+  success: boolean;
+  message?: string;
+  request?: FriendRequest;
+  newFriend?: FriendPlayer;
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${API_BASE}?action=respond_request`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        requestId,
+        action,
+        myCode: myCode.trim().toUpperCase(),
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Impossible de traiter la demande d’amitié.';
+    return { success: false, error: errorMsg };
+  }
+}
+
+/**
+ * Supprime un compagnon de façon bilatérale synchronisée
+ */
+export async function removeFriendApi(
+  myCode: string,
+  targetCode: string
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}?action=remove_friend`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        myCode: myCode.trim().toUpperCase(),
+        targetCode: targetCode.trim().toUpperCase(),
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : 'Erreur lors du retrait du compagnon.';
+    return { success: false, error: errorMsg };
+  }
+}
+
+/**
+ * Vérifie si deux explorateurs sont compagnons mutuels sur le serveur
+ */
+export async function checkAreFriendsApi(
+  userA: string,
+  userB: string
+): Promise<{ success: boolean; areFriends: boolean; codeA?: string; codeB?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}?action=are_friends`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userA: userA.trim(), userB: userB.trim() }),
+    });
+
+    const data = await res.json();
+    return {
+      success: Boolean(data.success),
+      areFriends: Boolean(data.areFriends),
+      codeA: data.codeA,
+      codeB: data.codeB,
+    };
+  } catch {
+    return { success: false, areFriends: false };
+  }
+}
+

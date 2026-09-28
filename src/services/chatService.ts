@@ -1119,7 +1119,7 @@ export async function sendPrivateMessage(payload: {
     if (data?.warning || data?.error) {
       return {
         success: false,
-        error: data.error,
+        error: data.message || data.error,
         warning: data.warning,
         flaggedWords: data.flaggedWords,
       };

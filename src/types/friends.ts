@@ -33,6 +33,25 @@ export interface FriendPlayer {
   lastActive: string; // ISO string
   dailyScores?: FriendDailyScores;
   isOnline?: boolean;
+  isMutual?: boolean;
   addedAt?: string;
   note?: string;
 }
+
+export type FriendRequestStatus = 'pending' | 'accepted' | 'declined' | 'canceled';
+
+export interface FriendRequest {
+  id: string;
+  fromCode: string;
+  fromUsername: string;
+  fromAvatarId: IndieAvatarId;
+  fromTitle?: string;
+  toCode: string;
+  toUsername: string;
+  status: FriendRequestStatus;
+  createdAt: string; // ISO string
+  updatedAt?: string; // ISO string
+  fromPlayer?: FriendPlayer;
+  toPlayer?: FriendPlayer;
+}
+

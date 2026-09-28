@@ -96,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { t, i18n } = useTranslation();
   const { feathersCount, unlockAchievement } = useAchievements();
   const { profile, isAuthenticated, isAdmin, isSteamConnected, steamAccount, logout } = useUserAccount();
-  const { totalFriendsCount, friendsActiveTodayCount, friendsOnlineCount } = useFriends();
+  const { totalFriendsCount, friendsActiveTodayCount, friendsOnlineCount, pendingRequestsCount } = useFriends();
   const { openChat, unreadCount } = useChat();
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
 
@@ -557,7 +557,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-slate-100 font-bold group-hover:text-emerald-300 flex items-center justify-between">
-                          <span>Compagnons</span>
+                          <span className="flex items-center gap-1.5">
+                            <span>Compagnons</span>
+                            {pendingRequestsCount > 0 && (
+                              <span className="px-1.5 py-0.2 rounded-full text-[9px] font-black bg-rose-500 text-white animate-pulse">
+                                {pendingRequestsCount} reçue{pendingRequestsCount > 1 ? 's' : ''}
+                              </span>
+                            )}
+                          </span>
                           {totalFriendsCount > 0 && (
                             <span className="text-[10px] font-mono text-emerald-400 font-bold">
                               {friendsOnlineCount > 0 ? `${friendsOnlineCount} en ligne` : `${friendsActiveTodayCount}/${totalFriendsCount} actif${friendsActiveTodayCount > 1 ? 's' : ''}`}
@@ -757,21 +764,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-emerald-300 hover:text-white hover:border-emerald-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 min-h-[40px] cursor-pointer relative group touch-manipulation"
                 title={
-                  friendsOnlineCount > 0
+                  pendingRequestsCount > 0
+                    ? `Cercle des Compagnons (${pendingRequestsCount} demande${pendingRequestsCount > 1 ? 's' : ''} en attente)`
+                    : friendsOnlineCount > 0
                     ? `Cercle des Compagnons (${friendsOnlineCount} en ligne)`
                     : 'Cercle des Compagnons (Amis & Duels 1v1)'
                 }
                 aria-label="Cercle des Compagnons"
               >
                 <Users className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
-                {/* Nombre fixe d'amis connectés sans clignotement, affiché uniquement si >= 1 connecté */}
-                {friendsOnlineCount > 0 && (
+                {pendingRequestsCount > 0 ? (
+                  <span
+                    className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-[9px] font-mono font-black bg-rose-600 text-white flex items-center justify-center border border-[#06241b] shadow-sm shadow-rose-500/50 animate-pulse"
+                  >
+                    {pendingRequestsCount > 9 ? '9+' : pendingRequestsCount}
+                  </span>
+                ) : friendsOnlineCount > 0 ? (
                   <span
                     className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-mono font-bold bg-emerald-600 text-white flex items-center justify-center border border-[#06241b] shadow-sm shadow-emerald-500/30"
                   >
                     {friendsOnlineCount}
                   </span>
-                )}
+                ) : null}
               </button>
             )}
 

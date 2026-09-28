@@ -1420,6 +1420,78 @@ if ($action === 'send_private_message') {
         exit;
     }
 
+    // -------------------------------------------------------------
+    // CONTRÔLE D'ACCÈS INFRANCHISSABLE : COMPAGNONS MUTUELS STRICTS
+    // -------------------------------------------------------------
+    // Protection absolue anti-bot & anti-arnaque : Seuls les compagnons mutuels
+    // peuvent échanger des messages privés directs.
+    // Exception de sécurité souveraine : Communication toujours autorisée si l'un
+    // des deux correspondants est le Fondateur Hibouxe ou membre du staff officiel.
+    $isFounderOrStaff = ($isStaff || $isOfficialCreator || $normSender === 'hibouxe' || $normRecipient === 'hibouxe' || $normSender === 'edsaje' || $normRecipient === 'edsaje');
+    if (!$isFounderOrStaff) {
+        $friendsDataFile = __DIR__ . '/friends_data.json';
+        $areMutualFriends = false;
+
+        if (file_exists($friendsDataFile)) {
+            $fRaw = @file_get_contents($friendsDataFile);
+            if ($fRaw) {
+                $fDb = json_decode($fRaw, true);
+                if (is_array($fDb)) {
+                    $senderCode = null;
+                    $recipientCode = null;
+
+                    // 1. Résolution du senderCode
+                    if (isset($body['friendCode']) && preg_match('/^HOOT-[A-Z0-9]{3,10}$/i', $body['friendCode'])) {
+                        $senderCode = strtoupper(trim($body['friendCode']));
+                    } elseif (isset($fDb['usernameToCode'][$normSender])) {
+                        $senderCode = $fDb['usernameToCode'][$normSender];
+                    } else {
+                        foreach (($fDb['players'] ?? []) as $fc => $pl) {
+                            if (isset($pl['username']) && normalizeChatUsername($pl['username']) === $normSender) {
+                                $senderCode = $fc;
+                                break;
+                            }
+                        }
+                    }
+
+                    // 2. Résolution du recipientCode
+                    if (isset($body['recipientFriendCode']) && preg_match('/^HOOT-[A-Z0-9]{3,10}$/i', $body['recipientFriendCode'])) {
+                        $recipientCode = strtoupper(trim($body['recipientFriendCode']));
+                    } elseif (isset($fDb['usernameToCode'][$normRecipient])) {
+                        $recipientCode = $fDb['usernameToCode'][$normRecipient];
+                    } else {
+                        foreach (($fDb['players'] ?? []) as $fc => $pl) {
+                            if (isset($pl['username']) && normalizeChatUsername($pl['username']) === $normRecipient) {
+                                $recipientCode = $fc;
+                                break;
+                            }
+                        }
+                    }
+
+                    // 3. Vérification de la réciprocité bilatérale
+                    if ($senderCode && $recipientCode) {
+                        $friendships = $fDb['friendships'] ?? [];
+                        $inSender = in_array($recipientCode, $friendships[$senderCode] ?? [], true);
+                        $inRecipient = in_array($senderCode, $friendships[$recipientCode] ?? [], true);
+                        if ($inSender && $inRecipient) {
+                            $areMutualFriends = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$areMutualFriends) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => 'friends_only',
+                'message' => 'Pour protéger la communauté contre le spam et les arnaques, vous devez être compagnons mutuels pour échanger des messages privés.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+    }
+
     $canonicalId = getCanonicalConversationKey($senderUsername, $recipientUsername);
     $store = getPrivateChatStore($privateConversationsFile);
 

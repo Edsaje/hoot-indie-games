@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   ArrowLeft,
   Send,
@@ -14,9 +14,12 @@ import {
   Sparkles,
   ExternalLink,
   ShieldAlert,
+  ShieldCheck,
+  UserCheck,
 } from 'lucide-react';
 import { useChat } from '../../context/useChat';
 import { useUserAccount } from '../../context/useUserAccount';
+import { useFriends } from '../../context/useFriends';
 import {
   type PrivateMessage,
   checkTextForPhishing,
@@ -51,14 +54,21 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
   } = useChat();
 
   const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
+  const { friends, pendingRequests, sentRequests, sendFriendRequest } = useFriends();
 
   const [inputText, setInputText] = useState('');
   const [searchFilter, setSearchFilter] = useState('');
   const [showNewConvModal, setShowNewConvModal] = useState(false);
   const [newConvUsername, setNewConvUsername] = useState('');
   const [newConvError, setNewConvError] = useState<string | null>(null);
+  const [newConvSuccess, setNewConvSuccess] = useState<string | null>(null);
+  const [isSendingFriendReq, setIsSendingFriendReq] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState<PrivateMessage | null>(null);
   const [externalLinkToConfirm, setExternalLinkToConfirm] = useState<string | null>(null);
+
+  const mutualFriendsList = useMemo(() => {
+    return friends.filter((f) => f.isMutual !== false);
+  }, [friends]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -148,6 +158,9 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
       setInputText('');
     } else {
       soundFx.playError();
+      if (res.error) {
+        setModerationWarning(res.error);
+      }
     }
   };
 
@@ -162,11 +175,40 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
       return;
     }
 
-    soundFx.playClick();
-    setNewConvError(null);
-    setShowNewConvModal(false);
-    setNewConvUsername('');
-    openPrivateChat(target);
+    const isTargetHibouxe = target.toLowerCase() === 'hibouxe';
+    const foundMutual = friends.find(
+      (f) =>
+        (f.username.toLowerCase() === target.toLowerCase() ||
+          f.friendCode.toUpperCase() === target.toUpperCase()) &&
+        f.isMutual !== false
+    );
+
+    if (isTargetHibouxe || foundMutual) {
+      soundFx.playClick();
+      setNewConvError(null);
+      setNewConvSuccess(null);
+      setShowNewConvModal(false);
+      setNewConvUsername('');
+      if (foundMutual) {
+        openPrivateChat(foundMutual.username, {
+          avatarId: foundMutual.avatarId,
+          title: foundMutual.title,
+          steamId: foundMutual.steamId,
+        });
+      } else {
+        openPrivateChat('Hibouxe', {
+          avatarId: 'hibouxe_creator',
+          title: 'Fondateur du Perchoir',
+        });
+      }
+      return;
+    }
+
+    soundFx.playError();
+    setNewConvSuccess(null);
+    setNewConvError(
+      `🛡️ ${target} ne fait pas encore partie de vos compagnons mutuels. Pour éviter les spams et arnaques, une demande d'amitié mutuelle est requise avant d'ouvrir un salon privé.`
+    );
   };
 
   const renderMessageContent = (text: string) => {
@@ -205,6 +247,22 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
     const isOtherCreator =
       activePrivateParticipant.username.toLowerCase() === 'hibouxe' ||
       activePrivateParticipant.avatarId === 'hibouxe_creator';
+
+    const isMutualFriend =
+      isOtherCreator ||
+      friends.some(
+        (f) =>
+          f.username.toLowerCase() === activePrivateParticipant.username.toLowerCase() &&
+          f.isMutual !== false
+      );
+
+    const hasSentFriendReq = sentRequests.some(
+      (r) => r.toUsername.toLowerCase() === activePrivateParticipant.username.toLowerCase()
+    );
+
+    const hasReceivedFriendReq = pendingRequests.some(
+      (r) => r.fromUsername.toLowerCase() === activePrivateParticipant.username.toLowerCase()
+    );
 
     return (
       <div className="flex-1 flex flex-col min-h-0 bg-[#04120e] relative overflow-hidden">
@@ -249,9 +307,20 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                 <span className="font-bold text-xs text-white truncate">
                   {activePrivateParticipant.username}
                 </span>
-                {isOtherCreator && (
-                  <span className="px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-black shrink-0">
-                    Fondateur
+                {isOtherCreator ? (
+                  <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-black shrink-0 flex items-center gap-1">
+                    <span>👑</span>
+                    <span>Fondateur</span>
+                  </span>
+                ) : isMutualFriend ? (
+                  <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px] font-bold shrink-0 flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                    <span>Compagnon Mutuel</span>
+                  </span>
+                ) : (
+                  <span className="px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[9px] font-bold shrink-0 flex items-center gap-1">
+                    <ShieldAlert className="w-3 h-3 text-rose-400" />
+                    <span>Non-ami (Verrouillé)</span>
                   </span>
                 )}
                 {activePrivateParticipant.steamId && (
@@ -365,49 +434,101 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
 
         {/* Barre de saisie privée */}
         {isAuthenticated ? (
-          <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
-            {/* Emojis rapides */}
-            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
-              <span className="text-[10px] text-amber-300/80 font-bold px-1 flex items-center gap-0.5 shrink-0">
-                <Smile className="w-3 h-3" />
-              </span>
-              {QUICK_EMOJIS.map((emoji) => (
-                <button
-                  key={emoji}
-                  type="button"
-                  onClick={() => setInputText((prev) => prev + emoji)}
-                  className="px-1.5 py-0.5 rounded hover:bg-emerald-900/60 text-xs transition cursor-pointer active:scale-95 shrink-0"
-                >
-                  {emoji}
-                </button>
-              ))}
+          !isMutualFriend && !isOtherCreator ? (
+            <div className="p-3 bg-[#061e16] border-t border-rose-500/30 flex flex-col gap-2 shrink-0">
+              <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-start gap-2.5">
+                <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-bold text-rose-200">
+                    🛡️ Bouclier Anti-Bot & Anti-Arnaque Actif
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed mt-1">
+                    Pour préserver la sécurité de la communauté contre le démarchage et les arnaques, les échanges privés sont exclusivement réservés aux <strong>compagnons mutuels</strong>.
+                  </p>
+                  <div className="mt-2.5 flex items-center gap-2 flex-wrap">
+                    {hasSentFriendReq ? (
+                      <span className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>Demande d'amitié envoyée (en attente d'acceptation)</span>
+                      </span>
+                    ) : hasReceivedFriendReq ? (
+                      <span className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center gap-1.5">
+                        <UserCheck className="w-3.5 h-3.5" />
+                        <span>Demande reçue ! Acceptez-la dans vos Compagnons pour discuter</span>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          setIsSendingFriendReq(true);
+                          const res = await sendFriendRequest(activePrivateParticipant.username);
+                          setIsSendingFriendReq(false);
+                          if (res.success) {
+                            soundFx.playSuccess();
+                          } else {
+                            soundFx.playError();
+                          }
+                        }}
+                        disabled={isSendingFriendReq}
+                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer active:scale-95 disabled:opacity-50"
+                      >
+                        <UserPlus className="w-3.5 h-3.5" />
+                        <span>
+                          {isSendingFriendReq
+                            ? 'Envoi en cours...'
+                            : `Envoyer une demande d'amitié à ${activePrivateParticipant.username}`}
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
+          ) : (
+            <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
+              {/* Emojis rapides */}
+              <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+                <span className="text-[10px] text-amber-300/80 font-bold px-1 flex items-center gap-0.5 shrink-0">
+                  <Smile className="w-3 h-3" />
+                </span>
+                {QUICK_EMOJIS.map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    onClick={() => setInputText((prev) => prev + emoji)}
+                    className="px-1.5 py-0.5 rounded hover:bg-emerald-900/60 text-xs transition cursor-pointer active:scale-95 shrink-0"
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
 
-            <form onSubmit={handleSend} className="flex items-center gap-2">
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder={`Message privé à ${activePrivateParticipant.username}...`}
-                maxLength={400}
-                className="flex-1 px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 focus:border-amber-400 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
-              />
+              <form onSubmit={handleSend} className="flex items-center gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder={`Message privé à ${activePrivateParticipant.username}...`}
+                  maxLength={400}
+                  className="flex-1 px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 focus:border-amber-400 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                />
 
-              <button
-                type="submit"
-                disabled={!inputText.trim() || isSending || cooldownSeconds > 0}
-                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white font-bold text-xs shadow-md transition flex items-center gap-1 shrink-0 cursor-pointer active:scale-95"
-                title={cooldownSeconds > 0 ? `Attente (${cooldownSeconds}s)` : 'Envoyer'}
-              >
-                {cooldownSeconds > 0 ? (
-                  <span className="font-mono text-[10px]">{cooldownSeconds}s</span>
-                ) : (
-                  <Send className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </form>
-          </div>
+                <button
+                  type="submit"
+                  disabled={!inputText.trim() || isSending || cooldownSeconds > 0}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white font-bold text-xs shadow-md transition flex items-center gap-1 shrink-0 cursor-pointer active:scale-95"
+                  title={cooldownSeconds > 0 ? `Attente (${cooldownSeconds}s)` : 'Envoyer'}
+                >
+                  {cooldownSeconds > 0 ? (
+                    <span className="font-mono text-[10px]">{cooldownSeconds}s</span>
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </form>
+            </div>
+          )
         ) : (
           <div className="p-3 bg-[#061e16] border-t border-[#059669]/30 text-center">
             <p className="text-xs text-slate-400 mb-2">
@@ -655,8 +776,9 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
       {/* Modale "Nouvelle discussion" */}
       {showNewConvModal && (
         <div className="absolute inset-0 z-50 bg-black/85 backdrop-blur-sm p-4 flex items-center justify-center animate-in fade-in">
-          <div className="bg-[#03150f] border-2 border-emerald-500/50 rounded-2xl p-4 max-w-sm w-full space-y-3 shadow-2xl">
-            <div className="flex items-center justify-between pb-2 border-b border-emerald-500/30">
+          <div className="bg-[#03150f] border-2 border-emerald-500/50 rounded-2xl p-4 max-w-md w-full max-h-[85vh] flex flex-col space-y-3 shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-2 border-b border-emerald-500/30 shrink-0">
               <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
                 <UserPlus className="w-4 h-4 text-emerald-400" />
                 <span>Nouvelle Correspondance</span>
@@ -666,54 +788,217 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                 onClick={() => {
                   setShowNewConvModal(false);
                   setNewConvError(null);
+                  setNewConvSuccess(null);
+                  setNewConvUsername('');
                 }}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Entrez le pseudonyme de l'explorateur avec qui vous souhaitez ouvrir un salon privé direct :
-            </p>
-
-            <form onSubmit={handleStartNewConv} className="space-y-3">
-              <input
-                type="text"
-                value={newConvUsername}
-                onChange={(e) => setNewConvUsername(e.target.value)}
-                placeholder="Ex: Hibouxe, adrien..."
-                maxLength={30}
-                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-emerald-500/40 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
-                autoFocus
-              />
-
-              {newConvError && (
-                <div className="p-2 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px]">
-                  {newConvError}
+            {/* Corps défilable */}
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {/* Section 1 : Vos Compagnons Mutuels Disponibles en 1-clic */}
+              <div>
+                <div className="text-[11px] font-bold text-emerald-400/90 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Vos Compagnons Mutuels Certifiés</span>
                 </div>
-              )}
 
-              <div className="flex items-center justify-end gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowNewConvModal(false);
-                    setNewConvError(null);
-                  }}
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  disabled={!newConvUsername.trim()}
-                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white font-bold text-xs shadow-md transition cursor-pointer"
-                >
-                  Démarrer
-                </button>
+                <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                  {/* Option rapide Hibouxe (Fondateur) */}
+                  {profile.username?.toLowerCase() !== 'hibouxe' && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFx.playClick();
+                        setShowNewConvModal(false);
+                        setNewConvError(null);
+                        setNewConvSuccess(null);
+                        setNewConvUsername('');
+                        openPrivateChat('Hibouxe', {
+                          avatarId: 'hibouxe_creator',
+                          title: 'Fondateur du Perchoir',
+                        });
+                      }}
+                      className="w-full p-2 rounded-xl bg-gradient-to-r from-amber-950/40 to-[#072418] border border-amber-500/40 hover:border-amber-400 text-left transition flex items-center justify-between group cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-600 to-amber-900 border border-amber-400 flex items-center justify-center text-xs shrink-0">
+                          🦉
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-amber-200 flex items-center gap-1.5 truncate">
+                            <span>Hibouxe</span>
+                            <span className="px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-black">
+                              Fondateur
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 truncate">Support officiel & Créateur</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-amber-300 group-hover:underline shrink-0">
+                        Écrire →
+                      </span>
+                    </button>
+                  )}
+
+                  {/* Compagnons mutuels du joueur */}
+                  {mutualFriendsList.length > 0 ? (
+                    mutualFriendsList.map((friend) => {
+                      const avatar = getAvatarInfo(friend.avatarId);
+                      return (
+                        <button
+                          key={friend.friendCode}
+                          type="button"
+                          onClick={() => {
+                            soundFx.playClick();
+                            setShowNewConvModal(false);
+                            setNewConvError(null);
+                            setNewConvSuccess(null);
+                            setNewConvUsername('');
+                            openPrivateChat(friend.username, {
+                              avatarId: friend.avatarId,
+                              title: friend.title,
+                              steamId: friend.steamId,
+                            });
+                          }}
+                          className="w-full p-2 rounded-xl bg-[#061e16] border border-[#174d39] hover:border-emerald-500/60 hover:bg-[#09291e] text-left transition flex items-center justify-between group cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div
+                              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 bg-gradient-to-br ${avatar.bgGradient} overflow-hidden shadow-sm`}
+                            >
+                              {avatar.imageUrl ? (
+                                <img src={avatar.imageUrl} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <span>{avatar.emoji}</span>
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-xs font-bold text-white flex items-center gap-1.5 truncate">
+                                <span>{friend.username}</span>
+                                {friend.isOnline && (
+                                  <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" title="En ligne" />
+                                )}
+                              </div>
+                              <p className="text-[10px] text-slate-400 truncate">
+                                {friend.title || 'Explorateur sylvestre'}
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-bold text-emerald-400 group-hover:underline shrink-0">
+                            Discuter →
+                          </span>
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <div className="p-2.5 rounded-xl bg-black/40 border border-slate-800 text-center">
+                      <p className="text-[11px] text-slate-400">
+                        Aucun autre compagnon mutuel pour le moment.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-            </form>
+
+              {/* Section 2 : Recherche ou invitation externe */}
+              <div className="pt-2 border-t border-emerald-500/20">
+                <p className="text-xs text-slate-300 leading-relaxed mb-2">
+                  Ou recherchez un autre joueur par pseudonyme ou code ami :
+                </p>
+
+                <form onSubmit={handleStartNewConv} className="space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={newConvUsername}
+                      onChange={(e) => {
+                        setNewConvUsername(e.target.value);
+                        if (newConvError) setNewConvError(null);
+                        if (newConvSuccess) setNewConvSuccess(null);
+                      }}
+                      placeholder="Ex: adrien, HOOT-..."
+                      maxLength={30}
+                      className="flex-1 px-3 py-2 rounded-xl bg-black/60 border border-emerald-500/40 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!newConvUsername.trim()}
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white font-bold text-xs shadow-md transition cursor-pointer"
+                    >
+                      Démarrer
+                    </button>
+                  </div>
+
+                  {newConvError && (
+                    <div className="p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] space-y-2">
+                      <p>{newConvError}</p>
+                      {newConvError.includes("demande d'amitié") && (
+                        <button
+                          type="button"
+                          disabled={isSendingFriendReq}
+                          onClick={async () => {
+                            setIsSendingFriendReq(true);
+                            try {
+                              const res = await sendFriendRequest(newConvUsername.trim());
+                              if (res.success) {
+                                soundFx.playSuccess();
+                                if (res.isImmediate) {
+                                  setNewConvSuccess(`🎉 Amitié mutuelle confirmée avec ${newConvUsername} !`);
+                                  setNewConvError(null);
+                                  setTimeout(() => {
+                                    setShowNewConvModal(false);
+                                    openPrivateChat(newConvUsername.trim());
+                                  }, 1000);
+                                } else {
+                                  setNewConvSuccess(`🤝 Demande d'amitié envoyée avec succès à ${newConvUsername} ! Le salon privé sera déverrouillé dès acceptation.`);
+                                  setNewConvError(null);
+                                }
+                              } else {
+                                soundFx.playError();
+                                setNewConvError(res.error || res.message || 'Impossible d\'envoyer la demande.');
+                              }
+                            } finally {
+                              setIsSendingFriendReq(false);
+                            }
+                          }}
+                          className="w-full px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <UserPlus className="w-3.5 h-3.5" />
+                          <span>{isSendingFriendReq ? 'Envoi en cours...' : `Envoyer une demande d'amitié à ${newConvUsername}`}</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {newConvSuccess && (
+                    <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 text-[11px] flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>{newConvSuccess}</span>
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end pt-2 border-t border-emerald-500/20 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowNewConvModal(false);
+                  setNewConvError(null);
+                  setNewConvSuccess(null);
+                  setNewConvUsername('');
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold hover:bg-slate-700 transition cursor-pointer"
+              >
+                Fermer
+              </button>
+            </div>
           </div>
         </div>
       )}
