@@ -14,18 +14,17 @@ export const getTodayDateString = (date = new Date()): string => {
 export const getYesterdayDateString = (referenceDateStr?: string): string => {
   if (referenceDateStr) {
     const [y, m, d] = referenceDateStr.split('-').map(Number);
-    const date = new Date(y, m - 1, d);
-    date.setDate(date.getDate() - 1);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const utc = new Date(Date.UTC(y, m - 1, d - 1));
+    const year = utc.getUTCFullYear();
+    const month = String(utc.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(utc.getUTCDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-  const date = new Date();
-  date.setDate(date.getDate() - 1);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const now = new Date();
+  const utc = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate() - 1));
+  const year = utc.getUTCFullYear();
+  const month = String(utc.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(utc.getUTCDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 
@@ -36,6 +35,30 @@ export const getDayDifference = (dateStr1: string, dateStr2: string): number => 
   const utc2 = Date.UTC(y2, m2 - 1, d2);
   return Math.round((utc1 - utc2) / (1000 * 60 * 60 * 24));
 };
+
+/**
+ * Calcule la série active effective en tenant compte de l'écoulement des jours.
+ * Une série est active si le dernier gain date d'aujourd'hui, d'hier,
+ * ou d'avant-hier (fenêtre de rattrapage de la veille encore ouverte).
+ * Si plus de 2 jours se sont écoulés sans victoire, la série est rompue (0).
+ */
+export function getEffectiveCurrentStreak(
+  currentStreak: number,
+  lastWonDate?: string,
+  todayStr = getTodayDateString()
+): number {
+  if (!currentStreak || currentStreak <= 0 || !lastWonDate) return 0;
+  if (lastWonDate === todayStr) return currentStreak;
+  const yesterdayStr = getYesterdayDateString(todayStr);
+  if (lastWonDate === yesterdayStr) return currentStreak;
+  const dayBeforeYesterdayStr = getYesterdayDateString(yesterdayStr);
+  if (lastWonDate === dayBeforeYesterdayStr) {
+    // Si la veille n'a pas encore été perdue définitivement, la série est en sursis (sauvable)
+    return currentStreak;
+  }
+  // Plus de 2 jours écoulés sans gain : la série est rompue
+  return 0;
+}
 
 export const isDatePlayable = (
   dateStr: string,

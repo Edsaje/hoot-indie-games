@@ -13,6 +13,7 @@ interface BoosterOpeningModalProps {
   onClose: () => void;
   onOpenAnother?: () => void;
   canOpenAnother?: boolean;
+  openAnotherLabel?: string;
 }
 
 export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
@@ -21,6 +22,7 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
   onClose,
   onOpenAnother,
   canOpenAnother = false,
+  openAnotherLabel,
 }) => {
   const [openedStep, setOpenedStep] = useState<'sealed' | 'opening' | 'revealing'>('sealed');
   const [revealedIndices, setRevealedIndices] = useState<number[]>([]);
@@ -466,7 +468,7 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
                         className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer active:scale-95"
                       >
                         <Package className="w-4 h-4" />
-                        <span>Ouvrir un autre (150 🪶)</span>
+                        <span>{openAnotherLabel || 'Ouvrir un autre (150 🪶)'}</span>
                       </button>
                     )}
 

@@ -10,6 +10,7 @@ import {
   getTodayDateString,
   getYesterdayDateString,
   getChallengeStatusForDate,
+  getEffectiveCurrentStreak,
 } from '../utils/streakManager';
 import { recordDailyCommunityCompletion } from '../services/leaderboardService';
 
@@ -19,16 +20,29 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const saved = localStorage.getItem(STATS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        return {
-          screenle: { ...defaultOverallStats.screenle, ...(parsed.screenle || {}) },
-          indledle: { ...defaultOverallStats.indledle, ...(parsed.indledle || {}) },
-          linkle: { ...defaultOverallStats.linkle, ...(parsed.linkle || {}) },
-          profille: { ...defaultOverallStats.profille, ...(parsed.profille || {}) },
-          chrono: { ...defaultOverallStats.chrono, ...(parsed.chrono || {}) },
-          pixel: { ...defaultOverallStats.pixel, ...(parsed.pixel || {}) },
-          review: { ...defaultOverallStats.review, ...(parsed.review || {}) },
-          blindtest: { ...defaultOverallStats.blindtest, ...(parsed.blindtest || {}) },
-        };
+        const todayStr = getTodayDateString();
+        const modes: DailyGameMode[] = [
+          'screenle',
+          'indledle',
+          'linkle',
+          'profille',
+          'chrono',
+          'pixel',
+          'review',
+          'blindtest',
+        ];
+        const sanitized: any = {};
+        for (const m of modes) {
+          const rawM = parsed[m] || {};
+          const effStreak = getEffectiveCurrentStreak(rawM.currentStreak || 0, rawM.lastWonDate, todayStr);
+          sanitized[m] = {
+            ...defaultOverallStats[m],
+            ...rawM,
+            currentStreak: effStreak,
+            activeStreakBreak: effStreak === 0 ? null : (rawM.activeStreakBreak || null),
+          };
+        }
+        return sanitized as OverallStats;
       }
     } catch {
       // Fallback
@@ -108,19 +122,21 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             modeStats.activeStreakBreak = null;
           } else if (yesterdayStatus === 'unplayed') {
             // Yesterday was missed!
+            const dayBeforeYesterdayStr = getYesterdayDateString(yesterdayStr);
             const prevStreak = modeStats.currentStreak;
-            if (prevStreak > 0) {
+            // Une série ne peut être sauvée que si elle était active avant-hier
+            const canRescue = lastWon === dayBeforeYesterdayStr && prevStreak > 0;
+            if (canRescue) {
               modeStats.activeStreakBreak = {
                 date: todayStr,
                 missedDate: yesterdayStr,
                 lostStreak: prevStreak,
                 canRescueYesterday: true,
               };
-              modeStats.currentStreak = 1;
             } else {
               modeStats.activeStreakBreak = null;
-              modeStats.currentStreak = 1;
             }
+            modeStats.currentStreak = 1;
             modeStats.lastWonDate = todayStr;
           } else {
             // Yesterday was played and lost
@@ -143,8 +159,8 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           } else {
             const dayBeforeYesterdayStr = getYesterdayDateString(yesterdayStr);
             if (lastWon === dayBeforeYesterdayStr) {
-              modeStats.currentStreak += 1;
-            } else if (!lastWon || modeStats.currentStreak === 0) {
+              modeStats.currentStreak = (modeStats.currentStreak || 0) + 1;
+            } else {
               modeStats.currentStreak = 1;
             }
             modeStats.streakRescued = true;

@@ -26,6 +26,7 @@ export interface UserCloudSavePayload {
   versusStats?: any;
   cardCollection?: Record<string, { count: number; countHolo: number; firstObtainedAt?: string }>;
   lastDailyBoosterClaim?: string;
+  freeBoostersStock?: { count: number; lastRechargeTimestamp: number };
   dailyGameStates?: Record<string, any>;
   syncedAt?: string;
 }
@@ -161,6 +162,14 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
         }
       })(),
       lastDailyBoosterClaim: localStorage.getItem('hoot_last_daily_booster_claim_v1') || undefined,
+      freeBoostersStock: (() => {
+        try {
+          const raw = localStorage.getItem('hoot_free_boosters_stock_v2');
+          return raw ? JSON.parse(raw) : undefined;
+        } catch {
+          return undefined;
+        }
+      })(),
       syncedAt: new Date().toISOString(),
     };
   } catch (err) {
@@ -480,6 +489,32 @@ export function applyCloudSaveToLocalStorage(
             localStorage.setItem('hoot_last_daily_booster_claim_v1', cloudData.lastDailyBoosterClaim);
           }
         } catch {}
+      }
+    }
+
+    if (cloudData.freeBoostersStock && typeof cloudData.freeBoostersStock === 'object') {
+      const cloudStock = cloudData.freeBoostersStock;
+      if (isReplace) {
+        localStorage.setItem('hoot_free_boosters_stock_v2', JSON.stringify(cloudStock));
+        window.dispatchEvent(new CustomEvent('hoot_free_boosters_updated', { detail: cloudStock }));
+      } else {
+        try {
+          const localRaw = localStorage.getItem('hoot_free_boosters_stock_v2');
+          if (localRaw) {
+            const localStock = JSON.parse(localRaw);
+            const bestCount = Math.min(2, Math.max(Number(localStock.count || 0), Number(cloudStock.count || 0)));
+            const olderTimestamp = Math.min(Number(localStock.lastRechargeTimestamp || Date.now()), Number(cloudStock.lastRechargeTimestamp || Date.now()));
+            const mergedStock = { count: bestCount, lastRechargeTimestamp: olderTimestamp };
+            localStorage.setItem('hoot_free_boosters_stock_v2', JSON.stringify(mergedStock));
+            window.dispatchEvent(new CustomEvent('hoot_free_boosters_updated', { detail: mergedStock }));
+          } else {
+            localStorage.setItem('hoot_free_boosters_stock_v2', JSON.stringify(cloudStock));
+            window.dispatchEvent(new CustomEvent('hoot_free_boosters_updated', { detail: cloudStock }));
+          }
+        } catch {
+          localStorage.setItem('hoot_free_boosters_stock_v2', JSON.stringify(cloudStock));
+          window.dispatchEvent(new CustomEvent('hoot_free_boosters_updated', { detail: cloudStock }));
+        }
       }
     }
 

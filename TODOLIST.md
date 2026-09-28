@@ -122,20 +122,26 @@
   - [x] Application réactive immédiate de l'état distant dans `UserAccountProvider.tsx` (`apiGetSession()`, `login()`, `connectSteamByIdentifier()` et `handleCloudRestored`) sans closure périmée sur les rôles admin.
   - [x] Algorithme de fusion non-destructif : `Math.max` pour les plumes, séries de victoires et distributions, union dédupliquée pour les succès, puzzles du calendrier, cosmétiques et collection de cartes.
 
-### 7. 📅 Vérification du système de « Série de jeu » (Streaks) & synchronisation Calendrier `[⏳ À faire]`
-- **Constat :** Le système de décompte des séries consécutives (streaks) et son reflet dans l'archive/calendrier des jours joués nécessite un audit de fiabilité.
-- **Actions à réaliser :**
-  - [ ] Auditer le gestionnaire `src/utils/streakManager.ts` et le stockage local / cloud sync.
-  - [ ] Contrôler la cohérence entre les dates locales (fuseau horaire du navigateur) et la date de réinitialisation quotidienne du serveur (minuit UTC ou heure de Paris).
-  - [ ] Vérifier la modale du calendrier (`CalendarArchiveModal.tsx`) pour garantir que chaque jour complété est correctement coché/coloré sans décalage de date.
+### 7. 📅 Vérification du système de « Série de jeu » (Streaks) & synchronisation Calendrier `[✅ 100% Terminé]`
+- **Constat :** Le système de décompte des séries consécutives (streaks) et son reflet dans l'archive/calendrier des jours joués nécessitait un audit de fiabilité mathématique et d'affichage.
+- **Actions réalisées :**
+  - [x] Réécriture de `getYesterdayDateString` avec arithmétique UTC absolue dans `src/utils/streakManager.ts`, immunisée contre les décalages de fuseau horaire et de changements d'heure (DST).
+  - [x] Création de la fonction canonique `getEffectiveCurrentStreak` pour purger les « séries fantômes » lorsque plus de 2 jours s'écoulent sans victoire.
+  - [x] Sécurisation stricte de `canRescueYesterday` dans `src/context/GameStatsProvider.tsx` : la fenêtre de rattrapage de la veille n'est autorisée que si la série était active avant-hier (`lastWon === dayBeforeYesterdayStr`), interdisant tout saut temporel illégitime.
+  - [x] Assainissement automatique des séries expirées dès l'initialisation de `GameStatsProvider.tsx`.
+  - [x] Actualisation réactive de `CalendarArchiveModal.tsx` lors de `hoot_daily_game_completed` et mise en valeur par flamme dorée des journées passées entièrement remportées (8/8 mini-jeux gagnés).
+  - [x] Affichage unifié de la série effective dans `MiniGamesHub.tsx` et `StatsModal.tsx`.
 
-### 8. 🃏 Jeu de Cartes : Cumul de 2 boosters gratuits & recharge toutes les 12h `[⏳ À faire]`
+### 8. 🃏 Jeu de Cartes : Cumul de 2 boosters gratuits & recharge toutes les 12h `[✅ 100% Terminé]`
 - **Constat :** Les boosters gratuits doivent récompenser la régularité sans pénaliser les joueurs qui ne peuvent pas se connecter toutes les 12 heures exactes.
-- **Actions à réaliser :**
-  - [ ] Mettre en place un plafond de stockage à **2 boosters gratuits maximum**.
-  - [ ] Instaurer une recharge automatique d'un booster toutes les 12 heures.
-  - [ ] Le compte à rebours de 12h ne démarre ou ne continue que lorsque la réserve de boosters gratuits est inférieure à 2.
-  - [ ] Mettre à jour l'interface de la boutique de plumes / boosters (`FeatherShopModal.tsx`, `BoosterOpeningModal.tsx`) avec l'affichage clair du stock (ex: `1/2` ou `2/2`) et du minuteur jusqu'au prochain booster.
+- **Actions réalisées :**
+  - [x] Implémentation du stockage dynamique `FreeBoostersStock` dans `src/services/cardCollectionService.ts` plafonné à **2 boosters gratuits maximum**.
+  - [x] Algorithme de recharge automatique de 12 heures (`BOOSTER_RECHARGE_MS = 43 200 000 ms`), préservant la continuité temporelle entre ouvertures successives.
+  - [x] Le décompte de 12h ne démarre ou ne continue que lorsque la réserve est inférieure à 2 (`count < 2`).
+  - [x] Hook React temps-réel `useFreeBoostersStock` avec réactivité à la seconde et rafraîchissement au focus (`visibilitychange`).
+  - [x] Synchronisation et réconciliation Cloud souveraine (`UserCloudSavePayload.freeBoostersStock`) dans `userCloudSyncService.ts`.
+  - [x] Refonte de l'interface de l'Album des Cartes (`CardsBinderView.tsx`) avec badges de stock (`1/2` ou `2/2`), barre de progression de la recharge 12h, minuteur interactif et boutons réactifs.
+  - [x] Bouton d'enchaînement direct dans la modale d'ouverture (`BoosterOpeningModal.tsx`) indiquant clairement le nombre de boosters gratuits restants en réserve.
 
 ### 9. 👥 Correction de l'affichage « Progression du jour de mes amis » `[⏳ À faire]`
 - **Constat :** L'encart de suivi de la progression quotidienne des amis (qui a réussi l'Indledle, le Pixel, le Screenle, le Linkle, etc. aujourd'hui) ne s'affiche pas correctement ou n'actualise pas les scores en temps réel.

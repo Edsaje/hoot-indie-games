@@ -19,7 +19,11 @@ import {
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
-import { getChallengeStatusForDate, getTodayDateString } from '../../utils/streakManager';
+import {
+  getChallengeStatusForDate,
+  getTodayDateString,
+  getEffectiveCurrentStreak,
+} from '../../utils/streakManager';
 import { QUIZ_QUESTIONS } from '../../data/quizQuestions';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 
@@ -293,7 +297,13 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
                     <span className="flex items-center gap-1 font-bold text-amber-300">
                       <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                       <span>
-                        {t('minigamesHub.daysShort', { count: modeStats.currentStreak })}
+                        {t('minigamesHub.daysShort', {
+                          count: getEffectiveCurrentStreak(
+                            modeStats.currentStreak,
+                            modeStats.lastWonDate,
+                            todayStr
+                          ),
+                        })}
                       </span>
                     </span>
                   )}

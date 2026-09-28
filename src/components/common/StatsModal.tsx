@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Award, Flame, BarChart3, RotateCcw, Share2, Check } from 'lucide-react';
 import { useGameStats } from '../../context/useGameStats';
 import { soundFx } from '../../utils/audio';
+import { getEffectiveCurrentStreak } from '../../utils/streakManager';
 
 import { type DailyGameMode, defaultOverallStats } from '../../context/GameStatsContext';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
@@ -22,6 +23,10 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
   if (!isOpen) return null;
 
   const currentModeStats = stats[activeTab] || defaultOverallStats[activeTab];
+  const effectiveStreak = getEffectiveCurrentStreak(
+    currentModeStats.currentStreak,
+    currentModeStats.lastWonDate
+  );
   const winRate = currentModeStats.played > 0
     ? Math.round((currentModeStats.won / currentModeStats.played) * 100)
     : 0;
@@ -30,7 +35,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
 
   const handleShare = () => {
     soundFx.playClick();
-    const text = `🦉 Hoot Indie Games Stats [${activeTab.toUpperCase()}]\n🏆 Victoires: ${winRate}%\n🔥 Série: ${currentModeStats.currentStreak} (Max: ${currentModeStats.maxStreak})\n🎮 https://hootindiegames.com`;
+    const text = `🦉 Hoot Indie Games Stats [${activeTab.toUpperCase()}]\n🏆 Victoires: ${winRate}%\n🔥 Série: ${effectiveStreak} (Max: ${currentModeStats.maxStreak})\n🎮 https://hootindiegames.com`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
@@ -101,7 +106,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
           <div className="bg-[#0b0f19] border border-[#1e293b] p-2.5 rounded-xl">
             <div className="flex items-center justify-center gap-1 text-2xl font-black text-[#f59e0b]">
               <Flame className="w-4 h-4 text-[#f59e0b]" />
-              {currentModeStats.currentStreak}
+              {effectiveStreak}
             </div>
             <div className="text-xs uppercase tracking-wider text-slate-300 font-semibold">{t('common.streak')}</div>
           </div>

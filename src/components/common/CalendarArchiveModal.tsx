@@ -40,9 +40,11 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
     const handleUpdate = () => setUpdateTrigger((n) => n + 1);
     window.addEventListener('hoot_daily_states_updated', handleUpdate);
     window.addEventListener('hoot_stats_updated', handleUpdate);
+    window.addEventListener('hoot_daily_game_completed', handleUpdate);
     return () => {
       window.removeEventListener('hoot_daily_states_updated', handleUpdate);
       window.removeEventListener('hoot_stats_updated', handleUpdate);
+      window.removeEventListener('hoot_daily_game_completed', handleUpdate);
     };
   }, []);
 
@@ -214,15 +216,32 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
             // Case 2: Expired past date (> 1 day ago) (locked)
             if (isDatePastExpired(item.dateStr, todayStr)) {
               const pastStatus = getChallengeStatusForDate(item.dateStr);
+              const pastWonAll =
+                pastStatus.screenle === 'won' &&
+                pastStatus.indledle === 'won' &&
+                pastStatus.linkle === 'won' &&
+                pastStatus.profille === 'won' &&
+                pastStatus.chrono === 'won' &&
+                pastStatus.pixel === 'won' &&
+                pastStatus.review === 'won' &&
+                pastStatus.blindtest === 'won';
               return (
                 <div
                   key={item.dateStr}
-                  title={`${item.dateStr} • ${t('calendar.locked')}`}
-                  className="h-14 p-1 rounded-xl border border-slate-800/30 bg-[#090d16]/60 text-slate-600 flex flex-col items-center justify-between text-xs select-none cursor-not-allowed opacity-45"
+                  title={`${item.dateStr} • ${pastWonAll ? t('calendar.won') : t('calendar.locked')}`}
+                  className={`h-14 p-1 rounded-xl border flex flex-col items-center justify-between text-xs select-none cursor-not-allowed ${
+                    pastWonAll
+                      ? 'border-amber-500/30 bg-[#090d16]/80 text-amber-300 opacity-75'
+                      : 'border-slate-800/30 bg-[#090d16]/60 text-slate-600 opacity-45'
+                  }`}
                 >
                   <div className="w-full flex items-center justify-between px-1">
                     <span className="text-[11px] font-mono text-slate-500">{item.dayNum}</span>
-                    <Lock className="w-2.5 h-2.5 text-slate-600" />
+                    {pastWonAll ? (
+                      <Flame className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
+                    ) : (
+                      <Lock className="w-2.5 h-2.5 text-slate-600" />
+                    )}
                   </div>
                   <div className="flex items-center gap-1 pb-1">
                     <span
