@@ -221,23 +221,36 @@ function mergeSaveData($existing, $incoming) {
     ];
 
     // 8. Collection de Cartes (Fusion des cartes normales et holographiques)
+    // 8. Collection de Cartes (Préservation des échanges et des obtentions)
     $exCards = is_array($existing['cardCollection'] ?? null) ? $existing['cardCollection'] : [];
     $inCards = is_array($incoming['cardCollection'] ?? null) ? $incoming['cardCollection'] : [];
-    $mergedCards = $exCards;
-    foreach ($inCards as $cardId => $cardData) {
-        if (!is_array($cardData)) continue;
-        if (!isset($mergedCards[$cardId])) {
-            $mergedCards[$cardId] = $cardData;
-        } else {
-            $exCard = $mergedCards[$cardId];
-            $mergedCards[$cardId] = [
-                'count' => max(intval($exCard['count'] ?? 0), intval($cardData['count'] ?? 0)),
-                'countHolo' => max(intval($exCard['countHolo'] ?? 0), intval($cardData['countHolo'] ?? 0)),
-                'firstObtainedAt' => !empty($exCard['firstObtainedAt']) ? $exCard['firstObtainedAt'] : ($cardData['firstObtainedAt'] ?? date('c')),
-            ];
+    
+    $serverTradeTs = intval($existing['tradesLastUpdated'] ?? 0);
+    $clientTradeTs = intval($incoming['tradesLastUpdated'] ?? 0);
+
+    if ($serverTradeTs > $clientTradeTs && !empty($exCards)) {
+        // Le serveur a des transactions d'échanges plus récentes : préserver la version serveur
+        $mergedCards = $exCards;
+        foreach ($inCards as $cardId => $cardData) {
+            if (!is_array($cardData)) continue;
+            if (!isset($mergedCards[$cardId])) {
+                $mergedCards[$cardId] = $cardData;
+            }
+        }
+    } else {
+        // Le client est à jour avec les échanges ou a lui-même effectué un recyclage/échange
+        $mergedCards = !empty($inCards) ? $inCards : $exCards;
+        foreach ($exCards as $cardId => $cardData) {
+            if (!is_array($cardData)) continue;
+            if (!isset($mergedCards[$cardId])) {
+                $mergedCards[$cardId] = $cardData;
+            }
         }
     }
     $merged['cardCollection'] = $mergedCards;
+    if ($serverTradeTs > 0 || $clientTradeTs > 0) {
+        $merged['tradesLastUpdated'] = max($serverTradeTs, $clientTradeTs);
+    }
 
     // Dernier booster quotidien réclamé (date la plus récente)
     $exBooster = (string)($existing['lastDailyBoosterClaim'] ?? '');

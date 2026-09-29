@@ -7,6 +7,7 @@ import {
   Gift,
   RefreshCw,
   ShoppingBag,
+  ArrowLeftRight,
 } from 'lucide-react';
 import { ALL_CARDS, buildCardsFromGames, setDynamicCardsPool, getCardById, createFallbackCard } from '../../data/cardsData';
 import type { CardItem, CardRarity, BoosterOpenResult, UserCardCollection } from '../../types/cards';
@@ -22,6 +23,7 @@ import { formatFeathers, isLocalAdminProfile } from '../../utils/featherEconomy'
 import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
+import { useTrades } from '../../context/useTrades';
 import { soundFx } from '../../utils/audio';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { CardView } from './CardView';
@@ -44,6 +46,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
   const { isAdmin, isCreator } = useUserAccount();
   const isSuperAdmin = Boolean(isAdmin || isCreator || isLocalAdminProfile());
   const { curatedGems } = useSteamCatalog();
+  const { openTradeModal, pendingIncomingCount } = useTrades();
 
   const [collection, setCollection] = useState<UserCardCollection>(() => getCardCollection());
 
@@ -255,9 +258,29 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
         <SylvestreIvyFrame density="medium" />
 
         <div className="relative z-10 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-black uppercase tracking-wider mb-2.5">
-            <Package className="w-3.5 h-3.5 text-amber-400" />
-            <span>Collection Officielle • 185 Cartes</span>
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-2.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-black uppercase tracking-wider">
+              <Package className="w-3.5 h-3.5 text-amber-400" />
+              <span>Collection Officielle • {allCards.length} Cartes</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                openTradeModal();
+              }}
+              className="relative inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/25 to-amber-600/25 hover:from-amber-500/40 hover:to-amber-600/40 border border-amber-500/60 text-amber-300 hover:text-white text-xs font-black uppercase tracking-wider transition cursor-pointer active:scale-95 shadow-sm"
+              title="Centre d'Échanges Bilatéral avec vos compagnons"
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5 text-amber-400" />
+              <span>Centre d'Échanges</span>
+              {pendingIncomingCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-black animate-pulse">
+                  {pendingIncomingCount}
+                </span>
+              )}
+            </button>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
@@ -265,7 +288,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-            Collectionnez les 185 chefs-d'œuvre du sanctuaire, découvrez des versions holographiques
+            Collectionnez les {allCards.length} chefs-d'œuvre du sanctuaire, découvrez des versions holographiques
             rares et recyclez vos doubles en Plumes d'Or 🪶 !
           </p>
 

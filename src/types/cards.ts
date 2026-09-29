@@ -117,3 +117,5 @@ export const RARITY_CONFIG: Record<
     accentHex: '#fbbf24',
   },
 };
+
+export const CARD_RARITY_METADATA = RARITY_CONFIG;

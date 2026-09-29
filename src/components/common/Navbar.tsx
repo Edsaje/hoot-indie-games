@@ -34,6 +34,7 @@ import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useFriends } from '../../context/useFriends';
+import { useTrades } from '../../context/useTrades';
 import { useChat } from '../../context/useChat';
 import { SUPPORTED_LANGUAGES, getAppLanguage, type AppLanguage } from '../../utils/localization';
 import { INDIE_AVATARS } from '../../data/avatars';
@@ -97,6 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { feathersCount, unlockAchievement } = useAchievements();
   const { profile, isAuthenticated, isAdmin, isSteamConnected, steamAccount, logout } = useUserAccount();
   const { totalFriendsCount, friendsActiveTodayCount, friendsOnlineCount, pendingRequestsCount } = useFriends();
+  const { pendingIncomingCount } = useTrades();
   const { openChat, unreadCount } = useChat();
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
 
@@ -323,6 +325,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Layers className="w-3.5 h-3.5 shrink-0" />
               <span>{t('nav.cards', 'Cartes')}</span>
+              {pendingIncomingCount > 0 && (
+                <span
+                  className="min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-mono font-black bg-rose-600 text-white flex items-center justify-center border border-[#06241b] shadow-sm shadow-rose-500/50 animate-pulse"
+                  title={`${pendingIncomingCount} offre(s) d'échange reçue(s)`}
+                >
+                  {pendingIncomingCount}
+                </span>
+              )}
             </a>
 
             <div className="h-4 w-px bg-[#78350f] mx-0.5 xl:mx-1 shrink-0" />
@@ -911,7 +921,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       { id: 'catalog' as NavTab, label: t('nav.catalog', 'Catalogue'), desc: '185 chefs-d’œuvre indépendants', icon: Database },
                       { id: 'minigames' as NavTab, label: t('nav.games', 'Mini-Jeux'), desc: '11 défis quotidiens, sprint & duel 1v1', icon: Puzzle, badge: '11' },
                       { id: 'arcade' as NavTab, label: t('nav.arcade'), desc: 'Salle de jeux rétro & classements', icon: Gamepad2 },
-                      { id: 'cards' as NavTab, label: t('nav.cards', 'Cartes'), desc: 'Album de 185 cartes & boosters', icon: Layers, badge: '185' },
+                      { id: 'cards' as NavTab, label: t('nav.cards', 'Cartes'), desc: 'Album de cartes, échanges & boosters', icon: Layers, badge: pendingIncomingCount > 0 ? `${pendingIncomingCount} Échange` : undefined },
                       { id: 'toolbox' as NavTab, label: t('nav.toolbox'), desc: 'Filtres, générateurs & outils indés', icon: Wrench },
                       { id: 'roost' as NavTab, label: t('nav.roost'), desc: 'Communauté, retours & créateur', icon: Feather },
                     ]

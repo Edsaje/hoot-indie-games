@@ -23,8 +23,10 @@ import {
   LogIn,
   Inbox,
   ShieldCheck,
+  ArrowLeftRight,
 } from 'lucide-react';
 import { useFriends } from '../../context/useFriends';
+import { useTrades } from '../../context/useTrades';
 import type { FriendPlayer } from '../../types/friends';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useChat } from '../../context/useChat';
@@ -81,6 +83,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
 
   const { isSteamConnected, isAuthenticated } = useUserAccount();
   const { openPrivateChat } = useChat();
+  const { openTradeModal } = useTrades();
 
   const [activeTab, setActiveTab] = useState<'friends' | 'requests'>(initialTab);
   const [respondingReqId, setRespondingReqId] = useState<string | null>(null);
@@ -654,6 +657,24 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                         >
                           <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
                           <span className="hidden sm:inline">Message</span>
+                        </button>
+
+                        {/* Échange de Cartes Bilatéral */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            soundFx.playClick();
+                            onClose();
+                            openTradeModal({
+                              targetFriend: friend,
+                              initialTab: 'create',
+                            });
+                          }}
+                          className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 hover:text-white font-bold text-xs transition flex items-center gap-1 cursor-pointer active:scale-95"
+                          title={`Proposer un échange de cartes à ${friend.username}`}
+                        >
+                          <ArrowLeftRight className="w-3.5 h-3.5 text-amber-400" />
+                          <span className="hidden sm:inline">Échanger</span>
                         </button>
 
                         {friend.friendCode !== 'HOOT-HIBOU' && (

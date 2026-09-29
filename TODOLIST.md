@@ -70,6 +70,16 @@
 
 ---
 
+### 7. 🎨 Audit Global UI/UX & Perfectionnement Ergonomique `[⏳ À faire]`
+- **Priorité :** P2 (Expérience utilisateur, design system & confort visuel)
+- **Constat :** Suite aux nombreux ajouts de fonctionnalités (tchat privé, amis mutuels, boutique, cartes, micro-indés, mini-jeux), un audit complet de cohérence UI/UX s'impose pour uniformiser l'ergonomie, la hiérarchie visuelle, les contrastes, l'accessibilité et la fluidité mobile.
+- **Actions prévues :**
+  - [ ] Revue globale de la cohérence visuelle et typographique (thème sylvestre, polices, tailles, arrondis, ombres).
+  - [ ] Audit responsive mobile & tablette (padding, overflow, zones de touch 48x48px, modales plein écran sur smartphone).
+  - [ ] Audit des contrastes et lisibilité des textes (respect des normes WCAG AA sur fonds sombres/verts).
+  - [ ] Feedback utilisateur & micro-interactions (états de survol, focus clavier, animations subtiles, sons et retours haptiques).
+  - [ ] Clarté de la navigation et réduction de la charge cognitive (simplification des menus, clarté des statuts et notifications).
+
 ---
 
 ## 🔴 Phase 1 : Urgences Critiques, Intégrité du Jeu & Image (Priorité P0)
@@ -296,18 +306,38 @@
 
 ---
 
-### 20. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[⏳ À faire]`
+### 20. 🔄 Véritable Système & Menu d'Échange de Cartes (Trade Bilatéral) `[✅ 100% Terminé]`
 - **Priorité :** P2 (Priorité moyenne — Économie du jeu de cartes & collection)
 - **Difficulté :** Élevée (Transactions atomiques sécurisées, double validation, cohérence des inventaires)
-- **Constat :** Le bouton d'échange actuel dans `CardDetailModal.tsx` se limite à copier un lien dans le presse-papier ou poster un message texte dans le tchat. Il n'existe aucun système d'échange transactionnel ni d'interface interactive permettant d'échanger réellement une carte contre une autre.
-- **Actions à réaliser :**
-  - [ ] **Menu d'Échange dédié (`TradeModal.tsx`) :**
-    - Concevoir une interface d'échange claire (choix du destinataire ami, sélection visuelle de la carte à offrir et de la carte souhaitée).
-    - Système d'invitation d'échange depuis la liste d'amis (`FriendsModal.tsx`) ou le tchat avec notification visuelle et sonore.
-  - [ ] **Sécurisation des Inventaires & Transaction Atomique :**
-    - Vérification stricte : s'assurer que le joueur possède au moins un exemplaire (standard ou holo) de la carte qu'il s'apprête à céder.
-    - Exécution bilatérale atomique : à la confirmation mutuelle des deux joueurs, retirer la carte envoyée de l'inventaire du joueur A pour l'ajouter chez le joueur B, et inversement pour la carte reçue.
-    - Historique et gestion des propositions (`en attente`, `acceptée`, `refusée`, `expirée`).
+- **Constat :** Le bouton d'échange initial dans `CardDetailModal.tsx` se limitait à copier un lien dans le presse-papier ou poster un message texte dans le tchat public. Les joueurs ne pouvaient pas réaliser d'échanges réels et sécurisés de cartes avec leurs compagnons.
+- **Actions réalisées :**
+  - [x] **Backend PHP Souverain (`public/api/trades.php`) :**
+    - Endpoints complets d'échange : `get_trades`, `create_trade`, `respond_trade`, `get_friend_binder`, `acknowledge_trade`.
+    - Transactions atomiques sous verrouillage exclusif `LOCK_EX` et renommage POSIX dans `card_trades.json`.
+    - Contrôle d'accès strict : échange restreint aux compagnons mutuellement confirmés (`areFriendsMutual`).
+    - Validation stricte des inventaires : vérification de possession de la carte offerte (et de la carte demandée à l'acceptation).
+    - Transfert bilatéral instantané : débit et crédit synchronisés dans les sauvegardes Cloud des deux utilisateurs (`public/api/user_saves/`) avec horodatage `tradesLastUpdated`.
+    - Cycle de vie complet : `pending`, `accepted`, `declined`, `canceled`, `expired` (7 jours).
+  - [x] **Préservation & Réconciliation Cloud (`public/api/user_cloud_sync.php`) :**
+    - Ajustement de l'algorithme de fusion `mergeSaveData` : prise en compte de `tradesLastUpdated` pour empêcher l'arithmétique `max()` de ressusciter les cartes échangées ou recyclées.
+  - [x] **Services & Idempotence Frontend (`src/types/trades.ts`, `src/services/tradesService.ts`) :**
+    - Typages TypeScript stricts `CardTradeOffer`, `CreateTradePayload`, `FriendBinderData`.
+    - Fonction `applyTradeToLocalCollection` idempotente : registre local `hoot_applied_trades_v1` empêchant tout double retrait de carte, et mise à jour de l'horodatage `tradesLastUpdated`.
+  - [x] **Gestion d'État & Notifications (`src/context/TradesProvider.tsx`, `src/context/useTrades.ts`) :**
+    - Polling intelligent (90s) & réveil au focus, carillon audio discret (`soundFx.playChime()`) lors de l'arrivée d'une offre entrante.
+    - Compteur réactif d'offres en attente `pendingIncomingCount`.
+  - [x] **Interface Graphique Moderne (`src/components/cards/TradeModal.tsx`) :**
+    - 4 onglets : « Proposer un échange », « Offres reçues », « Offres envoyées », « Historique ».
+    - Sélection visuelle des cartes avec filtres rareté, recherche, version normale/holographique, et affichage des doubles du compagnon ciblé.
+    - Échanges précis (Carte X contre Carte Y) ou ouverts (Carte X contre « Au choix du compagnon » avec sous-modale de sélection de la contre-carte).
+  - [x] **Interconnexions Globales :**
+    - `CardDetailModal.tsx` : Bouton « Lancer un échange bilatéral sécurisé » et bouton « Échanger » sur chaque compagnon de la liste.
+    - `FriendsModal.tsx` : Bouton direct « Échanger » avec icône `ArrowLeftRight` sur chaque fiche compagnon.
+    - `CardsBinderView.tsx` : Bouton « Centre d'Échanges » avec badge de notifications dans l'en-tête du classeur.
+    - `Navbar.tsx` : Badge de notifications animé sur l'onglet « Cartes » (barre desktop et menu mobile).
+    - `App.tsx` : Intégration de `TradesProvider`, injection de `<TradeModal />` et écoute du hash `#trade` / `#trades`.
+  - [x] **Suite de Tests Unitaires Validée (`scripts/testCardTrading.ts`) :**
+    - 5/5 tests réussis (statuts du cycle de vie, débit/crédit initiateur, débit/crédit destinataire, idempotence anti-doublon, résolution « Au choix du compagnon »).
 
 ---
 

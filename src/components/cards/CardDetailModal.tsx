@@ -27,6 +27,7 @@ import { soundFx } from '../../utils/audio';
 import { useTranslation } from 'react-i18next';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { useFriends } from '../../context/useFriends';
+import { useTrades } from '../../context/useTrades';
 import { useChat } from '../../context/useChat';
 
 interface CardDetailModalProps {
@@ -67,6 +68,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   const dragStartRef = useRef<{ clientX: number; clientY: number; initialPanX: number; initialPanY: number } | null>(null);
 
   const { friends, myFriendCode } = useFriends();
+  const { openTradeModal } = useTrades();
   const { openChat, sendMessage } = useChat();
 
   // Bloquer le défilement du catalogue et de la page en arrière-plan
@@ -634,6 +636,23 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                     </div>
                   )}
 
+                  {/* Bouton Principal : Lancer l'Échange Bilatéral Sécurisé */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFx.playClick();
+                      onClose();
+                      openTradeModal({
+                        prefilledOfferedCard: card,
+                        initialTab: 'create',
+                      });
+                    }}
+                    className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition cursor-pointer"
+                  >
+                    <ArrowLeftRight className="w-4 h-4 text-slate-950" />
+                    <span>Lancer un échange bilatéral sécurisé</span>
+                  </button>
+
                   {/* Lien direct & Partage */}
                   <div className="space-y-1.5">
                     <label className="text-[10px] uppercase font-bold text-slate-400">
@@ -680,7 +699,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                     </div>
 
                     {friends.length > 0 ? (
-                      <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1">
+                      <div className="max-h-32 overflow-y-auto space-y-1.5 pr-1">
                         {friends.map((f) => (
                           <div
                             key={f.friendCode}
@@ -690,13 +709,33 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                               <span className="font-bold text-white truncate">{f.username}</span>
                               <span className="text-[10px] font-mono text-slate-500">{f.friendCode}</span>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => handleSendTradeToFriend(f)}
-                              className="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[10px] border border-amber-500/30 shrink-0 transition cursor-pointer"
-                            >
-                              Proposer
-                            </button>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  soundFx.playClick();
+                                  onClose();
+                                  openTradeModal({
+                                    targetFriend: f,
+                                    prefilledOfferedCard: card,
+                                    initialTab: 'create',
+                                  });
+                                }}
+                                className="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[10px] shrink-0 transition cursor-pointer flex items-center gap-1 shadow-sm"
+                                title="Ouvrir un échange bilatéral direct"
+                              >
+                                <ArrowLeftRight className="w-3 h-3" />
+                                <span>Échanger</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleSendTradeToFriend(f)}
+                                className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-[10px] border border-slate-700 shrink-0 transition cursor-pointer"
+                                title="Copier un message texte pour cet ami"
+                              >
+                                Copier
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>

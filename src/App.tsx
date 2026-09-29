@@ -21,6 +21,7 @@ const FriendsModal = React.lazy(() => import('./components/friends/FriendsModal'
 const FeatherShopModal = React.lazy(() => import('./components/shop/FeatherShopModal').then(module => ({ default: module.FeatherShopModal })));
 const ChatDrawer = React.lazy(() => import('./components/chat/ChatDrawer').then(module => ({ default: module.ChatDrawer })));
 const AdminRewardCelebrationModal = React.lazy(() => import('./components/common/AdminRewardCelebrationModal').then(module => ({ default: module.AdminRewardCelebrationModal })));
+const TradeModal = React.lazy(() => import('./components/cards/TradeModal').then(module => ({ default: module.TradeModal })));
 
 // Main Views & Hubs (Lazy Loaded)
 const GemExplorerHome = React.lazy(() => import('./components/gems/GemExplorerHome').then(module => ({ default: module.GemExplorerHome })));
@@ -54,6 +55,8 @@ import { UserAccountProvider } from './context/UserAccountProvider';
 import { useUserAccount } from './context/useUserAccount';
 import { SteamCatalogProvider } from './context/SteamCatalogProvider';
 import { FriendsProvider } from './context/FriendsProvider';
+import { TradesProvider } from './context/TradesProvider';
+import { useTrades } from './context/useTrades';
 import { ChatProvider } from './context/ChatProvider';
 import { getAppLanguage } from './utils/localization';
 import { useKonamiCode } from './utils/useKonamiCode';
@@ -66,6 +69,7 @@ import { getTodayDateString, getYesterdayDateString, isDatePlayable } from './ut
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { isAuthenticated, isAdmin } = useUserAccount();
+  const { isTradeModalOpen, openTradeModal } = useTrades();
 
   // Mini-game sub-tab state (Hub or one of the 7 disciplines)
   const [activeMiniGame, setActiveMiniGame] = useState<MiniGameSubTab>(() => {
@@ -163,6 +167,15 @@ export const AppContent: React.FC = () => {
     return false;
   });
   const [isCardsModalOpen, setIsCardsModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.startsWith('#trade') || hash.startsWith('#echange')) {
+        openTradeModal();
+      }
+    }
+  }, [openTradeModal]);
 
   const { unlockAchievement } = useAchievements();
 
@@ -324,6 +337,8 @@ export const AppContent: React.FC = () => {
         setIsFriendsOpen(true);
       } else if (hash.startsWith('#shop') || hash.startsWith('#boutique')) {
         setIsShopOpen(true);
+      } else if (hash.startsWith('#trade') || hash.startsWith('#echange')) {
+        openTradeModal();
       } else if (hash.startsWith('#gems') || hash === '') {
         setCurrentTab('gems');
       }
@@ -792,6 +807,9 @@ export const AppContent: React.FC = () => {
       {/* Célébration Décret Royal / Récompense Souveraine Hibouxe */}
       <AdminRewardCelebrationModal />
 
+      {/* Centre d'Échange Bilatéral de Cartes */}
+      <TradeModal />
+
       {(() => {
         const isAnyModalOpen = Boolean(
           isStatsOpen ||
@@ -805,7 +823,8 @@ export const AppContent: React.FC = () => {
           isLeaderboardOpen ||
           isAdminDashboardOpen ||
           isShopOpen ||
-          isCardsModalOpen
+          isCardsModalOpen ||
+          isTradeModalOpen
         );
         return <ChatDrawer onOpenAuth={() => setIsAuthOpen(true)} isModalActive={isAnyModalOpen} />;
       })()}
@@ -856,11 +875,13 @@ export default function App() {
         <AchievementsProvider>
           <SteamCatalogProvider>
             <FriendsProvider>
-              <ChatProvider>
-                <ErrorBoundary>
-                  <AppContent />
-                </ErrorBoundary>
-              </ChatProvider>
+              <TradesProvider>
+                <ChatProvider>
+                  <ErrorBoundary>
+                    <AppContent />
+                  </ErrorBoundary>
+                </ChatProvider>
+              </TradesProvider>
             </FriendsProvider>
           </SteamCatalogProvider>
         </AchievementsProvider>
