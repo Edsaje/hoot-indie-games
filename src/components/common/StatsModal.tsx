@@ -50,8 +50,8 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative overflow-visible w-full max-w-md bg-[#06241b] border-2 border-[#78350f] rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-200 max-h-[90dvh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative overflow-visible w-full h-full sm:h-auto max-w-md bg-[#06241b] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-200 max-h-[100dvh] sm:max-h-[90dvh] overflow-y-auto">
         <SylvestreIvyFrame density="medium" rounded="3xl" />
         {/* Close Button */}
         <button
@@ -148,7 +148,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
         <div className="flex items-center justify-between pt-2 border-t border-[#1e293b]">
           <button
             onClick={handleReset}
-            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-red-400 transition"
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-red-400 transition"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Réinitialiser

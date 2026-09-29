@@ -214,7 +214,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                         </h3>
 
                         {Object.keys(referrers).length === 0 ? (
-                          <div className="text-xs text-slate-500 py-4 text-center">Aucun référent enregistré pour le moment.</div>
+                          <div className="text-xs text-slate-400 py-4 text-center">Aucun référent enregistré pour le moment.</div>
                         ) : (
                           <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                             {Object.entries(referrers)
@@ -271,7 +271,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                             value={eventFilter}
                             onChange={(e) => setEventFilter(e.target.value)}
                             placeholder="Filtrer un événement ou mot-clé..."
-                            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
+                            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400"
                           />
                         </div>
 
@@ -299,7 +299,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                       </div>
 
                       {filteredRecentEvents.length === 0 ? (
-                        <div className="text-xs text-slate-500 py-4 text-center">
+                        <div className="text-xs text-slate-400 py-4 text-center">
                           Aucun événement ne correspond aux critères de recherche.
                         </div>
                       ) : (
@@ -338,7 +338,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                                     </span>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-2 text-[10px] text-slate-500 shrink-0 font-mono">
+                                <div className="flex items-center gap-2 text-[10px] text-slate-400 shrink-0 font-mono">
                                   {item.device && <span className="uppercase">{item.device}</span>}
                                   <span>{new Date(item.timestamp || (item as any).time || 0).toLocaleTimeString()}</span>
                                 </div>

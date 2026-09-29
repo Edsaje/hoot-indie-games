@@ -1483,7 +1483,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                       localizedPrice.discountPercent > 0 ? (
                         <div className="px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-xs font-mono font-bold text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shadow-md">
                           {localizedPrice.formattedInitial && (
-                            <span className="line-through text-slate-500 text-[10px]">
+                            <span className="line-through text-slate-400 text-[10px]">
                               {localizedPrice.formattedInitial}
                             </span>
                           )}
@@ -1593,7 +1593,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                       )}
 
                       {!game.steamUrl && !game.itchUrl && (
-                        <div className="w-full text-center text-[11px] text-slate-500 italic py-1">{t('home.certifiedGemBadge')}</div>
+                        <div className="w-full text-center text-[11px] text-slate-400 italic py-1">{t('home.certifiedGemBadge')}</div>
                       )}
 
                       {/* Bouton de bascule rapide possédé */}
@@ -1612,7 +1612,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                           className={`p-2 rounded-xl border transition cursor-pointer ${
                             owned
                               ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40 hover:bg-cyan-500/30'
-                              : 'bg-slate-800/80 text-slate-500 hover:text-slate-300 border-slate-700 hover:border-slate-600'
+                              : 'bg-slate-800/80 text-slate-400 hover:text-slate-300 border-slate-700 hover:border-slate-600'
                           }`}
                         >
                           <Check className="w-4 h-4" />

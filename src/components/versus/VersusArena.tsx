@@ -1474,23 +1474,23 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
             </div>
             <div className="grid grid-cols-2 gap-2 max-w-md w-full text-left">
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Genre</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Genre</div>
                 <div className="text-xs font-bold text-white truncate">{currentRoundGame.genre.join(', ')}</div>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Année</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Année</div>
                 <div className="text-xs font-bold text-amber-400">
                   {timerSeconds <= 10 ? currentRoundGame.releaseYear : 'Débloqué à 10s'}
                 </div>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Développeur</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Développeur</div>
                 <div className="text-xs font-bold text-sky-400 truncate">
                   {timerSeconds <= 14 ? currentRoundGame.developer : 'Débloqué à 14s'}
                 </div>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Direction Artistique</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Direction Artistique</div>
                 <div className="text-xs font-bold text-emerald-400 truncate">
                   {currentRoundGame.artStyle?.fr || 'Indé culte'}
                 </div>
@@ -1669,7 +1669,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
             {/* Séparateur */}
             <div className="relative flex py-1 items-center">
               <div className="flex-grow border-t border-slate-800"></div>
-              <span className="flex-shrink mx-3 text-[10px] font-black uppercase tracking-wider text-slate-500">
+              <span className="flex-shrink mx-3 text-[10px] font-black uppercase tracking-wider text-slate-400">
                 Ou par e-mail &amp; mot de passe
               </span>
               <div className="flex-grow border-t border-slate-800"></div>
@@ -2233,7 +2233,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
                   {timerSeconds <= 12 ? (
                     <span>Genre : <strong className="text-amber-400">{currentRoundGame.genre.slice(0, 2).join(', ')}</strong></span>
                   ) : (
-                    <span className="text-slate-500 italic">Indice genre à 12s...</span>
+                    <span className="text-slate-400 italic">Indice genre à 12s...</span>
                   )}
                 </div>
 
@@ -2241,7 +2241,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
                   {timerSeconds <= 6 ? (
                     <span>Année : <strong className="text-amber-400">{currentRoundGame.releaseYear}</strong></span>
                   ) : (
-                    <span className="text-slate-500 italic">Indice année à 6s...</span>
+                    <span className="text-slate-400 italic">Indice année à 6s...</span>
                   )}
                 </div>
               </div>

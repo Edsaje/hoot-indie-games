@@ -462,7 +462,7 @@ export const ChronoSprint: React.FC<ChronoSprintProps> = ({ games, onBackToHub, 
               >
                 <span>{t('timeattack.hud.skip')}</span>
                 <Forward className="w-3 h-3" />
-                <span className="text-[10px] text-slate-500">(Espace)</span>
+                <span className="text-[10px] text-slate-400">(Espace)</span>
               </button>
             </div>
 

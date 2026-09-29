@@ -405,7 +405,7 @@ export const ProfilleSprint: React.FC<ProfilleSprintProps> = ({ games, onBackToH
             {/* Score & Combo */}
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-300 font-bold text-xs">
-                <Flame className={`w-4 h-4 ${combo > 1 ? 'animate-bounce text-purple-400' : 'text-slate-500'}`} />
+                <Flame className={`w-4 h-4 ${combo > 1 ? 'animate-bounce text-purple-400' : 'text-slate-400'}`} />
                 <span>Combo x{combo}</span>
               </div>
 

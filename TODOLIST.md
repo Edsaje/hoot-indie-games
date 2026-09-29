@@ -70,15 +70,15 @@
 
 ---
 
-### 7. 🎨 Audit Global UI/UX & Perfectionnement Ergonomique `[⏳ À faire]`
+### 7. 🎨 Audit Global UI/UX & Perfectionnement Ergonomique `[✅ 100% Terminé]`
 - **Priorité :** P2 (Expérience utilisateur, design system & confort visuel)
 - **Constat :** Suite aux nombreux ajouts de fonctionnalités (tchat privé, amis mutuels, boutique, cartes, micro-indés, mini-jeux), un audit complet de cohérence UI/UX s'impose pour uniformiser l'ergonomie, la hiérarchie visuelle, les contrastes, l'accessibilité et la fluidité mobile.
 - **Actions prévues :**
-  - [ ] Revue globale de la cohérence visuelle et typographique (thème sylvestre, polices, tailles, arrondis, ombres).
-  - [ ] Audit responsive mobile & tablette (padding, overflow, zones de touch 48x48px, modales plein écran sur smartphone).
-  - [ ] Audit des contrastes et lisibilité des textes (respect des normes WCAG AA sur fonds sombres/verts).
-  - [ ] Feedback utilisateur & micro-interactions (états de survol, focus clavier, animations subtiles, sons et retours haptiques).
-  - [ ] Clarté de la navigation et réduction de la charge cognitive (simplification des menus, clarté des statuts et notifications).
+  - [x] Revue globale de la cohérence visuelle et typographique (thème sylvestre, polices, tailles, arrondis, ombres).
+  - [x] Audit responsive mobile & tablette (padding, overflow, zones de touch 48x48px, modales plein écran sur smartphone).
+  - [x] Audit des contrastes et lisibilité des textes (respect des normes WCAG AA sur fonds sombres/verts).
+  - [x] Feedback utilisateur & micro-interactions (états de survol, focus clavier, animations subtiles, sons et retours haptiques).
+  - [x] Clarté de la navigation et réduction de la charge cognitive (simplification des menus, clarté des statuts et notifications).
 
 ---
 

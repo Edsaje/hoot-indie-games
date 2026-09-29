@@ -602,7 +602,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
               className={`inline-flex items-center justify-center w-5 h-5 rounded-full transition-all duration-300 ${
                 i < mistakesRemaining
                   ? 'bg-amber-500/20 text-[#f59e0b] ring-1 ring-amber-400'
-                  : 'bg-slate-800 text-slate-600'
+                  : 'bg-slate-800 text-slate-500'
               }`}
             >
               <Feather className="w-3 h-3" />

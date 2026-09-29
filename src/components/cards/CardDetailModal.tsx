@@ -363,7 +363,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[80] overflow-y-auto flex flex-col p-2.5 sm:p-4">
+      <div className="fixed inset-0 z-[80] overflow-y-auto flex flex-col p-0 sm:p-4">
         {/* Backdrop sombre */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -381,7 +381,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           initial={{ scale: 0.95, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 15 }}
-          className="relative w-full max-w-2xl max-h-[92dvh] overflow-y-auto bg-[#041610] rounded-none sm:rounded-3xl border-2 border-[#78350f] shadow-2xl shadow-black/90 z-10 text-slate-100 p-4 sm:p-7 m-auto"
+          className="relative w-full max-w-2xl max-h-[100dvh] h-full sm:h-auto overflow-y-auto bg-[#041610] rounded-none sm:rounded-3xl sm:border-2 border-0 border-[#78350f] shadow-2xl shadow-black/90 z-10 text-slate-100 p-4 sm:p-7 m-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <SylvestreIvyFrame density="delicate" />
@@ -695,7 +695,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                         <Users className="w-3 h-3" />
                         <span>Amis du Sanctuaire ({friends.length})</span>
                       </span>
-                      <span className="text-[10px] font-mono text-slate-500">Code: {myFriendCode}</span>
+                      <span className="text-[10px] font-mono text-slate-400">Code: {myFriendCode}</span>
                     </div>
 
                     {friends.length > 0 ? (
@@ -707,7 +707,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                           >
                             <div className="flex items-center gap-2 truncate mr-2">
                               <span className="font-bold text-white truncate">{f.username}</span>
-                              <span className="text-[10px] font-mono text-slate-500">{f.friendCode}</span>
+                              <span className="text-[10px] font-mono text-slate-400">{f.friendCode}</span>
                             </div>
                             <div className="flex items-center gap-1.5 shrink-0">
                               <button
@@ -740,7 +740,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                         ))}
                       </div>
                     ) : (
-                      <p className="text-[11px] text-slate-500 italic bg-[#02130e] p-2 rounded-xl border border-slate-800">
+                      <p className="text-[11px] text-slate-400 italic bg-[#02130e] p-2 rounded-xl border border-slate-800">
                         Aucun ami pour le moment. Partagez votre code ami <strong>{myFriendCode}</strong> !
                       </p>
                     )}
@@ -900,7 +900,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                       Exemplaire unique protégé du recyclage. Vous pouvez toutefois l'échanger avec un ami !
                     </p>
                   ) : (
-                    <p className="text-[11px] text-slate-500 italic">
+                    <p className="text-[11px] text-slate-400 italic">
                       Cette carte n'a pas encore été trouvée dans vos boosters.
                     </p>
                   )}

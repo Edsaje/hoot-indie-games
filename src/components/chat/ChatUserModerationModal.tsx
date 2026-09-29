@@ -356,7 +356,7 @@ export const ChatUserModerationModal: React.FC<ChatUserModerationModalProps> = (
                     </span>
                   ) : null}
                   {(profileData?.steamId || targetUser.steamId) && (
-                    <span className="text-slate-500 font-mono text-[10px]">
+                    <span className="text-slate-400 font-mono text-[10px]">
                       Steam: {profileData?.steamId || targetUser.steamId}
                     </span>
                   )}
@@ -369,7 +369,7 @@ export const ChatUserModerationModal: React.FC<ChatUserModerationModalProps> = (
                 <MessageSquare className="w-3 h-3 text-emerald-400" />
                 <span className="font-bold text-white">{messageCount}</span> messages
               </div>
-              <div className="text-[10px] text-slate-500 mt-0.5">
+              <div className="text-[10px] text-slate-400 mt-0.5">
                 {profileData?.isBanned ? 'Compte restreint' : 'Compte actif'}
               </div>
             </div>
@@ -642,11 +642,11 @@ export const ChatUserModerationModal: React.FC<ChatUserModerationModalProps> = (
                         key={m.id}
                         className={`p-2 rounded-lg text-[11px] border ${
                           m.isDeleted
-                            ? 'bg-black/30 border-slate-800 text-slate-500 italic'
+                            ? 'bg-black/30 border-slate-800 text-slate-400 italic'
                             : 'bg-[#020d0a] border-slate-800 text-slate-300'
                         }`}
                       >
-                        <div className="flex items-center justify-between text-[10px] text-slate-500 mb-0.5">
+                        <div className="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
                           <span className="font-mono">#{m.channel}</span>
                           <span>
                             {new Date(m.timestamp * 1000).toLocaleTimeString([], {

@@ -579,7 +579,7 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
             </div>
 
             {/* Contrôle Muet & Passer */}
-            <div className="w-full flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-800">
+            <div className="w-full flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
               <button
                 onClick={() => setIsMuted((prev) => !prev)}
                 className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer"
@@ -612,7 +612,7 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
                 } else if (isSelected && !isTarget) {
                   btnStyle = 'bg-rose-600/30 border-rose-500 text-rose-300 font-bold';
                 } else {
-                  btnStyle = 'bg-slate-800/40 border-slate-800 text-slate-500 opacity-50';
+                  btnStyle = 'bg-slate-800/40 border-slate-800 text-slate-400 opacity-50';
                 }
               }
 

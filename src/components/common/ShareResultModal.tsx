@@ -296,7 +296,7 @@ export const ShareResultModal: React.FC<ShareResultModalProps> = ({
 
               {/* Text Preview Box */}
               <div className="p-3 bg-[#0b0f19] border border-[#1e293b] rounded-2xl">
-                <div className="text-[10px] uppercase font-mono font-bold text-slate-500 mb-1">
+                <div className="text-[10px] uppercase font-mono font-bold text-slate-400 mb-1">
                   Aperçu du texte copié :
                 </div>
                 <pre className="text-xs font-mono text-slate-300 whitespace-pre-wrap leading-relaxed select-all">

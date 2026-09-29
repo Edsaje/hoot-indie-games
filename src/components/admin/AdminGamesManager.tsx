@@ -934,7 +934,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher par titre, studio, genre..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#0c1220] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#0c1220] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition"
           />
           {searchQuery && (
             <button
@@ -979,7 +979,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       {/* Grille / Liste des Jeux */}
       {paginatedGames.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-[#0c1220] border border-white/5 space-y-3">
-          <Gamepad2 className="w-10 h-10 text-slate-600 mx-auto" />
+          <Gamepad2 className="w-10 h-10 text-slate-500 mx-auto" />
           <p className="text-sm text-slate-400 font-medium">Aucun jeu ne correspond à vos critères de recherche.</p>
           {(searchQuery || statusFilter !== 'all') && (
             <button
@@ -1103,7 +1103,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       </span>
                     ))}
                     {Array.isArray(game.genre) && game.genre.length > 3 && (
-                      <span className="px-1.5 py-0.5 rounded-md bg-white/5 text-[10px] text-slate-500">
+                      <span className="px-1.5 py-0.5 rounded-md bg-white/5 text-[10px] text-slate-400">
                         +{game.genre.length - 3}
                       </span>
                     )}
@@ -1139,7 +1139,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                           : 'Réservé au catalogue (cliquer pour promouvoir en Pépite)'
                       }
                     >
-                      <Sparkles className={`w-3.5 h-3.5 ${game.isGem ? 'text-amber-400 fill-amber-400/40' : 'text-slate-500'}`} />
+                      <Sparkles className={`w-3.5 h-3.5 ${game.isGem ? 'text-amber-400 fill-amber-400/40' : 'text-slate-400'}`} />
                       <span className="text-[10px] hidden sm:inline">{game.isGem ? 'Pépite' : 'Catalogue'}</span>
                     </button>
 
@@ -1300,7 +1300,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                         }
                       }}
                       placeholder="Collez une URL Steam (store.steampowered.com/app/...) ou un AppID"
-                      className="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-mono"
+                      className="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 font-mono"
                     />
                     <button
                       type="button"
@@ -1341,7 +1341,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formTitle}
                       onChange={(e) => setFormTitle(e.target.value)}
                       placeholder="Ex: Hollow Knight"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
 
@@ -1353,7 +1353,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formId}
                       onChange={(e) => setFormId(e.target.value)}
                       placeholder="Ex: hollow-knight (auto si vide)"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-mono focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
 
@@ -1365,7 +1365,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formDeveloper}
                       onChange={(e) => setFormDeveloper(e.target.value)}
                       placeholder="Ex: Team Cherry"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
 
@@ -1378,7 +1378,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       max="2035"
                       value={formReleaseYear}
                       onChange={(e) => setFormReleaseYear(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
                 </div>
@@ -1391,7 +1391,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formGenres}
                     onChange={(e) => setFormGenres(e.target.value)}
                     placeholder="Ex: Metroidvania, Action, Plateforme 2D"
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                   />
                 </div>
 
@@ -1404,7 +1404,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formArtStyleFr}
                       onChange={(e) => setFormArtStyleFr(e.target.value)}
                       placeholder="Ex: 2D Dessiné main"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                     <div className="flex flex-wrap gap-1 pt-1">
                       {[
@@ -1442,7 +1442,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formCameraFr}
                       onChange={(e) => setFormCameraFr(e.target.value)}
                       placeholder="Ex: Vue de côté 2D"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                     <div className="flex flex-wrap gap-1 pt-1">
                       {[
@@ -1481,7 +1481,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formSteamUrl}
                       onChange={(e) => setFormSteamUrl(e.target.value)}
                       placeholder="https://store.steampowered.com/app/..."
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                     />
                   </div>
 
@@ -1493,7 +1493,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formItchUrl}
                       onChange={(e) => setFormItchUrl(e.target.value)}
                       placeholder="https://creator.itch.io/game"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                     />
                   </div>
                 </div>
@@ -1659,7 +1659,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formTaglineFr}
                       onChange={(e) => setFormTaglineFr(e.target.value)}
                       placeholder="Une brève citation ou pitch de jeu..."
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1669,7 +1669,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formTaglineEn}
                       onChange={(e) => setFormTaglineEn(e.target.value)}
                       placeholder="Short pitch or quote in English..."
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
                 </div>
@@ -1682,7 +1682,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formHeaderImage}
                     onChange={(e) => setFormHeaderImage(e.target.value)}
                     placeholder="https://cdn.akamai.steamstatic.com/..."
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                   />
                 </div>
 
@@ -1694,7 +1694,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formScreenshots}
                     onChange={(e) => setFormScreenshots(e.target.value)}
                     placeholder="https://...\nhttps://..."
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                   />
                 </div>
 
@@ -1706,7 +1706,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formComposer}
                     onChange={(e) => setFormComposer(e.target.value)}
                     placeholder="Ex: Christopher Larkin"
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                   />
                 </div>
 

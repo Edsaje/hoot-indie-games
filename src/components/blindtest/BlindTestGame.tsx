@@ -657,7 +657,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
             {/* Compteur de Temps */}
             <div className="text-xs font-mono text-slate-300">
               <span className="font-bold text-pink-400">{playbackSeconds.toFixed(1)}s</span>
-              <span className="text-slate-500"> / {maxAllowedDuration.toFixed(1)}s</span>
+              <span className="text-slate-400"> / {maxAllowedDuration.toFixed(1)}s</span>
             </div>
           </div>
 
@@ -690,8 +690,8 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
             </div>
 
             {/* Paliers temporels sous la barre avec alignement exact sur chaque marqueur */}
-            <div className="relative w-full h-4 text-[10px] font-mono text-slate-500 select-none">
-              <span className="absolute left-0 text-slate-500">0s</span>
+            <div className="relative w-full h-4 text-[10px] font-mono text-slate-400 select-none">
+              <span className="absolute left-0 text-slate-400">0s</span>
               {AUDIO_UNLOCK_DURATIONS.map((dur, i) => {
                 const leftPct = (dur / TOTAL_MAX_DURATION) * 100;
                 const isCurrent = dur === maxAllowedDuration;
@@ -706,7 +706,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                         ? 'text-pink-400 font-bold'
                         : isUnlocked
                         ? 'text-purple-300 font-semibold'
-                        : 'text-slate-600'
+                        : 'text-slate-500'
                     } ${isLast ? 'right-0' : '-translate-x-1/2'}`}
                     style={isLast ? undefined : { left: `${leftPct}%` }}
                   >
@@ -735,7 +735,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                     ? 'bg-rose-500/20 text-rose-400 border-rose-500/50'
                     : isCurrent
                     ? 'bg-purple-500/20 text-purple-300 border-purple-400 ring-2 ring-purple-500/30'
-                    : 'bg-[#131b2e]/60 text-slate-600 border-[#1e293b]'
+                    : 'bg-[#131b2e]/60 text-slate-500 border-[#1e293b]'
                 }`}
               >
                 {isCorrectGuess ? (
@@ -768,7 +768,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                 className={`p-3 rounded-xl border transition-all ${
                   isUnlocked
                     ? 'bg-[#0f172a] border-purple-500/30 text-white shadow-sm'
-                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-500'
+                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-400'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -776,12 +776,12 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                     {isUnlocked ? (
                       <Unlock className="w-3 h-3 text-purple-400" />
                     ) : (
-                      <Lock className="w-3 h-3 text-slate-600" />
+                      <Lock className="w-3 h-3 text-slate-500" />
                     )}
                     {getClueLabel(clue.labelFr, i18n.language)}
                   </span>
                   {!isUnlocked && (
-                    <span className="text-[9px] font-mono text-slate-500">
+                    <span className="text-[9px] font-mono text-slate-400">
                       {t('blindtest.guessCount', { count: idx + 1 })}
                     </span>
                   )}
@@ -791,7 +791,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                   {isUnlocked ? (
                     <span className="text-slate-200">{getClueValue(clue, i18n.language)}</span>
                   ) : (
-                    <span className="italic text-slate-600">
+                    <span className="italic text-slate-500">
                       {t('blindtest.clueLocked')}
                     </span>
                   )}
@@ -890,7 +890,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                           {game.developer} • {game.releaseYear}
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-slate-500 shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
                     </button>
                   ))}
                 </motion.div>

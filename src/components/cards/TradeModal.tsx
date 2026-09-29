@@ -309,8 +309,8 @@ export const TradeModal: React.FC = () => {
   if (!isTradeModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto animate-in fade-in">
-      <div className="bg-[#03150f] border-2 border-amber-500/50 rounded-2xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl relative overflow-hidden">
+    <div className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-0 sm:p-4 overflow-y-auto animate-in fade-in">
+      <div className="bg-[#03150f] sm:border-2 border-0 border-amber-500/50 sm:rounded-2xl rounded-none w-full h-full sm:h-auto max-w-4xl max-h-[100dvh] sm:max-h-[92vh] flex flex-col shadow-2xl relative overflow-hidden">
         {/* En-tête */}
         <div className="px-4 py-3 bg-[#06241b] border-b border-[#059669]/40 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
@@ -486,7 +486,7 @@ export const TradeModal: React.FC = () => {
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="text-xs font-bold truncate">{f.username}</div>
-                            <div className="text-[10px] text-slate-500 font-mono truncate">{f.friendCode}</div>
+                            <div className="text-[10px] text-slate-400 font-mono truncate">{f.friendCode}</div>
                           </div>
                           {isSelected && <Check className="w-4 h-4 text-amber-400 shrink-0" />}
                         </button>
@@ -526,7 +526,7 @@ export const TradeModal: React.FC = () => {
                       value={offeredSearch}
                       onChange={(e) => setOfferedSearch(e.target.value)}
                       placeholder="Filtrer mes cartes..."
-                      className="w-full pl-8 pr-3 py-1 rounded-lg bg-black/60 border border-emerald-500/30 text-xs text-white placeholder:text-slate-500 focus:outline-none"
+                      className="w-full pl-8 pr-3 py-1 rounded-lg bg-black/60 border border-emerald-500/30 text-xs text-white placeholder:text-slate-400 focus:outline-none"
                     />
                   </div>
 
@@ -581,7 +581,7 @@ export const TradeModal: React.FC = () => {
                     /* Liste de sélection */
                     <div className="max-h-48 overflow-y-auto space-y-1.5 pr-1">
                       {availableOfferedCards.length === 0 ? (
-                        <p className="text-[11px] text-slate-500 italic p-3 text-center">
+                        <p className="text-[11px] text-slate-400 italic p-3 text-center">
                           Aucune carte correspondante disponible.
                         </p>
                       ) : (
@@ -678,7 +678,7 @@ export const TradeModal: React.FC = () => {
                             value={requestedSearch}
                             onChange={(e) => setRequestedSearch(e.target.value)}
                             placeholder="Rechercher une carte..."
-                            className="w-full pl-8 pr-2 py-1 rounded-lg bg-black/60 border border-emerald-500/30 text-xs text-white placeholder:text-slate-500 focus:outline-none"
+                            className="w-full pl-8 pr-2 py-1 rounded-lg bg-black/60 border border-emerald-500/30 text-xs text-white placeholder:text-slate-400 focus:outline-none"
                           />
                         </div>
                         <select
@@ -810,7 +810,7 @@ export const TradeModal: React.FC = () => {
                   onChange={(e) => setTradeNote(e.target.value)}
                   placeholder="Ex: Salut ! Je cherche à compléter mon deck roguelike 🦉"
                   maxLength={160}
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-emerald-500/40 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
+                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-emerald-500/40 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                 />
 
                 <div className="flex items-center justify-end gap-2 pt-1">
@@ -840,7 +840,7 @@ export const TradeModal: React.FC = () => {
                   <p className="text-xs font-bold text-slate-200">
                     Aucune proposition d'échange reçue pour l'instant
                   </p>
-                  <p className="text-[11px] text-slate-500 max-w-sm">
+                  <p className="text-[11px] text-slate-400 max-w-sm">
                     Lorsque vos compagnons vous proposent des cartes, elles apparaîtront directement ici pour validation.
                   </p>
                 </div>
@@ -862,9 +862,9 @@ export const TradeModal: React.FC = () => {
                       <div className="flex items-center justify-between pb-2 border-b border-emerald-500/20 text-xs">
                         <div className="flex items-center gap-2 font-bold text-white">
                           <span>🦉 Proposition de {trade.fromUsername}</span>
-                          <span className="text-[10px] text-slate-500 font-mono">({trade.fromFriendCode})</span>
+                          <span className="text-[10px] text-slate-400 font-mono">({trade.fromFriendCode})</span>
                         </div>
-                        <span className="text-[10px] text-slate-500 font-mono">
+                        <span className="text-[10px] text-slate-400 font-mono">
                           {new Date(trade.createdAt * 1000).toLocaleDateString()}
                         </span>
                       </div>
@@ -969,7 +969,7 @@ export const TradeModal: React.FC = () => {
                   <p className="text-xs font-bold text-slate-200 mb-1">
                     Aucune offre d'échange en cours
                   </p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-slate-400">
                     Proposez un échange à l'un de vos compagnons depuis le premier onglet !
                   </p>
                 </div>
@@ -1011,7 +1011,7 @@ export const TradeModal: React.FC = () => {
           {activeTab === 'history' && (
             <div className="space-y-2">
               {tradeHistory.length === 0 ? (
-                <div className="py-12 text-center text-slate-500 text-xs">
+                <div className="py-12 text-center text-slate-400 text-xs">
                   Aucun historique d'échange archivé pour le moment.
                 </div>
               ) : (
@@ -1029,7 +1029,7 @@ export const TradeModal: React.FC = () => {
                         <div className="font-bold text-white truncate">
                           {trade.offeredCardTitle} ⇄ {trade.requestedCardTitle}
                         </div>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="text-[10px] text-slate-400">
                           Avec {trade.fromFriendCode === myFriendCode ? trade.toUsername : trade.fromUsername} • {new Date((trade.updatedAt || trade.createdAt) * 1000).toLocaleDateString()}
                         </div>
                       </div>

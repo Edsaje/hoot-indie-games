@@ -22,7 +22,7 @@ export const GamesTab: React.FC<GamesTabProps> = ({
                         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                           Sessions & Performances par Mode de Jeu (12 Disciplines)
                         </h3>
-                        <p className="text-xs text-slate-500 mt-0.5">
+                        <p className="text-xs text-slate-400 mt-0.5">
                           Télémétrie des 8 énigmes quotidiennes + modes compétitifs et arcade
                         </p>
                       </div>

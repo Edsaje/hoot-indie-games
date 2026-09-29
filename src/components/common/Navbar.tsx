@@ -197,7 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 setIsMobileMenuOpen((prev) => !prev);
               }}
-              className="xl:hidden p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-400 hover:text-white hover:border-amber-400 transition flex items-center justify-center shrink-0 min-h-[38px] min-w-[38px] cursor-pointer touch-manipulation"
+              className="xl:hidden p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-400 hover:text-white hover:border-amber-400 transition flex items-center justify-center shrink-0 touch-target-comfortable  cursor-pointer touch-manipulation"
               title={isMobileMenuOpen ? 'Fermer le menu' : 'Menu des onglets'}
               aria-label="Menu principal"
               aria-expanded={isMobileMenuOpen}
@@ -374,7 +374,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 onOpenCalendar();
               }}
-              className={`hidden min-[1800px]:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-mono transition cursor-pointer min-h-[36px] ${
+              className={`hidden min-[1800px]:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-mono transition cursor-pointer touch-target-comfortable ${
                 isYesterday
                   ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25'
                   : 'bg-[#06241b] border-[#78350f] text-slate-300 hover:text-white hover:border-amber-500/40'
@@ -401,14 +401,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Bouton Son direct (visible sur sm+, accessible dans le menu joueur sur mobile) */}
             <button
               onClick={toggleSound}
-              className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 hover:text-white hover:bg-slate-800 transition shrink-0 cursor-pointer min-h-[36px] items-center justify-center touch-manipulation"
+              className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 hover:text-white hover:bg-slate-800 transition shrink-0 cursor-pointer touch-target-comfortable items-center justify-center touch-manipulation"
               title={soundEnabled ? t('nav.soundOn') : t('nav.soundOff')}
               aria-label={soundEnabled ? t('nav.soundOn') : t('nav.soundOff')}
             >
               {soundEnabled ? (
                 <Volume2 className="w-4 h-4 text-emerald-400" />
               ) : (
-                <VolumeX className="w-4 h-4 text-slate-500" />
+                <VolumeX className="w-4 h-4 text-slate-400" />
               )}
             </button>
 
@@ -420,7 +420,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   setIsPlayerMenuOpen(!isPlayerMenuOpen);
                 }}
-                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer min-h-[36px] touch-manipulation ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer touch-target-comfortable touch-manipulation ${
                   isPlayerMenuOpen
                     ? 'border-amber-400 text-amber-300 shadow-md shadow-amber-500/20'
                     : 'border-[#78350f] text-slate-200 hover:border-amber-500/50 hover:text-amber-300'
@@ -464,7 +464,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 group-hover:border-emerald-400'
                         : 'bg-slate-800/40 border-slate-700 text-slate-400'
                     }`}>
-                      {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
+                      {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-slate-100 font-bold group-hover:text-amber-300 flex items-center justify-between">
@@ -699,7 +699,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   setIsLangMenuOpen(!isLangMenuOpen);
                 }}
-                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer min-h-[36px] sm:min-h-[40px] touch-manipulation ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer touch-target-comfortable sm:touch-target-comfortable touch-manipulation ${
                   isLangMenuOpen
                     ? 'border-amber-400 text-amber-300 shadow-md shadow-amber-500/20'
                     : 'border-[#78350f] text-slate-200 hover:border-amber-500/50 hover:text-amber-400'
@@ -727,7 +727,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         key={langOption.id}
                         type="button"
                         onClick={() => selectLanguage(langOption.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition cursor-pointer min-h-[38px] text-left ${
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition cursor-pointer touch-target-comfortable text-left ${
                           isSelected
                             ? 'bg-amber-500/20 text-amber-300 font-bold border-l-2 border-amber-400'
                             : 'text-slate-300 hover:bg-[#03150f] hover:text-emerald-300'
@@ -757,7 +757,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     window.open('/api/track.php', '_blank');
                   }
                 }}
-                className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition items-center justify-center shrink-0 min-h-[40px] shadow-sm shadow-amber-500/10 cursor-pointer group touch-manipulation"
+                className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition items-center justify-center shrink-0 touch-target-comfortable shadow-sm shadow-amber-500/10 cursor-pointer group touch-manipulation"
                 title="Tableau de Bord Administrateur (👑 Accès Souverain)"
                 aria-label="Tableau de Bord Administrateur"
               >
@@ -772,7 +772,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   onOpenFriends();
                 }}
-                className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-emerald-300 hover:text-white hover:border-emerald-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 min-h-[40px] cursor-pointer relative group touch-manipulation"
+                className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-emerald-300 hover:text-white hover:border-emerald-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 touch-target-comfortable cursor-pointer relative group touch-manipulation"
                 title={
                   pendingRequestsCount > 0
                     ? `Cercle des Compagnons (${pendingRequestsCount} demande${pendingRequestsCount > 1 ? 's' : ''} en attente)`
@@ -805,7 +805,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 openChat();
               }}
-              className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-300 hover:text-white hover:border-amber-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 min-h-[40px] cursor-pointer relative group touch-manipulation"
+              className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-300 hover:text-white hover:border-amber-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 touch-target-comfortable cursor-pointer relative group touch-manipulation"
               title={
                 unreadCount > 0
                   ? `${t('chat.discussion')} (${unreadCount} nouveau${unreadCount > 1 ? 'x' : ''})`
@@ -830,7 +830,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   onOpenAuth();
                 }}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer shrink-0 min-h-[40px] touch-manipulation"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer shrink-0 touch-target-comfortable touch-manipulation"
                 title={t('nav.authTip')}
                 aria-label={t('nav.signIn')}
               >
@@ -848,7 +848,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   onOpenProfile();
                 }}
-                className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#06241b] border border-[#78350f] hover:border-amber-500/50 hover:bg-[#093a2b] transition group relative cursor-pointer shrink-0 min-h-[40px] touch-manipulation"
+                className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#06241b] border border-[#78350f] hover:border-amber-500/50 hover:bg-[#093a2b] transition group relative cursor-pointer shrink-0 touch-target-comfortable touch-manipulation"
                 title={isSteamConnected ? `Profil (${steamAccount?.personaName} sur Steam)` : t('nav.profile')}
                 aria-label={t('nav.profile')}
               >

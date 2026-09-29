@@ -210,7 +210,7 @@ export const MicroIndiesTab: React.FC<MicroIndiesTabProps> = ({
                                   )}
 
                                   {dateStr && (
-                                    <div className="text-[10px] text-slate-500 font-mono">
+                                    <div className="text-[10px] text-slate-400 font-mono">
                                       Soumis le {new Date(dateStr).toLocaleDateString()}
                                     </div>
                                   )}
@@ -286,7 +286,7 @@ export const MicroIndiesTab: React.FC<MicroIndiesTabProps> = ({
                                       <button
                                         type="button"
                                         onClick={() => setConfirmDeleteMicroIndie(m.id)}
-                                        className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
+                                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
                                         title="Supprimer ce jeu micro-indé"
                                       >
                                         <Trash2 className="w-4 h-4" />

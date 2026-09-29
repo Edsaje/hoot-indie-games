@@ -661,7 +661,7 @@ export const ToolboxHub: React.FC = () => {
                   value={backlogSearch}
                   onChange={(e) => setBacklogSearch(e.target.value)}
                   placeholder="Rechercher parmi les 161 jeux..."
-                  className="w-full pl-9 pr-3 py-2 bg-[#020b08] border border-[#78350f]/50 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:border-amber-400"
+                  className="w-full pl-9 pr-3 py-2 bg-[#020b08] border border-[#78350f]/50 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                 />
               </div>
 
@@ -1005,7 +1005,7 @@ export const ToolboxHub: React.FC = () => {
                   value={gemSearch}
                   onChange={(e) => setGemSearch(e.target.value)}
                   placeholder={t('toolbox.gems.search')}
-                  className="w-full pl-9 pr-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:border-amber-400"
+                  className="w-full pl-9 pr-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                 />
               </div>
 
@@ -1013,7 +1013,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={selectedGenre}
                 onChange={(e) => setSelectedGenre(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">{t('toolbox.gems.filterGenre')}</option>
                 {allGenresList.map((genre) => (
@@ -1027,7 +1027,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={cameraFilter}
                 onChange={(e) => setCameraFilter(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">Toutes les caméras</option>
                 {allCamerasList.map((cam) => (
@@ -1041,7 +1041,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={artFilter}
                 onChange={(e) => setArtFilter(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">Tous les styles d'art</option>
                 {allArtStylesList.map((art) => (
@@ -1055,7 +1055,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={priceFilter}
                 onChange={(e) => setPriceFilter(e.target.value as any)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">Tous les prix</option>
                 <option value="free">Gratuits</option>
@@ -1068,7 +1068,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value as SortOption)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-amber-400 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="rating-desc">Évaluations Steam</option>
                 <option value="year-desc">Plus récents</option>

@@ -119,7 +119,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-950/80 backdrop-blur-md overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md overflow-hidden">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -135,7 +135,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-md bg-[#06241b] border-2 border-[#78350f] rounded-2xl sm:rounded-3xl shadow-2xl z-10 max-h-[92dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden"
+            className="relative w-full h-full sm:h-auto max-w-md bg-[#06241b] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl shadow-2xl z-10 max-h-[100dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden"
           >
             <div className="hidden sm:block pointer-events-none">
               <SylvestreIvyFrame density="medium" />
@@ -225,7 +225,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {/* Divider */}
               <div className="relative flex items-center justify-center">
                 <div className="border-t border-[#1e293b] w-full" />
-                <span className="bg-[#0f172a] px-3 text-[11px] uppercase tracking-wider text-slate-500 font-bold shrink-0">
+                <span className="bg-[#0f172a] px-3 text-[11px] uppercase tracking-wider text-slate-400 font-bold shrink-0">
                   ou avec votre e-mail
                 </span>
                 <div className="border-t border-[#1e293b] w-full" />
@@ -289,7 +289,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     Adresse E-mail
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="email"
                       value={email}
@@ -306,7 +306,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     Mot de passe
                   </label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
@@ -318,7 +318,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition"
                       tabIndex={-1}
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

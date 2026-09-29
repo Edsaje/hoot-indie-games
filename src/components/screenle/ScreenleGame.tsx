@@ -362,7 +362,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
                   ? 'bg-[#f59e0b] text-slate-950 ring-2 ring-amber-400 ring-offset-2 ring-offset-[#0b0f19] scale-105'
                   : isUnlocked
                   ? 'bg-[#131a29] border border-[#1e293b] text-slate-300 hover:border-amber-500/40'
-                  : 'bg-[#0e1422]/60 text-slate-600 border border-slate-900 cursor-not-allowed'
+                  : 'bg-[#0e1422]/60 text-slate-500 border border-slate-900 cursor-not-allowed'
               }`}
               title={`Étape ${i + 1} / 6`}
             >
@@ -669,12 +669,12 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
                     isMatch
                       ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
                       : isSkipped
-                      ? 'bg-slate-900/40 border-slate-800 text-slate-500 italic'
+                      ? 'bg-slate-900/40 border-slate-800 text-slate-400 italic'
                       : 'bg-[#131a29] border-[#1e293b] text-slate-300'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-5 font-mono text-xs text-slate-500">{idx + 1}.</span>
+                    <span className="w-5 font-mono text-xs text-slate-400">{idx + 1}.</span>
                     <span>{guess.title}</span>
                   </div>
                   {isMatch ? (

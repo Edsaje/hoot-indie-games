@@ -381,12 +381,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-sm overflow-hidden">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative overflow-hidden sm:overflow-visible w-full max-w-2xl bg-[#06241b] border-2 border-[#78350f] rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col"
+          className="relative overflow-hidden sm:overflow-visible w-full h-full sm:h-auto max-w-2xl bg-[#06241b] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl p-3.5 sm:p-6 shadow-2xl max-h-[100dvh] sm:max-h-[90dvh] flex flex-col"
         >
           <div className="hidden sm:block pointer-events-none">
             <SylvestreIvyFrame density="medium" />
@@ -1191,7 +1191,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                               value={masterKeyInput}
                               onChange={(e) => setMasterKeyInput(e.target.value)}
                               placeholder="Collez votre clé Steam Web API (32 caractères)..."
-                              className="flex-1 px-3 py-1.5 bg-[#090e18] border border-amber-500/40 rounded-lg text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                              className="flex-1 px-3 py-1.5 bg-[#090e18] border border-amber-500/40 rounded-lg text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                             />
                             <button
                               type="button"
@@ -1293,13 +1293,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                                 {owned ? (
                                   <CheckSquare className="w-4 h-4 text-cyan-400" />
                                 ) : (
-                                  <Square className="w-4 h-4 text-slate-600" />
+                                  <Square className="w-4 h-4 text-slate-500" />
                                 )}
                               </button>
                               <div className="min-w-0">
                                 <div className="text-xs font-bold truncate flex items-center gap-1.5">
                                   <span>{game.title}</span>
-                                  <span className="text-[10px] text-slate-500 font-mono">
+                                  <span className="text-[10px] text-slate-400 font-mono">
                                     ({game.releaseYear})
                                   </span>
                                 </div>
@@ -1453,7 +1453,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <RefreshCw className={`w-4 h-4 ${isAuthLoading ? 'animate-spin' : ''}`} />
                       <span>{isAuthLoading ? 'Synchronisation en cours...' : '🔄 Forcer la Synchronisation & Fusion Cloud'}</span>
                     </button>
-                    <p className="text-[11px] text-slate-500 text-center">
+                    <p className="text-[11px] text-slate-400 text-center">
                       La fusion intelligente conserve le maximum de vos plumes, succès débloqués, cartes, calendrier et records sans jamais écraser vos progrès.
                     </p>
                   </div>
@@ -1547,7 +1547,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         <Key className="w-4 h-4 text-slate-400" />
                         <div>
                           <span className="text-xs font-bold text-slate-300">Options avancées — Clé de secours manuelle</span>
-                          <p className="text-[10px] text-slate-500">Pour transférer manuellement votre sauvegarde sans créer de compte</p>
+                          <p className="text-[10px] text-slate-400">Pour transférer manuellement votre sauvegarde sans créer de compte</p>
                         </div>
                       </div>
                       <span className="text-xs font-bold text-amber-400/80 shrink-0">

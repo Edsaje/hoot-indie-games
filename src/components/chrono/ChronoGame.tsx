@@ -363,7 +363,7 @@ export const ChronoGame: React.FC<ChronoGameProps> = ({ currentDate, onSelectDat
                   className={`w-4 h-4 transition-transform duration-300 ${
                     hasLife
                       ? 'text-rose-500 fill-rose-500 scale-110 drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]'
-                      : 'text-slate-600 fill-slate-800 scale-90 opacity-40'
+                      : 'text-slate-500 fill-slate-800 scale-90 opacity-40'
                   }`}
                 />
               );

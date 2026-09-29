@@ -251,8 +251,8 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-200">
-      <div className="relative bg-[#072a20] border-2 border-[#78350f] rounded-2xl sm:rounded-3xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-200">
+      <div className="relative bg-[#072a20] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl w-full h-full sm:h-auto max-w-2xl shadow-2xl flex flex-col max-h-[100dvh] sm:max-h-[90vh] overflow-hidden">
         <div className="hidden sm:block pointer-events-none">
           <SylvestreIvyFrame density="delicate" />
         </div>
@@ -328,7 +328,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                 {pendingRequestsCount}
               </span>
             ) : (
-              <span className="text-slate-500 text-xs">({pendingRequests.length})</span>
+              <span className="text-slate-400 text-xs">({pendingRequests.length})</span>
             )}
           </button>
         </div>
@@ -460,7 +460,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                       onChange={(e) => setAddInput(e.target.value)}
                       placeholder="Code joueur (ex: HOOT-7K9A) ou pseudo..."
                       maxLength={30}
-                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#071810] border border-[#1b4332] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500 uppercase"
+                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#071810] border border-[#1b4332] text-white text-xs placeholder:text-slate-400 focus:outline-none focus:border-amber-500 uppercase"
                     />
                     <button
                       type="submit"
@@ -600,7 +600,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                           className={`p-2 rounded-xl border transition cursor-pointer active:scale-90 ${
                             isFav
                               ? 'bg-amber-500/20 border-amber-500/50 text-amber-400 shadow-sm shadow-amber-500/20'
-                              : 'bg-[#06140e] border-[#163627] text-slate-500 hover:text-amber-300 hover:border-amber-500/30'
+                              : 'bg-[#06140e] border-[#163627] text-slate-400 hover:text-amber-300 hover:border-amber-500/30'
                           }`}
                           title={
                             isFav
@@ -685,7 +685,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                                 removeFriend(friend.friendCode);
                               }
                             }}
-                            className="p-1.5 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
+                            className="p-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
                             title="Retirer ce compagnon"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -714,7 +714,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                           const status = discScore ? discScore.status : 'unplayed';
                           const guesses = discScore ? discScore.guessCount : null;
 
-                          let bgClass = 'bg-[#06140e] border-[#163627] text-slate-500';
+                          let bgClass = 'bg-[#06140e] border-[#163627] text-slate-400';
                           let statusLabel = isToday ? 'Non tenté' : 'Pas encore joué aujourd’hui';
 
                           if (status === 'won') {
@@ -849,7 +849,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                               {req.createdAt && (
                                 <>
                                   <span>·</span>
-                                  <span className="text-[10px] text-slate-500">
+                                  <span className="text-[10px] text-slate-400">
                                     reçue le {formatRequestDate(req.createdAt)}
                                   </span>
                                 </>
@@ -905,7 +905,7 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
                         <div className="text-slate-200 font-bold truncate flex items-center gap-1.5">
                           <span>Invitation pour</span>
                           <span className="text-amber-300 font-semibold">{req.toUsername}</span>
-                          <span className="font-mono text-slate-500 text-[10px]">({req.toCode})</span>
+                          <span className="font-mono text-slate-400 text-[10px]">({req.toCode})</span>
                         </div>
                         <p className="text-[10px] text-slate-400 mt-0.5">
                           En attente de son acceptation · envoyée le {formatRequestDate(req.createdAt)}

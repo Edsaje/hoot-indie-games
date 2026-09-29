@@ -1041,7 +1041,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   if (!isOpen || !isAuthenticated || !isAdmin) return null;
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-5 overflow-y-auto">
         {/* Backdrop sombre avec blur */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -1057,7 +1057,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 15 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="relative overflow-visible w-full max-w-5xl bg-[#052118] border-2 border-[#78350f] rounded-3xl shadow-2xl z-10 flex flex-col max-h-[92vh]"
+          className="relative overflow-visible w-full h-full sm:h-auto max-w-5xl bg-[#052118] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl shadow-2xl z-10 flex flex-col max-h-[100dvh] sm:max-h-[92vh]"
         >
           <SylvestreIvyFrame density="medium" />
           {/* Ligne d'accent en dégradé supérieur */}
@@ -1486,7 +1486,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         </h3>
 
                         {Object.keys(referrers).length === 0 ? (
-                          <div className="text-xs text-slate-500 py-4 text-center">Aucun référent enregistré pour le moment.</div>
+                          <div className="text-xs text-slate-400 py-4 text-center">Aucun référent enregistré pour le moment.</div>
                         ) : (
                           <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                             {Object.entries(referrers)
@@ -1543,7 +1543,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             value={eventFilter}
                             onChange={(e) => setEventFilter(e.target.value)}
                             placeholder="Filtrer un événement ou mot-clé..."
-                            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
+                            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400"
                           />
                         </div>
 
@@ -1571,7 +1571,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                       </div>
 
                       {filteredRecentEvents.length === 0 ? (
-                        <div className="text-xs text-slate-500 py-4 text-center">
+                        <div className="text-xs text-slate-400 py-4 text-center">
                           Aucun événement ne correspond aux critères de recherche.
                         </div>
                       ) : (
@@ -1610,7 +1610,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                     </span>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-2 text-[10px] text-slate-500 shrink-0 font-mono">
+                                <div className="flex items-center gap-2 text-[10px] text-slate-400 shrink-0 font-mono">
                                   {item.device && <span className="uppercase">{item.device}</span>}
                                   <span>{new Date(item.timestamp || (item as any).time || 0).toLocaleTimeString()}</span>
                                 </div>
@@ -1665,7 +1665,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                           Sessions & Performances par Mode de Jeu (12 Disciplines)
                         </h3>
-                        <p className="text-xs text-slate-500 mt-0.5">
+                        <p className="text-xs text-slate-400 mt-0.5">
                           Télémétrie des 8 énigmes quotidiennes + modes compétitifs et arcade
                         </p>
                       </div>
@@ -1833,7 +1833,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           value={usernameFilter}
                           onChange={(e) => setUsernameFilter(e.target.value)}
                           placeholder="Rechercher par nom, slug, Steam ID, titre ou note..."
-                          className="w-full pl-9 pr-8 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                          className="w-full pl-9 pr-8 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition"
                         />
                         {usernameFilter && (
                           <button
@@ -1918,7 +1918,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           <tbody className="divide-y divide-white/5">
                             {filteredUsernames.length === 0 ? (
                               <tr>
-                                <td colSpan={6} className="p-8 text-center text-slate-500">
+                                <td colSpan={6} className="p-8 text-center text-slate-400">
                                   Aucun utilisateur ne correspond à vos critères de recherche.
                                 </td>
                               </tr>
@@ -1975,7 +1975,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                               </span>
                                             )}
                                           </div>
-                                          <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5">
+                                          <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
                                             <span>@{u.normalized}</span>
                                             {u.isAdminReserved && !isCreator && (
                                               <span className="text-amber-400/80">• Réservé admin</span>
@@ -1999,7 +1999,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                           <ExternalLink className="w-3 h-3 shrink-0" />
                                         </a>
                                       ) : (
-                                        <span className="text-slate-500 text-[10px]">Local / Sans Steam</span>
+                                        <span className="text-slate-400 text-[10px]">Local / Sans Steam</span>
                                       )}
                                     </td>
 
@@ -2051,7 +2051,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                           <span className="truncate italic">« {u.note} »</span>
                                         </div>
                                       ) : (
-                                        <span className="text-slate-600 text-[10px]">—</span>
+                                        <span className="text-slate-500 text-[10px]">—</span>
                                       )}
                                     </td>
 
@@ -2059,7 +2059,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                     <td className="p-3 hidden md:table-cell text-slate-400 text-[11px]">
                                       <div>{u.claimedAt ? new Date(u.claimedAt).toLocaleDateString() : 'N/A'}</div>
                                       {u.lastSeenAt && (
-                                        <div className="text-[10px] text-slate-500">
+                                        <div className="text-[10px] text-slate-400">
                                           Vu : {new Date(u.lastSeenAt).toLocaleDateString()}
                                         </div>
                                       )}
@@ -2123,8 +2123,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
 
                                         {/* Bouton Supprimer / Libérer */}
                                         {isCreator || isCurrentAdmin ? (
-                                          <span className="p-1.5 text-slate-600 cursor-not-allowed inline-flex items-center justify-center" title="Compte inaliénable">
-                                            <Lock className="w-3.5 h-3.5 text-slate-600" />
+                                          <span className="p-1.5 text-slate-500 cursor-not-allowed inline-flex items-center justify-center" title="Compte inaliénable">
+                                            <Lock className="w-3.5 h-3.5 text-slate-500" />
                                           </span>
                                         ) : confirmDeleteUsername === u.normalized ? (
                                           <div className="flex items-center gap-1">
@@ -2250,7 +2250,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             </div>
 
                             <div className="flex flex-wrap items-center justify-between pt-2.5 border-t border-white/5 gap-2 text-xs">
-                              <span className="text-[10px] text-slate-500 font-mono">
+                              <span className="text-[10px] text-slate-400 font-mono">
                                 Proposé le {new Date(s.submittedAt).toLocaleDateString()}
                               </span>
 
@@ -2310,7 +2310,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                 ) : (
                                   <button
                                     onClick={() => setConfirmDeleteSuggestion(s.id)}
-                                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
                                     title="Rejeter / Supprimer la suggestion"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
@@ -2512,7 +2512,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                   )}
 
                                   {dateStr && (
-                                    <div className="text-[10px] text-slate-500 font-mono">
+                                    <div className="text-[10px] text-slate-400 font-mono">
                                       Soumis le {new Date(dateStr).toLocaleDateString()}
                                     </div>
                                   )}
@@ -2588,7 +2588,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                       <button
                                         type="button"
                                         onClick={() => setConfirmDeleteMicroIndie(m.id)}
-                                        className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
+                                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
                                         title="Supprimer ce jeu micro-indé"
                                       >
                                         <Trash2 className="w-4 h-4" />
@@ -2862,14 +2862,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Nom d'affichage */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Pseudonyme Affiché <span className="text-slate-500 font-normal">(2 à 24 caractères)</span>
+                        Pseudonyme Affiché <span className="text-slate-400 font-normal">(2 à 24 caractères)</span>
                       </label>
                       <input
                         type="text"
                         value={editDisplayName}
                         onChange={(e) => setEditDisplayName(e.target.value)}
                         maxLength={24}
-                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                       />
                       {editDisplayName.trim().toLowerCase() !== editingUser.normalized && (
                         <p className="text-[10px] text-amber-400 mt-1 flex items-center gap-1">
@@ -2944,17 +2944,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Titre Personnalisé */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Titre Personnalisé <span className="text-slate-500 font-normal">(Affiché à côté du pseudo)</span>
+                        Titre Personnalisé <span className="text-slate-400 font-normal">(Affiché à côté du pseudo)</span>
                       </label>
                       <div className="relative">
-                        <Tag className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Tag className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={editCustomTitle}
                           onChange={(e) => setEditCustomTitle(e.target.value)}
                           placeholder="ex: Maître du Pixel, Hibou Alpha..."
                           maxLength={32}
-                          className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400"
+                          className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                         />
                       </div>
                     </div>
@@ -2962,14 +2962,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Note interne privée */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Note Privée Administrateur <span className="text-slate-500 font-normal">(Invisible pour les visiteurs)</span>
+                        Note Privée Administrateur <span className="text-slate-400 font-normal">(Invisible pour les visiteurs)</span>
                       </label>
                       <textarea
                         value={editNote}
                         onChange={(e) => setEditNote(e.target.value)}
                         placeholder="Commentaire ou motif de surveillance..."
                         rows={2}
-                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 resize-none"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 resize-none"
                       />
                     </div>
                   </div>
@@ -3040,7 +3040,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Pseudonyme */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Pseudonyme <span className="text-cyan-400">*</span> <span className="text-slate-500 font-normal">(2 à 24 caractères)</span>
+                        Pseudonyme <span className="text-cyan-400">*</span> <span className="text-slate-400 font-normal">(2 à 24 caractères)</span>
                       </label>
                       <input
                         type="text"
@@ -3055,7 +3055,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Steam ID 64 */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Steam ID 64 <span className="text-slate-500 font-normal">(Optionnel, 17 chiffres)</span>
+                        Steam ID 64 <span className="text-slate-400 font-normal">(Optionnel, 17 chiffres)</span>
                       </label>
                       <input
                         type="text"
@@ -3100,10 +3100,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Titre Personnalisé */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Titre Personnalisé <span className="text-slate-500 font-normal">(Optionnel)</span>
+                        Titre Personnalisé <span className="text-slate-400 font-normal">(Optionnel)</span>
                       </label>
                       <div className="relative">
-                        <Tag className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Tag className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={createCustomTitle}
@@ -3118,7 +3118,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Note */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Note Privée Administrateur <span className="text-slate-500 font-normal">(Optionnel)</span>
+                        Note Privée Administrateur <span className="text-slate-400 font-normal">(Optionnel)</span>
                       </label>
                       <textarea
                         value={createNote}
@@ -3410,7 +3410,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         step="10"
                         value={rewardFeathers}
                         onChange={(e) => setRewardFeathers(Math.max(0, parseInt(e.target.value, 10) || 0))}
-                        className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-amber-400"
+                        className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white font-mono text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                         placeholder="Montant libre de plumes..."
                       />
                     </div>
@@ -3444,14 +3444,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           value={rewardCardSearch}
                           onChange={(e) => setRewardCardSearch(e.target.value)}
                           placeholder="Rechercher par nom de jeu, dev, rareté..."
-                          className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                          className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                         />
                       </div>
 
                       {/* Liste compacte des cartes */}
                       <div className="max-h-36 overflow-y-auto space-y-1 pr-1 border border-white/5 rounded-xl p-1 bg-black/20">
                         {availableCards.length === 0 ? (
-                          <div className="text-center py-4 text-slate-500 text-[11px]">
+                          <div className="text-center py-4 text-slate-400 text-[11px]">
                             Aucune carte trouvée pour cette recherche
                           </div>
                         ) : (
@@ -3521,7 +3521,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Section 3 : Motif / Message */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Motif ou Message du Don <span className="text-slate-500 font-normal">(Visible par le joueur)</span>
+                        Motif ou Message du Don <span className="text-slate-400 font-normal">(Visible par le joueur)</span>
                       </label>
                       <input
                         type="text"
@@ -3529,7 +3529,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         onChange={(e) => setRewardReason(e.target.value)}
                         placeholder="ex: Récompense souveraine offerte par Hibouxe 👑"
                         maxLength={80}
-                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400 text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                       />
                       {/* Presets rapides de motif */}
                       <div className="flex flex-wrap gap-1 mt-1.5">
@@ -3636,7 +3636,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             }}
                           />
                         ) : (
-                          <div className="w-20 h-20 rounded-xl bg-slate-900 border border-white/15 flex items-center justify-center text-slate-500 shrink-0 text-[10px]">
+                          <div className="w-20 h-20 rounded-xl bg-slate-900 border border-white/15 flex items-center justify-center text-slate-400 shrink-0 text-[10px]">
                             Pas d'image
                           </div>
                         )}
@@ -3646,7 +3646,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             value={editMicroCover}
                             onChange={(e) => setEditMicroCover(e.target.value)}
                             placeholder="https://... URL de l'image (JPG, PNG, GIF)"
-                            className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400"
+                            className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                           />
                           {editMicroSteamUrl && (
                             <button
@@ -3670,7 +3670,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           type="text"
                           value={editMicroTitle}
                           onChange={(e) => setEditMicroTitle(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                         />
                       </div>
                       <div>
@@ -3679,7 +3679,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           type="text"
                           value={editMicroDev}
                           onChange={(e) => setEditMicroDev(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                         />
                       </div>
                     </div>
@@ -3713,7 +3713,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           value={editMicroPlayUrl}
                           onChange={(e) => setEditMicroPlayUrl(e.target.value)}
                           placeholder="https://..."
-                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-amber-400"
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                         />
                       </div>
                     </div>
@@ -3725,7 +3725,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         rows={2}
                         value={editMicroPitch}
                         onChange={(e) => setEditMicroPitch(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 resize-none"
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 resize-none"
                       />
                     </div>
 
@@ -3735,7 +3735,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         type="text"
                         value={editMicroDiscoveredBy}
                         onChange={(e) => setEditMicroDiscoveredBy(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400"
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                       />
                     </div>
 
@@ -3746,7 +3746,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         value={editMicroPrice}
                         onChange={(e) => setEditMicroPrice(e.target.value)}
                         placeholder="Ex: 1,99 €, 4,99 $, Gratuit 🆓..."
-                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-amber-200 text-xs focus:outline-none focus:border-amber-400"
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-amber-200 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                       />
                     </div>
                   </div>

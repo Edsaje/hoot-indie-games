@@ -501,7 +501,7 @@ export const AppContent: React.FC = () => {
               <Calendar className="w-3.5 h-3.5 text-[#f59e0b]" />
               <span className="font-semibold">{t('app.puzzleDate')}</span>
               <span className="text-amber-400 font-mono font-bold">{currentDate}</span>
-              <Archive className="w-3 h-3 text-slate-500 ml-1" />
+              <Archive className="w-3 h-3 text-slate-400 ml-1" />
             </button>
 
             {isYesterdayMode ? (

@@ -308,12 +308,12 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
                     </span>
                   )}
                   {isDaily && (
-                    <span className="text-[11px] text-slate-500 font-mono">
+                    <span className="text-[11px] text-slate-400 font-mono">
                       • {currentDate === todayStr ? t('minigamesHub.today') : currentDate}
                     </span>
                   )}
                   {!isDaily && (
-                    <span className="text-[11px] text-slate-500 font-medium">
+                    <span className="text-[11px] text-slate-400 font-medium">
                       {t('minigamesHub.unlimited')}
                     </span>
                   )}

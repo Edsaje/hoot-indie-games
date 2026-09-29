@@ -274,6 +274,17 @@ textarea,
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Global focus-visible for accessibility */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #f59e0b !important;
+  outline-offset: 2px !important;
+}
+
 /* 2. Prevent iOS Safari auto-zoom on input focus */
 @media (max-width: 640px) {
   input,
@@ -305,8 +316,8 @@ textarea,
 
 /* 6. Touch-friendly comfortable target size */
 .touch-target-comfortable {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 48px;
+  min-width: 48px;
 }
 
 

@@ -508,7 +508,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher une carte, un studio, un genre..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#020e0a] border border-[#78350f]/70 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#020e0a] border border-[#78350f]/70 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition"
           />
         </div>
 
@@ -585,7 +585,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
           Affichage de <strong className="text-white">{filteredCards.length}</strong> carte
           {filteredCards.length > 1 ? 's' : ''}
         </span>
-        <span className="text-[11px] text-slate-500">
+        <span className="text-[11px] text-slate-400">
           Cliquez sur une carte pour l'examiner en 3D ou recycler ses doubles.
         </span>
       </div>
@@ -610,9 +610,9 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
       {/* Empty State */}
       {filteredCards.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center text-slate-400">
-          <Layers className="w-12 h-12 text-slate-600 mb-2" />
+          <Layers className="w-12 h-12 text-slate-500 mb-2" />
           <h3 className="text-base font-bold text-slate-300">Aucune carte trouvée</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm">
+          <p className="text-xs text-slate-400 mt-1 max-w-sm">
             Aucune carte ne correspond aux filtres ou à la recherche sélectionnés.
           </p>
         </div>

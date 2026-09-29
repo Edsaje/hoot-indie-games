@@ -436,7 +436,7 @@ export const MicroIndieHub: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('micro.searchPlaceholder', 'Rechercher un créateur, un jeu...')}
-              className="w-full pl-10 pr-4 py-2 bg-[#06241b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-colors"
+              className="w-full pl-10 pr-4 py-2 bg-[#06241b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition-colors"
             />
           </div>
           <button

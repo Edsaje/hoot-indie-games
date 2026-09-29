@@ -443,7 +443,7 @@ export const IndieQuizGame: React.FC<IndieQuizGameProps> = ({ onOpenLeaderboard 
                     className={`w-4 h-4 transition-all duration-300 ${
                       i < lives
                         ? 'text-rose-500 fill-rose-500 scale-110 drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]'
-                        : 'text-slate-600 fill-slate-800 opacity-40'
+                        : 'text-slate-500 fill-slate-800 opacity-40'
                     }`}
                   />
                 ))}
@@ -460,7 +460,7 @@ export const IndieQuizGame: React.FC<IndieQuizGameProps> = ({ onOpenLeaderboard 
               )}
               <div className="text-xs font-mono font-bold bg-[#0b0f19] px-2.5 py-1 rounded-lg border border-[#1e293b] text-slate-200">
                 <span className="text-amber-400 font-black">{score}</span>
-                {mode === 'standard' && <span className="text-slate-500"> / {sessionQuestions.length}</span>}
+                {mode === 'standard' && <span className="text-slate-400"> / {sessionQuestions.length}</span>}
               </div>
             </div>
           </div>
@@ -487,7 +487,7 @@ export const IndieQuizGame: React.FC<IndieQuizGameProps> = ({ onOpenLeaderboard 
                 } else if (isSelected) {
                   style = 'bg-rose-950/70 border-rose-500 text-rose-200 font-bold';
                 } else {
-                  style = 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-500 opacity-60';
+                  style = 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-400 opacity-60';
                 }
               }
 
@@ -573,7 +573,7 @@ export const IndieQuizGame: React.FC<IndieQuizGameProps> = ({ onOpenLeaderboard 
           )}
 
           {/* Indication des raccourcis clavier */}
-          <div className="text-center mt-3 text-[11px] text-slate-500">
+          <div className="text-center mt-3 text-[11px] text-slate-400">
             {t('quiz.keyboardTip')}
           </div>
         </div>

@@ -570,7 +570,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
                     : 'Mode Puriste : les suggestions couvrent l’ensemble du catalogue des 187 jeux sans assistance'
                 }
               >
-                <Zap className={`w-3.5 h-3.5 ${adaptiveCluesEnabled ? 'text-amber-400 fill-amber-400' : 'text-slate-500'}`} />
+                <Zap className={`w-3.5 h-3.5 ${adaptiveCluesEnabled ? 'text-amber-400 fill-amber-400' : 'text-slate-400'}`} />
                 <span>
                   {adaptiveCluesEnabled
                     ? 'Mode Adaptatif (Indices actifs)'
@@ -602,7 +602,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
             <span>{t('indledle.attempts', { count: guesses.length, max: MAX_GUESSES })}</span>
             {adaptiveCluesEnabled && guesses.length > 0 && candidateGames.length > 0 && (
               <>
-                <span className="text-slate-600">•</span>
+                <span className="text-slate-500">•</span>
                 <span className="text-amber-400 font-bold">
                   {t('indledle.candidatesRemaining', { count: candidateGames.length })}
                 </span>

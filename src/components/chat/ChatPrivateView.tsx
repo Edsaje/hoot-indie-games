@@ -355,7 +355,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
               <p className="text-xs font-bold text-slate-300">
                 Début de votre correspondance privée avec {activePrivateParticipant.username}
               </p>
-              <p className="text-[11px] text-slate-500 max-w-xs leading-relaxed">
+              <p className="text-[11px] text-slate-400 max-w-xs leading-relaxed">
                 Les échanges sont directs, sécurisés et protégés par le bouclier sylvestre.
               </p>
             </div>
@@ -511,7 +511,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder={`Message privé à ${activePrivateParticipant.username}...`}
                   maxLength={400}
-                  className="flex-1 px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 focus:border-amber-400 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                  className="flex-1 px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 focus:border-amber-400 text-xs text-white placeholder:text-slate-400 focus:outline-none transition shadow-inner"
                 />
 
                 <button
@@ -639,7 +639,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
               placeholder="Rechercher une correspondance..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#020d0a] border border-[#78350f]/60 focus:border-amber-400 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#020d0a] border border-[#78350f]/60 focus:border-amber-400 text-xs text-white placeholder:text-slate-400 focus:outline-none transition shadow-inner"
             />
           </div>
 
@@ -750,7 +750,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                       )}
                     </div>
 
-                    <span className="text-[10px] text-slate-500 font-mono shrink-0">
+                    <span className="text-[10px] text-slate-400 font-mono shrink-0">
                       {formatTime(conv.updatedAt)}
                     </span>
                   </div>
@@ -922,7 +922,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                       }}
                       placeholder="Ex: adrien, HOOT-..."
                       maxLength={30}
-                      className="flex-1 px-3 py-2 rounded-xl bg-black/60 border border-emerald-500/40 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
+                      className="flex-1 px-3 py-2 rounded-xl bg-black/60 border border-emerald-500/40 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                     />
                     <button
                       type="submit"

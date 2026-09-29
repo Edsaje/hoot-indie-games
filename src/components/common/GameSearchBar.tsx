@@ -334,7 +334,7 @@ export const GameSearchBar: React.FC<GameSearchBarProps> = ({
                     </div>
                     <ChevronRight
                       className={`w-4 h-4 shrink-0 transition-transform ${
-                        isHighlighted ? 'text-[#f59e0b] translate-x-0.5' : 'text-slate-500'
+                        isHighlighted ? 'text-[#f59e0b] translate-x-0.5' : 'text-slate-400'
                       }`}
                     />
                   </div>

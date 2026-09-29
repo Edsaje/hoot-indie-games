@@ -111,7 +111,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
           defaultValue: `Affichage de ${startIdx} à ${endIdx} sur ${totalItems} ${resolvedItemName}`,
         })}
         {totalPages > 1 && (
-          <span className="hidden md:inline text-slate-500 ml-2">
+          <span className="hidden md:inline text-slate-400 ml-2">
             • {t('pagination.page', { current: currentPage, total: totalPages, defaultValue: `Page ${currentPage} sur ${totalPages}` })}
           </span>
         )}
@@ -185,7 +185,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
                 p === '...' ? (
                   <span
                     key={`ellipsis-${idx}`}
-                    className="w-7 h-8 flex items-center justify-center text-slate-500 font-bold text-xs"
+                    className="w-7 h-8 flex items-center justify-center text-slate-400 font-bold text-xs"
                     aria-hidden="true"
                   >
                     …

@@ -731,7 +731,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-bold text-amber-200">{log.username}</span>
                       <span className="text-[10px] text-slate-400 font-mono">#{log.channel}</span>
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-slate-400">
                         {new Date(log.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       {isPhishing ? (
@@ -769,7 +769,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                   </div>
 
                   <div className="text-[11px] text-slate-300 bg-black/40 p-2 rounded-lg break-words">
-                    <span className="text-[10px] text-slate-500 block mb-0.5 font-bold">
+                    <span className="text-[10px] text-slate-400 block mb-0.5 font-bold">
                       {isPhishing ? 'Message neutralisé :' : 'Message bloqué :'}
                     </span>
                     "{log.originalText}"
@@ -956,7 +956,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         </span>
                       )}
 
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-slate-400">
                         {formatTimestamp(msg.timestamp)}
                       </span>
                     </div>
@@ -1062,8 +1062,8 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                           onClick={() => handleDeleteMessage(msg)}
                           className={`p-1 rounded transition cursor-pointer self-center shrink-0 ${
                             msg.isDeleted
-                              ? 'opacity-60 hover:opacity-100 text-slate-500 hover:text-red-400 hover:bg-red-500/10'
-                              : 'opacity-0 group-hover/bubble:opacity-100 focus:opacity-100 text-slate-500 hover:text-red-400 hover:bg-red-500/10'
+                              ? 'opacity-60 hover:opacity-100 text-slate-400 hover:text-red-400 hover:bg-red-500/10'
+                              : 'opacity-0 group-hover/bubble:opacity-100 focus:opacity-100 text-slate-400 hover:text-red-400 hover:bg-red-500/10'
                           }`}
                           title={
                             msg.isDeleted
@@ -1156,9 +1156,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                     ? t('chat.feedbackPlaceholder')
                     : `${t('chat.placeholder')}`
                 }
-                className="w-full px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 text-slate-100 text-xs focus:outline-none focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/60 placeholder:text-slate-500"
+                className="w-full px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/60 placeholder:text-slate-400"
               />
-              <span className="absolute right-2 bottom-1.5 text-[9px] text-slate-500">
+              <span className="absolute right-2 bottom-1.5 text-[9px] text-slate-400">
                 {inputText.length}/350
               </span>
             </div>
@@ -1168,7 +1168,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
               disabled={!inputText.trim() || isSending || cooldownSeconds > 0}
               className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1 transition-all shadow-md shrink-0 cursor-pointer ${
                 !inputText.trim() || isSending || cooldownSeconds > 0
-                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                  ? 'bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-700'
                   : 'bg-gradient-to-r from-emerald-600 to-amber-600 text-white hover:from-emerald-500 hover:to-amber-500 border border-amber-400/50 shadow-emerald-950/40 active:scale-95'
               }`}
             >

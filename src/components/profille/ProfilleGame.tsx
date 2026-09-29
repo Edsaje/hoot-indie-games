@@ -825,7 +825,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -944,7 +944,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1070,7 +1070,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1199,7 +1199,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1316,7 +1316,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1433,7 +1433,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}

@@ -107,7 +107,7 @@ export const SuggestionsTab: React.FC<SuggestionsTabProps> = ({
                             </div>
 
                             <div className="flex flex-wrap items-center justify-between pt-2.5 border-t border-white/5 gap-2 text-xs">
-                              <span className="text-[10px] text-slate-500 font-mono">
+                              <span className="text-[10px] text-slate-400 font-mono">
                                 Proposé le {new Date(s.submittedAt).toLocaleDateString()}
                               </span>
 
@@ -167,7 +167,7 @@ export const SuggestionsTab: React.FC<SuggestionsTabProps> = ({
                                 ) : (
                                   <button
                                     onClick={() => setConfirmDeleteSuggestion(s.id)}
-                                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
                                     title="Rejeter / Supprimer la suggestion"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
