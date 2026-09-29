@@ -40,6 +40,11 @@ Options -Indexes
   ExpiresByType application/javascript "access plus 1 month"
 </IfModule>
 
+# Favicons et identité visuelle du sanctuaire : cache court de 1h avec revalidation obligatoire
+<FilesMatch "(favicon.*|apple-touch-icon.*|logo.*)\.(ico|png|svg)$">
+  Header set Cache-Control "public, max-age=3600, must-revalidate"
+</FilesMatch>
+
 # En-têtes HTTP de sécurité stricts (HSTS, CSP, Clickjacking, MIME-Sniffing)
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
