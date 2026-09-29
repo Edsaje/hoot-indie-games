@@ -85,11 +85,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Mongoose Rodeo",
     "expectedDate": {
       "fr": "Fin 2026 / 2027",
-      "en": "Late 2026 / 2027",
-      "es": "Finales de 2026 / 2027",
-      "de": "Ende 2026 / 2027",
-      "ja": "2026年後半 / 2027年",
-      "pt-BR": "Final de 2026 / 2027"
+      "en": "Late 2026 / 2027"
     },
     "genres": [
       {
@@ -148,11 +144,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Hello Games",
     "expectedDate": {
       "fr": "2027+ (TBA)",
-      "en": "2027+ (TBA)",
-      "es": "2027+ (TBA)",
-      "de": "2027+ (TBA)",
-      "ja": "2027年以降（時期未定）",
-      "pt-BR": "2027+ (TBA)"
+      "en": "2027+ (TBA)"
     },
     "genres": [
       {
@@ -210,11 +202,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "THQ Nordic",
     "expectedDate": {
       "fr": "Prochainement",
-      "en": "Prochainement",
-      "es": "Próximamente",
-      "de": "Demnächst",
-      "ja": "近日公開",
-      "pt-BR": "Em breve"
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -275,11 +263,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Chucklefish",
     "expectedDate": {
       "fr": "2026",
-      "en": "2026",
-      "es": "2026",
-      "de": "2026",
-      "ja": "2026年",
-      "pt-BR": "2026"
+      "en": "2026"
     },
     "genres": [
       {
@@ -338,11 +322,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Crescent Moon Games",
     "expectedDate": {
       "fr": "Fin 2026 / 2027",
-      "en": "Late 2026 / 2027",
-      "es": "Finales de 2026 / 2027",
-      "de": "Ende 2026 / 2027",
-      "ja": "2026年後半 / 2027年",
-      "pt-BR": "Final de 2026 / 2027"
+      "en": "Late 2026 / 2027"
     },
     "genres": [
       {
@@ -393,11 +373,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Perfect Garbage",
     "expectedDate": {
       "fr": "2026",
-      "en": "2026",
-      "es": "2026",
-      "de": "2026",
-      "ja": "2026年",
-      "pt-BR": "2026"
+      "en": "2026"
     },
     "genres": [
       {
@@ -455,11 +431,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Take-Two Interactive",
     "expectedDate": {
       "fr": "Prochainement",
-      "en": "Prochainement",
-      "es": "Próximamente",
-      "de": "Demnächst",
-      "ja": "近日公開",
-      "pt-BR": "Em breve"
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -519,11 +491,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "505 Games",
     "expectedDate": {
       "fr": "29 sept. 2026",
-      "en": "29 sept. 2026",
-      "es": "29 de septiembre de 2026",
-      "de": "29. September 2026",
-      "ja": "2026年9月29日",
-      "pt-BR": "29 de setembro de 2026"
+      "en": "29 sept. 2026"
     },
     "genres": [
       {
@@ -573,5 +541,35 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 95,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1488490/header.jpg"
+  },
+  {
+    "id": "toem-2",
+    "title": "TOEM 2",
+    "developer": "Something We Made",
+    "publisher": "Something We Made, popagenda",
+    "expectedDate": {
+      "fr": "29 sept. 2026",
+      "en": "29 Sep, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/2900640/",
+    "description": {
+      "fr": "Reprenez votre appareil photo et repartez pour une toute nouvelle aventure ! Dénichez les détails cachés, aidez vos amis tout au long du chemin et immortalisez les merveilles du monde de TOEM 2, la suite du célèbre premier opus.",
+      "en": "Step back into the shoes of a curious photographer and set off on a brand new adventure all about uncovering hidden details, helping friends along the way, and documenting the world’s little wonders in TOEM 2, the sequel to the acclaimed TOEM."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/499ae31f4d74c4c41e61058259fca32ccd73c93c/header.jpg?t=1789666373"
   }
 ];

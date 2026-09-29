@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 42
+ * Total de pépites sélectionnées : 44
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -1860,5 +1860,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzIxMzIyOTk2LnBuZw==/315x250%23c/CVV4Oa.png"
     ],
     "dateAdded": "2026-09-28"
+  },
+  {
+    "id": "itch-andromeda-six",
+    "title": "Andromeda Six",
+    "developer": "wanderlust-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://wanderlust-games.itch.io/andromeda-six",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$14.99",
+      "en": "$14.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A sci-fi themed Visual Novel game.",
+      "en": "A sci-fi themed Visual Novel game."
+    },
+    "description": {
+      "fr": "A sci-fi themed Visual Novel game.",
+      "en": "A sci-fi themed Visual Novel game."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMzNjg5MjEucG5n/315x250%23c/1yA0mb.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMzNjg5MjEucG5n/315x250%23c/1yA0mb.png"
+    ],
+    "dateAdded": "2026-09-29"
+  },
+  {
+    "id": "itch-prescription-love",
+    "title": "Prescription:LOVE",
+    "developer": "livingslime",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://livingslime.itch.io/prescriptionlove",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "You may see the doctor now... Forever ♡",
+      "en": "You may see the doctor now... Forever ♡"
+    },
+    "description": {
+      "fr": "You may see the doctor now... Forever ♡",
+      "en": "You may see the doctor now... Forever ♡"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE4Mjc4NzgyLnBuZw==/315x250%23c/nkA1x6.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE4Mjc4NzgyLnBuZw==/315x250%23c/nkA1x6.png"
+    ],
+    "dateAdded": "2026-09-29"
   }
 ];

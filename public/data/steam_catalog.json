@@ -104,112 +104,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/48000/header.jpg?t=1761819450"
   },
   {
-    "id": "amnesia-the-dark-descent",
-    "title": "Amnesia: The Dark Descent",
-    "releaseYear": 2010,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Survie",
-      "Horreur"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Frictional Games",
-    "steamUrl": "https://store.steampowered.com/app/57300/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/57300/ss_2bf5b6775bbc3857f0b607cb298885c5f3651556.1920x1080.jpg?t=1751032707",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/57300/ss_db5cf1ca6aa0198d45b9ea892c202bd2bb451e74.1920x1080.jpg?t=1751032707",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/57300/ss_b27b47bb43ebd1ab3b26e3d74cf2db088e928a6d.1920x1080.jpg?t=1751032707",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/57300/ss_4efbef5937d9e1c74434f7a447dba6bc682e32cc.1920x1080.jpg?t=1751032707",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/57300/ss_f05aa49adbc3fbd7f96ab079b4649259a4fb443e.1920x1080.jpg?t=1751032707",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/57300/ss_fbf8289efe7ff6ce01d2e209f0300ecffb8fcfc4.1920x1080.jpg?t=1751032707"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Amnesia: The Dark Descent, a first person survival horror. A game about immersion, discovery and living through a nightmare. An experience that will chill you to the core.",
-        "en": "Amnesia: The Dark Descent, a first person survival horror. A game about immersion, discovery and living through a nightmare. An experience that will chill you to the core."
-      }
-    },
-    "steamAppId": 57300,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/57300/header.jpg?t=1751032707"
-  },
-  {
-    "id": "the-blackwell-legacy",
-    "title": "The Blackwell Legacy",
-    "releaseYear": 2012,
-    "genre": [
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Wadjet Eye Games",
-    "steamUrl": "https://store.steampowered.com/app/80330/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/80330/ss_ed30b968b75215a4953959d52bb1fc04751ee251.1920x1080.jpg?t=1728040271",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/80330/ss_a4a8c7242855eec8640bf92be720e73b91c27c0a.1920x1080.jpg?t=1728040271",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/80330/ss_3ed86a2da20aef74f87d25331e978f02c959eaba.1920x1080.jpg?t=1728040271",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/80330/ss_093d67ca6fec231a918d415af41980feb004701b.1920x1080.jpg?t=1728040271",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/80330/ss_0b1588694ef2964a219675de9c1aed212804a58b.1920x1080.jpg?t=1728040271",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/80330/header.jpg?t=1728040271"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Lorsque trois étudiants de l'Université de New York s'entretuent, personne ne pense qu'une sinistre force est à l'œuvre. Personne, sauf la jeune médium Rosa Blackwell et son nouveau guide spirituel Joey Mallone.",
-        "en": "When 3 NYU students kill themselves, nobody thinks that a sinister force is at work. Nobody but fledgling medium Rosa Blackwell & her new spirit guide Joey Mallone."
-      }
-    },
-    "steamAppId": 80330,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/80330/header.jpg?t=1728040271"
-  },
-  {
-    "id": "nidhogg",
-    "title": "Nidhogg",
-    "releaseYear": 2014,
-    "genre": [
-      "Action",
-      "Sport"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Messhof",
-    "steamUrl": "https://store.steampowered.com/app/94400/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/94400/ss_79813555407a2c56918973929eb8c4124361a477.1920x1080.jpg?t=1744306112",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/94400/ss_9630929ed94e706d8a5037f5412ae67245cc52f2.1920x1080.jpg?t=1744306112",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/94400/ss_bc948804c395603d73579b69193d9bb2dfc4bde6.1920x1080.jpg?t=1744306112",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/94400/ss_764bdc489bc9ed7f23512dc3525a23b780766af7.1920x1080.jpg?t=1744306112",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/94400/ss_3c3598c94dd14500a757358ba53267371c82b859.1920x1080.jpg?t=1744306112",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/94400/ss_1520bc90d80393648b22b33aa8950344f5f7e14d.1920x1080.jpg?t=1744306112"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Nidhogg est le jeu épique primé d’escrime et de tir à la corde, agrémenté de vers géants volants.",
-        "en": "Nidhogg is the epic award-winning game of fencing tug-of-war complete with flying giant worms."
-      }
-    },
-    "steamAppId": 94400,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/94400/header.jpg?t=1744306112"
-  },
-  {
     "id": "terraria",
     "title": "Terraria",
     "releaseYear": 2011,
@@ -14273,5 +14167,223 @@
     "addedAt": "2026-09-28",
     "steamAppId": 1867240,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1867240/59d4daf753bd5d982e6675f7eee363bc817c574e/header.jpg?t=1789503126"
+  },
+  {
+    "id": "ai-vj",
+    "title": "AI-VJ",
+    "releaseYear": 2026,
+    "genre": [
+      "Free-to-play",
+      "Animation & Modélisation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "Intuition Technology",
+    "steamUrl": "https://store.steampowered.com/app/2893580/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2893580/bf5715e77fff09fde22e22ca2335e909f1345c3c/ss_bf5715e77fff09fde22e22ca2335e909f1345c3c.1920x1080.jpg?t=1790636694",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2893580/2a2ddcb332beedd9e898e18c3cb66b1deb9eb805/ss_2a2ddcb332beedd9e898e18c3cb66b1deb9eb805.1920x1080.jpg?t=1790636694",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2893580/757f3d4335a4a8bd820d57ce4fceced412b732e7/ss_757f3d4335a4a8bd820d57ce4fceced412b732e7.1920x1080.jpg?t=1790636694",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2893580/b2b473ff95a66b941d08f4bb6f097682bf1c65e6/ss_b2b473ff95a66b941d08f4bb6f097682bf1c65e6.1920x1080.jpg?t=1790636694",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2893580/3cff6981f0d4657b907127025d814e5d59922a07/ss_3cff6981f0d4657b907127025d814e5d59922a07.1920x1080.jpg?t=1790636694",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2893580/119885e07f1ba1eb039da4974aeddf0710a2a51b/ss_119885e07f1ba1eb039da4974aeddf0710a2a51b.1920x1080.jpg?t=1790636694"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Add mesmerizing AI visuals to your DJ shows. Liven up the big screen at house parties! Get perfect sync by linking up with all popular DJ software, or by using estimated beats per minute from any audio playing on your PC (such as Youtube or Spotify). Can even play your own VJ loops and VJ videos!",
+        "en": "Add mesmerizing AI visuals to your DJ shows. Liven up the big screen at house parties! Get perfect sync by linking up with all popular DJ software, or by using estimated beats per minute from any audio playing on your PC (such as Youtube or Spotify). Can even play your own VJ loops and VJ videos!"
+      }
+    },
+    "addedAt": "2026-09-29",
+    "isFree": true,
+    "steamAppId": 2893580,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2893580/26a2dc143ddbeb1194cd9451181ca858e9f59c7a/header.jpg?t=1790636694"
+  },
+  {
+    "id": "deskrawl-idle-arpg",
+    "title": "Deskrawl: Idle ARPG",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "First Day Games",
+    "steamUrl": "https://store.steampowered.com/app/4623570/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/1089bea90dc47d572a300fbf7df963aec6e68eb5/ss_1089bea90dc47d572a300fbf7df963aec6e68eb5.1920x1080.jpg?t=1790596988",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/02e81e26ee20991a279ad7030b5b5c78ca3463dd/ss_02e81e26ee20991a279ad7030b5b5c78ca3463dd.1920x1080.jpg?t=1790596988",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/ca7df1c7414a55702e847ad7a0cb62386babb9a9/ss_ca7df1c7414a55702e847ad7a0cb62386babb9a9.1920x1080.jpg?t=1790596988",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/23da12d1aca66a4cf1e1a8fdecf150abdfb453e3/ss_23da12d1aca66a4cf1e1a8fdecf150abdfb453e3.1920x1080.jpg?t=1790596988",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/827759a0bed5f921eef66f25ccf45fee31651bc0/ss_827759a0bed5f921eef66f25ccf45fee31651bc0.1920x1080.jpg?t=1790596988",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/fac1392578eb565b3dccd8985e299c9585b2f99c/ss_fac1392578eb565b3dccd8985e299c9585b2f99c.1920x1080.jpg?t=1790596988"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Grindez des monstres, farmez du butin et capturez des ennemis pour les mettre à votre service. Deskrawl est un idle ARPG épique qui se joue en bas de votre bureau. Farmez des objets légendaires et créez des héros surpuissants pendant que vous travaillez ou vous détendez.",
+        "en": "Grind mobs, farm loot and capture enemies to serve you. Deskrawl is an epic idle ARPG that plays at the bottom of your desktop. Farm legendary items and build overpowered heroes while you work or chill."
+      }
+    },
+    "addedAt": "2026-09-29",
+    "steamAppId": 4623570,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/4c1aa677f31f987858b5d88981978bb83b86b519/header.jpg?t=1790596988"
+  },
+  {
+    "id": "femboy-ghost",
+    "title": "Femboy Ghost",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Strange Girl Studios",
+    "steamUrl": "https://store.steampowered.com/app/4198330/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/5892074fe701e1b9ce998baff85871acb15487ca/ss_5892074fe701e1b9ce998baff85871acb15487ca.1920x1080.jpg?t=1790600455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/16f417b6ec646f12e11f05a075ac7490f8ffff26/ss_16f417b6ec646f12e11f05a075ac7490f8ffff26.1920x1080.jpg?t=1790600455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/7779372968ff68b100fbcf99951a57d85be3df57/ss_7779372968ff68b100fbcf99951a57d85be3df57.1920x1080.jpg?t=1790600455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/66923b3c8ddf2a5e5473073f6efda59d162c066e/ss_66923b3c8ddf2a5e5473073f6efda59d162c066e.1920x1080.jpg?t=1790600455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/529942716c0fbe427d0c799113b01af28e5b9e98/ss_529942716c0fbe427d0c799113b01af28e5b9e98.1920x1080.jpg?t=1790600455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/a79f8fd0622b793bb67c23deeccdd34c12a8e226/ss_a79f8fd0622b793bb67c23deeccdd34c12a8e226.1920x1080.jpg?t=1790600455"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Femboy Ghost is a casual adult game set in a fictional corporation that allows you to possess the bodies of your coworkers up to the president. The main goal is to fully corrupt the same people in the office who exposed you. What will you do once you possess their bodies?",
+        "en": "Femboy Ghost is a casual adult game set in a fictional corporation that allows you to possess the bodies of your coworkers up to the president. The main goal is to fully corrupt the same people in the office who exposed you. What will you do once you possess their bodies?"
+      }
+    },
+    "addedAt": "2026-09-29",
+    "steamAppId": 4198330,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/ea9a78e4399b9408cc773e7570f21f7c5431c6a7/header.jpg?t=1790600455"
+  },
+  {
+    "id": "the-magus-circle",
+    "title": "The Magus Circle",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "By Witchlight",
+    "steamUrl": "https://store.steampowered.com/app/2796640/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2796640/54201e6710d3676d9f4412dd75bbe46b89676975/ss_54201e6710d3676d9f4412dd75bbe46b89676975.1920x1080.jpg?t=1790254825",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2796640/1b01ba55fc5f43fd0c69ff4cf2694e7a3e2ff007/ss_1b01ba55fc5f43fd0c69ff4cf2694e7a3e2ff007.1920x1080.jpg?t=1790254825",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2796640/5a2a78e8f275c868d9509916b07d2a01e790acd3/ss_5a2a78e8f275c868d9509916b07d2a01e790acd3.1920x1080.jpg?t=1790254825",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2796640/ebeb032871da2a12068adffef40d6570a1789e1c/ss_ebeb032871da2a12068adffef40d6570a1789e1c.1920x1080.jpg?t=1790254825",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2796640/1efd4d94ffdc10133ef55812da549d54f26d7bcb/ss_1efd4d94ffdc10133ef55812da549d54f26d7bcb.1920x1080.jpg?t=1790254825",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2796640/8d95aef89c93f8846ae441ce91f7ce738e0bc186/ss_8d95aef89c93f8846ae441ce91f7ce738e0bc186.1920x1080.jpg?t=1790254825"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Magic is Art. The Magus Circle is a vampire-survivors, rogue-lite game where you draw to cast spells! Meet other mages and unlock their abilities. Discover the secrets hidden inside the Circle. Draw the sigil, protect the circle, save the cosmos.",
+        "en": "Magic is Art. The Magus Circle is a vampire-survivors, rogue-lite game where you draw to cast spells! Meet other mages and unlock their abilities. Discover the secrets hidden inside the Circle. Draw the sigil, protect the circle, save the cosmos."
+      }
+    },
+    "addedAt": "2026-09-29",
+    "steamAppId": 2796640,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2796640/1c9b203ae7005cc7009569fcc90ae1bc4d6efa33/header.jpg?t=1790254825"
+  },
+  {
+    "id": "antivirus-survivors-2003-professional",
+    "title": "Antivirus Survivors 2003 Professional",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Shaun Hammond Business Solutions Limited",
+    "steamUrl": "https://store.steampowered.com/app/3832490/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3832490/0d0e88f9839b5bdfd4d4ca461b98d0789e608c0e/ss_0d0e88f9839b5bdfd4d4ca461b98d0789e608c0e.1920x1080.jpg?t=1790609561",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3832490/b24aac6968a1d49d0e44c246fe6d61f0168a8d5b/ss_b24aac6968a1d49d0e44c246fe6d61f0168a8d5b.1920x1080.jpg?t=1790609561",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3832490/39bf9cb5bec02665af6ccb28adc84ec1f4d1212d/ss_39bf9cb5bec02665af6ccb28adc84ec1f4d1212d.1920x1080.jpg?t=1790609561",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3832490/f07d9a3ebfd87b68d94f83668778b0b5144acb88/ss_f07d9a3ebfd87b68d94f83668778b0b5144acb88.1920x1080.jpg?t=1790609561",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3832490/d5ffb2c5a882f3ba056e06c9e42702bfa493b2b9/ss_d5ffb2c5a882f3ba056e06c9e42702bfa493b2b9.1920x1080.jpg?t=1790609561",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3832490/1d65bf1be7e9557cbc3dd773b4358bf3111372b3/ss_1d65bf1be7e9557cbc3dd773b4358bf3111372b3.1920x1080.jpg?t=1790609561"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "L'ordinateur de la famille est encore infecté, et c'est à toi de combattre les virus grâce à une panoplie d'armes inspirés par les annés 2000. Antivirus Survivors 2003 Professional est un auto-shooter rempli avec des références aux annés ou l'ordinateur était un endroi amusant et plein de vie.",
+        "en": "The family computer is infected again and it’s your job to fend off waves of viruses and adware foes with an arsenal of nostalgic Y2K-inspired weapons. Antivirus Survivors 2003 Professional is a survivor-like auto-shooter filled with nods to the days when computers were actually fun."
+      }
+    },
+    "addedAt": "2026-09-29",
+    "steamAppId": 3832490,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3832490/19ec8cf9c754e295d6bc29870e1ed65f04b69988/header.jpg?t=1790609561"
+  },
+  {
+    "id": "drop-command",
+    "title": "Drop Command",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "PillBugGames",
+    "steamUrl": "https://store.steampowered.com/app/1944880/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/c4fd86e34650827eb1c9e9f5266608456a8c261f/ss_c4fd86e34650827eb1c9e9f5266608456a8c261f.1920x1080.jpg?t=1790611206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/362859f5a90cedd5debd564a555fafa9fb35f387/ss_362859f5a90cedd5debd564a555fafa9fb35f387.1920x1080.jpg?t=1790611206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/dc3cfbd33cff563b5ada12a91abe12c849953e96/ss_dc3cfbd33cff563b5ada12a91abe12c849953e96.1920x1080.jpg?t=1790611206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/58bf60f80627e06197ff5f139892930e324ee6c4/ss_58bf60f80627e06197ff5f139892930e324ee6c4.1920x1080.jpg?t=1790611206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/eccfcc3bae98afb291865428067f9f47b20aeedc/ss_eccfcc3bae98afb291865428067f9f47b20aeedc.1920x1080.jpg?t=1790611206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/f1d8581fbdf9d883421cb54d98a07e2e1e1d60d9/ss_f1d8581fbdf9d883421cb54d98a07e2e1e1d60d9.1920x1080.jpg?t=1790611206"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "'90s Mech combat at a grand scale! Build an empire across the stars. Pilot Mechs, Tanks, Infantry and Aircraft in combined arms combat on many worlds across the star cluster. Rise to command entire battalions throughout a sandbox campaign.",
+        "en": "'90s Mech combat at a grand scale! Build an empire across the stars. Pilot Mechs, Tanks, Infantry and Aircraft in combined arms combat on many worlds across the star cluster. Rise to command entire battalions throughout a sandbox campaign."
+      }
+    },
+    "addedAt": "2026-09-29",
+    "steamAppId": 1944880,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/a7492921225a86704117fc20c92f31fae1d875ef/header.jpg?t=1790611206"
   }
 ]
