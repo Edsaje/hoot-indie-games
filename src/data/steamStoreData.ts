@@ -8148,23 +8148,7 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Overwhelmingly Positive"
     }
   },
-  "4198330": {
-    "appId": 4198330,
-    "isFree": false,
-    "currency": "EUR",
-    "initialPriceCents": 519,
-    "finalPriceCents": 467,
-    "discountPercent": 10,
-    "formattedFinalPrice": "4,67€",
-    "formattedInitialPrice": "5,19€",
-    "totalReviews": 0,
-    "totalPositive": 0,
-    "positivePercent": 90,
-    "reviewScoreDesc": {
-      "fr": "Très positifs",
-      "en": "Very Positive"
-    }
-  },
+
   "4289410": {
     "appId": 4289410,
     "isFree": false,

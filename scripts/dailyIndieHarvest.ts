@@ -5,7 +5,7 @@ import { INDIE_GAMES } from '../src/data/games';
 import { UPCOMING_INDIE_GAMES, type UpcomingGame } from '../src/data/upcomingGames';
 import { INITIAL_MICRO_INDIES } from '../src/data/microIndies';
 import type { MicroIndieGame } from '../src/types/microIndie';
-import { BANNED_APP_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
+import { BANNED_APP_IDS, ADULT_CONTENT_DESCRIPTOR_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
 
 /**
  * 🦉 Hoot Indie Games — Script d'Alimentation & Synchronisation Quotidienne Automatique
@@ -69,12 +69,73 @@ function isReadableLatinText(text: string): boolean {
 
 // Filtre strict anti-contenu adulte / NSFW / shovelware / drogues / éditeurs AAA non-indés
 function isAdultOrInappropriate(details: SteamDetails): boolean {
+  if (!details) return true;
   if (BANNED_APP_IDS.has(details.steam_appid)) return true;
+
+  // 1. Contrôle strict de l'âge requis Steam (18+ = rejet immédiat)
+  const reqAge = parseInt(String(details.required_age || '0'), 10);
+  if (!isNaN(reqAge) && reqAge >= 18) {
+    console.warn(`   ⛔ [Filtré Âge 18+] "${details.name}" (requis ${reqAge}+).`);
+    return true;
+  }
+
+  // 2. Contrôle impératif des Content Descriptors officiels de Valve (Steam)
+  // ID 1: Nudity/Sexual Content, ID 3: Mature Content, ID 4: Sexual Content, ID 5: Explicit Sexual Content / Adult Only
+  if (details.content_descriptors) {
+    const ids = details.content_descriptors.ids || [];
+    const matchedId = ids.find((id) => ADULT_CONTENT_DESCRIPTOR_IDS.has(id));
+    if (matchedId !== undefined) {
+      console.warn(`   ⛔ [Filtré Content Descriptor ${matchedId}] "${details.name}" taggué adulte par Valve.`);
+      return true;
+    }
+    if (details.content_descriptors.notes) {
+      const notesCheck = checkAdultContent(details.content_descriptors.notes);
+      if (notesCheck.hasAdult) {
+        console.warn(`   ⛔ [Filtré Notes Valve] "${details.name}" (${notesCheck.keywords.join(', ')}).`);
+        return true;
+      }
+    }
+  }
+
+  // 3. Contrôle des genres & catégories Steam
+  if (details.genres && Array.isArray(details.genres)) {
+    for (const g of details.genres) {
+      const gDesc = (g.description || '').toLowerCase();
+      if (
+        gDesc.includes('adulte') ||
+        gDesc.includes('adult') ||
+        gDesc.includes('sexual') ||
+        gDesc.includes('sexuel') ||
+        gDesc.includes('erotic') ||
+        gDesc.includes('érotique') ||
+        gDesc.includes('hentai') ||
+        gDesc.includes('nudity') ||
+        gDesc.includes('nudité')
+      ) {
+        console.warn(`   ⛔ [Filtré Genre Adulte] "${details.name}" (${g.description}).`);
+        return true;
+      }
+    }
+  }
+
+  // 4. Contrôle éditeurs AAA non-indépendants
   const devPub = (details.developers || []).join(' ') + ' ' + (details.publishers || []).join(' ');
   if (isNonIndieOrAAA(devPub)) return true;
-  const text = details.name + ' ' + details.short_description + ' ' + (details.detailed_description || '');
-  const check = checkAdultContent(text);
-  return check.hasAdult;
+
+  // 5. Analyse textuelle exhaustive (titre, résumé, description complète, notes)
+  const fullText = [
+    details.name || '',
+    details.short_description || '',
+    details.detailed_description || '',
+    details.content_descriptors?.notes || '',
+  ].join(' ');
+  const check = checkAdultContent(fullText);
+  if (check.hasAdult) {
+    console.warn(`   ⛔ [Filtré Mots-clés Adultes] "${details.name}" (${check.keywords.join(', ')}).`);
+    return true;
+  }
+
+  return false;
 }
 
 // Validation d'audit interne stricte (Règle 0 Hallucination & Intégrité)
@@ -217,6 +278,11 @@ interface SteamDetails {
   release_date?: { coming_soon?: boolean; date: string };
   genres?: Array<{ id: string; description: string }>;
   screenshots?: Array<{ id: number; path_full: string; path_thumbnail: string }>;
+  required_age?: number | string;
+  content_descriptors?: {
+    ids?: number[];
+    notes?: string;
+  };
 }
 
 async function fetchGameDetails(appId: number, lang: 'french' | 'english'): Promise<SteamDetails | null> {

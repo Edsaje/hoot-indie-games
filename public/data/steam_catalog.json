@@ -9190,41 +9190,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1321440/header.jpg?t=1789482081"
   },
   {
-    "id": "nioh-2-the-complete-edition",
-    "title": "Nioh 2 – The Complete Edition",
-    "releaseYear": 2021,
-    "genre": [
-      "Action",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "KOEI TECMO GAMES CO., LTD.",
-    "steamUrl": "https://store.steampowered.com/app/1325200/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_c8ad5efb3acdb4099f77b8b611289e2aa00cd19c.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_bb996dea7ada75409e8c328b4f60e1f262e165d9.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_7fcca74473ea2678e90ee4cff018392007b8f1c0.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_bdb077e9fcfabe5eca01571b8fd1bdbf03440d68.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_6335545598363d44156664e20f92aea3d5aaa0fb.1920x1080.jpg?t=1775540023",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/ss_899a1bef5a95596f54139852a4e6585309ae66c4.1920x1080.jpg?t=1775540023"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Combattez des hordes de yokai dans ce jeu de rôle d'action ultra exigeant. Créez votre protagoniste et embarquez pour une aventure à travers le Japon de l'époque Sengoku. Servez-vous de votre nouvelle compétence Mutation yokai pour vaincre les plus féroces yokai, et préparez-vous à braver les Royaumes obscurs créés par vos ennemis.",
-        "en": "Battle hordes of yokai in this masocore Action RPG. Create your protagonist and embark on an adventure through a myriad of locales across Japan during the Sengoku period. Utilize the new Yokai Shift ability to defeat even the most ferocious yokai and be prepared to brave through Dark Realms created by your enemies."
-      }
-    },
-    "steamAppId": 1325200,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1325200/header.jpg?t=1775540023"
-  },
-  {
     "id": "sons-of-the-forest",
     "title": "Sons Of The Forest",
     "releaseYear": 2024,
@@ -14241,42 +14206,6 @@
     "addedAt": "2026-09-29",
     "steamAppId": 4623570,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/4c1aa677f31f987858b5d88981978bb83b86b519/header.jpg?t=1790596988"
-  },
-  {
-    "id": "femboy-ghost",
-    "title": "Femboy Ghost",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure",
-      "Indépendant"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisée",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Strange Girl Studios",
-    "steamUrl": "https://store.steampowered.com/app/4198330/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/5892074fe701e1b9ce998baff85871acb15487ca/ss_5892074fe701e1b9ce998baff85871acb15487ca.1920x1080.jpg?t=1790600455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/16f417b6ec646f12e11f05a075ac7490f8ffff26/ss_16f417b6ec646f12e11f05a075ac7490f8ffff26.1920x1080.jpg?t=1790600455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/7779372968ff68b100fbcf99951a57d85be3df57/ss_7779372968ff68b100fbcf99951a57d85be3df57.1920x1080.jpg?t=1790600455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/66923b3c8ddf2a5e5473073f6efda59d162c066e/ss_66923b3c8ddf2a5e5473073f6efda59d162c066e.1920x1080.jpg?t=1790600455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/529942716c0fbe427d0c799113b01af28e5b9e98/ss_529942716c0fbe427d0c799113b01af28e5b9e98.1920x1080.jpg?t=1790600455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/a79f8fd0622b793bb67c23deeccdd34c12a8e226/ss_a79f8fd0622b793bb67c23deeccdd34c12a8e226.1920x1080.jpg?t=1790600455"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Femboy Ghost is a casual adult game set in a fictional corporation that allows you to possess the bodies of your coworkers up to the president. The main goal is to fully corrupt the same people in the office who exposed you. What will you do once you possess their bodies?",
-        "en": "Femboy Ghost is a casual adult game set in a fictional corporation that allows you to possess the bodies of your coworkers up to the president. The main goal is to fully corrupt the same people in the office who exposed you. What will you do once you possess their bodies?"
-      }
-    },
-    "addedAt": "2026-09-29",
-    "steamAppId": 4198330,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4198330/ea9a78e4399b9408cc773e7570f21f7c5431c6a7/header.jpg?t=1790600455"
   },
   {
     "id": "the-magus-circle",

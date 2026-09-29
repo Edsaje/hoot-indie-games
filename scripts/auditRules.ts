@@ -4,11 +4,21 @@ import type { Game } from '../src/types/game';
  * AppIDs explicitement bannis du sanctuaire (contenu adulte, shovelware, troll, etc.)
  */
 export const BANNED_APP_IDS = new Set<number>([
+  4198330, // Femboy Ghost (contenu adulte explicite)
   4739660, // Drag'n Wash (contenu adulte déguisé)
   1888160, // ARMORED CORE VI (AAA FromSoftware / Bandai Namco)
   1325200, // Nioh 2 (AAA Team Ninja / Koei Tecmo)
   2072450, // Like a Dragon: Infinite Wealth (AAA SEGA)
 ]);
+
+/**
+ * Identifiants officiels Valve Steam pour les descripteurs de contenu adulte / sexuel
+ * 1: Nudity or Sexual Content
+ * 3: Mature Content
+ * 4: Sexual Content
+ * 5: Adult Only Sexual Content / Explicit Sexual Content
+ */
+export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([1, 3, 4, 5]);
 
 /**
  * Éditeurs et studios AAA non-indépendants interdits de moissonnage dans le sanctuaire
@@ -56,49 +66,75 @@ export function isNonIndieOrAAA(text: string): boolean {
  * Mots-clés interdits pour le filtrage strict anti-contenu adulte / hentai / NSFW
  */
 export const ADULT_BANNED_KEYWORDS = [
+  'femboy',
+  'twink',
   'hentai',
   'sexual',
   'sexuel',
+  'sexuelle',
+  'sexuels',
+  'sexuality',
+  'sexualité',
   'nsfw',
   'nudity',
   'nudité',
+  'nude',
+  'naked',
   'erotic',
   'érotique',
+  'erotica',
   'dating sim',
   'waifu',
   'compagne de bureau',
   'porn',
   'porno',
+  'pornography',
+  'pornographique',
   'touch them',
   'wash them',
   'male dragon',
   'adult content',
   'adult only',
+  'adult game',
+  'adult games',
+  'jeu adulte',
+  'jeux adultes',
+  'contenu adulte',
+  'adult visual novel',
   '18+',
   'ecchi',
   'sensual',
+  'sensuelle',
   'furry',
   'harem',
   'lust',
   'ntr',
   'unrated',
   'co-eds',
-  'landlord',
   'satisfy the lonely hearts',
   'eroge',
   'yuri',
   'yaoi',
   'bdsm',
   'fetish',
+  'masturbation',
+  'masturbate',
+  'intercourse',
+  'orgasm',
+  'non-consensual',
   'weed',
   'cannabis',
   'marijuana',
   'drug',
   'drugs',
-  'gore',
   'explicit content',
   'sexual content',
   'mature content',
+  'mature sexual',
+  'lewd',
+  'stripper',
+  'seduce',
+  'seduction',
 ];
 
 export const VALID_ART_STYLES = [
