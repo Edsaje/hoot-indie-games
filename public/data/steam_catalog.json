@@ -319,43 +319,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/f21426ac9ad51338fa33becce88984758e07c38b/header.jpg?t=1748969356"
   },
   {
-    "id": "guacamelee-gold-edition",
-    "title": "Guacamelee! Gold Edition",
-    "releaseYear": 2013,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Metroidvania",
-      "Plateforme"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Drinkbox Studios",
-    "steamUrl": "https://store.steampowered.com/app/214770/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_0ae81d50f72066713315c972f5a62c4111a75023.1920x1080.jpg?t=1762522710",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_4bc28441486c27a23e82940a31a58a329530d25f.1920x1080.jpg?t=1762522710",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_5d7b0cd418905f274202c2778dbb0fe8efa7db83.1920x1080.jpg?t=1762522710",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_2dfcc00057c01771af3f0bacdfc1b0fdde7e190c.1920x1080.jpg?t=1762522710",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_622e2336ef1723e51abd6bd03f3cde4342ec4d50.1920x1080.jpg?t=1762522710",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_d60ffeca591b6c21510479185d47f4bd701b6e05.1920x1080.jpg?t=1762522710"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Guacamelee! Gold Edition est un jeu d'action et de plateforme de style Metroidvania, qui se déroule dans un monde magique, est inspiré de la culture et du folklore mexicain, et propose de nombreux personnages uniques et fascinants.",
-        "en": "Guacamelee! is a Metroidvania-style action-platformer set in a magical Mexican-inspired world. The game draws its inspiration from traditional Mexican culture and folklore, and features many interesting and unique characters."
-      }
-    },
-    "steamAppId": 214770,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/header.jpg?t=1762522710"
-  },
-  {
     "id": "hotline-miami",
     "title": "Hotline Miami",
     "releaseYear": 2012,
@@ -388,40 +351,6 @@
     },
     "steamAppId": 219150,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219150/header.jpg?t=1785434922"
-  },
-  {
-    "id": "antichamber",
-    "title": "Antichamber",
-    "releaseYear": 2013,
-    "genre": [
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Alexander Bruce",
-    "steamUrl": "https://store.steampowered.com/app/219890/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_c02435ac01bff1e3af6c69e9ddeb77f6bf40caf2.1920x1080.jpg?t=1525832559",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_8604088893b9d0ea42d41c741619e740e92fcee0.1920x1080.jpg?t=1525832559",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_fe2278241777765a73f5cc1567c17307d92ec6bb.1920x1080.jpg?t=1525832559",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_62a1e3085fee312cf6c1025ec89018fa98821d99.1920x1080.jpg?t=1525832559",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_1bf5f04ea4ffb1aaf3e77bef5e31793486f789ae.1920x1080.jpg?t=1525832559",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_aa83543c053ccc413d8b7b5389bffb845ae84068.1920x1080.jpg?t=1525832559"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Antichamber est un jeu d'exploration psychologique et hors du commun où rien ne peut être considéré comme acquis. Découvrez un univers inspiré de l’œuvre d'Escher où les couloirs s'enroulent autour d'autres, où les espaces se reconfigurent eux-mêmes et où accomplir l'impossible peut être la seule façon d'avancer.",
-        "en": "Antichamber is a mind-bending psychological exploration game where nothing can be taken for granted. Discover an Escher-like world where hallways wrap around upon each other, spaces reconfigure themselves, and accomplishing the impossible may just be the only way forward."
-      }
-    },
-    "steamAppId": 219890,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/header.jpg?t=1525832559"
   },
   {
     "id": "cry-of-fear",
@@ -667,42 +596,6 @@
     },
     "steamAppId": 240720,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/240720/header.jpg?t=1666987027"
-  },
-  {
-    "id": "nuclear-throne",
-    "title": "Nuclear Throne",
-    "releaseYear": 2015,
-    "genre": [
-      "Action",
-      "RPG",
-      "Roguelike"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Vlambeer",
-    "steamUrl": "https://store.steampowered.com/app/242680/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/b1a8c68f52b8460cdbfb8034c7d36d9abaad9af2/ss_b1a8c68f52b8460cdbfb8034c7d36d9abaad9af2.1920x1080.jpg?t=1764957456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/2772b5b75ed8bc39e8a3e8e9687641217e102f94/ss_2772b5b75ed8bc39e8a3e8e9687641217e102f94.1920x1080.jpg?t=1764957456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/71a2c94508a5fd95e64298e5daaa59d365084dd2/ss_71a2c94508a5fd95e64298e5daaa59d365084dd2.1920x1080.jpg?t=1764957456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/97e1a2821a54b09c4d8b438f33f0eb2ae93103a3/ss_97e1a2821a54b09c4d8b438f33f0eb2ae93103a3.1920x1080.jpg?t=1764957456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/ss_25da6e703cf45cdbd2a03acb4b1f1aa6d8b7a478.1920x1080.jpg?t=1764957456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/ss_3df9b8fc5865796007e2a9f793ce72fbc5125fe7.1920x1080.jpg?t=1764957456"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Nuclear Throne est un jeu de tir roguelike post-apocalyptique en vue du dessus. Dans ce monde post-apocalyptique, l'humanité a disparu, et des monstres et mutants rôdent sur Terre. Parviendrez-vous à atteindre le Trône nucléaire ?",
-        "en": "Nuclear Throne is a post-apocalyptic roguelike-like top-down shooter. Not 'the final hope of humanity' post-apocalyptic, but 'humanity is extinct and mutants and monsters now roam the world' post-apocalyptic. Can you reach the Nuclear Throne?"
-      }
-    },
-    "steamAppId": 242680,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/header.jpg?t=1764957456"
   },
   {
     "id": "the-forest",
@@ -14314,5 +14207,111 @@
     "addedAt": "2026-09-29",
     "steamAppId": 1944880,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1944880/a7492921225a86704117fc20c92f31fae1d875ef/header.jpg?t=1790611206"
+  },
+  {
+    "id": "toem-2",
+    "title": "TOEM 2",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Something We Made",
+    "steamUrl": "https://store.steampowered.com/app/2900640/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/3ca2aae60b48796a57582034ff98c2e0ac0ca0b4/ss_3ca2aae60b48796a57582034ff98c2e0ac0ca0b4.1920x1080.jpg?t=1790697404",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/29a973d469026ac6d7cd1331f41546e12b58a770/ss_29a973d469026ac6d7cd1331f41546e12b58a770.1920x1080.jpg?t=1790697404",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/6d848c5cbb3e1baff851664ccb6544eff324a80b/ss_6d848c5cbb3e1baff851664ccb6544eff324a80b.1920x1080.jpg?t=1790697404",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/e6d456a72ed9b2e40de0860ab2b5464315fd392a/ss_e6d456a72ed9b2e40de0860ab2b5464315fd392a.1920x1080.jpg?t=1790697404",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/a7457b1fb2e0b90a1be4b6aa7198c08f546e2a90/ss_a7457b1fb2e0b90a1be4b6aa7198c08f546e2a90.1920x1080.jpg?t=1790697404",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/b749dbeb794ff89f97705c7e111e134c572bd365/ss_b749dbeb794ff89f97705c7e111e134c572bd365.1920x1080.jpg?t=1790697404"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Reprenez votre appareil photo et repartez pour une toute nouvelle aventure ! Dénichez les détails cachés, aidez vos amis tout au long du chemin et immortalisez les merveilles du monde de TOEM 2, la suite du célèbre premier opus.",
+        "en": "Step back into the shoes of a curious photographer and set off on a brand new adventure all about uncovering hidden details, helping friends along the way, and documenting the world’s little wonders in TOEM 2, the sequel to the acclaimed TOEM."
+      }
+    },
+    "addedAt": "2026-09-30",
+    "steamAppId": 2900640,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/499ae31f4d74c4c41e61058259fca32ccd73c93c/header.jpg?t=1790697404"
+  },
+  {
+    "id": "reseau-electrique",
+    "title": "Réseau électrique",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "David Made This",
+    "steamUrl": "https://store.steampowered.com/app/2429930/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2429930/88eb1a3b1bc1370a893ee14816cd55639e1b8cab/ss_88eb1a3b1bc1370a893ee14816cd55639e1b8cab.1920x1080.jpg?t=1790752101",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2429930/a10774e2973d509c03feb5925785634754de3296/ss_a10774e2973d509c03feb5925785634754de3296.1920x1080.jpg?t=1790752101",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2429930/69daaf81436a17bf24b252c6a5f6c3c4078418e0/ss_69daaf81436a17bf24b252c6a5f6c3c4078418e0.1920x1080.jpg?t=1790752101",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2429930/4811ca7e65d823b30c0e7d268c25f5ee8ca6f18e/ss_4811ca7e65d823b30c0e7d268c25f5ee8ca6f18e.1920x1080.jpg?t=1790752101",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2429930/6d5c98fd8eb2356db73a1f5ce20b853b30c576e3/ss_6d5c98fd8eb2356db73a1f5ce20b853b30c576e3.1920x1080.jpg?t=1790752101",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2429930/4f3c57934a811b83c260d475d947eb98c7a0faca/ss_4f3c57934a811b83c260d475d947eb98c7a0faca.1920x1080.jpg?t=1790752101"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Power Network Tycoon est un jeu de simulation de réseau électrique basé sur la physique. Construisez et entretenez un réseau haute tension, gérez vos ressources, recherchez des améliorations et affrontez les défis de la nature pour protéger les habitants de votre île !",
+        "en": "Power Network Tycoon is a physics based power grid simulation game where you build and maintain a high-voltage power network. Build power infrastructure, monitor resources, research upgrades, adapt to environmental challenges, keep up with energy demands and protect your island community!"
+      }
+    },
+    "addedAt": "2026-09-30",
+    "steamAppId": 2429930,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2429930/bf58a260d157e72abe0d738045c7934d6fadcc8e/header.jpg?t=1790752101"
+  },
+  {
+    "id": "dicevaders",
+    "title": "Dicevaders",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Pengonauts",
+    "steamUrl": "https://store.steampowered.com/app/3917700/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3917700/79f09dc4f398369f2206955f17c9d583583f9873/ss_79f09dc4f398369f2206955f17c9d583583f9873.1920x1080.jpg?t=1790706148",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3917700/be11d5f6af7f5fc2c676b7ef19033f44f131231f/ss_be11d5f6af7f5fc2c676b7ef19033f44f131231f.1920x1080.jpg?t=1790706148",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3917700/77167e1818b1ecf06bf728f089a033329d8711a5/ss_77167e1818b1ecf06bf728f089a033329d8711a5.1920x1080.jpg?t=1790706148",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3917700/889ed5c580c70600ed8805378d386490492e277d/ss_889ed5c580c70600ed8805378d386490492e277d.1920x1080.jpg?t=1790706148",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3917700/f54cd6ddaff8a32746ef80c74291c6b2b9f032a1/ss_f54cd6ddaff8a32746ef80c74291c6b2b9f032a1.1920x1080.jpg?t=1790706148",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3917700/e232885f2b41e0341698d11e76703194c2bfd005/ss_e232885f2b41e0341698d11e76703194c2bfd005.1920x1080.jpg?t=1790706148"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "DiceVaders est un roguelike mêlant deckbuilding et jeu de dés, dans lequel vous menez une invasion extraterrestre. Incarnez les méchants de StarVaders, manipulez vos dés avec stratégie, levez une armée inarrêtable et déclenchez des combos de folie grâce à de puissantes synergies.",
+        "en": "Dicevaders is a dice-based roguelike deckbuilder about leading the ultimate alien invasion. Set in the StarVaders universe, draft and manipulate the dice row, build an unstoppable army, and unleash adrenaline pumping combos through powerful synergies and strategic play."
+      }
+    },
+    "addedAt": "2026-09-30",
+    "steamAppId": 3917700,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3917700/c17c7fcf2494a8e006d4f51809914d4f1ffb09aa/header_alt_assets_2.jpg?t=1790706148"
   }
 ]

@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 44
+ * Total de pépites sélectionnées : 46
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -1940,5 +1940,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE4Mjc4NzgyLnBuZw==/315x250%23c/nkA1x6.png"
     ],
     "dateAdded": "2026-09-29"
+  },
+  {
+    "id": "itch-deltarune",
+    "title": "DELTARUNE",
+    "developer": "tobyfox",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://tobyfox.itch.io/deltarune",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "UNDERTALE's parallel story",
+      "en": "UNDERTALE's parallel story"
+    },
+    "description": {
+      "fr": "UNDERTALE's parallel story",
+      "en": "UNDERTALE's parallel story"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzcwMDM2MDQucG5n/315x250%23c/abTUVx.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzcwMDM2MDQucG5n/315x250%23c/abTUVx.png"
+    ],
+    "dateAdded": "2026-09-30"
+  },
+  {
+    "id": "itch-online-obsession",
+    "title": "Online Obsession",
+    "developer": "sourmiiiilk",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://sourmiiiilk.itch.io/online-obsession",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "What could go wrong when you finally meet your online friend?",
+      "en": "What could go wrong when you finally meet your online friend?"
+    },
+    "description": {
+      "fr": "What could go wrong when you finally meet your online friend?",
+      "en": "What could go wrong when you finally meet your online friend?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE5NjgyMjc4LnBuZw==/315x250%23c/mdp6SI.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE5NjgyMjc4LnBuZw==/315x250%23c/mdp6SI.png"
+    ],
+    "dateAdded": "2026-09-30"
   }
 ];

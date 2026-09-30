@@ -485,91 +485,139 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "nivalis",
-    "title": "Nivalis",
-    "developer": "ION LANDS",
-    "publisher": "505 Games",
+    "id": "battle-simulator-counter-zombie-reborn",
+    "title": "Battle Simulator: Counter Zombie REBORN",
+    "developer": "Yurii Nikshych",
+    "publisher": "TheGamesFortress",
     "expectedDate": {
-      "fr": "29 sept. 2026",
-      "en": "29 sept. 2026"
+      "fr": "30 sept. 2026",
+      "en": "Sep 30, 2026"
     },
     "genres": [
       {
-        "fr": "Simulation de Vie",
-        "en": "Life Sim",
-        "es": "Simulador de Vida",
-        "de": "Lebenssimulation",
-        "ja": "生活シミュレーション",
-        "pt-BR": "Simulador de Vida"
+        "fr": "Action",
+        "en": "Action"
       },
       {
-        "fr": "Cyberpunk",
-        "en": "Cyberpunk",
-        "es": "Ciberpunk",
-        "de": "Cyberpunk",
-        "ja": "サイバーパンク",
-        "pt-BR": "Cyberpunk"
+        "fr": "Simulation",
+        "en": "Simulation"
       },
       {
-        "fr": "Gestion & Aventure",
-        "en": "Management & Adventure",
-        "es": "Gestión y Aventura",
-        "de": "Wirtschaft & Abenteuer",
-        "ja": "経営＆アドベンチャー",
-        "pt-BR": "Gerenciamento e Aventura"
+        "fr": "Stratégie",
+        "en": "Stratégie"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/1488490/Nivalis/",
+    "steamUrl": "https://store.steampowered.com/app/4831090/",
     "description": {
-      "fr": "Par les créateurs de Cloudpunk. Développez votre commerce, gérez des restaurants et boîtes de nuit dans la métropole cyberpunk de Nivalis, liez des amitiés et explorez la ville.",
-      "en": "From the makers of Cloudpunk. Grow your business, manage restaurants and nightclubs in the cyberpunk city of Nivalis, make friends and explore the vertical metropolis.",
-      "es": "De los creadores de Cloudpunk. Desarrolla tus negocios, administra restaurantes y discotecas en la metrópolis ciberpunk de Nivalis, entabla amistades y explora la ciudad vertical.",
-      "de": "Von den Schöpfern von Cloudpunk. Baue dein Unternehmen auf, manage Restaurants und Nachtclubs in Nivalis, schließe Freundschaften und erkunde die Metropole.",
-      "ja": "『Cloudpunk』のION LANDSが贈る新作。サイバーパンクの大都市ニヴァリスで店舗を構え、レストランやクラブを経営し、住人たちと交流しながら垂直都市を散策しよう。",
-      "pt-BR": "Dos criadores de Cloudpunk. Expanda seus negócios, administre restaurantes e casas noturnas na metrópole cyberpunk de Nivalis, faça amizades e explore a cidade vertical."
-    },
-    "highlight": {
-      "fr": "Un simulateur de vie cyberpunk immersif dans un univers vertical somptueux.",
-      "en": "An immersive slice-of-life cyberpunk simulation set in a stunning vertical metropolis.",
-      "es": "Un simulador de vida ciberpunk inmersivo en una urbe vertical deslumbrante.",
-      "de": "Eine fesselnde Cyberpunk-Lebenssimulation in einer atemberaubenden vertikalen Zukunftsstadt.",
-      "ja": "壮大な多層構造のサイバーパンク都市で味わう、超没入型のスライス・オブ・ライフ生活。",
-      "pt-BR": "Um simulador de vida cyberpunk imersivo em uma metrópole vertical deslumbrante."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1488490/header.jpg"
-  },
-  {
-    "id": "toem-2",
-    "title": "TOEM 2",
-    "developer": "Something We Made",
-    "publisher": "Something We Made, popagenda",
-    "expectedDate": {
-      "fr": "29 sept. 2026",
-      "en": "29 Sep, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/2900640/",
-    "description": {
-      "fr": "Reprenez votre appareil photo et repartez pour une toute nouvelle aventure ! Dénichez les détails cachés, aidez vos amis tout au long du chemin et immortalisez les merveilles du monde de TOEM 2, la suite du célèbre premier opus.",
-      "en": "Step back into the shoes of a curious photographer and set off on a brand new adventure all about uncovering hidden details, helping friends along the way, and documenting the world’s little wonders in TOEM 2, the sequel to the acclaimed TOEM."
+      "fr": "Simulateur de combat contre les zombies post-apocalyptique avec des tactiques d’escouade réalistes et précises. Affrontez et éliminez la horde de zombies. Tirez pour tuer et utilisez des armes comme le lance-flammes, le M16 et les RPG pour éliminer les morts-vivants.",
+      "en": "Post-apocalyptic zombie battle simulator with accurate squad based tactics. Battle and kill the zombie horde. Shooting to kill, use weapons like flamethrower, m16 and RPGs to kill the undead. Accurate zombie AI and HDR graphics."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2900640/499ae31f4d74c4c41e61058259fca32ccd73c93c/header.jpg?t=1789666373"
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/c78cd742272ca43444802b8da37448bc394e8f18/header.jpg?t=1788512366"
+  },
+  {
+    "id": "gundrobe-an-incremental-gun-builder",
+    "title": "Gundrobe: an Incremental Gun Builder",
+    "developer": "BehaUlas",
+    "publisher": "BehaUlas",
+    "expectedDate": {
+      "fr": "30 sept. 2026",
+      "en": "Sep 30, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      },
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5213660/",
+    "description": {
+      "fr": "Construisez votre arme pièce par pièce, faites évoluer ses composants, débloquez de nouvelles technologies et repoussez vos limites à chaque prestige. Créez des armes toujours plus puissantes et absurdes, capables de tirer des milliers de balles.",
+      "en": "Build your gun piece by piece, evolve its parts, unlock new technology and push your progression further with every prestige. Create increasingly powerful and absurd weapons, from clever builds to guns capable of firing thousands of bullets."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5213660/c143cac45e58bf86a6e4609d9d3b1fb891fcd9fe/header.jpg?t=1790610254"
+  },
+  {
+    "id": "esc-ape-you-died",
+    "title": "ESC ape, You died?",
+    "developer": "Salt&Vinegar",
+    "publisher": "Salt&Vinegar",
+    "expectedDate": {
+      "fr": "30 sept. 2026",
+      "en": "Sep 30, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Puzzle",
+        "en": "Puzzle"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5208240/",
+    "description": {
+      "fr": "ESC ape, You died? est un projet né pour recréer un jeu tenant sur une seule disquette (1,44 Mo) : un jeu de plates-formes à énigmes qui se résout avec l'interface des paramètres de la touche ÉCHAP (menu) et tous les autres éléments d'interface.",
+      "en": "ESC ape, You died? started as a project to recreate a game that fits on a single floppy disk (1.44 MB): a platformer where you solve puzzles with the ESC (menu) settings UI and every other piece of UI."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5208240/f66b6e6f8f5b4e3d4e29f40bb5ecef2e7bf14a27/header.jpg?t=1790671588"
+  },
+  {
+    "id": "stickword",
+    "title": "StickWord",
+    "developer": "Xrootpi",
+    "publisher": "Xrootpi",
+    "expectedDate": {
+      "fr": "30 sept. 2026",
+      "en": "Sep 30, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5228570/",
+    "description": {
+      "fr": "Letters fall out of the sky. You have a bow, a bridge, and one question to answer. Net the letters you need, let the rest drop, and spell your way across 84 levels of a hand-drawn exercise book — before the hangman finishes his sketch.",
+      "en": "Letters fall out of the sky. You have a bow, a bridge, and one question to answer. Net the letters you need, let the rest drop, and spell your way across 84 levels of a hand-drawn exercise book — before the hangman finishes his sketch."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/c8d36f851dd112a935ddc3baa5666f67bfedfc47/header.jpg?t=1790347607"
   }
 ];

@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 500 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 502 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -7485,6 +7485,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Very Positive"
     }
   },
+  "2429930": {
+    "appId": 2429930,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1109,
+    "discountPercent": 25,
+    "formattedFinalPrice": "11,09€",
+    "formattedInitialPrice": "14,79€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "2449490": {
     "appId": 2449490,
     "isFree": false,
@@ -7773,6 +7790,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "finalPriceCents": 0,
     "discountPercent": 0,
     "formattedFinalPrice": "Gratuit",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "2900640": {
+    "appId": 2900640,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1899,
+    "finalPriceCents": 1614,
+    "discountPercent": 15,
+    "formattedFinalPrice": "16,14€",
+    "formattedInitialPrice": "18,99€",
     "totalReviews": 0,
     "totalPositive": 0,
     "positivePercent": 90,
@@ -8081,6 +8115,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Very Positive"
     }
   },
+  "3917700": {
+    "appId": 3917700,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1499,
+    "finalPriceCents": 1349,
+    "discountPercent": 10,
+    "formattedFinalPrice": "13,49€",
+    "formattedInitialPrice": "14,99€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "3936270": {
     "appId": 3936270,
     "isFree": false,
@@ -8148,7 +8199,6 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Overwhelmingly Positive"
     }
   },
-
   "4289410": {
     "appId": 4289410,
     "isFree": false,

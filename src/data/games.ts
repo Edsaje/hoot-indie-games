@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlySchedule
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 253
+ * Total de jeux : 256
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -9742,6 +9742,111 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-09-29"
+  },
+  {
+    "id": "guacamelee-gold-edition",
+    "title": "Guacamelee! Gold Edition",
+    "releaseYear": 2013,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Metroidvania",
+      "Platformer"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Drinkbox Studios",
+    "steamUrl": "https://store.steampowered.com/app/214770/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_0ae81d50f72066713315c972f5a62c4111a75023.1920x1080.jpg?t=1762522710",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_4bc28441486c27a23e82940a31a58a329530d25f.1920x1080.jpg?t=1762522710",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_5d7b0cd418905f274202c2778dbb0fe8efa7db83.1920x1080.jpg?t=1762522710",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_2dfcc00057c01771af3f0bacdfc1b0fdde7e190c.1920x1080.jpg?t=1762522710",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_622e2336ef1723e51abd6bd03f3cde4342ec4d50.1920x1080.jpg?t=1762522710",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214770/ss_d60ffeca591b6c21510479185d47f4bd701b6e05.1920x1080.jpg?t=1762522710"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Guacamelee! Gold Edition est un jeu d'action et de plateforme de style Metroidvania, qui se déroule dans un monde magique, est inspiré de la culture et du folklore mexicain, et propose de nombreux personnages uniques et fascinants.",
+        "en": "Guacamelee! is a Metroidvania-style action-platformer set in a magical Mexican-inspired world. The game draws its inspiration from traditional Mexican culture and folklore, and features many interesting and unique characters."
+      }
+    },
+    "addedAt": "2026-09-30"
+  },
+  {
+    "id": "antichamber",
+    "title": "Antichamber",
+    "releaseYear": 2013,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Alexander Bruce",
+    "steamUrl": "https://store.steampowered.com/app/219890/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_c02435ac01bff1e3af6c69e9ddeb77f6bf40caf2.1920x1080.jpg?t=1525832559",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_8604088893b9d0ea42d41c741619e740e92fcee0.1920x1080.jpg?t=1525832559",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_fe2278241777765a73f5cc1567c17307d92ec6bb.1920x1080.jpg?t=1525832559",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_62a1e3085fee312cf6c1025ec89018fa98821d99.1920x1080.jpg?t=1525832559",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_1bf5f04ea4ffb1aaf3e77bef5e31793486f789ae.1920x1080.jpg?t=1525832559",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219890/ss_aa83543c053ccc413d8b7b5389bffb845ae84068.1920x1080.jpg?t=1525832559"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Antichamber est un jeu d'exploration psychologique et hors du commun où rien ne peut être considéré comme acquis. Découvrez un univers inspiré de l’œuvre d'Escher où les couloirs s'enroulent autour d'autres, où les espaces se reconfigurent eux-mêmes et où accomplir l'impossible peut être la seule façon d'avancer.",
+        "en": "Antichamber is a mind-bending psychological exploration game where nothing can be taken for granted. Discover an Escher-like world where hallways wrap around upon each other, spaces reconfigure themselves, and accomplishing the impossible may just be the only way forward."
+      },
+      "composer": "Siddhartha Barnhoorn"
+    },
+    "addedAt": "2026-09-30"
+  },
+  {
+    "id": "nuclear-throne",
+    "title": "Nuclear Throne",
+    "releaseYear": 2015,
+    "genre": [
+      "Action",
+      "RPG",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Vlambeer",
+    "steamUrl": "https://store.steampowered.com/app/242680/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/b1a8c68f52b8460cdbfb8034c7d36d9abaad9af2/ss_b1a8c68f52b8460cdbfb8034c7d36d9abaad9af2.1920x1080.jpg?t=1764957456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/2772b5b75ed8bc39e8a3e8e9687641217e102f94/ss_2772b5b75ed8bc39e8a3e8e9687641217e102f94.1920x1080.jpg?t=1764957456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/71a2c94508a5fd95e64298e5daaa59d365084dd2/ss_71a2c94508a5fd95e64298e5daaa59d365084dd2.1920x1080.jpg?t=1764957456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/97e1a2821a54b09c4d8b438f33f0eb2ae93103a3/ss_97e1a2821a54b09c4d8b438f33f0eb2ae93103a3.1920x1080.jpg?t=1764957456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/ss_25da6e703cf45cdbd2a03acb4b1f1aa6d8b7a478.1920x1080.jpg?t=1764957456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/ss_3df9b8fc5865796007e2a9f793ce72fbc5125fe7.1920x1080.jpg?t=1764957456"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Nuclear Throne est un jeu de tir roguelike post-apocalyptique en vue du dessus. Dans ce monde post-apocalyptique, l'humanité a disparu, et des monstres et mutants rôdent sur Terre. Parviendrez-vous à atteindre le Trône nucléaire ?",
+        "en": "Nuclear Throne is a post-apocalyptic roguelike-like top-down shooter. Not 'the final hope of humanity' post-apocalyptic, but 'humanity is extinct and mutants and monsters now roam the world' post-apocalyptic. Can you reach the Nuclear Throne?"
+      }
+    },
+    "addedAt": "2026-09-30"
   }
 ];
 
