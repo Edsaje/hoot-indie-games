@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 46
+ * Total de pépites sélectionnées : 48
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2020,5 +2020,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE5NjgyMjc4LnBuZw==/315x250%23c/mdp6SI.png"
     ],
     "dateAdded": "2026-09-30"
+  },
+  {
+    "id": "itch-celeste",
+    "title": "Celeste",
+    "developer": "maddymakesgamesinc",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://maddymakesgamesinc.itch.io/celeste",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$19.99",
+      "en": "$19.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!",
+      "en": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!"
+    },
+    "description": {
+      "fr": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!",
+      "en": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMjE2OTk2LzEwMjQyNTUucG5n/315x250%23c/BFXDdz.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvMjE2OTk2LzEwMjQyNTUucG5n/315x250%23c/BFXDdz.png"
+    ],
+    "dateAdded": "2026-10-01"
+  },
+  {
+    "id": "itch-a-tale-of-crowns",
+    "title": "A Tale of Crowns",
+    "developer": "qeresi",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://qeresi.itch.io/a-tale-of-crowns",
+    "playInBrowserUrl": "https://qeresi.itch.io/a-tale-of-crowns",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Middle Eastern fantasy/romance story.",
+      "en": "A Middle Eastern fantasy/romance story."
+    },
+    "description": {
+      "fr": "A Middle Eastern fantasy/romance story.",
+      "en": "A Middle Eastern fantasy/romance story."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzQxMjQ3MDcucG5n/315x250%23c/zsfJb%2F.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzQxMjQ3MDcucG5n/315x250%23c/zsfJb%2F.png"
+    ],
+    "dateAdded": "2026-10-01"
   }
 ];

@@ -372,8 +372,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Perfect Garbage",
     "publisher": "Perfect Garbage",
     "expectedDate": {
-      "fr": "2026",
-      "en": "2026"
+      "fr": "9 mars 2027",
+      "en": "9 mars 2027"
     },
     "genres": [
       {
@@ -490,8 +490,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Yurii Nikshych",
     "publisher": "TheGamesFortress",
     "expectedDate": {
-      "fr": "30 sept. 2026",
-      "en": "Sep 30, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -523,13 +523,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/c78cd742272ca43444802b8da37448bc394e8f18/header.jpg?t=1788512366"
   },
   {
-    "id": "gundrobe-an-incremental-gun-builder",
-    "title": "Gundrobe: an Incremental Gun Builder",
-    "developer": "BehaUlas",
-    "publisher": "BehaUlas",
+    "id": "leadfall",
+    "title": "LeadFall",
+    "developer": "IronPan",
+    "publisher": "IronPan",
     "expectedDate": {
-      "fr": "30 sept. 2026",
-      "en": "Sep 30, 2026"
+      "fr": "1 oct. 2026",
+      "en": "Oct 1, 2026"
     },
     "genres": [
       {
@@ -537,87 +537,91 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
         "en": "Action"
       },
       {
-        "fr": "Simulation",
-        "en": "Simulation"
+        "fr": "Roguelike",
+        "en": "Roguelike"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5213660/",
+    "steamUrl": "https://store.steampowered.com/app/4839790/",
     "description": {
-      "fr": "Construisez votre arme pièce par pièce, faites évoluer ses composants, débloquez de nouvelles technologies et repoussez vos limites à chaque prestige. Créez des armes toujours plus puissantes et absurdes, capables de tirer des milliers de balles.",
-      "en": "Build your gun piece by piece, evolve its parts, unlock new technology and push your progression further with every prestige. Create increasingly powerful and absurd weapons, from clever builds to guns capable of firing thousands of bullets."
+      "fr": "LeadFall is a fast-paced top-down action roguelike where you survive chaotic waves of food-themed enemies, collect powerful card upgrades, and create broken weapon builds in short, replayable runs.",
+      "en": "LeadFall is a fast-paced top-down action roguelike where you survive chaotic waves of food-themed enemies, collect powerful card upgrades, and create broken weapon builds in short, replayable runs."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5213660/c143cac45e58bf86a6e4609d9d3b1fb891fcd9fe/header.jpg?t=1790610254"
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/8ccd7a91388d030fa20fb7111ae00abb093d3785/header.jpg?t=1790050229"
   },
   {
-    "id": "esc-ape-you-died",
-    "title": "ESC ape, You died?",
-    "developer": "Salt&Vinegar",
-    "publisher": "Salt&Vinegar",
+    "id": "fox-clicker",
+    "title": "Fox Clicker",
+    "developer": "Kemonocept",
+    "publisher": "Kemonocept",
     "expectedDate": {
-      "fr": "30 sept. 2026",
-      "en": "Sep 30, 2026"
+      "fr": "1 oct. 2026",
+      "en": "Oct 1, 2026"
     },
     "genres": [
       {
-        "fr": "Puzzle",
-        "en": "Puzzle"
+        "fr": "Simulation",
+        "en": "Simulation"
+      },
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5208240/",
+    "steamUrl": "https://store.steampowered.com/app/5212110/",
     "description": {
-      "fr": "ESC ape, You died? est un projet né pour recréer un jeu tenant sur une seule disquette (1,44 Mo) : un jeu de plates-formes à énigmes qui se résout avec l'interface des paramètres de la touche ÉCHAP (menu) et tous les autres éléments d'interface.",
-      "en": "ESC ape, You died? started as a project to recreate a game that fits on a single floppy disk (1.44 MB): a platformer where you solve puzzles with the ESC (menu) settings UI and every other piece of UI."
+      "fr": "Restore a forgotten sanctuary with nine fox spirits in a cozy incremental game. Ring the bell, rebuild their Areas, deepen Bonds, celebrate Festivals, and make memories together.",
+      "en": "Restore a forgotten sanctuary with nine fox spirits in a cozy incremental game. Ring the bell, rebuild their Areas, deepen Bonds, celebrate Festivals, and make memories together."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/e4966d7cae45287c787090efd2895505987fa01b/header.jpg?t=1789906231"
+  },
+  {
+    "id": "the-great-game-of-cards",
+    "title": "The Great Game of Cards",
+    "developer": "Acherlose Games",
+    "publisher": "Acherlose Games",
+    "expectedDate": {
+      "fr": "1 oct. 2026",
+      "en": "Oct 1, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      },
+      {
+        "fr": "Free-to-play",
+        "en": "Free-to-play"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5250500/",
+    "description": {
+      "fr": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS",
+      "en": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS"
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5208240/f66b6e6f8f5b4e3d4e29f40bb5ecef2e7bf14a27/header.jpg?t=1790671588"
-  },
-  {
-    "id": "stickword",
-    "title": "StickWord",
-    "developer": "Xrootpi",
-    "publisher": "Xrootpi",
-    "expectedDate": {
-      "fr": "30 sept. 2026",
-      "en": "Sep 30, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5228570/",
-    "description": {
-      "fr": "Letters fall out of the sky. You have a bow, a bridge, and one question to answer. Net the letters you need, let the rest drop, and spell your way across 84 levels of a hand-drawn exercise book — before the hangman finishes his sketch.",
-      "en": "Letters fall out of the sky. You have a bow, a bridge, and one question to answer. Net the letters you need, let the rest drop, and spell your way across 84 levels of a hand-drawn exercise book — before the hangman finishes his sketch."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/c8d36f851dd112a935ddc3baa5666f67bfedfc47/header.jpg?t=1790347607"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1790194422"
   }
 ];

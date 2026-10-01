@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlySchedule
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 256
+ * Total de jeux : 259
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -9847,6 +9847,111 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-09-30"
+  },
+  {
+    "id": "lovers-in-a-dangerous-spacetime",
+    "title": "Lovers in a Dangerous Spacetime",
+    "releaseYear": 2015,
+    "genre": [
+      "Action",
+      "Simulation",
+      "Co-op"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Asteroid Base",
+    "steamUrl": "https://store.steampowered.com/app/252110/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252110/ss_9258e46d97c5cc9a0a64228fe3aebce583bf6015.1920x1080.jpg?t=1745967822",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252110/ss_2c9c01c79209fa70ffbbd8f8d67690d36f3427bf.1920x1080.jpg?t=1745967822",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252110/ss_a461930faa67193f0bace5c86afcbc05ba951380.1920x1080.jpg?t=1745967822",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252110/ss_7fbd1470b31ebbc61a3780963e34495cdfa2fcf4.1920x1080.jpg?t=1745967822",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252110/ss_58f009382d6281b8b1c93b6ee4af77f1150e8a49.1920x1080.jpg?t=1745967822",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252110/ss_549f685226ce791a52df37d8b2d187c2f3ee2521.1920x1080.jpg?t=1745967822"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "LOVERS IN A DANGEROUS SPACETIME est un shooter spatial en coop à bord d'un immense vaisseau fluorescent. Le travail d'équipe est le maître mot pour combattre les forces maléfiques de l'Anti-Amour, sauver les lapins stellaires et échapper à une mort certaine au fond d'un trou noir.",
+        "en": "Explore a neon galaxy in your very own battleship in this 1- to 4-player couch co-op adventure."
+      }
+    },
+    "addedAt": "2026-10-01"
+  },
+  {
+    "id": "steamworld-dig",
+    "title": "SteamWorld Dig",
+    "releaseYear": 2013,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Metroidvania",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Image & Form Games",
+    "steamUrl": "https://store.steampowered.com/app/252410/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_d68bda43fabeb368a4b27d0e98beb9195ccbe360.1920x1080.jpg?t=1750855239",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_b03e0452ea16e460ea4cc18fd8ccd6647de1ba98.1920x1080.jpg?t=1750855239",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_20913ce72c771b92779adac2024847251c7e37b7.1920x1080.jpg?t=1750855239",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_a443439ccd5c33103eda22fd2ae50a5104951677.1920x1080.jpg?t=1750855239",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_c0aab5de5b639e115a3acee96740eaac83af22f3.1920x1080.jpg?t=1750855239",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_45b1664274405aacf12fd4d03a67c402ad45e931.1920x1080.jpg?t=1750855239"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "SteamWorld Dig is an action-adventure puzzler with strong Metroidvanian influences set in the SteamWorld Universe. You’ll need to dig deep into the earth, gather resources to upgrade your tools and abilities, take on enemies, solve challenging puzzles and uncover the secrets to save a dying town.",
+        "en": "SteamWorld Dig is an action-adventure puzzler with strong Metroidvanian influences set in the SteamWorld Universe. You’ll need to dig deep into the earth, gather resources to upgrade your tools and abilities, take on enemies, solve challenging puzzles and uncover the secrets to save a dying town."
+      }
+    },
+    "addedAt": "2026-10-01"
+  },
+  {
+    "id": "death-road-to-canada",
+    "title": "Death Road to Canada",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Rocketcat Games, Madgarden",
+    "steamUrl": "https://store.steampowered.com/app/252610/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252610/ss_50507cb2bab17be0512f53802aa4570123a26219.1920x1080.jpg?t=1666824491",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252610/ss_bad1cf022858a17f9881007f74b987fe01ed0da4.1920x1080.jpg?t=1666824491",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252610/ss_a0420c3949dd195dc9276981a47cc3c76db3c95f.1920x1080.jpg?t=1666824491",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252610/ss_a092939bc83383ca66fc5f6c6f3bea5fd724bf83.1920x1080.jpg?t=1666824491",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252610/ss_e1fd0bc2d9a95ae2ea438fcad47c4e1267c38033.1920x1080.jpg?t=1666824491",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252610/ss_d02496b9f40a65fa6c77b7295cc9a8738e9f987e.1920x1080.jpg?t=1666824491"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Control a car full of jerks as they explore cities, recruit weird people, rescue dogs, argue with each other, and face gigantic swarms of slow zombies. Randomly generated for a new story and rare events every time you play!",
+        "en": "Control a car full of jerks as they explore cities, recruit weird people, rescue dogs, argue with each other, and face gigantic swarms of slow zombies. Randomly generated for a new story and rare events every time you play!"
+      }
+    },
+    "addedAt": "2026-10-01"
   }
 ];
 
