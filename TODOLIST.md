@@ -82,6 +82,34 @@
 
 ---
 
+### 8. 🌾 Réparation de l'action GitHub « Daily Indie Games Harvest » (Élimination des faux positifs) `[✅ 100% Terminé]`
+- **Constat :** Le workflow automatique de moissonnage rejetait agressivement d'authentiques chefs-d'œuvre indépendants (*Mark of the Ninja*, *Dust: An Elysian Tail*, *Risk of Rain*, *TowerFall Ascension*, *Rust*, *SUNLESS SEA*, *The Ascent*, *SpyCat: Codename Wu*, *Bodycam*) sous de faux labels d'interdiction (`[Filtré Adulte FR]`, `[Filtré Content Descriptor]`, `[Filtré Âge 18+]`).
+- **Causes identifiées :**
+  1. `ADULT_CONTENT_DESCRIPTOR_IDS` contenait à tort les descripteurs Valve `1` (*Some Nudity / Mild sexual references*) et `5` (*General Mature Content / Violence*), bloquant des jeux comme *TowerFall Ascension* ou *Rust*. Seuls les descripteurs `3` (*Adult Only Sexual Content*) et `4` (*Frequent Sexual Content*) correspondent aux contenus NSFW/porno stricts.
+  2. Le test d'éditeur AAA (`isNonIndieOrAAA`) était appelé à l'intérieur du filtre adulte `isAdultOrInappropriate`. Lorsqu'un jeu indé disposait d'un accord d'édition console tiers (ex: Klei avec Microsoft Studios pour *Mark of the Ninja*, Dean Dodrill avec Xbox Game Studios pour *Dust*, Hopoo Games avec 2K pour *Risk of Rain*), il était faussement bloqué sous le libellé « Filtré Adulte ».
+  3. Rejet automatique sans discernement de tout jeu avec `required_age >= 18`, pénalisant les créations indés d'horreur ou d'action classées M / PEGI 18 (*The Ascent*, *Hotline Miami*, *CARRION*, *Darkwood*).
+  4. Mots-clés trop génériques dans `ADULT_BANNED_KEYWORDS` : `drug`/`drugs` (bloquait *SpyCat: Codename Wu* pour une enquête sur un trafic pharmaceutique), `sexual` (bloquait *Sunless Sea* sur ses notes PEGI/ESRB), `nudity` (bloquait l'option de censure de *Rust*).
+- **Actions réalisées :**
+  - [x] Restreindre strictement `ADULT_CONTENT_DESCRIPTOR_IDS` à `new Set<number>([3, 4])`.
+  - [x] Créer les listes de protection absolue `KNOWN_INDIE_APP_IDS` et `KNOWN_INDIE_STUDIOS` (Klei, Hopoo, Facepunch, Failbetter, Neon Giant, Extremely OK Games, etc.).
+  - [x] Dissocier le filtre AAA du filtre Adulte dans `dailyIndieHarvest.ts` pour des alertes séparées et explicites (`⛔ [Filtré Studio AAA]` vs `⛔ [Filtré Adulte FR]`).
+  - [x] Supprimer le blocage systématique `required_age >= 18` pour préserver les jeux d'action/horreur indés légitimes.
+  - [x] Nettoyer `ADULT_BANNED_KEYWORDS` en supprimant `drug`/`drugs`/`mature content` et en ciblant précisément les actes explicites composés (`sexual acts`, `explicit sexual`, `sexual violence`, `explicit sex`, etc.).
+  - [x] Validation par banc de test automatisé : 100% de succès (jeux indés admis, jeux NSFW réels type *Femboy Ghost* et *Drag'n Wash* strictement bloqués).
+
+---
+
+### 9. 🦉 Hoot Odyssey (Jeu Idle Bêta) — Feuille de Route d'Amélioration Globale `[En cours / Planifié]`
+- **Constat :** La première version fonctionnelle de l'Odyssée Céleste est en place, mais nécessite un saut qualitatif majeur pour s'éloigner d'un aspect austère et offrir un véritable « game feel » captivant, gratifiant et visuel.
+- **Axes prioritaires détaillés dans `IDLE_GAME_DESIGN.md` (Section 12) :**
+  - [ ] **Carte Interactive du Monde (World Map / Route Map)** : Visualisation cartographique stylisée des biomes (Clairière, Canopée, Grottes, Cimes, Enfers, Néant) avec embranchements, routes 1 à 5, indicateurs de complétion et boss de zone.
+  - [ ] **Pokédex de Route (Route Loot Dex & Radar)** : Réglette visuelle sous chaque route affichant les 6 à 8 pépites capturables (silhouettes sombres non découvertes, capsules officielles débloquées, cadres holo étincelants), pourcentage de maîtrise et bonus de route à 100%.
+  - [ ] **Révolution Graphique & "Juiciness" de Combat** : Décors peints multi-couches en parallaxe, tracé de taillade SVG réactif au clic/touch, micro screen-shake sur coups critiques, flinch et flash blanc sur les monstres, drain dynamique de PV et éclats de sève 60 FPS.
+  - [ ] **Compagnon Protecteur Actif** : Possibilité d'assigner l'un de ses 256 jeux capturés au bord de l'arène avec une jauge d'énergie déclenchant un pouvoir ultime thématique.
+  - [ ] **Coffres de Premier Passage (First-Clear Chests)** : Coffres animés à l'ouverture lors de la première victoire sur une route offrant de gros butins et des boosters de cartes.
+
+---
+
 ## 🔴 Phase 1 : Urgences Critiques, Intégrité du Jeu & Image (Priorité P0)
 
 ### 1. 🛡️ Résolution de l'erreur « Jeton CSRF invalide ou expiré » sur les suggestions de jeux `[✅ 100% Terminé]`
