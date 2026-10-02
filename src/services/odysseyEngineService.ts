@@ -77,9 +77,23 @@ export function loadOdysseyState(): OdysseySaveState {
     }
 
     const defaultState = getDefaultOdysseyState();
+    const currentBiomeId =
+      parsed.currentBiomeId && ODYSSEY_BIOMES.some((b) => b.id === parsed.currentBiomeId)
+        ? parsed.currentBiomeId
+        : defaultState.currentBiomeId;
+    const currentRouteNumber =
+      typeof parsed.currentRouteNumber === 'number'
+        ? Math.max(1, Math.min(5, Math.floor(parsed.currentRouteNumber)))
+        : defaultState.currentRouteNumber;
+    const autoAdvance =
+      typeof parsed.autoAdvance === 'boolean' ? parsed.autoAdvance : defaultState.autoAdvance;
+
     return {
       ...defaultState,
       ...parsed,
+      currentBiomeId,
+      currentRouteNumber,
+      autoAdvance,
       highestRouteUnlocked: {
         ...defaultState.highestRouteUnlocked,
         ...(parsed.highestRouteUnlocked || {}),

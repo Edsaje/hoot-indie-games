@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { RouteLootDex } from './RouteLootDex';
 import { OdysseyArenaBackdrop } from './OdysseyArenaBackdrop';
+import { OdysseyWorldMap } from './OdysseyWorldMap';
 import {
   OdysseySlashOverlay,
   OdysseySapBurstOverlay,
@@ -118,6 +119,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     return localStorage.getItem('hoot_screen_shake') !== 'false';
   });
 
+  const [mobileTab, setMobileTab] = useState<'arena' | 'map'>('arena');
   const arenaRef = useRef<HTMLDivElement>(null);
 
   const toggleScreenShake = () => {
@@ -446,7 +448,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto flex flex-col items-center select-none">
+    <div className="relative w-full max-w-7xl mx-auto flex flex-col items-center select-none">
       {/* 1. Bandeau supérieur : Choix de Route & Sève */}
       <div className="w-full flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4 rounded-2xl bg-[#06241b]/90 border border-[#78350f] backdrop-blur-md mb-4 shadow-xl">
         <div className="flex items-center gap-2.5">
@@ -476,15 +478,17 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
             </div>
           </div>
 
-          {onOpenMap && (
-            <button
-              onClick={onOpenMap}
-              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-black text-xs shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
-            >
-              <Map className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline">Carte</span>
-            </button>
-          )}
+          <button
+            onClick={() => {
+              soundFx.playClick();
+              setMobileTab((prev) => (prev === 'arena' ? 'map' : 'arena'));
+              onOpenMap?.();
+            }}
+            className="lg:hidden px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-black text-xs shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          >
+            <Map className="w-3.5 h-3.5 text-amber-400" />
+            <span>{mobileTab === 'arena' ? 'Carte' : 'Combat'}</span>
+          </button>
 
           <button
             onClick={onOpenTree}
@@ -497,7 +501,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       </div>
 
       {/* 2. Sélecteur de Route (1 à 5) & Case Auto-Progression */}
-      <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-2.5 px-1">
+      <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-1">
         <div className="flex-1 min-w-[240px] flex items-center gap-1.5 sm:gap-2">
           {[1, 2, 3, 4, 5].map((rNum) => {
             const isBoss = rNum === 5;
@@ -559,15 +563,51 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         </label>
       </div>
 
-      {/* 2bis. Pokédex de Route / Loot Radar des Pépites */}
-      <RouteLootDex
-        currentRoute={currentRoute}
-        capturedGames={state.capturedGames}
-        onSelectGameInspect={onOpenCompanions}
-      />
+      {/* Sélecteur d'onglet Mobile (Combat & Pokédex vs Carte du Monde) */}
+      <div className="flex lg:hidden w-full items-center p-1 rounded-xl bg-slate-950/80 border border-white/10 mb-3">
+        <button
+          onClick={() => {
+            soundFx.playClick();
+            setMobileTab('arena');
+          }}
+          className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            mobileTab === 'arena'
+              ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <Sword className="w-3.5 h-3.5" />
+          <span>Combat & Pépites</span>
+        </button>
+        <button
+          onClick={() => {
+            soundFx.playClick();
+            setMobileTab('map');
+          }}
+          className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            mobileTab === 'map'
+              ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <Map className="w-3.5 h-3.5" />
+          <span>Carte du Monde</span>
+        </button>
+      </div>
 
-      {/* 3. L'Arène de Combat Centrale */}
-      <div
+      {/* 3. Grille Principale Pokéclicker (Arène à gauche, Carte interactive à droite sur Desktop) */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Colonne Gauche : Combat & Pokédex de Route */}
+        <div className={`lg:col-span-7 flex flex-col gap-3.5 ${mobileTab === 'map' ? 'hidden lg:flex' : 'flex'}`}>
+          {/* Pokédex de Route / Loot Radar des Pépites */}
+          <RouteLootDex
+            currentRoute={currentRoute}
+            capturedGames={state.capturedGames}
+            onSelectGameInspect={onOpenCompanions}
+          />
+
+          {/* L'Arène de Combat Centrale */}
+          <div
         ref={arenaRef}
         onClick={handleMonsterClick}
         className={`relative w-full aspect-[4/3] sm:aspect-[16/9] max-h-[460px] rounded-3xl border-2 ${currentBiome.borderColor} bg-gradient-to-b ${currentBiome.bgGradient} shadow-2xl overflow-hidden flex flex-col justify-between p-4 sm:p-6 cursor-crosshair select-none active:scale-[0.99] group ${
@@ -785,5 +825,12 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         </div>
       </div>
     </div>
-  );
+
+    {/* Colonne Droite : Carte Interactive du Monde & Sentier des Routes */}
+    <div className={`lg:col-span-5 flex flex-col gap-3.5 w-full ${mobileTab === 'arena' ? 'hidden lg:flex' : 'flex'}`}>
+      <OdysseyWorldMap state={state} onStateChange={onStateChange} />
+    </div>
+  </div>
+</div>
+);
 };

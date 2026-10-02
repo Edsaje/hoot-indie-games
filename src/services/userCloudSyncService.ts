@@ -579,9 +579,27 @@ export function applyCloudSaveToLocalStorage(
               };
             }
 
+            const mergedRouteKills: Record<string, number> = { ...(localOdyssey.routeKills || {}) };
+            for (const [rId, kNum] of Object.entries(cloudOdyssey.routeKills || {})) {
+              mergedRouteKills[rId] = Math.max(Number(mergedRouteKills[rId] || 0), Number(kNum || 0));
+            }
+
+            const activeBiome = localOdyssey.currentBiomeId || cloudOdyssey.currentBiomeId || 'biome_1_clearing';
+            const activeRoute = localOdyssey.currentRouteNumber || cloudOdyssey.currentRouteNumber || 1;
+            const activeAutoAdvance =
+              typeof localOdyssey.autoAdvance === 'boolean'
+                ? localOdyssey.autoAdvance
+                : typeof cloudOdyssey.autoAdvance === 'boolean'
+                ? cloudOdyssey.autoAdvance
+                : false;
+
             const mergedOdyssey = {
               ...localOdyssey,
               ...cloudOdyssey,
+              currentBiomeId: activeBiome,
+              currentRouteNumber: activeRoute,
+              autoAdvance: activeAutoAdvance,
+              routeKills: mergedRouteKills,
               highestBiomeUnlocked: mergedBiome,
               highestRouteUnlocked: mergedRoutes,
               treeUpgrades: mergedUpgrades,

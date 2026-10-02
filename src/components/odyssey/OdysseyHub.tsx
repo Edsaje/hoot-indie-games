@@ -46,10 +46,18 @@ export const OdysseyHub: React.FC = () => {
     if (!offlineSummary) return;
 
     setOdysseyState((prev) => {
+      const activeRoute = getCurrentRoute(prev.currentBiomeId, prev.currentRouteNumber);
+      const prevRouteKills = (prev.routeKills && prev.routeKills[activeRoute.id]) || 0;
+      const updatedRouteKills = {
+        ...(prev.routeKills || {}),
+        [activeRoute.id]: prevRouteKills + offlineSummary.monstersDefeatedEstimate,
+      };
+
       const updated: OdysseySaveState = {
         ...prev,
         starSap: prev.starSap + offlineSummary.starSapEarned,
         totalStarSapEarned: prev.totalStarSapEarned + offlineSummary.starSapEarned,
+        routeKills: updatedRouteKills,
         stats: {
           ...prev.stats,
           monstersDefeated: prev.stats.monstersDefeated + offlineSummary.monstersDefeatedEstimate,

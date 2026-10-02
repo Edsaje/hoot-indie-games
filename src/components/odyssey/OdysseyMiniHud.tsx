@@ -70,6 +70,12 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     return () => window.removeEventListener('hoot_odyssey_updated', handleUpdate);
   }, []);
 
+  // Réinitialiser le monstre si la route ou le biome change
+  useEffect(() => {
+    const r = getCurrentRoute(odysseyState.currentBiomeId, odysseyState.currentRouteNumber);
+    setMonster(spawnNextMonster(r, playerStats.holoChanceBonus));
+  }, [odysseyState.currentBiomeId, odysseyState.currentRouteNumber, playerStats.holoChanceBonus]);
+
   // Défaite d'un monstre en arrière-plan
   const handleDefeat = useCallback(() => {
     const curMob = monsterRef.current;
@@ -80,15 +86,17 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     setOdysseyState(nextState);
     saveOdysseyState(nextState);
 
-    const nextMob = spawnNextMonster(currentRoute, curStats.holoChanceBonus);
+    const activeRoute = getCurrentRoute(nextState.currentBiomeId, nextState.currentRouteNumber);
+    const nextMob = spawnNextMonster(activeRoute, curStats.holoChanceBonus);
     setMonster(nextMob);
-  }, [currentRoute]);
+  }, []);
 
   // Boucle de combat passif de fond (Tick chaque seconde)
   useEffect(() => {
     const tickInterval = setInterval(() => {
-      // Si la page est en arrière-plan ou passiveDps = 0, on économise
+      // Si la page est en arrière-plan, que la modale/page Odyssée est active ou passiveDps = 0, on économise
       if (typeof document !== 'undefined' && document.hidden) return;
+      if (isModalActive) return;
       const stats = statsRef.current;
       if (stats.passiveDps <= 0) return;
 
@@ -104,7 +112,7 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     }, 1000);
 
     return () => clearInterval(tickInterval);
-  }, [handleDefeat]);
+  }, [handleDefeat, isModalActive]);
 
   // Attaque rapide au clic
   const handleQuickAttack = (e: React.MouseEvent) => {
