@@ -6,6 +6,7 @@ import {
   Compass,
   ArrowRight,
   Layers,
+  Menu,
 } from 'lucide-react';
 import type { OdysseySaveState, OdysseyBiomeId, OdysseyRoute } from '../../types/odyssey';
 import { ODYSSEY_BIOMES, ODYSSEY_ROUTES } from '../../data/odysseyData';
@@ -15,9 +16,11 @@ import {
   switchRoute,
   unlockBiome,
   getCurrentBiome,
+  getCurrentRoute,
 } from '../../services/odysseyEngineService';
 import { getRouteMastery } from '../../data/odysseyRouteDex';
 import { soundFx } from '../../utils/audio';
+import { OdysseyRouteBurgerMenu } from './OdysseyRouteBurgerMenu';
 
 interface OdysseyWorldMapProps {
   state: OdysseySaveState;
@@ -43,6 +46,7 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
   const [viewMode, setViewMode] = useState<'trail' | 'atlas'>('trail');
   const [inspectedBiomeId, setInspectedBiomeId] = useState<OdysseyBiomeId>(state.currentBiomeId);
   const [hoveredRoute, setHoveredRoute] = useState<OdysseyRoute | null>(null);
+  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
 
   const inspectedBiome = getCurrentBiome(inspectedBiomeId);
   const routesForInspected = ODYSSEY_ROUTES.filter((r) => r.biomeId === inspectedBiomeId);
@@ -171,11 +175,11 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-col items-center bg-[#041a12]/95 border border-[#78350f] rounded-2xl p-3 sm:p-4 shadow-2xl backdrop-blur-md relative overflow-hidden select-none">
-      {/* 1. Barre d'outils cartographique supérieure : Sélecteur des 6 Royaumes */}
-      <div className="w-full flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/10 mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+    <div className="w-full flex flex-col items-center bg-[#041a12]/95 border-2 border-[#78350f] rounded-3xl p-3 sm:p-4 md:p-5 shadow-2xl backdrop-blur-md relative overflow-hidden select-none">
+      {/* 1. Barre d'outils cartographique supérieure : Sélecteur des 6 Royaumes & Menu Burger */}
+      <div className="w-full flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-white/10 mb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
             <Compass className="w-4 h-4 animate-spin-slow" />
           </div>
           <div>
@@ -183,7 +187,7 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
               <span className="text-[10px] font-mono uppercase tracking-wider text-amber-300 font-bold">
                 Carte du Monde
               </span>
-              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
                 Monde {inspectedBiome.index}/6
               </span>
             </div>
@@ -191,35 +195,53 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
           </div>
         </div>
 
-        {/* Boutons d'affichage : Sentier local vs Atlas mondial */}
-        <div className="flex items-center gap-1 bg-slate-950/60 p-1 rounded-xl border border-white/10">
+        {/* Boutons d'affichage : Menu Burger des Routes & Sentier/Atlas */}
+        <div className="flex items-center gap-2">
+          {/* Bouton Menu Burger Principal */}
           <button
             onClick={() => {
               soundFx.playClick();
-              setViewMode('trail');
+              setIsBurgerOpen(true);
             }}
-            className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer ${
-              viewMode === 'trail'
-                ? 'bg-amber-500 text-slate-950 shadow-sm'
-                : 'text-slate-400 hover:text-white'
-            }`}
+            className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            title="Menu complet pour changer de route et de biome"
           >
-            <span>Sentier</span>
+            <Menu className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>Routes</span>
+            <span className="text-[10px] font-mono px-1 py-0.2 rounded bg-slate-950/20 font-black">
+              R{state.currentRouteNumber}
+            </span>
           </button>
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              setViewMode('atlas');
-            }}
-            className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer ${
-              viewMode === 'atlas'
-                ? 'bg-amber-500 text-slate-950 shadow-sm'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Layers className="w-3 h-3" />
-            <span>Atlas</span>
-          </button>
+
+          <div className="flex items-center gap-1 bg-slate-950/60 p-1 rounded-xl border border-white/10">
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                setViewMode('trail');
+              }}
+              className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                viewMode === 'trail'
+                  ? 'bg-amber-500 text-slate-950 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span>Sentier</span>
+            </button>
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                setViewMode('atlas');
+              }}
+              className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                viewMode === 'atlas'
+                  ? 'bg-amber-500 text-slate-950 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Layers className="w-3 h-3" />
+              <span>Atlas</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -260,12 +282,12 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
         })}
       </div>
 
-      {/* 3. Vue 1 : Le Sentier Cartographique SVG Réel (Routes 1 à 5) */}
+      {/* 3. Vue 1 : Le Sentier Cartographique SVG Réel (Routes 1 à 5 agrandi) */}
       {viewMode === 'trail' && (
-        <div className="relative w-full aspect-[600/340] max-h-[360px] rounded-xl overflow-hidden border border-white/10 bg-[#02100a] shadow-inner">
+        <div className="relative w-full aspect-[600/350] min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] max-h-[500px] rounded-2xl overflow-hidden border border-white/10 bg-[#02100a] shadow-inner mb-3">
           {/* Fond cartographique SVG interactif */}
           <svg
-            viewBox="0 0 600 340"
+            viewBox="0 0 600 350"
             className="w-full h-full object-cover"
             preserveAspectRatio="xMidYMid meet"
           >
@@ -583,6 +605,38 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
               </div>
             </div>
           )}
+
+          {/* Barre de synthèse & action de route active sous la carte */}
+          <div className="w-full flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-2xl bg-black/40 border border-white/10 mt-1">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0">
+                R{state.currentRouteNumber}
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-black text-white truncate">
+                  {getCurrentRoute(state.currentBiomeId, state.currentRouteNumber).name}
+                </div>
+                <div className="text-[10px] font-mono text-slate-400 flex items-center gap-1.5">
+                  <span>{getCurrentBiome(state.currentBiomeId).name}</span>
+                  <span>•</span>
+                  <span className="text-emerald-400 font-bold">
+                    {(state.routeKills && state.routeKills[getCurrentRoute(state.currentBiomeId, state.currentRouteNumber).id]) || 0} vaincus
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                setIsBurgerOpen(true);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 hover:border-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ml-auto active:scale-95 shadow-sm"
+            >
+              <Menu className="w-3.5 h-3.5 text-amber-400" />
+              <span>Changer de route</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -665,6 +719,14 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
           })}
         </div>
       )}
+
+      {/* 5. Modale / Tiroir burger des routes & biomes */}
+      <OdysseyRouteBurgerMenu
+        isOpen={isBurgerOpen}
+        onClose={() => setIsBurgerOpen(false)}
+        state={state}
+        onStateChange={onStateChange}
+      />
     </div>
   );
 };

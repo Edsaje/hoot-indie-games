@@ -21,10 +21,12 @@ import {
   Target,
   FastForward,
   Activity,
+  Menu,
 } from 'lucide-react';
 import { RouteLootDex } from './RouteLootDex';
 import { OdysseyArenaBackdrop } from './OdysseyArenaBackdrop';
 import { OdysseyWorldMap } from './OdysseyWorldMap';
+import { OdysseyRouteBurgerMenu } from './OdysseyRouteBurgerMenu';
 import {
   OdysseySlashOverlay,
   OdysseySapBurstOverlay,
@@ -58,7 +60,6 @@ interface OdysseyArenaProps {
   onStateChange: (newState: OdysseySaveState) => void;
   onOpenTree: () => void;
   onOpenCompanions: () => void;
-  onOpenMap?: () => void;
 }
 
 const getBiomeLucideIcon = (biomeId: string) => {
@@ -86,8 +87,8 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   onStateChange,
   onOpenTree,
   onOpenCompanions,
-  onOpenMap,
 }) => {
+  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
   const currentBiome = getCurrentBiome(state.currentBiomeId);
   const currentRoute = getCurrentRoute(state.currentBiomeId, state.currentRouteNumber);
 
@@ -482,7 +483,6 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
             onClick={() => {
               soundFx.playClick();
               setMobileTab((prev) => (prev === 'arena' ? 'map' : 'arena'));
-              onOpenMap?.();
             }}
             className="lg:hidden px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-black text-xs shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
           >
@@ -500,9 +500,22 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         </div>
       </div>
 
-      {/* 2. Sélecteur de Route (1 à 5) & Case Auto-Progression */}
+      {/* 2. Sélecteur de Route (1 à 5), Menu Burger & Case Auto-Progression */}
       <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-1">
-        <div className="flex-1 min-w-[240px] flex items-center gap-1.5 sm:gap-2">
+        <div className="flex-1 min-w-[260px] flex items-center gap-1.5 sm:gap-2">
+          {/* Bouton Menu Burger rapide */}
+          <button
+            onClick={() => {
+              soundFx.playClick();
+              setIsBurgerOpen(true);
+            }}
+            className="py-1.5 sm:py-2 px-2.5 rounded-xl text-xs font-black font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer border bg-slate-900/90 text-amber-300 border-amber-500/40 hover:bg-slate-800 hover:border-amber-400 shadow-sm shrink-0 active:scale-95"
+            title="Menu complet des routes & biomes"
+          >
+            <Menu className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Routes</span>
+          </button>
+
           {[1, 2, 3, 4, 5].map((rNum) => {
             const isBoss = rNum === 5;
             const maxUnlocked = state.highestRouteUnlocked[state.currentBiomeId] || 1;
@@ -595,10 +608,10 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         </button>
       </div>
 
-      {/* 3. Grille Principale Pokéclicker (Arène à gauche, Carte interactive à droite sur Desktop) */}
+      {/* 3. Grille Principale Pokéclicker (Arène à gauche 50%, Carte interactive à droite 50% sur Desktop) */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Colonne Gauche : Combat & Pokédex de Route */}
-        <div className={`lg:col-span-7 flex flex-col gap-3.5 ${mobileTab === 'map' ? 'hidden lg:flex' : 'flex'}`}>
+        <div className={`lg:col-span-6 flex flex-col gap-3.5 ${mobileTab === 'map' ? 'hidden lg:flex' : 'flex'}`}>
           {/* Pokédex de Route / Loot Radar des Pépites */}
           <RouteLootDex
             currentRoute={currentRoute}
@@ -826,11 +839,19 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       </div>
     </div>
 
-    {/* Colonne Droite : Carte Interactive du Monde & Sentier des Routes */}
-    <div className={`lg:col-span-5 flex flex-col gap-3.5 w-full ${mobileTab === 'arena' ? 'hidden lg:flex' : 'flex'}`}>
+    {/* Colonne Droite : Carte Interactive du Monde & Sentier des Routes (50%) */}
+    <div className={`lg:col-span-6 flex flex-col gap-3.5 w-full ${mobileTab === 'arena' ? 'hidden lg:flex' : 'flex'}`}>
       <OdysseyWorldMap state={state} onStateChange={onStateChange} />
     </div>
   </div>
+
+  {/* Menu burger des routes accessible directement depuis l'arène */}
+  <OdysseyRouteBurgerMenu
+    isOpen={isBurgerOpen}
+    onClose={() => setIsBurgerOpen(false)}
+    state={state}
+    onStateChange={onStateChange}
+  />
 </div>
 );
 };

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Sword,
-  Map,
   Backpack,
   Sparkles,
   Network,
@@ -18,12 +17,11 @@ import {
 import { OdysseyArena } from './OdysseyArena';
 import { CelestialTreeView } from './CelestialTreeView';
 import { CompanionsDexView } from './CompanionsDexView';
-import { BiomesMapView } from './BiomesMapView';
 import { OdysseyStatsView } from './OdysseyStatsView';
 import { OdysseyOfflineModal } from './OdysseyOfflineModal';
 import { soundFx } from '../../utils/audio';
 
-type HubView = 'arena' | 'tree' | 'companions' | 'map' | 'stats';
+type HubView = 'arena' | 'tree' | 'companions' | 'stats';
 
 export const OdysseyHub: React.FC = () => {
   const [odysseyState, setOdysseyState] = useState<OdysseySaveState>(() => loadOdysseyState());
@@ -98,7 +96,7 @@ export const OdysseyHub: React.FC = () => {
   }, [odysseyState]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 py-6 sm:py-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-6 sm:py-8 animate-in fade-in duration-300">
       {/* Modale des Gains Hors-Ligne */}
       {offlineSummary && (
         <OdysseyOfflineModal summary={offlineSummary} onClaim={handleClaimOfflineGains} />
@@ -119,7 +117,7 @@ export const OdysseyHub: React.FC = () => {
         </h1>
       </div>
 
-      {/* Navigation Interne de l'Odyssée (Pills en tête de page) */}
+      {/* Navigation Interne de l'Odyssée (Pills en tête de page : 4 onglets majeurs) */}
       <div className="w-full max-w-xl mx-auto flex items-center justify-center p-1.5 rounded-2xl bg-[#06241b] border border-[#78350f] mb-6 shadow-xl">
         <button
           onClick={() => {
@@ -169,21 +167,6 @@ export const OdysseyHub: React.FC = () => {
         <button
           onClick={() => {
             soundFx.playClick();
-            setActiveView('map');
-          }}
-          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-            activeView === 'map'
-              ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
-              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-          }`}
-        >
-          <Map className="w-3.5 h-3.5" />
-          <span>Biomes</span>
-        </button>
-
-        <button
-          onClick={() => {
-            soundFx.playClick();
             setActiveView('stats');
           }}
           className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
@@ -205,7 +188,6 @@ export const OdysseyHub: React.FC = () => {
           onStateChange={setOdysseyState}
           onOpenTree={() => setActiveView('tree')}
           onOpenCompanions={() => setActiveView('companions')}
-          onOpenMap={() => setActiveView('map')}
         />
       )}
 
@@ -220,14 +202,6 @@ export const OdysseyHub: React.FC = () => {
       {activeView === 'companions' && (
         <CompanionsDexView
           state={odysseyState}
-          onBackToArena={() => setActiveView('arena')}
-        />
-      )}
-
-      {activeView === 'map' && (
-        <BiomesMapView
-          state={odysseyState}
-          onStateChange={setOdysseyState}
           onBackToArena={() => setActiveView('arena')}
         />
       )}
