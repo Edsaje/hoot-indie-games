@@ -335,45 +335,90 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
               const isUnlocked = rNum <= maxRouteUnlocked;
               const isCurrent =
                 state.currentBiomeId === inspectedBiomeId && state.currentRouteNumber === rNum;
+              const isHovered = hoveredRoute?.id === route.id;
               const kills = (state.routeKills && state.routeKills[route.id]) || 0;
               const mastery = getRouteMastery(route.id, state.capturedGames);
+
+              // Rayon adaptatif centré (s'agrandit en douceur au survol SANS déplacement de coordonnées)
+              const baseRadius = isBoss ? 17 : 14;
+              const radius = isHovered ? baseRadius + 3 : baseRadius;
 
               return (
                 <g
                   key={route.id}
-                  className="cursor-pointer transition-transform hover:scale-110"
+                  className="cursor-pointer select-none group"
                   onClick={() => handleSelectRoute(rNum)}
                   onMouseEnter={() => setHoveredRoute(route)}
                   onMouseLeave={() => setHoveredRoute(null)}
                 >
-                  {/* Halo de pulsation pour la route active */}
+                  {/* Halo de pulsation radar fluide pour la route active (deux ondes concentriques centrées) */}
                   {isCurrent && (
-                    <circle
-                      cx={coords.x}
-                      cy={coords.y}
-                      r="22"
-                      fill="none"
-                      stroke="#f59e0b"
-                      strokeWidth="2"
-                      className="animate-ping"
-                      opacity="0.6"
-                    />
+                    <>
+                      <circle
+                        cx={coords.x}
+                        cy={coords.y}
+                        r={baseRadius}
+                        fill="none"
+                        stroke="#f59e0b"
+                        strokeWidth="2"
+                      >
+                        <animate
+                          attributeName="r"
+                          values={`${baseRadius};${baseRadius + 14}`}
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                        <animate
+                          attributeName="opacity"
+                          values="0.8;0"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </circle>
+                      <circle
+                        cx={coords.x}
+                        cy={coords.y}
+                        r={baseRadius}
+                        fill="none"
+                        stroke="#fbbf24"
+                        strokeWidth="1.5"
+                      >
+                        <animate
+                          attributeName="r"
+                          values={`${baseRadius};${baseRadius + 14}`}
+                          begin="1s"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                        <animate
+                          attributeName="opacity"
+                          values="0.8;0"
+                          begin="1s"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </circle>
+                    </>
                   )}
 
                   {/* Disque extérieur du jalon */}
                   <circle
                     cx={coords.x}
                     cy={coords.y}
-                    r={isBoss ? 17 : 14}
+                    r={radius}
                     fill={
                       isCurrent
                         ? '#f59e0b'
                         : isUnlocked
-                        ? '#062e22'
+                        ? isHovered
+                          ? '#0d4a36'
+                          : '#062e22'
                         : '#0a100d'
                     }
                     stroke={
-                      isCurrent
+                      isHovered
+                        ? '#fef08a'
+                        : isCurrent
                         ? '#fef08a'
                         : isUnlocked
                         ? isBoss
@@ -381,8 +426,9 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
                           : '#10b981'
                         : '#334155'
                     }
-                    strokeWidth={isCurrent ? 3 : 2}
-                    filter={isCurrent ? 'url(#glow-gold)' : undefined}
+                    strokeWidth={isHovered ? 3.5 : isCurrent ? 3 : 2}
+                    filter={isCurrent || isHovered ? 'url(#glow-gold)' : undefined}
+                    className="transition-all duration-150"
                   />
 
                   {/* Numéro ou icône centrale */}
@@ -391,9 +437,10 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
                       x={coords.x}
                       y={coords.y + 4}
                       textAnchor="middle"
-                      fontSize="10"
+                      fontSize={isHovered ? '11' : '10'}
                       fill={isCurrent ? '#020617' : '#f43f5e'}
                       fontWeight="900"
+                      className="transition-all duration-150"
                     >
                       👑
                     </text>
@@ -402,10 +449,11 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
                       x={coords.x}
                       y={coords.y + 3.5}
                       textAnchor="middle"
-                      fontSize="10"
+                      fontSize={isHovered ? '11' : '10'}
                       fontFamily="monospace"
                       fontWeight="900"
                       fill={isCurrent ? '#020617' : isUnlocked ? '#ffffff' : '#64748b'}
+                      className="transition-all duration-150"
                     >
                       {rNum}
                     </text>
@@ -444,8 +492,11 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
                     width="60"
                     height="14"
                     rx="4"
-                    fill="#020617"
-                    opacity="0.85"
+                    fill={isHovered ? '#0f172a' : '#020617'}
+                    stroke={isHovered ? '#f59e0b' : 'transparent'}
+                    strokeWidth="0.8"
+                    opacity="0.9"
+                    className="transition-all duration-150"
                   />
                   <text
                     x={coords.x}
@@ -454,14 +505,22 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
                     fontSize="7.5"
                     fontFamily="monospace"
                     fontWeight="bold"
-                    fill={isCurrent ? '#fbbf24' : isUnlocked ? '#cbd5e1' : '#64748b'}
+                    fill={isHovered ? '#fef08a' : isCurrent ? '#fbbf24' : isUnlocked ? '#cbd5e1' : '#64748b'}
+                    className="transition-all duration-150"
                   >
                     {isUnlocked ? (isBoss ? 'BOSS R5' : `R${rNum} (${kills})`) : 'VERROUILLÉ'}
                   </text>
 
-                  {/* Balise animée de présence "VOUS ÊTES ICI" avec Mascotte Hoot */}
+                  {/* Balise animée de présence "VOUS ÊTES ICI" avec Mascotte Hoot (flottement doux centré) */}
                   {isCurrent && (
-                    <g transform={`translate(${coords.x}, ${coords.y - 28})`} className="animate-bounce">
+                    <g transform={`translate(${coords.x}, ${coords.y - 28})`}>
+                      <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values={`${coords.x} ${coords.y - 32}; ${coords.x} ${coords.y - 25}; ${coords.x} ${coords.y - 32}`}
+                        dur="2.4s"
+                        repeatCount="indefinite"
+                      />
                       {/* Bulle d'indication */}
                       <rect
                         x="-36"
