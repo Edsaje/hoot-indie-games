@@ -11,6 +11,7 @@ import type {
   CelestialUpgradeNode,
 } from '../types/odyssey';
 import { INDIE_GAMES } from './games';
+import { pickWildEchoForRoute, getRouteMastery, getGameArtwork } from './odysseyRouteDex';
 
 export const HOLO_BASE_PROBABILITY = 1 / 1024; // 1 chance sur 1024 par apparition
 
@@ -700,55 +701,66 @@ export function calculateUpgradeCost(node: CelestialUpgradeNode, currentLevel: n
  */
 export function generateMonsterForRoute(
   route: OdysseyRoute,
-  holoRateBonus: number = 0
+  holoRateBonus: number = 0,
+  capturedGames: Record<string, { count: number; isHolo: boolean }> = {},
+  huntUncaught: boolean = false
 ): OdysseyMonster {
-  // 35% de chance d'affronter un Écho Sauvage d'un jeu indé certifié
-  const isWildEcho = !route.isBossRoute && Math.random() < 0.35 && INDIE_GAMES.length > 0;
+  // Bonus de spawn si la route est maîtrisée à 100% (45% au lieu de 35%)
+  const mastery = getRouteMastery(route.id, capturedGames);
+  const echoChance = mastery.isMastered ? 0.45 : 0.35;
+  const isWildEcho = !route.isBossRoute && Math.random() < echoChance;
   
   // Tirage Shiny / Holo
   const holoThreshold = HOLO_BASE_PROBABILITY * (1 + holoRateBonus);
   const isHolo = Math.random() < holoThreshold;
 
-  // Calcul PV et récompense avec légère variance (+- 10%)
+  // Calcul PV et récompense avec légère variance (+- 10%) et bonus de maîtrise (+15% de sève)
   const variance = 0.9 + Math.random() * 0.2;
   const maxHp = Math.max(10, Math.floor(route.baseHp * variance));
-  const sapReward = Math.max(1, Math.floor(route.baseSapReward * variance * (isHolo ? 3 : 1)));
+  const sapMultiplier = (isHolo ? 3 : 1) * mastery.sapMultiplierBonus;
+  const sapReward = Math.max(1, Math.floor(route.baseSapReward * variance * sapMultiplier));
 
   if (route.isBossRoute) {
+    const bossEchoGame = pickWildEchoForRoute(route.id, capturedGames, huntUncaught);
+    const bossArtwork = bossEchoGame ? getGameArtwork(bossEchoGame) : undefined;
+
     return {
       id: `boss_${route.id}_${Date.now()}`,
-      name: route.name,
+      name: bossEchoGame ? `Gardien : ${bossEchoGame.title}` : route.name,
       maxHp: route.baseHp,
       currentHp: route.baseHp,
-      sapReward: route.baseSapReward * (isHolo ? 3 : 1),
+      sapReward: Math.floor(sapReward * 2),
       isBoss: true,
-      isWildEcho: false,
+      isWildEcho: Boolean(bossEchoGame),
+      gameId: bossEchoGame?.id,
       isHolo,
+      artworkUrl: bossArtwork,
       emoji: '👑',
+      title: bossEchoGame?.title || route.name,
+      developer: bossEchoGame?.developer,
     };
   }
 
   if (isWildEcho) {
-    const randomGame = INDIE_GAMES[Math.floor(Math.random() * INDIE_GAMES.length)];
-    const artworkUrl =
-      randomGame.headerImage ||
-      randomGame.screenshots?.[0] ||
-      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/header.jpg';
+    const pickedGame =
+      pickWildEchoForRoute(route.id, capturedGames, huntUncaught) ||
+      INDIE_GAMES[Math.floor(Math.random() * INDIE_GAMES.length)];
+    const artworkUrl = getGameArtwork(pickedGame);
 
     return {
-      id: `echo_${randomGame.id}_${Date.now()}`,
-      name: `Écho de ${randomGame.title}`,
+      id: `echo_${pickedGame.id}_${Date.now()}`,
+      name: `Écho de ${pickedGame.title}`,
       maxHp,
       currentHp: maxHp,
       sapReward: Math.floor(sapReward * 1.5),
       isBoss: false,
       isWildEcho: true,
-      gameId: randomGame.id,
+      gameId: pickedGame.id,
       isHolo,
       artworkUrl,
       emoji: isHolo ? '✨' : '🎮',
-      title: randomGame.title,
-      developer: randomGame.developer,
+      title: pickedGame.title,
+      developer: pickedGame.developer,
     };
   }
 

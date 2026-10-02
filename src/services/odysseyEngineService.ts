@@ -246,8 +246,13 @@ export function formatOdysseyNumber(num: number): string {
 /**
  * Génère le prochain monstre sur une route
  */
-export function spawnNextMonster(route: OdysseyRoute, holoChanceBonus: number = 0): OdysseyMonster {
-  return generateMonsterForRoute(route, holoChanceBonus);
+export function spawnNextMonster(
+  route: OdysseyRoute,
+  holoChanceBonus: number = 0,
+  capturedGames: Record<string, { count: number; isHolo: boolean }> = {},
+  huntUncaught: boolean = false
+): OdysseyMonster {
+  return generateMonsterForRoute(route, holoChanceBonus, capturedGames, huntUncaught);
 }
 
 /**

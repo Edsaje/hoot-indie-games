@@ -18,6 +18,7 @@ import {
   Flame,
   Map,
 } from 'lucide-react';
+import { RouteLootDex } from './RouteLootDex';
 import type {
   OdysseySaveState,
   OdysseyPlayerStats,
@@ -75,9 +76,12 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   const currentBiome = getCurrentBiome(state.currentBiomeId);
   const currentRoute = getCurrentRoute(state.currentBiomeId, state.currentRouteNumber);
 
+  // Mode Traque des pépites non capturées
+  const [huntUncaught, setHuntUncaught] = useState<boolean>(false);
+
   // Monstre actif
   const [currentMonster, setCurrentMonster] = useState<OdysseyMonster>(() =>
-    spawnNextMonster(currentRoute, playerStats.holoChanceBonus)
+    spawnNextMonster(currentRoute, playerStats.holoChanceBonus, state.capturedGames, false)
   );
 
   // Kills sur la route courante (pour débloquer la suite)
@@ -124,9 +128,17 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   const buffRef = useRef(activeBuff);
   buffRef.current = activeBuff;
 
+  const huntUncaughtRef = useRef(huntUncaught);
+  huntUncaughtRef.current = huntUncaught;
+
   // Réinitialiser le monstre quand on change de route
   useEffect(() => {
-    const nextMob = spawnNextMonster(currentRoute, playerStats.holoChanceBonus);
+    const nextMob = spawnNextMonster(
+      currentRoute,
+      playerStats.holoChanceBonus,
+      stateRef.current.capturedGames,
+      huntUncaughtRef.current
+    );
     setCurrentMonster(nextMob);
     setRouteKills(0);
     if (currentRoute.isBossRoute) {
@@ -248,7 +260,12 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     saveOdysseyState(nextState);
 
     // Spawner le monstre suivant
-    const nextMob = spawnNextMonster(currentRoute, stats.holoChanceBonus);
+    const nextMob = spawnNextMonster(
+      currentRoute,
+      stats.holoChanceBonus,
+      nextState.capturedGames,
+      huntUncaughtRef.current
+    );
     setCurrentMonster(nextMob);
     if (currentRoute.isBossRoute) {
       setBossTimeLeft(currentRoute.bossTimerSeconds || 30);
@@ -407,6 +424,18 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
           );
         })}
       </div>
+
+      {/* 2bis. Pokédex de Route / Loot Radar des Pépites */}
+      <RouteLootDex
+        currentRoute={currentRoute}
+        capturedGames={state.capturedGames}
+        huntUncaught={huntUncaught}
+        onToggleHuntUncaught={() => {
+          soundFx.playClick();
+          setHuntUncaught((prev) => !prev);
+        }}
+        onSelectGameInspect={onOpenCompanions}
+      />
 
       {/* 3. L'Arène de Combat Centrale */}
       <div
