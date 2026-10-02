@@ -21,13 +21,11 @@ import {
   Target,
   FastForward,
   Activity,
-  Menu,
   Smartphone,
 } from 'lucide-react';
 import { RouteLootDex } from './RouteLootDex';
 import { OdysseyArenaBackdrop } from './OdysseyArenaBackdrop';
 import { OdysseyWorldMap } from './OdysseyWorldMap';
-import { OdysseyRouteBurgerMenu } from './OdysseyRouteBurgerMenu';
 import {
   OdysseySlashOverlay,
   OdysseySapBurstOverlay,
@@ -89,7 +87,6 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   onOpenTree,
   onOpenCompanions,
 }) => {
-  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
   const currentBiome = getCurrentBiome(state.currentBiomeId);
   const currentRoute = getCurrentRoute(state.currentBiomeId, state.currentRouteNumber);
 
@@ -507,22 +504,9 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         </div>
       </div>
 
-      {/* 2. Sélecteur de Route (1 à 5), Menu Burger & Case Auto-Progression */}
+      {/* 2. Sélecteur de Route (1 à 5) & Case Auto-Progression */}
       <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-1">
-        <div className="flex-1 min-w-[260px] flex items-center gap-1.5 sm:gap-2">
-          {/* Bouton Menu Burger rapide */}
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              setIsBurgerOpen(true);
-            }}
-            className="py-1.5 sm:py-2 px-2.5 rounded-xl text-xs font-black font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer border bg-slate-900/90 text-amber-300 border-amber-500/40 hover:bg-slate-800 hover:border-amber-400 shadow-sm shrink-0 active:scale-95"
-            title="Menu complet des routes & biomes"
-          >
-            <Menu className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Routes</span>
-          </button>
-
+        <div className="flex-1 min-w-[200px] flex items-center gap-1.5 sm:gap-2">
           {[1, 2, 3, 4, 5].map((rNum) => {
             const isBoss = rNum === 5;
             const maxUnlocked = state.highestRouteUnlocked[state.currentBiomeId] || 1;
@@ -879,13 +863,6 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     </div>
   </div>
 
-  {/* Menu burger des routes accessible directement depuis l'arène */}
-  <OdysseyRouteBurgerMenu
-    isOpen={isBurgerOpen}
-    onClose={() => setIsBurgerOpen(false)}
-    state={state}
-    onStateChange={onStateChange}
-  />
-</div>
+  </div>
 );
 };
