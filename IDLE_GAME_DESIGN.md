@@ -259,5 +259,89 @@ Pour préserver la pureté, la lisibilité et l'ergonomie Mobile-First du site s
   - Synergies avec les 256 cartes du Sanctuaire.
 
 ---
-> *© 2026 Hoot Indie Games — Conception originale pour Quentin Beaud (Hibouxe / Edsaje).*
+
+## 🎨 12. Programme d'Améliorations Majeures (Next-Gen : Expérience "Vrai Jeu" & Fin de l'Austérité)
+
+> [!IMPORTANT]
+> **Constat & Direction Artistique** : La première mouture fonctionnelle est robuste sous le capot (sauvegardes, calculs, cloud sync), mais l'aspect visuel souffre d'une présentation trop austère, statique et abstraite ("look IA / tableaux administratifs").  
+> Pour susciter un véritable plaisir de jeu et une boucle addictive à la Pokéclicker, l'Odyssée doit se métamorphoser en un **vrai jeu vidéo incarné, vivant, vibrant d'animations, d'artworks et de feedback tactile gratifiant**.
+
+### 🗺️ A. La Carte du Monde Interactive (World Map & Progression Spatiale)
+Remplacer la grille de cartes statiques par une véritable **carte d'aventure illustrée et interactive** (style *Slay the Spire*, *Super Mario World*, *Pokéclicker*) :
+1. **Sentiers & Chemins Sinueux** : Les 6 biomes et leurs 30 routes reliés par un tracé cartographique organique avec embranchements et étapes clés.
+2. **Jalons Visuels Typés** :
+   - *Bornes de Route* (R1 à R4) avec indicateur de complétion.
+   - *Sanctuaires de Sève / Fontaines d'Étoiles* (points d'intérêt bonus).
+   - *Portes Monumentales de Boss* (icône imposante aux lueurs écarlates pour R5).
+   - *Coffres au Trésor Scellés* le long du parcours.
+3. **Brouillard de Guerre Organique (Fog of War)** : Les biomes non débloqués apparaissent sous une brume nébuleuse mystérieuse avec silhouettes d'ombres géantes, attisant la curiosité.
+4. **Pion Voyageur Animé (Le Hibou Explorateur)** : La mascotte Hoot se déplace physiquement le long de la ligne de route lorsqu'on change de zone ou voyage d'un biome à l'autre.
+5. **Zoom & Pan Panoramique** : Navigation fluide au glisser/toucher sur mobile et à la souris sur grand écran.
+
+---
+
+### 📖 B. Le "Pokédex de Route" (Route Loot Dex & Radar des Pépites)
+Reprendre le mécanisme le plus addictif de Pokéclicker : **savoir exactement ce que l'on peut chasser sur chaque route** pour motiver la complétion à 100% :
+1. **Réglette Horizontale de Butin sous chaque Route** :
+   - Présentation des **6 à 8 pépites indés spécifiques** assignées à la route actuelle.
+   - **3 États Visuels Clairs & Stimulants** :
+     - ❓ *Silhouette Noire & ?* : Pépite jamais rencontrée / non capturée, avec affichage du taux de probabilité de rencontre.
+     - 🎮 *Miniature Découverte & Capturée* : Vraie capsule Steam en couleur, badge de quantité (*x3*), bonus actif débloqué.
+     - ✨ *Variante Holographique Possédée* : Cadre doré étincelant avec reflets prismatiques arc-en-ciel animés.
+2. **Jauge de Maîtrise de Route (Route Mastery)** :
+   - Exemple : `Route 1-2 : 5/7 Capturés (71%)`.
+   - À 100% de complétion de la route : la route s'illumine d'une **Étoile d'Or de Maîtrise**, octroyant un bonus permanent passif (+15% de Sève sur cette route ou +5% de vitesse de spawn).
+3. **Filtres de Ciblage (Chasseur Actif)** :
+   - Possibilité d'activer un filtre : "Affronter en priorité les pépites non capturées" ou "Traquer les Holos manquants".
+
+---
+
+### 🎬 C. Révolution Graphique, Décors & "Game Feel" (VFX & Animations Réactives)
+Transformer l'arène de combat en une véritable scène de jeu animée :
+1. **Décors Illustrés & Parallaxe Multi-Couches** :
+   - Chaque biome dispose d'une scénographie picturale :
+     - *Clairière* : Arbres anciens peints, rayons de soleil volumétriques, tapis de mousse et fleurs phosphorescentes.
+     - *Canopée Pixel* : Arbres géométriques d'inspiration Fez/Hyper Light Drifter avec pluie de pixels dorés.
+     - *Grottes de Silice* : Géodes géantes luminescentes avec reflets sur parois humides.
+     - *Sommet Céleste* : Cimes enneigées sous aurore boréale mouvante et vent de particules.
+     - *Gouffre des Enfers* : Lacs de lave rougeoyants et chutes de cendres incandescentes.
+     - *Sanctuaire du Néant* : Spirale de galaxies et débris orbitaux flottants.
+2. **Animations d'Impact & "Juiciness" de Combat** :
+   - *Slash / Taillade Visuelle au Clic* : Tracé lumineux de lame ou coup de griffe SVG généré à l'endroit exact du curseur/doigt.
+   - *Screen Shake / Secousse Réactive* : Micro-secousse de la caméra lors d'un coup critique ou de la mort d'un monstre (désactivable dans les options pour l'accessibilité).
+   - *Flinch & Flash Blanc d'Impact* : L'ennemi recule légèrement sous le choc et clignote en surbrillance blanche lors d'une frappe.
+   - *Drain de Barre de Vie Dynamique* : La jauge de PV ne baisse pas sèchement mais affiche une barre résiduelle rouge/orange qui fond en fondu (style jeux de combat / RPG arcade).
+   - *Explosion de Particules de Sève* : Jaillissement de gouttelettes cyan ou d'étincelles dorées vers le compteur de ressources lors d'une victoire.
+3. **Météo & Particules d'Ambiance Dynamiques (Canvas 60 FPS ultra-léger)** :
+   - Feuilles qui tombent délicatement dans la Clairière, lucioles dérivantes dans les Grottes, étincelles de forge dans les Enfers.
+
+---
+
+### 🦉 D. Compagnon de Tête Actif (Le Protecteur du Sanctuaire)
+1. **Attribution d'un Compagnon Favori** :
+   - Le joueur peut choisir l'un de ses 256 jeux capturés pour l'accompagner visuellement au bord de l'arène (ex: The Knight de *Hollow Knight*, Madeline de *Celeste*, Zagreus de *Hades*, le Slugcat de *Rain World*).
+2. **Capacité Ultime Active (Barre d'Énergie)** :
+   - Chaque compagnon dispose d'un pouvoir thématique déclenchable après un certain nombre de clics ou de temps :
+     - *Dash Éthéré* : Inflige instantanément 30 coups rapides en 1 seconde.
+     - *Pluie d'Ambre* : Triple la production de sève pendant 15 secondes.
+     - *Révélation Stellaire* : Force la prochaine pépite à être un Écho Sauvage rare.
+
+---
+
+### 🎁 E. Coffres de Victoire & Butins de Premier Passage (First-Clear Rewards)
+1. **Coffres de Route Déverrouillés** :
+   - Compléter pour la première fois les 10 monstres d'une route fait apparaître un **Coffre en Bois Doré** animé qui s'ouvre avec explosion de lumière.
+   - Récompenses : Sève massive, Plumes d'or pour la boutique, et 1 Booster de cartes du Sanctuaire.
+2. **Trophée de Boss de Biome** :
+   - Vaincre le Boss R5 pour la première fois débloque une **Relique d'Artefact** pérenne visible dans le Sanctuaire.
+
+---
+
+### 🕹️ F. Mini-Jeu de Fouille Géologique (Les Trésors du Sous-Sol)
+- Une grille rétro destructible 8x8 blocs façon *Pokémon Souterrains* / *Dome Keeper*.
+- Utilisation de pioches et de charges de sève pour creuser la roche et déterrer des disquettes Itch.io oubliées, des micro-pépites et des fossiles indés.
+
+---
+> *© 2026 Hoot Indie Games — Feuille de route d'améliorations continues conçue pour Quentin Beaud (Hibouxe / Edsaje).*
+
 
