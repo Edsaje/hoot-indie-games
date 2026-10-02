@@ -150,43 +150,30 @@ export function getRouteMastery(
 }
 
 /**
- * Sélectionne intelligemment la pépite qui apparaîtra comme Écho Sauvage sur la route.
- * Prend en compte l'activation du ciblage des pépites non capturées.
+ * Sélectionne la pépite qui apparaîtra comme Écho Sauvage sur la route selon ses probabilités naturelles.
  */
-export function pickWildEchoForRoute(
-  routeId: string,
-  capturedGames: Record<string, { count: number }> = {},
-  huntUncaught: boolean = false
-): Game | null {
+export function pickWildEchoForRoute(routeId: string): Game | null {
   const gameIds = ROUTE_GAMES_MAPPING[routeId] || [];
   if (gameIds.length === 0) return null;
 
-  const weightedCandidates: { game: Game; effectiveWeight: number }[] = [];
+  const weightedCandidates: { game: Game; weight: number }[] = [];
 
   for (let i = 0; i < gameIds.length; i++) {
     const g = GAMES_BY_ID.get(gameIds[i]);
     if (!g) continue;
 
     const { weight } = getBaseRarityAndWeight(i);
-    const isCaptured = Boolean(capturedGames[g.id] && capturedGames[g.id].count > 0);
-
-    let effectiveWeight = weight;
-    if (huntUncaught) {
-      // Tripler les chances des pépites manquantes pour aider le joueur à finir la route
-      effectiveWeight = isCaptured ? Math.max(1, Math.floor(weight / 2.5)) : weight * 3;
-    }
-
-    weightedCandidates.push({ game: g, effectiveWeight });
+    weightedCandidates.push({ game: g, weight });
   }
 
-  const totalEffectiveWeight = weightedCandidates.reduce((s, c) => s + c.effectiveWeight, 0);
-  let roll = Math.random() * totalEffectiveWeight;
+  const totalWeight = weightedCandidates.reduce((s, c) => s + c.weight, 0);
+  let roll = Math.random() * totalWeight;
 
   for (const candidate of weightedCandidates) {
-    if (roll < candidate.effectiveWeight) {
+    if (roll < candidate.weight) {
       return candidate.game;
     }
-    roll -= candidate.effectiveWeight;
+    roll -= candidate.weight;
   }
 
   return weightedCandidates[weightedCandidates.length - 1]?.game || null;

@@ -17,6 +17,9 @@ import {
   Mountain,
   Flame,
   Map,
+  Check,
+  Target,
+  FastForward,
 } from 'lucide-react';
 import { RouteLootDex } from './RouteLootDex';
 import type {
@@ -76,12 +79,9 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   const currentBiome = getCurrentBiome(state.currentBiomeId);
   const currentRoute = getCurrentRoute(state.currentBiomeId, state.currentRouteNumber);
 
-  // Mode Traque des pépites non capturées
-  const [huntUncaught, setHuntUncaught] = useState<boolean>(false);
-
   // Monstre actif
   const [currentMonster, setCurrentMonster] = useState<OdysseyMonster>(() =>
-    spawnNextMonster(currentRoute, playerStats.holoChanceBonus, state.capturedGames, false)
+    spawnNextMonster(currentRoute, playerStats.holoChanceBonus, state.capturedGames)
   );
 
   // Kills sur la route courante (pour débloquer la suite)
@@ -128,16 +128,12 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   const buffRef = useRef(activeBuff);
   buffRef.current = activeBuff;
 
-  const huntUncaughtRef = useRef(huntUncaught);
-  huntUncaughtRef.current = huntUncaught;
-
   // Réinitialiser le monstre quand on change de route
   useEffect(() => {
     const nextMob = spawnNextMonster(
       currentRoute,
       playerStats.holoChanceBonus,
-      stateRef.current.capturedGames,
-      huntUncaughtRef.current
+      stateRef.current.capturedGames
     );
     setCurrentMonster(nextMob);
     setRouteKills(0);
@@ -263,8 +259,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     const nextMob = spawnNextMonster(
       currentRoute,
       stats.holoChanceBonus,
-      nextState.capturedGames,
-      huntUncaughtRef.current
+      nextState.capturedGames
     );
     setCurrentMonster(nextMob);
     if (currentRoute.isBossRoute) {
@@ -386,54 +381,73 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         </div>
       </div>
 
-      {/* 2. Sélecteur de Route (1 à 5) */}
-      <div className="w-full flex items-center justify-between gap-1.5 sm:gap-2 mb-4 px-1">
-        {[1, 2, 3, 4, 5].map((rNum) => {
-          const isBoss = rNum === 5;
-          const maxUnlocked = state.highestRouteUnlocked[state.currentBiomeId] || 1;
-          const isUnlocked = rNum <= maxUnlocked;
-          const isCurrent = rNum === state.currentRouteNumber;
+      {/* 2. Sélecteur de Route (1 à 5) & Case Auto-Progression */}
+      <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-2.5 px-1">
+        <div className="flex-1 min-w-[240px] flex items-center gap-1.5 sm:gap-2">
+          {[1, 2, 3, 4, 5].map((rNum) => {
+            const isBoss = rNum === 5;
+            const maxUnlocked = state.highestRouteUnlocked[state.currentBiomeId] || 1;
+            const isUnlocked = rNum <= maxUnlocked;
+            const isCurrent = rNum === state.currentRouteNumber;
 
-          return (
-            <button
-              key={rNum}
-              disabled={!isUnlocked}
-              onClick={() => {
-                soundFx.playClick();
-                const next = switchRoute(state, rNum);
-                onStateChange(next);
-              }}
-              className={`flex-1 py-1.5 sm:py-2 px-1 rounded-xl text-xs font-black font-mono transition-all flex items-center justify-center gap-1 cursor-pointer border ${
-                isCurrent
-                  ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30 scale-102'
-                  : isUnlocked
-                  ? 'bg-[#06241b] text-slate-300 hover:text-white hover:bg-slate-800/80 border-[#78350f]'
-                  : 'bg-slate-950/40 text-slate-600 border-slate-900 cursor-not-allowed'
-              }`}
-            >
-              {isBoss ? (
-                <>
-                  <Crown className="w-3 h-3 text-rose-400 shrink-0" />
-                  <span className="hidden sm:inline">Boss</span>
-                </>
-              ) : (
-                <span>R{rNum}</span>
-              )}
-              {!isUnlocked && <Lock className="w-2.5 h-2.5 text-slate-600" />}
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={rNum}
+                disabled={!isUnlocked}
+                onClick={() => {
+                  soundFx.playClick();
+                  const next = switchRoute(state, rNum);
+                  onStateChange(next);
+                }}
+                className={`flex-1 py-1.5 sm:py-2 px-1 rounded-xl text-xs font-black font-mono transition-all flex items-center justify-center gap-1 cursor-pointer border ${
+                  isCurrent
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30 scale-102'
+                    : isUnlocked
+                    ? 'bg-[#06241b] text-slate-300 hover:text-white hover:bg-slate-800/80 border-[#78350f]'
+                    : 'bg-slate-950/40 text-slate-600 border-slate-900 cursor-not-allowed'
+                }`}
+              >
+                {isBoss ? (
+                  <>
+                    <Crown className="w-3 h-3 text-rose-400 shrink-0" />
+                    <span className="hidden sm:inline">Boss</span>
+                  </>
+                ) : (
+                  <span>R{rNum}</span>
+                )}
+                {!isUnlocked && <Lock className="w-2.5 h-2.5 text-slate-600" />}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Case à cocher : Auto-progression (Désactivée par défaut) */}
+        <label
+          className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/70 text-xs font-mono font-bold text-slate-300 hover:text-white cursor-pointer select-none transition-all hover:bg-slate-800 shrink-0 shadow-sm"
+          title="Si cochée, le jeu avance automatiquement vers la route suivante dès que le quota de monstres est atteint."
+        >
+          <input
+            type="checkbox"
+            checked={Boolean(state.autoAdvance)}
+            onChange={(e) => {
+              soundFx.playClick();
+              const nextState = { ...state, autoAdvance: e.target.checked };
+              onStateChange(nextState);
+              saveOdysseyState(nextState);
+            }}
+            className="w-3.5 h-3.5 rounded border-slate-600 text-amber-500 focus:ring-0 focus:ring-offset-0 bg-slate-950 cursor-pointer accent-amber-500"
+          />
+          <span className="text-[11px] flex items-center gap-1">
+            <FastForward className={`w-3.5 h-3.5 ${state.autoAdvance ? 'text-amber-400 animate-pulse' : 'text-slate-400'}`} />
+            <span>Auto-progression</span>
+          </span>
+        </label>
       </div>
 
       {/* 2bis. Pokédex de Route / Loot Radar des Pépites */}
       <RouteLootDex
         currentRoute={currentRoute}
         capturedGames={state.capturedGames}
-        huntUncaught={huntUncaught}
-        onToggleHuntUncaught={() => {
-          soundFx.playClick();
-          setHuntUncaught((prev) => !prev);
-        }}
         onSelectGameInspect={onOpenCompanions}
       />
 
@@ -476,10 +490,26 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         {/* Header Arène : Progression et Timer Boss */}
         <div className="flex items-center justify-between text-xs z-10">
           <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10 font-mono text-slate-300 font-bold">
-            <Sword className="w-3.5 h-3.5 text-amber-400" />
-            <span>
-              Vague {routeKills} / {currentRoute.requiredKillsToAdvance}
-            </span>
+            {currentRoute.isBossRoute ? (
+              <>
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>Boss du Biome</span>
+              </>
+            ) : routeKills < currentRoute.requiredKillsToAdvance ? (
+              <>
+                <Target className="w-3.5 h-3.5 text-amber-400" />
+                <span>
+                  {routeKills} / {currentRoute.requiredKillsToAdvance} pour débloquer la suite
+                </span>
+              </>
+            ) : (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-300">
+                  {routeKills} vaincus
+                </span>
+              </>
+            )}
           </div>
 
           {currentRoute.isBossRoute && (

@@ -702,8 +702,7 @@ export function calculateUpgradeCost(node: CelestialUpgradeNode, currentLevel: n
 export function generateMonsterForRoute(
   route: OdysseyRoute,
   holoRateBonus: number = 0,
-  capturedGames: Record<string, { count: number; isHolo: boolean }> = {},
-  huntUncaught: boolean = false
+  capturedGames: Record<string, { count: number; isHolo: boolean }> = {}
 ): OdysseyMonster {
   // Bonus de spawn si la route est maîtrisée à 100% (45% au lieu de 35%)
   const mastery = getRouteMastery(route.id, capturedGames);
@@ -721,7 +720,7 @@ export function generateMonsterForRoute(
   const sapReward = Math.max(1, Math.floor(route.baseSapReward * variance * sapMultiplier));
 
   if (route.isBossRoute) {
-    const bossEchoGame = pickWildEchoForRoute(route.id, capturedGames, huntUncaught);
+    const bossEchoGame = pickWildEchoForRoute(route.id);
     const bossArtwork = bossEchoGame ? getGameArtwork(bossEchoGame) : undefined;
 
     return {
@@ -743,7 +742,7 @@ export function generateMonsterForRoute(
 
   if (isWildEcho) {
     const pickedGame =
-      pickWildEchoForRoute(route.id, capturedGames, huntUncaught) ||
+      pickWildEchoForRoute(route.id) ||
       INDIE_GAMES[Math.floor(Math.random() * INDIE_GAMES.length)];
     const artworkUrl = getGameArtwork(pickedGame);
 

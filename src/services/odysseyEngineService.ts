@@ -29,7 +29,7 @@ export function getDefaultOdysseyState(): OdysseySaveState {
     version: 1,
     currentBiomeId: 'biome_1_clearing',
     currentRouteNumber: 1,
-    autoAdvance: true,
+    autoAdvance: false,
     highestBiomeUnlocked: 1,
     highestRouteUnlocked: {
       biome_1_clearing: 1,
@@ -249,10 +249,9 @@ export function formatOdysseyNumber(num: number): string {
 export function spawnNextMonster(
   route: OdysseyRoute,
   holoChanceBonus: number = 0,
-  capturedGames: Record<string, { count: number; isHolo: boolean }> = {},
-  huntUncaught: boolean = false
+  capturedGames: Record<string, { count: number; isHolo: boolean }> = {}
 ): OdysseyMonster {
-  return generateMonsterForRoute(route, holoChanceBonus, capturedGames, huntUncaught);
+  return generateMonsterForRoute(route, holoChanceBonus, capturedGames);
 }
 
 /**

@@ -17,16 +17,12 @@ import {
 interface RouteLootDexProps {
   currentRoute: OdysseyRoute;
   capturedGames: Record<string, { count: number; isHolo: boolean; level: number }>;
-  huntUncaught: boolean;
-  onToggleHuntUncaught: () => void;
   onSelectGameInspect?: (gameId: string) => void;
 }
 
 export const RouteLootDex: React.FC<RouteLootDexProps> = ({
   currentRoute,
   capturedGames,
-  huntUncaught,
-  onToggleHuntUncaught,
   onSelectGameInspect,
 }) => {
   const entries = getRouteDexEntries(currentRoute.id, capturedGames);
@@ -57,7 +53,7 @@ export const RouteLootDex: React.FC<RouteLootDexProps> = ({
 
   return (
     <div className="w-full bg-[#03150f]/90 border border-emerald-500/30 rounded-2xl p-2.5 sm:p-3.5 mb-3 shadow-xl backdrop-blur-md transition-all">
-      {/* 1. En-tête : Progression de la route & Commutateur de traque */}
+      {/* 1. En-tête : Progression de la route */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5 pb-2 border-b border-emerald-950/80">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 font-mono text-xs font-black text-emerald-400">
@@ -86,23 +82,19 @@ export const RouteLootDex: React.FC<RouteLootDexProps> = ({
           </div>
         </div>
 
-        {/* Bouton de Traque des manquants */}
-        <button
-          onClick={onToggleHuntUncaught}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold transition-all cursor-pointer border ${
-            huntUncaught
-              ? 'bg-emerald-500 text-slate-950 border-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.5)] font-black'
-              : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 border-slate-700/60'
-          }`}
-          title={
-            huntUncaught
-              ? 'Traque active : vous rencontrez en priorité les pépites non encore découvertes de cette route.'
-              : 'Cliquez pour forcer l’apparition en priorité des pépites manquantes.'
-          }
-        >
-          <Target className={`w-3.5 h-3.5 ${huntUncaught ? 'animate-spin' : 'text-emerald-400'}`} />
-          <span>{huntUncaught ? 'Traque Active (x3 manquants)' : 'Chasser les manquants'}</span>
-        </button>
+        {/* Indicateur de reste à découvrir */}
+        <div className="text-[11px] font-mono text-slate-400">
+          {mastery.isMastered ? (
+            <span className="text-amber-300 font-bold flex items-center gap-1">
+              <Star className="w-3 h-3 fill-amber-300" />
+              <span>Collection Complète</span>
+            </span>
+          ) : (
+            <span className="text-slate-400">
+              <strong className="text-emerald-400 font-bold">{mastery.totalCount - mastery.capturedCount}</strong> pépite(s) restante(s)
+            </span>
+          )}
+        </div>
       </div>
 
       {/* 2. Barre de progression fine de maîtrise */}
