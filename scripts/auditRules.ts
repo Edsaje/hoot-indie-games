@@ -12,13 +12,75 @@ export const BANNED_APP_IDS = new Set<number>([
 ]);
 
 /**
- * Identifiants officiels Valve Steam pour les descripteurs de contenu adulte / sexuel
- * 1: Nudity or Sexual Content
- * 3: Mature Content
- * 4: Sexual Content
- * 5: Adult Only Sexual Content / Explicit Sexual Content
+ * Identifiants officiels Valve Steam pour les descripteurs de contenu adulte / sexuel explicite (NSFW / Porn)
+ * ID 3: Adult Only Sexual Content (Gratuitous or explicit sexual content)
+ * ID 4: Frequent Sexual Content or Frequent Nudity
+ * Note : ID 1 = Some Nudity / Mild sexual references (Rust, Sunless Sea)
+ *        ID 2 = Frequent Violence or Gore
+ *        ID 5 = General Mature Content (TowerFall Ascension, Bodycam, The Ascent)
+ * Seuls les descripteurs 3 et 4 qualifient un jeu d'inapproprié / NSFW au sens Valve.
  */
-export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([1, 3, 4, 5]);
+export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([3, 4]);
+
+/**
+ * AppIDs de pépites et jeux indépendants certifiés (protection absolue contre les faux positifs)
+ */
+export const KNOWN_INDIE_APP_IDS = new Set<number>([
+  214560,  // Mark of the Ninja (Klei Entertainment / édité initialement via XBLA Microsoft Studios)
+  236090,  // Dust: An Elysian Tail (Humble Hearts LLC / Xbox Game Studios)
+  248820,  // Risk of Rain (2013) (Hopoo Games / Gearbox - 2K)
+  251470,  // TowerFall Ascension (Maddy Makes Games / Extremely OK Games)
+  252490,  // Rust (Facepunch Studios)
+  304650,  // SUNLESS SEA (Failbetter Games)
+  979690,  // The Ascent (Neon Giant)
+  2406770, // Bodycam (Reissad Studio)
+  4762810, // SpyCat: Codename Wu
+]);
+
+/**
+ * Studios indépendants certifiés (ne doivent jamais être flaggués AAA, même en cas de partenariat d'édition)
+ */
+export const KNOWN_INDIE_STUDIOS = new Set<string>([
+  'klei entertainment',
+  'hopoo games',
+  'humble hearts',
+  'humble hearts llc',
+  'maddy makes games',
+  'maddy makes games inc.',
+  'extremely ok games',
+  'extremely ok games, ltd.',
+  'failbetter games',
+  'facepunch studios',
+  'neon giant',
+  'supergiant games',
+  'team cherry',
+  'motion twin',
+  'evil empire',
+  're-logic',
+  'poncle',
+  'mega crit',
+  'subset games',
+  'yacht club games',
+  'toby fox',
+  'heart machine',
+  'studio mdhr',
+  'moon studios',
+  'hazelight',
+  'hazelight studios',
+  'unknown worlds entertainment',
+  'ghost ship games',
+  'iron gate studio',
+  'landfall',
+  'tarsier studios',
+  'nomada studio',
+  'red hook studios',
+  'reissad studio',
+  'acid nerve',
+  'playdead',
+  'the game bakers',
+  'coldwood interactive',
+  'concernedape',
+]);
 
 /**
  * Éditeurs et studios AAA non-indépendants interdits de moissonnage dans le sanctuaire
@@ -56,11 +118,39 @@ const COMPILED_AAA_REGEXES = [
   ...BANNED_AAA_PUBLISHERS.map((pub) => new RegExp(`\\b${pub.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}\\b`, 'i')),
 ];
 
-export function isNonIndieOrAAA(text: string): boolean {
-  if (!text) return false;
-  return COMPILED_AAA_REGEXES.some((rx) => rx.test(text));
-}
+export function isNonIndieOrAAA(developerOrText: string, publisher?: string, appId?: number): boolean {
+  if (appId && KNOWN_INDIE_APP_IDS.has(appId)) return false;
 
+  const devClean = (developerOrText || '').toLowerCase().trim();
+  if (devClean) {
+    for (const indieStudio of KNOWN_INDIE_STUDIOS) {
+      if (devClean.includes(indieStudio)) return false;
+    }
+    if (COMPILED_AAA_REGEXES.some((rx) => rx.test(devClean))) {
+      return true;
+    }
+  }
+
+  if (publisher) {
+    const pubClean = publisher.toLowerCase().trim();
+    if (COMPILED_AAA_REGEXES.some((rx) => rx.test(pubClean))) {
+      // Si le studio développeur est absent ou identique à l'éditeur AAA
+      if (!devClean || devClean === pubClean) {
+        return true;
+      }
+      // Éditeurs AAA stricts dont les jeux ne sont pas des indés tiers
+      const STRICT_AAA_PUBS = [
+        'electronic arts', 'ubisoft', 'activision', 'blizzard',
+        'square enix', 'capcom', 'fromsoftware', 'tencent', 'riot games'
+      ];
+      if (STRICT_AAA_PUBS.some((p) => pubClean.includes(p))) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
 
 /**
  * Mots-clés interdits pour le filtrage strict anti-contenu adulte / hentai / NSFW
@@ -69,17 +159,7 @@ export const ADULT_BANNED_KEYWORDS = [
   'femboy',
   'twink',
   'hentai',
-  'sexual',
-  'sexuel',
-  'sexuelle',
-  'sexuels',
-  'sexuality',
-  'sexualité',
   'nsfw',
-  'nudity',
-  'nudité',
-  'nude',
-  'naked',
   'erotic',
   'érotique',
   'erotica',
@@ -101,7 +181,8 @@ export const ADULT_BANNED_KEYWORDS = [
   'jeux adultes',
   'contenu adulte',
   'adult visual novel',
-  '18+',
+  '18+ adult',
+  'adult 18+',
   'ecchi',
   'sensual',
   'sensuelle',
@@ -125,12 +206,29 @@ export const ADULT_BANNED_KEYWORDS = [
   'weed',
   'cannabis',
   'marijuana',
-  'drug',
-  'drugs',
-  'explicit content',
   'sexual content',
-  'mature content',
+  'sexual act',
+  'sexual acts',
+  'sexual violence',
+  'sexual simulation',
+  'sexual intercourse',
+  'sexual scene',
+  'sexual scenes',
+  'explicit sexual',
   'mature sexual',
+  'acte sexuel',
+  'actes sexuels',
+  'contenu sexuel',
+  'scène sexuelle',
+  'scènes sexuelles',
+  'simulation sexuelle',
+  'sexualized',
+  'explicit sex',
+  'sex acts',
+  'explicit nudity',
+  'nudité explicite',
+  'sexual nudity',
+  'full frontal nudity',
   'lewd',
   'stripper',
   'seduce',

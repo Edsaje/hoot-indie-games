@@ -67,20 +67,13 @@ function isReadableLatinText(text: string): boolean {
   return Boolean(latinMatches && latinMatches.length / text.length >= 0.55);
 }
 
-// Filtre strict anti-contenu adulte / NSFW / shovelware / drogues / éditeurs AAA non-indés
+// Filtre strict anti-contenu adulte / NSFW / shovelware
 function isAdultOrInappropriate(details: SteamDetails): boolean {
   if (!details) return true;
   if (BANNED_APP_IDS.has(details.steam_appid)) return true;
 
-  // 1. Contrôle strict de l'âge requis Steam (18+ = rejet immédiat)
-  const reqAge = parseInt(String(details.required_age || '0'), 10);
-  if (!isNaN(reqAge) && reqAge >= 18) {
-    console.warn(`   ⛔ [Filtré Âge 18+] "${details.name}" (requis ${reqAge}+).`);
-    return true;
-  }
-
-  // 2. Contrôle impératif des Content Descriptors officiels de Valve (Steam)
-  // ID 1: Nudity/Sexual Content, ID 3: Mature Content, ID 4: Sexual Content, ID 5: Explicit Sexual Content / Adult Only
+  // 1. Contrôle impératif des Content Descriptors officiels de Valve (Steam)
+  // ID 3: Adult Only Sexual Content, ID 4: Frequent Sexual Content / Frequent Nudity
   if (details.content_descriptors) {
     const ids = details.content_descriptors.ids || [];
     const matchedId = ids.find((id) => ADULT_CONTENT_DESCRIPTOR_IDS.has(id));
@@ -97,20 +90,18 @@ function isAdultOrInappropriate(details: SteamDetails): boolean {
     }
   }
 
-  // 3. Contrôle des genres & catégories Steam
+  // 2. Contrôle des genres & catégories Steam
   if (details.genres && Array.isArray(details.genres)) {
     for (const g of details.genres) {
       const gDesc = (g.description || '').toLowerCase();
       if (
         gDesc.includes('adulte') ||
         gDesc.includes('adult') ||
-        gDesc.includes('sexual') ||
-        gDesc.includes('sexuel') ||
         gDesc.includes('erotic') ||
         gDesc.includes('érotique') ||
         gDesc.includes('hentai') ||
-        gDesc.includes('nudity') ||
-        gDesc.includes('nudité')
+        gDesc.includes('sexual content') ||
+        gDesc.includes('contenu sexuel')
       ) {
         console.warn(`   ⛔ [Filtré Genre Adulte] "${details.name}" (${g.description}).`);
         return true;
@@ -118,11 +109,7 @@ function isAdultOrInappropriate(details: SteamDetails): boolean {
     }
   }
 
-  // 4. Contrôle éditeurs AAA non-indépendants
-  const devPub = (details.developers || []).join(' ') + ' ' + (details.publishers || []).join(' ');
-  if (isNonIndieOrAAA(devPub)) return true;
-
-  // 5. Analyse textuelle exhaustive (titre, résumé, description complète, notes)
+  // 3. Analyse textuelle exhaustive (titre, résumé, description complète, notes)
   const fullText = [
     details.name || '',
     details.short_description || '',
@@ -463,6 +450,14 @@ async function syncUpcomingRadar(
       await delay(CONFIG.REQUEST_DELAY_MS);
       const detailsEn = await fetchGameDetails(appId, 'english');
 
+      const devText = (detailsFr.developers || []).join(', ');
+      const pubText = (detailsFr.publishers || []).join(', ');
+      if (isNonIndieOrAAA(devText, pubText, appId)) {
+        console.warn(`   ⛔ [Promotion Rejetée AAA] "${upcoming.title}" est associé à un éditeur/studio AAA (${devText || pubText}).`);
+        hasChanges = true;
+        continue;
+      }
+
       if (isAdultOrInappropriate(detailsFr) || (detailsEn && isAdultOrInappropriate(detailsEn))) {
         console.warn(`   ⛔ [Promotion Rejetée Adulte] "${upcoming.title}" contient du contenu inapproprié.`);
         hasChanges = true;
@@ -627,6 +622,10 @@ async function refillUpcomingRadar(
         ['indépendant', 'indie'].includes(g.description.toLowerCase())
       );
       if (!isIndie) continue;
+
+      const devText = (detailsFr.developers || []).join(', ');
+      const pubText = (detailsFr.publishers || []).join(', ');
+      if (isNonIndieOrAAA(devText, pubText, appId)) continue;
 
       if (isAdultOrInappropriate(detailsFr)) continue;
 
@@ -909,7 +908,7 @@ function saveSteamCatalogDatabase(newGames: any[], promotedGameIds: Set<string> 
     // Filtrer les jeux sans titre latin, les playtests ou les éditeurs AAA
     if (!/[a-zA-Z]/.test(g.title)) continue;
     if (g.title.toLowerCase().includes('playtest')) continue;
-    if (isNonIndieOrAAA(g.developer)) continue;
+    if (isNonIndieOrAAA(g.developer, undefined, appId || undefined)) continue;
     if (appId && BANNED_APP_IDS.has(appId)) continue;
 
     if (!existingIds.has(g.id) && (!appId || !existingAppIds.has(appId))) {
@@ -1165,7 +1164,15 @@ export async function runDailyHarvest() {
     );
     if (!isIndie) continue;
 
-    // 4. Filtrer contenu adulte / NSFW
+    // 4. Contrôle éditeur / studio AAA non-indépendant
+    const devText = (detailsFr.developers || []).join(', ');
+    const pubText = (detailsFr.publishers || []).join(', ');
+    if (isNonIndieOrAAA(devText, pubText, appId)) {
+      console.log(`   ⛔ [Filtré Studio AAA] "${detailsFr.name}" (${devText || pubText}).`);
+      continue;
+    }
+
+    // 5. Filtrer contenu adulte / NSFW
     if (isAdultOrInappropriate(detailsFr)) {
       console.log(`   ⛔ [Filtré Adulte FR] ${detailsFr.name} contient du contenu inapproprié.`);
       continue;
