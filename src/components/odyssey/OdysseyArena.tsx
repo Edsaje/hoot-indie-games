@@ -93,8 +93,8 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     spawnNextMonster(currentRoute, playerStats.holoChanceBonus, state.capturedGames)
   );
 
-  // Kills sur la route courante (pour débloquer la suite)
-  const [routeKills, setRouteKills] = useState<number>(0);
+  // Kills sur la route courante (persistant dans la sauvegarde globale)
+  const routeKills = (state.routeKills && state.routeKills[currentRoute.id]) || 0;
 
   // Popups de dégâts flottants
   const [damagePopups, setDamagePopups] = useState<DamagePopup[]>([]);
@@ -162,7 +162,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   const buffRef = useRef(activeBuff);
   buffRef.current = activeBuff;
 
-  // Réinitialiser le monstre quand on change de route
+  // Réinitialiser le monstre quand on change de route (sans effacer les kills persistant sur la route)
   useEffect(() => {
     const nextMob = spawnNextMonster(
       currentRoute,
@@ -170,7 +170,6 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       stateRef.current.capturedGames
     );
     setCurrentMonster(nextMob);
-    setRouteKills(0);
     if (currentRoute.isBossRoute) {
       setBossTimeLeft(currentRoute.bossTimerSeconds || 30);
     }
@@ -321,8 +320,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     }
 
     // Auto-advance de route
-    const nextKills = routeKills + 1;
-    setRouteKills(nextKills);
+    const nextKills = (nextState.routeKills && nextState.routeKills[currentRoute.id]) || (routeKills + 1);
 
     if (curState.autoAdvance && nextKills >= currentRoute.requiredKillsToAdvance) {
       if (!currentRoute.isBossRoute && curState.currentRouteNumber < 5) {

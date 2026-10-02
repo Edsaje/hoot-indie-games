@@ -27,50 +27,57 @@ export const OdysseySlashOverlay: React.FC<{ slashes: SlashEffect[] }> = ({ slas
       {slashes.map((s) => (
         <div
           key={s.id}
-          style={
-            {
-              left: `${s.x}px`,
-              top: `${s.y}px`,
-              '--slash-angle': `${s.angle}deg`,
-            } as React.CSSProperties
-          }
-          className="absolute -translate-x-1/2 -translate-y-1/2 animate-combat-slash"
+          style={{
+            left: `${s.x}px`,
+            top: `${s.y}px`,
+          }}
+          className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center"
         >
-          <svg
-            viewBox="0 0 140 140"
-            className={`${s.isCrit ? 'w-28 h-28 sm:w-36 sm:h-36' : 'w-20 h-20 sm:w-28 sm:h-28'}`}
+          <div
+            style={
+              {
+                '--slash-angle': `${s.angle}deg`,
+              } as React.CSSProperties
+            }
+            className="animate-combat-slash flex items-center justify-center"
           >
-            <defs>
-              <linearGradient id={`slash_grad_${s.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="45%" stopColor={s.isCrit ? '#fde047' : '#67e8f9'} stopOpacity="1" />
-                <stop offset="100%" stopColor={s.isCrit ? '#ef4444' : '#059669'} stopOpacity="0.85" />
-              </linearGradient>
-            </defs>
-            {/* Arc en croissant de la lame */}
-            <path
-              d="M 12 128 Q 70 42 128 12 Q 74 68 12 128 Z"
-              fill={`url(#slash_grad_${s.id})`}
-            />
-            {/* Ligne blanche centrale haute vélocité */}
-            <path
-              d="M 22 118 Q 70 52 118 22"
-              stroke="#ffffff"
-              strokeWidth={s.isCrit ? '4' : '2.5'}
-              strokeLinecap="round"
-            />
-            {/* Étincelle d'impact centrale */}
-            <circle
-              cx="70"
-              cy="52"
-              r={s.isCrit ? '6' : '4'}
-              fill={s.isCrit ? '#fef08a' : '#e0f2fe'}
-            />
-            {/* Éclats de frappe */}
-            <line x1="70" y1="52" x2="88" y2="36" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="70" y1="52" x2="52" y2="38" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
-            <line x1="70" y1="52" x2="84" y2="68" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+            <svg
+              viewBox="-60 -60 120 120"
+              className={`${s.isCrit ? 'w-28 h-28 sm:w-36 sm:h-36' : 'w-20 h-20 sm:w-28 sm:h-28'}`}
+            >
+              <defs>
+                <linearGradient id={`slash_grad_${s.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                  <stop offset="45%" stopColor={s.isCrit ? '#fde047' : '#67e8f9'} stopOpacity="1" />
+                  <stop offset="100%" stopColor={s.isCrit ? '#ef4444' : '#059669'} stopOpacity="0.85" />
+                </linearGradient>
+              </defs>
+              {/* Arc tranchant en croissant centré sur (0, 0) */}
+              <path
+                d="M -48 48 Q 0 -22 48 -48 Q 22 0 -48 48 Z"
+                fill={`url(#slash_grad_${s.id})`}
+              />
+              {/* Ligne blanche centrale haute vélocité traversant (0, 0) */}
+              <path
+                d="M -42 42 Q 0 0 42 -42"
+                stroke="#ffffff"
+                strokeWidth={s.isCrit ? '4' : '2.5'}
+                strokeLinecap="round"
+              />
+              {/* Étincelle d'impact centrale pile au centre du clic */}
+              <circle
+                cx="0"
+                cy="0"
+                r={s.isCrit ? '6' : '4'}
+                fill={s.isCrit ? '#fef08a' : '#e0f2fe'}
+              />
+              {/* Éclats de frappe rayonnants */}
+              <line x1="0" y1="0" x2="18" y2="-18" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="0" y1="0" x2="-14" y2="-12" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+              <line x1="0" y1="0" x2="14" y2="12" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+              <line x1="0" y1="0" x2="-12" y2="16" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
         </div>
       ))}
     </div>

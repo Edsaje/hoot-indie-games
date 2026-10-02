@@ -350,21 +350,22 @@ textarea:focus-visible {
 @keyframes slashSweep {
   0% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(0.65) rotate(var(--slash-angle, 0deg));
+    transform: scale(0.65) rotate(var(--slash-angle, 0deg));
     filter: brightness(2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.95));
   }
   50% {
     opacity: 0.95;
-    transform: translate(-50%, -50%) scale(1.15) rotate(var(--slash-angle, 0deg));
+    transform: scale(1.15) rotate(var(--slash-angle, 0deg));
     filter: brightness(1.6) drop-shadow(0 0 16px rgba(245, 158, 11, 0.85));
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.35) rotate(var(--slash-angle, 0deg));
+    transform: scale(1.35) rotate(var(--slash-angle, 0deg));
     filter: brightness(0.6) drop-shadow(0 0 4px rgba(245, 158, 11, 0));
   }
 }
 .animate-combat-slash {
+  transform-origin: center center;
   animation: slashSweep 0.22s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
 }
 

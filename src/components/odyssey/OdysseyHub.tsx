@@ -5,6 +5,7 @@ import {
   Backpack,
   Sparkles,
   Network,
+  BarChart3,
 } from 'lucide-react';
 import type { OdysseySaveState, OfflineGainsSummary } from '../../types/odyssey';
 import {
@@ -18,10 +19,11 @@ import { OdysseyArena } from './OdysseyArena';
 import { CelestialTreeView } from './CelestialTreeView';
 import { CompanionsDexView } from './CompanionsDexView';
 import { BiomesMapView } from './BiomesMapView';
+import { OdysseyStatsView } from './OdysseyStatsView';
 import { OdysseyOfflineModal } from './OdysseyOfflineModal';
 import { soundFx } from '../../utils/audio';
 
-type HubView = 'arena' | 'tree' | 'companions' | 'map';
+type HubView = 'arena' | 'tree' | 'companions' | 'map' | 'stats';
 
 export const OdysseyHub: React.FC = () => {
   const [odysseyState, setOdysseyState] = useState<OdysseySaveState>(() => loadOdysseyState());
@@ -170,6 +172,21 @@ export const OdysseyHub: React.FC = () => {
           <Map className="w-3.5 h-3.5" />
           <span>Biomes</span>
         </button>
+
+        <button
+          onClick={() => {
+            soundFx.playClick();
+            setActiveView('stats');
+          }}
+          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            activeView === 'stats'
+              ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+          }`}
+        >
+          <BarChart3 className="w-3.5 h-3.5" />
+          <span>Stats</span>
+        </button>
       </div>
 
       {/* Rendu de la vue active */}
@@ -203,6 +220,13 @@ export const OdysseyHub: React.FC = () => {
           state={odysseyState}
           onStateChange={setOdysseyState}
           onBackToArena={() => setActiveView('arena')}
+        />
+      )}
+
+      {activeView === 'stats' && (
+        <OdysseyStatsView
+          state={odysseyState}
+          playerStats={playerStats}
         />
       )}
     </div>

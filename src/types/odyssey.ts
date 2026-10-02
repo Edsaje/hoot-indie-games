@@ -136,6 +136,7 @@ export interface OdysseySaveState {
   autoAdvance: boolean;
   highestBiomeUnlocked: number; // 1 à 6
   highestRouteUnlocked: Record<string, number>; // biomeId -> highest route unlocked (1-5)
+  routeKills?: Record<string, number>; // routeId -> nombre d'ennemis vaincus sur cette route
   starSap: number;
   totalStarSapEarned: number;
   celestialShards: number; // Monnaie de réincarnation / prestige

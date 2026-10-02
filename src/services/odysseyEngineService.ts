@@ -42,6 +42,7 @@ export function getDefaultOdysseyState(): OdysseySaveState {
     starSap: 0,
     totalStarSapEarned: 0,
     celestialShards: 0,
+    routeKills: {},
     treeUpgrades: {},
     capturedGames: {},
     activeCompanions: [],
@@ -83,6 +84,7 @@ export function loadOdysseyState(): OdysseySaveState {
         ...defaultState.highestRouteUnlocked,
         ...(parsed.highestRouteUnlocked || {}),
       },
+      routeKills: { ...(parsed.routeKills || {}) },
       treeUpgrades: { ...(parsed.treeUpgrades || {}) },
       capturedGames: { ...(parsed.capturedGames || {}) },
       stats: {
@@ -319,6 +321,16 @@ export function defeatMonster(
   // Déblocage de la route suivante si c'est un boss ou franchissement
   const currentBiomeId = state.currentBiomeId;
   const currentRouteNum = state.currentRouteNumber;
+  const currentRouteObj = getCurrentRoute(currentBiomeId, currentRouteNum);
+  const currentRouteId = currentRouteObj.id;
+
+  const currentRouteKills = (state.routeKills && state.routeKills[currentRouteId]) || 0;
+  const nextRouteKills = currentRouteKills + 1;
+  const updatedRouteKills = {
+    ...(state.routeKills || {}),
+    [currentRouteId]: nextRouteKills,
+  };
+
   const highestForBiome = state.highestRouteUnlocked[currentBiomeId] || 1;
   const nextUnlockedRoute = monster.isBoss
     ? Math.min(5, highestForBiome)
@@ -334,6 +346,7 @@ export function defeatMonster(
     starSap: state.starSap + sapGained,
     totalStarSapEarned: state.totalStarSapEarned + sapGained,
     highestRouteUnlocked: updatedRoutes,
+    routeKills: updatedRouteKills,
     capturedGames: updatedCaptured,
     stats: {
       ...state.stats,
