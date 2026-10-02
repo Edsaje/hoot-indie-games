@@ -291,8 +291,10 @@ Reprendre le mécanisme le plus addictif de Pokéclicker : **savoir exactement c
 2. **Jauge de Maîtrise de Route (Route Mastery)** :
    - Exemple : `Route 1-2 : 5/7 Capturés (71%)`.
    - À 100% de complétion de la route : la route s'illumine d'une **Étoile d'Or de Maîtrise**, octroyant un bonus permanent passif (+15% de Sève sur cette route ou +5% de vitesse de spawn).
-3. **Filtres de Ciblage (Chasseur Actif)** :
-   - Possibilité d'activer un filtre : "Affronter en priorité les pépites non capturées" ou "Traquer les Holos manquants".
+3. **Farming Libre & Auto-Progression Maîtrisée** :
+   - Case à cocher dédiée **Auto-progression** (désactivée par défaut) : permet au joueur de choisir librement de rester indéfiniment sur une route pour farmer ses pépites favorites ou collecter de la Sève sans être propulsé automatiquement sur la suivante.
+   - Les taux d'apparition restent 100% naturels et organiques (Commune, Peu Commune, Rare) pour préserver le plaisir authentique de la collection rare, sans distorsion artificielle.
+   - Le système de « Vagues » a été supprimé au profit d'un objectif clair : le nombre requis de monstres pour débloquer la route suivante (`X / Y pour débloquer la suite`), laissant ensuite place au compteur cumulé de monstres vaincus (`X vaincus`).
 
 ---
 
