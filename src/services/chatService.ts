@@ -810,6 +810,7 @@ export interface PrivateConversation {
   lastMessage?: {
     id: string;
     senderUsername: string;
+    recipientUsername?: string;
     text: string;
     timestamp: number;
     read: boolean;
@@ -832,9 +833,11 @@ interface LocalPrivateStore {
     participants: Record<string, PrivateParticipant>;
     unread: Record<string, number>;
     updatedAt: number;
+    activeViewers?: Record<string, number>;
     lastMessage?: {
       id: string;
       senderUsername: string;
+      recipientUsername?: string;
       text: string;
       timestamp: number;
       read: boolean;
@@ -866,6 +869,7 @@ function saveLocalPrivateStore(store: LocalPrivateStore): void {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(LOCAL_STORAGE_PRIVATE_CHAT_KEY, JSON.stringify(store));
+    window.dispatchEvent(new CustomEvent('hoot_private_store_updated'));
   } catch {
     // Ignore
   }
@@ -982,6 +986,7 @@ export async function fetchPrivateMessages(
     conversationId: convId,
     since: String(since),
     markRead: markRead ? '1' : '0',
+    _t: String(Date.now()), // Anti-cache strict
   });
   if (auth.steamId) params.append('steamId', auth.steamId);
   if (auth.userId) params.append('userId', auth.userId);
@@ -990,8 +995,11 @@ export async function fetchPrivateMessages(
     const res = await fetch(`/api/chat.php?${params.toString()}`, {
       method: 'GET',
       credentials: 'include',
+      cache: 'no-store',
       headers: {
         Accept: 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
         ...(adminKey ? { 'X-Admin-Key': adminKey } : {}),
       },
     });
@@ -1017,6 +1025,13 @@ export async function fetchPrivateMessages(
   let msgs = store.messages[convId] || [];
   const normUser = normalizeUsername(cleanUsername);
 
+  if (store.conversations[convId]) {
+    if (!store.conversations[convId].activeViewers) {
+      store.conversations[convId].activeViewers = {};
+    }
+    store.conversations[convId].activeViewers[normUser] = Math.floor(Date.now() / 1000);
+  }
+
   if (markRead && store.conversations[convId]) {
     store.conversations[convId].unread[normUser] = 0;
     msgs = msgs.map((m) => {
@@ -1025,6 +1040,9 @@ export async function fetchPrivateMessages(
       }
       return m;
     });
+    if (store.conversations[convId].lastMessage && normalizeUsername(store.conversations[convId].lastMessage.recipientUsername || '') === normUser) {
+      store.conversations[convId].lastMessage.read = true;
+    }
     store.messages[convId] = msgs;
     saveLocalPrivateStore(store);
   }
@@ -1132,6 +1150,12 @@ export async function sendPrivateMessage(payload: {
   const convId = getCanonicalConvKey(payload.username, cleanRecipient);
   const now = Math.floor(Date.now() / 1000);
   const msgId = `pmsg_loc_${now}_${Math.random().toString(36).slice(2, 7)}`;
+  const normSender = normalizeUsername(payload.username);
+  const normRecipient = normalizeUsername(cleanRecipient);
+
+  const store = getLocalPrivateStore();
+  const recipientViewerTs = store.conversations[convId]?.activeViewers?.[normRecipient] || 0;
+  const isRecipientViewing = recipientViewerTs > 0 && (now - recipientViewerTs) <= 8;
 
   const localMsg: PrivateMessage = {
     id: msgId,
@@ -1148,10 +1172,9 @@ export async function sendPrivateMessage(payload: {
     recipientSteamId: payload.recipientSteamId,
     text: cleanText,
     timestamp: now,
-    read: false,
+    read: isRecipientViewing,
   };
 
-  const store = getLocalPrivateStore();
   if (!store.messages[convId]) {
     store.messages[convId] = [];
   }
@@ -1159,9 +1182,6 @@ export async function sendPrivateMessage(payload: {
   if (store.messages[convId].length > 100) {
     store.messages[convId] = store.messages[convId].slice(-100);
   }
-
-  const normSender = normalizeUsername(payload.username);
-  const normRecipient = normalizeUsername(cleanRecipient);
 
   if (!store.conversations[convId]) {
     store.conversations[convId] = {
@@ -1193,13 +1213,18 @@ export async function sendPrivateMessage(payload: {
   store.conversations[convId].lastMessage = {
     id: msgId,
     senderUsername: payload.username,
+    recipientUsername: cleanRecipient,
     text: cleanText,
     timestamp: now,
-    read: false,
+    read: isRecipientViewing,
   };
 
   store.conversations[convId].updatedAt = now;
-  store.conversations[convId].unread[normRecipient] = (store.conversations[convId].unread[normRecipient] || 0) + 1;
+  if (!isRecipientViewing) {
+    store.conversations[convId].unread[normRecipient] = (store.conversations[convId].unread[normRecipient] || 0) + 1;
+  } else {
+    store.conversations[convId].unread[normRecipient] = 0;
+  }
 
   saveLocalPrivateStore(store);
 
@@ -1221,7 +1246,7 @@ export async function markPrivateConversationRead(
   if (!cleanUsername || !conversationId) return { success: false };
 
   try {
-    await fetch('/api/chat.php?action=mark_private_read', {
+    const res = await fetch('/api/chat.php?action=mark_private_read', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -1231,12 +1256,18 @@ export async function markPrivateConversationRead(
         username: cleanUsername,
       }),
     });
+    if (!res.ok) throw new Error('API failed');
   } catch {
     // Fallback local
     const store = getLocalPrivateStore();
     const normUser = normalizeUsername(cleanUsername);
     if (store.conversations[conversationId]) {
       store.conversations[conversationId].unread[normUser] = 0;
+      if (!store.conversations[conversationId].activeViewers) {
+        store.conversations[conversationId].activeViewers = {};
+      }
+      store.conversations[conversationId].activeViewers[normUser] = Math.floor(Date.now() / 1000);
+
       if (store.messages[conversationId]) {
         store.messages[conversationId] = store.messages[conversationId].map((m) => {
           if (normalizeUsername(m.recipientUsername) === normUser) {
@@ -1244,6 +1275,12 @@ export async function markPrivateConversationRead(
           }
           return m;
         });
+      }
+      if (
+        store.conversations[conversationId].lastMessage &&
+        normalizeUsername(store.conversations[conversationId].lastMessage.recipientUsername || '') === normUser
+      ) {
+        store.conversations[conversationId].lastMessage.read = true;
       }
       saveLocalPrivateStore(store);
     }

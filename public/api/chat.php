@@ -18,6 +18,8 @@ error_reporting(0);
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
 require_once __DIR__ . '/admin_auth.php';
 sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
@@ -1298,6 +1300,16 @@ if ($action === 'get_private_messages') {
     $otherMeta = $store['conversations'][$convId]['participants'][$otherNorm] ?? null;
 
     $updated = false;
+
+    // Enregistrement de présence active sur ce fil (pour accusé de réception instantané)
+    if (isset($store['conversations'][$convId])) {
+        if (!isset($store['conversations'][$convId]['activeViewers']) || !is_array($store['conversations'][$convId]['activeViewers'])) {
+            $store['conversations'][$convId]['activeViewers'] = [];
+        }
+        $store['conversations'][$convId]['activeViewers'][$normUser] = time();
+        $updated = true;
+    }
+
     if ($markRead && isset($store['conversations'][$convId])) {
         if (!empty($store['conversations'][$convId]['unread'][$normUser])) {
             $store['conversations'][$convId]['unread'][$normUser] = 0;
@@ -1310,10 +1322,15 @@ if ($action === 'get_private_messages') {
             }
         }
         unset($m);
-        if ($updated) {
-            $store['messages'][$convId] = $messages;
-            savePrivateChatStore($privateConversationsFile, $store);
+        if (isset($store['conversations'][$convId]['lastMessage']) && normalizeChatUsername($store['conversations'][$convId]['lastMessage']['recipientUsername'] ?? '') === $normUser) {
+            $store['conversations'][$convId]['lastMessage']['read'] = true;
+            $updated = true;
         }
+    }
+
+    if ($updated) {
+        $store['messages'][$convId] = $messages;
+        savePrivateChatStore($privateConversationsFile, $store);
     }
 
     if ($since > 0) {
@@ -1503,6 +1520,10 @@ if ($action === 'send_private_message') {
     $recipientTitle = trim($body['recipientTitle'] ?? 'Explorateur');
     $recipientSteamId = trim($body['recipientSteamId'] ?? '');
 
+    // Détection de présence active : le destinataire est-il actuellement sur ce fil ? (actif dans les 8 dernières secondes)
+    $lastViewerTs = (int)($store['conversations'][$canonicalId]['activeViewers'][$normRecipient] ?? 0);
+    $isRecipientViewing = ($lastViewerTs > 0 && ($now - $lastViewerTs) <= 8);
+
     $message = [
         'id' => $msgId,
         'conversationId' => $canonicalId,
@@ -1518,7 +1539,7 @@ if ($action === 'send_private_message') {
         'recipientSteamId' => $recipientSteamId,
         'text' => htmlspecialchars(strip_tags($rawText), ENT_QUOTES, 'UTF-8'),
         'timestamp' => $now,
-        'read' => false
+        'read' => $isRecipientViewing
     ];
 
     if (!isset($store['messages'][$canonicalId])) {
@@ -1570,15 +1591,20 @@ if ($action === 'send_private_message') {
     $store['conversations'][$canonicalId]['lastMessage'] = [
         'id' => $msgId,
         'senderUsername' => $senderUsername,
+        'recipientUsername' => $cleanRecipient,
         'text' => $message['text'],
         'timestamp' => $now,
-        'read' => false
+        'read' => $isRecipientViewing
     ];
 
     $store['conversations'][$canonicalId]['updatedAt'] = $now;
 
-    $currentUnread = (int)($store['conversations'][$canonicalId]['unread'][$normRecipient] ?? 0);
-    $store['conversations'][$canonicalId]['unread'][$normRecipient] = $currentUnread + 1;
+    if (!$isRecipientViewing) {
+        $currentUnread = (int)($store['conversations'][$canonicalId]['unread'][$normRecipient] ?? 0);
+        $store['conversations'][$canonicalId]['unread'][$normRecipient] = $currentUnread + 1;
+    } else {
+        $store['conversations'][$canonicalId]['unread'][$normRecipient] = 0;
+    }
 
     savePrivateChatStore($privateConversationsFile, $store);
 
@@ -1614,6 +1640,11 @@ if ($action === 'mark_private_read') {
         $store = getPrivateChatStore($privateConversationsFile);
         if (isset($store['conversations'][$convId])) {
             $store['conversations'][$convId]['unread'][$normUser] = 0;
+            if (!isset($store['conversations'][$convId]['activeViewers']) || !is_array($store['conversations'][$convId]['activeViewers'])) {
+                $store['conversations'][$convId]['activeViewers'] = [];
+            }
+            $store['conversations'][$convId]['activeViewers'][$normUser] = time();
+
             if (isset($store['messages'][$convId])) {
                 foreach ($store['messages'][$convId] as &$m) {
                     if (normalizeChatUsername($m['recipientUsername'] ?? '') === $normUser) {
@@ -1621,6 +1652,9 @@ if ($action === 'mark_private_read') {
                     }
                 }
                 unset($m);
+            }
+            if (isset($store['conversations'][$convId]['lastMessage']) && normalizeChatUsername($store['conversations'][$convId]['lastMessage']['recipientUsername'] ?? '') === $normUser) {
+                $store['conversations'][$convId]['lastMessage']['read'] = true;
             }
             savePrivateChatStore($privateConversationsFile, $store);
         }

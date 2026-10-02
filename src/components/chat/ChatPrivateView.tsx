@@ -87,11 +87,27 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
     }
   }, [activePrivateConversationId]);
 
-  // Récupération systématique des messages à la sélection d'un fil
+  // Récupération systématique des messages à la sélection d'un fil et synchronisation active en continu (2.5s)
   useEffect(() => {
-    if (activePrivateConversationId) {
+    if (!activePrivateConversationId) return;
+
+    refreshPrivateMessages(activePrivateConversationId);
+
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && !document.hidden) {
+        refreshPrivateMessages(activePrivateConversationId);
+      }
+    }, 2500);
+
+    const handleFocus = () => {
       refreshPrivateMessages(activePrivateConversationId);
-    }
+    };
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [activePrivateConversationId, refreshPrivateMessages]);
 
   const effectiveParticipant = useMemo(() => {

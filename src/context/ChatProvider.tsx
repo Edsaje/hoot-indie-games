@@ -102,6 +102,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const isFetchingRef = useRef<boolean>(false);
   const activeTabRef = useRef<'public' | 'private'>(activeTab);
   activeTabRef.current = activeTab;
+  const activePrivateConversationIdRef = useRef<string | null>(activePrivateConversationId);
+  activePrivateConversationIdRef.current = activePrivateConversationId;
 
   // Récupérer les messages (Delta polling intelligent avec 'since' pour éviter de surcharger le serveur)
   const refreshMessages = useCallback(
@@ -226,7 +228,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Rafraîchir les messages du fil privé en cours
   const refreshPrivateMessages = useCallback(
     async (targetConvId?: string) => {
-      const convId = targetConvId || activePrivateConversationId;
+      const convId = targetConvId || activePrivateConversationIdRef.current || activePrivateConversationId;
       const myUsername = profile.username || 'Explorateur';
       if (!convId) return;
 
@@ -276,10 +278,39 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     refreshPrivateConversations();
   }, [refreshMessages, refreshPrivateConversations]);
 
+  // Synchronisation inter-onglets & événements de stockage en temps réel
+  useEffect(() => {
+    const handleStorageChange = (e?: StorageEvent) => {
+      if (!e || e.key === 'hoot_private_chat_store' || e.key === null) {
+        refreshPrivateConversations();
+        const curConvId = activePrivateConversationIdRef.current;
+        if (curConvId) {
+          refreshPrivateMessages(curConvId);
+        }
+      }
+    };
+    const handleLocalUpdate = () => {
+      refreshPrivateConversations();
+      const curConvId = activePrivateConversationIdRef.current;
+      if (curConvId) {
+        refreshPrivateMessages(curConvId);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('hoot_private_store_updated', handleLocalUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('hoot_private_store_updated', handleLocalUpdate);
+    };
+  }, [refreshPrivateConversations, refreshPrivateMessages]);
+
   // Polling sobre & intelligent :
   // - Si onglet masqué / en arrière-plan : PAUSE COMPLÈTE (0 appel réseau !)
-  // - Si le tiroir du chat est OUVERT : polling delta toutes les 8 secondes
-  // - Si le tiroir du chat est FERMÉ : polling delta espacé (toutes les 60 secondes)
+  // - Si une conversation privée est OUVERTE : polling réactif rapide toutes les 2.5s (pour accusés de lecture temps-réel)
+  // - Si le tiroir du chat est OUVERT en public : polling delta toutes les 7s
+  // - Si le tiroir du chat est FERMÉ : polling delta espacé (toutes les 60s)
   useEffect(() => {
     let pollTimer: ReturnType<typeof setInterval> | null = null;
 
@@ -287,13 +318,20 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (pollTimer) clearInterval(pollTimer);
       if (typeof document !== 'undefined' && document.hidden) return;
 
-      const delay = isOpen ? 7000 : 60000;
+      const isPrivateActive = Boolean(
+        isOpen && activeTab === 'private' && (activePrivateConversationId || activePrivateConversationIdRef.current)
+      );
+      const delay = isPrivateActive ? 2500 : isOpen ? 7000 : 60000;
+
       pollTimer = setInterval(() => {
         if (typeof document !== 'undefined' && !document.hidden) {
-          refreshMessages(false);
+          if (activeTabRef.current === 'public') {
+            refreshMessages(false);
+          }
           refreshPrivateConversations();
-          if (activeTabRef.current === 'private' && activePrivateConversationId) {
-            refreshPrivateMessages();
+          const curConv = activePrivateConversationIdRef.current;
+          if (activeTabRef.current === 'private' && curConv) {
+            refreshPrivateMessages(curConv);
           }
         }
       }, delay);
@@ -305,10 +343,13 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (document.hidden) {
         if (pollTimer) clearInterval(pollTimer);
       } else {
-        refreshMessages(false);
+        if (activeTabRef.current === 'public') {
+          refreshMessages(false);
+        }
         refreshPrivateConversations();
-        if (activeTabRef.current === 'private' && activePrivateConversationId) {
-          refreshPrivateMessages();
+        const curConv = activePrivateConversationIdRef.current;
+        if (activeTabRef.current === 'private' && curConv) {
+          refreshPrivateMessages(curConv);
         }
         startPoll();
       }
@@ -320,7 +361,14 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (pollTimer) clearInterval(pollTimer);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [isOpen, refreshMessages, refreshPrivateConversations, refreshPrivateMessages, activePrivateConversationId]);
+  }, [
+    isOpen,
+    activeTab,
+    activePrivateConversationId,
+    refreshMessages,
+    refreshPrivateConversations,
+    refreshPrivateMessages,
+  ]);
 
   // Ouverture / Fermeture
   const openChat = useCallback((channel?: ChatChannel) => {
