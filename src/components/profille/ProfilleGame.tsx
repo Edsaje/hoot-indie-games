@@ -1558,7 +1558,7 @@ https://hootindiegames.com/#profille`;
         </div>
 
         {/* Thumbnail Strip */}
-        <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex flex-wrap items-center gap-2 mt-3 pb-1">
           {secretGame.screenshots.map((src: string, idx: number) => (
             <button
               key={idx}

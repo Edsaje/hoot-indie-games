@@ -1165,7 +1165,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             </div>
 
             {/* Miniatures Screenshots */}
-            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+            <div className="flex flex-wrap gap-2 pb-1">
               {selectedGameForModal.screenshots.map((s, idx) => (
                 <button
                   key={idx}

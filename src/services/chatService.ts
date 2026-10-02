@@ -3,7 +3,7 @@
  * 
  * Communique avec public/api/chat.php avec résilience hors-ligne / localhost
  */
-import { ADMIN_STEAM_ID } from '../utils/usernameValidation';
+import { ADMIN_STEAM_ID, normalizeUsername } from '../utils/usernameValidation';
 
 export type ChatChannel = 'global' | 'fr' | 'en' | 'es' | 'de' | 'ja' | 'pt-BR' | 'feedback';
 export type FeedbackCategory = 'suggestion' | 'bug' | 'idea' | 'love' | 'general';
@@ -821,9 +821,9 @@ export interface PrivateConversation {
 const LOCAL_STORAGE_PRIVATE_CHAT_KEY = 'hoot_local_private_chat_v1';
 
 export function getCanonicalConvKey(userA: string, userB: string): string {
-  const normA = userA.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const normB = userB.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return normA.localeCompare(normB) <= 0 ? `${normA}__${normB}` : `${normB}__${normA}`;
+  const normA = normalizeUsername(userA);
+  const normB = normalizeUsername(userB);
+  return normA <= normB ? `${normA}__${normB}` : `${normB}__${normA}`;
 }
 
 interface LocalPrivateStore {
@@ -919,7 +919,7 @@ export async function fetchPrivateConversations(auth: {
 
   // Fallback LocalStorage
   const store = getLocalPrivateStore();
-  const normUser = cleanUsername.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const normUser = normalizeUsername(cleanUsername);
   const userConversations: PrivateConversation[] = [];
   let totalUnread = 0;
 
@@ -1015,12 +1015,12 @@ export async function fetchPrivateMessages(
   // Fallback LocalStorage
   const store = getLocalPrivateStore();
   let msgs = store.messages[convId] || [];
-  const normUser = cleanUsername.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const normUser = normalizeUsername(cleanUsername);
 
   if (markRead && store.conversations[convId]) {
     store.conversations[convId].unread[normUser] = 0;
     msgs = msgs.map((m) => {
-      if (m.recipientUsername.toLowerCase().replace(/[^a-z0-9]/g, '') === normUser) {
+      if (normalizeUsername(m.recipientUsername) === normUser) {
         return { ...m, read: true };
       }
       return m;
@@ -1160,8 +1160,8 @@ export async function sendPrivateMessage(payload: {
     store.messages[convId] = store.messages[convId].slice(-100);
   }
 
-  const normSender = payload.username.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const normRecipient = cleanRecipient.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const normSender = normalizeUsername(payload.username);
+  const normRecipient = normalizeUsername(cleanRecipient);
 
   if (!store.conversations[convId]) {
     store.conversations[convId] = {
@@ -1234,12 +1234,12 @@ export async function markPrivateConversationRead(
   } catch {
     // Fallback local
     const store = getLocalPrivateStore();
-    const normUser = cleanUsername.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normUser = normalizeUsername(cleanUsername);
     if (store.conversations[conversationId]) {
       store.conversations[conversationId].unread[normUser] = 0;
       if (store.messages[conversationId]) {
         store.messages[conversationId] = store.messages[conversationId].map((m) => {
-          if (m.recipientUsername.toLowerCase().replace(/[^a-z0-9]/g, '') === normUser) {
+          if (normalizeUsername(m.recipientUsername) === normUser) {
             return { ...m, read: true };
           }
           return m;

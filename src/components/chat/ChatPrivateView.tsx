@@ -87,6 +87,31 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
     }
   }, [activePrivateConversationId]);
 
+  // Récupération systématique des messages à la sélection d'un fil
+  useEffect(() => {
+    if (activePrivateConversationId) {
+      refreshPrivateMessages(activePrivateConversationId);
+    }
+  }, [activePrivateConversationId, refreshPrivateMessages]);
+
+  const effectiveParticipant = useMemo(() => {
+    if (activePrivateParticipant) return activePrivateParticipant;
+    if (!activePrivateConversationId) return null;
+    const found = privateConversations.find((c) => c.conversationId === activePrivateConversationId);
+    if (found?.otherParticipant) return found.otherParticipant;
+    const parts = activePrivateConversationId.split('__');
+    if (parts.length === 2) {
+      const myNorm = (profile.username || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const otherNorm = parts[0] === myNorm ? parts[1] : parts[0];
+      return {
+        username: otherNorm,
+        avatarId: 'owl',
+        title: 'Explorateur',
+      };
+    }
+    return null;
+  }, [activePrivateParticipant, activePrivateConversationId, privateConversations, profile.username]);
+
   // Formatage relatif des dates
   const formatTime = (ts: number): string => {
     if (!ts) return '';
@@ -241,27 +266,28 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
   // -------------------------------------------------------------
   // VUE 1 : FIL DE DISCUSSION ACTIF AVEC UN JOUEUR
   // -------------------------------------------------------------
-  if (activePrivateConversationId && activePrivateParticipant) {
-    const otherAvatar = getAvatarInfo(activePrivateParticipant.avatarId);
-    const otherFrame = getFrameDefinition(activePrivateParticipant.activeFrame);
+  const currentParticipant = activePrivateParticipant || effectiveParticipant;
+  if (activePrivateConversationId && currentParticipant) {
+    const otherAvatar = getAvatarInfo(currentParticipant.avatarId);
+    const otherFrame = getFrameDefinition(currentParticipant.activeFrame);
     const isOtherCreator =
-      activePrivateParticipant.username.toLowerCase() === 'hibouxe' ||
-      activePrivateParticipant.avatarId === 'hibouxe_creator';
+      currentParticipant.username.toLowerCase() === 'hibouxe' ||
+      currentParticipant.avatarId === 'hibouxe_creator';
 
     const isMutualFriend =
       isOtherCreator ||
       friends.some(
         (f) =>
-          f.username.toLowerCase() === activePrivateParticipant.username.toLowerCase() &&
+          f.username.toLowerCase() === currentParticipant.username.toLowerCase() &&
           f.isMutual !== false
       );
 
     const hasSentFriendReq = sentRequests.some(
-      (r) => r.toUsername.toLowerCase() === activePrivateParticipant.username.toLowerCase()
+      (r) => r.toUsername.toLowerCase() === currentParticipant.username.toLowerCase()
     );
 
     const hasReceivedFriendReq = pendingRequests.some(
-      (r) => r.fromUsername.toLowerCase() === activePrivateParticipant.username.toLowerCase()
+      (r) => r.fromUsername.toLowerCase() === currentParticipant.username.toLowerCase()
     );
 
     return (
@@ -291,13 +317,13 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
               {otherAvatar.imageUrl ? (
                 <img
                   src={otherAvatar.imageUrl}
-                  alt={activePrivateParticipant.username}
+                  alt={currentParticipant.username}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <span>{otherAvatar.emoji}</span>
               )}
-              {activePrivateParticipant.isOnline && (
+              {currentParticipant.isOnline && (
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-black" />
               )}
             </div>
@@ -305,7 +331,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 truncate">
                 <span className="font-bold text-xs text-white truncate">
-                  {activePrivateParticipant.username}
+                  {currentParticipant.username}
                 </span>
                 {isOtherCreator ? (
                   <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-black shrink-0 flex items-center gap-1">
@@ -323,12 +349,12 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                     <span>Non-ami (Verrouillé)</span>
                   </span>
                 )}
-                {activePrivateParticipant.steamId && (
+                {currentParticipant.steamId && (
                   <SteamIcon className="w-3 h-3 text-cyan-400 shrink-0" />
                 )}
               </div>
               <p className="text-[10px] text-emerald-400/80 truncate">
-                {activePrivateParticipant.title || 'Explorateur sylvestre'}
+                {currentParticipant.title || 'Explorateur sylvestre'}
               </p>
             </div>
           </div>
@@ -353,7 +379,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                 <Lock className="w-5 h-5 text-emerald-400" />
               </div>
               <p className="text-xs font-bold text-slate-300">
-                Début de votre correspondance privée avec {activePrivateParticipant.username}
+                Début de votre correspondance privée avec {currentParticipant.username}
               </p>
               <p className="text-[11px] text-slate-400 max-w-xs leading-relaxed">
                 Les échanges sont directs, sécurisés et protégés par le bouclier sylvestre.
@@ -461,7 +487,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                         type="button"
                         onClick={async () => {
                           setIsSendingFriendReq(true);
-                          const res = await sendFriendRequest(activePrivateParticipant.username);
+                          const res = await sendFriendRequest(currentParticipant.username);
                           setIsSendingFriendReq(false);
                           if (res.success) {
                             soundFx.playSuccess();
@@ -476,7 +502,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                         <span>
                           {isSendingFriendReq
                             ? 'Envoi en cours...'
-                            : `Envoyer une demande d'amitié à ${activePrivateParticipant.username}`}
+                            : `Envoyer une demande d'amitié à ${currentParticipant.username}`}
                         </span>
                       </button>
                     )}
@@ -487,7 +513,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
           ) : (
             <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
               {/* Emojis rapides */}
-              <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+              <div className="flex flex-wrap items-center gap-1 py-0.5">
                 <span className="text-[10px] text-amber-300/80 font-bold px-1 flex items-center gap-0.5 shrink-0">
                   <Smile className="w-3 h-3" />
                 </span>
@@ -509,7 +535,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder={`Message privé à ${activePrivateParticipant.username}...`}
+                  placeholder={`Message privé à ${currentParticipant.username}...`}
                   maxLength={400}
                   className="flex-1 px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 focus:border-amber-400 text-xs text-white placeholder:text-slate-400 focus:outline-none transition shadow-inner"
                 />
@@ -705,7 +731,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                 type="button"
                 onClick={() => {
                   soundFx.playClick();
-                  openPrivateChat(conv.otherParticipant.username, conv.otherParticipant);
+                  openPrivateChat(conv.otherParticipant.username, conv.otherParticipant, conv.conversationId);
                 }}
                 className={`w-full p-2.5 rounded-xl border transition flex items-center gap-3 text-left cursor-pointer group ${
                   conv.unreadCount > 0

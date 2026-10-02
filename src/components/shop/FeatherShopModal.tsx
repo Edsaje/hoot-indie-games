@@ -254,7 +254,7 @@ export const FeatherShopModal: React.FC<FeatherShopModalProps> = ({
             )}
 
             {/* Filtres par Onglets de la Boutique */}
-            <div className="flex items-center gap-1.5 sm:gap-2 mt-4 overflow-x-auto pb-1 scrollbar-none">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-4 pb-1">
               {[
                 { id: 'all', label: 'Tout le Catalogue', icon: ShoppingBag },
                 { id: 'avatars', label: 'Compagnons d’Élite', icon: Crown },

@@ -666,7 +666,7 @@ export const ToolboxHub: React.FC = () => {
               </div>
 
               {/* Duration Pills */}
-              <div className="flex items-center gap-1 shrink-0 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+              <div className="flex flex-wrap items-center gap-1 shrink-0 w-full sm:w-auto">
                 {(
                   [
                     { id: 'all', label: 'Tous' },

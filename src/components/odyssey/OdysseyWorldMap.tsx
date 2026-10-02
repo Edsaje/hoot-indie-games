@@ -245,8 +245,8 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
         </div>
       </div>
 
-      {/* 2. Mini-ruban sélecteur rapide des 6 Biomes */}
-      <div className="w-full flex items-center gap-1.5 overflow-x-auto pb-2 mb-2.5 scrollbar-thin">
+      {/* 2. Sélecteur rapide des 6 Biomes (Grille 3x2 mobile / 6 colonnes desktop - 0 scroll horizontal) */}
+      <div className="w-full grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-1.5 mb-2.5">
         {ODYSSEY_BIOMES.map((b) => {
           const isUnlocked = b.index <= state.highestBiomeUnlocked;
           const isInspected = b.id === inspectedBiomeId;
@@ -260,7 +260,7 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
                 setInspectedBiomeId(b.id);
                 if (viewMode === 'atlas') setViewMode('trail');
               }}
-              className={`px-2.5 py-1.5 rounded-xl text-[11px] font-mono font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border cursor-pointer ${
+              className={`w-full px-1.5 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-mono font-bold transition-all flex items-center justify-center gap-1 border cursor-pointer ${
                 isInspected
                   ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/20 font-black'
                   : isUnlocked
@@ -269,13 +269,13 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
               }`}
             >
               {isUnlocked ? (
-                <span className="text-[10px]">{b.index}.</span>
+                <span className="text-[10px] opacity-80">{b.index}.</span>
               ) : (
-                <Lock className="w-2.5 h-2.5 text-slate-500" />
+                <Lock className="w-2.5 h-2.5 text-slate-500 shrink-0" />
               )}
-              <span>{b.name.replace(/^(La |Le |Les )/, '')}</span>
+              <span className="truncate">{b.name.replace(/^(La |Le |Les )/, '')}</span>
               {isCurrentActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-ping" />
               )}
             </button>
           );
@@ -632,10 +632,65 @@ export const OdysseyWorldMap: React.FC<OdysseyWorldMapProps> = ({
                 setIsBurgerOpen(true);
               }}
               className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 hover:border-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ml-auto active:scale-95 shadow-sm"
+              title="Ouvrir le panneau récapitulatif des mondes"
             >
               <Menu className="w-3.5 h-3.5 text-amber-400" />
-              <span>Changer de route</span>
+              <span>Tous les mondes</span>
             </button>
+          </div>
+
+          {/* Grille sélectrice directe des 5 Routes (Accès immédiat 1 clic, 0 scroll horizontal) */}
+          <div className="w-full mt-2 p-2 sm:p-2.5 rounded-2xl bg-black/40 border border-white/10">
+            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-1.5 px-1">
+              <span className="flex items-center gap-1.5 text-amber-300">
+                <Compass className="w-3 h-3 text-amber-400" />
+                <span>Routes de {inspectedBiome.name}</span>
+              </span>
+              <span className="text-slate-400">
+                Débloquées : <strong className="text-white">{maxRouteUnlocked}/5</strong>
+              </span>
+            </div>
+
+            <div className="grid grid-cols-5 gap-1 sm:gap-1.5">
+              {routesForInspected.map((route) => {
+                const isUnlocked = route.routeNumber <= maxRouteUnlocked;
+                const isCurrent = inspectedBiomeId === state.currentBiomeId && route.routeNumber === state.currentRouteNumber;
+                const kills = (state.routeKills && state.routeKills[route.id]) || 0;
+
+                return (
+                  <button
+                    key={route.id}
+                    type="button"
+                    disabled={!isUnlocked}
+                    onClick={() => handleSelectRoute(route.routeNumber)}
+                    className={`relative p-1.5 sm:p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
+                      isCurrent
+                        ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30 font-black scale-[1.02] z-10'
+                        : isUnlocked
+                        ? 'bg-slate-900/90 text-slate-200 border-white/10 hover:border-amber-400/60 hover:bg-slate-800/90 cursor-pointer active:scale-95'
+                        : 'bg-slate-950/60 text-slate-600 border-white/5 cursor-not-allowed opacity-60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-1 text-[11px] sm:text-xs font-mono font-black">
+                      {isUnlocked ? (
+                        <span>{route.isBossRoute ? '👑 BOSS' : `R${route.routeNumber}`}</span>
+                      ) : (
+                        <Lock className="w-2.5 h-2.5 text-slate-500" />
+                      )}
+                    </div>
+                    <div className="text-[9px] sm:text-[10px] font-mono truncate max-w-full leading-tight mt-0.5">
+                      {isUnlocked ? (
+                        <span className={isCurrent ? 'text-slate-950 font-bold' : 'text-emerald-400 font-semibold'}>
+                          {kills} k
+                        </span>
+                      ) : (
+                        <span className="text-slate-500 text-[8px]">Scellé</span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

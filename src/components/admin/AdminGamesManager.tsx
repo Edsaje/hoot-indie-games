@@ -947,7 +947,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         </div>
 
         {/* Pilules de statut */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0 text-xs">
+        <div className="flex flex-wrap items-center gap-1.5 shrink-0 text-xs">
           {[
             { id: 'all', label: `Tous (${stats.total})` },
             { id: 'gems', label: `✨ Pépites (${stats.gemCount})` },

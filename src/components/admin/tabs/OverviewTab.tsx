@@ -275,7 +275,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                           />
                         </div>
 
-                        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+                        <div className="flex flex-wrap items-center gap-1">
                           {[
                             { id: 'all' as const, label: 'Tous' },
                             { id: 'game' as const, label: 'Parties' },

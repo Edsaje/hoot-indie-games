@@ -14,7 +14,8 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
   onSelectTab,
 }) => {
   const { t } = useTranslation();
-  const { stats } = useSteamCatalog();
+  const { curatedGems, stats } = useSteamCatalog();
+  const gemsCount = curatedGems.length > 0 ? curatedGems.length : 256;
   const catalogCount = stats.steamCatalogCount > 0 ? stats.steamCatalogCount : 405;
 
   return (
@@ -32,6 +33,15 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
       >
         <Compass className="w-3.5 h-3.5 shrink-0" />
         <span>{t('nav.gems', 'Pépites')}</span>
+        <span
+          className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-black ${
+            currentTab === 'gems'
+              ? 'bg-slate-950/20 text-slate-950'
+              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+          }`}
+        >
+          {gemsCount}
+        </span>
       </button>
 
       <button
@@ -48,10 +58,10 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
         <Database className="w-3.5 h-3.5 shrink-0" />
         <span>{t('nav.catalog', 'Catalogue')}</span>
         <span
-          className={`text-[9px] font-mono px-1 py-0.2 rounded font-black ${
+          className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-black ${
             currentTab === 'catalog'
               ? 'bg-slate-950/20 text-slate-950'
-              : 'bg-amber-500/20 text-amber-300'
+              : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
           }`}
         >
           {catalogCount}

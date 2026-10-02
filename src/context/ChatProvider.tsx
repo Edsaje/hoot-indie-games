@@ -227,14 +227,15 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const refreshPrivateMessages = useCallback(
     async (targetConvId?: string) => {
       const convId = targetConvId || activePrivateConversationId;
-      if (!convId || !profile.username) return;
+      const myUsername = profile.username || 'Explorateur';
+      if (!convId) return;
 
       try {
         const markAsReadNow = Boolean(isOpenRef.current && activeTabRef.current === 'private');
         const res = await fetchPrivateMessages(
           convId,
           {
-            username: profile.username,
+            username: myUsername,
             steamId: profile.steam?.steamId,
             userId: profile.id,
           },
@@ -252,7 +253,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           res.messages.forEach((m) => {
             if (!knownPrivateMessageIdsRef.current.has(m.id)) {
               knownPrivateMessageIdsRef.current.add(m.id);
-              if (m.senderUsername.toLowerCase() !== profile.username.toLowerCase()) {
+              if (m.senderUsername.toLowerCase() !== myUsername.toLowerCase()) {
                 newFromOther = true;
               }
             }
@@ -360,24 +361,22 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Ouvrir un tchat privé directement avec un interlocuteur
   const openPrivateChat = useCallback(
-    (targetUsername: string, targetMeta?: Partial<PrivateParticipant>) => {
+    (targetUsername: string, targetMeta?: Partial<PrivateParticipant>, explicitConvId?: string) => {
       soundFx.playClick();
       const myUsername = profile.username || 'Explorateur';
-      const convId = getCanonicalConvKey(myUsername, targetUsername);
+      const convId = explicitConvId || getCanonicalConvKey(myUsername, targetUsername);
       setActiveTab('private');
       setActivePrivateConversationId(convId);
 
-      if (targetMeta) {
-        setActivePrivateParticipant({
-          username: targetUsername,
-          avatarId: targetMeta.avatarId || 'owl',
-          title: targetMeta.title || 'Explorateur',
-          activeFrame: targetMeta.activeFrame,
-          steamId: targetMeta.steamId,
-          friendCode: targetMeta.friendCode,
-          isOnline: targetMeta.isOnline,
-        });
-      }
+      setActivePrivateParticipant({
+        username: targetMeta?.username || targetUsername,
+        avatarId: targetMeta?.avatarId || 'owl',
+        title: targetMeta?.title || 'Explorateur',
+        activeFrame: targetMeta?.activeFrame,
+        steamId: targetMeta?.steamId,
+        friendCode: targetMeta?.friendCode,
+        isOnline: targetMeta?.isOnline,
+      });
 
       setIsOpen(true);
       setPrivateUnreadCount((prev) => Math.max(0, prev - 1));

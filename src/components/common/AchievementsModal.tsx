@@ -291,7 +291,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
             </div>
 
             {/* Category Filters */}
-            <div className="flex items-center gap-1.5 py-2.5 overflow-x-auto no-scrollbar shrink-0">
+            <div className="flex flex-wrap items-center gap-1.5 py-2.5 shrink-0">
               {(
                 [
                   { id: 'all', label: t('achievementsModal.all') },

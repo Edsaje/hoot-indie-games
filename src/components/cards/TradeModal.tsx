@@ -351,7 +351,7 @@ export const TradeModal: React.FC = () => {
         </div>
 
         {/* Barre d'onglets */}
-        <div className="flex items-center px-4 bg-[#041912] border-b border-emerald-500/20 gap-2 shrink-0 overflow-x-auto no-scrollbar">
+        <div className="flex flex-wrap items-center px-4 bg-[#041912] border-b border-emerald-500/20 gap-2 shrink-0">
           <button
             type="button"
             onClick={() => {

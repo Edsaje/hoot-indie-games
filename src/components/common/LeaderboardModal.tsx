@@ -401,7 +401,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         </div>
 
         {/* Games Selector Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-1.5 pb-2 shrink-0">
           {currentGamesList.map((g) => {
             const isSelected = selectedGame === g.id;
             return (

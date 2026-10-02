@@ -628,7 +628,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
               <Lightbulb className="w-3 h-3 text-amber-400" />
               <span>{t('chat.feedbackCategory')}</span>
             </span>
-            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 w-full max-w-full">
+            <div className="flex flex-wrap items-center gap-1 py-0.5 w-full max-w-full">
               {FEEDBACK_CATEGORIES.map((cat) => {
                 const isCatSelected = selectedCategory === cat.id;
                 const catLabel = getCategoryLabel(cat.id, cat.label);
@@ -1125,7 +1125,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       {isAuthenticated ? (
         <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
           {/* Barre de réactions rapides / emojis */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none">
+          <div className="flex flex-wrap items-center gap-1 pb-0.5">
             <span className="text-[10px] text-emerald-400/70 shrink-0 flex items-center gap-0.5 mr-0.5">
               <Smile className="w-3 h-3" />
             </span>

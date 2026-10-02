@@ -1214,7 +1214,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           )}
 
           {/* Bandeau de navigation par Onglets */}
-          <div className="flex overflow-x-auto border-b border-white/5 px-4 sm:px-6 bg-[#090d16] no-scrollbar shrink-0 gap-2 pt-3">
+          <div className="flex flex-wrap border-b border-white/5 px-4 sm:px-6 bg-[#090d16] shrink-0 gap-2 pt-3">
             {[
               { id: 'overview' as AdminTab, label: "Vue d'Ensemble & Trafic", icon: Activity },
               { id: 'catalog' as AdminTab, label: 'Catalogue & CRUD Jeux', icon: Sparkles },
@@ -1547,7 +1547,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           />
                         </div>
 
-                        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+                        <div className="flex flex-wrap items-center gap-1">
                           {[
                             { id: 'all' as const, label: 'Tous' },
                             { id: 'game' as const, label: 'Parties' },
@@ -1847,7 +1847,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                       </div>
 
                       {/* Filtres par catégorie */}
-                      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+                      <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                         {[
                           { id: 'all', label: 'Tous', count: data.usernames?.list?.length || 0 },
                           { id: 'steam', label: 'Steam', count: data.usernames?.list?.filter((u) => !!u.steamId).length || 0 },

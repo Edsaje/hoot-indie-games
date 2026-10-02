@@ -144,7 +144,7 @@ export const OdysseyRouteBurgerMenu: React.FC<OdysseyRouteBurgerMenuProps> = ({
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">
             1. Choisissez un Royaume Sylvestre
           </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
             {ODYSSEY_BIOMES.map((b) => {
               const isUnlocked = b.index <= state.highestBiomeUnlocked;
               const isSelected = b.id === selectedBiomeId;
@@ -157,7 +157,7 @@ export const OdysseyRouteBurgerMenu: React.FC<OdysseyRouteBurgerMenuProps> = ({
                     soundFx.playClick();
                     setSelectedBiomeId(b.id);
                   }}
-                  className={`px-3 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border cursor-pointer shrink-0 ${
+                  className={`w-full px-2 py-2 rounded-xl text-[10px] sm:text-xs font-mono font-bold transition-all flex items-center justify-center gap-1 border cursor-pointer ${
                     isSelected
                       ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-md shadow-amber-500/20'
                       : isUnlocked
@@ -166,13 +166,13 @@ export const OdysseyRouteBurgerMenu: React.FC<OdysseyRouteBurgerMenuProps> = ({
                   }`}
                 >
                   {isUnlocked ? (
-                    <span className="text-[10px] font-mono">{b.index}.</span>
+                    <span className="text-[10px] font-mono opacity-80">{b.index}.</span>
                   ) : (
-                    <Lock className="w-3 h-3 text-slate-500" />
+                    <Lock className="w-2.5 h-2.5 text-slate-500 shrink-0" />
                   )}
-                  <span>{b.name.replace(/^(La |Le |Les )/, '')}</span>
+                  <span className="truncate">{b.name.replace(/^(La |Le |Les )/, '')}</span>
                   {isCurrent && (
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
                   )}
                 </button>
               );

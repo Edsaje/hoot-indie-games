@@ -127,7 +127,7 @@ export const UsernamesTab: React.FC<UsernamesTabProps> = ({
                       </div>
 
                       {/* Filtres par catégorie */}
-                      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+                      <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                         {[
                           { id: 'all', label: 'Tous', count: data.usernames?.list?.length || 0 },
                           { id: 'steam', label: 'Steam', count: data.usernames?.list?.filter((u: any) => !!u.steamId).length || 0 },

@@ -187,9 +187,15 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     const timer = setInterval(() => {
       setBossTimeLeft((prev) => {
         if (prev <= 1) {
-          // Échec du boss : retour à la route 4
+          // Échec du boss : repli vers la route précédente et désactivation de "avancer automatique"
           soundFx.playError();
-          const fallback = switchRoute(stateRef.current, 4);
+          const targetRouteNum = Math.max(1, currentRoute.routeNumber - 1);
+          let fallback = switchRoute(stateRef.current, targetRouteNum);
+          fallback = {
+            ...fallback,
+            autoAdvance: false,
+          };
+          saveOdysseyState(fallback);
           onStateChange(fallback);
           return 30;
         }
@@ -198,7 +204,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [currentRoute.isBossRoute, onStateChange]);
+  }, [currentRoute.isBossRoute, currentRoute.routeNumber, onStateChange]);
 
   // Boucle de buff et de spawn aléatoire de Luciole Dorée
   useEffect(() => {

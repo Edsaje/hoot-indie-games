@@ -30,7 +30,11 @@ export interface ChatContextType {
   setActivePrivateConversationId: (convId: string | null) => void;
   activePrivateMessages: PrivateMessage[];
   activePrivateParticipant: PrivateParticipant | null;
-  openPrivateChat: (targetUsername: string, targetMeta?: Partial<PrivateParticipant>) => void;
+  openPrivateChat: (
+    targetUsername: string,
+    targetMeta?: Partial<PrivateParticipant>,
+    explicitConvId?: string
+  ) => void;
   sendPrivateMsg: (
     recipientUsername: string,
     text: string,

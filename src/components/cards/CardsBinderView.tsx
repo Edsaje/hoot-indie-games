@@ -515,7 +515,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
         {/* Filters Group */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
           {/* Rarity Tabs */}
-          <div className="flex items-center gap-1 bg-[#020e0a] p-1 rounded-xl border border-[#78350f]/60 overflow-x-auto scrollbar-none">
+          <div className="flex flex-wrap items-center gap-1 bg-[#020e0a] p-1 rounded-xl border border-[#78350f]/60">
             {[
               { id: 'all', label: 'Toutes' },
               { id: 'common', label: 'Communes' },
