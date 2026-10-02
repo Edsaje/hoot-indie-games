@@ -1243,78 +1243,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/282140/header.jpg?t=1786607913"
   },
   {
-    "id": "salt-and-sanctuary",
-    "title": "Salt and Sanctuary",
-    "releaseYear": 2016,
-    "genre": [
-      "Action",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Ska Studios",
-    "steamUrl": "https://store.steampowered.com/app/283640/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_e13553f8d90a1e4f604f8c81e09b089899c6203b.1920x1080.jpg?t=1729712419",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_1535f4d0f1c49f2ec693018ebf987913d91609b4.1920x1080.jpg?t=1729712419",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_0650b3bebe5aeadd16e0b166dc12b2981425cf43.1920x1080.jpg?t=1729712419",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_53676a06df752583b57ff2916edc003bf78dd57f.1920x1080.jpg?t=1729712419",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_7472b0f50976aa92ec45ca27a939f9182324d74f.1920x1080.jpg?t=1729712419",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_18d932316f9bf594481d34aca9821639c21ac501.1920x1080.jpg?t=1729712419"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Explore a haunting, punishing island in this stylized 2D action RPG. Salt and Sanctuary combines fast and brutal 2D combat with richly developed RPG mechanics in a cursed realm of forgotten cities, blood-soaked dungeons, and desecrated monuments.",
-        "en": "Explore a haunting, punishing island in this stylized 2D action RPG. Salt and Sanctuary combines fast and brutal 2D combat with richly developed RPG mechanics in a cursed realm of forgotten cities, blood-soaked dungeons, and desecrated monuments."
-      }
-    },
-    "steamAppId": 283640,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/header.jpg?t=1729712419"
-  },
-  {
-    "id": "gang-beasts",
-    "title": "Gang Beasts",
-    "releaseYear": 2017,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Occasionnel",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Boneloaf",
-    "steamUrl": "https://store.steampowered.com/app/285900/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_0476d6b0403313cb4fa727fd99146762eb80f611.1920x1080.jpg?t=1780410654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_0e7190e5cee562fa851f23bfeb65b336550a6d18.1920x1080.jpg?t=1780410654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_1778496dc8675159f7cb7ded7f6806ad4c1e2ccf.1920x1080.jpg?t=1780410654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_d10fe0c8d1bcf4f69317121e2ba3dc23f052e352.1920x1080.jpg?t=1780410654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_0717d70ae0ad852c0a17bd8eabb00c9d0159c6bc.1920x1080.jpg?t=1780410654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_c43fe05124ca430efa50929b242cd72add692106.1920x1080.jpg?t=1780410654"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Gang Beasts est un jeu multijoueur loufoque avec des personnages gélatineux hargneux, des combats brutalo-comiques, et des lieux absurdement dangereux situés dans la cité de Ville-bœuf.",
-        "en": "Gang Beasts is a silly multiplayer party game with surly gelatinous characters, brutal slapstick fight sequences, and absurd hazardous environments, set in the mean streets of Beef City."
-      }
-    },
-    "steamAppId": 285900,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/header.jpg?t=1780410654"
-  },
-  {
     "id": "rimworld",
     "title": "RimWorld",
     "releaseYear": 2018,
@@ -1668,42 +1596,6 @@
     },
     "steamAppId": 323190,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/323190/abcd2bf3c275092d637d7dd98e0061dbdd2fd2da/header.jpg?t=1784897899"
-  },
-  {
-    "id": "children-of-morta",
-    "title": "Children of Morta",
-    "releaseYear": 2019,
-    "genre": [
-      "Action",
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Dead Mage",
-    "steamUrl": "https://store.steampowered.com/app/330020/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_83a775e3ef93bde16a08d009a0ad1fb1b2a43b76.1920x1080.jpg?t=1765218667",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_e7bbfd5607b247a6931f521c397bcd50328d45fc.1920x1080.jpg?t=1765218667",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_7e1a090f480f8392e1e1ae019624425a8ded8484.1920x1080.jpg?t=1765218667",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_35184bb42eaf327d0926a8f437ad37d8b1f30652.1920x1080.jpg?t=1765218667",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_0845547cac4c10933666ea052efb7b9da217cffd.1920x1080.jpg?t=1765218667",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_074324b619a1db674fd935bdeef4e0ab165c55ba.1920x1080.jpg?t=1765218667"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Children of Morta est un jeu de RPG d'action basé sur une histoire et mettant en scène une famille extraordinaire de héros. Conduisez les Bergson, avec tous leurs défauts et leurs vertus, contre la corruption à venir. Serez-vous capable de tout sacrifier pour sauver ceux que vous aimez?",
-        "en": "Children of Morta is a story-driven action RPG game about an extraordinary family of heroes. Lead the Bergsons, with all their flaws and virtues, against the forthcoming Corruption. Will you be able to sacrifice everything to save the ones you care for?"
-      }
-    },
-    "steamAppId": 330020,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/header.jpg?t=1765218667"
   },
   {
     "id": "axiom-verge",
@@ -14313,5 +14205,191 @@
     "addedAt": "2026-10-01",
     "steamAppId": 5228570,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/c8d36f851dd112a935ddc3baa5666f67bfedfc47/header.jpg?t=1790760795"
+  },
+  {
+    "id": "battle-simulator-counter-zombie-reborn",
+    "title": "Battle Simulator: Counter Zombie REBORN",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Yurii Nikshych",
+    "steamUrl": "https://store.steampowered.com/app/4831090/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/c48afa64d48a45a46ad2f1168721551e602f1a77/ss_c48afa64d48a45a46ad2f1168721551e602f1a77.1920x1080.jpg?t=1790883849",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/105d6092cdf5d1f1294877fb61ccb739f7d08081/ss_105d6092cdf5d1f1294877fb61ccb739f7d08081.1920x1080.jpg?t=1790883849",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/57315c1d1456f3dafe5cc27ded97238f738633a0/ss_57315c1d1456f3dafe5cc27ded97238f738633a0.1920x1080.jpg?t=1790883849",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/e1f4a8b28101b30e435725d1c986b376ae03eed6/ss_e1f4a8b28101b30e435725d1c986b376ae03eed6.1920x1080.jpg?t=1790883849",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/0ea330e829a5d2d8e437d7505a1c50f838a13c58/ss_0ea330e829a5d2d8e437d7505a1c50f838a13c58.1920x1080.jpg?t=1790883849",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/ffafc6ac00acf17db42044a38f1518fe656a3c2a/ss_ffafc6ac00acf17db42044a38f1518fe656a3c2a.1920x1080.jpg?t=1790883849"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Simulateur de combat contre les zombies post-apocalyptique avec des tactiques d’escouade réalistes et précises. Affrontez et éliminez la horde de zombies. Tirez pour tuer et utilisez des armes comme le lance-flammes, le M16 et les RPG pour éliminer les morts-vivants.",
+        "en": "Post-apocalyptic zombie battle simulator with accurate squad based tactics. Battle and kill the zombie horde. Shooting to kill, use weapons like flamethrower, m16 and RPGs to kill the undead. Accurate zombie AI and HDR graphics."
+      }
+    },
+    "addedAt": "2026-10-02",
+    "steamAppId": 4831090,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/c78cd742272ca43444802b8da37448bc394e8f18/header.jpg?t=1790883849"
+  },
+  {
+    "id": "leadfall",
+    "title": "LeadFall",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "IronPan",
+    "steamUrl": "https://store.steampowered.com/app/4839790/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/99a2ce7a2f16de8d637543972de3c3b14ad311e8/ss_99a2ce7a2f16de8d637543972de3c3b14ad311e8.1920x1080.jpg?t=1790856037",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/9f535c60df4b095f416a6d78b5d3c1fd522717dc/ss_9f535c60df4b095f416a6d78b5d3c1fd522717dc.1920x1080.jpg?t=1790856037",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/0067d25cd58ff93e211c2175fad8a50a630e272d/ss_0067d25cd58ff93e211c2175fad8a50a630e272d.1920x1080.jpg?t=1790856037",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/90973757ee8e16b4884143b8ea31dff47e78629f/ss_90973757ee8e16b4884143b8ea31dff47e78629f.1920x1080.jpg?t=1790856037",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/bdc915813d2aae6ba049c8fa535665944a45e06a/ss_bdc915813d2aae6ba049c8fa535665944a45e06a.1920x1080.jpg?t=1790856037",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/b05feed3a03ad1236377d3a1102bc5830e325b58/ss_b05feed3a03ad1236377d3a1102bc5830e325b58.1920x1080.jpg?t=1790856037"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "LeadFall is a fast-paced top-down action roguelike where you survive chaotic waves of food-themed enemies, collect powerful card upgrades, and create broken weapon builds in short, replayable runs.",
+        "en": "LeadFall is a fast-paced top-down action roguelike where you survive chaotic waves of food-themed enemies, collect powerful card upgrades, and create broken weapon builds in short, replayable runs."
+      }
+    },
+    "addedAt": "2026-10-02",
+    "steamAppId": 4839790,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/8ccd7a91388d030fa20fb7111ae00abb093d3785/header.jpg?t=1790856037"
+  },
+  {
+    "id": "fox-clicker",
+    "title": "Fox Clicker",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Kemonocept",
+    "steamUrl": "https://store.steampowered.com/app/5212110/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/b5cbfcdfbaddc6f17ef7f57e79d597e22bfc95e0/ss_b5cbfcdfbaddc6f17ef7f57e79d597e22bfc95e0.1920x1080.jpg?t=1790845075",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/f093c88a3911e63d113df9a9e9bfaa6f10ca6b21/ss_f093c88a3911e63d113df9a9e9bfaa6f10ca6b21.1920x1080.jpg?t=1790845075",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/942dcbc8daa592ea3d5b4d53180c3e3082fc5c77/ss_942dcbc8daa592ea3d5b4d53180c3e3082fc5c77.1920x1080.jpg?t=1790845075",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/3513f79235b008ef39a182fba0aa5019018c9e92/ss_3513f79235b008ef39a182fba0aa5019018c9e92.1920x1080.jpg?t=1790845075",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/73407e3f08f40fc12270efac6e805989fea8778e/ss_73407e3f08f40fc12270efac6e805989fea8778e.1920x1080.jpg?t=1790845075",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/e4966d7cae45287c787090efd2895505987fa01b/header.jpg?t=1790845075"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Restore a forgotten sanctuary with nine fox spirits in a cozy incremental game. Ring the bell, rebuild their Areas, deepen Bonds, celebrate Festivals, and make memories together.",
+        "en": "Restore a forgotten sanctuary with nine fox spirits in a cozy incremental game. Ring the bell, rebuild their Areas, deepen Bonds, celebrate Festivals, and make memories together."
+      }
+    },
+    "addedAt": "2026-10-02",
+    "steamAppId": 5212110,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/e4966d7cae45287c787090efd2895505987fa01b/header.jpg?t=1790845075"
+  },
+  {
+    "id": "eclesiar",
+    "title": "Eclesiar",
+    "releaseYear": 2026,
+    "genre": [
+      "Massivement multijoueur",
+      "RPG",
+      "Simulation",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Atlantic Game Development",
+    "steamUrl": "https://store.steampowered.com/app/4962560/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4962560/5293be61ec5586b70e156fc73d5035c915a03f2f/ss_5293be61ec5586b70e156fc73d5035c915a03f2f.1920x1080.jpg?t=1790873747",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4962560/856f071ab71eebfbadb0b23dd2e205c799a7bf85/ss_856f071ab71eebfbadb0b23dd2e205c799a7bf85.1920x1080.jpg?t=1790873747",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4962560/efc657d7b19574ce8f69a4f2f05bb5b66fb22e53/ss_efc657d7b19574ce8f69a4f2f05bb5b66fb22e53.1920x1080.jpg?t=1790873747",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4962560/dcfe4b8f2b24477a7eb14555a5fa673cdd39ebfa/ss_dcfe4b8f2b24477a7eb14555a5fa673cdd39ebfa.1920x1080.jpg?t=1790873747",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4962560/748a1a2fd867ce6e9e4f8de144a1385ec4d14846/ss_748a1a2fd867ce6e9e4f8de144a1385ec4d14846.1920x1080.jpg?t=1790873747",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4962560/8a283e94b39cb4ee1b22206068f4a4a26e0de193/ss_8a283e94b39cb4ee1b22206068f4a4a26e0de193.1920x1080.jpg?t=1790873747"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Forgez votre destin dans un MMO de stratégie en monde persistant. Choisissez une nation et débutez comme simple citoyen. Devenez président, commandant militaire ou magnat des affaires dans un univers vivant façonné par les joueurs, la politique, l’économie et la guerre.",
+        "en": "Forge your own destiny in a persistent strategy MMO. Choose a nation and begin your journey as an ordinary citizen. Rise to become a president, military commander, or business tycoon in a living world where players shape politics, the economy, and warfare."
+      }
+    },
+    "addedAt": "2026-10-02",
+    "isFree": true,
+    "steamAppId": 4962560,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4962560/0120140eb1b63f40d0f71afe493c9dad7ce3759b/header.jpg?t=1790873747"
+  },
+  {
+    "id": "gus-game",
+    "title": "Gus Game",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Stratégie",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Gus",
+    "steamUrl": "https://store.steampowered.com/app/2407780/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/ss_136ec8fc3b2f6c8a55795600ef71a7083612211a.1920x1080.jpg?t=1790873733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/ss_841abe5f99d7d118d833b5cd9b68cf3c32fcf25e.1920x1080.jpg?t=1790873733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/ss_9985fc47b8246fd74ccf54a757cb4600e7bf3f27.1920x1080.jpg?t=1790873733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/ss_8a0c009be964a5fe661caf8082ea4537a3ec0143.1920x1080.jpg?t=1790873733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/ss_6d2e0125ef1e9034ed92b666b6f93ad745bd01af.1920x1080.jpg?t=1790873733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/a391311f3672fb609b2f940f4a48c50b19edf1e0/ss_a391311f3672fb609b2f940f4a48c50b19edf1e0.1920x1080.jpg?t=1790873733"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Gus Game est un party game multijoueur qui vous plonge dans un monde fantastique rempli de mini-jeux hilarants et compétitifs. Gus Game vous permet de vous mesurer à vos amis dans des épreuves telles que le lancer de boulet de canon, le parcours d'obstacles et bien plus encore...",
+        "en": "Gus Game is a multiplayer party game that immerses you in a fantastic world full of hilarious and competitive mini-games. Gus Game allows you to compete against your friends in challenges such as cannonball throwing, obstacle courses, and much more..."
+      }
+    },
+    "addedAt": "2026-10-02",
+    "isFree": true,
+    "steamAppId": 2407780,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/3d1b74eeb6bb4efd8853312ae7fce550ee2998f2/header.jpg?t=1790873733"
   }
 ]

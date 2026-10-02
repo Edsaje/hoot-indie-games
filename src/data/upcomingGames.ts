@@ -485,119 +485,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "battle-simulator-counter-zombie-reborn",
-    "title": "Battle Simulator: Counter Zombie REBORN",
-    "developer": "Yurii Nikshych",
-    "publisher": "TheGamesFortress",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Simulation",
-        "en": "Simulation"
-      },
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/4831090/",
-    "description": {
-      "fr": "Simulateur de combat contre les zombies post-apocalyptique avec des tactiques d’escouade réalistes et précises. Affrontez et éliminez la horde de zombies. Tirez pour tuer et utilisez des armes comme le lance-flammes, le M16 et les RPG pour éliminer les morts-vivants.",
-      "en": "Post-apocalyptic zombie battle simulator with accurate squad based tactics. Battle and kill the zombie horde. Shooting to kill, use weapons like flamethrower, m16 and RPGs to kill the undead. Accurate zombie AI and HDR graphics."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/c78cd742272ca43444802b8da37448bc394e8f18/header.jpg?t=1788512366"
-  },
-  {
-    "id": "leadfall",
-    "title": "LeadFall",
-    "developer": "IronPan",
-    "publisher": "IronPan",
-    "expectedDate": {
-      "fr": "1 oct. 2026",
-      "en": "Oct 1, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Roguelike",
-        "en": "Roguelike"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/4839790/",
-    "description": {
-      "fr": "LeadFall is a fast-paced top-down action roguelike where you survive chaotic waves of food-themed enemies, collect powerful card upgrades, and create broken weapon builds in short, replayable runs.",
-      "en": "LeadFall is a fast-paced top-down action roguelike where you survive chaotic waves of food-themed enemies, collect powerful card upgrades, and create broken weapon builds in short, replayable runs."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4839790/8ccd7a91388d030fa20fb7111ae00abb093d3785/header.jpg?t=1790050229"
-  },
-  {
-    "id": "fox-clicker",
-    "title": "Fox Clicker",
-    "developer": "Kemonocept",
-    "publisher": "Kemonocept",
-    "expectedDate": {
-      "fr": "1 oct. 2026",
-      "en": "Oct 1, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Simulation",
-        "en": "Simulation"
-      },
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5212110/",
-    "description": {
-      "fr": "Restore a forgotten sanctuary with nine fox spirits in a cozy incremental game. Ring the bell, rebuild their Areas, deepen Bonds, celebrate Festivals, and make memories together.",
-      "en": "Restore a forgotten sanctuary with nine fox spirits in a cozy incremental game. Ring the bell, rebuild their Areas, deepen Bonds, celebrate Festivals, and make memories together."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5212110/e4966d7cae45287c787090efd2895505987fa01b/header.jpg?t=1789906231"
-  },
-  {
     "id": "the-great-game-of-cards",
     "title": "The Great Game of Cards",
     "developer": "Acherlose Games",
     "publisher": "Acherlose Games",
     "expectedDate": {
-      "fr": "1 oct. 2026",
-      "en": "Oct 1, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -623,5 +517,103 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 96,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1790194422"
+  },
+  {
+    "id": "apocalypse-intern",
+    "title": "Apocalypse Intern",
+    "developer": "WizardHistory",
+    "publisher": "WizardHistory",
+    "expectedDate": {
+      "fr": "2 oct. 2026",
+      "en": "Oct 2, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5275800/",
+    "description": {
+      "fr": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee.",
+      "en": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1790323342"
+  },
+  {
+    "id": "infinite-museum",
+    "title": "Infinite Museum",
+    "developer": "Northn Games",
+    "publisher": "Northn Games",
+    "expectedDate": {
+      "fr": "2 oct. 2026",
+      "en": "Oct 2, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/4543490/",
+    "description": {
+      "fr": "Un jeu d’horreur psychologique dans lequel vous repérez des anomalies dans un musée en boucle et choisissez la bonne sortie pour atteindre l’étage G.",
+      "en": "A psychological game where you spot anomalies in a looping museum and choose the correct exit to reach G Floor."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/c577009fe2122efa182cf7423454c725b8ef4b98/header.jpg?t=1789816442"
+  },
+  {
+    "id": "marblego",
+    "title": "MarbleGo",
+    "developer": "FF",
+    "publisher": "FF",
+    "expectedDate": {
+      "fr": "2 oct. 2026",
+      "en": "Oct 2, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/4958470/",
+    "description": {
+      "fr": "Marble GO est un RPG pixel décontracté alliant combat de billes et construction d’équipement. Lancez des billes pour déclencher des effets, battez des monstres et gagnez équipement &amp; or en mode automatique. Construction libre, collisions satisfaisantes et progression profonde.",
+      "en": "Marble GO is a casual pixel RPG with marble combat and gear building. Launch marbles to trigger 20+ effects, defeat monsters, and earn gear &amp; gold via auto-launch idle mode. It offers 7 gear categories, 200+ items &amp; 40+ buffs for custom builds, delivering satisfying collisions and deep progression."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/062ee092a37e1eebf250f98e534f24451a5cadaf/header.jpg?t=1790679619"
   }
 ];

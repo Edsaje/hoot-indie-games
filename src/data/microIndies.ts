@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 48
+ * Total de pépites sélectionnées : 50
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2101,5 +2101,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzQxMjQ3MDcucG5n/315x250%23c/zsfJb%2F.png"
     ],
     "dateAdded": "2026-10-01"
+  },
+  {
+    "id": "itch-big-bad-dogs",
+    "title": "Big Bad Dogs",
+    "developer": "spar0w",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://spar0w.itch.io/bigbaddogs",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Obedient. Wild. Possessive. What kind of dog are you feeding ?",
+      "en": "Obedient. Wild. Possessive. What kind of dog are you feeding ?"
+    },
+    "description": {
+      "fr": "Obedient. Wild. Possessive. What kind of dog are you feeding ?",
+      "en": "Obedient. Wild. Possessive. What kind of dog are you feeding ?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIyMTY5MDQxLmdpZg==/original/FqFEf8.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIyMTY5MDQxLmdpZg==/original/FqFEf8.gif"
+    ],
+    "dateAdded": "2026-10-02"
+  },
+  {
+    "id": "itch-to-eat-a-god",
+    "title": "To Eat a God",
+    "developer": "soffis-mbm",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://soffis-mbm.itch.io/to-eat-a-god",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Visual Novel Game",
+      "en": "A Visual Novel Game"
+    },
+    "description": {
+      "fr": "A Visual Novel Game",
+      "en": "A Visual Novel Game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE3OTI1MzIyLmpwZw==/315x250%23c/a3y8Lx.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE3OTI1MzIyLmpwZw==/315x250%23c/a3y8Lx.jpg"
+    ],
+    "dateAdded": "2026-10-02"
   }
 ];

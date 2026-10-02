@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlySchedule
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 259
+ * Total de jeux : 262
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -9952,6 +9952,110 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-01"
+  },
+  {
+    "id": "salt-and-sanctuary",
+    "title": "Salt and Sanctuary",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Ska Studios",
+    "steamUrl": "https://store.steampowered.com/app/283640/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_e13553f8d90a1e4f604f8c81e09b089899c6203b.1920x1080.jpg?t=1729712419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_1535f4d0f1c49f2ec693018ebf987913d91609b4.1920x1080.jpg?t=1729712419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_0650b3bebe5aeadd16e0b166dc12b2981425cf43.1920x1080.jpg?t=1729712419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_53676a06df752583b57ff2916edc003bf78dd57f.1920x1080.jpg?t=1729712419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_7472b0f50976aa92ec45ca27a939f9182324d74f.1920x1080.jpg?t=1729712419",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/283640/ss_18d932316f9bf594481d34aca9821639c21ac501.1920x1080.jpg?t=1729712419"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Explore a haunting, punishing island in this stylized 2D action RPG. Salt and Sanctuary combines fast and brutal 2D combat with richly developed RPG mechanics in a cursed realm of forgotten cities, blood-soaked dungeons, and desecrated monuments.",
+        "en": "Explore a haunting, punishing island in this stylized 2D action RPG. Salt and Sanctuary combines fast and brutal 2D combat with richly developed RPG mechanics in a cursed realm of forgotten cities, blood-soaked dungeons, and desecrated monuments."
+      }
+    },
+    "addedAt": "2026-10-02"
+  },
+  {
+    "id": "gang-beasts",
+    "title": "Gang Beasts",
+    "releaseYear": 2017,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Boneloaf, Rocket Science",
+    "steamUrl": "https://store.steampowered.com/app/285900/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_0476d6b0403313cb4fa727fd99146762eb80f611.1920x1080.jpg?t=1780410654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_0e7190e5cee562fa851f23bfeb65b336550a6d18.1920x1080.jpg?t=1780410654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_1778496dc8675159f7cb7ded7f6806ad4c1e2ccf.1920x1080.jpg?t=1780410654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_d10fe0c8d1bcf4f69317121e2ba3dc23f052e352.1920x1080.jpg?t=1780410654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_0717d70ae0ad852c0a17bd8eabb00c9d0159c6bc.1920x1080.jpg?t=1780410654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285900/ss_c43fe05124ca430efa50929b242cd72add692106.1920x1080.jpg?t=1780410654"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Gang Beasts est un jeu multijoueur loufoque avec des personnages gélatineux hargneux, des combats brutalo-comiques, et des lieux absurdement dangereux situés dans la cité de Ville-bœuf.",
+        "en": "Gang Beasts is a silly multiplayer party game with surly gelatinous characters, brutal slapstick fight sequences, and absurd hazardous environments, set in the mean streets of Beef City."
+      }
+    },
+    "addedAt": "2026-10-02"
+  },
+  {
+    "id": "children-of-morta",
+    "title": "Children of Morta",
+    "releaseYear": 2019,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Dead Mage",
+    "steamUrl": "https://store.steampowered.com/app/330020/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_83a775e3ef93bde16a08d009a0ad1fb1b2a43b76.1920x1080.jpg?t=1765218667",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_e7bbfd5607b247a6931f521c397bcd50328d45fc.1920x1080.jpg?t=1765218667",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_7e1a090f480f8392e1e1ae019624425a8ded8484.1920x1080.jpg?t=1765218667",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_35184bb42eaf327d0926a8f437ad37d8b1f30652.1920x1080.jpg?t=1765218667",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_0845547cac4c10933666ea052efb7b9da217cffd.1920x1080.jpg?t=1765218667",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_074324b619a1db674fd935bdeef4e0ab165c55ba.1920x1080.jpg?t=1765218667"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Children of Morta est un jeu de RPG d'action basé sur une histoire et mettant en scène une famille extraordinaire de héros. Conduisez les Bergson, avec tous leurs défauts et leurs vertus, contre la corruption à venir. Serez-vous capable de tout sacrifier pour sauver ceux que vous aimez?",
+        "en": "Children of Morta is a story-driven action RPG game about an extraordinary family of heroes. Lead the Bergsons, with all their flaws and virtues, against the forthcoming Corruption. Will you be able to sacrifice everything to save the ones you care for?"
+      }
+    },
+    "addedAt": "2026-10-02"
   }
 ];
 
