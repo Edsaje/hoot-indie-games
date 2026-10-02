@@ -906,7 +906,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                   {(
                     [
-                      { id: 'gems' as NavTab, label: t('nav.discovery', 'Découverte'), desc: 'Pépites, Catalogue (256) & Micro-Indés', icon: Compass },
+                      { id: 'gems' as NavTab, label: t('nav.discovery', 'Découverte'), desc: 'Pépites, Grand Catalogue & Micro-Indés', icon: Compass },
                       { id: 'minigames' as NavTab, label: t('nav.games', 'Mini-Jeux'), desc: '11 défis quotidiens, sprint & duel 1v1', icon: Puzzle, badge: '11' },
                       { id: 'odyssey' as NavTab, label: t('nav.odyssey', 'Odyssée Sylvestre'), desc: 'Aventure idle, Arbre Céleste & Compagnons', icon: Sparkles, badge: 'BÊTA' },
                       { id: 'arcade' as NavTab, label: t('nav.arcade'), desc: 'Salle de jeux rétro & classements', icon: Gamepad2 },

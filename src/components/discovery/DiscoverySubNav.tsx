@@ -1,5 +1,7 @@
 import React from 'react';
 import { Compass, Database, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
 
 interface DiscoverySubNavProps {
@@ -11,6 +13,10 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
   currentTab,
   onSelectTab,
 }) => {
+  const { t } = useTranslation();
+  const { stats } = useSteamCatalog();
+  const catalogCount = stats.steamCatalogCount > 0 ? stats.steamCatalogCount : 405;
+
   return (
     <div className="w-full max-w-xl mx-auto flex items-center justify-center p-1.5 rounded-2xl bg-[#06241b] border border-[#78350f] mb-6 shadow-xl">
       <button
@@ -25,7 +31,7 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
         }`}
       >
         <Compass className="w-3.5 h-3.5 shrink-0" />
-        <span>Pépites</span>
+        <span>{t('nav.gems', 'Pépites')}</span>
       </button>
 
       <button
@@ -40,7 +46,7 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
         }`}
       >
         <Database className="w-3.5 h-3.5 shrink-0" />
-        <span>Catalogue</span>
+        <span>{t('nav.catalog', 'Catalogue')}</span>
         <span
           className={`text-[9px] font-mono px-1 py-0.2 rounded font-black ${
             currentTab === 'catalog'
@@ -48,7 +54,7 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
               : 'bg-amber-500/20 text-amber-300'
           }`}
         >
-          256
+          {catalogCount}
         </span>
       </button>
 
@@ -64,7 +70,7 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
         }`}
       >
         <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-400" />
-        <span>Micro-Indés</span>
+        <span>{t('nav.microindies', 'Micro-Indés')}</span>
         <span
           className={`text-[9px] font-mono px-1 py-0.2 rounded font-black ${
             currentTab === 'microindies'
