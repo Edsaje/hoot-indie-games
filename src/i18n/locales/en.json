@@ -8,6 +8,8 @@
     "archiveBanner": "Archive Mode"
   },
   "nav": {
+    "discovery": "Discovery",
+    "odyssey": "Odyssey",
     "gems": "Gems",
     "catalog": "Catalog",
     "games": "Mini-Games",

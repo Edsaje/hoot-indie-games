@@ -1,0 +1,254 @@
+import React, { useState } from 'react';
+import {
+  Check,
+  ArrowUpCircle,
+} from 'lucide-react';
+import type { OdysseySaveState, CelestialBranch } from '../../types/odyssey';
+import {
+  CELESTIAL_TREE_UPGRADES,
+  calculateUpgradeCost,
+} from '../../data/odysseyData';
+import {
+  formatOdysseyNumber,
+  buyCelestialUpgrade,
+} from '../../services/odysseyEngineService';
+import { soundFx } from '../../utils/audio';
+
+interface CelestialTreeViewProps {
+  state: OdysseySaveState;
+  onStateChange: (newState: OdysseySaveState) => void;
+  onBackToArena: () => void;
+}
+
+const BRANCH_CONFIG: Record<
+  CelestialBranch,
+  { label: string; icon: string; desc: string; color: string; border: string; bg: string }
+> = {
+  vigor: {
+    label: 'Vigueur Céleste',
+    icon: '🦅',
+    desc: 'Puissance de frappe manuelle et coups critiques au clic.',
+    color: 'text-amber-400',
+    border: 'border-amber-500/40',
+    bg: 'bg-amber-500/10',
+  },
+  companions: {
+    label: 'Chouettes & Compagnons',
+    icon: '🦉',
+    desc: 'DPS passif automatique et synergies avec vos 256 jeux capturés.',
+    color: 'text-cyan-400',
+    border: 'border-cyan-500/40',
+    bg: 'bg-cyan-500/10',
+  },
+  alchemy: {
+    label: 'Alchimie Végétale',
+    icon: '💧',
+    desc: 'Production de Sève Stellaire et attirance des Lucioles Dorées.',
+    color: 'text-emerald-400',
+    border: 'border-emerald-500/40',
+    bg: 'bg-emerald-500/10',
+  },
+  astronomy: {
+    label: 'Astronomie Nocturne',
+    icon: '🌟',
+    desc: 'Plafond de gains hors-ligne et détection des Pépites Holographiques.',
+    color: 'text-purple-400',
+    border: 'border-purple-500/40',
+    bg: 'bg-purple-500/10',
+  },
+};
+
+export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
+  state,
+  onStateChange,
+  onBackToArena,
+}) => {
+  const [selectedBranch, setSelectedBranch] = useState<CelestialBranch>('vigor');
+  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null);
+
+  const currentBranchNodes = CELESTIAL_TREE_UPGRADES.filter(
+    (n) => n.branch === selectedBranch
+  );
+
+  const handleBuy = (nodeId: string) => {
+    const { success, nextState, error } = buyCelestialUpgrade(state, nodeId);
+    if (success) {
+      soundFx.playAchievement();
+      onStateChange(nextState);
+    } else if (error) {
+      soundFx.playError();
+      setPurchaseFeedback(error);
+      setTimeout(() => setPurchaseFeedback(null), 2500);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-5xl mx-auto flex flex-col items-center">
+      {/* 1. Header Arbre Céleste */}
+      <div className="w-full flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-[#06241b]/95 border border-[#78350f] backdrop-blur-md mb-6 shadow-xl">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/30">
+            🌲
+          </div>
+          <div>
+            <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+              L’Arbre Céleste du Sanctuaire
+            </h2>
+            <p className="text-xs text-slate-300">
+              Irriguez les branches millénaires avec votre Sève Stellaire pour débloquer des pouvoirs permanents.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <div className="text-[10px] font-mono uppercase text-cyan-300 font-bold">Sève Disponible</div>
+            <div className="text-lg sm:text-2xl font-black font-mono text-cyan-400 flex items-center justify-end gap-1">
+              <span>💧</span>
+              <span>{formatOdysseyNumber(state.starSap)}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={onBackToArena}
+            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-600 transition-transform active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>⚔️</span>
+            <span>Retour Combat</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Message d'erreur éventuel */}
+      {purchaseFeedback && (
+        <div className="w-full max-w-md mx-auto mb-4 p-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-300 text-xs font-bold text-center animate-shake">
+          {purchaseFeedback}
+        </div>
+      )}
+
+      {/* 2. Onglets de Branches */}
+      <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+        {(Object.keys(BRANCH_CONFIG) as CelestialBranch[]).map((branchKey) => {
+          const config = BRANCH_CONFIG[branchKey];
+          const isSelected = selectedBranch === branchKey;
+
+          return (
+            <button
+              key={branchKey}
+              onClick={() => {
+                soundFx.playClick();
+                setSelectedBranch(branchKey);
+              }}
+              className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                isSelected
+                  ? `${config.bg} ${config.border} shadow-lg ring-2 ring-amber-400/50`
+                  : 'bg-[#06241b]/60 border-[#78350f]/60 hover:bg-[#06241b] text-slate-400'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-2xl">{config.icon}</span>
+                {isSelected && (
+                  <span className="w-2 h-2 rounded-full bg-amber-400 shadow-sm shadow-amber-400 animate-ping" />
+                )}
+              </div>
+              <div>
+                <h4 className={`text-xs font-black line-clamp-1 ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                  {config.label}
+                </h4>
+                <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">{config.desc}</p>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 3. Liste des Compétences de la Branche */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {currentBranchNodes.map((node) => {
+          const currentLevel = state.treeUpgrades[node.id] || 0;
+          const isMax = currentLevel >= node.maxLevel;
+          const cost = calculateUpgradeCost(node, currentLevel);
+          const canAfford = state.starSap >= cost && !isMax;
+
+          return (
+            <div
+              key={node.id}
+              className={`relative p-4 sm:p-5 rounded-2xl border bg-[#06241b]/90 backdrop-blur-md shadow-xl flex flex-col justify-between transition-all ${
+                isMax
+                  ? 'border-emerald-500/50 bg-emerald-950/20'
+                  : canAfford
+                  ? 'border-amber-500/40 hover:border-amber-400'
+                  : 'border-[#78350f]/60 opacity-90'
+              }`}
+            >
+              {/* Header Compétence */}
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{node.icon}</span>
+                    <div>
+                      <h4 className="text-sm font-black text-white">{node.name}</h4>
+                      <span className="text-[10px] font-mono font-bold text-amber-300">
+                        Niv. {currentLevel} / {node.maxLevel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {isMax ? (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      MAX
+                    </span>
+                  ) : (
+                    <div className="text-right font-mono">
+                      <div className="text-[9px] uppercase text-slate-400">Coût</div>
+                      <div
+                        className={`text-xs font-black ${
+                          canAfford ? 'text-cyan-300' : 'text-slate-400'
+                        }`}
+                      >
+                        💧 {formatOdysseyNumber(cost)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-xs text-slate-300 mb-3">{node.description}</p>
+              </div>
+
+              {/* Effet Actuel & Bouton d'Achat */}
+              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                <div className="text-[11px] font-mono text-emerald-400 font-bold">
+                  {node.formatValue ? node.formatValue(currentLevel) : `Niveau ${currentLevel}`}
+                </div>
+
+                <button
+                  disabled={!canAfford || isMax}
+                  onClick={() => handleBuy(node.id)}
+                  className={`px-3 py-1.5 rounded-xl font-black text-xs transition-transform flex items-center gap-1.5 cursor-pointer shadow-md ${
+                    isMax
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 cursor-default'
+                      : canAfford
+                      ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 hover:scale-105 active:scale-95 shadow-amber-500/20'
+                      : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+                  }`}
+                >
+                  {isMax ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Maîtrisé</span>
+                    </>
+                  ) : (
+                    <>
+                      <ArrowUpCircle className="w-3.5 h-3.5" />
+                      <span>Améliorer</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};

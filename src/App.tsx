@@ -32,6 +32,9 @@ const TheRoostHub = React.lazy(() => import('./components/roost/TheRoostHub').th
 const ArcadeHallView = React.lazy(() => import('./components/arcade/ArcadeHallView').then(module => ({ default: module.ArcadeHallView })));
 const ToolboxHub = React.lazy(() => import('./components/toolbox/ToolboxHub').then(module => ({ default: module.ToolboxHub })));
 const CardsBinderView = React.lazy(() => import('./components/cards/CardsBinderView').then(module => ({ default: module.CardsBinderView })));
+const OdysseyHub = React.lazy(() => import('./components/odyssey/OdysseyHub').then(module => ({ default: module.OdysseyHub })));
+const OdysseyMiniHud = React.lazy(() => import('./components/odyssey/OdysseyMiniHud').then(module => ({ default: module.OdysseyMiniHud })));
+const DiscoverySubNav = React.lazy(() => import('./components/discovery/DiscoverySubNav').then(module => ({ default: module.DiscoverySubNav })));
 
 // Mini-Games (Lazy Loaded)
 const ScreenleGame = React.lazy(() => import('./components/screenle/ScreenleGame').then(module => ({ default: module.ScreenleGame })));
@@ -113,6 +116,7 @@ export const AppContent: React.FC = () => {
       ) {
         return 'minigames';
       }
+      if (hash.startsWith('#odyssey') || hash.startsWith('#idle') || hash.startsWith('#sanctuary')) return 'odyssey';
       if (hash.startsWith('#micro') || hash.startsWith('#itch')) return 'microindies';
       if (hash.startsWith('#catalog') || hash.startsWith('#steam')) return 'catalog';
       if (hash.startsWith('#arcade')) return 'arcade';
@@ -314,8 +318,12 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#quiz') || hash.startsWith('#quizz')) {
         setCurrentTab('minigames');
         setActiveMiniGame('quiz');
+      } else if (hash.startsWith('#odyssey') || hash.startsWith('#idle') || hash.startsWith('#sanctuary')) {
+        setCurrentTab('odyssey');
       } else if (hash.startsWith('#catalog') || hash.startsWith('#steam')) {
         setCurrentTab('catalog');
+      } else if (hash.startsWith('#micro') || hash.startsWith('#itch')) {
+        setCurrentTab('microindies');
       } else if (hash.startsWith('#arcade')) {
         setCurrentTab('arcade');
       } else if (hash.startsWith('#cards') || hash.startsWith('#album') || hash.startsWith('#binder')) {
@@ -536,12 +544,17 @@ export const AppContent: React.FC = () => {
       <React.Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-12 h-12 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" /></div>}>
         <main className="flex-1 w-full relative z-10">
           {currentTab === 'gems' && (
-            <GemExplorerHome
-            currentDate={currentDate}
-            onNavigateTab={handleTabChange}
-            onOpenArcade={handleOpenArcade}
-          />
-        )}
+            <div>
+              <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pt-4 sm:pt-6">
+                <DiscoverySubNav currentTab="gems" onSelectTab={handleTabChange} />
+              </div>
+              <GemExplorerHome
+                currentDate={currentDate}
+                onNavigateTab={handleTabChange}
+                onOpenArcade={handleOpenArcade}
+              />
+            </div>
+          )}
 
         {currentTab === 'minigames' && (
           <div>
@@ -643,14 +656,20 @@ export const AppContent: React.FC = () => {
           </div>
         )}
 
+        {currentTab === 'odyssey' && (
+          <OdysseyHub />
+        )}
+
         {currentTab === 'microindies' && (
-          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 animate-in fade-in duration-300">
+          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 animate-in fade-in duration-300">
+            <DiscoverySubNav currentTab="microindies" onSelectTab={handleTabChange} />
             <MicroIndieHub />
           </div>
         )}
 
         {currentTab === 'catalog' && (
-          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 animate-in fade-in duration-300">
+          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 animate-in fade-in duration-300">
+            <DiscoverySubNav currentTab="catalog" onSelectTab={handleTabChange} />
             <SteamCatalogExplorer />
           </div>
         )}
@@ -826,7 +845,15 @@ export const AppContent: React.FC = () => {
           isCardsModalOpen ||
           isTradeModalOpen
         );
-        return <ChatDrawer onOpenAuth={() => setIsAuthOpen(true)} isModalActive={isAnyModalOpen} />;
+        return (
+          <>
+            <ChatDrawer onOpenAuth={() => setIsAuthOpen(true)} isModalActive={isAnyModalOpen} />
+            <OdysseyMiniHud
+              onNavigateToOdyssey={() => handleTabChange('odyssey')}
+              isModalActive={isAnyModalOpen || currentTab === 'odyssey'}
+            />
+          </>
+        );
       })()}
         </React.Suspense>
       </ErrorBoundary>

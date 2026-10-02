@@ -15,7 +15,6 @@ import {
   Puzzle,
   Trophy,
   Crown,
-  Database,
   Layers,
   Check,
   ChevronDown,
@@ -61,7 +60,9 @@ export type NavTab =
   | 'cards'
   | 'timeattack'
   | 'toolbox'
-  | 'roost';
+  | 'roost'
+  | 'odyssey'
+  | 'discovery';
 
 interface NavbarProps {
   currentTab: NavTab;
@@ -122,6 +123,9 @@ export const Navbar: React.FC<NavbarProps> = ({
       window.location.hash = tab === 'gems' ? '#gems' : `#${tab}`;
     }
   };
+
+  const isDiscoveryActive =
+    currentTab === 'gems' || currentTab === 'microindies' || currentTab === 'catalog';
 
   const isMinigamesActive =
     currentTab === 'minigames' ||
@@ -225,58 +229,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Center Navigation Tabs (Consolidated 7 tabs, Desktop xl+) */}
           <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-1 bg-[#06241b] p-1 rounded-2xl border border-[#78350f] shrink-0">
-            {/* 1. Pépites */}
+            {/* 1. Découverte (Pépites, Catalogue, Micro-Indés) */}
             <a
               href="#gems"
               onClick={(e) => handleTabSelect('gems', e)}
               className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                currentTab === 'gems'
+                isDiscoveryActive
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <Compass className="w-3.5 h-3.5 shrink-0" />
-              <span>{t('nav.gems')}</span>
+              <span>{t('nav.discovery', 'Découverte')}</span>
             </a>
 
-            {/* 2. Micro-Indés & Itch.io */}
-            <a
-              href="#microindies"
-              onClick={(e) => handleTabSelect('microindies', e)}
-              className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                currentTab === 'microindies'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-400" />
-              <span>{t('nav.microindies', 'Micro-Indés')}</span>
-              <span
-                className={`hidden min-[1800px]:inline text-[9px] font-black px-1 py-0.2 rounded border ${
-                  currentTab === 'microindies'
-                    ? 'bg-slate-950/20 text-slate-950 border-slate-950/30'
-                    : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
-                }`}
-              >
-                Itch
-              </span>
-            </a>
-
-            {/* 3. Catalogue */}
-            <a
-              href="#catalog"
-              onClick={(e) => handleTabSelect('catalog', e)}
-              className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                currentTab === 'catalog'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Database className="w-3.5 h-3.5 shrink-0" />
-              <span>{t('nav.catalog', 'Catalogue')}</span>
-            </a>
-
-            {/* 3. Mini-jeux */}
+            {/* 2. Mini-jeux */}
             <a
               href="#minigames"
               onClick={(e) => handleTabSelect('minigames', e)}
@@ -296,6 +263,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 11
+              </span>
+            </a>
+
+            {/* 3. Odyssée Sylvestre (Idle Game) */}
+            <a
+              href="#odyssey"
+              onClick={(e) => handleTabSelect('odyssey', e)}
+              className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                currentTab === 'odyssey'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <span className="text-xs">🌲</span>
+              <span>{t('nav.odyssey', 'Odyssée')}</span>
+              <span
+                className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded border ${
+                  currentTab === 'odyssey'
+                    ? 'bg-slate-950/20 text-slate-950 border-slate-950/30'
+                    : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
+                }`}
+              >
+                Idle
               </span>
             </a>
 
@@ -912,14 +902,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
                 </div>
 
-                {/* Grid of the 8 navigation tabs */}
+                {/* Grid of the 7 consolidated navigation tabs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                   {(
                     [
-                      { id: 'gems' as NavTab, label: t('nav.gems'), desc: 'Pépites certifiées & actualités', icon: Compass },
-                      { id: 'microindies' as NavTab, label: t('nav.microindies', 'Micro-Indés'), desc: 'Pépites Itch.io & Game Jams', icon: Sparkles, badge: 'Itch' },
-                      { id: 'catalog' as NavTab, label: t('nav.catalog', 'Catalogue'), desc: '185 chefs-d’œuvre indépendants', icon: Database },
+                      { id: 'gems' as NavTab, label: t('nav.discovery', 'Découverte'), desc: 'Pépites, Catalogue (256) & Micro-Indés', icon: Compass },
                       { id: 'minigames' as NavTab, label: t('nav.games', 'Mini-Jeux'), desc: '11 défis quotidiens, sprint & duel 1v1', icon: Puzzle, badge: '11' },
+                      { id: 'odyssey' as NavTab, label: t('nav.odyssey', 'Odyssée Sylvestre'), desc: 'Aventure idle, Arbre Céleste & Compagnons', icon: Sparkles, badge: 'Idle' },
                       { id: 'arcade' as NavTab, label: t('nav.arcade'), desc: 'Salle de jeux rétro & classements', icon: Gamepad2 },
                       { id: 'cards' as NavTab, label: t('nav.cards', 'Cartes'), desc: 'Album de cartes, échanges & boosters', icon: Layers, badge: pendingIncomingCount > 0 ? `${pendingIncomingCount} Échange` : undefined },
                       { id: 'toolbox' as NavTab, label: t('nav.toolbox'), desc: 'Filtres, générateurs & outils indés', icon: Wrench },
@@ -927,7 +916,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                     ]
                   ).map((item) => {
                     const Icon = item.icon;
-                    const active = item.id === 'minigames' ? isMinigamesActive : currentTab === item.id;
+                    const active =
+                      item.id === 'minigames'
+                        ? isMinigamesActive
+                        : item.id === 'gems'
+                        ? isDiscoveryActive
+                        : currentTab === item.id;
 
                     return (
                       <a

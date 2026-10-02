@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
-import type { UserProfile, IndieAvatarId, AccountSaveData, SteamAccountInfo } from '../types/user';
+import type { UserProfile, IndieAvatarId, SteamAccountInfo } from '../types/user';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
 import {
   buildSteamOpenIdUrl,
@@ -21,7 +21,11 @@ import {
   EXPRESS_RENAME_COST,
   SHOP_TITLES,
 } from '../utils/featherEconomy';
-import { syncUserCloudSave } from '../services/userCloudSyncService';
+import {
+  syncUserCloudSave,
+  gatherLocalSaveData,
+  applyCloudSaveToLocalStorage,
+} from '../services/userCloudSyncService';
 import {
   apiGetSession,
   apiRegister,
@@ -660,30 +664,43 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
   }, []);
 
   const exportSaveData = useCallback((): string => {
-    const statsStr = localStorage.getItem('hoot_game_stats_v1') || '{}';
-    const achStr = localStorage.getItem('hoot_achievements_v1') || '{}';
-    const feathersStr = localStorage.getItem('hoot_golden_feathers_v1') || '0';
-
-    const fullSave: AccountSaveData = {
-      profile,
-      stats: JSON.parse(statsStr),
-      achievements: JSON.parse(achStr),
-      goldenFeathers: Number(feathersStr),
+    // Collecte intégrale et souveraine de toutes les données locales
+    const fullPayload = gatherLocalSaveData();
+    const exportObject = {
+      ...fullPayload,
+      hootExportVersion: 2,
       exportedAt: new Date().toISOString(),
     };
-
-    return JSON.stringify(fullSave, null, 2);
-  }, [profile]);
+    return JSON.stringify(exportObject, null, 2);
+  }, []);
 
   const importSaveData = useCallback((jsonString: string): { success: boolean; error?: string } => {
     try {
-      const data: AccountSaveData = JSON.parse(jsonString);
+      const data: any = JSON.parse(jsonString);
+      if (!data || typeof data !== 'object') {
+        return { success: false, error: 'Format de fichier de sauvegarde invalide.' };
+      }
+
+      // 1. Format moderne V2 / payload complet
+      if (data.hootExportVersion === 2 || data.feathers || data.cardCollection || data.odysseyState) {
+        applyCloudSaveToLocalStorage(data, { strategy: 'merge' });
+        
+        // Recharger le profil local
+        const rawProf = localStorage.getItem('hoot_user_profile_v1');
+        if (rawProf) {
+          try {
+            setProfile(JSON.parse(rawProf));
+          } catch {}
+        }
+        return { success: true };
+      }
+
+      // 2. Format historique V1
       if (!data.profile || typeof data.goldenFeathers !== 'number') {
         return { success: false, error: 'Format de fichier de sauvegarde invalide.' };
       }
 
       // [SÉCURITÉ CWE-20] Assainissement strict du profil importé :
-      // Supprimer les privilèges administrateur / modérateur et préserver l'authentification courante
       setProfile((prev) => {
         const incoming = data.profile;
         const isOfficialSteam = Boolean(prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID);
@@ -704,7 +721,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       if (data.achievements) {
         localStorage.setItem('hoot_achievements_v1', JSON.stringify(data.achievements));
       }
-      // Plafonner les plumes importées pour éviter la corruption de l'économie locale
       const safeFeathers = Math.max(0, Math.min(100000, Number(data.goldenFeathers) || 0));
       localStorage.setItem('hoot_golden_feathers_v1', String(safeFeathers));
 

@@ -4,6 +4,7 @@
  */
 
 import { ACHIEVEMENTS_LIST } from '../data/achievements';
+import type { OdysseySaveState } from '../types/odyssey';
 
 export interface AdminRewardNotification {
   id: string;
@@ -39,6 +40,7 @@ export interface UserCloudSavePayload {
   freeBoostersStock?: { count: number; lastRechargeTimestamp: number };
   dailyGameStates?: Record<string, any>;
   pendingAdminRewards?: AdminRewardNotification[];
+  odysseyState?: OdysseySaveState;
   syncedAt?: string;
 }
 
@@ -176,6 +178,14 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
       freeBoostersStock: (() => {
         try {
           const raw = localStorage.getItem('hoot_free_boosters_stock_v2');
+          return raw ? JSON.parse(raw) : undefined;
+        } catch {
+          return undefined;
+        }
+      })(),
+      odysseyState: (() => {
+        try {
+          const raw = localStorage.getItem('hoot_odyssey_save_v1');
           return raw ? JSON.parse(raw) : undefined;
         } catch {
           return undefined;
@@ -529,6 +539,105 @@ export function applyCloudSaveToLocalStorage(
       }
     }
 
+    // 7. Odyssée Sylvestre (Idle Game)
+    if (cloudData.odysseyState && typeof cloudData.odysseyState === 'object') {
+      const cloudOdyssey = cloudData.odysseyState;
+      if (isReplace) {
+        localStorage.setItem('hoot_odyssey_save_v1', JSON.stringify(cloudOdyssey));
+        window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: cloudOdyssey }));
+      } else {
+        try {
+          const localRaw = localStorage.getItem('hoot_odyssey_save_v1');
+          const localOdyssey = localRaw ? JSON.parse(localRaw) : null;
+          if (!localOdyssey) {
+            localStorage.setItem('hoot_odyssey_save_v1', JSON.stringify(cloudOdyssey));
+            window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: cloudOdyssey }));
+          } else {
+            const mergedBiome = Math.max(
+              Number(localOdyssey.highestBiomeUnlocked || 1),
+              Number(cloudOdyssey.highestBiomeUnlocked || 1)
+            );
+
+            const mergedRoutes: Record<string, number> = { ...(localOdyssey.highestRouteUnlocked || {}) };
+            for (const [bId, rNum] of Object.entries(cloudOdyssey.highestRouteUnlocked || {})) {
+              mergedRoutes[bId] = Math.max(Number(mergedRoutes[bId] || 1), Number(rNum || 1));
+            }
+
+            const mergedUpgrades: Record<string, number> = { ...(localOdyssey.treeUpgrades || {}) };
+            for (const [uId, uLvl] of Object.entries(cloudOdyssey.treeUpgrades || {})) {
+              mergedUpgrades[uId] = Math.max(Number(mergedUpgrades[uId] || 0), Number(uLvl || 0));
+            }
+
+            const mergedCaptured: Record<string, any> = { ...(localOdyssey.capturedGames || {}) };
+            for (const [gId, cData] of Object.entries(cloudOdyssey.capturedGames || {})) {
+              const lData = mergedCaptured[gId] || { count: 0, isHolo: false, level: 1 };
+              mergedCaptured[gId] = {
+                count: Math.max(Number(lData.count || 0), Number((cData as any).count || 0)),
+                isHolo: Boolean(lData.isHolo || (cData as any).isHolo),
+                level: Math.max(Number(lData.level || 1), Number((cData as any).level || 1)),
+                firstCapturedAt: lData.firstCapturedAt || (cData as any).firstCapturedAt || new Date().toISOString(),
+              };
+            }
+
+            const mergedOdyssey = {
+              ...localOdyssey,
+              ...cloudOdyssey,
+              highestBiomeUnlocked: mergedBiome,
+              highestRouteUnlocked: mergedRoutes,
+              treeUpgrades: mergedUpgrades,
+              capturedGames: mergedCaptured,
+              starSap: Math.max(Number(localOdyssey.starSap || 0), Number(cloudOdyssey.starSap || 0)),
+              totalStarSapEarned: Math.max(
+                Number(localOdyssey.totalStarSapEarned || 0),
+                Number(cloudOdyssey.totalStarSapEarned || 0)
+              ),
+              celestialShards: Math.max(
+                Number(localOdyssey.celestialShards || 0),
+                Number(cloudOdyssey.celestialShards || 0)
+              ),
+              stats: {
+                totalClicks: Math.max(
+                  Number(localOdyssey.stats?.totalClicks || 0),
+                  Number(cloudOdyssey.stats?.totalClicks || 0)
+                ),
+                totalDamageDealt: Math.max(
+                  Number(localOdyssey.stats?.totalDamageDealt || 0),
+                  Number(cloudOdyssey.stats?.totalDamageDealt || 0)
+                ),
+                monstersDefeated: Math.max(
+                  Number(localOdyssey.stats?.monstersDefeated || 0),
+                  Number(cloudOdyssey.stats?.monstersDefeated || 0)
+                ),
+                bossesDefeated: Math.max(
+                  Number(localOdyssey.stats?.bossesDefeated || 0),
+                  Number(cloudOdyssey.stats?.bossesDefeated || 0)
+                ),
+                holosFound: Math.max(
+                  Number(localOdyssey.stats?.holosFound || 0),
+                  Number(cloudOdyssey.stats?.holosFound || 0)
+                ),
+                firefliesCaught: Math.max(
+                  Number(localOdyssey.stats?.firefliesCaught || 0),
+                  Number(cloudOdyssey.stats?.firefliesCaught || 0)
+                ),
+                rebirthsCount: Math.max(
+                  Number(localOdyssey.stats?.rebirthsCount || 0),
+                  Number(cloudOdyssey.stats?.rebirthsCount || 0)
+                ),
+              },
+              lastSavedAt: Math.max(Number(localOdyssey.lastSavedAt || 0), Number(cloudOdyssey.lastSavedAt || 0)),
+            };
+
+            localStorage.setItem('hoot_odyssey_save_v1', JSON.stringify(mergedOdyssey));
+            window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: mergedOdyssey }));
+          }
+        } catch {
+          localStorage.setItem('hoot_odyssey_save_v1', JSON.stringify(cloudOdyssey));
+          window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: cloudOdyssey }));
+        }
+      }
+    }
+
     // Déclenchement d'un événement global pour notifier tous les providers et composants React
     window.dispatchEvent(new CustomEvent('hoot_cloud_save_restored', { detail: cloudData }));
     // Signaler la mise à jour des plumes avec le flag 'fromCloud: true' pour éviter la boucle infinie de re-synchronisation
@@ -650,6 +759,9 @@ function computeSaveFingerprint(data: UserCloudSavePayload): string {
     stats: data.stats,
     dailyCount: Object.keys(data.dailyGameStates || {}).length,
     taPlayed: Object.keys(data.timeAttackStats || {}).length,
+    odysseySap: Math.floor((data.odysseyState?.totalStarSapEarned || 0) / 100),
+    odysseyBiome: data.odysseyState?.highestBiomeUnlocked || 1,
+    odysseyCap: Object.keys(data.odysseyState?.capturedGames || {}).length,
   });
 }
 

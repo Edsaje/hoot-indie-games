@@ -294,6 +294,89 @@ function mergeSaveData($existing, $incoming) {
         unset($merged['pendingAdminRewards']);
     }
 
+    // 11. Odyssée Sylvestre (Idle Game)
+    $exOdyssey = is_array($existing['odysseyState'] ?? null) ? $existing['odysseyState'] : [];
+    $inOdyssey = is_array($incoming['odysseyState'] ?? null) ? $incoming['odysseyState'] : [];
+    if (!empty($exOdyssey) || !empty($inOdyssey)) {
+        if (empty($exOdyssey)) {
+            $merged['odysseyState'] = $inOdyssey;
+        } elseif (empty($inOdyssey)) {
+            $merged['odysseyState'] = $exOdyssey;
+        } else {
+            // Fusion intelligente des progrès
+            $mergedBiome = max(intval($exOdyssey['highestBiomeUnlocked'] ?? 1), intval($inOdyssey['highestBiomeUnlocked'] ?? 1));
+            
+            // Routes
+            $exRoutes = is_array($exOdyssey['highestRouteUnlocked'] ?? null) ? $exOdyssey['highestRouteUnlocked'] : [];
+            $inRoutes = is_array($inOdyssey['highestRouteUnlocked'] ?? null) ? $inOdyssey['highestRouteUnlocked'] : [];
+            $allRouteBiomes = array_unique(array_merge(array_keys($exRoutes), array_keys($inRoutes)));
+            $mergedRoutes = [];
+            foreach ($allRouteBiomes as $bId) {
+                $mergedRoutes[$bId] = max(intval($exRoutes[$bId] ?? 1), intval($inRoutes[$bId] ?? 1));
+            }
+
+            // Améliorations de l'Arbre Céleste
+            $exTree = is_array($exOdyssey['treeUpgrades'] ?? null) ? $exOdyssey['treeUpgrades'] : [];
+            $inTree = is_array($inOdyssey['treeUpgrades'] ?? null) ? $inOdyssey['treeUpgrades'] : [];
+            $allNodes = array_unique(array_merge(array_keys($exTree), array_keys($inTree)));
+            $mergedTree = [];
+            foreach ($allNodes as $nId) {
+                $mergedTree[$nId] = max(intval($exTree[$nId] ?? 0), intval($inTree[$nId] ?? 0));
+            }
+
+            // Pépites capturées
+            $exCap = is_array($exOdyssey['capturedGames'] ?? null) ? $exOdyssey['capturedGames'] : [];
+            $inCap = is_array($inOdyssey['capturedGames'] ?? null) ? $inOdyssey['capturedGames'] : [];
+            $mergedCap = $exCap;
+            foreach ($inCap as $gId => $cap) {
+                if (!is_array($cap)) continue;
+                if (!isset($mergedCap[$gId])) {
+                    $mergedCap[$gId] = $cap;
+                } else {
+                    $mergedCap[$gId] = [
+                        'count' => max(intval($mergedCap[$gId]['count'] ?? 0), intval($cap['count'] ?? 0)),
+                        'isHolo' => !empty($mergedCap[$gId]['isHolo']) || !empty($cap['isHolo']),
+                        'level' => max(intval($mergedCap[$gId]['level'] ?? 1), intval($cap['level'] ?? 1)),
+                        'firstCapturedAt' => $mergedCap[$gId]['firstCapturedAt'] ?? ($cap['firstCapturedAt'] ?? date('c')),
+                    ];
+                }
+            }
+
+            // Statistiques
+            $exStats = is_array($exOdyssey['stats'] ?? null) ? $exOdyssey['stats'] : [];
+            $inStats = is_array($inOdyssey['stats'] ?? null) ? $inOdyssey['stats'] : [];
+            $mergedStats = [
+                'totalClicks' => max(intval($exStats['totalClicks'] ?? 0), intval($inStats['totalClicks'] ?? 0)),
+                'totalDamageDealt' => max(intval($exStats['totalDamageDealt'] ?? 0), intval($inStats['totalDamageDealt'] ?? 0)),
+                'monstersDefeated' => max(intval($exStats['monstersDefeated'] ?? 0), intval($inStats['monstersDefeated'] ?? 0)),
+                'bossesDefeated' => max(intval($exStats['bossesDefeated'] ?? 0), intval($inStats['bossesDefeated'] ?? 0)),
+                'holosFound' => max(intval($exStats['holosFound'] ?? 0), intval($inStats['holosFound'] ?? 0)),
+                'firefliesCaught' => max(intval($exStats['firefliesCaught'] ?? 0), intval($inStats['firefliesCaught'] ?? 0)),
+                'rebirthsCount' => max(intval($exStats['rebirthsCount'] ?? 0), intval($inStats['rebirthsCount'] ?? 0)),
+            ];
+
+            $activeBiome = !empty($inOdyssey['currentBiomeId']) ? $inOdyssey['currentBiomeId'] : ($exOdyssey['currentBiomeId'] ?? 'biome_1_clearing');
+            $activeRoute = max(intval($exOdyssey['currentRouteNumber'] ?? 1), intval($inOdyssey['currentRouteNumber'] ?? 1));
+
+            $merged['odysseyState'] = [
+                'version' => 1,
+                'currentBiomeId' => $activeBiome,
+                'currentRouteNumber' => $activeRoute,
+                'autoAdvance' => isset($inOdyssey['autoAdvance']) ? (bool)$inOdyssey['autoAdvance'] : true,
+                'highestBiomeUnlocked' => $mergedBiome,
+                'highestRouteUnlocked' => $mergedRoutes,
+                'starSap' => max(intval($exOdyssey['starSap'] ?? 0), intval($inOdyssey['starSap'] ?? 0)),
+                'totalStarSapEarned' => max(intval($exOdyssey['totalStarSapEarned'] ?? 0), intval($inOdyssey['totalStarSapEarned'] ?? 0)),
+                'celestialShards' => max(intval($exOdyssey['celestialShards'] ?? 0), intval($inOdyssey['celestialShards'] ?? 0)),
+                'treeUpgrades' => $mergedTree,
+                'capturedGames' => $mergedCap,
+                'activeCompanions' => !empty($inOdyssey['activeCompanions']) ? $inOdyssey['activeCompanions'] : ($exOdyssey['activeCompanions'] ?? []),
+                'stats' => $mergedStats,
+                'lastSavedAt' => max(intval($exOdyssey['lastSavedAt'] ?? 0), intval($inOdyssey['lastSavedAt'] ?? 0)),
+            ];
+        }
+    }
+
     $merged['syncedAt'] = date('c');
     return $merged;
 }
