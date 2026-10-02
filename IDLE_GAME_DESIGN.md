@@ -266,7 +266,7 @@ Pour préserver la pureté, la lisibilité et l'ergonomie Mobile-First du site s
 > **Constat & Direction Artistique** : La première mouture fonctionnelle est robuste sous le capot (sauvegardes, calculs, cloud sync), mais l'aspect visuel souffre d'une présentation trop austère, statique et abstraite ("look IA / tableaux administratifs").  
 > Pour susciter un véritable plaisir de jeu et une boucle addictive à la Pokéclicker, l'Odyssée doit se métamorphoser en un **vrai jeu vidéo incarné, vivant, vibrant d'animations, d'artworks et de feedback tactile gratifiant**.
 
-### 🗺️ A. La Carte du Monde Interactive (World Map & Progression Spatiale)
+### 🗺️ A. La Carte du Monde Interactive (World Map & Progression Spatiale) `[✅ Implémenté]`
 Remplacer la grille de cartes statiques par une véritable **carte d'aventure illustrée et interactive** (style *Slay the Spire*, *Super Mario World*, *Pokéclicker*) :
 1. **Sentiers & Chemins Sinueux** : Les 6 biomes et leurs 30 routes reliés par un tracé cartographique organique avec embranchements et étapes clés.
 2. **Jalons Visuels Typés** :

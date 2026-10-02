@@ -57,6 +57,7 @@ interface OdysseyArenaProps {
   onStateChange: (newState: OdysseySaveState) => void;
   onOpenTree: () => void;
   onOpenCompanions: () => void;
+  onOpenMap?: () => void;
 }
 
 const getBiomeLucideIcon = (biomeId: string) => {
@@ -84,6 +85,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   onStateChange,
   onOpenTree,
   onOpenCompanions,
+  onOpenMap,
 }) => {
   const currentBiome = getCurrentBiome(state.currentBiomeId);
   const currentRoute = getCurrentRoute(state.currentBiomeId, state.currentRouteNumber);
@@ -473,6 +475,16 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
               <span>{formatOdysseyNumber(state.starSap)}</span>
             </div>
           </div>
+
+          {onOpenMap && (
+            <button
+              onClick={onOpenMap}
+              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-black text-xs shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            >
+              <Map className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Carte</span>
+            </button>
+          )}
 
           <button
             onClick={onOpenTree}

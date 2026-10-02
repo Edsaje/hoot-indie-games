@@ -197,6 +197,7 @@ export const OdysseyHub: React.FC = () => {
           onStateChange={setOdysseyState}
           onOpenTree={() => setActiveView('tree')}
           onOpenCompanions={() => setActiveView('companions')}
+          onOpenMap={() => setActiveView('map')}
         />
       )}
 
