@@ -3,6 +3,8 @@ import {
   Sparkles,
   Search,
   Lock,
+  Backpack,
+  Sword,
 } from 'lucide-react';
 import type { OdysseySaveState } from '../../types/odyssey';
 import { INDIE_GAMES } from '../../data/games';
@@ -48,8 +50,8 @@ export const CompanionsDexView: React.FC<CompanionsDexViewProps> = ({
       {/* 1. Header Compagnons */}
       <div className="w-full flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-[#06241b]/95 border border-[#78350f] backdrop-blur-md mb-6 shadow-xl">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/30">
-            🎒
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/30">
+            <Backpack className="w-6 h-6 text-amber-300" />
           </div>
           <div>
             <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
@@ -74,8 +76,8 @@ export const CompanionsDexView: React.FC<CompanionsDexViewProps> = ({
 
             <div>
               <div className="text-[10px] font-mono uppercase text-cyan-300 font-bold">Shinies Holo</div>
-              <div className="text-base sm:text-lg font-black font-mono text-cyan-400 flex items-center gap-1">
-                <span>✨</span>
+              <div className="text-base sm:text-lg font-black font-mono text-cyan-400 flex items-center gap-1.5 justify-end">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
                 <span>{totalHolo}</span>
               </div>
             </div>
@@ -85,7 +87,7 @@ export const CompanionsDexView: React.FC<CompanionsDexViewProps> = ({
             onClick={onBackToArena}
             className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-600 transition-transform active:scale-95 flex items-center gap-1.5 cursor-pointer"
           >
-            <span>⚔️</span>
+            <Sword className="w-3.5 h-3.5 text-amber-400" />
             <span>Retour Combat</span>
           </button>
         </div>

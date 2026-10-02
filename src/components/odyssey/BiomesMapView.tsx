@@ -4,6 +4,14 @@ import {
   CheckCircle2,
   Sparkles,
   ArrowRight,
+  Map,
+  Droplets,
+  Sword,
+  Trees,
+  Gamepad2,
+  Gem,
+  Mountain,
+  Flame,
 } from 'lucide-react';
 import type { OdysseySaveState, OdysseyBiomeId } from '../../types/odyssey';
 import { ODYSSEY_BIOMES } from '../../data/odysseyData';
@@ -19,6 +27,25 @@ interface BiomesMapViewProps {
   onStateChange: (newState: OdysseySaveState) => void;
   onBackToArena: () => void;
 }
+
+const getBiomeLucideIcon = (biomeId: OdysseyBiomeId) => {
+  switch (biomeId) {
+    case 'biome_1_clearing':
+      return <Trees className="w-5 h-5 text-emerald-400" />;
+    case 'biome_2_pixel_canopy':
+      return <Gamepad2 className="w-5 h-5 text-cyan-400" />;
+    case 'biome_3_crystal_caves':
+      return <Gem className="w-5 h-5 text-purple-400" />;
+    case 'biome_4_celestial_summit':
+      return <Mountain className="w-5 h-5 text-sky-400" />;
+    case 'biome_5_infernal_abyss':
+      return <Flame className="w-5 h-5 text-rose-400" />;
+    case 'biome_6_cosmic_void':
+      return <Sparkles className="w-5 h-5 text-amber-400" />;
+    default:
+      return <Map className="w-5 h-5 text-amber-400" />;
+  }
+};
 
 export const BiomesMapView: React.FC<BiomesMapViewProps> = ({
   state,
@@ -48,8 +75,8 @@ export const BiomesMapView: React.FC<BiomesMapViewProps> = ({
       {/* 1. Header Carte */}
       <div className="w-full flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-[#06241b]/95 border border-[#78350f] backdrop-blur-md mb-6 shadow-xl">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/30">
-            🗺️
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/30">
+            <Map className="w-6 h-6 text-amber-300" />
           </div>
           <div>
             <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
@@ -64,8 +91,8 @@ export const BiomesMapView: React.FC<BiomesMapViewProps> = ({
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-[10px] font-mono uppercase text-cyan-300 font-bold">Sève Disponible</div>
-            <div className="text-lg sm:text-2xl font-black font-mono text-cyan-400 flex items-center justify-end gap-1">
-              <span>💧</span>
+            <div className="text-lg sm:text-2xl font-black font-mono text-cyan-400 flex items-center justify-end gap-1.5">
+              <Droplets className="w-4 h-4 text-cyan-400" />
               <span>{formatOdysseyNumber(state.starSap)}</span>
             </div>
           </div>
@@ -74,7 +101,7 @@ export const BiomesMapView: React.FC<BiomesMapViewProps> = ({
             onClick={onBackToArena}
             className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-600 transition-transform active:scale-95 flex items-center gap-1.5 cursor-pointer"
           >
-            <span>⚔️</span>
+            <Sword className="w-3.5 h-3.5 text-amber-400" />
             <span>Retour Combat</span>
           </button>
         </div>
@@ -107,7 +134,9 @@ export const BiomesMapView: React.FC<BiomesMapViewProps> = ({
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-3xl">{biome.icon}</span>
+                    <div className="w-10 h-10 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                      {getBiomeLucideIcon(biome.id)}
+                    </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-mono font-bold uppercase text-amber-400">
@@ -140,10 +169,16 @@ export const BiomesMapView: React.FC<BiomesMapViewProps> = ({
 
               {/* Bouton d'Action */}
               <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
-                <span className="text-xs font-mono text-slate-400">
-                  {isUnlocked
-                    ? `Routes franchies : ${state.highestRouteUnlocked[biome.id] || 1}/5`
-                    : `Coût : 💧 ${formatOdysseyNumber(biome.unlockRequirement.starSapCost)}`}
+                <span className="text-xs font-mono text-slate-400 flex items-center gap-1">
+                  {isUnlocked ? (
+                    `Routes franchies : ${state.highestRouteUnlocked[biome.id] || 1}/5`
+                  ) : (
+                    <>
+                      <span>Coût :</span>
+                      <Droplets className="w-3 h-3 text-cyan-400" />
+                      <span>{formatOdysseyNumber(biome.unlockRequirement.starSapCost)}</span>
+                    </>
+                  )}
                 </span>
 
                 {isUnlocked ? (

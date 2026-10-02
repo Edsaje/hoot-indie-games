@@ -7,6 +7,16 @@ import {
   Clock,
   Lock,
   Crown,
+  Droplets,
+  Network,
+  Backpack,
+  MousePointerClick,
+  Trees,
+  Gamepad2,
+  Gem,
+  Mountain,
+  Flame,
+  Map,
 } from 'lucide-react';
 import type {
   OdysseySaveState,
@@ -35,6 +45,25 @@ interface OdysseyArenaProps {
   onOpenTree: () => void;
   onOpenCompanions: () => void;
 }
+
+const getBiomeLucideIcon = (biomeId: string) => {
+  switch (biomeId) {
+    case 'biome_1_clearing':
+      return <Trees className="w-5 h-5 text-emerald-400" />;
+    case 'biome_2_pixel_canopy':
+      return <Gamepad2 className="w-5 h-5 text-cyan-400" />;
+    case 'biome_3_crystal_caves':
+      return <Gem className="w-5 h-5 text-purple-400" />;
+    case 'biome_4_celestial_summit':
+      return <Mountain className="w-5 h-5 text-sky-400" />;
+    case 'biome_5_infernal_abyss':
+      return <Flame className="w-5 h-5 text-rose-400" />;
+    case 'biome_6_cosmic_void':
+      return <Sparkles className="w-5 h-5 text-amber-400" />;
+    default:
+      return <Map className="w-5 h-5 text-amber-400" />;
+  }
+};
 
 export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   state,
@@ -278,13 +307,13 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         type: 'frenzy_click',
         duration: 30,
         multiplier: 7,
-        label: '⚡ Frénésie de Clic (Dégâts x7 pendant 30s)',
+        label: 'Frénésie de Frappe (Dégâts x7 pendant 30s)',
       },
       {
         type: 'sap_rain',
         duration: 30,
         multiplier: 3,
-        label: '💧 Pluie de Sève (Sève x3 pendant 30s)',
+        label: 'Pluie de Sève (Sève x3 pendant 30s)',
       },
     ];
 
@@ -304,7 +333,9 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       {/* 1. Bandeau supérieur : Choix de Route & Sève */}
       <div className="w-full flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4 rounded-2xl bg-[#06241b]/90 border border-[#78350f] backdrop-blur-md mb-4 shadow-xl">
         <div className="flex items-center gap-2.5">
-          <span className="text-2xl">{currentBiome.icon}</span>
+          <div className="w-9 h-9 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+            {getBiomeLucideIcon(currentBiome.id)}
+          </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm sm:text-base font-black text-white">{currentBiome.name}</h3>
@@ -322,8 +353,8 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
             <div className="text-[10px] font-mono uppercase tracking-wider text-cyan-300 font-bold">
               Sève Stellaire
             </div>
-            <div className="text-lg sm:text-2xl font-black font-mono text-cyan-400 flex items-center justify-end gap-1">
-              <span>💧</span>
+            <div className="text-lg sm:text-2xl font-black font-mono text-cyan-400 flex items-center justify-end gap-1.5">
+              <Droplets className="w-4 h-4 text-cyan-400" />
               <span>{formatOdysseyNumber(state.starSap)}</span>
             </div>
           </div>
@@ -332,7 +363,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
             onClick={onOpenTree}
             className="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
           >
-            <span>🌲</span>
+            <Network className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Arbre Céleste</span>
           </button>
         </div>
@@ -388,10 +419,10 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
             onClick={handleFireflyClick}
             style={{ left: `${firefly.x}%`, top: `${firefly.y}%` }}
             className="absolute z-40 -translate-x-1/2 -translate-y-1/2 cursor-pointer p-2 animate-bounce hover:scale-125 transition-transform"
-            title="✨ Cliquez sur la Luciole Dorée pour activer la Frénésie !"
+            title="Luciole Dorée — Cliquez pour activer un bonus temporaire !"
           >
             <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-amber-400/40 border-2 border-amber-300 shadow-[0_0_25px_rgba(251,191,36,0.9)] animate-pulse">
-              <span className="text-xl">✨</span>
+              <Sparkles className="w-5 h-5 text-amber-300 animate-spin" />
             </div>
           </div>
         )}
@@ -475,9 +506,15 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
               </div>
+            ) : currentMonster.isBoss ? (
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-slate-900/90 border-2 border-amber-400/80 flex flex-col items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+                <Crown className="w-10 h-10 sm:w-14 sm:h-14 text-amber-400 mb-1" />
+                <span className="text-[10px] font-black uppercase text-amber-300 font-mono tracking-wider">BOSS</span>
+              </div>
             ) : (
-              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-slate-900/80 border-2 border-[#78350f] flex items-center justify-center text-5xl sm:text-6xl shadow-2xl">
-                {currentMonster.emoji}
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-slate-900/80 border-2 border-[#78350f] flex flex-col items-center justify-center shadow-xl">
+                <Sword className="w-10 h-10 sm:w-12 sm:h-12 text-emerald-400 mb-1" />
+                <span className="text-[9px] font-mono text-slate-400 font-bold">ÉCHO R{state.currentRouteNumber}</span>
               </div>
             )}
 
@@ -485,8 +522,9 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
               <h4 className="text-sm sm:text-base font-black text-white drop-shadow-md">
                 {currentMonster.name}
               </h4>
-              <span className="text-[11px] font-mono text-emerald-300 font-bold">
-                +💧 {formatOdysseyNumber(currentMonster.sapReward * playerStats.sapMultiplier)} Sève
+              <span className="text-[11px] font-mono text-emerald-300 font-bold flex items-center justify-center gap-1 mt-0.5">
+                <Droplets className="w-3 h-3 text-cyan-400" />
+                <span>+{formatOdysseyNumber(currentMonster.sapReward * playerStats.sapMultiplier)} Sève</span>
               </span>
             </div>
           </div>
@@ -515,21 +553,24 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       </div>
 
       {/* 4. Barre d'action rapide sous l'arène */}
-      <div className="w-full flex items-center justify-between gap-3 mt-3 px-1 text-xs text-slate-400 font-mono">
-        <div className="flex items-center gap-3">
-          <span>
-            🗡️ Clic : <strong className="text-amber-400 font-bold">{formatOdysseyNumber(playerStats.clickDamage)}</strong>
+      <div className="w-full flex flex-wrap items-center justify-between gap-3 mt-3 px-1 text-xs text-slate-400 font-mono">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5">
+            <MousePointerClick className="w-3.5 h-3.5 text-amber-400" />
+            <span>Clic : <strong className="text-amber-400 font-bold">{formatOdysseyNumber(playerStats.clickDamage)}</strong></span>
           </span>
-          <span>
-            🦉 Passif : <strong className="text-cyan-400 font-bold">{formatOdysseyNumber(playerStats.passiveDps)}/s</strong>
+          <span className="flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Passif : <strong className="text-cyan-400 font-bold">{formatOdysseyNumber(playerStats.passiveDps)}/s</strong></span>
           </span>
         </div>
 
         <button
           onClick={onOpenCompanions}
-          className="hover:text-amber-300 transition-colors flex items-center gap-1 cursor-pointer"
+          className="hover:text-amber-300 transition-colors flex items-center gap-1.5 cursor-pointer"
         >
-          <span>🎒 Compagnons ({Object.keys(state.capturedGames).length}/256)</span>
+          <Backpack className="w-3.5 h-3.5 text-amber-400" />
+          <span>Compagnons ({Object.keys(state.capturedGames).length}/256)</span>
         </button>
       </div>
     </div>

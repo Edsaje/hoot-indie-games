@@ -3,6 +3,8 @@ import {
   Sword,
   Map,
   Backpack,
+  Sparkles,
+  Network,
 } from 'lucide-react';
 import type { OdysseySaveState, OfflineGainsSummary } from '../../types/odyssey';
 import {
@@ -92,6 +94,21 @@ export const OdysseyHub: React.FC = () => {
         <OdysseyOfflineModal summary={offlineSummary} onClaim={handleClaimOfflineGains} />
       )}
 
+      {/* Header Titre & Badge Bêta */}
+      <div className="w-full flex flex-col items-center text-center mb-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-2 shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+          <span className="font-black tracking-wider uppercase text-[10px]">Fonctionnalité en Bêta</span>
+          <span className="text-slate-500 text-[11px]">•</span>
+          <span className="text-slate-300 text-[11px] hidden sm:inline">Équilibrage actif — Vos avis et suggestions sont bienvenus sur Le Perchoir !</span>
+          <span className="text-slate-300 text-[11px] sm:hidden">Équilibrage actif</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center justify-center gap-2.5">
+          <Sparkles className="w-6 h-6 text-amber-400" />
+          <span>L’Odyssée Sylvestre</span>
+        </h1>
+      </div>
+
       {/* Navigation Interne de l'Odyssée (Pills en tête de page) */}
       <div className="w-full max-w-xl mx-auto flex items-center justify-center p-1.5 rounded-2xl bg-[#06241b] border border-[#78350f] mb-6 shadow-xl">
         <button
@@ -120,7 +137,7 @@ export const OdysseyHub: React.FC = () => {
               : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <span>🌲</span>
+          <Network className="w-3.5 h-3.5" />
           <span>Arbre</span>
         </button>
 

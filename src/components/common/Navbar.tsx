@@ -276,16 +276,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              <span className="text-xs">🌲</span>
+              <Sparkles className="w-3.5 h-3.5" />
               <span>{t('nav.odyssey', 'Odyssée')}</span>
               <span
                 className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded border ${
                   currentTab === 'odyssey'
                     ? 'bg-slate-950/20 text-slate-950 border-slate-950/30'
-                    : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
+                    : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
                 }`}
               >
-                Idle
+                BÊTA
               </span>
             </a>
 
@@ -619,7 +619,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div className="flex-1 min-w-0">
                         <div className="text-amber-300 font-bold group-hover:text-amber-200 flex items-center justify-between">
                           <span>Boutique du Sanctuaire</span>
-                          <span className="text-[10px] font-mono text-amber-400 font-black">🪶 Shop</span>
+                          <span className="text-[10px] font-mono text-amber-400 font-bold">Shop</span>
                         </div>
                         <p className="text-[10px] text-slate-400 truncate">
                           Avatars, titres, cadres & renommage express
@@ -644,7 +644,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="text-emerald-300 font-bold group-hover:text-emerald-200 flex items-center justify-between">
                         <span>{t('chat.discussion')} ({t('nav.roost')})</span>
-                        <span className="text-[10px] font-mono text-emerald-400 font-bold">💬 Salons & Idées</span>
+                        <span className="text-[10px] font-mono text-emerald-400 font-bold">Salons</span>
                       </div>
                       <p className="text-[10px] text-slate-400 truncate">
                         Discussions mondiales, salons multilingues & retours
@@ -748,7 +748,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }
                 }}
                 className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition items-center justify-center shrink-0 touch-target-comfortable shadow-sm shadow-amber-500/10 cursor-pointer group touch-manipulation"
-                title="Tableau de Bord Administrateur (👑 Accès Souverain)"
+                title="Tableau de Bord Administrateur (Accès Souverain)"
                 aria-label="Tableau de Bord Administrateur"
               >
                 <Crown className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
@@ -908,7 +908,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     [
                       { id: 'gems' as NavTab, label: t('nav.discovery', 'Découverte'), desc: 'Pépites, Catalogue (256) & Micro-Indés', icon: Compass },
                       { id: 'minigames' as NavTab, label: t('nav.games', 'Mini-Jeux'), desc: '11 défis quotidiens, sprint & duel 1v1', icon: Puzzle, badge: '11' },
-                      { id: 'odyssey' as NavTab, label: t('nav.odyssey', 'Odyssée Sylvestre'), desc: 'Aventure idle, Arbre Céleste & Compagnons', icon: Sparkles, badge: 'Idle' },
+                      { id: 'odyssey' as NavTab, label: t('nav.odyssey', 'Odyssée Sylvestre'), desc: 'Aventure idle, Arbre Céleste & Compagnons', icon: Sparkles, badge: 'BÊTA' },
                       { id: 'arcade' as NavTab, label: t('nav.arcade'), desc: 'Salle de jeux rétro & classements', icon: Gamepad2 },
                       { id: 'cards' as NavTab, label: t('nav.cards', 'Cartes'), desc: 'Album de cartes, échanges & boosters', icon: Layers, badge: pendingIncomingCount > 0 ? `${pendingIncomingCount} Échange` : undefined },
                       { id: 'toolbox' as NavTab, label: t('nav.toolbox'), desc: 'Filtres, générateurs & outils indés', icon: Wrench },

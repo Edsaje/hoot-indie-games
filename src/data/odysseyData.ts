@@ -760,7 +760,7 @@ export function generateMonsterForRoute(
 
   return {
     id: `mob_${route.id}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-    name: isHolo ? `✨ ${name} Brillant` : name,
+    name: isHolo ? `${name} (Holo)` : name,
     maxHp,
     currentHp: maxHp,
     sapReward,

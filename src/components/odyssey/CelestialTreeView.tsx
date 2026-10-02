@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import {
   Check,
   ArrowUpCircle,
+  Network,
+  Sword,
+  Users,
+  Droplets,
+  Sparkles,
 } from 'lucide-react';
 import type { OdysseySaveState, CelestialBranch } from '../../types/odyssey';
 import {
@@ -22,11 +27,11 @@ interface CelestialTreeViewProps {
 
 const BRANCH_CONFIG: Record<
   CelestialBranch,
-  { label: string; icon: string; desc: string; color: string; border: string; bg: string }
+  { label: string; iconType: 'vigor' | 'companions' | 'alchemy' | 'astronomy'; desc: string; color: string; border: string; bg: string }
 > = {
   vigor: {
     label: 'Vigueur Céleste',
-    icon: '🦅',
+    iconType: 'vigor',
     desc: 'Puissance de frappe manuelle et coups critiques au clic.',
     color: 'text-amber-400',
     border: 'border-amber-500/40',
@@ -34,7 +39,7 @@ const BRANCH_CONFIG: Record<
   },
   companions: {
     label: 'Chouettes & Compagnons',
-    icon: '🦉',
+    iconType: 'companions',
     desc: 'DPS passif automatique et synergies avec vos 256 jeux capturés.',
     color: 'text-cyan-400',
     border: 'border-cyan-500/40',
@@ -42,7 +47,7 @@ const BRANCH_CONFIG: Record<
   },
   alchemy: {
     label: 'Alchimie Végétale',
-    icon: '💧',
+    iconType: 'alchemy',
     desc: 'Production de Sève Stellaire et attirance des Lucioles Dorées.',
     color: 'text-emerald-400',
     border: 'border-emerald-500/40',
@@ -50,12 +55,25 @@ const BRANCH_CONFIG: Record<
   },
   astronomy: {
     label: 'Astronomie Nocturne',
-    icon: '🌟',
+    iconType: 'astronomy',
     desc: 'Plafond de gains hors-ligne et détection des Pépites Holographiques.',
     color: 'text-purple-400',
     border: 'border-purple-500/40',
     bg: 'bg-purple-500/10',
   },
+};
+
+const renderBranchIcon = (iconType: 'vigor' | 'companions' | 'alchemy' | 'astronomy') => {
+  switch (iconType) {
+    case 'vigor':
+      return <Sword className="w-5 h-5 text-amber-400" />;
+    case 'companions':
+      return <Users className="w-5 h-5 text-cyan-400" />;
+    case 'alchemy':
+      return <Droplets className="w-5 h-5 text-emerald-400" />;
+    case 'astronomy':
+      return <Sparkles className="w-5 h-5 text-purple-400" />;
+  }
 };
 
 export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
@@ -87,8 +105,8 @@ export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
       {/* 1. Header Arbre Céleste */}
       <div className="w-full flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-[#06241b]/95 border border-[#78350f] backdrop-blur-md mb-6 shadow-xl">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/30">
-            🌲
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/30">
+            <Network className="w-6 h-6 text-amber-300" />
           </div>
           <div>
             <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
@@ -103,8 +121,8 @@ export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-[10px] font-mono uppercase text-cyan-300 font-bold">Sève Disponible</div>
-            <div className="text-lg sm:text-2xl font-black font-mono text-cyan-400 flex items-center justify-end gap-1">
-              <span>💧</span>
+            <div className="text-lg sm:text-2xl font-black font-mono text-cyan-400 flex items-center justify-end gap-1.5">
+              <Droplets className="w-4 h-4 text-cyan-400" />
               <span>{formatOdysseyNumber(state.starSap)}</span>
             </div>
           </div>
@@ -113,7 +131,7 @@ export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
             onClick={onBackToArena}
             className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-600 transition-transform active:scale-95 flex items-center gap-1.5 cursor-pointer"
           >
-            <span>⚔️</span>
+            <Sword className="w-3.5 h-3.5 text-amber-400" />
             <span>Retour Combat</span>
           </button>
         </div>
@@ -146,7 +164,9 @@ export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-2xl">{config.icon}</span>
+                <div className="w-8 h-8 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center">
+                  {renderBranchIcon(config.iconType)}
+                </div>
                 {isSelected && (
                   <span className="w-2 h-2 rounded-full bg-amber-400 shadow-sm shadow-amber-400 animate-ping" />
                 )}
@@ -185,7 +205,9 @@ export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">{node.icon}</span>
+                    <div className="w-8 h-8 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                    </div>
                     <div>
                       <h4 className="text-sm font-black text-white">{node.name}</h4>
                       <span className="text-[10px] font-mono font-bold text-amber-300">
@@ -202,11 +224,12 @@ export const CelestialTreeView: React.FC<CelestialTreeViewProps> = ({
                     <div className="text-right font-mono">
                       <div className="text-[9px] uppercase text-slate-400">Coût</div>
                       <div
-                        className={`text-xs font-black ${
+                        className={`text-xs font-black flex items-center gap-1 justify-end ${
                           canAfford ? 'text-cyan-300' : 'text-slate-400'
                         }`}
                       >
-                        💧 {formatOdysseyNumber(cost)}
+                        <Droplets className="w-3 h-3 text-cyan-400" />
+                        <span>{formatOdysseyNumber(cost)}</span>
                       </div>
                     </div>
                   )}

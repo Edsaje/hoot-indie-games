@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Moon, Droplets } from 'lucide-react';
 import type { OfflineGainsSummary } from '../../types/odyssey';
 import { formatOdysseyNumber } from '../../services/odysseyEngineService';
 import { soundFx } from '../../utils/audio';
@@ -22,8 +22,8 @@ export const OdysseyOfflineModal: React.FC<OdysseyOfflineModalProps> = ({
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div className="w-full max-w-md p-6 rounded-3xl bg-[#06241b] border-2 border-[#78350f] text-center shadow-2xl animate-in zoom-in-95 duration-300">
-        <div className="w-16 h-16 rounded-full bg-cyan-500/20 border-2 border-cyan-400 mx-auto flex items-center justify-center text-3xl shadow-xl shadow-cyan-500/30 mb-4 animate-bounce">
-          🌙
+        <div className="w-16 h-16 rounded-full bg-cyan-500/20 border-2 border-cyan-400 mx-auto flex items-center justify-center shadow-xl shadow-cyan-500/30 mb-4 animate-bounce">
+          <Moon className="w-8 h-8 text-cyan-400" />
         </div>
 
         <h3 className="text-xl font-black text-white mb-1">
@@ -43,8 +43,8 @@ export const OdysseyOfflineModal: React.FC<OdysseyOfflineModalProps> = ({
 
           <div className="flex items-center justify-between text-xs text-slate-300">
             <span>Sève Récoltée</span>
-            <span className="text-base font-black text-cyan-400 flex items-center gap-1">
-              <span>💧</span>
+            <span className="text-base font-black text-cyan-400 flex items-center gap-1.5">
+              <Droplets className="w-4 h-4 text-cyan-400" />
               <span>+{formatOdysseyNumber(summary.starSapEarned)}</span>
             </span>
           </div>
