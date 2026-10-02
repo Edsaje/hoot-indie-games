@@ -470,6 +470,75 @@ class AudioManager {
       // Ignore
     }
   }
+
+  // Tranchant de lame / taillade au clic dans l'Odyssée
+  public playSlash(isCrit: boolean = false) {
+    if (!this.soundEnabled) return;
+    try {
+      const ctx = this.initCtx();
+      if (!ctx) return;
+      const t = ctx.currentTime;
+
+      // 1. Whoosh / tranchant rapide
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = isCrit ? 'sawtooth' : 'triangle';
+
+      const startFreq = isCrit ? 920 : 680;
+      const endFreq = isCrit ? 160 : 120;
+      osc.frequency.setValueAtTime(startFreq, t);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, t + (isCrit ? 0.12 : 0.08));
+
+      const initialGain = isCrit ? 0.15 : 0.08;
+      gain.gain.setValueAtTime(initialGain, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + (isCrit ? 0.13 : 0.08));
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + (isCrit ? 0.13 : 0.08));
+
+      // 2. Si coup critique, impact percutant et clochette d'impact
+      if (isCrit) {
+        const ping = ctx.createOscillator();
+        const pingGain = ctx.createGain();
+        ping.type = 'sine';
+        ping.frequency.setValueAtTime(1100, t);
+        ping.frequency.exponentialRampToValueAtTime(1760, t + 0.14);
+        pingGain.gain.setValueAtTime(0.07, t);
+        pingGain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+        ping.connect(pingGain);
+        pingGain.connect(ctx.destination);
+        ping.start(t);
+        ping.stop(t + 0.16);
+      }
+    } catch {
+      // Ignore
+    }
+  }
+
+  // Éclat de sève / récolte de butin
+  public playSapBurst() {
+    if (!this.soundEnabled) return;
+    try {
+      const ctx = this.initCtx();
+      if (!ctx) return;
+      const t = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(580, t);
+      osc.frequency.exponentialRampToValueAtTime(1040, t + 0.09);
+      gain.gain.setValueAtTime(0.06, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.1);
+    } catch {
+      // Ignore
+    }
+  }
 }
 
 export const soundFx = new AudioManager();

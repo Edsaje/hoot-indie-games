@@ -320,4 +320,108 @@ textarea:focus-visible {
   min-width: 48px;
 }
 
+/* ==========================================================================
+   Odyssey Celestial Arena: Game Feel, Juice & Dynamic Biome VFX
+   ========================================================================== */
+
+/* 1. Micro Screen-Shake on Critical Hits & Boss Defeat */
+@keyframes critScreenShake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-3px, 2px) rotate(-0.4deg); }
+  40% { transform: translate(3px, -2px) rotate(0.4deg); }
+  60% { transform: translate(-2px, -1px) rotate(-0.2deg); }
+  80% { transform: translate(2px, 1px) rotate(0.2deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+.arena-screen-shake {
+  animation: critScreenShake 0.18s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* 2. Monster Idle Breathing / Bobbing */
+@keyframes monsterIdleBob {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-5px) scale(1.015); }
+}
+.animate-monster-idle {
+  animation: monsterIdleBob 3.2s ease-in-out infinite;
+}
+
+/* 3. Slash Arc Blade Effect on Clicks */
+@keyframes slashSweep {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.65) rotate(var(--slash-angle, 0deg));
+    filter: brightness(2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.95));
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.15) rotate(var(--slash-angle, 0deg));
+    filter: brightness(1.6) drop-shadow(0 0 16px rgba(245, 158, 11, 0.85));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.35) rotate(var(--slash-angle, 0deg));
+    filter: brightness(0.6) drop-shadow(0 0 4px rgba(245, 158, 11, 0));
+  }
+}
+.animate-combat-slash {
+  animation: slashSweep 0.22s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+}
+
+/* 4. God Rays for Forest/Clearing Biome */
+@keyframes godRaysSway {
+  0%, 100% { opacity: 0.14; transform: rotate(-12deg) skewX(-10deg) scaleY(1); }
+  50% { opacity: 0.32; transform: rotate(-8deg) skewX(-4deg) scaleY(1.08); }
+}
+.animate-god-rays {
+  animation: godRaysSway 8s ease-in-out infinite alternate;
+}
+
+/* 5. Aurora Borealis Wave for Celestial Peaks */
+@keyframes auroraDance {
+  0% { transform: translateX(-10%) skewY(-2deg) scaleY(0.9); opacity: 0.35; }
+  50% { transform: translateX(10%) skewY(3deg) scaleY(1.2); opacity: 0.65; }
+  100% { transform: translateX(-10%) skewY(-2deg) scaleY(0.9); opacity: 0.35; }
+}
+.animate-aurora-wave {
+  animation: auroraDance 14s ease-in-out infinite;
+}
+
+/* 6. Cosmic Orbital Rings for Void Sanctuary */
+@keyframes cosmicRingRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-cosmic-ring {
+  animation: cosmicRingRotate 38s linear infinite;
+}
+
+@keyframes cosmicRingReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+.animate-cosmic-ring-reverse {
+  animation: cosmicRingReverse 26s linear infinite;
+}
+
+/* 7. Burst of Sap Droplets on Monster Defeat */
+@keyframes sapOrbBurst {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.95;
+    transform: translate(var(--orb-tx), var(--orb-ty)) scale(1.2);
+  }
+  100% {
+    transform: translate(calc(var(--orb-tx) * 1.35), calc(var(--orb-ty) - 45px)) scale(0.2);
+    opacity: 0;
+  }
+}
+.animate-sap-burst {
+  animation: sapOrbBurst 0.65s cubic-bezier(0.12, 0.75, 0.45, 1) forwards;
+}
+
+
 

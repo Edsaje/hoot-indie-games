@@ -20,8 +20,17 @@ import {
   Check,
   Target,
   FastForward,
+  Activity,
 } from 'lucide-react';
 import { RouteLootDex } from './RouteLootDex';
+import { OdysseyArenaBackdrop } from './OdysseyArenaBackdrop';
+import {
+  OdysseySlashOverlay,
+  OdysseySapBurstOverlay,
+  OdysseyHealthBar,
+  type SlashEffect,
+  type SapOrbParticle,
+} from './OdysseyCombatJuice';
 import type {
   OdysseySaveState,
   OdysseyPlayerStats,
@@ -90,8 +99,33 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
   // Popups de dégâts flottants
   const [damagePopups, setDamagePopups] = useState<DamagePopup[]>([]);
 
-  // Animation d'impact sur le monstre
+  // Animation d'impact et critique sur le monstre
   const [isHit, setIsHit] = useState<boolean>(false);
+  const [isCritHit, setIsCritHit] = useState<boolean>(false);
+
+  // Tranchants au clic (Slash FX)
+  const [slashes, setSlashes] = useState<SlashEffect[]>([]);
+
+  // Éclats d'orbes de Sève à la victoire
+  const [sapBursts, setSapBursts] = useState<SapOrbParticle[]>([]);
+
+  // Secousse d'écran (Screen Shake) et accessibilité
+  const [screenShake, setScreenShake] = useState<boolean>(false);
+  const [screenShakeEnabled, setScreenShakeEnabled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    return localStorage.getItem('hoot_screen_shake') !== 'false';
+  });
+
+  const arenaRef = useRef<HTMLDivElement>(null);
+
+  const toggleScreenShake = () => {
+    setScreenShakeEnabled((prev) => {
+      const next = !prev;
+      localStorage.setItem('hoot_screen_shake', String(next));
+      soundFx.playClick();
+      return next;
+    });
+  };
 
   // Timer du boss
   const [bossTimeLeft, setBossTimeLeft] = useState<number>(30);
@@ -215,6 +249,25 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     return () => clearTimeout(cleanup);
   }, [damagePopups]);
 
+  // Nettoyage automatique des tranchants visuels de lame (Slash FX)
+  useEffect(() => {
+    if (slashes.length === 0) return;
+    const cleanup = setTimeout(() => {
+      const now = Date.now();
+      setSlashes((prev) => prev.filter((s) => now - s.createdAt < 300));
+    }, 300);
+    return () => clearTimeout(cleanup);
+  }, [slashes]);
+
+  // Nettoyage automatique des particules de sève éclatées
+  useEffect(() => {
+    if (sapBursts.length === 0) return;
+    const cleanup = setTimeout(() => {
+      setSapBursts([]);
+    }, 700);
+    return () => clearTimeout(cleanup);
+  }, [sapBursts]);
+
   // Fonction de victoire contre un monstre
   const handleDefeat = useCallback(() => {
     const mob = monsterRef.current;
@@ -228,6 +281,34 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       stats,
       sapMultiplier
     );
+
+    // Éclats d'orbes de Sève à la victoire
+    const burstCount = mob.isBoss ? 16 : 8;
+    const burstParticles: SapOrbParticle[] = Array.from({ length: burstCount }).map((_, i) => {
+      const angle = (i / burstCount) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+      const dist = 45 + Math.random() * 80;
+      return {
+        id: `${Date.now()}_${i}_${Math.random()}`,
+        tx: Math.cos(angle) * dist,
+        ty: Math.sin(angle) * dist,
+        color: mob.isBoss
+          ? Math.random() > 0.4
+            ? 'bg-amber-300'
+            : 'bg-rose-400'
+          : Math.random() > 0.3
+          ? 'bg-cyan-400'
+          : 'bg-emerald-300',
+        size: 5 + Math.random() * 5,
+      };
+    });
+    setSapBursts(burstParticles);
+    soundFx.playSapBurst();
+
+    // Micro-secousse lors de la mort d'un Boss
+    if (mob.isBoss && screenShakeEnabled) {
+      setScreenShake(true);
+      setTimeout(() => setScreenShake(false), 280);
+    }
 
     if (newlyCapturedGameTitle) {
       setRecentCapture(newlyCapturedGameTitle);
@@ -265,10 +346,10 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
     if (currentRoute.isBossRoute) {
       setBossTimeLeft(currentRoute.bossTimerSeconds || 30);
     }
-  }, [currentRoute, routeKills, onStateChange]);
+  }, [currentRoute, routeKills, onStateChange, screenShakeEnabled]);
 
   // Attaque par clic du joueur
-  const handleMonsterClick = useCallback(() => {
+  const handleMonsterClick = useCallback((e?: React.MouseEvent<HTMLDivElement>) => {
     const mob = monsterRef.current;
     const stats = playerStatsRef.current;
     const frenzyMult = buffRef.current?.type === 'frenzy_click' ? 7 : 1;
@@ -277,15 +358,41 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
 
     addDamagePopup(damage, isCrit);
     setIsHit(true);
-    setTimeout(() => setIsHit(false), 80);
-    soundFx.playClick();
+    setIsCritHit(isCrit);
+    setTimeout(() => setIsHit(false), 90);
+
+    // Bruitage procédural de lame tranchante
+    soundFx.playSlash(isCrit);
+
+    // Secousse dynamique sur coup critique
+    if (isCrit && screenShakeEnabled) {
+      setScreenShake(true);
+      setTimeout(() => setScreenShake(false), 180);
+    }
+
+    // Apparition du tracé de taillade SVG à l'endroit exact du clic
+    if (e && arenaRef.current) {
+      const rect = arenaRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const angle = Math.random() * 68 - 34;
+      const newSlash: SlashEffect = {
+        id: `${Date.now()}_${Math.random()}`,
+        x,
+        y,
+        angle,
+        isCrit,
+        createdAt: Date.now(),
+      };
+      setSlashes((prev) => [...prev.slice(-6), newSlash]);
+    }
 
     if (isKilled) {
       handleDefeat();
     } else {
       setCurrentMonster((prev) => ({ ...prev, currentHp: nextHp }));
     }
-  }, [addDamagePopup, handleDefeat]);
+  }, [addDamagePopup, handleDefeat, screenShakeEnabled]);
 
   // Boucle DPS Passif (Tick toutes les 200ms)
   useEffect(() => {
@@ -337,8 +444,6 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       label: chosen.label,
     });
   };
-
-  const hpPercent = Math.max(0, Math.min(100, (currentMonster.currentHp / currentMonster.maxHp) * 100));
 
   return (
     <div className="relative w-full max-w-4xl mx-auto flex flex-col items-center select-none">
@@ -453,9 +558,24 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
 
       {/* 3. L'Arène de Combat Centrale */}
       <div
+        ref={arenaRef}
         onClick={handleMonsterClick}
-        className={`relative w-full aspect-[4/3] sm:aspect-[16/9] max-h-[460px] rounded-3xl border-2 ${currentBiome.borderColor} bg-gradient-to-b ${currentBiome.bgGradient} shadow-2xl overflow-hidden flex flex-col justify-between p-4 sm:p-6 cursor-crosshair transition-transform select-none active:scale-[0.99] group`}
+        className={`relative w-full aspect-[4/3] sm:aspect-[16/9] max-h-[460px] rounded-3xl border-2 ${currentBiome.borderColor} bg-gradient-to-b ${currentBiome.bgGradient} shadow-2xl overflow-hidden flex flex-col justify-between p-4 sm:p-6 cursor-crosshair select-none active:scale-[0.99] group ${
+          screenShake ? 'arena-screen-shake' : ''
+        }`}
       >
+        {/* Décors vivants multi-couches spécifiques au Biome */}
+        <OdysseyArenaBackdrop
+          biomeId={currentBiome.id}
+          isBoss={Boolean(currentRoute.isBossRoute)}
+        />
+
+        {/* Effets de tranchant SVG au clic */}
+        <OdysseySlashOverlay slashes={slashes} />
+
+        {/* Éclats de Sève à la victoire */}
+        <OdysseySapBurstOverlay particles={sapBursts} />
+
         {/* Luciole Dorée Flottante */}
         {firefly.isActive && (
           <div
@@ -527,7 +647,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         </div>
 
         {/* Centre Arène : Monstre / Écho Sauvage */}
-        <div className="relative my-auto flex flex-col items-center justify-center">
+        <div className="relative my-auto flex flex-col items-center justify-center z-15">
           {/* Popups de dégâts bondissants */}
           {damagePopups.map((p) => (
             <div
@@ -545,25 +665,44 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
 
           {/* Sprite / Médaillon du Monstre */}
           <div
-            className={`relative flex flex-col items-center justify-center transition-transform duration-75 ${
-              isHit ? 'scale-90 brightness-130' : 'hover:scale-105'
+            className={`relative flex flex-col items-center justify-center transition-all duration-100 ${
+              isHit
+                ? isCritHit
+                  ? 'scale-90 rotate-2 brightness-150 contrast-125'
+                  : 'scale-95 -rotate-1 brightness-130'
+                : 'animate-monster-idle hover:scale-105'
             }`}
           >
             {currentMonster.isHolo && (
-              <div className="absolute -top-6 px-2 py-0.5 rounded-full bg-cyan-400/25 border border-cyan-400 text-cyan-200 text-[10px] font-black tracking-wider uppercase flex items-center gap-1 shadow-lg shadow-cyan-500/50 animate-pulse">
-                <Sparkles className="w-3 h-3 text-cyan-300 animate-spin" />
-                <span>SHINY HOLOGRAPHIQUE (1/1024)</span>
+              <div className="absolute -top-7 px-2.5 py-0.5 rounded-full bg-cyan-400/30 border border-cyan-300 text-cyan-100 text-[10px] font-black tracking-wider uppercase flex items-center gap-1 shadow-lg shadow-cyan-500/50 animate-pulse z-20">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-300 animate-spin" />
+                <span>HOLOGRAPHIQUE SHINY (1/1024)</span>
               </div>
             )}
 
             {currentMonster.artworkUrl ? (
-              <div className="relative w-40 sm:w-56 aspect-[16/9] rounded-2xl overflow-hidden border-2 border-amber-400/60 shadow-2xl bg-black">
+              <div
+                className={`relative w-40 sm:w-56 aspect-[16/9] rounded-2xl overflow-hidden border-2 shadow-2xl bg-black ${
+                  currentMonster.isHolo
+                    ? 'border-cyan-300 shadow-[0_0_35px_rgba(6,182,212,0.6)] ring-2 ring-amber-400/60'
+                    : 'border-amber-400/60 shadow-black/80'
+                }`}
+              >
                 <img
                   src={currentMonster.artworkUrl}
                   alt={currentMonster.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent pointer-events-none" />
+                {currentMonster.isHolo && (
+                  <div
+                    className="absolute inset-0 pointer-events-none opacity-40 mix-blend-color-dodge"
+                    style={{
+                      background:
+                        'linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.7) 45%, rgba(6,182,212,0.8) 55%, transparent 80%)',
+                    }}
+                  />
+                )}
               </div>
             ) : currentMonster.isBoss ? (
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-slate-900/90 border-2 border-amber-400/80 flex flex-col items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.4)]">
@@ -589,26 +728,13 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
           </div>
         </div>
 
-        {/* Footer Arène : Jauge de PV du Monstre */}
-        <div className="w-full max-w-md mx-auto z-10">
-          <div className="flex items-center justify-between text-[11px] font-mono font-bold text-slate-300 mb-1 px-1">
-            <span>Points de Vie</span>
-            <span>
-              {formatOdysseyNumber(currentMonster.currentHp)} / {formatOdysseyNumber(currentMonster.maxHp)}
-            </span>
-          </div>
-
-          <div className="w-full h-3 sm:h-3.5 rounded-full bg-black/60 border border-white/20 overflow-hidden shadow-inner p-0.5">
-            <div
-              style={{ width: `${hpPercent}%` }}
-              className={`h-full rounded-full transition-all duration-100 ${
-                currentMonster.isBoss
-                  ? 'bg-gradient-to-r from-rose-600 via-amber-500 to-rose-400'
-                  : 'bg-gradient-to-r from-emerald-500 to-cyan-400'
-              }`}
-            />
-          </div>
-        </div>
+        {/* Footer Arène : Jauge de PV RPG Double-Couche avec Impact Flash */}
+        <OdysseyHealthBar
+          currentHp={currentMonster.currentHp}
+          maxHp={currentMonster.maxHp}
+          isBoss={Boolean(currentMonster.isBoss)}
+          isHit={isHit}
+        />
       </div>
 
       {/* 4. Barre d'action rapide sous l'arène */}
@@ -624,13 +750,29 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
           </span>
         </div>
 
-        <button
-          onClick={onOpenCompanions}
-          className="hover:text-amber-300 transition-colors flex items-center gap-1.5 cursor-pointer"
-        >
-          <Backpack className="w-3.5 h-3.5 text-amber-400" />
-          <span>Compagnons ({Object.keys(state.capturedGames).length}/256)</span>
-        </button>
+        <div className="flex items-center gap-3">
+          {/* Commutateur de Secousses d'Écran (Accessibilité) */}
+          <button
+            onClick={toggleScreenShake}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-[11px] font-mono transition-all cursor-pointer ${
+              screenShakeEnabled
+                ? 'bg-slate-900/90 text-amber-300 border-amber-500/40 hover:bg-slate-800'
+                : 'bg-slate-950/80 text-slate-500 border-slate-800 hover:text-slate-400'
+            }`}
+            title="Activer ou désactiver les micro-secousses d'écran lors des coups critiques"
+          >
+            <Activity className={`w-3.5 h-3.5 ${screenShakeEnabled ? 'text-amber-400' : 'text-slate-600'}`} />
+            <span>Secousses {screenShakeEnabled ? 'ON' : 'OFF'}</span>
+          </button>
+
+          <button
+            onClick={onOpenCompanions}
+            className="hover:text-amber-300 transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <Backpack className="w-3.5 h-3.5 text-amber-400" />
+            <span>Compagnons ({Object.keys(state.capturedGames).length}/256)</span>
+          </button>
+        </div>
       </div>
     </div>
   );
