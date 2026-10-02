@@ -134,6 +134,7 @@ export interface OdysseySaveState {
   currentBiomeId: OdysseyBiomeId;
   currentRouteNumber: number; // 1 à 5
   autoAdvance: boolean;
+  miniHudMobileEnabled?: boolean; // Option : afficher le mini-widget flottant sur téléphone mobile (désactivé par défaut)
   highestBiomeUnlocked: number; // 1 à 6
   highestRouteUnlocked: Record<string, number>; // biomeId -> highest route unlocked (1-5)
   routeKills?: Record<string, number>; // routeId -> nombre d'ennemis vaincus sur cette route

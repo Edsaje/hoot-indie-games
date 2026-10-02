@@ -7,6 +7,7 @@ import {
   Sparkles,
   Droplets,
   Crown,
+  X,
 } from 'lucide-react';
 import type { OdysseySaveState, OdysseyMonster } from '../../types/odyssey';
 import {
@@ -38,6 +39,20 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     }
     return false;
   });
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const playerStats = computePlayerStats(odysseyState);
   const currentBiome = getCurrentBiome(odysseyState.currentBiomeId);
@@ -57,7 +72,7 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
   const statsRef = useRef(playerStats);
   statsRef.current = playerStats;
 
-  // Écoute des mises à jour globales
+  // Écoute des mises à jour globales de l'état
   useEffect(() => {
     const handleUpdate = (e: any) => {
       if (e.detail) {
@@ -68,6 +83,19 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     };
     window.addEventListener('hoot_odyssey_updated', handleUpdate);
     return () => window.removeEventListener('hoot_odyssey_updated', handleUpdate);
+  }, []);
+
+  // Écoute spécifique de la préférence Gadget Mobile
+  useEffect(() => {
+    const handlePrefUpdated = (e: any) => {
+      const nextVal =
+        typeof e.detail === 'boolean'
+          ? e.detail
+          : localStorage.getItem('hoot_odyssey_hud_mobile_enabled') === 'true';
+      setOdysseyState((prev) => ({ ...prev, miniHudMobileEnabled: nextVal }));
+    };
+    window.addEventListener('hoot_odyssey_hud_pref_updated', handlePrefUpdated);
+    return () => window.removeEventListener('hoot_odyssey_hud_pref_updated', handlePrefUpdated);
   }, []);
 
   // Réinitialiser le monstre si la route ou le biome change
@@ -140,7 +168,25 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     });
   };
 
-  if (isModalActive) return null;
+  const handleDisableOnMobile = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    soundFx.playClick();
+    const nextState = { ...stateRef.current, miniHudMobileEnabled: false };
+    setOdysseyState(nextState);
+    saveOdysseyState(nextState);
+    try {
+      localStorage.setItem('hoot_odyssey_hud_mobile_enabled', 'false');
+    } catch {}
+    window.dispatchEvent(new CustomEvent('hoot_odyssey_hud_pref_updated', { detail: false }));
+  };
+
+  const isMobileGadgetEnabled = Boolean(
+    odysseyState.miniHudMobileEnabled ??
+      (typeof window !== 'undefined' && localStorage.getItem('hoot_odyssey_hud_mobile_enabled') === 'true')
+  );
+
+  // Masquer sur mobile par défaut pour économiser l'espace écran (sauf si coché dans les options)
+  if (isModalActive || (isMobile && !isMobileGadgetEnabled)) return null;
 
   const hpPercent = Math.max(0, Math.min(100, (monster.currentHp / monster.maxHp) * 100));
 
@@ -159,6 +205,16 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
           {formatOdysseyNumber(odysseyState.starSap)}
         </span>
         <ChevronUp className="w-3.5 h-3.5 text-amber-400 group-hover:-translate-y-0.5 transition-transform" />
+        {isMobile && (
+          <button
+            onClick={handleDisableOnMobile}
+            className="p-1 -mr-1 rounded-full text-slate-400 hover:text-rose-400 hover:bg-slate-800/80 transition"
+            title="Masquer le gadget sur mobile"
+            aria-label="Masquer le gadget sur mobile"
+          >
+            <X className="w-3 h-3" />
+          </button>
+        )}
       </div>
     );
   }
@@ -182,6 +238,16 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
           >
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
+          {isMobile && (
+            <button
+              onClick={handleDisableOnMobile}
+              className="p-1 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 transition cursor-pointer"
+              title="Masquer le gadget sur mobile"
+              aria-label="Masquer le gadget sur mobile"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 

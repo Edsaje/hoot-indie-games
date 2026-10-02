@@ -30,6 +30,7 @@ export function getDefaultOdysseyState(): OdysseySaveState {
     currentBiomeId: 'biome_1_clearing',
     currentRouteNumber: 1,
     autoAdvance: false,
+    miniHudMobileEnabled: false,
     highestBiomeUnlocked: 1,
     highestRouteUnlocked: {
       biome_1_clearing: 1,
@@ -87,6 +88,10 @@ export function loadOdysseyState(): OdysseySaveState {
         : defaultState.currentRouteNumber;
     const autoAdvance =
       typeof parsed.autoAdvance === 'boolean' ? parsed.autoAdvance : defaultState.autoAdvance;
+    const miniHudMobileEnabled =
+      typeof parsed.miniHudMobileEnabled === 'boolean'
+        ? parsed.miniHudMobileEnabled
+        : (typeof window !== 'undefined' && localStorage.getItem('hoot_odyssey_hud_mobile_enabled') === 'true');
 
     return {
       ...defaultState,
@@ -94,6 +99,7 @@ export function loadOdysseyState(): OdysseySaveState {
       currentBiomeId,
       currentRouteNumber,
       autoAdvance,
+      miniHudMobileEnabled,
       highestRouteUnlocked: {
         ...defaultState.highestRouteUnlocked,
         ...(parsed.highestRouteUnlocked || {}),

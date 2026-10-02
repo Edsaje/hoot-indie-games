@@ -22,6 +22,7 @@ import {
   FastForward,
   Activity,
   Menu,
+  Smartphone,
 } from 'lucide-react';
 import { RouteLootDex } from './RouteLootDex';
 import { OdysseyArenaBackdrop } from './OdysseyArenaBackdrop';
@@ -578,6 +579,33 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
           <span className="text-[11px] flex items-center gap-1">
             <FastForward className={`w-3.5 h-3.5 ${state.autoAdvance ? 'text-amber-400 animate-pulse' : 'text-slate-400'}`} />
             <span>Auto-progression</span>
+          </span>
+        </label>
+
+        {/* Case à cocher : Gadget mobile flottant (Désactivé par défaut pour économiser l'écran sur téléphone) */}
+        <label
+          className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/70 text-xs font-mono font-bold text-slate-300 hover:text-white cursor-pointer select-none transition-all hover:bg-slate-800 shrink-0 shadow-sm"
+          title="Afficher le mini-widget flottant de l'Odyssée sur téléphone mobile (désactivé par défaut)."
+        >
+          <input
+            type="checkbox"
+            checked={Boolean(state.miniHudMobileEnabled)}
+            onChange={(e) => {
+              soundFx.playClick();
+              const nextVal = e.target.checked;
+              const nextState = { ...state, miniHudMobileEnabled: nextVal };
+              onStateChange(nextState);
+              saveOdysseyState(nextState);
+              try {
+                localStorage.setItem('hoot_odyssey_hud_mobile_enabled', String(nextVal));
+              } catch {}
+              window.dispatchEvent(new CustomEvent('hoot_odyssey_hud_pref_updated', { detail: nextVal }));
+            }}
+            className="w-3.5 h-3.5 rounded border-slate-600 text-amber-500 focus:ring-0 focus:ring-offset-0 bg-slate-950 cursor-pointer accent-amber-500"
+          />
+          <span className="text-[11px] flex items-center gap-1">
+            <Smartphone className={`w-3.5 h-3.5 ${state.miniHudMobileEnabled ? 'text-cyan-400 animate-pulse' : 'text-slate-400'}`} />
+            <span>Gadget mobile</span>
           </span>
         </label>
       </div>
