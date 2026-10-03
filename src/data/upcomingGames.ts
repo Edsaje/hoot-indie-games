@@ -524,8 +524,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "WizardHistory",
     "publisher": "WizardHistory",
     "expectedDate": {
-      "fr": "2 oct. 2026",
-      "en": "Oct 2, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -553,13 +553,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1790323342"
   },
   {
-    "id": "infinite-museum",
-    "title": "Infinite Museum",
-    "developer": "Northn Games",
-    "publisher": "Northn Games",
+    "id": "autochart",
+    "title": "AutoChart",
+    "developer": "1rwy",
+    "publisher": "1rwy",
     "expectedDate": {
-      "fr": "2 oct. 2026",
-      "en": "Oct 2, 2026"
+      "fr": "4 oct. 2026",
+      "en": "Oct 4, 2026"
     },
     "genres": [
       {
@@ -567,53 +567,57 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
         "en": "Aventure"
       },
       {
-        "fr": "Simulation",
-        "en": "Simulation"
+        "fr": "Indépendant",
+        "en": "Indépendant"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4543490/",
+    "steamUrl": "https://store.steampowered.com/app/5201270/",
     "description": {
-      "fr": "Un jeu d’horreur psychologique dans lequel vous repérez des anomalies dans un musée en boucle et choisissez la bonne sortie pour atteindre l’étage G.",
-      "en": "A psychological game where you spot anomalies in a looping museum and choose the correct exit to reach G Floor."
+      "fr": "AutoChart est un jeu de rythme au clavier qui donne vie à votre musique. Importez un fichier audio ou vidéo : l’IA génère une partition. Choisissez la difficulté et de 4 à 8 touches, jouez les notes qui défilent au rythme de la musique et battez votre record.",
+      "en": "AutoChart is a key-based rhythm game powered by your own music. Import an audio or video file and let AI generate a note chart. Choose your difficulty and a 4–8 key layout, hit the falling notes to the beat, and chase your personal best."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/c577009fe2122efa182cf7423454c725b8ef4b98/header.jpg?t=1789816442"
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/4ed4ba97c641dc5596b95b93364f207dfd66834b/header.jpg?t=1790652014"
   },
   {
-    "id": "marblego",
-    "title": "MarbleGo",
-    "developer": "FF",
-    "publisher": "FF",
+    "id": "sightsplice",
+    "title": "SightSplice",
+    "developer": "Dravekor",
+    "publisher": "Dravekor_Studio",
     "expectedDate": {
-      "fr": "2 oct. 2026",
-      "en": "Oct 2, 2026"
+      "fr": "4 oct. 2026",
+      "en": "Oct 4, 2026"
     },
     "genres": [
       {
-        "fr": "Stratégie",
-        "en": "Stratégie"
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4958470/",
+    "steamUrl": "https://store.steampowered.com/app/5226480/",
     "description": {
-      "fr": "Marble GO est un RPG pixel décontracté alliant combat de billes et construction d’équipement. Lancez des billes pour déclencher des effets, battez des monstres et gagnez équipement &amp; or en mode automatique. Construction libre, collisions satisfaisantes et progression profonde.",
-      "en": "Marble GO is a casual pixel RPG with marble combat and gear building. Launch marbles to trigger 20+ effects, defeat monsters, and earn gear &amp; gold via auto-launch idle mode. It offers 7 gear categories, 200+ items &amp; 40+ buffs for custom builds, delivering satisfying collisions and deep progression."
+      "fr": "Study the room, survive the blink, and spot what changed before time runs out. Master 30 handcrafted pixel-art rooms across four difficulty modes, sharpen permanent skills, and test how much you really saw.",
+      "en": "Study the room, survive the blink, and spot what changed before time runs out. Master 30 handcrafted pixel-art rooms across four difficulty modes, sharpen permanent skills, and test how much you really saw."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/062ee092a37e1eebf250f98e534f24451a5cadaf/header.jpg?t=1790679619"
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5226480/c82fa2caaf49a3bb9bf049634d6b31d0c85fbc3e/header.jpg?t=1790413844"
   }
 ];

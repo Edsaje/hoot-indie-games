@@ -707,43 +707,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/247080/d82a7663aad7a678370462212071264cbee7fb47/header.jpg?t=1789603692"
   },
   {
-    "id": "risk-of-rain-2013",
-    "title": "Risk of Rain (2013)",
-    "releaseYear": 2013,
-    "genre": [
-      "Action",
-      "RPG",
-      "Roguelike",
-      "Plateforme"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Hopoo Games",
-    "steamUrl": "https://store.steampowered.com/app/248820/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_9b26bb93397ea5bbb7906950c4ffa0d6e9203f7d.1920x1080.jpg?t=1782157778",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_9e1919fe4e37de4d153333fb012586fb63cb8999.1920x1080.jpg?t=1782157778",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_1538d1e9b9693caddf83be07670960173e37fa2f.1920x1080.jpg?t=1782157778",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_d470578d7945689fb108cc5e68dc9b2ae12fe528.1920x1080.jpg?t=1782157778",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_20e92e121ba7ada0c21262ee3b78f24e1d6e7866.1920x1080.jpg?t=1782157778",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_631b48c74a1105bf58db0c68ab6c06ae2345d371.1920x1080.jpg?t=1782157778"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Risk of Rain is an action platformer with roguelike elements. With permanent death as a primary feature, players will have to play their best to get as far as possible. Fight on a mysterious planet with randomly spawning enemies and bosses, either alone or with 3 friends in online co-op.",
-        "en": "Risk of Rain is an action platformer with roguelike elements. With permanent death as a primary feature, players will have to play their best to get as far as possible. Fight on a mysterious planet with randomly spawning enemies and bosses, either alone or with 3 friends in online co-op."
-      }
-    },
-    "steamAppId": 248820,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/header.jpg?t=1782157778"
-  },
-  {
     "id": "shovel-knight-treasure-trove",
     "title": "Shovel Knight: Treasure Trove",
     "releaseYear": 2014,
@@ -14391,5 +14354,294 @@
     "isFree": true,
     "steamAppId": 2407780,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2407780/3d1b74eeb6bb4efd8853312ae7fce550ee2998f2/header.jpg?t=1790873733"
+  },
+  {
+    "id": "infinite-museum",
+    "title": "Infinite Museum",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Northn Games",
+    "steamUrl": "https://store.steampowered.com/app/4543490/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/d16a54b1c47d464aa0ad5f6e8c3a59e0a9c22cdd/ss_d16a54b1c47d464aa0ad5f6e8c3a59e0a9c22cdd.1920x1080.jpg?t=1790938650",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/21a62bc91d37c81e7ec25a1672e37c8ec7287747/ss_21a62bc91d37c81e7ec25a1672e37c8ec7287747.1920x1080.jpg?t=1790938650",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/77bdf6eda8d9118f5e74612e784228cf6974e82b/ss_77bdf6eda8d9118f5e74612e784228cf6974e82b.1920x1080.jpg?t=1790938650",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/14a129744a0878c26a72bd49948af7070806614d/ss_14a129744a0878c26a72bd49948af7070806614d.1920x1080.jpg?t=1790938650",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/ce6733fdf8c47e7b6703dd7900f1a34fc236f6b4/ss_ce6733fdf8c47e7b6703dd7900f1a34fc236f6b4.1920x1080.jpg?t=1790938650",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/c577009fe2122efa182cf7423454c725b8ef4b98/header.jpg?t=1790938650"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu d’horreur psychologique dans lequel vous repérez des anomalies dans un musée en boucle et choisissez la bonne sortie pour atteindre l’étage G.",
+        "en": "A psychological game where you spot anomalies in a looping museum and choose the correct exit to reach G Floor."
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 4543490,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4543490/c577009fe2122efa182cf7423454c725b8ef4b98/header.jpg?t=1790938650"
+  },
+  {
+    "id": "marblego",
+    "title": "MarbleGo",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "FF",
+    "steamUrl": "https://store.steampowered.com/app/4958470/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/00f27dc3da4812e58247c5316297777473fa626e/ss_00f27dc3da4812e58247c5316297777473fa626e.1920x1080.jpg?t=1790946273",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/2c6c30a873c9f88e8380525d686a2d6abb41dcbc/ss_2c6c30a873c9f88e8380525d686a2d6abb41dcbc.1920x1080.jpg?t=1790946273",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/96c73385777d88fa0bfcd706a9acba25e78bed90/ss_96c73385777d88fa0bfcd706a9acba25e78bed90.1920x1080.jpg?t=1790946273",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/54b7f1f029c0c3caf06080941a6ac527d8fefb58/ss_54b7f1f029c0c3caf06080941a6ac527d8fefb58.1920x1080.jpg?t=1790946273",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/63fd635d7135a08882c934a7a58127cf83c0741e/ss_63fd635d7135a08882c934a7a58127cf83c0741e.1920x1080.jpg?t=1790946273",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/070b9e1d36a5ca4ca645d0085818800a0cefbe6c/ss_070b9e1d36a5ca4ca645d0085818800a0cefbe6c.1920x1080.jpg?t=1790946273"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Marble GO est un RPG pixel décontracté alliant combat de billes et construction d’équipement. Lancez des billes pour déclencher des effets, battez des monstres et gagnez équipement &amp; or en mode automatique. Construction libre, collisions satisfaisantes et progression profonde.",
+        "en": "Marble GO is a casual pixel RPG with marble combat and gear building. Launch marbles to trigger 20+ effects, defeat monsters, and earn gear &amp; gold via auto-launch idle mode. It offers 7 gear categories, 200+ items &amp; 40+ buffs for custom builds, delivering satisfying collisions and deep progression."
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 4958470,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4958470/062ee092a37e1eebf250f98e534f24451a5cadaf/header.jpg?t=1790946273"
+  },
+  {
+    "id": "birb",
+    "title": "Birb",
+    "releaseYear": 2026,
+    "genre": [
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Hwonze",
+    "steamUrl": "https://store.steampowered.com/app/4364930/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4364930/24cb85a5131125193ace74ab1a7c657483976e8c/ss_24cb85a5131125193ace74ab1a7c657483976e8c.1920x1080.jpg?t=1790992975",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4364930/8cc29c6c7b8bff5f7ebf4046d51c9701dc61e3e9/ss_8cc29c6c7b8bff5f7ebf4046d51c9701dc61e3e9.1920x1080.jpg?t=1790992975",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4364930/367cd198c5969183180d147e7aaa9a4de92983c2/ss_367cd198c5969183180d147e7aaa9a4de92983c2.1920x1080.jpg?t=1790992975",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4364930/72d9f71136b7fd1a8575babb3ad6e71cb2fbc5fc/ss_72d9f71136b7fd1a8575babb3ad6e71cb2fbc5fc.1920x1080.jpg?t=1790992975",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4364930/11c1a8cd3c8b271d018ea72bcb0b694d37b6d35a/ss_11c1a8cd3c8b271d018ea72bcb0b694d37b6d35a.1920x1080.jpg?t=1790992975",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4364930/7b0cb1873a65cdf62d58fa40a8cc9ca382c84a68/ss_7b0cb1873a65cdf62d58fa40a8cc9ca382c84a68.1920x1080.jpg?t=1790992975"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Commencez petit oiseau, mangez du popcorn et évoluez en force cosmique ! Birb mélange mécanique idle et expéditions roguelite. Construisez votre nid, pêchez, défiez des boss et grimpez au classement mondial. Combien de coups de bec pour dominer le monde ?",
+        "en": "Start as a humble birb, eat popcorn, and evolve into a cosmic force of nature! Birb blends addictive idle mechanics with active roguelite expeditions. Build your nest, catch rare fish, challenge bosses, and compete on the global leaderboard. How many pecks will it take to rule the world?"
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 4364930,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4364930/122dcb70cf78714f4806d286acb107934ce37ff2/header.jpg?t=1790992975"
+  },
+  {
+    "id": "monster-museum-tidy-up-the-collection",
+    "title": "Monster Museum: Tidy Up the collection!",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Klafti Studio",
+    "steamUrl": "https://store.steampowered.com/app/4998990/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4998990/c094cfdb55475eeedc1bf0b9ec2e154ad19f9bc9/ss_c094cfdb55475eeedc1bf0b9ec2e154ad19f9bc9.1920x1080.jpg?t=1790984613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4998990/f5b967d52ad5da75e7296070d3579e9eadb2dfcd/ss_f5b967d52ad5da75e7296070d3579e9eadb2dfcd.1920x1080.jpg?t=1790984613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4998990/a1fdb1141beebe704b60d9e2f08583b47b1162fc/ss_a1fdb1141beebe704b60d9e2f08583b47b1162fc.1920x1080.jpg?t=1790984613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4998990/716acf7b4ab0a132ff6f9da092ff4a90d33dea2f/ss_716acf7b4ab0a132ff6f9da092ff4a90d33dea2f.1920x1080.jpg?t=1790984613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4998990/f870ebffa430adfe1ea0267b9cada92758fe0b95/ss_f870ebffa430adfe1ea0267b9cada92758fe0b95.1920x1080.jpg?t=1790984613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4998990/a52e7dcdda1b8ae19e5c66e8e7fb39f769ca7331/ss_a52e7dcdda1b8ae19e5c66e8e7fb39f769ca7331.1920x1080.jpg?t=1790984613"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Plongez dans l'univers cosy de Monster Museum ! Faites équipe avec votre créature préférée et lancez-vous dans une aventure pour restaurer le musée en triant 2586 figurines. Débloquez de nouvelles capacités, collectionnez des badges et découvrez ses secrets cachés. Chill, solo, sans chronomètre.",
+        "en": "Step into the relaxing world of Monster Museum! Team up with your favorite creature companion and begin your journey to restore the museum by sorting 2586 monster figurines.  Unlock your creature's abilities, sort the museum and uncover hidden secrets along the way. Cozy, single player, no timers."
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 4998990,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4998990/58cfcaa779ba210c71f00ea3e588d4580e5c54d5/header.jpg?t=1790984613"
+  },
+  {
+    "id": "obstacle-overdrive",
+    "title": "Obstacle Overdrive",
+    "releaseYear": 2026,
+    "genre": [
+      "Course automobile",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Arcane Ermine",
+    "steamUrl": "https://store.steampowered.com/app/3412490/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3412490/317bcaced0114005770d03f18fee06a960342d0f/ss_317bcaced0114005770d03f18fee06a960342d0f.1920x1080.jpg?t=1790960465",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3412490/8ed080425b7f4ba37a9a0919481d28e1f616c1bb/ss_8ed080425b7f4ba37a9a0919481d28e1f616c1bb.1920x1080.jpg?t=1790960465",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3412490/9151ffc509e4a8b9890cb413fbab975bedc05dcf/ss_9151ffc509e4a8b9890cb413fbab975bedc05dcf.1920x1080.jpg?t=1790960465",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3412490/a7dd867aaa878680901c4502bdbdf6fb22a56597/ss_a7dd867aaa878680901c4502bdbdf6fb22a56597.1920x1080.jpg?t=1790960465",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3412490/7bc8a7b8515fbe9734883ce496256a52efcf5990/ss_7bc8a7b8515fbe9734883ce496256a52efcf5990.1920x1080.jpg?t=1790960465",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3412490/317d8c9f4bbe9b99abbab3030d6f7ba076a8b8e7/header.jpg?t=1790960465"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Cruise through a world of colorful retro inspired toys in Obstacle Overdrive, a cozy off-roading toy car adventure! Navigate fun, challenging courses, tumultuous tumbles, and enjoy the charm of a miniature world where the obstacles are as playful as the ride itself.",
+        "en": "Cruise through a world of colorful retro inspired toys in Obstacle Overdrive, a cozy off-roading toy car adventure! Navigate fun, challenging courses, tumultuous tumbles, and enjoy the charm of a miniature world where the obstacles are as playful as the ride itself."
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 3412490,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3412490/317d8c9f4bbe9b99abbab3030d6f7ba076a8b8e7/header.jpg?t=1790960465"
+  },
+  {
+    "id": "crack-the-pack",
+    "title": "Crack the Pack",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Simulation",
+      "Deckbuilder"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Doigt",
+    "steamUrl": "https://store.steampowered.com/app/4614210/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4614210/3cb15447663154b947fb2cf548058f051a426f92/ss_3cb15447663154b947fb2cf548058f051a426f92.1920x1080.jpg?t=1790956720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4614210/a7cfd83d9b60a27edc3caf901704f997e59fd2e1/ss_a7cfd83d9b60a27edc3caf901704f997e59fd2e1.1920x1080.jpg?t=1790956720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4614210/7312d9a02051d89cb2a25961b7e1f810cf365ab5/ss_7312d9a02051d89cb2a25961b7e1f810cf365ab5.1920x1080.jpg?t=1790956720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4614210/3695a69c07c46f5d2a3b4d9a810503408807b30a/ss_3695a69c07c46f5d2a3b4d9a810503408807b30a.1920x1080.jpg?t=1790956720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4614210/208a4088e35b0af48e702a2a09d89d9cf7261df2/ss_208a4088e35b0af48e702a2a09d89d9cf7261df2.1920x1080.jpg?t=1790956720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4614210/7694c67854a77c5c4ba15cc30b735064fba15510/ss_7694c67854a77c5c4ba15cc30b735064fba15510.1920x1080.jpg?t=1790956720"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Ouvre des paquets, achète des améliorations et collectionne les 1001 cartes et leurs variantes. Crée une véritable usine automatisée à boosters en démultipliant sans cesse la production jusqu'à atteindre le clonage et la fusion nucléaire !",
+        "en": "Open booster packs, buy upgrades, and collect over 1001 cards and their variants. Build a true automated booster factory by endlessly multiplying production until you unlock cloning and nuclear fusion !"
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 4614210,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4614210/8357dcf96285c892bea82f21f661efb9a687fe4b/header.jpg?t=1790956720"
+  },
+  {
+    "id": "bodycam",
+    "title": "Bodycam",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Massivement multijoueur",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Réaliste",
+      "en": "Realistic 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Reissad Studio",
+    "steamUrl": "https://store.steampowered.com/app/2406770/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/5689aeb849dc9ed3d9b70ad1b830d0c94c143138/ss_5689aeb849dc9ed3d9b70ad1b830d0c94c143138.1920x1080.jpg?t=1788548796",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/ad5579da682b0f91c23a895b37089a24dda24258/ss_ad5579da682b0f91c23a895b37089a24dda24258.1920x1080.jpg?t=1788548796",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/dcf7dfe29365b0bf8e3e30798f7c8be5ac9a3ea2/ss_dcf7dfe29365b0bf8e3e30798f7c8be5ac9a3ea2.1920x1080.jpg?t=1788548796",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/9ea48df963ebc872b59a03f31336705ee8fdc145/ss_9ea48df963ebc872b59a03f31336705ee8fdc145.1920x1080.jpg?t=1788548796",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/926c3c136c80c1aaafc97b68a6bad427b61e127e/ss_926c3c136c80c1aaafc97b68a6bad427b61e127e.1920x1080.jpg?t=1788548796",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/ed5ec44dde87f40b2d47e21f0600a8f786db985e/ss_ed5ec44dde87f40b2d47e21f0600a8f786db985e.1920x1080.jpg?t=1788548796"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Bodycam est le premier FPS multijoueur tactique avec une véritable vue de caméra corporelle dans Unreal Engine 5. Les combats rapprochés semblent bruts et bruyants. Chaque angle, légende et puce compte. Jouez à Deathmatch, Team Deathmatch et Wingman sur des cartes photoréalistes où le jeu d'équipe.",
+        "en": "Bodycam is the first tactical multiplayer FPS with a true body-camera view in Unreal Engine 5. Close-quarters combats feel raw and loud. Every angle, callout, and bullet matters. Play Deathmatch, Team Deathmatch, and Wingman on photoreal maps where teamplay, tactics, and clutch skill are key."
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 2406770,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/36264077393918f3945447eed3d6374cdf21e69a/header.jpg?t=1788548796"
+  },
+  {
+    "id": "dreamspring",
+    "title": "Dreamspring",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Billyfighter",
+    "steamUrl": "https://store.steampowered.com/app/3231480/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3231480/35f609b400799d23549a0a5470b0011905bd06a7/ss_35f609b400799d23549a0a5470b0011905bd06a7.1920x1080.jpg?t=1791005482",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3231480/34a897b03a94bb7f796eb2ada06c5f3d51a0497e/ss_34a897b03a94bb7f796eb2ada06c5f3d51a0497e.1920x1080.jpg?t=1791005482",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3231480/bf1b8a09d21817d76043bfb34d52e97ed033dea9/ss_bf1b8a09d21817d76043bfb34d52e97ed033dea9.1920x1080.jpg?t=1791005482",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3231480/577a6169a08adbd3b0cf7919fe602e3dcb13ead0/ss_577a6169a08adbd3b0cf7919fe602e3dcb13ead0.1920x1080.jpg?t=1791005482",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3231480/f9bb6bd418f6f4f25f2ad35cf75205829164f3c6/ss_f9bb6bd418f6f4f25f2ad35cf75205829164f3c6.1920x1080.jpg?t=1791005482",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3231480/013fc5af455e218090fd9d563cb8d07d62e4a5ea/ss_013fc5af455e218090fd9d563cb8d07d62e4a5ea.1920x1080.jpg?t=1791005482"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dreamspring is a dark fantasy styled, open world dungeon crawler inspired by games like Morrowind and King's Field. Explore a dying kingdom and it's different realms in first person action combat, styled in a mix of retro and vaporwave aesthetics.",
+        "en": "Dreamspring is a dark fantasy styled, open world dungeon crawler inspired by games like Morrowind and King's Field. Explore a dying kingdom and it's different realms in first person action combat, styled in a mix of retro and vaporwave aesthetics."
+      }
+    },
+    "addedAt": "2026-10-03",
+    "steamAppId": 3231480,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3231480/header.jpg?t=1791005482"
   }
 ]

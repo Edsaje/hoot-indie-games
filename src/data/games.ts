@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlySchedule
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 262
+ * Total de jeux : 265
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -10056,6 +10056,111 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-02"
+  },
+  {
+    "id": "mark-of-the-ninja",
+    "title": "Mark of the Ninja",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Klei Entertainment",
+    "steamUrl": "https://store.steampowered.com/app/214560/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_e0e5bff3ff1aa40dd71296ca9becf8279910da2b.1920x1080.jpg?t=1668892924",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_5ca2235feff99db0b31a9e5578a64ef3806e9581.1920x1080.jpg?t=1668892924",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_152fb144da101f023f0440b2755b0a9f9e3847ce.1920x1080.jpg?t=1668892924",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_99576c9f2ce7bad1077482929ea68e100a825e81.1920x1080.jpg?t=1668892924",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_3fae382f516aa00cbffa1deac3a20c9889a8f27e.1920x1080.jpg?t=1668892924",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_06c44458d747cb051caae433a90c4a3e1c364996.1920x1080.jpg?t=1668892924"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dans Mark of the Ninja, vous saurez ce que signifie être un ninja. Vous devez être silencieux, agile et ingénieux pour vous montrer plus malin que vos adversaires dans un monde au décor fantastique et aux animations gracieuses.",
+        "en": "In Mark of the Ninja, you'll know what it is to truly be a ninja. You must be silent, agile and clever to outwit your opponents in a world of gorgeous scenery and flowing animation. Marked with cursed tattoos giving you heightened senses, every situation presents you with options."
+      }
+    },
+    "addedAt": "2026-10-03"
+  },
+  {
+    "id": "dust-an-elysian-tail",
+    "title": "Dust: An Elysian Tail",
+    "releaseYear": 2013,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Humble Hearts LLC",
+    "steamUrl": "https://store.steampowered.com/app/236090/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/236090/ss_bb0bb104d025d7078000cfdbc1da13d0f9140488.1920x1080.jpg?t=1667838728",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/236090/ss_72f03d88618737bd69f674c95b197029a645a062.1920x1080.jpg?t=1667838728",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/236090/ss_bbb015ac3c9419ef891e717e6488c11710518633.1920x1080.jpg?t=1667838728",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/236090/ss_afb025e35a8a0d1fdb718503291883fbb62d11b9.1920x1080.jpg?t=1667838728",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/236090/ss_6499bf398942af124d696420d1d09ee467a1d8a5.1920x1080.jpg?t=1667838728",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/236090/ss_08144f649272fe0b5720be1927b9700117b22550.1920x1080.jpg?t=1667838728"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Immerse yourself in a gorgeous hand-painted world on a search for your true identity. As the mysterious warrior, Dust, your action-packed journey will take you from peaceful glades to snowy mountaintops and beyond.",
+        "en": "Immerse yourself in a gorgeous hand-painted world on a search for your true identity. As the mysterious warrior, Dust, your action-packed journey will take you from peaceful glades to snowy mountaintops and beyond."
+      }
+    },
+    "addedAt": "2026-10-03"
+  },
+  {
+    "id": "risk-of-rain-2013",
+    "title": "Risk of Rain (2013)",
+    "releaseYear": 2013,
+    "genre": [
+      "Action",
+      "RPG",
+      "Roguelike",
+      "Platformer"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Hopoo Games",
+    "steamUrl": "https://store.steampowered.com/app/248820/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_9b26bb93397ea5bbb7906950c4ffa0d6e9203f7d.1920x1080.jpg?t=1782157778",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_9e1919fe4e37de4d153333fb012586fb63cb8999.1920x1080.jpg?t=1782157778",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_1538d1e9b9693caddf83be07670960173e37fa2f.1920x1080.jpg?t=1782157778",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_d470578d7945689fb108cc5e68dc9b2ae12fe528.1920x1080.jpg?t=1782157778",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_20e92e121ba7ada0c21262ee3b78f24e1d6e7866.1920x1080.jpg?t=1782157778",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/248820/ss_631b48c74a1105bf58db0c68ab6c06ae2345d371.1920x1080.jpg?t=1782157778"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Risk of Rain is an action platformer with roguelike elements. With permanent death as a primary feature, players will have to play their best to get as far as possible. Fight on a mysterious planet with randomly spawning enemies and bosses, either alone or with 3 friends in online co-op.",
+        "en": "Risk of Rain is an action platformer with roguelike elements. With permanent death as a primary feature, players will have to play their best to get as far as possible. Fight on a mysterious planet with randomly spawning enemies and bosses, either alone or with 3 friends in online co-op."
+      }
+    },
+    "addedAt": "2026-10-03"
   }
 ];
 

@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 50
+ * Total de pépites sélectionnées : 52
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2181,5 +2181,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE3OTI1MzIyLmpwZw==/315x250%23c/a3y8Lx.jpg"
     ],
     "dateAdded": "2026-10-02"
+  },
+  {
+    "id": "itch-the-freak-circus",
+    "title": "The Freak Circus",
+    "developer": "garula",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://garula.itch.io/the-freak-circus",
+    "playInBrowserUrl": "https://garula.itch.io/the-freak-circus",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "18+ Yandere",
+      "en": "18+ Yandere"
+    },
+    "description": {
+      "fr": "18+ Yandere",
+      "en": "18+ Yandere"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIxNjQxODI1LnBuZw==/315x250%23c/LC5bpl.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIxNjQxODI1LnBuZw==/315x250%23c/LC5bpl.png"
+    ],
+    "dateAdded": "2026-10-03"
+  },
+  {
+    "id": "itch-seekl",
+    "title": "seekL",
+    "developer": "robobarbie",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://robobarbie.itch.io/seekl",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Seek / Query / Love",
+      "en": "Seek / Query / Love"
+    },
+    "description": {
+      "fr": "Seek / Query / Love",
+      "en": "Seek / Query / Love"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE2MDIzNjk4LmpwZw==/315x250%23c/FvcUNb.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE2MDIzNjk4LmpwZw==/315x250%23c/FvcUNb.jpg"
+    ],
+    "dateAdded": "2026-10-03"
   }
 ];
