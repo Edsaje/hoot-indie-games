@@ -1,27 +1,70 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
-import type { UserProfile, IndieAvatarId, AccountSaveData, SteamAccountInfo } from '../types/user';
-import { supabase, isSupabaseConfigured } from '../services/supabase';
+import type { UserProfile, IndieAvatarId, SteamAccountInfo } from '../types/user';
+import { getSupabaseClient, isSupabaseConfigured } from '../services/supabase';
 import {
-  buildSteamOpenIdUrl,
   extractSteamIdFromOpenId,
   getAppIdFromSteamUrl,
-  resolveSteamAccount,
-  fetchSteamOwnedGames,
-} from '../services/steamService';
+} from '../utils/steamUrl';
 import {
   validateUsernameFormat,
   claimUsernameOnServer,
   ADMIN_STEAM_ID,
 } from '../utils/usernameValidation';
-import { updateLeaderboardPlayerProfile } from '../services/leaderboardService';
 import { UserAccountContext } from './UserAccountContext';
 import {
   getRenameCooldownInfo,
   EXPRESS_RENAME_COST,
   SHOP_TITLES,
 } from '../utils/featherEconomy';
-import { syncUserCloudSave } from '../services/userCloudSyncService';
+
+// Dynamic wrappers for non-critical services to keep critical startup bundle tiny
+const syncUserCloudSave = async (
+  identity: { steamId?: string; userId?: string; username?: string },
+  options?: { force?: boolean; strategy?: 'merge' | 'replace' }
+) => {
+  const mod = await import('../services/userCloudSyncService');
+  return mod.syncUserCloudSave(identity, options);
+};
+
+const forcePushOdysseyReset = async (
+  identity: { steamId?: string; userId?: string; username?: string },
+  freshOdysseyState: any
+) => {
+  const mod = await import('../services/userCloudSyncService');
+  return mod.forcePushOdysseyReset(identity, freshOdysseyState);
+};
+
+const updateLeaderboardPlayerProfile = async (
+  nickname: string,
+  avatarId?: string,
+  oldNickname?: string
+) => {
+  const mod = await import('../services/leaderboardService');
+  return mod.updateLeaderboardPlayerProfile(nickname, avatarId, oldNickname);
+};
+
+const buildSteamOpenIdUrl = async () => {
+  const mod = await import('../services/steamService');
+  return mod.buildSteamOpenIdUrl();
+};
+
+const resolveSteamAccount = async (identifier: string) => {
+  const mod = await import('../services/steamService');
+  return mod.resolveSteamAccount(identifier);
+};
+
+const fetchSteamOwnedGames = async (steamId: string, apiKey?: string, forceRefresh?: boolean) => {
+  const mod = await import('../services/steamService');
+  return mod.fetchSteamOwnedGames(steamId, apiKey, forceRefresh);
+};
+import {
+  apiGetSession,
+  apiRegister,
+  apiLogin,
+  apiLogout,
+  apiLinkSteam,
+} from '../services/userAuthService';
 
 const STORAGE_KEY = 'hoot_user_profile_v1';
 
@@ -72,6 +115,7 @@ export function clearAllUserConnectedData(): void {
   localStorage.removeItem('hoot_cards_collection_v1');
   localStorage.removeItem('hoot_cards_stats_v1');
   localStorage.removeItem('hoot_cards_pack_history_v1');
+  localStorage.removeItem('hoot_last_daily_booster_claim_v1');
 
   // 4. Liste d'amis
   localStorage.removeItem('hoot_friends_list_v2');
@@ -87,18 +131,56 @@ export function clearAllUserConnectedData(): void {
   localStorage.removeItem('hoot_achievements_v1');
   localStorage.removeItem('hoot_unlocked_achievements');
 
-  // 7. Clés administrateur et de modération
+  // 7. Statistiques et Puzzles Quotidiens (Nettoyage étanche pour PC partagé)
+  const modePrefixes = [
+    'screenle_state_',
+    'indledle_state_',
+    'linkle_state_',
+    'profille_state_',
+    'chrono_state_',
+    'pixel_state_',
+    'review_state_',
+    'blindtest_state_',
+  ];
+  const keysToRemove: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && modePrefixes.some((p) => k.startsWith(p))) {
+      keysToRemove.push(k);
+    }
+  }
+  keysToRemove.forEach((k) => localStorage.removeItem(k));
+
+  localStorage.removeItem('hoot_indie_stats_v1');
+  localStorage.removeItem('hoot_game_stats_v1');
+  localStorage.removeItem('hoot_time_attack_stats_v1');
+  localStorage.removeItem('hoot_cloud_sync_key_v1');
+
+  // 8. Clés administrateur et de modération
   localStorage.removeItem('hoot_admin_key');
   localStorage.removeItem('hoot_dev_admin');
 
-  // 8. Déclenchement des événements souverains de réinitialisation réactive
+  // 9. Messagerie privée et salons (Purge étanche pour confidentialité multi-comptes / PC partagé)
+  localStorage.removeItem('hoot_local_private_chat_v1');
+  localStorage.removeItem('hoot_local_chat_messages_v1');
+  localStorage.removeItem('hoot_private_chat_store');
+
+  // 1. Déconnexion serveur utilisateur & administrateur
+  try {
+    fetch('/api/user_auth.php?action=logout', { credentials: 'include' }).catch(() => {});
+  } catch {}
+
+  // 10. Déclenchement des événements souverains de réinitialisation réactive
   try {
     window.dispatchEvent(new CustomEvent('hoot_cards_updated', { detail: {} }));
     window.dispatchEvent(new CustomEvent('hoot_feathers_updated'));
     window.dispatchEvent(new CustomEvent('hoot_achievements_updated'));
     window.dispatchEvent(new CustomEvent('hoot_friends_updated'));
     window.dispatchEvent(new CustomEvent('hoot_profile_updated'));
+    window.dispatchEvent(new CustomEvent('hoot_daily_states_updated'));
+    window.dispatchEvent(new CustomEvent('hoot_stats_updated', { detail: null }));
     window.dispatchEvent(new CustomEvent('hoot_cloud_reset'));
+    window.dispatchEvent(new CustomEvent('hoot_private_store_updated'));
   } catch {}
 }
 
@@ -192,23 +274,30 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     const handleCloudRestored = (e: any) => {
       const cloudData = e.detail;
       if (!cloudData) return;
-      const isOfficialAdmin = Boolean(
-        (profile.steam?.steamId && String(profile.steam.steamId).trim() === ADMIN_STEAM_ID) ||
-        (profile.email && profile.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
-      );
-      setProfile((prev) => ({
-        ...prev,
-        username: isOfficialAdmin ? 'Hibouxe' : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_') ? cloudData.username : prev.username),
-        avatarId: (cloudData.avatarId as any) || (isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId),
-        title: cloudData.title || (isOfficialAdmin ? '👑 Créateur du Site' : prev.title),
-        isAdmin: isOfficialAdmin ? true : false,
-        role: isOfficialAdmin ? 'admin' : (prev.role === 'admin' ? 'user' : prev.role),
-        activeFrame: cloudData.activeFrame || prev.activeFrame,
-        unlockedAvatars: cloudData.unlockedAvatars || prev.unlockedAvatars,
-        unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
-        unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
-        isCloudSynced: true,
-      }));
+      setProfile((prev) => {
+        const isOfficialAdmin = Boolean(
+          (cloudData.steamId && String(cloudData.steamId).trim() === ADMIN_STEAM_ID) ||
+          (prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID) ||
+          (prev.email && prev.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+        );
+        return {
+          ...prev,
+          username: isOfficialAdmin
+            ? 'Hibouxe'
+            : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_')
+                ? cloudData.username
+                : prev.username),
+          avatarId: (cloudData.avatarId as any) || (isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId),
+          title: cloudData.title || (isOfficialAdmin ? '👑 Créateur du Site' : prev.title),
+          isAdmin: isOfficialAdmin ? true : false,
+          role: isOfficialAdmin ? 'admin' : (prev.role === 'admin' ? 'user' : prev.role),
+          activeFrame: cloudData.activeFrame || prev.activeFrame,
+          unlockedAvatars: cloudData.unlockedAvatars || prev.unlockedAvatars,
+          unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
+          unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
+          isCloudSynced: true,
+        };
+      });
     };
 
     window.addEventListener('hoot_cloud_save_restored', handleCloudRestored as any);
@@ -241,38 +330,200 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
   }, [profile.steam?.steamId, profile.id, profile.username]);
 
-  // Écoute de session Supabase si configuré
+  // Sauvegarde automatique cloud de l'Odyssée Sylvestre (Idle Game)
   useEffect(() => {
-    if (!supabase || !isSupabaseConfigured) return;
+    let odysseyTimer: any = null;
+    let lastOdysseySync = 0;
+    const ODYSSEY_SYNC_INTERVAL_MS = 25000; // Synchronisation toutes les 25s de jeu actif au maximum
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setIsAuthenticated(true);
-        setProfile((prev) => ({
-          ...prev,
-          id: session.user.id,
-          email: session.user.email,
-          isCloudSynced: true,
-        }));
+    const triggerOdysseySync = () => {
+      const steamId = profile.steam?.steamId;
+      const username = profile.username;
+      if (steamId || (username && username !== 'Hibou Mystère')) {
+        lastOdysseySync = Date.now();
+        syncUserCloudSave({ steamId, userId: profile.id, username }).catch(() => {});
       }
-    });
+    };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setIsAuthenticated(true);
-        setProfile((prev) => ({
-          ...prev,
-          id: session.user.id,
-          email: session.user.email,
-          isCloudSynced: true,
-        }));
+    const handleOdysseyChanged = (e: any) => {
+      // Éviter la boucle infinie si l'événement provient de la synchronisation cloud elle-même
+      if (e?.detail?.fromCloud) return;
+
+      const steamId = profile.steam?.steamId;
+      const username = profile.username;
+
+      if (e?.detail?.reset) {
+        clearTimeout(odysseyTimer);
+        if (steamId || (username && username !== 'Hibou Mystère')) {
+          lastOdysseySync = Date.now();
+          forcePushOdysseyReset({ steamId, userId: profile.id, username }, e.detail).catch(() => {});
+        }
+        return;
+      }
+
+      const now = Date.now();
+      const elapsed = now - lastOdysseySync;
+
+      clearTimeout(odysseyTimer);
+      if (elapsed > ODYSSEY_SYNC_INTERVAL_MS) {
+        odysseyTimer = setTimeout(triggerOdysseySync, 2000);
       } else {
-        setIsAuthenticated(false);
+        odysseyTimer = setTimeout(triggerOdysseySync, ODYSSEY_SYNC_INTERVAL_MS - elapsed);
       }
+    };
+
+    const handleFlushSync = () => {
+      clearTimeout(odysseyTimer);
+      triggerOdysseySync();
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden') {
+        handleFlushSync();
+      }
+    };
+
+    window.addEventListener('hoot_odyssey_updated', handleOdysseyChanged as any);
+    window.addEventListener('beforeunload', handleFlushSync);
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearTimeout(odysseyTimer);
+      window.removeEventListener('hoot_odyssey_updated', handleOdysseyChanged as any);
+      window.removeEventListener('beforeunload', handleFlushSync);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [profile.steam?.steamId, profile.id, profile.username]);
+
+  // Vérification de la session serveur souveraine Hoot au démarrage (Cookie HttpOnly, différée après affichage initial)
+  useEffect(() => {
+    const runGetSession = () => {
+      apiGetSession().then((res) => {
+        if (res.success && res.authenticated && res.user) {
+          const user = res.user;
+          const isOfficialAdmin = Boolean(
+            (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
+            (user.email && user.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+          );
+          setIsAuthenticated(true);
+          setProfile((prev) => ({
+            ...prev,
+            id: user.id,
+            email: user.email || prev.email,
+            username: user.username && user.username !== 'Hibou Mystère' ? user.username : prev.username,
+            steam: user.steamId ? {
+              ...(prev.steam || {
+                profileUrl: '',
+                lastSyncedAt: new Date().toISOString(),
+                ownedAppIds: [],
+                gamesCount: 0,
+              }),
+              steamId: user.steamId,
+              personaName: prev.steam?.personaName || user.username,
+            } : prev.steam,
+            isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+            role: isOfficialAdmin ? 'admin' : prev.role,
+            avatarId: isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId,
+            title: isOfficialAdmin ? '👑 Créateur du Site' : prev.title,
+            isCloudSynced: true,
+          }));
+
+          // Synchroniser automatiquement les sauvegardes cloud (isolation compte existant)
+          syncUserCloudSave(
+            {
+              userId: user.id,
+              steamId: user.steamId || undefined,
+              username: user.username,
+            },
+            { force: true, strategy: 'replace' }
+          ).then((syncRes) => {
+            if (syncRes.success && syncRes.data) {
+              const cloudData = syncRes.data;
+              setProfile((prev) => {
+                const isAdmin = Boolean(
+                  isOfficialAdmin ||
+                  (cloudData.steamId && String(cloudData.steamId).trim() === ADMIN_STEAM_ID) ||
+                  (prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID) ||
+                  (prev.email && prev.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+                );
+                return {
+                  ...prev,
+                  username: isAdmin ? 'Hibouxe' : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_') ? cloudData.username : prev.username),
+                  avatarId: (cloudData.avatarId as any) || (isAdmin ? 'hibouxe_creator' : prev.avatarId),
+                  title: cloudData.title || (isAdmin ? '👑 Créateur du Site' : prev.title),
+                  isAdmin: isAdmin ? true : prev.isAdmin,
+                  role: isAdmin ? 'admin' : prev.role,
+                  activeFrame: cloudData.activeFrame || prev.activeFrame,
+                  unlockedAvatars: (cloudData.unlockedAvatars as any) || prev.unlockedAvatars,
+                  unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
+                  unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
+                  isCloudSynced: true,
+                };
+              });
+            }
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+    };
+
+    if (!isAuthenticated) return;
+
+    let timer: any;
+    const win = typeof window !== 'undefined' ? (window as any) : null;
+    if (win && typeof win.requestIdleCallback === 'function') {
+      timer = win.requestIdleCallback(runGetSession, { timeout: 8000 });
+    } else {
+      timer = setTimeout(runGetSession, 8000);
+    }
+
+    return () => {
+      if (win && typeof win.cancelIdleCallback === 'function' && timer) {
+        win.cancelIdleCallback(timer);
+      } else {
+        clearTimeout(timer);
+      }
+    };
+  }, [isAuthenticated]);
+
+  // Écoute de session Supabase si configuré (fallback)
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    let unsubscribe: (() => void) | undefined;
+    getSupabaseClient().then((client) => {
+      if (!client) return;
+
+      client.auth.getSession().then(({ data: { session } }: any) => {
+        if (session?.user) {
+          setIsAuthenticated(true);
+          setProfile((prev) => ({
+            ...prev,
+            id: session.user.id,
+            email: session.user.email,
+            isCloudSynced: true,
+          }));
+        }
+      });
+
+      const { data: { subscription } } = client.auth.onAuthStateChange((_event: any, session: any) => {
+        if (session?.user) {
+          setIsAuthenticated(true);
+          setProfile((prev) => ({
+            ...prev,
+            id: session.user.id,
+            email: session.user.email,
+            isCloudSynced: true,
+          }));
+        } else {
+          setIsAuthenticated(false);
+        }
+      });
+
+      unsubscribe = () => subscription?.unsubscribe();
     });
 
     return () => {
-      subscription.unsubscribe();
+      if (unsubscribe) unsubscribe();
     };
   }, []);
 
@@ -548,30 +799,49 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
   }, []);
 
   const exportSaveData = useCallback((): string => {
-    const statsStr = localStorage.getItem('hoot_game_stats_v1') || '{}';
-    const achStr = localStorage.getItem('hoot_achievements_v1') || '{}';
-    const feathersStr = localStorage.getItem('hoot_golden_feathers_v1') || '0';
-
-    const fullSave: AccountSaveData = {
-      profile,
-      stats: JSON.parse(statsStr),
-      achievements: JSON.parse(achStr),
-      goldenFeathers: Number(feathersStr),
-      exportedAt: new Date().toISOString(),
-    };
-
-    return JSON.stringify(fullSave, null, 2);
-  }, [profile]);
+    try {
+      const rawProfile = localStorage.getItem('hoot_user_profile_v1');
+      const profile = rawProfile ? JSON.parse(rawProfile) : {};
+      const exportObject = {
+        profile,
+        hootExportVersion: 2,
+        exportedAt: new Date().toISOString(),
+      };
+      return JSON.stringify(exportObject, null, 2);
+    } catch {
+      return '{}';
+    }
+  }, []);
 
   const importSaveData = useCallback((jsonString: string): { success: boolean; error?: string } => {
     try {
-      const data: AccountSaveData = JSON.parse(jsonString);
+      const data: any = JSON.parse(jsonString);
+      if (!data || typeof data !== 'object') {
+        return { success: false, error: 'Format de fichier de sauvegarde invalide.' };
+      }
+
+      // 1. Format moderne V2 / payload complet
+      if (data.hootExportVersion === 2 || data.feathers || data.cardCollection || data.odysseyState) {
+        import('../services/userCloudSyncService').then((m) => {
+          m.applyCloudSaveToLocalStorage(data, { strategy: 'merge' });
+        });
+        
+        // Recharger le profil local
+        const rawProf = localStorage.getItem('hoot_user_profile_v1');
+        if (rawProf) {
+          try {
+            setProfile(JSON.parse(rawProf));
+          } catch {}
+        }
+        return { success: true };
+      }
+
+      // 2. Format historique V1
       if (!data.profile || typeof data.goldenFeathers !== 'number') {
         return { success: false, error: 'Format de fichier de sauvegarde invalide.' };
       }
 
       // [SÉCURITÉ CWE-20] Assainissement strict du profil importé :
-      // Supprimer les privilèges administrateur / modérateur et préserver l'authentification courante
       setProfile((prev) => {
         const incoming = data.profile;
         const isOfficialSteam = Boolean(prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID);
@@ -592,7 +862,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       if (data.achievements) {
         localStorage.setItem('hoot_achievements_v1', JSON.stringify(data.achievements));
       }
-      // Plafonner les plumes importées pour éviter la corruption de l'économie locale
       const safeFeathers = Math.max(0, Math.min(100000, Number(data.goldenFeathers) || 0));
       localStorage.setItem('hoot_golden_feathers_v1', String(safeFeathers));
 
@@ -602,87 +871,202 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, []);
 
-  const loginWithEmail = useCallback(async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
-    const defaultName = email.split('@')[0];
-    if (!supabase || !isSupabaseConfigured) {
-      // Mode simulation hors-ligne
-      setProfile((prev) => ({
-        ...prev,
-        email,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: false,
-      }));
-      setIsAuthenticated(true);
-      claimUsernameOnServer(defaultName, profile.id, profile.steam?.steamId).catch(() => {});
-      return { success: true };
-    }
+  const loginWithEmail = useCallback(
+    async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+      try {
+        const res = await apiLogin(email, pass);
+        if (res.success && res.user) {
+          const user = res.user;
+          const isOfficialAdmin = Boolean(
+            (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
+            (user.email && user.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+          );
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password: pass,
-    });
+          setIsAuthenticated(true);
+          setProfile((prev) => ({
+            ...prev,
+            id: user.id,
+            email: user.email || email,
+            username: user.username || prev.username,
+            steam: user.steamId
+              ? {
+                  ...(prev.steam || {
+                    profileUrl: '',
+                    lastSyncedAt: new Date().toISOString(),
+                    ownedAppIds: [],
+                    gamesCount: 0,
+                  }),
+                  steamId: user.steamId,
+                  personaName: prev.steam?.personaName || user.username,
+                }
+              : prev.steam,
+            isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+            role: isOfficialAdmin ? 'admin' : prev.role,
+            avatarId: isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId,
+            title: isOfficialAdmin ? '👑 Créateur du Site' : prev.title,
+            isCloudSynced: true,
+          }));
 
-    if (error) {
-      return { success: false, error: error.message };
-    }
+          // Synchronisation cloud immédiate avec le compte chargé (remplacement propre sans aspirer les données d'un autre invité)
+          syncUserCloudSave(
+            {
+              userId: user.id,
+              steamId: user.steamId || undefined,
+              username: user.username,
+            },
+            { force: true, strategy: 'replace' }
+          ).then((syncRes) => {
+            if (syncRes.success && syncRes.data) {
+              const cloudData = syncRes.data;
+              setProfile((prev) => {
+                const isAdmin = Boolean(
+                  isOfficialAdmin ||
+                  (cloudData.steamId && String(cloudData.steamId).trim() === ADMIN_STEAM_ID) ||
+                  (prev.steam?.steamId && String(prev.steam.steamId).trim() === ADMIN_STEAM_ID) ||
+                  (prev.email && prev.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+                );
+                return {
+                  ...prev,
+                  username: isAdmin ? 'Hibouxe' : (cloudData.username && cloudData.username !== 'Hibou Mystère' && !cloudData.username.startsWith('Explorateur_') ? cloudData.username : prev.username),
+                  avatarId: (cloudData.avatarId as any) || (isAdmin ? 'hibouxe_creator' : prev.avatarId),
+                  title: cloudData.title || (isAdmin ? '👑 Créateur du Site' : prev.title),
+                  isAdmin: isAdmin ? true : prev.isAdmin,
+                  role: isAdmin ? 'admin' : prev.role,
+                  activeFrame: cloudData.activeFrame || prev.activeFrame,
+                  unlockedAvatars: (cloudData.unlockedAvatars as any) || prev.unlockedAvatars,
+                  unlockedTitles: cloudData.unlockedTitles || prev.unlockedTitles,
+                  unlockedFrames: cloudData.unlockedFrames || prev.unlockedFrames,
+                  isCloudSynced: true,
+                };
+              });
+            }
+          }).catch(() => {});
 
-    const authUser = data?.user;
-    if (authUser) {
-      setIsAuthenticated(true);
-      setProfile((prev) => ({
-        ...prev,
-        id: authUser.id,
-        email: authUser.email ?? undefined,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: true,
-      }));
-      claimUsernameOnServer(defaultName, authUser.id, profile.steam?.steamId).catch(() => {});
-    }
+          return { success: true };
+        }
 
-    return { success: true };
-  }, [profile.id, profile.steam?.steamId]);
+        if (isSupabaseConfigured) {
+          const client = await getSupabaseClient();
+          if (client) {
+            const { data, error } = await client.auth.signInWithPassword({
+              email,
+              password: pass,
+            });
+            if (error) {
+              return { success: false, error: res.message || error.message };
+            }
+            const authUser = data?.user;
+            if (authUser) {
+              setIsAuthenticated(true);
+              setProfile((prev) => ({
+                ...prev,
+                id: authUser.id,
+                email: authUser.email ?? undefined,
+                isCloudSynced: true,
+              }));
+              return { success: true };
+            }
+          }
+        }
 
-  const signUpWithEmail = useCallback(async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
-    const defaultName = email.split('@')[0];
-    if (!supabase || !isSupabaseConfigured) {
-      setProfile((prev) => ({
-        ...prev,
-        email,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: false,
-      }));
-      setIsAuthenticated(true);
-      claimUsernameOnServer(defaultName, profile.id, profile.steam?.steamId).catch(() => {});
-      return { success: true };
-    }
+        return {
+          success: false,
+          error: res.message || 'Adresse e-mail ou mot de passe incorrect.',
+        };
+      } catch (err: any) {
+        return {
+          success: false,
+          error: err.message || 'Erreur réseau lors de la connexion.',
+        };
+      }
+    },
+    []
+  );
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password: pass,
-    });
+  const signUpWithEmail = useCallback(
+    async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+      try {
+        const preferredUsername =
+          profile.username && profile.username !== 'Hibou Mystère' ? profile.username : undefined;
+        const currentSteamId =
+          profile.steam?.steamId && !profile.steam.steamId.startsWith('local_')
+            ? profile.steam.steamId
+            : undefined;
 
-    if (error) {
-      return { success: false, error: error.message };
-    }
+        const res = await apiRegister(email, pass, preferredUsername, currentSteamId);
+        if (res.success && res.user) {
+          const user = res.user;
+          const isOfficialAdmin = Boolean(
+            (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
+            (user.email && user.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
+          );
 
-    const authUser = data?.user;
-    if (authUser) {
-      setIsAuthenticated(true);
-      setProfile((prev) => ({
-        ...prev,
-        id: authUser.id,
-        email: authUser.email ?? undefined,
-        username: prev.username === 'Hibou Mystère' ? defaultName : prev.username,
-        isCloudSynced: true,
-      }));
-      claimUsernameOnServer(defaultName, authUser.id, profile.steam?.steamId).catch(() => {});
-    }
+          setIsAuthenticated(true);
+          setProfile((prev) => ({
+            ...prev,
+            id: user.id,
+            email: user.email || email,
+            username: user.username || prev.username,
+            isAdmin: isOfficialAdmin ? true : prev.isAdmin,
+            role: isOfficialAdmin ? 'admin' : prev.role,
+            avatarId: isOfficialAdmin ? 'hibouxe_creator' : prev.avatarId,
+            title: isOfficialAdmin ? '👑 Créateur du Site' : prev.title,
+            isCloudSynced: true,
+          }));
 
-    return { success: true };
-  }, [profile.id, profile.steam?.steamId]);
+          // Envoi de la sauvegarde locale vers le cloud pour initialiser le profil distant (promotion de la session d'essai)
+          syncUserCloudSave(
+            {
+              userId: user.id,
+              steamId: user.steamId || undefined,
+              username: user.username,
+            },
+            { force: true, strategy: 'merge' }
+          ).catch(() => {});
+
+          return { success: true };
+        }
+
+        if (isSupabaseConfigured) {
+          const client = await getSupabaseClient();
+          if (client) {
+            const { data, error } = await client.auth.signUp({
+              email,
+              password: pass,
+            });
+            if (error) {
+              return { success: false, error: res.message || error.message };
+            }
+            const authUser = data?.user;
+            if (authUser) {
+              setIsAuthenticated(true);
+              setProfile((prev) => ({
+                ...prev,
+                id: authUser.id,
+                email: authUser.email ?? undefined,
+                isCloudSynced: true,
+              }));
+              return { success: true };
+            }
+          }
+        }
+
+        return {
+          success: false,
+          error: res.message || 'Impossible de créer le compte.',
+        };
+      } catch (err: any) {
+        return {
+          success: false,
+          error: err.message || 'Erreur réseau lors de l\'inscription.',
+        };
+      }
+    },
+    [profile.username, profile.steam?.steamId]
+  );
 
   const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
-    if (!supabase || !isSupabaseConfigured) {
+    if (!isSupabaseConfigured) {
       // Mode simulation hors-ligne / démonstration locale
       const guestGoogleEmail = 'joueur.google@hoot.local';
       const chosenName = profile.username && profile.username !== 'Hibou Mystère' ? profile.username : 'Chouette Exploratrice';
@@ -696,7 +1080,11 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       claimUsernameOnServer(chosenName, profile.id, profile.steam?.steamId).catch(() => {});
       return { success: true };
     }
-    const { error } = await supabase.auth.signInWithOAuth({
+    const client = await getSupabaseClient();
+    if (!client) {
+      return { success: false, error: 'Service d\'authentification indisponible.' };
+    }
+    const { error } = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: window.location.origin,
@@ -709,9 +1097,13 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
   }, [profile.id, profile.username, profile.steam?.steamId]);
 
   const logout = useCallback(async () => {
-    if (supabase && isSupabaseConfigured) {
+    try {
+      await apiLogout();
+    } catch {}
+    if (isSupabaseConfigured) {
       try {
-        await supabase.auth.signOut();
+        const client = await getSupabaseClient();
+        if (client) await client.auth.signOut();
       } catch {}
     }
     hasInitialSyncedRef.current = false;
@@ -855,8 +1247,8 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     });
   }, []);
 
-  const connectSteamWithOpenId = useCallback(() => {
-    const url = buildSteamOpenIdUrl();
+  const connectSteamWithOpenId = useCallback(async () => {
+    const url = await buildSteamOpenIdUrl();
     if (url) {
       window.location.href = url;
     }
@@ -922,8 +1314,11 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
         // Enregistrement automatique sur le serveur souverain et synchronisation cloud
         claimUsernameOnServer(isOfficialAdmin ? 'Hibouxe' : details.personaName, profile.id, details.steamId).catch(() => {});
+        if (profile.id && profile.id.startsWith('user_')) {
+          apiLinkSteam(details.steamId).catch(() => {});
+        }
 
-        syncUserCloudSave({ steamId: details.steamId, username: isOfficialAdmin ? 'Hibouxe' : details.personaName }, { force: true }).then((syncResCloud) => {
+        syncUserCloudSave({ userId: profile.id, steamId: details.steamId, username: isOfficialAdmin ? 'Hibouxe' : details.personaName }, { force: true, strategy: 'replace' }).then((syncResCloud) => {
           if (syncResCloud.success && syncResCloud.data) {
             const cloudData = syncResCloud.data;
             setProfile((prev) => ({

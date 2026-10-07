@@ -63,27 +63,14 @@ export const SylvestreLeaf: React.FC<SylvestreLeafProps> = ({
 }) => {
   const colors = colorMap[variant];
 
-  return (
-    <div
-      onClick={onClick}
-      title={title}
-      className={`inline-block select-none ${
-        onClick ? 'pointer-events-auto cursor-pointer' : 'pointer-events-none cursor-default'
-      } sylvestre-leaf ${className}`}
-      style={{
-        width: `${size}px`,
-        height: `${Math.round(size * 1.4)}px`,
-        transformOrigin: flip ? '58% 98%' : '42% 98%',
-        ['--leaf-rot' as any]: `${rotation}deg`,
-        ['--leaf-scale-x' as any]: flip ? -1 : 1,
-      }}
+  const svgContent = (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 40 56"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
     >
-      <svg
-        viewBox="0 0 40 56"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-      >
         {/* Botanical stem / Pétiole connecting the leaf to the vine or wood bark */}
         {/* Bark shadow underlayer of the stem */}
         <path
@@ -163,6 +150,42 @@ export const SylvestreLeaf: React.FC<SylvestreLeafProps> = ({
         {/* Dewdrop / bioluminescent spore glint */}
         <circle cx="15" cy="13" r="1.6" fill="#ffffff" opacity="0.7" />
       </svg>
+  );
+
+  const leafStyle: React.CSSProperties = {
+    width: `${size}px`,
+    height: `${Math.round(size * 1.4)}px`,
+    transformOrigin: flip ? '58% 98%' : '42% 98%',
+    ['--leaf-rot' as any]: `${rotation}deg`,
+    ['--leaf-scale-x' as any]: flip ? -1 : 1,
+  };
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={title || 'Feuille sonore'}
+        className={`inline-flex items-center justify-center min-w-7 min-h-7 p-0 border-0 bg-transparent pointer-events-auto cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-emerald-400 rounded-full select-none ${className}`}
+      >
+        <div
+          style={leafStyle}
+          aria-hidden="true"
+          className="sylvestre-leaf flex items-center justify-center pointer-events-none"
+        >
+          {svgContent}
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <div
+      aria-hidden="true"
+      className={`inline-block select-none pointer-events-none cursor-default sylvestre-leaf ${className}`}
+      style={leafStyle}
+    >
+      {svgContent}
     </div>
   );
 };

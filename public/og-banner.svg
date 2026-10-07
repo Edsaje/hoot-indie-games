@@ -131,13 +131,13 @@
   </text>
 
   <!-- Summary Micro-line -->
-  <text x="600" y="303" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="14" fill="#94a3b8" letter-spacing="0.5">
-    147 Pépites Steam Certifiées • 8 Défis Quotidiens • Arène 1v1 P2P • Salle d'Arcade Rétro
+  <text x="600" y="303" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="14.5" fill="#94a3b8" letter-spacing="0.5">
+    Catalogue Indé Culte • 9 Mini-Jeux Quotidiens • Collection de Cartes • Arène 1v1 P2P
   </text>
 
   <!-- ==================== 4 FEATURE PILLARS ==================== -->
   
-  <!-- Card 1: 147 Pépites Steam (Amber Accent) -->
+  <!-- Card 1: Pépites Indées (Amber Accent) -->
   <g transform="translate(76, 335)">
     <rect width="244" height="135" rx="14" fill="url(#cardGrad)" stroke="url(#borderAmber)" stroke-width="1.5" />
     <rect x="25" y="0" width="194" height="2" rx="1" fill="#f59e0b" opacity="0.9" />
@@ -148,12 +148,12 @@
       <polygon points="0,-12 5,-4 0,11 -5,-4" fill="none" stroke="#f59e0b" stroke-width="1.5" />
       <line x1="-11" y1="-4" x2="11" y2="-4" stroke="#fbbf24" stroke-width="1.5" />
     </g>
-    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">147 PÉPITES</text>
-    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#fbbf24">Catalogue Certifié Steam</text>
+    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">PÉPITES INDÉES</text>
+    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#fbbf24">Catalogue &amp; Découverte</text>
     <text x="122" y="116" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="11" fill="#94a3b8">Fiches, Avis &amp; OST Audio</text>
   </g>
 
-  <!-- Card 2: 8 Défis Quotidiens (Emerald Accent) -->
+  <!-- Card 2: 9 Mini-Jeux Quotidiens (Emerald Accent) -->
   <g transform="translate(344, 335)">
     <rect width="244" height="135" rx="14" fill="url(#cardGrad)" stroke="url(#borderEmerald)" stroke-width="1.5" />
     <rect x="25" y="0" width="194" height="2" rx="1" fill="#10b981" opacity="0.9" />
@@ -168,43 +168,44 @@
       <line x1="-17" y1="0" x2="-12" y2="0" stroke="#34d399" stroke-width="2" stroke-linecap="round" />
       <line x1="12" y1="0" x2="17" y2="0" stroke="#34d399" stroke-width="2" stroke-linecap="round" />
     </g>
-    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">8 DÉFIS DU JOUR</text>
-    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#34d399">Screenle, OST, Classic...</text>
+    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">9 MINI-JEUX</text>
+    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#34d399">Screenle, Blind Test, Critique...</text>
     <text x="122" y="116" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="11" fill="#94a3b8">Nouveaux Défis à Minuit</text>
   </g>
 
-  <!-- Card 3: Arène 1v1 P2P (Cyan Accent) -->
+  <!-- Card 3: Classeur de Cartes (Purple Accent) -->
   <g transform="translate(612, 335)">
+    <rect width="244" height="135" rx="14" fill="url(#cardGrad)" stroke="url(#borderPurple)" stroke-width="1.5" />
+    <rect x="25" y="0" width="194" height="2" rx="1" fill="#c084fc" opacity="0.9" />
+    <!-- Vector Trading Cards Icon -->
+    <g transform="translate(122, 34)">
+      <circle cx="0" cy="0" r="18" fill="#c084fc" opacity="0.12" />
+      <!-- Back card -->
+      <rect x="-9" y="-12" width="14" height="20" rx="2.5" fill="#1e1b4b" stroke="#a855f7" stroke-width="1.6" transform="rotate(-12)" />
+      <!-- Front card -->
+      <rect x="-7" y="-11" width="14" height="20" rx="2.5" fill="#2e1065" stroke="#c084fc" stroke-width="1.8" transform="rotate(8)" />
+      <!-- Sparkle/Star in front card -->
+      <polygon points="1,-2 2.5,1 5,1.5 3,3.5 3.5,6 1,4.5 -1.5,6 -1,3.5 -3,1.5 -0.5,1" fill="#facc15" />
+    </g>
+    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">CARTES À JOUER</text>
+    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#c084fc">Communes à Légendaires</text>
+    <text x="122" y="116" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="11" fill="#94a3b8">Boutique, Boosters &amp; Plumes</text>
+  </g>
+
+  <!-- Card 4: Arène 1v1 & Arcade (Cyan Accent) -->
+  <g transform="translate(880, 335)">
     <rect width="244" height="135" rx="14" fill="url(#cardGrad)" stroke="url(#borderCyan)" stroke-width="1.5" />
     <rect x="25" y="0" width="194" height="2" rx="1" fill="#38bdf8" opacity="0.9" />
-    <!-- Vector Crossed Swords Icon -->
+    <!-- Vector Crossed Swords / Versus Icon -->
     <g transform="translate(122, 34)">
       <circle cx="0" cy="0" r="18" fill="#38bdf8" opacity="0.12" />
       <path d="M-10 -10 L10 10 M-7 -10 L-10 -7 M-4 -12 L-12 -4" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" />
       <path d="M10 -10 L-10 10 M7 -10 L10 -7 M4 -12 L12 -4" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" />
       <circle cx="0" cy="0" r="2.5" fill="#e0f2fe" />
     </g>
-    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">ARÈNE 1v1 P2P</text>
-    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#38bdf8">Duels en Direct WebRTC</text>
-    <text x="122" y="116" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="11" fill="#94a3b8">Affrontez vos Amis en Ligne</text>
-  </g>
-
-  <!-- Card 4: Salle d'Arcade (Purple Accent) -->
-  <g transform="translate(880, 335)">
-    <rect width="244" height="135" rx="14" fill="url(#cardGrad)" stroke="url(#borderPurple)" stroke-width="1.5" />
-    <rect x="25" y="0" width="194" height="2" rx="1" fill="#c084fc" opacity="0.9" />
-    <!-- Vector Arcade Joystick Icon -->
-    <g transform="translate(122, 34)">
-      <circle cx="0" cy="0" r="18" fill="#c084fc" opacity="0.12" />
-      <rect x="-12" y="-7" width="24" height="18" rx="3" fill="none" stroke="#c084fc" stroke-width="2" />
-      <line x1="-4" y1="-7" x2="-4" y2="-13" stroke="#c084fc" stroke-width="2" stroke-linecap="round" />
-      <circle cx="-4" cy="-14" r="3" fill="#f472b6" />
-      <circle cx="4" cy="0" r="1.8" fill="#c084fc" />
-      <circle cx="8" cy="3.5" r="1.8" fill="#c084fc" />
-    </g>
-    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">SALLE D'ARCADE</text>
-    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#c084fc">8 Rétro &amp; Vectrex 1982</text>
-    <text x="122" y="116" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="11" fill="#94a3b8">Émulateur Vectoriel Culte</text>
+    <text x="122" y="76" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#f8fafc" letter-spacing="1">ARÈNE 1v1 &amp; ARCADE</text>
+    <text x="122" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="12.5" fill="#38bdf8">Duels en Direct &amp; Rétro</text>
+    <text x="122" y="116" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="11" fill="#94a3b8">Défiez vos Amis en Ligne</text>
   </g>
 
   <!-- ==================== BOTTOM STATUS BAR ==================== -->

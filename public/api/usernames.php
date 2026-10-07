@@ -274,6 +274,17 @@ if ($method === 'GET') {
         exit;
     }
 
+    // Caractères autorisés : STRICTEMENT lettres, chiffres, tirets (-) et underscores (_)
+    if (!preg_match('/^[a-zA-Z0-9_\-]+$/', $cleanDisplay)) {
+        echo json_encode([
+            'success' => true,
+            'available' => false,
+            'reason' => 'invalid_characters',
+            'message' => 'Le pseudonyme ne peut contenir que des lettres, chiffres, tirets (-) et underscores (_).'
+        ]);
+        exit;
+    }
+
     $normalized = normalizeUsername($cleanDisplay);
 
     $db = loadUsernamesData($storageFile);
@@ -380,10 +391,10 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes et ponctuation gamer
-    if (!preg_match('/^[\p{L}\p{N}\s_\'#.\-\[\]\(\)\|\!\?\*\~\^\:\@]+$/u', $cleanDisplay)) {
+    // Caractères autorisés : STRICTEMENT lettres, chiffres, tirets (-) et underscores (_)
+    if (!preg_match('/^[a-zA-Z0-9_\-]+$/', $cleanDisplay)) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'invalid_characters', 'message' => 'Caractères spéciaux non autorisés dans le pseudonyme.']);
+        echo json_encode(['success' => false, 'error' => 'invalid_characters', 'message' => 'Caractères non autorisés. Seuls les lettres, les chiffres, tirets (-) et underscores (_) sont acceptés.']);
         exit;
     }
 

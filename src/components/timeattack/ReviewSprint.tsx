@@ -225,7 +225,12 @@ export const ReviewSprint: React.FC<ReviewSprintProps> = ({ games, onBackToHub, 
   // Raccourcis clavier (1, 2, 3, 4, Espace)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameState !== 'playing' || feedback !== null || !currentQuestion) return;
+      
+      const target = e.target as HTMLElement;
+      if (target && (['INPUT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable)) {
+        return;
+      }
+if (gameState !== 'playing' || feedback !== null || !currentQuestion) return;
 
       if (['1', '&'].includes(e.key) && currentQuestion.choices[0]) {
         e.preventDefault();
@@ -395,7 +400,7 @@ export const ReviewSprint: React.FC<ReviewSprintProps> = ({ games, onBackToHub, 
                     {currentQuestion.puzzle.author}
                   </div>
                   <div className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-slate-500" />
+                    <Clock className="w-3 h-3 text-slate-400" />
                     <span>{t('timeattack.hud.hoursPlayed', { hours: currentQuestion.puzzle.hoursPlayed })}</span>
                   </div>
                 </div>
@@ -404,7 +409,7 @@ export const ReviewSprint: React.FC<ReviewSprintProps> = ({ games, onBackToHub, 
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium">
                 <ThumbsUp className="w-3.5 h-3.5" />
                 <span>{t('timeattack.hud.recommended')}</span>
-                <span className="text-slate-500 text-[10px] ml-1">({currentQuestion.puzzle.reviewDate})</span>
+                <span className="text-slate-400 text-[10px] ml-1">({currentQuestion.puzzle.reviewDate})</span>
               </div>
             </div>
 
@@ -418,7 +423,7 @@ export const ReviewSprint: React.FC<ReviewSprintProps> = ({ games, onBackToHub, 
             </div>
 
             {/* Hint subtil si bloqué */}
-            <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
+            <div className="mt-4 flex items-center justify-between text-xs text-slate-400">
               <span>{t('timeattack.hud.keyboardTip')}</span>
               <button
                 onClick={handleSkip}
@@ -444,7 +449,7 @@ export const ReviewSprint: React.FC<ReviewSprintProps> = ({ games, onBackToHub, 
                 } else if (isSelected && !isTarget) {
                   btnStyle = 'bg-rose-600/30 border-rose-500 text-rose-300 font-bold';
                 } else {
-                  btnStyle = 'bg-slate-800/40 border-slate-800 text-slate-500 opacity-50';
+                  btnStyle = 'bg-slate-800/40 border-slate-800 text-slate-400 opacity-50';
                 }
               }
 

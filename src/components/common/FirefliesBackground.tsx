@@ -37,8 +37,51 @@ export const FirefliesBackground: React.FC = () => {
     if (prefersReducedMotion) return;
 
     let animationFrameId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let width = 0;
+    let height = 0;
+    let initialized = false;
+    const stars: NightSkyStar[] = [];
+    const fireflies: Firefly[] = [];
+
+    const initCanvas = () => {
+      if (initialized || !canvas) return;
+      initialized = true;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      const isMobile = width < 768;
+
+      // Stationary twinkling night stars (reduced on mobile for performance)
+      const starCount = isMobile ? 18 : Math.min(95, Math.max(45, Math.floor((width * height) / 24000)));
+      for (let i = 0; i < starCount; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * (height * 0.88),
+          size: Math.random() < 0.25 ? Math.random() * 1.1 + 0.8 : Math.random() * 0.65 + 0.4,
+          baseAlpha: Math.random() * 0.55 + 0.3,
+          twinkleSpeed: 0.015 + Math.random() * 0.03,
+          twinklePhase: Math.random() * Math.PI * 2,
+          isAmber: Math.random() < 0.25,
+        });
+      }
+
+      // Moving Fireflies: reduced on mobile for battery and CPU efficiency
+      const count = isMobile ? 8 : Math.min(65, Math.max(25, Math.floor((width * height) / 45000)));
+      for (let i = 0; i < count; i++) {
+        const isEmerald = Math.random() < 0.4;
+        const hue = isEmerald ? 142 + Math.random() * 22 : 36 + Math.random() * 14;
+        fireflies.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 2.2 + 1.2,
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45 - 0.1, // subtle upward drift
+          alpha: Math.random() * 0.7 + 0.2,
+          targetAlpha: Math.random() * 0.8 + 0.2,
+          hue,
+          pulseSpeed: 0.01 + Math.random() * 0.02,
+        });
+      }
+    };
 
     const mouse = {
       x: -1000,
@@ -57,7 +100,7 @@ export const FirefliesBackground: React.FC = () => {
     };
 
     const handleResize = () => {
-      if (!canvas) return;
+      if (!canvas || !initialized) return;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     };
@@ -66,43 +109,6 @@ export const FirefliesBackground: React.FC = () => {
     document.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('resize', handleResize);
 
-    // Stationary twinkling night stars
-    const starCount = Math.min(95, Math.max(45, Math.floor((width * height) / 24000)));
-    const stars: NightSkyStar[] = [];
-    for (let i = 0; i < starCount; i++) {
-      stars.push({
-        x: Math.random() * width,
-        y: Math.random() * (height * 0.88),
-        size: Math.random() < 0.25 ? Math.random() * 1.1 + 0.8 : Math.random() * 0.65 + 0.4,
-        baseAlpha: Math.random() * 0.55 + 0.3,
-        twinkleSpeed: 0.015 + Math.random() * 0.03,
-        twinklePhase: Math.random() * Math.PI * 2,
-        isAmber: Math.random() < 0.25,
-      });
-    }
-
-    // Moving Fireflies: roughly 1 firefly per 45,000 px^2, between 25 and 65 fireflies
-    const count = Math.min(65, Math.max(25, Math.floor((width * height) / 45000)));
-    const fireflies: Firefly[] = [];
-
-    for (let i = 0; i < count; i++) {
-      // 60% warm amber gold, 40% enchanted woodland emerald/moss spore glow
-      const isEmerald = Math.random() < 0.4;
-      const hue = isEmerald ? 142 + Math.random() * 22 : 36 + Math.random() * 14;
-
-      fireflies.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 2.2 + 1.2,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45 - 0.1, // subtle upward drift
-        alpha: Math.random() * 0.7 + 0.2,
-        targetAlpha: Math.random() * 0.8 + 0.2,
-        hue,
-        pulseSpeed: 0.01 + Math.random() * 0.02,
-      });
-    }
-
     let isVisible = true;
     const handleVisibilityChange = () => {
       isVisible = !document.hidden;
@@ -110,6 +116,7 @@ export const FirefliesBackground: React.FC = () => {
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     const render = () => {
+      if (!initialized) initCanvas();
       if (!isVisible) {
         animationFrameId = requestAnimationFrame(render);
         return;
@@ -186,9 +193,30 @@ export const FirefliesBackground: React.FC = () => {
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    let startTimer: any;
+    const win = window as any;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isMobile) {
+      const startOnTouch = () => {
+        window.removeEventListener('touchstart', startOnTouch);
+        window.removeEventListener('scroll', startOnTouch);
+        render();
+      };
+      window.addEventListener('touchstart', startOnTouch, { passive: true, once: true });
+      window.addEventListener('scroll', startOnTouch, { passive: true, once: true });
+      startTimer = setTimeout(render, 5500);
+    } else if (typeof win !== 'undefined' && typeof win.requestIdleCallback === 'function') {
+      startTimer = win.requestIdleCallback(render, { timeout: 2500 });
+    } else {
+      startTimer = setTimeout(render, 2000);
+    }
 
     return () => {
+      if (typeof win !== 'undefined' && typeof win.cancelIdleCallback === 'function' && startTimer) {
+        win.cancelIdleCallback(startTimer);
+      } else {
+        clearTimeout(startTimer);
+      }
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);

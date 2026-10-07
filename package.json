@@ -1,7 +1,7 @@
 {
   "name": "hoot-indie-games",
   "private": true,
-  "version": "1.2.6",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "prebuild": "npx tsx scripts/generateSeoIndex.ts",
@@ -14,12 +14,15 @@
     "add-game": "npx tsx scripts/fetchSteamGame.ts",
     "update-db": "npx tsx scripts/addBatchGames.ts && npx tsx scripts/mergeGamesDatabase.ts",
     "audit-db": "npx tsx scripts/verifySteamDatabase.ts",
+    "audit-cards": "npx tsx scripts/auditGemsCardsSync.ts",
     "audit-links": "npx tsx scripts/auditExternalLinks.ts",
     "harvest-daily": "npx tsx scripts/dailyIndieHarvest.ts",
+    "sync-odyssey": "npx tsx scripts/syncOdysseyRoutes.ts",
     "sync-store": "npx tsx scripts/syncSteamStoreData.ts",
     "fetch-steam": "npx tsx scripts/fetchSteamCatalog.ts"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.10",
     "@supabase/supabase-js": "^2.116.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/canvas-confetti": "^1.9.0",
@@ -38,6 +41,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
+    "sharp": "^0.35.5",
     "tsx": "^4.23.13",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"

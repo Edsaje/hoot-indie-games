@@ -32,6 +32,7 @@ import { type ShareCardData } from '../../utils/generateShareCard';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { telemetry } from '../../services/telemetry';
 import { getClueLabel, getClueValue, getBilingualText } from '../../utils/localization';
+import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
 
 interface ReviewGameProps {
   currentDate: string;
@@ -342,7 +343,7 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
             <div>
               <div className="text-xs font-bold text-slate-200">{puzzle.author}</div>
               <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
-                <Clock className="w-3 h-3 text-slate-500" />
+                <Clock className="w-3 h-3 text-slate-400" />
                 <span>{t('review.hoursRecorded', { hours: puzzle.hoursPlayed })}</span>
               </div>
             </div>
@@ -399,7 +400,7 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
                     ? 'bg-rose-500/20 text-rose-400 border-rose-500/50'
                     : isCurrent
                     ? 'bg-sky-500/20 text-sky-300 border-sky-400 ring-2 ring-sky-500/30'
-                    : 'bg-[#131b2e]/60 text-slate-600 border-[#1e293b]'
+                    : 'bg-[#131b2e]/60 text-slate-500 border-[#1e293b]'
                 }`}
               >
                 {isCorrectGuess ? (
@@ -432,7 +433,7 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
                 className={`p-3 rounded-xl border transition-all ${
                   isUnlocked
                     ? 'bg-[#0f172a] border-sky-500/30 text-white shadow-sm'
-                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-500'
+                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-400'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -440,12 +441,12 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
                     {isUnlocked ? (
                       <Unlock className="w-3 h-3 text-sky-400" />
                     ) : (
-                      <Lock className="w-3 h-3 text-slate-600" />
+                      <Lock className="w-3 h-3 text-slate-500" />
                     )}
                     {getClueLabel(clue.labelFr, i18n.language)}
                   </span>
                   {!isUnlocked && (
-                    <span className="text-[9px] font-mono text-slate-500">
+                    <span className="text-[9px] font-mono text-slate-400">
                       {t('review.guessCount', { count: idx + 1 })}
                     </span>
                   )}
@@ -455,7 +456,7 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
                   {isUnlocked ? (
                     <span className="text-slate-200">{getClueValue(clue, i18n.language)}</span>
                   ) : (
-                    <span className="italic text-slate-600">
+                    <span className="italic text-slate-500">
                       {t('review.clueLocked')}
                     </span>
                   )}
@@ -541,7 +542,7 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
                           {game.developer} • {game.releaseYear}
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-slate-500 shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
                     </button>
                   ))}
                 </motion.div>
@@ -648,6 +649,12 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
               />
             </div>
           )}
+
+          {/* Enchaînement vers le Défi Suivant */}
+          <DailyGameNextBanner
+            currentGame="review"
+            currentDate={currentDate}
+          />
         </motion.div>
       )}
 

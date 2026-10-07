@@ -32,6 +32,7 @@ import { type ShareCardData } from '../../utils/generateShareCard';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { telemetry } from '../../services/telemetry';
 import { getClueLabel, getClueValue } from '../../utils/localization';
+import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
 
 interface PixelGameProps {
   currentDate: string;
@@ -542,7 +543,7 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
                     ? 'bg-rose-500/20 text-rose-400 border-rose-500/50'
                     : isCurrent
                     ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400 ring-2 ring-cyan-500/30'
-                    : 'bg-[#131b2e]/60 text-slate-600 border-[#1e293b]'
+                    : 'bg-[#131b2e]/60 text-slate-500 border-[#1e293b]'
                 }`}
               >
                 {isCorrectGuess ? (
@@ -576,7 +577,7 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
                 className={`p-3 rounded-xl border transition-all ${
                   isUnlocked
                     ? 'bg-[#0f172a] border-cyan-500/30 text-white shadow-sm'
-                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-500'
+                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-400'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -584,12 +585,12 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
                     {isUnlocked ? (
                       <Unlock className="w-3 h-3 text-cyan-400" />
                     ) : (
-                      <Lock className="w-3 h-3 text-slate-600" />
+                      <Lock className="w-3 h-3 text-slate-500" />
                     )}
                     {getClueLabel(clue.labelFr, i18n.language)}
                   </span>
                   {!isUnlocked && (
-                    <span className="text-[9px] font-mono text-slate-500">
+                    <span className="text-[9px] font-mono text-slate-400">
                       {t('pixel.guessCount', { count: idx + 1 })}
                     </span>
                   )}
@@ -599,7 +600,7 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
                   {isUnlocked ? (
                     <span className="text-slate-200">{getClueValue(clue, i18n.language)}</span>
                   ) : (
-                    <span className="italic text-slate-600">
+                    <span className="italic text-slate-500">
                       {t('pixel.clueLocked')}
                     </span>
                   )}
@@ -685,7 +686,7 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
                           {game.developer} • {game.releaseYear}
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-slate-500 shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
                     </button>
                   ))}
                 </motion.div>
@@ -792,6 +793,12 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
               />
             </div>
           )}
+
+          {/* Enchaînement vers le Défi Suivant */}
+          <DailyGameNextBanner
+            currentGame="pixel"
+            currentDate={currentDate}
+          />
         </motion.div>
       )}
 

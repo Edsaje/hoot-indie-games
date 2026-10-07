@@ -3,15 +3,69 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChatContext } from './ChatContext';
 import { useUserAccount } from './useUserAccount';
-import {
-  type ChatChannel,
-  type ChatMessage,
-  type FeedbackCategory,
-  fetchChatMessages,
-  sendChatMessage,
-  deleteChatMessage,
+import type {
+  ChatChannel,
+  ChatMessage,
+  FeedbackCategory,
+  PrivateConversation,
+  PrivateMessage,
+  PrivateParticipant,
 } from '../services/chatService';
 import { soundFx } from '../utils/audio';
+
+// Lazy loader for sovereign chat service to remove ~36kB from critical path
+const getChatService = () => import('../services/chatService');
+
+const fetchChatMessages = async (...args: Parameters<typeof import('../services/chatService')['fetchChatMessages']>) => {
+  const mod = await getChatService();
+  return mod.fetchChatMessages(...args);
+};
+
+const sendChatMessage = async (...args: Parameters<typeof import('../services/chatService')['sendChatMessage']>) => {
+  const mod = await getChatService();
+  return mod.sendChatMessage(...args);
+};
+
+const deleteChatMessage = async (...args: Parameters<typeof import('../services/chatService')['deleteChatMessage']>) => {
+  const mod = await getChatService();
+  return mod.deleteChatMessage(...args);
+};
+
+const purgeUserChatMessages = async (...args: Parameters<typeof import('../services/chatService')['purgeUserChatMessages']>) => {
+  const mod = await getChatService();
+  return mod.purgeUserChatMessages(...args);
+};
+
+const fetchPrivateConversations = async (...args: Parameters<typeof import('../services/chatService')['fetchPrivateConversations']>) => {
+  const mod = await getChatService();
+  return mod.fetchPrivateConversations(...args);
+};
+
+const fetchPrivateMessages = async (...args: Parameters<typeof import('../services/chatService')['fetchPrivateMessages']>) => {
+  const mod = await getChatService();
+  return mod.fetchPrivateMessages(...args);
+};
+
+const sendPrivateMessage = async (...args: Parameters<typeof import('../services/chatService')['sendPrivateMessage']>) => {
+  const mod = await getChatService();
+  return mod.sendPrivateMessage(...args);
+};
+
+const markPrivateConversationRead = async (...args: Parameters<typeof import('../services/chatService')['markPrivateConversationRead']>) => {
+  const mod = await getChatService();
+  return mod.markPrivateConversationRead(...args);
+};
+
+const deletePrivateMessage = async (...args: Parameters<typeof import('../services/chatService')['deletePrivateMessage']>) => {
+  const mod = await getChatService();
+  return mod.deletePrivateMessage(...args);
+};
+
+const getCanonicalConvKey = (userA: string, userB: string): string => {
+  const normA = userA.trim().toLowerCase();
+  const normB = userB.trim().toLowerCase();
+  return normA <= normB ? `${normA}__${normB}` : `${normB}__${normA}`;
+};
 
 const INITIAL_MESSAGES_MAP: Record<ChatChannel, ChatMessage[]> = {
   global: [],
@@ -28,6 +82,17 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const { i18n } = useTranslation();
   const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
 
+  // Navigation par onglets (Salons publics ou Messages Privés)
+  const [activeTab, setActiveTab] = useState<'public' | 'private'>('public');
+
+  // État des messages privés
+  const [privateConversations, setPrivateConversations] = useState<PrivateConversation[]>([]);
+  const [activePrivateConversationId, setActivePrivateConversationId] = useState<string | null>(null);
+  const [activePrivateMessages, setActivePrivateMessages] = useState<PrivateMessage[]>([]);
+  const [activePrivateParticipant, setActivePrivateParticipant] = useState<PrivateParticipant | null>(null);
+  const [publicUnreadCount, setPublicUnreadCount] = useState<number>(0);
+  const [privateUnreadCount, setPrivateUnreadCount] = useState<number>(0);
+
   // Canal initial basé sur la langue ou le hash d'URL
   const getInitialChannel = (): ChatChannel => {
     if (typeof window !== 'undefined') {
@@ -39,6 +104,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (hash.startsWith('#chat-de')) return 'de';
       if (hash.startsWith('#chat-ja')) return 'ja';
       if (hash.startsWith('#chat-pt')) return 'pt-BR';
+      if (hash.startsWith('#chat-private') || hash.startsWith('#pm')) {
+        setActiveTab('private');
+        return 'global';
+      }
       if (hash.startsWith('#chat')) return 'global';
     }
     const lang = i18n.language?.toLowerCase() || 'fr';
@@ -54,7 +123,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isOpen, setIsOpen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase();
-      return hash.startsWith('#chat') || hash.startsWith('#feedback');
+      return hash.startsWith('#chat') || hash.startsWith('#feedback') || hash.startsWith('#pm');
     }
     return false;
   });
@@ -63,16 +132,22 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [allMessages, setAllMessages] = useState<Record<ChatChannel, ChatMessage[]>>(INITIAL_MESSAGES_MAP);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSending, setIsSending] = useState<boolean>(false);
-  const [unreadCount, setUnreadCount] = useState<number>(0);
   const [cooldownSeconds, setCooldownSeconds] = useState<number>(0);
   const [moderationWarning, setModerationWarning] = useState<string | null>(null);
 
+  const unreadCount = useMemo(() => publicUnreadCount + privateUnreadCount, [publicUnreadCount, privateUnreadCount]);
+
   const lastServerTimeRef = useRef<number>(0);
   const knownMessageIdsRef = useRef<Set<string>>(new Set());
+  const knownPrivateMessageIdsRef = useRef<Set<string>>(new Set());
   const cooldownTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isOpenRef = useRef<boolean>(isOpen);
   isOpenRef.current = isOpen;
   const isFetchingRef = useRef<boolean>(false);
+  const activeTabRef = useRef<'public' | 'private'>(activeTab);
+  activeTabRef.current = activeTab;
+  const activePrivateConversationIdRef = useRef<string | null>(activePrivateConversationId);
+  activePrivateConversationIdRef.current = activePrivateConversationId;
 
   // Récupérer les messages (Delta polling intelligent avec 'since' pour éviter de surcharger le serveur)
   const refreshMessages = useCallback(
@@ -158,9 +233,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             });
           }
 
-          // Si nouveau message d'un autre joueur et que le chat est fermé
-          if (newFromOthers && !isOpenRef.current) {
-            setUnreadCount((prev) => prev + 1);
+          // Si nouveau message d'un autre joueur et que le salon public n'est pas actif
+          if (newFromOthers && (!isOpenRef.current || activeTabRef.current !== 'public')) {
+            setPublicUnreadCount((prev) => prev + 1);
             soundFx.playChime();
           }
 
@@ -176,15 +251,138 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     [profile.username]
   );
 
-  // Initial load au premier rendu (1 seule fois avec since=0)
+  // Réinitialisation étanche des états privés si déconnecté ou invité
   useEffect(() => {
+    if (!isAuthenticated || !profile.username || profile.username === 'Hibou Mystère') {
+      setPrivateConversations([]);
+      setActivePrivateMessages([]);
+      setActivePrivateConversationId(null);
+      setActivePrivateParticipant(null);
+      setPrivateUnreadCount(0);
+    }
+  }, [isAuthenticated, profile.username]);
+
+  // Rafraîchir les conversations privées (uniquement pour utilisateurs connectés)
+  const refreshPrivateConversations = useCallback(async () => {
+    if (!isAuthenticated || !profile.username || profile.username === 'Hibou Mystère') {
+      setPrivateConversations([]);
+      setPrivateUnreadCount(0);
+      return;
+    }
+    try {
+      const res = await fetchPrivateConversations({
+        username: profile.username,
+        steamId: profile.steam?.steamId,
+        userId: profile.id,
+      });
+      if (res.success && Array.isArray(res.conversations)) {
+        setPrivateConversations(res.conversations);
+        setPrivateUnreadCount(res.totalUnread);
+      } else {
+        setPrivateConversations([]);
+        setPrivateUnreadCount(0);
+      }
+    } catch {
+      // Ignore les erreurs réseau passagères
+    }
+  }, [isAuthenticated, profile.username, profile.steam?.steamId, profile.id]);
+
+  // Rafraîchir les messages du fil privé en cours (uniquement pour utilisateurs connectés)
+  const refreshPrivateMessages = useCallback(
+    async (targetConvId?: string) => {
+      if (!isAuthenticated || !profile.username || profile.username === 'Hibou Mystère') {
+        setActivePrivateMessages([]);
+        setActivePrivateParticipant(null);
+        return;
+      }
+      const convId = targetConvId || activePrivateConversationIdRef.current || activePrivateConversationId;
+      const myUsername = profile.username;
+      if (!convId) return;
+
+      try {
+        const markAsReadNow = Boolean(isOpenRef.current && activeTabRef.current === 'private');
+        const res = await fetchPrivateMessages(
+          convId,
+          {
+            username: myUsername,
+            steamId: profile.steam?.steamId,
+            userId: profile.id,
+          },
+          0,
+          markAsReadNow
+        );
+
+        if (res.success && Array.isArray(res.messages)) {
+          setActivePrivateMessages(res.messages);
+          if (res.otherParticipant) {
+            setActivePrivateParticipant(res.otherParticipant);
+          }
+
+          let newFromOther = false;
+          res.messages.forEach((m) => {
+            if (!knownPrivateMessageIdsRef.current.has(m.id)) {
+              knownPrivateMessageIdsRef.current.add(m.id);
+              if (m.senderUsername.toLowerCase() !== myUsername.toLowerCase()) {
+                newFromOther = true;
+              }
+            }
+          });
+
+          if (newFromOther && (!isOpenRef.current || activeTabRef.current !== 'private')) {
+            soundFx.playChime();
+          }
+        } else {
+          setActivePrivateMessages([]);
+        }
+      } catch {
+        // Ignore
+      }
+    },
+    [isAuthenticated, activePrivateConversationId, profile.username, profile.steam?.steamId, profile.id]
+  );
+
+  // Initial load différé (ne bloque pas le LCP initial)
+  useEffect(() => {
+    if (!isOpen) return;
     refreshMessages(true);
-  }, [refreshMessages]);
+    if (isAuthenticated && profile.username && profile.username !== 'Hibou Mystère') {
+      refreshPrivateConversations();
+    }
+  }, [isOpen, refreshMessages, refreshPrivateConversations, isAuthenticated, profile.username]);
+
+  // Synchronisation inter-onglets & événements de stockage en temps réel
+  useEffect(() => {
+    const handleStorageChange = (e?: StorageEvent) => {
+      if (!e || e.key === 'hoot_private_chat_store' || e.key === null) {
+        refreshPrivateConversations();
+        const curConvId = activePrivateConversationIdRef.current;
+        if (curConvId) {
+          refreshPrivateMessages(curConvId);
+        }
+      }
+    };
+    const handleLocalUpdate = () => {
+      refreshPrivateConversations();
+      const curConvId = activePrivateConversationIdRef.current;
+      if (curConvId) {
+        refreshPrivateMessages(curConvId);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('hoot_private_store_updated', handleLocalUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('hoot_private_store_updated', handleLocalUpdate);
+    };
+  }, [refreshPrivateConversations, refreshPrivateMessages]);
 
   // Polling sobre & intelligent :
   // - Si onglet masqué / en arrière-plan : PAUSE COMPLÈTE (0 appel réseau !)
-  // - Si le tiroir du chat est OUVERT : polling delta toutes les 8 secondes
-  // - Si le tiroir du chat est FERMÉ : polling delta très espacé (toutes les 90 secondes) pour le compteur non-lu
+  // - Si une conversation privée est OUVERTE : polling réactif rapide toutes les 2.5s (pour accusés de lecture temps-réel)
+  // - Si le tiroir du chat est OUVERT en public : polling delta toutes les 7s
+  // - Si le tiroir du chat est FERMÉ : polling delta espacé (toutes les 60s)
   useEffect(() => {
     let pollTimer: ReturnType<typeof setInterval> | null = null;
 
@@ -192,10 +390,21 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (pollTimer) clearInterval(pollTimer);
       if (typeof document !== 'undefined' && document.hidden) return;
 
-      const delay = isOpen ? 8000 : 90000;
+      const isPrivateActive = Boolean(
+        isOpen && activeTab === 'private' && (activePrivateConversationId || activePrivateConversationIdRef.current)
+      );
+      const delay = isPrivateActive ? 2500 : isOpen ? 7000 : 60000;
+
       pollTimer = setInterval(() => {
         if (typeof document !== 'undefined' && !document.hidden) {
-          refreshMessages(false);
+          if (activeTabRef.current === 'public') {
+            refreshMessages(false);
+          }
+          refreshPrivateConversations();
+          const curConv = activePrivateConversationIdRef.current;
+          if (activeTabRef.current === 'private' && curConv) {
+            refreshPrivateMessages(curConv);
+          }
         }
       }, delay);
     };
@@ -206,7 +415,14 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (document.hidden) {
         if (pollTimer) clearInterval(pollTimer);
       } else {
-        refreshMessages(false);
+        if (activeTabRef.current === 'public') {
+          refreshMessages(false);
+        }
+        refreshPrivateConversations();
+        const curConv = activePrivateConversationIdRef.current;
+        if (activeTabRef.current === 'private' && curConv) {
+          refreshPrivateMessages(curConv);
+        }
         startPoll();
       }
     };
@@ -217,19 +433,27 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (pollTimer) clearInterval(pollTimer);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [isOpen, refreshMessages]);
+  }, [
+    isOpen,
+    activeTab,
+    activePrivateConversationId,
+    refreshMessages,
+    refreshPrivateConversations,
+    refreshPrivateMessages,
+  ]);
 
   // Ouverture / Fermeture
   const openChat = useCallback((channel?: ChatChannel) => {
     soundFx.playClick();
     if (channel) {
+      setActiveTab('public');
       setCurrentChannel(channel);
     }
     setIsOpen(true);
-    setUnreadCount(0);
-    // Rafraîchir immédiatement à l'ouverture du tiroir
+    setPublicUnreadCount(0);
     refreshMessages(false);
-  }, [refreshMessages]);
+    refreshPrivateConversations();
+  }, [refreshMessages, refreshPrivateConversations]);
 
   const closeChat = useCallback(() => {
     soundFx.playClick();
@@ -241,19 +465,72 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsOpen((prev) => {
       const next = !prev;
       if (next) {
-        setUnreadCount(0);
+        setPublicUnreadCount(0);
         refreshMessages(false);
+        refreshPrivateConversations();
       }
       return next;
     });
-  }, [refreshMessages]);
+  }, [refreshMessages, refreshPrivateConversations]);
 
   const setChannel = useCallback((channel: ChatChannel) => {
     soundFx.playClick();
+    setActiveTab('public');
     setCurrentChannel(channel);
   }, []);
 
-  // Envoi de message
+  // Ouvrir un tchat privé directement avec un interlocuteur
+  const openPrivateChat = useCallback(
+    (targetUsername: string, targetMeta?: Partial<PrivateParticipant>, explicitConvId?: string) => {
+      soundFx.playClick();
+      if (!isAuthenticated || !profile.username || profile.username === 'Hibou Mystère') {
+        setActiveTab('private');
+        setIsOpen(true);
+        return;
+      }
+
+      const myUsername = profile.username;
+      const convId = explicitConvId || getCanonicalConvKey(myUsername, targetUsername);
+      setActiveTab('private');
+      setActivePrivateConversationId(convId);
+
+      setActivePrivateParticipant({
+        username: targetMeta?.username || targetUsername,
+        avatarId: targetMeta?.avatarId || 'owl',
+        title: targetMeta?.title || 'Explorateur',
+        activeFrame: targetMeta?.activeFrame,
+        steamId: targetMeta?.steamId,
+        friendCode: targetMeta?.friendCode,
+        isOnline: targetMeta?.isOnline,
+      });
+
+      setIsOpen(true);
+      setPrivateUnreadCount((prev) => Math.max(0, prev - 1));
+      refreshPrivateMessages(convId);
+      markPrivateConversationRead(convId, {
+        username: myUsername,
+        steamId: profile.steam?.steamId,
+        userId: profile.id,
+      }).then(() => refreshPrivateConversations());
+    },
+    [isAuthenticated, profile.username, profile.steam?.steamId, profile.id, refreshPrivateMessages, refreshPrivateConversations]
+  );
+
+  // Marquer une conversation privée comme lue
+  const markConversationAsRead = useCallback(
+    async (conversationId: string) => {
+      if (!profile.username) return;
+      await markPrivateConversationRead(conversationId, {
+        username: profile.username,
+        steamId: profile.steam?.steamId,
+        userId: profile.id,
+      });
+      refreshPrivateConversations();
+    },
+    [profile.username, profile.steam?.steamId, profile.id, refreshPrivateConversations]
+  );
+
+  // Envoi de message sur les salons publics
   const sendMessage = useCallback(
     async (
       text: string,
@@ -293,7 +570,6 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         soundFx.playClick();
         knownMessageIdsRef.current.add(res.message.id);
 
-        // Ajout immédiat en local pour fluidité instantanée
         setAllMessages((prev) => ({
           ...prev,
           [currentChannel]: [...(prev[currentChannel] || []), res.message!],
@@ -303,7 +579,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           lastServerTimeRef.current = Math.max(lastServerTimeRef.current, res.message.timestamp);
         }
 
-        // Démarrage du cooldown de 3s
+        // Cooldown de 3s
         setCooldownSeconds(3);
         if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
         cooldownTimerRef.current = setInterval(() => {
@@ -332,9 +608,109 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     [isAuthenticated, cooldownSeconds, currentChannel, profile]
   );
 
-  // Modération / suppression de message
+  // Envoi de message privé direct
+  const sendPrivateMsg = useCallback(
+    async (
+      recipientUsername: string,
+      text: string,
+      recipientMeta?: Partial<PrivateParticipant>
+    ): Promise<{ success: boolean; error?: string; warning?: string }> => {
+      if (!isAuthenticated) {
+        return {
+          success: false,
+          error: 'Vous devez être connecté pour envoyer un message privé.',
+        };
+      }
+
+      if (cooldownSeconds > 0) {
+        return { success: false, error: `Veuillez patienter ${cooldownSeconds}s.` };
+      }
+
+      setIsSending(true);
+
+      const res = await sendPrivateMessage({
+        recipientUsername,
+        text,
+        username: profile.username,
+        avatarId: profile.avatarId,
+        title: profile.title,
+        activeFrame: profile.activeFrame,
+        steamId: profile.steam?.steamId,
+        userId: profile.id,
+        recipientAvatarId: recipientMeta?.avatarId,
+        recipientTitle: recipientMeta?.title,
+        recipientSteamId: recipientMeta?.steamId,
+      });
+
+      setIsSending(false);
+
+      if (res.success && res.message) {
+        soundFx.playClick();
+        knownPrivateMessageIdsRef.current.add(res.message.id);
+        setActivePrivateMessages((prev) => [...prev, res.message!]);
+        refreshPrivateConversations();
+
+        // Cooldown de 3s
+        setCooldownSeconds(3);
+        if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+        cooldownTimerRef.current = setInterval(() => {
+          setCooldownSeconds((prev) => {
+            if (prev <= 1) {
+              if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+
+        return { success: true };
+      }
+
+      if (res.warning) {
+        setModerationWarning(res.warning);
+      }
+
+      return {
+        success: false,
+        error: res.error || 'Impossible d\'envoyer le message privé.',
+        warning: res.warning,
+      };
+    },
+    [isAuthenticated, cooldownSeconds, profile, refreshPrivateConversations]
+  );
+
+  // Suppression d'un message privé
+  const deletePrivateMsg = useCallback(
+    async (messageId: string, conversationId: string, hardDelete: boolean = false): Promise<{ success: boolean }> => {
+      const res = await deletePrivateMessage(
+        messageId,
+        conversationId,
+        {
+          username: profile.username,
+          steamId: profile.steam?.steamId,
+          userId: profile.id,
+        },
+        hardDelete
+      );
+
+      if (res.success) {
+        soundFx.playClick();
+        setActivePrivateMessages((prev) =>
+          hardDelete
+            ? prev.filter((m) => m.id !== messageId)
+            : prev.map((m) => (m.id === messageId ? { ...m, isDeleted: true, text: '[Message retiré]' } : m))
+        );
+        refreshPrivateConversations();
+        return { success: true };
+      }
+      return { success: false };
+    },
+    [profile.username, profile.steam?.steamId, profile.id, refreshPrivateConversations]
+  );
+
+  // Modération / suppression de message public
   const deleteMessage = useCallback(
-    async (messageId: string): Promise<{ success: boolean; message?: string }> => {
+    async (messageId: string, hardDelete: boolean = false): Promise<{ success: boolean; message?: string; hardDeleted?: boolean }> => {
       if (!isAuthenticated) {
         return { success: false, message: 'Vous devez être connecté pour supprimer un message.' };
       }
@@ -342,47 +718,101 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const isActualAdmin = Boolean(isAdmin || isCreator || profile.isAdmin || profile.role === 'admin');
       const isActualMod = Boolean(isModerator || profile.isModerator || profile.role === 'moderator');
 
-      const res = await deleteChatMessage(messageId, {
-        steamId: profile.steam?.steamId,
-        userId: profile.id,
-        email: profile.email,
-        username: profile.username,
-        role: profile.role,
-        isAdmin: isActualAdmin,
-        isModerator: isActualMod,
-      });
+      const res = await deleteChatMessage(
+        messageId,
+        {
+          steamId: profile.steam?.steamId,
+          userId: profile.id,
+          email: profile.email,
+          username: profile.username,
+          role: profile.role,
+          isAdmin: isActualAdmin,
+          isModerator: isActualMod,
+        },
+        hardDelete
+      );
+
+      if (res.success) {
+        soundFx.playClick();
+        const reallyHardDeleted = Boolean(res.hardDeleted ?? hardDelete);
+        setAllMessages((prev) => {
+          const next = { ...prev };
+          for (const ch of Object.keys(next) as ChatChannel[]) {
+            if (reallyHardDeleted) {
+              next[ch] = next[ch].filter((m) => m.id !== messageId);
+            } else {
+              next[ch] = next[ch].map((m) => {
+                if (m.id !== messageId) return m;
+                const isAuthor = Boolean(
+                  (profile.username && m.username && m.username.toLowerCase() === profile.username.toLowerCase()) ||
+                  (profile.id && m.userId && m.userId === profile.id) ||
+                  (profile.steam?.steamId && m.steamId && m.steamId === profile.steam.steamId)
+                );
+                return {
+                  ...m,
+                  isDeleted: true,
+                  text: isAuthor
+                    ? '[Message retiré par l\'auteur]'
+                    : (isActualAdmin
+                        ? '[Message retiré par l\'administrateur]'
+                        : '[Message retiré par la modération]'),
+                };
+              });
+            }
+          }
+          return next;
+        });
+        return { success: true, message: res.message, hardDeleted: reallyHardDeleted };
+      }
+
+      return { success: false, message: res.message || 'Erreur lors de la modération du message.' };
+    },
+    [profile, isAdmin, isCreator, isModerator, isAuthenticated]
+  );
+
+  // Purge de tous les messages publics d'un utilisateur
+  const purgeUserMessages = useCallback(
+    async (targetUsername: string, targetUserId?: string): Promise<{ success: boolean; count?: number; message?: string }> => {
+      if (!isAuthenticated) {
+        return { success: false, message: 'Vous devez être connecté.' };
+      }
+
+      const isActualAdmin = Boolean(isAdmin || isCreator || profile.isAdmin || profile.role === 'admin');
+      const isActualMod = Boolean(isModerator || profile.isModerator || profile.role === 'moderator');
+      if (!isActualAdmin && !isActualMod) {
+        return { success: false, message: 'Action réservée aux modérateurs et administrateurs.' };
+      }
+
+      const res = await purgeUserChatMessages(
+        { username: targetUsername, userId: targetUserId },
+        {
+          steamId: profile.steam?.steamId,
+          userId: profile.id,
+          username: profile.username,
+          role: profile.role,
+          isAdmin: isActualAdmin,
+        }
+      );
 
       if (res.success) {
         soundFx.playClick();
         setAllMessages((prev) => {
           const next = { ...prev };
           for (const ch of Object.keys(next) as ChatChannel[]) {
-            next[ch] = next[ch].map((m) => {
-              if (m.id !== messageId) return m;
-              const isAuthor = Boolean(
-                (profile.username && m.username && m.username.toLowerCase() === profile.username.toLowerCase()) ||
-                (profile.id && m.userId && m.userId === profile.id) ||
-                (profile.steam?.steamId && m.steamId && m.steamId === profile.steam.steamId)
-              );
-              return {
-                ...m,
-                isDeleted: true,
-                text: isAuthor
-                  ? '[Message retiré par l\'auteur]'
-                  : (isActualAdmin
-                      ? '[Message retiré par l\'administrateur]'
-                      : '[Message retiré par la modération]'),
-              };
-            });
+            next[ch] = next[ch].filter(
+              (m) =>
+                !(
+                  (targetUsername && m.username?.toLowerCase() === targetUsername.toLowerCase()) ||
+                  (targetUserId && m.userId === targetUserId)
+                )
+            );
           }
           return next;
         });
-        return { success: true, message: res.message };
       }
-
-      return { success: false, message: res.message || 'Erreur lors de la modération du message.' };
+      return res;
     },
-    [profile, isAdmin, isCreator, isModerator, isAuthenticated]
+    [isAuthenticated, isAdmin, isCreator, isModerator, profile]
   );
 
   const activeMessages = useMemo(() => {
@@ -395,16 +825,32 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       openChat,
       closeChat,
       toggleChat,
+      activeTab,
+      setActiveTab,
       currentChannel,
       setChannel,
       messages: activeMessages,
       allMessages,
+      privateConversations,
+      activePrivateConversationId,
+      setActivePrivateConversationId,
+      activePrivateMessages,
+      activePrivateParticipant,
+      openPrivateChat,
+      sendPrivateMsg,
+      deletePrivateMsg,
+      markConversationAsRead,
+      refreshPrivateConversations,
+      refreshPrivateMessages,
       isLoading,
       isSending,
       unreadCount,
+      publicUnreadCount,
+      privateUnreadCount,
       cooldownSeconds,
       sendMessage,
       deleteMessage,
+      purgeUserMessages,
       moderationWarning,
       setModerationWarning,
       refreshMessages,
@@ -414,16 +860,30 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       openChat,
       closeChat,
       toggleChat,
+      activeTab,
       currentChannel,
       setChannel,
       activeMessages,
       allMessages,
+      privateConversations,
+      activePrivateConversationId,
+      activePrivateMessages,
+      activePrivateParticipant,
+      openPrivateChat,
+      sendPrivateMsg,
+      deletePrivateMsg,
+      markConversationAsRead,
+      refreshPrivateConversations,
+      refreshPrivateMessages,
       isLoading,
       isSending,
       unreadCount,
+      publicUnreadCount,
+      privateUnreadCount,
       cooldownSeconds,
       sendMessage,
       deleteMessage,
+      purgeUserMessages,
       moderationWarning,
       setModerationWarning,
       refreshMessages,
@@ -432,3 +892,4 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
+

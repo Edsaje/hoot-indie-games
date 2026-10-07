@@ -1,0 +1,1 @@
+export const TOTAL_QUIZ_QUESTIONS_COUNT = 180;

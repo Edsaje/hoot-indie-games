@@ -257,7 +257,12 @@ export const PixelSprint: React.FC<PixelSprintProps> = ({ games, onBackToHub, on
   // Raccourcis clavier (1, 2, 3, 4 et Espace)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameState === 'idle' && (e.key === 'Enter' || e.key === ' ')) {
+      
+      const target = e.target as HTMLElement;
+      if (target && (['INPUT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable)) {
+        return;
+      }
+if (gameState === 'idle' && (e.key === 'Enter' || e.key === ' ')) {
         e.preventDefault();
         startGame();
         return;
@@ -436,7 +441,7 @@ export const PixelSprint: React.FC<PixelSprintProps> = ({ games, onBackToHub, on
               >
                 <span>{t('timeattack.hud.skip')}</span>
                 <Forward className="w-3 h-3" />
-                <span className="text-[10px] text-slate-500">(Espace)</span>
+                <span className="text-[10px] text-slate-400">(Espace)</span>
               </button>
             </div>
 

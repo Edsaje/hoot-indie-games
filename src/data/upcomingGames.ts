@@ -85,11 +85,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Mongoose Rodeo",
     "expectedDate": {
       "fr": "Fin 2026 / 2027",
-      "en": "Late 2026 / 2027",
-      "es": "Finales de 2026 / 2027",
-      "de": "Ende 2026 / 2027",
-      "ja": "2026年後半 / 2027年",
-      "pt-BR": "Final de 2026 / 2027"
+      "en": "Late 2026 / 2027"
     },
     "genres": [
       {
@@ -148,11 +144,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Hello Games",
     "expectedDate": {
       "fr": "2027+ (TBA)",
-      "en": "2027+ (TBA)",
-      "es": "2027+ (TBA)",
-      "de": "2027+ (TBA)",
-      "ja": "2027年以降（時期未定）",
-      "pt-BR": "2027+ (TBA)"
+      "en": "2027+ (TBA)"
     },
     "genres": [
       {
@@ -210,11 +202,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "THQ Nordic",
     "expectedDate": {
       "fr": "Prochainement",
-      "en": "Prochainement",
-      "es": "Próximamente",
-      "de": "Demnächst",
-      "ja": "近日公開",
-      "pt-BR": "Em breve"
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -275,11 +263,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Chucklefish",
     "expectedDate": {
       "fr": "2026",
-      "en": "2026",
-      "es": "2026",
-      "de": "2026",
-      "ja": "2026年",
-      "pt-BR": "2026"
+      "en": "2026"
     },
     "genres": [
       {
@@ -338,11 +322,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Crescent Moon Games",
     "expectedDate": {
       "fr": "Fin 2026 / 2027",
-      "en": "Late 2026 / 2027",
-      "es": "Finales de 2026 / 2027",
-      "de": "Ende 2026 / 2027",
-      "ja": "2026年後半 / 2027年",
-      "pt-BR": "Final de 2026 / 2027"
+      "en": "Late 2026 / 2027"
     },
     "genres": [
       {
@@ -392,12 +372,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Perfect Garbage",
     "publisher": "Perfect Garbage",
     "expectedDate": {
-      "fr": "2026",
-      "en": "2026",
-      "es": "2026",
-      "de": "2026",
-      "ja": "2026年",
-      "pt-BR": "2026"
+      "fr": "9 mars 2027",
+      "en": "9 mars 2027"
     },
     "genres": [
       {
@@ -455,11 +431,7 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "publisher": "Take-Two Interactive",
     "expectedDate": {
       "fr": "Prochainement",
-      "en": "Prochainement",
-      "es": "Próximamente",
-      "de": "Demnächst",
-      "ja": "近日公開",
-      "pt-BR": "Em breve"
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -513,65 +485,139 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "nivalis",
-    "title": "Nivalis",
-    "developer": "ION LANDS",
-    "publisher": "505 Games",
+    "id": "the-great-game-of-cards",
+    "title": "The Great Game of Cards",
+    "developer": "Acherlose Games",
+    "publisher": "Acherlose Games",
     "expectedDate": {
-      "fr": "29 sept. 2026",
-      "en": "29 sept. 2026",
-      "es": "29 de septiembre de 2026",
-      "de": "29. September 2026",
-      "ja": "2026年9月29日",
-      "pt-BR": "29 de setembro de 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
-        "fr": "Simulation de Vie",
-        "en": "Life Sim",
-        "es": "Simulador de Vida",
-        "de": "Lebenssimulation",
-        "ja": "生活シミュレーション",
-        "pt-BR": "Simulador de Vida"
+        "fr": "Stratégie",
+        "en": "Stratégie"
       },
       {
-        "fr": "Cyberpunk",
-        "en": "Cyberpunk",
-        "es": "Ciberpunk",
-        "de": "Cyberpunk",
-        "ja": "サイバーパンク",
-        "pt-BR": "Cyberpunk"
-      },
-      {
-        "fr": "Gestion & Aventure",
-        "en": "Management & Adventure",
-        "es": "Gestión y Aventura",
-        "de": "Wirtschaft & Abenteuer",
-        "ja": "経営＆アドベンチャー",
-        "pt-BR": "Gerenciamento e Aventura"
+        "fr": "Free-to-play",
+        "en": "Free-to-play"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/1488490/Nivalis/",
+    "steamUrl": "https://store.steampowered.com/app/5250500/",
     "description": {
-      "fr": "Par les créateurs de Cloudpunk. Développez votre commerce, gérez des restaurants et boîtes de nuit dans la métropole cyberpunk de Nivalis, liez des amitiés et explorez la ville.",
-      "en": "From the makers of Cloudpunk. Grow your business, manage restaurants and nightclubs in the cyberpunk city of Nivalis, make friends and explore the vertical metropolis.",
-      "es": "De los creadores de Cloudpunk. Desarrolla tus negocios, administra restaurantes y discotecas en la metrópolis ciberpunk de Nivalis, entabla amistades y explora la ciudad vertical.",
-      "de": "Von den Schöpfern von Cloudpunk. Baue dein Unternehmen auf, manage Restaurants und Nachtclubs in Nivalis, schließe Freundschaften und erkunde die Metropole.",
-      "ja": "『Cloudpunk』のION LANDSが贈る新作。サイバーパンクの大都市ニヴァリスで店舗を構え、レストランやクラブを経営し、住人たちと交流しながら垂直都市を散策しよう。",
-      "pt-BR": "Dos criadores de Cloudpunk. Expanda seus negócios, administre restaurantes e casas noturnas na metrópole cyberpunk de Nivalis, faça amizades e explore a cidade vertical."
+      "fr": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS",
+      "en": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS"
     },
     "highlight": {
-      "fr": "Un simulateur de vie cyberpunk immersif dans un univers vertical somptueux.",
-      "en": "An immersive slice-of-life cyberpunk simulation set in a stunning vertical metropolis.",
-      "es": "Un simulador de vida ciberpunk inmersivo en una urbe vertical deslumbrante.",
-      "de": "Eine fesselnde Cyberpunk-Lebenssimulation in einer atemberaubenden vertikalen Zukunftsstadt.",
-      "ja": "壮大な多層構造のサイバーパンク都市で味わう、超没入型のスライス・オブ・ライフ生活。",
-      "pt-BR": "Um simulador de vida cyberpunk imersivo em uma metrópole vertical deslumbrante."
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1790194422"
+  },
+  {
+    "id": "apocalypse-intern",
+    "title": "Apocalypse Intern",
+    "developer": "WizardHistory",
+    "publisher": "WizardHistory",
+    "expectedDate": {
+      "fr": "Prochainement",
+      "en": "Prochainement"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5275800/",
+    "description": {
+      "fr": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee.",
+      "en": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1790323342"
+  },
+  {
+    "id": "autochart",
+    "title": "AutoChart",
+    "developer": "1rwy",
+    "publisher": "1rwy",
+    "expectedDate": {
+      "fr": "Prochainement",
+      "en": "Prochainement"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5201270/",
+    "description": {
+      "fr": "AutoChart est un jeu de rythme au clavier qui donne vie à votre musique. Importez un fichier audio ou vidéo : l’IA génère une partition. Choisissez la difficulté et de 4 à 8 touches, jouez les notes qui défilent au rythme de la musique et battez votre record.",
+      "en": "AutoChart is a key-based rhythm game powered by your own music. Import an audio or video file and let AI generate a note chart. Choose your difficulty and a 4–8 key layout, hit the falling notes to the beat, and chase your personal best."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/4ed4ba97c641dc5596b95b93364f207dfd66834b/header.jpg?t=1790652014"
+  },
+  {
+    "id": "how-to-wait-for-the-bus",
+    "title": "How to Wait for the Bus",
+    "developer": "Benevolent Anarchy",
+    "publisher": "Benevolent Anarchy",
+    "expectedDate": {
+      "fr": "14 oct. 2026",
+      "en": "14 oct. 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5313620/",
+    "description": {
+      "fr": "Le bus arrivera quand il arrivera. En attendant, faites exploser quelques tuiles. Lancez des tuiles colorées sur le plateau depuis n’importe quel bord. Alignez-en trois ou plus de la même couleur pour les faire exploser, déclencher des réactions en chaîne et vider progressivement le plateau.",
+      "en": "The bus will arrive when it arrives. In the meantime, make some tiles explode. Fire coloured tiles into the board from any edge. Line up three or more matching tiles to make them explode, trigger chain reactions, and gradually clear the board."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1488490/header.jpg"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791213606"
   }
 ];

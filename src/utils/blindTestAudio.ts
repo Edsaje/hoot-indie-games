@@ -84,6 +84,7 @@ export interface PlayBlindTestOptions {
 export interface PlayBlindTestHandle {
   stop: () => void;
   isOfficialClip: boolean;
+  startTime: number;
 }
 
 /**
@@ -126,6 +127,7 @@ export async function playBlindTestAudioClip({
 
         return {
           isOfficialClip: true,
+          startTime,
           stop: () => {
             try {
               clipGain.gain.setValueAtTime(clipGain.gain.value, ctx.currentTime);
@@ -226,6 +228,7 @@ export async function playBlindTestAudioClip({
 
   return {
     isOfficialClip: false,
+    startTime,
     stop: () => {
       nodes.forEach((n) => {
         try {

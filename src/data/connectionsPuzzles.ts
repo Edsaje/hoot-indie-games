@@ -1011,9 +1011,21 @@ export const CONNECTIONS_PUZZLES: DailyConnectionsPuzzle[] = [
   },
 ];
 
+function shuffleWithRand<T>(array: T[], rand: () => number): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    const temp = result[i];
+    result[i] = result[j];
+    result[j] = temp;
+  }
+  return result;
+}
+
 /**
  * Génère une grille quotidienne de 16 jeux dynamiques à partir de la bibliothèque.
- * Garantit l'absence totale d'ambiguïté (aucun jeu sélectionné ne correspond au filtre d'une autre catégorie active).
+ * Garantit l'absence totale d'ambiguïté (aucun jeu sélectionné ne correspond au filtre d'une autre catégorie active)
+ * et un déterminisme universel absolu (même grille sur tous les navigateurs, OS et appareils).
  */
 export function generateDailyConnectionsPuzzle(
   dateStr: string,
@@ -1022,10 +1034,14 @@ export function generateDailyConnectionsPuzzle(
   const rand = createPseudoRandom(stringToSeed(dateStr));
   const tiers: DifficultyLevel[] = ['easy', 'medium', 'hard', 'expert'];
 
-  const easyRules = CATEGORY_RULES.filter((r) => r.difficulty === 'easy').sort(() => rand() - 0.5);
-  const mediumRules = CATEGORY_RULES.filter((r) => r.difficulty === 'medium').sort(() => rand() - 0.5);
-  const hardRules = CATEGORY_RULES.filter((r) => r.difficulty === 'hard').sort(() => rand() - 0.5);
-  const expertRules = CATEGORY_RULES.filter((r) => r.difficulty === 'expert').sort(() => rand() - 0.5);
+  // Tri déterministe préalable des jeux et des règles par ID pour garantir une parité 100% absolue multiplateforme
+  const canonicalGames = [...allGames].sort((a, b) => a.id.localeCompare(b.id));
+  const canonicalRules = [...CATEGORY_RULES].sort((a, b) => a.id.localeCompare(b.id));
+
+  const easyRules = shuffleWithRand(canonicalRules.filter((r) => r.difficulty === 'easy'), rand);
+  const mediumRules = shuffleWithRand(canonicalRules.filter((r) => r.difficulty === 'medium'), rand);
+  const hardRules = shuffleWithRand(canonicalRules.filter((r) => r.difficulty === 'hard'), rand);
+  const expertRules = shuffleWithRand(canonicalRules.filter((r) => r.difficulty === 'expert'), rand);
 
   let selectedRules: CategoryRule[] | null = null;
   let categoryPureGames: Game[][] | null = null;
@@ -1043,7 +1059,7 @@ export function generateDailyConnectionsPuzzle(
           for (let i = 0; i < 4; i++) {
             const currentRule = rules[i];
             const otherRules = rules.filter((_, idx) => idx !== i);
-            const pure = allGames.filter(
+            const pure = canonicalGames.filter(
               (g) => currentRule.filter(g) && !otherRules.some((or) => or.filter(g))
             );
             if (pure.length < 4) {
@@ -1070,7 +1086,7 @@ export function generateDailyConnectionsPuzzle(
       const rule = selectedRules[i];
       const tier = tiers[i];
       const pureGames = categoryPureGames[i];
-      const shuffledGames = [...pureGames].sort(() => rand() - 0.5);
+      const shuffledGames = shuffleWithRand(pureGames, rand);
       const selected = shuffledGames.slice(0, 4);
 
       categories.push({
@@ -1089,13 +1105,13 @@ export function generateDailyConnectionsPuzzle(
     // Fallback de sécurité glouton si aucune combinaison pure n'était trouvée
     const chosenGameIds = new Set<string>();
     for (const tier of tiers) {
-      const tierRules = CATEGORY_RULES.filter((r) => r.difficulty === tier);
-      const shuffledRules = [...tierRules].sort(() => rand() - 0.5);
+      const tierRules = canonicalRules.filter((r) => r.difficulty === tier);
+      const shuffledRules = shuffleWithRand(tierRules, rand);
 
       for (const rule of shuffledRules) {
-        const eligibleGames = allGames.filter((g) => rule.filter(g) && !chosenGameIds.has(g.id));
+        const eligibleGames = canonicalGames.filter((g) => rule.filter(g) && !chosenGameIds.has(g.id));
         if (eligibleGames.length >= 4) {
-          const shuffledGames = [...eligibleGames].sort(() => rand() - 0.5);
+          const shuffledGames = shuffleWithRand(eligibleGames, rand);
           const selected = shuffledGames.slice(0, 4);
           selected.forEach((g) => chosenGameIds.add(g.id));
 

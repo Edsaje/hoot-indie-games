@@ -74,12 +74,12 @@ export function validateUsernameFormat(
     };
   }
 
-  // Caractères autorisés : lettres, chiffres, espaces, tirets, underscores, apostrophes, hashtags, ponctuation gamer
-  const validCharsRegex = /^[\p{L}\p{N}\s_'#.\-[\]()|!?*~^:@]+$/u;
+  // Caractères autorisés : STRICTEMENT lettres, chiffres, tirets (-) et underscores (_)
+  const validCharsRegex = /^[a-zA-Z0-9_\-]+$/;
   if (!validCharsRegex.test(trimmed)) {
     return {
       valid: false,
-      error: 'Caractères spéciaux non autorisés dans le pseudonyme.',
+      error: 'Le pseudonyme ne peut contenir que des lettres, chiffres, tirets (-) et underscores (_). Les espaces et autres caractères spéciaux sont interdits.',
     };
   }
 
@@ -93,7 +93,7 @@ export function validateUsernameFormat(
 export function cleanDisplayName(name: string): string {
   if (!name) return '';
   let cleaned = name.replace(/<[^>]*>/g, '').replace(/[\x00-\x1F\x7F]/g, '').trim();
-  cleaned = cleaned.replace(/[^\p{L}\p{N}\s_'#.\-[\]()|!?*~^:@]/gu, '');
+  cleaned = cleaned.replace(/[^a-zA-Z0-9_\-]/g, '');
   cleaned = cleaned.trim();
   if (cleaned.length < 2) return '';
   if (cleaned.length > 24) return cleaned.slice(0, 24).trim();

@@ -19,8 +19,12 @@ import {
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import { useGameStats } from '../../context/useGameStats';
-import { getChallengeStatusForDate, getTodayDateString } from '../../utils/streakManager';
-import { QUIZ_QUESTIONS } from '../../data/quizQuestions';
+import {
+  getChallengeStatusForDate,
+  getTodayDateString,
+  getEffectiveCurrentStreak,
+} from '../../utils/streakManager';
+import { TOTAL_QUIZ_QUESTIONS_COUNT } from '../../data/quizConstants';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 
 export type MiniGameId =
@@ -180,7 +184,7 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
       description: t('minigamesHub.quiz.desc'),
       icon: HelpCircle,
       accentColor: 'from-amber-600/20 to-yellow-500/20 border-amber-500/30 text-amber-400',
-      badgeText: `${QUIZ_QUESTIONS.length} Questions`,
+      badgeText: `${TOTAL_QUIZ_QUESTIONS_COUNT} Questions`,
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
       isDaily: false,
     },
@@ -293,17 +297,23 @@ export const MiniGamesHub: React.FC<MiniGamesHubProps> = ({
                     <span className="flex items-center gap-1 font-bold text-amber-300">
                       <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                       <span>
-                        {t('minigamesHub.daysShort', { count: modeStats.currentStreak })}
+                        {t('minigamesHub.daysShort', {
+                          count: getEffectiveCurrentStreak(
+                            modeStats.currentStreak,
+                            modeStats.lastWonDate,
+                            todayStr
+                          ),
+                        })}
                       </span>
                     </span>
                   )}
                   {isDaily && (
-                    <span className="text-[11px] text-slate-500 font-mono">
+                    <span className="text-[11px] text-slate-400 font-mono">
                       • {currentDate === todayStr ? t('minigamesHub.today') : currentDate}
                     </span>
                   )}
                   {!isDaily && (
-                    <span className="text-[11px] text-slate-500 font-medium">
+                    <span className="text-[11px] text-slate-400 font-medium">
                       {t('minigamesHub.unlimited')}
                     </span>
                   )}

@@ -19,6 +19,7 @@ import {
   ExternalLink,
   Lock,
   Languages,
+  Globe,
 } from 'lucide-react';
 import { useChat } from '../../context/useChat';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -36,6 +37,9 @@ import { translateChatMessage } from '../../services/translationService';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { getFrameDefinition } from '../../utils/featherEconomy';
 import { soundFx } from '../../utils/audio';
+import { ChatUserModerationModal } from './ChatUserModerationModal';
+import { ChatPrivateView } from './ChatPrivateView';
+import { SUPPORTED_LANGUAGES, getAppLanguage } from '../../utils/localization';
 
 const QUICK_EMOJIS = ['🦉', '🎮', '💎', '🏆', '✨', '❤️', '🔥', '👏', '👋', '🎉'];
 
@@ -50,17 +54,22 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     isOpen,
     openChat,
     closeChat,
+    activeTab,
+    setActiveTab,
     currentChannel,
     setChannel,
     messages,
     isLoading,
     isSending,
     unreadCount,
+    publicUnreadCount,
+    privateUnreadCount,
     cooldownSeconds,
     sendMessage,
     deleteMessage,
     moderationWarning,
     setModerationWarning,
+    openPrivateChat,
   } = useChat();
 
   const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
@@ -85,6 +94,11 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   const getCategoryLabel = (catId: string, fallback: string) =>
     t(`chat.categories.${catId}`, fallback);
 
+  // Langue active du site et métadonnées correspondantes
+  const currentLangCode = getAppLanguage(i18n.language);
+  const currentLangMeta =
+    SUPPORTED_LANGUAGES.find((l) => l.id === currentLangCode) || SUPPORTED_LANGUAGES[0];
+
   // Traduction automatique et par message
   const [isAutoTranslate, setIsAutoTranslate] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -99,33 +113,46 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   const [translations, setTranslations] = useState<Record<string, string>>({});
   const [translatingMsgIds, setTranslatingMsgIds] = useState<Record<string, boolean>>({});
   const [showOriginalMsgIds, setShowOriginalMsgIds] = useState<Record<string, boolean>>({});
+  const [manualTranslatedMsgIds, setManualTranslatedMsgIds] = useState<Record<string, boolean>>({});
+
+  // Réinitialiser les traductions quand la langue du site change pour adapter immédiatement
+  const prevLangRef = useRef(currentLangCode);
+  useEffect(() => {
+    if (prevLangRef.current !== currentLangCode) {
+      prevLangRef.current = currentLangCode;
+      setTranslations({});
+      setShowOriginalMsgIds({});
+      setManualTranslatedMsgIds({});
+    }
+  }, [currentLangCode]);
 
   const handleTranslateSingleMessage = async (msg: { id: string; text: string; channel: string }) => {
     if (translatingMsgIds[msg.id] || !msg.text) return;
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: true }));
     soundFx.playClick();
-    const res = await translateChatMessage(msg.text, i18n.language, msg.channel);
+    const res = await translateChatMessage(msg.text, currentLangCode, msg.channel);
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: false }));
     if (res.success && res.translatedText !== msg.text) {
       setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
       setShowOriginalMsgIds((prev) => ({ ...prev, [msg.id]: false }));
+      setManualTranslatedMsgIds((prev) => ({ ...prev, [msg.id]: true }));
     }
   };
 
-  // Auto-traduction des messages si le mode est activé
+  // Auto-traduction des messages si le mode est activé, vers la langue active du site
   useEffect(() => {
     if (!isAutoTranslate || !isOpen || messages.length === 0) return;
-    const userLang = i18n.language;
+    const targetLang = currentLangCode;
 
     messages.forEach((msg) => {
       if (msg.isDeleted || !msg.text || translations[msg.id] || translatingMsgIds[msg.id]) return;
-      translateChatMessage(msg.text, userLang, msg.channel).then((res) => {
+      translateChatMessage(msg.text, targetLang, msg.channel).then((res) => {
         if (res.success && res.translatedText !== msg.text) {
           setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
         }
       });
     });
-  }, [isAutoTranslate, isOpen, messages, i18n.language, translations, translatingMsgIds]);
+  }, [isAutoTranslate, isOpen, messages, currentLangCode, translations, translatingMsgIds]);
 
   // Guide de prévention & anti-hameçonnage
   const [showSecurityGuide, setShowSecurityGuide] = useState(false);
@@ -166,8 +193,23 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     setModLogs((prev) => prev.filter((l) => l.id !== logId));
   };
 
+  // Modale de modération d'un profil utilisateur (accessible pour Hibouxe et les modérateurs)
+  const [userToModerate, setUserToModerate] = useState<{
+    username: string;
+    userId?: string;
+    steamId?: string;
+    avatarId?: string;
+    title?: string;
+    activeFrame?: string;
+    isCreator?: boolean;
+    isModerator?: boolean;
+  } | null>(null);
+
+  // Modale d'action de suppression / effacement d'un message
+  const [messageToDelete, setMessageToDelete] = useState<ChatMessage | null>(null);
+
   const canDeleteMessage = (msg: ChatMessage): boolean => {
-    if (msg.isDeleted || !isAuthenticated) return false;
+    if (!isAuthenticated) return false;
 
     const isMe = Boolean(
       (profile.username && msg.username && msg.username.toLowerCase() === profile.username.toLowerCase()) ||
@@ -175,7 +217,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       (profile.steam?.steamId && msg.steamId && msg.steamId === profile.steam.steamId)
     );
 
-    // 1. Admin / Créateur : peut supprimer TOUS les messages (les siens, ceux des modos, ceux des utilisateurs)
+    // 1. Admin / Créateur : peut supprimer ou effacer TOUS les messages (les siens, ceux des modos, ceux des utilisateurs)
     if (isStrictAdmin) {
       return true;
     }
@@ -194,7 +236,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       return true;
     }
 
-    // 3. Utilisateur standard : peut supprimer son propre message
+    // 3. Utilisateur standard : peut supprimer ou faire disparaître son propre message
     if (isMe) {
       return true;
     }
@@ -202,30 +244,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     return false;
   };
 
-  const handleDeleteMessage = async (msg: ChatMessage) => {
+  const handleDeleteMessage = (msg: ChatMessage) => {
     soundFx.playClick();
-    const isMe = Boolean(
-      (profile.username && msg.username && msg.username.toLowerCase() === profile.username.toLowerCase()) ||
-      (profile.id && msg.userId && msg.userId === profile.id) ||
-      (profile.steam?.steamId && msg.steamId && msg.steamId === profile.steam.steamId)
-    );
-
-    let confirmPrompt = `Voulez-vous retirer ce message de ${msg.username} de la discussion ?`;
-    if (isMe) {
-      confirmPrompt = 'Voulez-vous supprimer votre message de la discussion ?';
-    } else if (isStrictAdmin) {
-      confirmPrompt = `Voulez-vous retirer ce message de ${msg.username} (action administrateur) ?`;
-    } else if (isStrictModerator) {
-      confirmPrompt = `Voulez-vous retirer ce message de ${msg.username} (action modérateur) ?`;
-    }
-
-    if (window.confirm(confirmPrompt)) {
-      const res = await deleteMessage(msg.id);
-      if (!res.success && res.message) {
-        setErrorMessage(res.message);
-        setTimeout(() => setErrorMessage(null), 4000);
-      }
-    }
+    setMessageToDelete(msg);
   };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -419,16 +440,31 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                   return next;
                 });
               }}
-              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                 isAutoTranslate
                   ? 'bg-amber-500/25 text-amber-300 border border-amber-500/50 shadow-sm shadow-amber-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/40 border border-transparent'
               }`}
-              title={isAutoTranslate ? t('chat.autoTranslateActive') : t('chat.autoTranslate')}
-              aria-label={t('chat.autoTranslate')}
+              title={
+                isAutoTranslate
+                  ? `${t('chat.autoTranslateActive')} → ${currentLangMeta.label} (${currentLangMeta.shortCode})`
+                  : `${t('chat.autoTranslate')} → ${currentLangMeta.label} (${currentLangMeta.shortCode})`
+              }
+              aria-label={`${t('chat.autoTranslate')} (${currentLangMeta.shortCode})`}
             >
               <Languages className={`w-3.5 h-3.5 ${isAutoTranslate ? 'text-amber-400' : 'text-slate-400'}`} />
               <span className="text-[10px] hidden sm:inline">{t('chat.autoTranslate')}</span>
+              <span
+                className={`text-[9px] px-1 py-0.2 rounded font-mono font-bold flex items-center gap-0.5 ${
+                  isAutoTranslate
+                    ? 'bg-amber-400/20 text-amber-200 border border-amber-400/40'
+                    : 'bg-black/40 text-slate-400 border border-slate-700/60'
+                }`}
+                title={`Traduction adaptée à la langue du site : ${currentLangMeta.nativeLabel} (${currentLangMeta.shortCode})`}
+              >
+                <span>{currentLangMeta.flag}</span>
+                <span>{currentLangMeta.shortCode}</span>
+              </span>
             </button>
 
             {/* Bouton Journal de Modération (si admin ou modérateur) */}
@@ -470,82 +506,129 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
           </div>
         </div>
 
-        {/* Barre du sélecteur de Salon / Langue */}
-        <div className="relative">
+        {/* Barre des Onglets : Salons Publics vs Messages Privés */}
+        <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-[#020d0a] border border-[#78350f]/60">
           <button
             type="button"
-            onClick={() => setShowChannelDropdown((prev) => !prev)}
-            className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#020d0a] border border-[#78350f]/60 hover:border-amber-500/60 text-xs font-medium transition-colors"
+            onClick={() => {
+              soundFx.playClick();
+              setActiveTab('public');
+            }}
+            className={`py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              activeTab === 'public'
+                ? 'bg-gradient-to-r from-emerald-700 to-teal-800 text-white shadow-sm border border-emerald-500/40'
+                : 'text-slate-400 hover:text-white hover:bg-emerald-950/40'
+            }`}
           >
-            <div className="flex items-center gap-2 truncate">
-              <span className="text-sm">{currentChannelInfo.icon}</span>
-              <span className="text-amber-100 font-bold">
-                {getChannelName(currentChannelInfo.id, currentChannelInfo.name)}
+            <Globe className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Salons Publics</span>
+            {publicUnreadCount > 0 && (
+              <span className="min-w-[16px] h-[16px] px-1 rounded-full bg-emerald-500 text-slate-950 text-[9px] font-mono font-bold flex items-center justify-center">
+                {publicUnreadCount > 9 ? '9+' : publicUnreadCount}
               </span>
-              <span className="text-[11px] text-emerald-400/70 truncate hidden sm:inline">
-                — {getChannelDesc(currentChannelInfo.id, currentChannelInfo.description)}
-              </span>
-            </div>
-            <ChevronDown
-              className={`w-3.5 h-3.5 text-amber-400 shrink-0 transition-transform ${
-                showChannelDropdown ? 'rotate-180' : ''
-              }`}
-            />
+            )}
           </button>
 
-          {/* Menu déroulant des Salons */}
-          {showChannelDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-[#03150f] border-2 border-[#78350f] rounded-xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 max-h-64 overflow-y-auto">
-              <div className="px-2 py-0.5 text-[10px] font-bold text-amber-400/80 uppercase tracking-wider">
-                {t('chat.channelsDropdownTitle', 'Salons & Retours')}
-              </div>
-              {CHAT_CHANNELS.map((ch) => {
-                const isSelected = ch.id === currentChannel;
-                return (
-                  <button
-                    key={ch.id}
-                    type="button"
-                    onClick={() => {
-                      setChannel(ch.id);
-                      setShowChannelDropdown(false);
-                    }}
-                    className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs transition-all ${
-                      isSelected
-                        ? 'bg-[#059669]/30 text-amber-200 font-bold border border-emerald-500/50'
-                        : 'text-slate-300 hover:bg-emerald-950/60 hover:text-white'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 truncate">
-                      <span className="text-sm shrink-0">{ch.icon}</span>
-                      <div className="truncate">
-                        <div className="font-semibold text-slate-100">
-                          {getChannelName(ch.id, ch.label)}
-                        </div>
-                        <div className="text-[10px] text-emerald-400/70 truncate">
-                          {getChannelDesc(ch.id, ch.description)}
-                        </div>
-                      </div>
-                    </div>
-                    {isSelected && (
-                      <span className="text-[10px] text-emerald-400 bg-emerald-900/60 px-1 py-0.2 rounded font-bold shrink-0">
-                        {t('chat.activeChannel', 'Actif')}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              setActiveTab('private');
+            }}
+            className={`py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              activeTab === 'private'
+                ? 'bg-gradient-to-r from-amber-600 to-amber-700 text-slate-950 shadow-sm border border-amber-400/50'
+                : 'text-slate-400 hover:text-white hover:bg-emerald-950/40'
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5 text-amber-300" />
+            <span>Messages Privés</span>
+            {privateUnreadCount > 0 && (
+              <span className="min-w-[16px] h-[16px] px-1 rounded-full bg-amber-500 text-slate-950 text-[9px] font-mono font-bold flex items-center justify-center animate-pulse">
+                {privateUnreadCount > 9 ? '9+' : privateUnreadCount}
+              </span>
+            )}
+          </button>
         </div>
 
+        {/* Barre du sélecteur de Salon / Langue (visible en mode salons publics) */}
+        {activeTab === 'public' && (
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowChannelDropdown((prev) => !prev)}
+              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#020d0a] border border-[#78350f]/60 hover:border-amber-500/60 text-xs font-medium transition-colors"
+            >
+              <div className="flex items-center gap-2 truncate">
+                <span className="text-sm">{currentChannelInfo.icon}</span>
+                <span className="text-amber-100 font-bold">
+                  {getChannelName(currentChannelInfo.id, currentChannelInfo.name)}
+                </span>
+                <span className="text-[11px] text-emerald-400/70 truncate hidden sm:inline">
+                  — {getChannelDesc(currentChannelInfo.id, currentChannelInfo.description)}
+                </span>
+              </div>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-amber-400 shrink-0 transition-transform ${
+                  showChannelDropdown ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+
+            {/* Menu déroulant des Salons */}
+            {showChannelDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-[#03150f] border-2 border-[#78350f] rounded-xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 max-h-64 overflow-y-auto">
+                <div className="px-2 py-0.5 text-[10px] font-bold text-amber-400/80 uppercase tracking-wider">
+                  {t('chat.channelsDropdownTitle', 'Salons & Retours')}
+                </div>
+                {CHAT_CHANNELS.map((ch) => {
+                  const isSelected = ch.id === currentChannel;
+                  return (
+                    <button
+                      key={ch.id}
+                      type="button"
+                      onClick={() => {
+                        setChannel(ch.id);
+                        setShowChannelDropdown(false);
+                      }}
+                      className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs transition-all ${
+                        isSelected
+                          ? 'bg-[#059669]/30 text-amber-200 font-bold border border-emerald-500/50'
+                          : 'text-slate-300 hover:bg-emerald-950/60 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <span className="text-sm shrink-0">{ch.icon}</span>
+                        <div className="truncate">
+                          <div className="font-semibold text-slate-100">
+                            {getChannelName(ch.id, ch.label)}
+                          </div>
+                          <div className="text-[10px] text-emerald-400/70 truncate">
+                            {getChannelDesc(ch.id, ch.description)}
+                          </div>
+                        </div>
+                      </div>
+                      {isSelected && (
+                        <span className="text-[10px] text-emerald-400 bg-emerald-900/60 px-1 py-0.2 rounded font-bold shrink-0">
+                          {t('chat.activeChannel', 'Actif')}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Bandeau contextuel / Catégories pour Feedback (Conteneur fluide sans dépassement) */}
-        {currentChannel === 'feedback' && (
+        {activeTab === 'public' && currentChannel === 'feedback' && (
           <div className="flex flex-col gap-1 pt-0.5 w-full max-w-full overflow-hidden">
             <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1">
               <Lightbulb className="w-3 h-3 text-amber-400" />
               <span>{t('chat.feedbackCategory')}</span>
             </span>
-            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 w-full max-w-full">
+            <div className="flex flex-wrap items-center gap-1 py-0.5 w-full max-w-full">
               {FEEDBACK_CATEGORIES.map((cat) => {
                 const isCatSelected = selectedCategory === cat.id;
                 const catLabel = getCategoryLabel(cat.id, cat.label);
@@ -648,7 +731,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-bold text-amber-200">{log.username}</span>
                       <span className="text-[10px] text-slate-400 font-mono">#{log.channel}</span>
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-slate-400">
                         {new Date(log.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       {isPhishing ? (
@@ -686,7 +769,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                   </div>
 
                   <div className="text-[11px] text-slate-300 bg-black/40 p-2 rounded-lg break-words">
-                    <span className="text-[10px] text-slate-500 block mb-0.5 font-bold">
+                    <span className="text-[10px] text-slate-400 block mb-0.5 font-bold">
                       {isPhishing ? 'Message neutralisé :' : 'Message bloqué :'}
                     </span>
                     "{log.originalText}"
@@ -696,9 +779,12 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
             })
           )}
         </div>
+      ) : activeTab === 'private' ? (
+        <ChatPrivateView onOpenAuth={onOpenAuth} />
       ) : (
-        /* Fil des messages */
-        <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
+        <>
+          {/* Fil des messages */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
           {isLoading && messages.length === 0 ? (
             <div className="flex items-center justify-center h-36 text-emerald-400 text-xs animate-pulse">
               Chargement de la discussion...
@@ -741,10 +827,42 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                 >
                   {/* Avatar avec cadre éventuel */}
                   <div
+                    onClick={() => {
+                      const cleanAuthor = isCreatorMsg && msg.username.startsWith('Explorateur_') ? 'Hibouxe' : msg.username;
+                      if (canModerate) {
+                        soundFx.playClick();
+                        setUserToModerate({
+                          username: cleanAuthor,
+                          userId: msg.userId,
+                          steamId: msg.steamId,
+                          avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                          title: msg.title,
+                          activeFrame: msg.activeFrame,
+                          isCreator: isCreatorMsg,
+                          isModerator: msg.isModerator,
+                        });
+                      } else if (!isMe) {
+                        soundFx.playClick();
+                        openPrivateChat(cleanAuthor, {
+                          avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                          title: msg.title,
+                          activeFrame: msg.activeFrame,
+                          steamId: msg.steamId,
+                        });
+                      }
+                    }}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 bg-gradient-to-br ${
                       avatar.bgGradient
-                    } ${frameDef.borderClass} ${frameDef.glowClass || ''} shadow-md overflow-hidden`}
-                    title={avatar.name}
+                    } ${frameDef.borderClass} ${frameDef.glowClass || ''} shadow-md overflow-hidden ${
+                      canModerate || !isMe ? 'cursor-pointer hover:ring-2 hover:ring-amber-400 transition-all hover:scale-105' : ''
+                    }`}
+                    title={
+                      canModerate
+                        ? `Modérer le profil de ${msg.username}`
+                        : !isMe
+                        ? `Envoyer un message privé à ${msg.username}`
+                        : avatar.name
+                    }
                   >
                     {avatar.imageUrl ? (
                       <img
@@ -773,8 +891,43 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         );
                         const authorDisplayName = (isCreatorMsg && msg.username.startsWith('Explorateur_')) ? 'Hibouxe' : msg.username;
                         return (
-                          <span className="font-bold text-[11px] text-amber-100 flex items-center gap-1">
-                            {authorDisplayName}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (canModerate) {
+                                soundFx.playClick();
+                                setUserToModerate({
+                                  username: authorDisplayName,
+                                  userId: msg.userId,
+                                  steamId: msg.steamId,
+                                  avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                                  title: msg.title,
+                                  activeFrame: msg.activeFrame,
+                                  isCreator: isCreatorMsg,
+                                  isModerator: msg.isModerator,
+                                });
+                              } else if (!isMe) {
+                                soundFx.playClick();
+                                openPrivateChat(authorDisplayName, {
+                                  avatarId: isCreatorMsg ? 'hibouxe_creator' : msg.avatarId,
+                                  title: msg.title,
+                                  activeFrame: msg.activeFrame,
+                                  steamId: msg.steamId,
+                                });
+                              }
+                            }}
+                            className={`font-bold text-[11px] text-amber-100 flex items-center gap-1 text-left ${
+                              canModerate || !isMe ? 'cursor-pointer hover:underline hover:text-amber-300' : ''
+                            }`}
+                            title={
+                              canModerate
+                                ? `Modérer le profil de ${authorDisplayName}`
+                                : !isMe
+                                ? `Envoyer un message privé à ${authorDisplayName}`
+                                : undefined
+                            }
+                          >
+                            <span>{authorDisplayName}</span>
                             {isCreatorMsg && (
                               <span
                                 className="inline-flex items-center gap-0.5 text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold"
@@ -793,7 +946,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                                 Modérateur
                               </span>
                             )}
-                          </span>
+                          </button>
                         );
                       })()}
 
@@ -803,7 +956,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         </span>
                       )}
 
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-slate-400">
                         {formatTimestamp(msg.timestamp)}
                       </span>
                     </div>
@@ -844,9 +997,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         }`}
                       >
                         {(() => {
-                          const isTranslated = Boolean(translations[msg.id]) && !showOriginalMsgIds[msg.id];
-                          const textToRender = isTranslated ? translations[msg.id] : msg.text;
                           const hasTranslation = Boolean(translations[msg.id]);
+                          const isTranslated = hasTranslation && (isAutoTranslate || Boolean(manualTranslatedMsgIds[msg.id])) && !showOriginalMsgIds[msg.id];
+                          const textToRender = isTranslated ? translations[msg.id] : msg.text;
 
                           return (
                             <>
@@ -858,19 +1011,19 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                               {hasTranslation && !msg.isDeleted && (
                                 <div className="flex items-center gap-1 mt-1 text-[10px] text-amber-300/80 font-mono">
                                   <Languages className="w-3 h-3 text-amber-400" />
-                                  <span>{isTranslated ? t('chat.translated') : 'Original'}</span>
+                                  <span>{isTranslated ? `${t('chat.translated')} (${currentLangMeta.shortCode})` : 'Original'}</span>
                                   <span>•</span>
                                   <button
                                     type="button"
                                     onClick={() =>
                                       setShowOriginalMsgIds((prev) => ({
                                         ...prev,
-                                        [msg.id]: !prev[msg.id],
+                                        [msg.id]: isTranslated ? true : false,
                                       }))
                                     }
                                     className="underline hover:text-white cursor-pointer"
                                   >
-                                    {isTranslated ? t('chat.showOriginal') : t('chat.translated')}
+                                    {isTranslated ? t('chat.showOriginal') : `${t('chat.translated')} (${currentLangMeta.shortCode})`}
                                   </button>
                                 </div>
                               )}
@@ -891,13 +1044,13 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                       </div>
 
                       {/* Bouton de traduction manuelle par message */}
-                      {!msg.isDeleted && !translations[msg.id] && (
+                      {!msg.isDeleted && (!translations[msg.id] || (!isAutoTranslate && !manualTranslatedMsgIds[msg.id])) && (
                         <button
                           type="button"
                           onClick={() => handleTranslateSingleMessage(msg)}
                           disabled={translatingMsgIds[msg.id]}
                           className="opacity-0 group-hover/bubble:opacity-100 focus:opacity-100 p-1 text-slate-400 hover:text-amber-300 hover:bg-amber-500/10 rounded transition cursor-pointer self-center shrink-0"
-                          title={t('chat.translate')}
+                          title={`${t('chat.translate')} (${currentLangMeta.shortCode})`}
                         >
                           <Languages className={`w-3.5 h-3.5 ${translatingMsgIds[msg.id] ? 'animate-spin text-amber-400' : ''}`} />
                         </button>
@@ -907,17 +1060,23 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                         <button
                           type="button"
                           onClick={() => handleDeleteMessage(msg)}
-                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded transition cursor-pointer self-center shrink-0"
+                          className={`p-1 rounded transition cursor-pointer self-center shrink-0 ${
+                            msg.isDeleted
+                              ? 'opacity-60 hover:opacity-100 text-slate-400 hover:text-red-400 hover:bg-red-500/10'
+                              : 'opacity-0 group-hover/bubble:opacity-100 focus:opacity-100 text-slate-400 hover:text-red-400 hover:bg-red-500/10'
+                          }`}
                           title={
-                            isStrictAdmin
+                            msg.isDeleted
+                              ? 'Faire disparaître définitivement ce message retiré'
+                              : isStrictAdmin
                               ? msg.username === profile.username
-                                ? 'Supprimer mon message (Action Administrateur)'
-                                : `Supprimer ce message de ${msg.username} (Action Administrateur)`
+                                ? 'Supprimer ou faire disparaître mon message'
+                                : `Modérer ce message de ${msg.username}`
                               : msg.username === profile.username
-                              ? 'Supprimer mon message'
-                              : `Retirer ce message de ${msg.username} (Action Modérateur)`
+                              ? 'Supprimer ou faire disparaître mon message'
+                              : `Modérer ce message de ${msg.username}`
                           }
-                          aria-label="Supprimer le message"
+                          aria-label="Supprimer ou faire disparaître le message"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -930,7 +1089,6 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
           )}
           <div ref={messagesEndRef} />
         </div>
-      )}
 
       {/* Avertissement visible de modération (anti-injure ou anti-phishing) */}
       {moderationWarning && (
@@ -967,7 +1125,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       {isAuthenticated ? (
         <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
           {/* Barre de réactions rapides / emojis */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none">
+          <div className="flex flex-wrap items-center gap-1 pb-0.5">
             <span className="text-[10px] text-emerald-400/70 shrink-0 flex items-center gap-0.5 mr-0.5">
               <Smile className="w-3 h-3" />
             </span>
@@ -998,9 +1156,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                     ? t('chat.feedbackPlaceholder')
                     : `${t('chat.placeholder')}`
                 }
-                className="w-full px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 text-slate-100 text-xs focus:outline-none focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/60 placeholder:text-slate-500"
+                className="w-full px-3 py-2 rounded-xl bg-[#020d0a] border border-[#78350f]/60 text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/60 placeholder:text-slate-400"
               />
-              <span className="absolute right-2 bottom-1.5 text-[9px] text-slate-500">
+              <span className="absolute right-2 bottom-1.5 text-[9px] text-slate-400">
                 {inputText.length}/350
               </span>
             </div>
@@ -1010,7 +1168,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
               disabled={!inputText.trim() || isSending || cooldownSeconds > 0}
               className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1 transition-all shadow-md shrink-0 cursor-pointer ${
                 !inputText.trim() || isSending || cooldownSeconds > 0
-                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                  ? 'bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-700'
                   : 'bg-gradient-to-r from-emerald-600 to-amber-600 text-white hover:from-emerald-500 hover:to-amber-500 border border-amber-400/50 shadow-emerald-950/40 active:scale-95'
               }`}
             >
@@ -1076,6 +1234,8 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
             <span>{t('chat.signIn')}</span>
           </button>
         </div>
+      )}
+        </>
       )}
 
       {/* Volet / Modale du Guide de Prévention & Anti-Hameçonnage */}
@@ -1192,6 +1352,148 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modale de modération d'un profil joueur (clic sur pseudo / avatar pour Hibouxe et modérateurs) */}
+      <ChatUserModerationModal
+        isOpen={Boolean(userToModerate)}
+        onClose={() => setUserToModerate(null)}
+        targetUser={userToModerate}
+        onUserPurged={() => {
+          setTimeout(() => setUserToModerate(null), 1000);
+        }}
+      />
+
+      {/* Modale de confirmation de suppression / effacement d'un message */}
+      {messageToDelete && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm animate-fade-in"
+          onClick={() => setMessageToDelete(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl bg-[#04120e] border border-emerald-500/40 p-4 shadow-2xl space-y-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2.5">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                <Trash2 className="w-4 h-4 text-rose-400" />
+                <span>{messageToDelete.isDeleted ? 'Effacement définitif' : 'Gestion du message'}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMessageToDelete(null)}
+                className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="text-xs text-slate-300">
+              <p className="font-semibold text-amber-200 mb-1">
+                Auteur : {messageToDelete.username}
+              </p>
+              <div className="p-2 rounded-lg bg-black/40 border border-slate-800 text-[11px] text-slate-400 italic break-words line-clamp-3">
+                "{messageToDelete.text}"
+              </div>
+            </div>
+
+            {messageToDelete.isDeleted ? (
+              <div className="space-y-2 pt-1">
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Ce message a déjà été masqué. Souhaitez-vous le faire disparaître définitivement de la base et du salon ?
+                </p>
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setMessageToDelete(null)}
+                    className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-medium cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const msg = messageToDelete;
+                      setMessageToDelete(null);
+                      const res = await deleteMessage(msg.id, true);
+                      if (!res.success && res.message) {
+                        setErrorMessage(res.message);
+                        setTimeout(() => setErrorMessage(null), 4000);
+                      }
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition cursor-pointer"
+                  >
+                    Faire disparaître
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 pt-1">
+                <p className="text-[11px] text-slate-300">
+                  Choisissez l'action à appliquer :
+                </p>
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const msg = messageToDelete;
+                      setMessageToDelete(null);
+                      const res = await deleteMessage(msg.id, true);
+                      if (!res.success && res.message) {
+                        setErrorMessage(res.message);
+                        setTimeout(() => setErrorMessage(null), 4000);
+                      }
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl bg-rose-950/40 hover:bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs transition cursor-pointer flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="font-bold flex items-center gap-1.5">
+                        <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+                        <span>Faire disparaître complètement</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">
+                        Efface physiquement le message du salon pour tout le monde.
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const msg = messageToDelete;
+                      setMessageToDelete(null);
+                      const res = await deleteMessage(msg.id, false);
+                      if (!res.success && res.message) {
+                        setErrorMessage(res.message);
+                        setTimeout(() => setErrorMessage(null), 4000);
+                      }
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 text-slate-300 text-xs transition cursor-pointer flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="font-bold flex items-center gap-1.5">
+                        <span>Masquer le texte uniquement</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">
+                        Remplace le texte par [Message retiré], la bulle reste visible.
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setMessageToDelete(null)}
+                    className="px-3 py-1 rounded-lg text-xs text-slate-400 hover:text-white cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

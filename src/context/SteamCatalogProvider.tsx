@@ -1,50 +1,130 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { SteamCatalogContext } from './SteamCatalogContext';
-import { steamCatalog } from '../services/steamCatalog';
 import type { SteamCatalogGame } from '../services/steamCatalog';
 import type { Game } from '../types/game';
+import { TODAY_DAILY_GEM } from '../data/dailyGem';
 
 interface SteamCatalogProviderProps {
   children: React.ReactNode;
 }
 
+const DEFAULT_STATS = {
+  totalGames: 274,
+  steamCatalogCount: 0,
+  customCount: 0,
+  genresCount: {},
+  yearsCount: {},
+  artStylesCount: {},
+};
+
 export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ children }) => {
   const [catalog, setCatalog] = useState<SteamCatalogGame[]>([]);
-  const [allGames, setAllGames] = useState<Game[]>(() => steamCatalog.getAllPlayableGames());
-  const [curatedGems, setCuratedGems] = useState<Game[]>(() => steamCatalog.getCuratedGems());
-  const [isLoading, setIsLoading] = useState(true);
-  const [version, setVersion] = useState(0);
+  const [allGames, setAllGames] = useState<Game[]>([TODAY_DAILY_GEM]);
+  const [curatedGems, setCuratedGems] = useState<Game[]>([TODAY_DAILY_GEM]);
+  const [stats, setStats] = useState(DEFAULT_STATS);
+  const [isLoading, setIsLoading] = useState(false);
+  const steamCatalogRef = useRef<any>(null);
 
-  // Charger le catalogue au montage
+  // Charger le catalogue complet asynchronement en arrière-plan sans bloquer le premier rendu (FCP/LCP)
   useEffect(() => {
     let isMounted = true;
-    steamCatalog.loadCatalog().then((items) => {
-      if (isMounted) {
-        setCatalog(items);
-        setAllGames(steamCatalog.getAllPlayableGames());
-        setCuratedGems(steamCatalog.getCuratedGems());
-        setIsLoading(false);
-      }
-    });
 
-    const handleUpdate = () => {
-      setAllGames(steamCatalog.getAllPlayableGames());
-      setCuratedGems(steamCatalog.getCuratedGems());
-      setVersion((v) => v + 1);
+    const loadService = async () => {
+      try {
+        const { steamCatalog } = await import('../services/steamCatalog');
+        if (!isMounted) return;
+        steamCatalogRef.current = steamCatalog;
+
+        const playable = steamCatalog.getAllPlayableGames();
+        const gems = steamCatalog.getCuratedGems();
+        setAllGames(playable);
+        setCuratedGems(gems);
+        setStats(steamCatalog.getStats());
+
+        const triggerLoadCatalog = () => {
+          steamCatalog.loadCatalog().then(async (items) => {
+            if (!isMounted) return;
+            setCatalog(items);
+            const updatedPlayable = steamCatalog.getAllPlayableGames();
+            const updatedGems = steamCatalog.getCuratedGems();
+            setAllGames(updatedPlayable);
+            setCuratedGems(updatedGems);
+            setStats(steamCatalog.getStats());
+            try {
+              const { buildCardsFromGames, setDynamicCardsPool } = await import('../data/cardsData');
+              setDynamicCardsPool(buildCardsFromGames(updatedGems));
+            } catch {
+              // Ignore
+            }
+            setIsLoading(false);
+          });
+        };
+
+        let idleTimer: any;
+        const onInteraction = () => {
+          if (idleTimer) clearTimeout(idleTimer);
+          window.removeEventListener('scroll', onInteraction);
+          window.removeEventListener('touchstart', onInteraction);
+          window.removeEventListener('click', onInteraction);
+          triggerLoadCatalog();
+        };
+
+        window.addEventListener('scroll', onInteraction, { passive: true, once: true });
+        window.addEventListener('touchstart', onInteraction, { passive: true, once: true });
+        window.addEventListener('click', onInteraction, { passive: true, once: true });
+        idleTimer = setTimeout(onInteraction, 8000);
+      } catch (err) {
+        console.warn('[SteamCatalogProvider] Background load error:', err);
+      }
+    };
+
+    let initTimer: any;
+    const triggerInit = () => {
+      if (initTimer) clearTimeout(initTimer);
+      window.removeEventListener('scroll', triggerInit);
+      window.removeEventListener('touchstart', triggerInit);
+      window.removeEventListener('click', triggerInit);
+      loadService();
+    };
+
+    window.addEventListener('scroll', triggerInit, { passive: true, once: true });
+    window.addEventListener('touchstart', triggerInit, { passive: true, once: true });
+    window.addEventListener('click', triggerInit, { passive: true, once: true });
+    initTimer = setTimeout(triggerInit, 4000);
+
+    const handleUpdate = async () => {
+      if (!steamCatalogRef.current) return;
+      const sc = steamCatalogRef.current;
+      const playable = sc.getAllPlayableGames();
+      const gems = sc.getCuratedGems();
+      setAllGames(playable);
+      setCuratedGems(gems);
+      setStats(sc.getStats());
+      try {
+        const { buildCardsFromGames, setDynamicCardsPool } = await import('../data/cardsData');
+        setDynamicCardsPool(buildCardsFromGames(gems));
+      } catch {
+        // Ignore
+      }
     };
 
     window.addEventListener('hoot_steam_catalog_updated', handleUpdate);
+    window.addEventListener('hoot_steam_store_data_updated', handleUpdate);
     return () => {
       isMounted = false;
+      if (initTimer) clearTimeout(initTimer);
+      window.removeEventListener('scroll', triggerInit);
+      window.removeEventListener('touchstart', triggerInit);
+      window.removeEventListener('click', triggerInit);
       window.removeEventListener('hoot_steam_catalog_updated', handleUpdate);
+      window.removeEventListener('hoot_steam_store_data_updated', handleUpdate);
     };
   }, []);
 
   // Synchronisation dynamique du nombre de jeux dans les balises meta de partage et de SEO
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    const count = curatedGems.length;
-    if (count <= 0) return;
+    const count = curatedGems.length > 1 ? curatedGems.length : 274;
 
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
@@ -72,23 +152,21 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
   }, [curatedGems.length]);
 
   const searchGames = useCallback((query: string, limit = 20) => {
-    return steamCatalog.searchGames(query, limit);
+    if (steamCatalogRef.current) {
+      return steamCatalogRef.current.searchGames(query, limit);
+    }
+    const q = query.toLowerCase().trim();
+    if (!q) return [TODAY_DAILY_GEM];
+    return [TODAY_DAILY_GEM].filter((g) => g.title.toLowerCase().includes(q));
   }, []);
 
   const addCustomGame = useCallback((game: SteamCatalogGame) => {
-    steamCatalog.addUserCustomGame(game);
+    steamCatalogRef.current?.addUserCustomGame(game);
   }, []);
 
   const removeCustomGame = useCallback((id: string) => {
-    steamCatalog.removeUserCustomGame(id);
+    steamCatalogRef.current?.removeUserCustomGame(id);
   }, []);
-
-  const stats = useMemo(() => {
-    if (catalog.length >= 0 && version >= 0) {
-      return steamCatalog.getStats();
-    }
-    return steamCatalog.getStats();
-  }, [catalog, version]);
 
   const value = useMemo(
     () => ({

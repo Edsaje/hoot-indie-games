@@ -43,9 +43,8 @@ import type { CardRarity } from '../../types/cards';
 import {
   computeGameRarity,
   extractSteamAppId,
-  STEAM_RARITY_THRESHOLDS,
 } from '../../data/cardsData';
-import { getSteamStoreData, registerSteamStoreData } from '../../data/steamStoreData';
+import { getSteamStoreData, registerSteamStoreData, type SteamStoreGameData } from '../../data/steamStoreData';
 
 interface AdminGamesManagerProps {
   currentSteamId?: string;
@@ -112,6 +111,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   const [formTaglineEn, setFormTaglineEn] = useState('');
   const [formComposer, setFormComposer] = useState('');
   const [formCardRarity, setFormCardRarity] = useState<'auto' | CardRarity>('auto');
+  const [formSteamStoreData, setFormSteamStoreData] = useState<SteamStoreGameData | null>(null);
   const [steamReviewsInfo, setSteamReviewsInfo] = useState<{
     totalReviews: number;
     positivePercent: number;
@@ -124,7 +124,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       const data = await fetchAdminGameOverrides(currentSteamId);
       setOverrides(data);
       steamCatalogService.setServerOverrides(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erreur chargement surcharges catalogue:', err);
       if (onNotice) onNotice('error', 'Impossible de récupérer les surcharges serveur du catalogue.');
     } finally {
@@ -133,7 +133,10 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   }, [currentSteamId, onNotice]);
 
   useEffect(() => {
-    loadData();
+    const timer = setTimeout(() => {
+      void loadData();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [loadData]);
 
   useEffect(() => {
@@ -145,28 +148,62 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   // Pré-remplissage automatique depuis une suggestion communautaire
   useEffect(() => {
     if (initialPrefillGame) {
-      soundFx.playClick();
-      setIsCreatingNew(true);
-      setEditingGame(initialPrefillGame);
-      setFormTitle(initialPrefillGame.title || '');
-      setFormId(initialPrefillGame.id || '');
-      setFormDeveloper(initialPrefillGame.developer || '');
-      setFormReleaseYear(initialPrefillGame.releaseYear || new Date().getFullYear());
-      setFormGenres(Array.isArray(initialPrefillGame.genre) ? initialPrefillGame.genre.join(', ') : '');
-      setFormArtStyleFr(initialPrefillGame.artStyle?.fr || 'Pixel Art');
-      setFormArtStyleEn(initialPrefillGame.artStyle?.en || 'Pixel Art');
-      setFormCameraFr(initialPrefillGame.camera?.fr || 'Vue de côté 2D');
-      setFormCameraEn(initialPrefillGame.camera?.en || '2D Side-scroller');
-      setFormSteamUrl(initialPrefillGame.steamUrl || '');
-      setFormItchUrl(initialPrefillGame.itchUrl || '');
-      setFormIsFree(!!initialPrefillGame.isFree);
-      setFormHeaderImage(initialPrefillGame.headerImage || '');
-      setFormScreenshots((initialPrefillGame.screenshots || []).join('\n'));
-      setFormTaglineFr(initialPrefillGame.hints?.tagline?.fr || '');
-      setFormTaglineEn(initialPrefillGame.hints?.tagline?.en || '');
-      setFormComposer(initialPrefillGame.hints?.composer || '');
+      const timer = setTimeout(() => {
+        soundFx.playClick();
+        setIsCreatingNew(true);
+        setEditingGame(initialPrefillGame);
+        setFormTitle(initialPrefillGame.title || '');
+        setFormId(initialPrefillGame.id || '');
+        setFormDeveloper(initialPrefillGame.developer || '');
+        setFormReleaseYear(initialPrefillGame.releaseYear || new Date().getFullYear());
+        setFormGenres(Array.isArray(initialPrefillGame.genre) ? initialPrefillGame.genre.join(', ') : '');
+        setFormArtStyleFr(initialPrefillGame.artStyle?.fr || 'Pixel Art');
+        setFormArtStyleEn(initialPrefillGame.artStyle?.en || 'Pixel Art');
+        setFormCameraFr(initialPrefillGame.camera?.fr || 'Vue de côté 2D');
+        setFormCameraEn(initialPrefillGame.camera?.en || '2D Side-scroller');
+        setFormSteamUrl(initialPrefillGame.steamUrl || '');
+        setFormItchUrl(initialPrefillGame.itchUrl || '');
+        setFormIsFree(!!initialPrefillGame.isFree);
+        setFormHeaderImage(initialPrefillGame.headerImage || '');
+        setFormScreenshots((initialPrefillGame.screenshots || []).join('\n'));
+        setFormTaglineFr(initialPrefillGame.hints?.tagline?.fr || '');
+        setFormTaglineEn(initialPrefillGame.hints?.tagline?.en || '');
+        setFormComposer(initialPrefillGame.hints?.composer || '');
 
-      onPrefillConsumed?.();
+        if (initialPrefillGame.steamStoreData) {
+          setFormSteamStoreData(initialPrefillGame.steamStoreData);
+          registerSteamStoreData(initialPrefillGame.steamStoreData);
+        } else {
+          const cleanAppId = extractSteamAppId(initialPrefillGame);
+          const store = cleanAppId ? getSteamStoreData(cleanAppId) : null;
+          if (store) {
+            setFormSteamStoreData(store);
+          }
+        }
+
+        if (initialPrefillGame.cardRarity) {
+          setFormCardRarity(initialPrefillGame.cardRarity);
+        } else {
+          const cleanAppId = extractSteamAppId(initialPrefillGame);
+          const store = initialPrefillGame.steamStoreData || (cleanAppId ? getSteamStoreData(cleanAppId) : null);
+          if (store && store.totalReviews > 0) {
+            setSteamReviewsInfo({
+              totalReviews: store.totalReviews,
+              positivePercent: store.positivePercent,
+              desc: store.reviewScoreDesc?.fr,
+            });
+          }
+          const autoRarity = computeGameRarity(
+            initialPrefillGame.id || '',
+            initialPrefillGame,
+            store ? { totalReviews: store.totalReviews, positivePercent: store.positivePercent } : undefined
+          );
+          setFormCardRarity(autoRarity);
+        }
+
+        onPrefillConsumed?.();
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [initialPrefillGame, onPrefillConsumed]);
 
@@ -249,7 +286,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
 
       const isModified = !!modifiedMap[catGame.id];
       const isHidden = hiddenSet.has(catGame.id);
-      const isGem = (promotedGemSet.has(catGame.id) || (catGame as any).isGem === true) && !excludedGemSet.has(catGame.id);
+      const isGem = (promotedGemSet.has(catGame.id) || Boolean((catGame as { isGem?: boolean }).isGem)) && !excludedGemSet.has(catGame.id);
       const mod = modifiedMap[catGame.id];
 
       const merged: EnrichedAdminGame = {
@@ -287,7 +324,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     // 3. Jeux personnalisés ajoutés par l'admin
     for (const customGame of customList) {
       const isHidden = hiddenSet.has(customGame.id);
-      const isGem = promotedGemSet.has(customGame.id) || (customGame as any).isGem === true;
+      const isGem = promotedGemSet.has(customGame.id) || Boolean((customGame as { isGem?: boolean }).isGem);
       map.set(customGame.id, {
         ...customGame,
         genre: Array.isArray(customGame.genre) ? customGame.genre : [],
@@ -337,9 +374,11 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
   }, [enrichedGamesList, statusFilter, searchQuery]);
 
   // Réinitialisation de page si le filtre change
-  useEffect(() => {
+  const [prevFilter, setPrevFilter] = useState({ searchQuery, statusFilter });
+  if (prevFilter.searchQuery !== searchQuery || prevFilter.statusFilter !== statusFilter) {
+    setPrevFilter({ searchQuery, statusFilter });
     setCurrentPage(1);
-  }, [searchQuery, statusFilter]);
+  }
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(filteredGames.length / ITEMS_PER_PAGE));
@@ -439,14 +478,20 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormComposer(game.hints?.composer || '');
 
     const appId = extractSteamAppId(game);
-    const store = appId ? getSteamStoreData(appId) : null;
-    if (store && store.totalReviews > 0) {
-      setSteamReviewsInfo({
-        totalReviews: store.totalReviews,
-        positivePercent: store.positivePercent,
-        desc: store.reviewScoreDesc?.fr,
-      });
+    const store = (game as Game).steamStoreData || (appId ? getSteamStoreData(appId) : null);
+    if (store) {
+      setFormSteamStoreData(store);
+      if (store.totalReviews > 0) {
+        setSteamReviewsInfo({
+          totalReviews: store.totalReviews,
+          positivePercent: store.positivePercent,
+          desc: store.reviewScoreDesc?.fr,
+        });
+      } else {
+        setSteamReviewsInfo(null);
+      }
     } else {
+      setFormSteamStoreData(null);
       setSteamReviewsInfo(null);
     }
     setFormCardRarity(game.cardRarity || 'auto');
@@ -477,6 +522,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     setFormTaglineEn('');
     setFormComposer('');
     setFormCardRarity('auto');
+    setFormSteamStoreData(null);
     setSteamReviewsInfo(null);
   };
 
@@ -494,19 +540,48 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     soundFx.playClick();
     setIsFetchingSteam(true);
     try {
-      let dataFR: any = null;
-      let dataEN: any = null;
+      interface SteamAppDetails {
+        name?: string;
+        developers?: string[];
+        publishers?: string[];
+        release_date?: { date?: string };
+        header_image?: string;
+        short_description?: string;
+        detailed_description?: string;
+        genres?: Array<{ description: string }>;
+        categories?: Array<{ description: string }>;
+        screenshots?: Array<{ path_full: string }>;
+        is_free?: boolean;
+        price_overview?: {
+          currency?: string;
+          initial?: number;
+          final?: number;
+          discount_percent?: number;
+          initial_formatted?: string;
+          final_formatted?: string;
+        };
+      }
 
-      let fetchedReviews: any = null;
+      interface SteamReviewsData {
+        totalReviews: number;
+        totalPositive: number;
+        positivePercent: number;
+        reviewScoreDesc?: string | { fr?: string; en?: string };
+      }
+
+      let dataFR: SteamAppDetails | null = null;
+      let dataEN: SteamAppDetails | null = null;
+
+      let fetchedReviews: SteamReviewsData | null = null;
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${appId}`);
         if (lookupRes.ok) {
           const lookupJson = await lookupRes.json();
           if (lookupJson.status === 'success' && lookupJson.dataFR) {
-            dataFR = lookupJson.dataFR;
-            dataEN = lookupJson.dataEN || lookupJson.dataFR;
+            dataFR = lookupJson.dataFR as SteamAppDetails;
+            dataEN = (lookupJson.dataEN || lookupJson.dataFR) as SteamAppDetails;
             if (lookupJson.reviews) {
-              fetchedReviews = lookupJson.reviews;
+              fetchedReviews = lookupJson.reviews as SteamReviewsData;
             }
           }
         }
@@ -520,8 +595,8 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         const corsUrlEN = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`)}`;
         const [frRes, enRes] = await Promise.all([fetch(corsUrlFR), fetch(corsUrlEN)]);
         const [frJson, enJson] = await Promise.all([frRes.json(), enRes.json()]);
-        dataFR = frJson?.[appId]?.data;
-        dataEN = enJson?.[appId]?.data || dataFR;
+        dataFR = frJson?.[appId]?.data as SteamAppDetails;
+        dataEN = (enJson?.[appId]?.data || dataFR) as SteamAppDetails;
       }
 
       if (!dataFR || !dataFR.name) {
@@ -572,29 +647,83 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         setFormComposer(extractedComposer);
       }
 
+      const numAppId = parseInt(appId, 10);
+      const priceOverview = dataFR.price_overview;
+      const isFree = !!dataFR.is_free || (!priceOverview && dataFR.is_free);
+      const currency = priceOverview?.currency || 'EUR';
+      const initialPriceCents = typeof priceOverview?.initial === 'number' ? priceOverview.initial : 0;
+      const finalPriceCents = typeof priceOverview?.final === 'number' ? priceOverview.final : 0;
+      const discountPercent = typeof priceOverview?.discount_percent === 'number' ? priceOverview.discount_percent : 0;
+      const formattedFinalPrice = priceOverview?.final_formatted || (isFree ? 'Gratuit' : '');
+      const formattedInitialPrice = priceOverview?.initial_formatted || '';
+
+      const descFr = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+        ? (fetchedReviews.reviewScoreDesc.fr || fetchedReviews.reviewScoreDesc.en || 'Très positives')
+        : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Très positives');
+      const descEn = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+        ? (fetchedReviews.reviewScoreDesc.en || fetchedReviews.reviewScoreDesc.fr || 'Very Positive')
+        : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Very Positive');
+
+      const storeData: SteamStoreGameData = {
+        appId: numAppId,
+        isFree: Boolean(isFree),
+        currency,
+        initialPriceCents,
+        finalPriceCents,
+        discountPercent,
+        formattedFinalPrice,
+        formattedInitialPrice,
+        totalReviews: fetchedReviews?.totalReviews || 0,
+        totalPositive: fetchedReviews?.totalPositive || 0,
+        positivePercent: fetchedReviews?.positivePercent || 0,
+        reviewScoreDesc: {
+          fr: descFr,
+          en: descEn,
+        },
+      };
+
+      setFormSteamStoreData(storeData);
+      registerSteamStoreData(storeData);
+
       if (fetchedReviews) {
-        registerSteamStoreData({
-          appId: parseInt(appId, 10),
-          isFree: !!dataFR.is_free,
-          currency: 'EUR',
-          initialPriceCents: 0,
-          finalPriceCents: 0,
-          discountPercent: 0,
-          formattedFinalPrice: '',
+        setSteamReviewsInfo({
           totalReviews: fetchedReviews.totalReviews,
-          totalPositive: fetchedReviews.totalPositive,
           positivePercent: fetchedReviews.positivePercent,
-          reviewScoreDesc: fetchedReviews.reviewScoreDesc,
+          desc: descFr,
         });
-        setSteamReviewsInfo(fetchedReviews);
+
+        const suggestedRarity = computeGameRarity(
+          slug,
+          {
+            id: slug,
+            title,
+            steamAppId: numAppId,
+            steamUrl: `https://store.steampowered.com/app/${appId}/`,
+          },
+          {
+            totalReviews: fetchedReviews.totalReviews,
+            totalPositive: fetchedReviews.totalPositive,
+            positivePercent: fetchedReviews.positivePercent,
+            reviewScoreDesc: descFr,
+          }
+        );
+        setFormCardRarity(suggestedRarity);
+      } else {
+        const fallbackRarity = computeGameRarity(slug, {
+          id: slug,
+          title,
+          steamAppId: numAppId,
+          steamUrl: `https://store.steampowered.com/app/${appId}/`,
+        });
+        setFormCardRarity(fallbackRarity);
       }
-      setFormCardRarity('auto');
 
       soundFx.playVictory();
       if (onNotice) onNotice('success', `✨ Fiche Steam auto-remplie avec succès pour « ${title} » !`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       soundFx.playError();
-      if (onNotice) onNotice('error', err.message || "Erreur lors de la récupération Steam.");
+      const errMsg = err instanceof Error ? err.message : "Erreur lors de la récupération Steam.";
+      if (onNotice) onNotice('error', errMsg);
     } finally {
       setIsFetchingSteam(false);
     }
@@ -625,11 +754,16 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
     const finalRarity: CardRarity =
       formCardRarity !== 'auto'
         ? formCardRarity
-        : computeGameRarity(formId.trim(), {
-            id: formId.trim(),
-            steamAppId: cleanAppId || undefined,
-            steamUrl: formSteamUrl.trim() || undefined,
-          });
+        : computeGameRarity(
+            formId.trim(),
+            {
+              id: formId.trim(),
+              title: formTitle.trim(),
+              steamAppId: cleanAppId || undefined,
+              steamUrl: formSteamUrl.trim() || undefined,
+            },
+            steamReviewsInfo || undefined
+          );
 
     const gamePayload: Partial<Game> & { isCustomAdmin?: boolean; isGem?: boolean } = {
       id: formId.trim() || undefined,
@@ -660,6 +794,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         composer: formComposer.trim() || undefined,
       },
       cardRarity: finalRarity,
+      steamStoreData: formSteamStoreData || (cleanAppId ? getSteamStoreData(cleanAppId) : undefined),
       addedAt: (editingGame as Game)?.addedAt || new Date().toISOString().split('T')[0],
       isCustomAdmin: isCreatingNew || (editingGame as EnrichedAdminGame)?.isCustomAdmin,
     };
@@ -807,7 +942,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher par titre, studio, genre..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#0c1220] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#0c1220] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition"
           />
           {searchQuery && (
             <button
@@ -820,7 +955,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
         </div>
 
         {/* Pilules de statut */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0 text-xs">
+        <div className="flex flex-wrap items-center gap-1.5 shrink-0 text-xs">
           {[
             { id: 'all', label: `Tous (${stats.total})` },
             { id: 'gems', label: `✨ Pépites (${stats.gemCount})` },
@@ -835,7 +970,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
               key={pill.id}
               onClick={() => {
                 soundFx.playClick();
-                setStatusFilter(pill.id as any);
+                setStatusFilter(pill.id as 'all' | 'gems' | 'catalog_only' | 'steam' | 'base' | 'custom' | 'modified' | 'hidden');
               }}
               className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap cursor-pointer ${
                 statusFilter === pill.id
@@ -852,7 +987,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       {/* Grille / Liste des Jeux */}
       {paginatedGames.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-[#0c1220] border border-white/5 space-y-3">
-          <Gamepad2 className="w-10 h-10 text-slate-600 mx-auto" />
+          <Gamepad2 className="w-10 h-10 text-slate-500 mx-auto" />
           <p className="text-sm text-slate-400 font-medium">Aucun jeu ne correspond à vos critères de recherche.</p>
           {(searchQuery || statusFilter !== 'all') && (
             <button
@@ -976,7 +1111,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       </span>
                     ))}
                     {Array.isArray(game.genre) && game.genre.length > 3 && (
-                      <span className="px-1.5 py-0.5 rounded-md bg-white/5 text-[10px] text-slate-500">
+                      <span className="px-1.5 py-0.5 rounded-md bg-white/5 text-[10px] text-slate-400">
                         +{game.genre.length - 3}
                       </span>
                     )}
@@ -1012,7 +1147,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                           : 'Réservé au catalogue (cliquer pour promouvoir en Pépite)'
                       }
                     >
-                      <Sparkles className={`w-3.5 h-3.5 ${game.isGem ? 'text-amber-400 fill-amber-400/40' : 'text-slate-500'}`} />
+                      <Sparkles className={`w-3.5 h-3.5 ${game.isGem ? 'text-amber-400 fill-amber-400/40' : 'text-slate-400'}`} />
                       <span className="text-[10px] hidden sm:inline">{game.isGem ? 'Pépite' : 'Catalogue'}</span>
                     </button>
 
@@ -1173,7 +1308,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                         }
                       }}
                       placeholder="Collez une URL Steam (store.steampowered.com/app/...) ou un AppID"
-                      className="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-mono"
+                      className="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 font-mono"
                     />
                     <button
                       type="button"
@@ -1214,7 +1349,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formTitle}
                       onChange={(e) => setFormTitle(e.target.value)}
                       placeholder="Ex: Hollow Knight"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
 
@@ -1226,7 +1361,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formId}
                       onChange={(e) => setFormId(e.target.value)}
                       placeholder="Ex: hollow-knight (auto si vide)"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-mono focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
 
@@ -1238,7 +1373,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formDeveloper}
                       onChange={(e) => setFormDeveloper(e.target.value)}
                       placeholder="Ex: Team Cherry"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
 
@@ -1251,7 +1386,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       max="2035"
                       value={formReleaseYear}
                       onChange={(e) => setFormReleaseYear(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
                 </div>
@@ -1264,7 +1399,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formGenres}
                     onChange={(e) => setFormGenres(e.target.value)}
                     placeholder="Ex: Metroidvania, Action, Plateforme 2D"
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                   />
                 </div>
 
@@ -1277,7 +1412,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formArtStyleFr}
                       onChange={(e) => setFormArtStyleFr(e.target.value)}
                       placeholder="Ex: 2D Dessiné main"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                     <div className="flex flex-wrap gap-1 pt-1">
                       {[
@@ -1315,7 +1450,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formCameraFr}
                       onChange={(e) => setFormCameraFr(e.target.value)}
                       placeholder="Ex: Vue de côté 2D"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                     <div className="flex flex-wrap gap-1 pt-1">
                       {[
@@ -1354,7 +1489,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formSteamUrl}
                       onChange={(e) => setFormSteamUrl(e.target.value)}
                       placeholder="https://store.steampowered.com/app/..."
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                     />
                   </div>
 
@@ -1366,7 +1501,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formItchUrl}
                       onChange={(e) => setFormItchUrl(e.target.value)}
                       placeholder="https://creator.itch.io/game"
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                     />
                   </div>
                 </div>
@@ -1436,11 +1571,16 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       const activeRarity =
                         formCardRarity !== 'auto'
                           ? formCardRarity
-                          : computeGameRarity(formId.trim(), {
-                              id: formId.trim(),
-                              steamAppId: tempAppId || undefined,
-                              steamUrl: formSteamUrl.trim() || undefined,
-                            });
+                          : computeGameRarity(
+                              formId.trim(),
+                              {
+                                id: formId.trim(),
+                                title: formTitle.trim(),
+                                steamAppId: tempAppId || undefined,
+                                steamUrl: formSteamUrl.trim() || undefined,
+                              },
+                              steamReviewsInfo || undefined
+                            );
                       const rarityMeta: Record<CardRarity, { label: string; bg: string; icon: string }> = {
                         legendary: { label: 'Légendaire', bg: 'bg-amber-500/20 text-amber-300 border-amber-500/40', icon: '🟡' },
                         epic: { label: 'Épique', bg: 'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: '🟣' },
@@ -1469,27 +1609,52 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
 
                   {/* Sélecteur de rareté */}
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 pt-1">
-                    {[
-                      { key: 'auto', label: '⚡ Auto (Steam)', desc: 'Calcul dynamique' },
-                      { key: 'common', label: '⚪ Commune', desc: `< ${Math.round(STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS / 1000)}k avis` },
-                      { key: 'rare', label: '🔵 Rare', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS / 1000)}k avis` },
-                      { key: 'epic', label: '🟣 Épique', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.EPIC_MIN_REVIEWS / 1000)}k avis` },
-                      { key: 'legendary', label: '🟡 Légendaire', desc: `≥ ${Math.round(STEAM_RARITY_THRESHOLDS.LEGENDARY_MIN_REVIEWS / 1000)}k avis` },
-                    ].map((opt) => (
-                      <button
-                        key={opt.key}
-                        type="button"
-                        onClick={() => setFormCardRarity(opt.key as any)}
-                        className={`p-2 rounded-lg border text-left transition cursor-pointer flex flex-col justify-between ${
-                          formCardRarity === opt.key
-                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm shadow-amber-500/10'
-                            : 'bg-white/[0.03] text-slate-300 border-white/5 hover:bg-white/[0.07] hover:text-white'
-                        }`}
-                      >
-                        <span className="text-[11px] font-bold block">{opt.label}</span>
-                        <span className="text-[9px] text-slate-400 block">{opt.desc}</span>
-                      </button>
-                    ))}
+                    {(() => {
+                      const tempAppId = extractSteamAppId({ steamAppId: (editingGame as Game)?.steamAppId, steamUrl: formSteamUrl });
+                      const currentAutoRarity = computeGameRarity(
+                        formId.trim(),
+                        {
+                          id: formId.trim(),
+                          title: formTitle.trim(),
+                          steamAppId: tempAppId || undefined,
+                          steamUrl: formSteamUrl.trim() || undefined,
+                        },
+                        steamReviewsInfo || undefined
+                      );
+                      const rarityMeta: Record<CardRarity, { label: string; icon: string }> = {
+                        legendary: { label: 'Légendaire', icon: '🟡' },
+                        epic: { label: 'Épique', icon: '🟣' },
+                        rare: { label: 'Rare', icon: '🔵' },
+                        common: { label: 'Commune', icon: '⚪' },
+                      };
+                      const autoInfo = rarityMeta[currentAutoRarity];
+
+                      return [
+                        {
+                          key: 'auto',
+                          label: '⚡ Auto (Steam)',
+                          desc: autoInfo ? `${autoInfo.icon} ${autoInfo.label}` : 'Calcul dynamique',
+                        },
+                        { key: 'common', label: '⚪ Commune', desc: '< 4k avis' },
+                        { key: 'rare', label: '🔵 Rare', desc: '≥ 4k avis' },
+                        { key: 'epic', label: '🟣 Épique', desc: '≥ 25k avis' },
+                        { key: 'legendary', label: '🟡 Légendaire', desc: '≥ 90k avis' },
+                      ].map((opt) => (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => setFormCardRarity(opt.key as CardRarity | 'auto')}
+                          className={`p-2 rounded-lg border text-left transition cursor-pointer flex flex-col justify-between ${
+                            formCardRarity === opt.key
+                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm shadow-amber-500/10'
+                              : 'bg-white/[0.03] text-slate-300 border-white/5 hover:bg-white/[0.07] hover:text-white'
+                          }`}
+                        >
+                          <span className="text-[11px] font-bold block">{opt.label}</span>
+                          <span className="text-[9px] text-slate-400 block">{opt.desc}</span>
+                        </button>
+                      ));
+                    })()}
                   </div>
                 </div>
 
@@ -1502,7 +1667,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formTaglineFr}
                       onChange={(e) => setFormTaglineFr(e.target.value)}
                       placeholder="Une brève citation ou pitch de jeu..."
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1512,7 +1677,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                       value={formTaglineEn}
                       onChange={(e) => setFormTaglineEn(e.target.value)}
                       placeholder="Short pitch or quote in English..."
-                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                     />
                   </div>
                 </div>
@@ -1525,7 +1690,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formHeaderImage}
                     onChange={(e) => setFormHeaderImage(e.target.value)}
                     placeholder="https://cdn.akamai.steamstatic.com/..."
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                   />
                 </div>
 
@@ -1537,7 +1702,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formScreenshots}
                     onChange={(e) => setFormScreenshots(e.target.value)}
                     placeholder="https://...\nhttps://..."
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs font-mono"
                   />
                 </div>
 
@@ -1549,7 +1714,7 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
                     value={formComposer}
                     onChange={(e) => setFormComposer(e.target.value)}
                     placeholder="Ex: Christopher Larkin"
-                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-amber-400 text-xs"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
                   />
                 </div>
 

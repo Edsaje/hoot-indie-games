@@ -86,6 +86,189 @@ function sanitizeUrl($url) {
     return $trimmed;
 }
 
+function formatLocalizedPricingText($priceStr, $platform = 'steam', $isFree = false) {
+    if ($isFree || preg_match('/gratuit|free|gratis|kostenlos|無料|grátis/i', $priceStr) || $priceStr === '0' || $priceStr === '0€') {
+        return [
+            'fr' => 'Gratuit 🆓',
+            'en' => 'Free 🆓',
+            'es' => 'Gratis 🆓',
+            'de' => 'Kostenlos 🆓',
+            'ja' => '無料 🆓',
+            'pt-BR' => 'Grátis 🆓',
+        ];
+    }
+
+    if (preg_match('/(\d+(?:[.,]\d{1,2})?)/', $priceStr, $m)) {
+        $num = floatval(str_replace(',', '.', $m[1]));
+        $isUsd = (strpos($priceStr, '$') !== false || stripos($priceStr, 'usd') !== false);
+        $eurValue = $isUsd ? ($num / 1.08) : $num;
+
+        $eurFormatted = number_format($eurValue, 2, ',', ' ') . ' €';
+        $usdFormatted = '$' . number_format($eurValue * 1.08, 2, '.', '');
+        $jpyFormatted = '¥' . number_format(round($eurValue * 160));
+        $brlFormatted = 'R$ ' . number_format($eurValue * 5.5, 2, ',', ' ');
+
+        $suffix = [
+            'fr' => ($platform === 'itch' ? 'sur Itch.io' : ($platform === 'both' ? 'sur Steam & Itch.io' : 'sur Steam')),
+            'en' => ($platform === 'itch' ? 'on Itch.io' : ($platform === 'both' ? 'on Steam & Itch.io' : 'on Steam')),
+            'es' => ($platform === 'itch' ? 'en Itch.io' : ($platform === 'both' ? 'en Steam & Itch.io' : 'en Steam')),
+            'de' => ($platform === 'itch' ? 'auf Itch.io' : ($platform === 'both' ? 'auf Steam & Itch.io' : 'auf Steam')),
+            'ja' => ($platform === 'itch' ? 'Itch.ioにて' : ($platform === 'both' ? 'Steam & Itch.ioにて' : 'Steamにて')),
+            'pt-BR' => ($platform === 'itch' ? 'no Itch.io' : ($platform === 'both' ? 'no Steam & Itch.io' : 'no Steam')),
+        ];
+
+        return [
+            'fr' => "{$eurFormatted} {$suffix['fr']}",
+            'en' => "{$usdFormatted} {$suffix['en']}",
+            'es' => "{$eurFormatted} {$suffix['es']}",
+            'de' => "{$eurFormatted} {$suffix['de']}",
+            'ja' => "{$suffix['ja']} {$jpyFormatted}",
+            'pt-BR' => "{$brlFormatted} {$suffix['pt-BR']}",
+        ];
+    }
+
+    return [
+        'fr' => $priceStr,
+        'en' => $priceStr,
+        'es' => $priceStr,
+        'de' => $priceStr,
+        'ja' => $priceStr,
+        'pt-BR' => $priceStr,
+    ];
+}
+
+function healAndLoadMicroIndies($dataFile) {
+    $items = [];
+    if (!file_exists($dataFile)) return $items;
+    $raw = @file_get_contents($dataFile);
+    if (!$raw) return $items;
+    $items = json_decode($raw, true) ?: [];
+    $dirty = false;
+    foreach ($items as &$item) {
+        $cover = $item['coverImage'] ?? '';
+        $steamUrl = $item['steamUrl'] ?? '';
+        $isDefaultOrBroken = empty($cover) || strpos($cover, '2420510') !== false;
+
+        // Auto-détection de l'image de couverture Steam si absente ou par défaut
+        if ($isDefaultOrBroken && !empty($steamUrl)) {
+            if (preg_match('#/app/(\d+)#', $steamUrl, $matches)) {
+                $item['coverImage'] = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$matches[1]}/header.jpg";
+                $dirty = true;
+            }
+        }
+
+        // Correction spécifique pour Crescent Bloom (AppID 1953920) : image et prix réel 1,99 €
+        if (($item['id'] ?? '') === 'micro-crescent-bloom-2d61c0' || stripos($item['title'] ?? '', 'Crescent Bloom') !== false) {
+            $properImg = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg';
+            if (($item['coverImage'] ?? '') !== $properImg) {
+                $item['coverImage'] = $properImg;
+                $dirty = true;
+            }
+            if (!isset($item['pricingText']) || !isset($item['pricingText']['fr']) || strpos($item['pricingText']['fr'], 'Payant /') !== false) {
+                $item['pricingText'] = [
+                    'fr' => '1,99 € sur Steam',
+                    'en' => '$1.99 on Steam',
+                    'es' => '1,99 € en Steam',
+                    'de' => '1,99 € auf Steam',
+                    'ja' => 'Steamにて1.99ドル',
+                    'pt-BR' => 'R$ 10,79 no Steam',
+                ];
+                $dirty = true;
+            }
+        }
+    }
+    unset($item);
+    if ($dirty) {
+        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+    return $items;
+}
+
+function getBaseLikesCount($gameId, $clientCount = null, $items = []) {
+    // 1. Chercher dans les items dynamiques (micro_indies.json)
+    if (is_array($items)) {
+        foreach ($items as $item) {
+            if (($item['id'] ?? '') === $gameId) {
+                return (int)($item['likesCount'] ?? 1);
+            }
+        }
+    }
+    // 2. Si le client a envoyé un compte valide > 0, l'utiliser comme base
+    if ($clientCount !== null && (int)$clientCount > 0) {
+        return (int)$clientCount;
+    }
+    // 3. Comptes initiaux des pépites natives (src/data/microIndies.ts)
+    static $baseCounts = [
+        "celeste-classic-pico8" => 142,
+        "micro-crescent-bloom-2d61c0" => 8,
+        "buckshot-roulette-itch" => 98,
+        "holocure-micro" => 165,
+        "grimms-hollow-micro" => 84,
+        "a-short-hike-micro" => 119,
+        "the-looker-micro" => 76,
+        "itch-our-life-beginnings-amp-always" => 1,
+        "itch-adventures-with-anxiety" => 1,
+        "itch-a-date-with-death" => 1,
+        "itch-blooming-panic" => 1,
+        "itch-don-039-t-eat-the-cashier" => 1,
+        "itch-quot-voices-of-the-void-quot-alpha" => 1,
+        "itch-14-days-with-you" => 1,
+        "itch-our-life-now-amp-forever" => 1,
+        "itch-serenitrove" => 1,
+        "itch-doki-doki-literature-club" => 1,
+        "itch-killer-chat-original-edition" => 1,
+        "itch-butterfly-soup" => 1,
+        "friday-night-funkin" => 230,
+        "minit-itch" => 115,
+        "sort-the-court" => 95,
+        "windowkill-itch" => 88,
+        "anatomy-itch" => 140,
+        "lost-constellation" => 102,
+        "a-good-snowman-itch" => 76,
+        "baba-is-you-prototype" => 198,
+        "the-hex-itch" => 82,
+        "vvvvvv-itch" => 160,
+        "super-hexagon-itch" => 130,
+        "nuclear-throne-itch" => 155,
+        "vampire-survivors-itch" => 210,
+        "birdsong-linssen" => 94,
+        "reap-linssen" => 91,
+        "itch-we-become-what-we-behold" => 1,
+        "itch-mushroom-oasis" => 1
+    ];
+    return $baseCounts[$gameId] ?? 1;
+}
+
+function getAuthenticatedUserVoteKey($params) {
+    if (!is_array($params)) return null;
+    $steamId = trim($params['steamId'] ?? '');
+    $userId = trim($params['userId'] ?? '');
+    $username = trim($params['username'] ?? '');
+
+    // 1. Joueur connecté via Steam OpenID
+    if (!empty($steamId)) {
+        $clean = preg_replace('/[^0-9]/', '', $steamId);
+        if (strlen($clean) >= 15) return 'steam_' . $clean;
+    }
+
+    // 2. Compte utilisateur Supabase / enregistré (non guest local temporaire)
+    if (!empty($userId) && strpos($userId, 'local_') !== 0) {
+        $clean = preg_replace('/[^a-zA-Z0-9_\-]/', '', $userId);
+        if (strlen($clean) >= 4) return 'user_' . $clean;
+    }
+
+    // 3. Pseudonyme joueur validé (exclut le pseudo par défaut 'Hibou Mystère')
+    if (!empty($username)) {
+        $clean = mb_strtolower(trim($username), 'UTF-8');
+        $clean = preg_replace('/[^a-z0-9]/', '', $clean);
+        if (!empty($clean) && $clean !== 'hiboumystere' && $clean !== 'amiduhibou') {
+            return 'name_' . $clean;
+        }
+    }
+
+    return null;
+}
+
 $action = $_GET['action'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rawInput = file_get_contents('php://input');
@@ -93,18 +276,141 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $postData['action'] ?? $action;
 }
 
+// 0. Récupération des informations officielles et du prix Steam en direct
+if ($action === 'get_steam_info') {
+    $appId = preg_replace('/[^0-9]/', '', $_GET['appId'] ?? ($postData['appId'] ?? ''));
+    if (empty($appId)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'AppID manquant']);
+        exit;
+    }
+    $reqCc = strtolower(preg_replace('/[^a-z]/i', '', $_GET['cc'] ?? ($postData['cc'] ?? 'fr')));
+    $reqL = strtolower(preg_replace('/[^a-z]/i', '', $_GET['l'] ?? ($postData['l'] ?? 'french')));
+    if (empty($reqCc)) $reqCc = 'fr';
+    if (empty($reqL)) $reqL = 'french';
+
+    $url = "https://store.steampowered.com/api/appdetails?appids={$appId}&cc={$reqCc}&l={$reqL}";
+    $ctx = stream_context_create([
+        'http' => [
+            'timeout' => 5,
+            'header' => "User-Agent: HootIndieGames-Sync/1.0\r\n"
+        ]
+    ]);
+    $raw = @file_get_contents($url, false, $ctx);
+    if ($raw) {
+        $data = json_decode($raw, true);
+        if (!empty($data[$appId]['success']) && isset($data[$appId]['data'])) {
+            $gameData = $data[$appId]['data'];
+            $isFree = !empty($gameData['is_free']);
+            $finalPrice = '';
+            $currency = 'EUR';
+            $finalCents = 0;
+
+            if ($isFree) {
+                $finalPrice = 'Gratuit 🆓';
+                $pricingText = [
+                    'fr' => 'Gratuit 🆓',
+                    'en' => 'Free 🆓',
+                    'es' => 'Gratis 🆓',
+                    'de' => 'Kostenlos 🆓',
+                    'ja' => '無料 🆓',
+                    'pt-BR' => 'Grátis 🆓',
+                ];
+            } else {
+                $priceOverview = $gameData['price_overview'] ?? [];
+                $finalFormatted = $priceOverview['final_formatted'] ?? '';
+                $finalCents = intval($priceOverview['final'] ?? 0);
+                $currency = $priceOverview['currency'] ?? 'EUR';
+                $finalPrice = !empty($finalFormatted) ? $finalFormatted . ' sur Steam' : 'Payant sur Steam';
+
+                // Calcul de la grille multi-devises
+                $eurValue = ($currency === 'USD') ? ($finalCents / 100) / 1.08 : ($finalCents / 100);
+                $pricingText = [
+                    'fr' => ($currency === 'EUR' && !empty($finalFormatted) ? $finalFormatted : number_format($eurValue, 2, ',', ' ') . ' €') . ' sur Steam',
+                    'en' => '$' . number_format($eurValue * 1.08, 2, '.', '') . ' on Steam',
+                    'es' => ($currency === 'EUR' && !empty($finalFormatted) ? $finalFormatted : number_format($eurValue, 2, ',', ' ') . ' €') . ' en Steam',
+                    'de' => ($currency === 'EUR' && !empty($finalFormatted) ? $finalFormatted : number_format($eurValue, 2, ',', ' ') . ' €') . ' auf Steam',
+                    'ja' => 'Steamにて¥' . number_format(round($eurValue * 160)),
+                    'pt-BR' => 'R$ ' . number_format($eurValue * 5.5, 2, ',', ' ') . ' no Steam',
+                ];
+            }
+
+            echo json_encode([
+                'success' => true,
+                'name' => $gameData['name'] ?? '',
+                'isFree' => $isFree,
+                'priceFormatted' => $finalPrice,
+                'pricingText' => $pricingText,
+                'currency' => $currency,
+                'finalCents' => $finalCents,
+                'coverImage' => "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$appId}/header.jpg",
+            ]);
+            exit;
+        }
+    }
+    echo json_encode(['success' => false, 'error' => 'Impossible de récupérer les données Steam.']);
+    exit;
+}
+
 // 1. Lister les micro-indés approuvés
 if ($action === 'list' || ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action))) {
-    $items = [];
-    if (file_exists($dataFile)) {
-        $raw = @file_get_contents($dataFile);
-        $items = json_decode($raw, true) ?: [];
-    }
+    $items = healAndLoadMicroIndies($dataFile);
     // Filtrer pour n'afficher que les éléments approuvés côté public
     $approved = array_values(array_filter($items, function($item) {
         return !empty($item['approved']);
     }));
-    echo json_encode(['success' => true, 'microIndies' => $approved]);
+
+    // Si l'utilisateur connecté demande la liste, on peut aussi renvoyer ses likes enregistrés
+    $userKey = getAuthenticatedUserVoteKey($_GET);
+    $userLikedIds = [];
+    $votesFile = __DIR__ . '/micro_indies_votes.json';
+    $likesMap = [];
+    if (file_exists($votesFile)) {
+        $vRaw = @file_get_contents($votesFile);
+        $vData = json_decode($vRaw, true) ?: [];
+        if ($userKey) {
+            $userLikedIds = $vData['users'][$userKey] ?? [];
+        }
+        $likesMap = $vData['counts'] ?? [];
+    }
+
+    // Appliquer likesMap aux jeux communautaires approuvés s'ils ont un compte personnalisé
+    foreach ($approved as &$apprItem) {
+        $aid = $apprItem['id'] ?? '';
+        if (isset($likesMap[$aid])) {
+            $apprItem['likesCount'] = $likesMap[$aid];
+        }
+    }
+    unset($apprItem);
+
+    echo json_encode([
+        'success' => true,
+        'microIndies' => $approved,
+        'userLikedIds' => array_values(array_unique($userLikedIds)),
+        'likesMap' => !empty($likesMap) ? $likesMap : new stdClass(),
+    ]);
+    exit;
+}
+
+// 1.1 Récupérer les jeux likés par un compte connecté
+if ($action === 'user_likes') {
+    $userKey = getAuthenticatedUserVoteKey($_GET);
+    $votesFile = __DIR__ . '/micro_indies_votes.json';
+    $userLikes = [];
+    $likesMap = [];
+    if (file_exists($votesFile)) {
+        $raw = @file_get_contents($votesFile);
+        $vData = json_decode($raw, true) ?: [];
+        if ($userKey) {
+            $userLikes = $vData['users'][$userKey] ?? [];
+        }
+        $likesMap = $vData['counts'] ?? [];
+    }
+    echo json_encode([
+        'success' => true,
+        'likedIds' => array_values(array_unique($userLikes)),
+        'likesMap' => !empty($likesMap) ? $likesMap : new stdClass(),
+    ]);
     exit;
 }
 
@@ -152,6 +458,13 @@ if ($action === 'submit') {
     $slug = trim($slug, '-');
     $id = 'micro-' . $slug . '-' . substr(bin2hex(random_bytes(4)), 0, 6);
 
+    // Auto-détection Steam si aucune image de couverture n'a été spécifiée
+    if (empty($coverImage) && !empty($steamUrl)) {
+        if (preg_match('#/app/(\d+)#', $steamUrl, $mSteam)) {
+            $coverImage = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$mSteam[1]}/header.jpg";
+        }
+    }
+
     $newEntry = [
         'id' => $id,
         'title' => $title,
@@ -162,10 +475,11 @@ if ($action === 'submit') {
         'steamUrl' => $steamUrl ?: null,
         'playInBrowserUrl' => $playUrl ?: null,
         'isFree' => $isFree,
-        'pricingText' => [
-            'fr' => $isFree ? 'Gratuit / Free 🆓' : 'Payant / Prix libre',
-            'en' => $isFree ? '100% Free 🆓' : 'Paid / Name your price',
-        ],
+        'pricingText' => formatLocalizedPricingText(
+            $isFree ? 'Gratuit' : (!empty($postData['price']) ? sanitizeText($postData['price'], 100) : 'Payant'),
+            $platform,
+            $isFree
+        ),
         'genre' => [$genre],
         'artStyle' => [
             'fr' => $artStyle,
@@ -186,18 +500,14 @@ if ($action === 'submit') {
         'jam' => $jam ?: null,
         'discoveredBy' => $submittedBy,
         'likesCount' => 1,
-        'coverImage' => $coverImage ?: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420510/header.jpg',
+        'coverImage' => $coverImage,
         'screenshots' => $coverImage ? [$coverImage] : [],
         'dateAdded' => date('Y-m-d'),
         'approved' => false, // Requiert impérativement validation par l'administrateur avant affichage public
         'ipHash' => $ipHash,
     ];
 
-    $items = [];
-    if (file_exists($dataFile)) {
-        $raw = @file_get_contents($dataFile);
-        $items = json_decode($raw, true) ?: [];
-    }
+    $items = healAndLoadMicroIndies($dataFile);
     array_unshift($items, $newEntry);
     @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
@@ -209,11 +519,22 @@ if ($action === 'submit') {
     exit;
 }
 
-// 3. Voter / Aimer un micro-indé
-if ($action === 'like') {
+// 3. Voter / Aimer ou Retirer son vote (Réservé aux comptes connectés - anti-triche navigation privée)
+if ($action === 'like' || $action === 'unlike' || $action === 'toggle_like') {
+    $userKey = getAuthenticatedUserVoteKey($postData);
+    if (!$userKey) {
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'requireAuth' => true,
+            'error' => 'Connexion à un compte requise pour voter ou retirer son vote.'
+        ]);
+        exit;
+    }
+
     $ipHash = getClientIpHash($secret);
-    // [CWE-799] Rate limiting strict sur les votes
-    if (!checkRateLimit($rateLimitFile, $ipHash . '_likes', 25, 600)) {
+    // [CWE-799] Rate limiting sur les votes
+    if (!checkRateLimit($rateLimitFile, $ipHash . '_likes', 30, 600)) {
         http_response_code(429);
         echo json_encode(['success' => false, 'error' => 'Veuillez patienter avant de voter à nouveau.']);
         exit;
@@ -225,32 +546,239 @@ if ($action === 'like') {
         echo json_encode(['success' => false, 'error' => 'Identifiant de jeu manquant.']);
         exit;
     }
+
+    $votesFile = __DIR__ . '/micro_indies_votes.json';
+    $vData = ['users' => [], 'games' => [], 'counts' => []];
+    if (file_exists($votesFile)) {
+        $vRaw = @file_get_contents($votesFile);
+        $vData = json_decode($vRaw, true) ?: ['users' => [], 'games' => [], 'counts' => []];
+    }
+    if (!isset($vData['games'])) $vData['games'] = [];
+    if (!isset($vData['users'])) $vData['users'] = [];
+    if (!isset($vData['counts'])) $vData['counts'] = [];
+
+    $alreadyLiked = !empty($vData['games'][$targetId][$userKey]);
+
+    // Déterminer s'il s'agit d'un like ou d'un unlike
+    $isUnlike = ($action === 'unlike') || ($action === 'toggle_like' && $alreadyLiked) || ($action === 'like' && !empty($postData['unlike']));
+
+    $items = [];
+    if (file_exists($dataFile)) {
+        $raw = @file_get_contents($dataFile);
+        $items = json_decode($raw, true) ?: [];
+    }
+
+    $clientCount = isset($postData['currentCount']) ? (int)$postData['currentCount'] : null;
+
+    if ($isUnlike) {
+        // Retirer le vote
+        unset($vData['games'][$targetId][$userKey]);
+        if (isset($vData['users'][$userKey])) {
+            $vData['users'][$userKey] = array_values(array_filter($vData['users'][$userKey], function($id) use ($targetId) {
+                return $id !== $targetId;
+            }));
+        }
+
+        // Calcul du compte de likes
+        if (isset($vData['counts'][$targetId])) {
+            $newLikes = max(0, $vData['counts'][$targetId] - 1);
+        } else {
+            $base = getBaseLikesCount($targetId, $clientCount, $items);
+            $newLikes = max(0, $alreadyLiked ? ($base > 1 ? $base - 1 : $base) : max(0, $base - 1));
+        }
+        $vData['counts'][$targetId] = $newLikes;
+        @file_put_contents($votesFile, json_encode($vData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        // Si le jeu est dans micro_indies.json, synchroniser aussi
+        $foundInItems = false;
+        foreach ($items as &$item) {
+            if (($item['id'] ?? '') === $targetId) {
+                $item['likesCount'] = $newLikes;
+                $foundInItems = true;
+                break;
+            }
+        }
+        unset($item);
+        if ($foundInItems) {
+            @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+
+        echo json_encode([
+            'success' => true,
+            'likesCount' => $newLikes,
+            'liked' => false,
+            'likesMap' => $vData['counts'],
+        ]);
+        exit;
+    } else {
+        // Ajouter le vote
+        if ($alreadyLiked) {
+            $existingCount = $vData['counts'][$targetId] ?? getBaseLikesCount($targetId, $clientCount, $items);
+            echo json_encode([
+                'success' => true,
+                'alreadyLiked' => true,
+                'likesCount' => $existingCount,
+                'liked' => true,
+                'likesMap' => $vData['counts'],
+            ]);
+            exit;
+        }
+
+        $vData['games'][$targetId][$userKey] = time();
+        if (!isset($vData['users'][$userKey])) $vData['users'][$userKey] = [];
+        $vData['users'][$userKey][] = $targetId;
+        $vData['users'][$userKey] = array_values(array_unique($vData['users'][$userKey]));
+
+        // Calcul du nouveau compte
+        if (isset($vData['counts'][$targetId])) {
+            $newLikes = $vData['counts'][$targetId] + 1;
+        } else {
+            $base = getBaseLikesCount($targetId, $clientCount, $items);
+            $newLikes = $base + 1;
+        }
+        $vData['counts'][$targetId] = $newLikes;
+        @file_put_contents($votesFile, json_encode($vData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        // Si le jeu est dans micro_indies.json, synchroniser aussi
+        $foundInItems = false;
+        foreach ($items as &$item) {
+            if (($item['id'] ?? '') === $targetId) {
+                $item['likesCount'] = $newLikes;
+                $foundInItems = true;
+                break;
+            }
+        }
+        unset($item);
+        if ($foundInItems) {
+            @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+
+        echo json_encode([
+            'success' => true,
+            'likesCount' => $newLikes,
+            'liked' => true,
+            'likesMap' => $vData['counts'],
+        ]);
+        exit;
+    }
+}
+
+// 4. Modération administrateur : Liste complète des propositions (avec stats)
+if ($action === 'admin_list') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $items = healAndLoadMicroIndies($dataFile);
+    $votesFile = __DIR__ . '/micro_indies_votes.json';
+    if (file_exists($votesFile)) {
+        $vRaw = @file_get_contents($votesFile);
+        $vData = json_decode($vRaw, true) ?: [];
+        $countsMap = $vData['counts'] ?? [];
+        foreach ($items as &$adminItem) {
+            $aid = $adminItem['id'] ?? '';
+            if (isset($countsMap[$aid])) {
+                $adminItem['likesCount'] = $countsMap[$aid];
+            }
+        }
+        unset($adminItem);
+    }
+    $total = count($items);
+    $pending = count(array_filter($items, function($item) {
+        return empty($item['approved']);
+    }));
+    $approved = count(array_filter($items, function($item) {
+        return !empty($item['approved']);
+    }));
+
+    echo json_encode([
+        'success' => true,
+        'total' => $total,
+        'pending' => $pending,
+        'approved' => $approved,
+        'list' => $items,
+    ]);
+    exit;
+}
+
+// 5. Modération administrateur : Valider et publier un micro-indé
+if ($action === 'admin_approve') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $targetId = sanitizeText($postData['id'] ?? $_GET['id'] ?? '', 100);
+    if (empty($targetId)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Identifiant de jeu manquant.']);
+        exit;
+    }
+
     $items = [];
     if (file_exists($dataFile)) {
         $raw = @file_get_contents($dataFile);
         $items = json_decode($raw, true) ?: [];
     }
     $found = false;
-    $newLikes = 0;
+    $updatedGame = null;
     foreach ($items as &$item) {
         if (($item['id'] ?? '') === $targetId) {
-            $item['likesCount'] = ($item['likesCount'] ?? 0) + 1;
-            $newLikes = $item['likesCount'];
+            $item['approved'] = true;
+            $item['approvedAt'] = date('c');
+            $found = true;
+            $updatedGame = $item;
+            break;
+        }
+    }
+    if ($found) {
+        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Le jeu a été validé et publié avec succès dans La Clairière des Micro-Indés !',
+            'game' => $updatedGame,
+        ]);
+    } else {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Jeu introuvable.']);
+    }
+    exit;
+}
+
+// 6. Modération administrateur : Remettre en attente (dé-publier)
+if ($action === 'admin_unapprove') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $targetId = sanitizeText($postData['id'] ?? $_GET['id'] ?? '', 100);
+    $items = [];
+    if (file_exists($dataFile)) {
+        $raw = @file_get_contents($dataFile);
+        $items = json_decode($raw, true) ?: [];
+    }
+    $found = false;
+    foreach ($items as &$item) {
+        if (($item['id'] ?? '') === $targetId) {
+            $item['approved'] = false;
             $found = true;
             break;
         }
     }
     if ($found) {
         @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-        echo json_encode(['success' => true, 'likesCount' => $newLikes]);
+        echo json_encode(['success' => true, 'message' => 'Le micro-indé a été remis en attente de validation.']);
     } else {
-        echo json_encode(['success' => true, 'likesCount' => 1]);
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Jeu introuvable.']);
     }
     exit;
 }
 
-// 4. Modération administrateur : Supprimer une proposition
-if ($action === 'delete') {
+// 7. Modération administrateur : Supprimer une proposition
+if ($action === 'delete' || $action === 'admin_delete') {
     if (!isCreatorAdminAuthorized()) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
@@ -267,6 +795,74 @@ if ($action === 'delete') {
     }));
     @file_put_contents($dataFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
     echo json_encode(['success' => true, 'message' => 'Jeu retiré de La Clairière.']);
+    exit;
+}
+
+// 8. Modération administrateur : Modifier les métadonnées (titre, dev, jaquette, liens, pitch...)
+if ($action === 'admin_update') {
+    if (!isCreatorAdminAuthorized()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Action réservée à l\'administrateur.']);
+        exit;
+    }
+    $targetId = sanitizeText($postData['id'] ?? $_GET['id'] ?? '', 100);
+    $updates = $postData['updates'] ?? [];
+    if (empty($targetId) || !is_array($updates)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Paramètres invalides.']);
+        exit;
+    }
+
+    $items = healAndLoadMicroIndies($dataFile);
+    $found = false;
+    $updatedGame = null;
+    foreach ($items as &$item) {
+        if (($item['id'] ?? '') === $targetId) {
+            if (isset($updates['title'])) $item['title'] = sanitizeText($updates['title'], 80);
+            if (isset($updates['developer'])) $item['developer'] = sanitizeText($updates['developer'], 80);
+            if (isset($updates['coverImage'])) $item['coverImage'] = sanitizeUrl($updates['coverImage']);
+            if (isset($updates['steamUrl'])) $item['steamUrl'] = sanitizeUrl($updates['steamUrl']) ?: null;
+            if (isset($updates['itchUrl'])) $item['itchUrl'] = sanitizeUrl($updates['itchUrl']) ?: null;
+            if (isset($updates['playInBrowserUrl'])) $item['playInBrowserUrl'] = sanitizeUrl($updates['playInBrowserUrl']) ?: null;
+            if (isset($updates['pitch'])) {
+                $p = sanitizeText($updates['pitch'], 300);
+                $item['tagline'] = ['fr' => $p, 'en' => $p];
+                $item['description'] = ['fr' => $p, 'en' => $p];
+            }
+            if (isset($updates['discoveredBy'])) $item['discoveredBy'] = sanitizeText($updates['discoveredBy'], 50);
+            if (isset($updates['price'])) {
+                $pPrice = sanitizeText($updates['price'], 100);
+                $plat = (!empty($item['steamUrl']) && !empty($item['itchUrl'])) ? 'both' : (!empty($item['itchUrl']) ? 'itch' : 'steam');
+                $isFreeGame = (stripos($pPrice, 'gratuit') !== false || stripos($pPrice, 'free') !== false || $pPrice === '0' || $pPrice === '0€');
+                $item['pricingText'] = formatLocalizedPricingText($pPrice, $plat, $isFreeGame);
+                $item['isFree'] = $isFreeGame;
+            }
+            if (isset($updates['pricingText'])) {
+                if (is_array($updates['pricingText'])) {
+                    $item['pricingText'] = $updates['pricingText'];
+                } else {
+                    $pt = sanitizeText($updates['pricingText'], 100);
+                    $item['pricingText'] = ['fr' => $pt, 'en' => $pt];
+                }
+            }
+            if (isset($updates['approved'])) $item['approved'] = !empty($updates['approved']);
+            $found = true;
+            $updatedGame = $item;
+            break;
+        }
+    }
+    unset($item);
+    if ($found) {
+        @file_put_contents($dataFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Micro-indé mis à jour avec succès.',
+            'game' => $updatedGame,
+        ]);
+    } else {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Jeu introuvable.']);
+    }
     exit;
 }
 

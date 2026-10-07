@@ -8,6 +8,8 @@
     "archiveBanner": "Archiv-Modus"
   },
   "nav": {
+    "discovery": "Entdeckung",
+    "odyssey": "Odyssee",
     "gems": "Perlen",
     "catalog": "Katalog",
     "games": "Minispiele",
@@ -971,6 +973,8 @@
     "proposeBtn": "Mikro-Indie einreichen",
     "playOnline": "Direkt spielen 🌐",
     "searchPlaceholder": "Schöpfer, Spiel suchen...",
+    "shuffleBtn": "Mischen",
+    "shuffleTooltip": "Spiele zufällig mischen, um neue zu entdecken",
     "noGamesTitle": "Keine Mikro-Indies entsprechen diesen Kriterien",
     "noGamesDesc": "Seien Sie der Erste, der ein unentdecktes Juwel vorschlägt, oder setzen Sie die Filter zurück!",
     "filters": {

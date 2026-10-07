@@ -136,7 +136,7 @@ export const AttemptDistributionChart: React.FC<AttemptDistributionChartProps> =
               {t('chart.title')}
             </h4>
             <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5">
-              <Users className="w-3 h-3 text-slate-500" />
+              <Users className="w-3 h-3 text-slate-400" />
               <span>
                 {t('chart.playersToday', { count: data?.total || 0 })}
               </span>

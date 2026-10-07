@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { HeadlessModal } from './HeadlessModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Trophy,
@@ -277,8 +278,6 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     }
   };
 
-  if (!isOpen) return null;
-
   const currentAvatarInfo = getAvatarVisual(profile.avatarId);
   const currentGamesList =
     category === 'arcade'
@@ -288,13 +287,11 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       : QUIZ_MODES_LIST;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="relative overflow-visible w-full max-w-2xl bg-[#06241b] border-2 border-[#78350f] rounded-3xl p-5 sm:p-7 shadow-2xl flex flex-col max-h-[90vh]"
-      >
+    <HeadlessModal
+      isOpen={isOpen}
+      onClose={onClose}
+      panelClassName="relative overflow-visible w-full h-full sm:h-auto max-w-2xl bg-[#06241b] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl p-4 sm:p-7 shadow-2xl flex flex-col max-h-[100dvh] sm:max-h-[90vh]"
+    >
         <SylvestreIvyFrame density="medium" />
         {/* Glow backdrop */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -401,7 +398,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         </div>
 
         {/* Games Selector Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-1.5 pb-2 shrink-0">
           {currentGamesList.map((g) => {
             const isSelected = selectedGame === g.id;
             return (
@@ -574,11 +571,11 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             </div>
           ) : entries.length === 0 ? (
             <div className="py-12 text-center text-slate-400">
-              <Trophy className="w-8 h-8 mx-auto text-slate-600 mb-2 opacity-50" />
+              <Trophy className="w-8 h-8 mx-auto text-slate-500 mb-2 opacity-50" />
               <div className="text-sm font-bold text-white">
                 {t('leaderboard.noScores')}
               </div>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 {t('leaderboard.beFirst')}
               </p>
             </div>
@@ -654,7 +651,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                           </span>
                         )}
                       </div>
-                      <div className="text-[10px] text-slate-500">
+                      <div className="text-[10px] text-slate-400">
                         {entry.date}
                       </div>
                     </div>
@@ -682,11 +679,10 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             <span>{t('leaderboard.refresh')}</span>
           </button>
 
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-slate-400">
             {t('leaderboard.championsRanked', { count: totalEntries })}
           </span>
         </div>
-      </motion.div>
-    </div>
+    </HeadlessModal>
   );
 };

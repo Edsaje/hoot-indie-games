@@ -52,9 +52,9 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                 </span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 {t('footer.supportTitle', 'Soutenir le Sanctuaire & Hoot Indie Games')}
-              </h3>
+              </h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
                 {t('footer.supportDesc', 'Hoot est une création artisanale, gratuite et sans abonnement dédiée aux passionnés du jeu vidéo indépendant. Vos contributions financent directement l\'hébergement, le nom de domaine et le développement continu de nouveaux mini-jeux et outils.')}
               </p>
@@ -86,22 +86,22 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                 href="https://ko-fi.com/hibouxe"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl bg-[#ff5e5b] hover:bg-[#fa4946] text-white font-bold text-sm shadow-lg shadow-rose-950/40 hover:scale-[1.02] active:scale-[0.98] transition border border-rose-400/30"
-                title="Offrir un café sur Ko-fi"
+                style={{ backgroundColor: '#991b1b', color: '#ffffff' }}
+                className="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl bg-[#991b1b] hover:bg-[#7f1d1d] text-white font-bold text-sm shadow-lg shadow-rose-950/40 hover:scale-[1.02] active:scale-[0.98] transition border border-rose-500/40"
               >
-                <KofiIcon className="w-5 h-5 fill-current" />
-                <span>{t('footer.kofiCta', 'Offrir un café sur Ko-fi')}</span>
+                <KofiIcon className="w-5 h-5 fill-current text-white" />
+                <span className="text-white font-bold" style={{ color: '#ffffff' }}>{t('footer.kofiCta', 'Offrir un café sur Ko-fi')}</span>
               </a>
 
               <a
                 href="https://paypal.me/Hibouxe"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl bg-[#0070ba] hover:bg-[#005ea6] text-white font-bold text-sm shadow-lg shadow-blue-950/40 hover:scale-[1.02] active:scale-[0.98] transition border border-sky-400/30"
-                title="Faire un don via PayPal"
+                style={{ backgroundColor: '#00457c', color: '#ffffff' }}
+                className="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl bg-[#00457c] hover:bg-[#003366] text-white font-bold text-sm shadow-lg shadow-blue-950/40 hover:scale-[1.02] active:scale-[0.98] transition border border-sky-400/40"
               >
-                <PaypalIcon className="w-5 h-5 fill-current" />
-                <span>{t('footer.paypalCta', 'Faire un don via PayPal')}</span>
+                <PaypalIcon className="w-5 h-5 fill-current text-white" />
+                <span className="text-white font-bold" style={{ color: '#ffffff' }}>{t('footer.paypalCta', 'Faire un don via PayPal')}</span>
               </a>
             </div>
           </div>
@@ -111,13 +111,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
           {/* Col 1: Brand & Details */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-3">
-              <div
-                onClick={handleFooterOwlClick}
-                className="cursor-pointer select-none hover:scale-110 transition-transform"
-                title="Tapotez 3 fois..."
-              >
-                <OwlLogo size="sm" />
-              </div>
+              <OwlLogo onEasterEggTrigger={handleFooterOwlClick} size="sm" />
               <span className="font-black text-white text-lg tracking-wider">
                 HOOT <span className="text-[#f59e0b]">INDIE</span> GAMES
               </span>
@@ -131,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-amber-400 transition"
-                title="Portfolio Quentin Beaud"
+                aria-label="Portfolio Quentin Beaud"
               >
                 <Globe className="w-4 h-4" />
               </a>
@@ -140,7 +134,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-white transition"
-                title="GitHub Edsaje"
+                aria-label="GitHub Edsaje"
               >
                 <GithubIcon className="w-4 h-4" />
               </a>
@@ -149,7 +143,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-red-400 transition"
-                title="YouTube Hibouxe"
+                aria-label="YouTube Hibouxe"
               >
                 <YoutubeIcon className="w-4 h-4" />
               </a>
@@ -158,7 +152,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-rose-400 hover:border-rose-500/40 transition"
-                title="Ko-fi Hibouxe"
+                aria-label="Ko-fi Hibouxe"
               >
                 <KofiIcon className="w-4 h-4" />
               </a>
@@ -167,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-xl bg-[#131a29] border border-[#1e293b] text-slate-300 hover:text-blue-400 hover:border-blue-500/40 transition"
-                title="PayPal Hibouxe"
+                aria-label="PayPal Hibouxe"
               >
                 <PaypalIcon className="w-4 h-4" />
               </a>
@@ -176,14 +170,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
 
           {/* Col 2: Mini-Jeux */}
           <div>
-            <h4 className="text-xs font-black uppercase text-white tracking-widest mb-3">
+            <h3 className="text-xs font-black uppercase text-white tracking-widest mb-3">
               {t('nav.games')} (10)
-            </h4>
-            <ul className="space-y-1.5 text-xs">
+            </h3>
+            <ul className="space-y-1 text-xs">
               <li>
                 <button
                   onClick={() => onSelectTab('minigames')}
-                  className="hover:text-amber-400 text-amber-300 font-bold transition flex items-center gap-1"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center gap-1 min-h-[30px] hover:text-amber-400 text-amber-300 font-bold transition hover:bg-white/5"
                 >
                   <span>✦ Hub {t('nav.games')}</span>
                 </button>
@@ -191,7 +185,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('screenle')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   1. {t('nav.screenle')}
                 </button>
@@ -199,7 +193,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('indledle')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   2. {t('nav.indledle')}
                 </button>
@@ -207,7 +201,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('linkle')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   3. {t('nav.linkle')}
                 </button>
@@ -215,7 +209,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('profille')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   4. {t('nav.profille')}
                 </button>
@@ -223,7 +217,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('chrono')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   5. {t('nav.chrono')}
                 </button>
@@ -231,7 +225,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('pixel')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   6. {t('nav.pixel')}
                 </button>
@@ -239,7 +233,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('review')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   7. {t('nav.review')}
                 </button>
@@ -247,24 +241,26 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('blindtest')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   8. {t('nav.blindtest')}
                 </button>
               </li>
-              <li className="pt-1 flex items-center gap-2">
+              <li>
                 <button
                   onClick={() => onSelectTab('timeattack')}
-                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center gap-1 min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   <span>9. {t('nav.timeattack')}</span>
                   <span className="text-[9px] font-bold uppercase px-1 py-0.2 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
                     ⚡
                   </span>
                 </button>
+              </li>
+              <li>
                 <button
                   onClick={() => onSelectTab('versus')}
-                  className="hover:text-amber-400 text-slate-300 transition flex items-center gap-1"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center gap-1 min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   <span>10. {t('nav.versus')}</span>
                   <span className="text-[9px] font-bold uppercase px-1 py-0.2 bg-rose-500/20 text-rose-300 rounded border border-rose-500/30">
@@ -277,14 +273,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
 
           {/* Col 3: Espaces */}
           <div>
-            <h4 className="text-xs font-black uppercase text-white tracking-widest mb-3">
+            <h3 className="text-xs font-black uppercase text-white tracking-widest mb-3">
               Espaces & Outils
-            </h4>
-            <ul className="space-y-2 text-xs">
+            </h3>
+            <ul className="space-y-1 text-xs">
               <li>
                 <button
                   onClick={() => onSelectTab('toolbox')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   {t('nav.toolbox')}
                 </button>
@@ -292,7 +288,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
               <li>
                 <button
                   onClick={() => onSelectTab('roost')}
-                  className="hover:text-amber-400 text-slate-300 transition"
+                  className="py-1 px-2 -mx-2 rounded-lg inline-flex items-center min-h-[30px] hover:text-amber-400 text-slate-300 transition hover:bg-white/5"
                 >
                   {t('nav.roost')}
                 </button>

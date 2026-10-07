@@ -560,6 +560,1176 @@ const CURATED_REVIEWS: CuratedReview[] = [
         "pt-BR": "Apenas combates intensos contra chefes mesclando espadas e bullet hell. O carcereiro de máscara de coelho te aguarda."
     },
   },
+  {
+    gameId: 'terraria',
+    author: 'UnderworldMiner',
+    hoursPlayed: 480.5,
+    reviewDate: '15 juillet 2021',
+    fullFr: "J'ai creusé tout droit vers le bas, trouvé les Enfers, et je me suis fait découper par un œil géant avec des dents. 10/10 meilleur jeu 2D bac à sable.",
+    fullEn: "Dug straight down, found the Underworld, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D sandbox.",
+    redactedFr: "J'ai creusé tout droit vers le bas, trouvé les ██████, et je me suis fait découper par un œil géant avec des dents. 10/10 meilleur jeu 2D.",
+    redactedEn: "Dug straight down, found the ██████████, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D game.",
+    fullText: {
+      fr: "J'ai creusé tout droit vers le bas, trouvé les Enfers, et je me suis fait découper par un œil géant avec des dents. 10/10 meilleur jeu 2D bac à sable.",
+      en: "Dug straight down, found the Underworld, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D sandbox.",
+      es: "Dug straight down, found the Underworld, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D sandbox.",
+      de: "Dug straight down, found the Underworld, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D sandbox.",
+      ja: "Dug straight down, found the Underworld, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D sandbox.",
+      'pt-BR': "Dug straight down, found the Underworld, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D sandbox."
+    },
+    redactedText: {
+      fr: "J'ai creusé tout droit vers le bas, trouvé les ██████, et je me suis fait découper par un œil géant avec des dents. 10/10 meilleur jeu 2D.",
+      en: "Dug straight down, found the ██████████, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D game.",
+      es: "Dug straight down, found the ██████████, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D game.",
+      de: "Dug straight down, found the ██████████, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D game.",
+      ja: "Dug straight down, found the ██████████, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D game.",
+      'pt-BR': "Dug straight down, found the ██████████, and got sliced in half by a giant flying eye with teeth. 10/10 best 2D game."
+    }
+  },
+  {
+    gameId: 'the-binding-of-isaac-rebirth',
+    author: 'TearsOfGuppy',
+    hoursPlayed: 620.2,
+    reviewDate: '3 novembre 2018',
+    fullFr: "Ma mère a entendu une voix divine et a voulu me sacrifier. J'ai sauté dans la cave et j'ai vaincu Satan en pleurant sur des cacas.",
+    fullEn: "My mother heard a divine voice and tried to sacrifice me. I jumped into the basement and defeated Satan by crying on poops.",
+    redactedFr: "Ma mère a entendu une voix divine et a voulu me sacrifier. J'ai sauté dans la ████ et j'ai vaincu Satan en pleurant sur des monstres.",
+    redactedEn: "My mother heard a divine voice and tried to sacrifice me. I jumped into the ████████ and defeated Satan by crying on monsters.",
+    fullText: {
+      fr: "Ma mère a entendu une voix divine et a voulu me sacrifier. J'ai sauté dans la cave et j'ai vaincu Satan en pleurant sur des cacas.",
+      en: "My mother heard a divine voice and tried to sacrifice me. I jumped into the basement and defeated Satan by crying on poops.",
+      es: "My mother heard a divine voice and tried to sacrifice me. I jumped into the basement and defeated Satan by crying on poops.",
+      de: "My mother heard a divine voice and tried to sacrifice me. I jumped into the basement and defeated Satan by crying on poops.",
+      ja: "My mother heard a divine voice and tried to sacrifice me. I jumped into the basement and defeated Satan by crying on poops.",
+      'pt-BR': "My mother heard a divine voice and tried to sacrifice me. I jumped into the basement and defeated Satan by crying on poops."
+    },
+    redactedText: {
+      fr: "Ma mère a entendu une voix divine et a voulu me sacrifier. J'ai sauté dans la ████ et j'ai vaincu Satan en pleurant sur des monstres.",
+      en: "My mother heard a divine voice and tried to sacrifice me. I jumped into the ████████ and defeated Satan by crying on monsters.",
+      es: "My mother heard a divine voice and tried to sacrifice me. I jumped into the ████████ and defeated Satan by crying on monsters.",
+      de: "My mother heard a divine voice and tried to sacrifice me. I jumped into the ████████ and defeated Satan by crying on monsters.",
+      ja: "My mother heard a divine voice and tried to sacrifice me. I jumped into the ████████ and defeated Satan by crying on monsters.",
+      'pt-BR': "My mother heard a divine voice and tried to sacrifice me. I jumped into the ████████ and defeated Satan by crying on monsters."
+    }
+  },
+  {
+    gameId: 'cuphead',
+    author: 'JazzParryMaster',
+    hoursPlayed: 54,
+    reviewDate: '9 octobre 2017',
+    fullFr: "J'ai vendu mon âme au Diable dans un casino des années 30. Je suis mort 42 fois sur une grenouille chanteuse de jazz et une carotte géante.",
+    fullEn: "Gambled my soul away to the Devil in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+    redactedFr: "J'ai parié mon âme contre le Diable dans un casino des années 30. Je suis mort 42 fois sur une grenouille chanteuse de jazz et une carotte géante.",
+    redactedEn: "Gambled my soul away in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+    fullText: {
+      fr: "J'ai vendu mon âme au Diable dans un casino des années 30. Je suis mort 42 fois sur une grenouille chanteuse de jazz et une carotte géante.",
+      en: "Gambled my soul away to the Devil in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      es: "Gambled my soul away to the Devil in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      de: "Gambled my soul away to the Devil in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      ja: "Gambled my soul away to the Devil in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      'pt-BR': "Gambled my soul away to the Devil in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot."
+    },
+    redactedText: {
+      fr: "J'ai parié mon âme contre le Diable dans un casino des années 30. Je suis mort 42 fois sur une grenouille chanteuse de jazz et une carotte géante.",
+      en: "Gambled my soul away in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      es: "Gambled my soul away in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      de: "Gambled my soul away in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      ja: "Gambled my soul away in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot.",
+      'pt-BR': "Gambled my soul away in a 1930s casino. Died 42 times to a jazz-singing frog and a giant psychic carrot."
+    }
+  },
+  {
+    gameId: 'vampire-survivors',
+    author: 'GarlicEnjoyer',
+    hoursPlayed: 112.3,
+    reviewDate: '18 mars 2022',
+    fullFr: "J'ai acheté un jeu à 3 euros où on contrôle uniquement les flèches directionnelles. Il est 4h du matin et l'ail est devenu ma religion.",
+    fullEn: "Bought a $3 game where you only walk around. It's now 4 AM and garlic has become my personal religion.",
+    redactedFr: "J'ai acheté un jeu à 3 euros où on contrôle uniquement les déplacements. Il est 4h du matin et l'███ est devenu ma religion.",
+    redactedEn: "Bought a $3 game where you only walk around. It's now 4 AM and ██████ has become my personal religion.",
+    fullText: {
+      fr: "J'ai acheté un jeu à 3 euros où on contrôle uniquement les flèches directionnelles. Il est 4h du matin et l'ail est devenu ma religion.",
+      en: "Bought a $3 game where you only walk around. It's now 4 AM and garlic has become my personal religion.",
+      es: "Bought a $3 game where you only walk around. It's now 4 AM and garlic has become my personal religion.",
+      de: "Bought a $3 game where you only walk around. It's now 4 AM and garlic has become my personal religion.",
+      ja: "Bought a $3 game where you only walk around. It's now 4 AM and garlic has become my personal religion.",
+      'pt-BR': "Bought a $3 game where you only walk around. It's now 4 AM and garlic has become my personal religion."
+    },
+    redactedText: {
+      fr: "J'ai acheté un jeu à 3 euros où on contrôle uniquement les déplacements. Il est 4h du matin et l'███ est devenu ma religion.",
+      en: "Bought a $3 game where you only walk around. It's now 4 AM and ██████ has become my personal religion.",
+      es: "Bought a $3 game where you only walk around. It's now 4 AM and ██████ has become my personal religion.",
+      de: "Bought a $3 game where you only walk around. It's now 4 AM and ██████ has become my personal religion.",
+      ja: "Bought a $3 game where you only walk around. It's now 4 AM and ██████ has become my personal religion.",
+      'pt-BR': "Bought a $3 game where you only walk around. It's now 4 AM and ██████ has become my personal religion."
+    }
+  },
+  {
+    gameId: 'papers-please',
+    author: 'InspectorEast',
+    hoursPlayed: 38.7,
+    reviewDate: '22 août 2014',
+    fullFr: "Gloire à l'Arstotzka. J'ai recalé une grand-mère parce que son passeport était périmé d'un jour. Mon fils a froid mais la frontière est sûre.",
+    fullEn: "Glory to Arstotzka. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the border is safe.",
+    redactedFr: "Gloire à l'████████. J'ai recalé une grand-mère parce que son passeport était périmé d'un jour. Mon fils a froid mais le poste frontière est sûr.",
+    redactedEn: "Glory to █████████. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the checkpoint is safe.",
+    fullText: {
+      fr: "Gloire à l'Arstotzka. J'ai recalé une grand-mère parce que son passeport était périmé d'un jour. Mon fils a froid mais la frontière est sûre.",
+      en: "Glory to Arstotzka. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the border is safe.",
+      es: "Glory to Arstotzka. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the border is safe.",
+      de: "Glory to Arstotzka. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the border is safe.",
+      ja: "Glory to Arstotzka. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the border is safe.",
+      'pt-BR': "Glory to Arstotzka. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the border is safe."
+    },
+    redactedText: {
+      fr: "Gloire à l'████████. J'ai recalé une grand-mère parce que son passeport était périmé d'un jour. Mon fils a froid mais le poste frontière est sûr.",
+      en: "Glory to █████████. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the checkpoint is safe.",
+      es: "Glory to █████████. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the checkpoint is safe.",
+      de: "Glory to █████████. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the checkpoint is safe.",
+      ja: "Glory to █████████. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the checkpoint is safe.",
+      'pt-BR': "Glory to █████████. Denied entry to a grandma because her passport expired yesterday. My son is freezing but the checkpoint is safe."
+    }
+  },
+  {
+    gameId: 'inscryption',
+    author: 'CabinCardist',
+    hoursPlayed: 45.9,
+    reviewDate: '28 octobre 2021',
+    fullFr: "Une simple partie de cartes dans une cabane sombre avec un vieil homme aux yeux luisants. Puis l'hermine s'est mise à me parler.",
+    fullEn: "Just a card game in a dark cabin with a glowing-eyed old man. Then the stoat started talking to me.",
+    redactedFr: "Une simple partie de cartes dans une cabane sombre avec un vieil homme aux yeux luisants. Puis l'███████ s'est mise à me parler.",
+    redactedEn: "Just a card game in a dark cabin with a glowing-eyed old man. Then the █████ started talking to me.",
+    fullText: {
+      fr: "Une simple partie de cartes dans une cabane sombre avec un vieil homme aux yeux luisants. Puis l'hermine s'est mise à me parler.",
+      en: "Just a card game in a dark cabin with a glowing-eyed old man. Then the stoat started talking to me.",
+      es: "Just a card game in a dark cabin with a glowing-eyed old man. Then the stoat started talking to me.",
+      de: "Just a card game in a dark cabin with a glowing-eyed old man. Then the stoat started talking to me.",
+      ja: "Just a card game in a dark cabin with a glowing-eyed old man. Then the stoat started talking to me.",
+      'pt-BR': "Just a card game in a dark cabin with a glowing-eyed old man. Then the stoat started talking to me."
+    },
+    redactedText: {
+      fr: "Une simple partie de cartes dans une cabane sombre avec un vieil homme aux yeux luisants. Puis l'███████ s'est mise à me parler.",
+      en: "Just a card game in a dark cabin with a glowing-eyed old man. Then the █████ started talking to me.",
+      es: "Just a card game in a dark cabin with a glowing-eyed old man. Then the █████ started talking to me.",
+      de: "Just a card game in a dark cabin with a glowing-eyed old man. Then the █████ started talking to me.",
+      ja: "Just a card game in a dark cabin with a glowing-eyed old man. Then the █████ started talking to me.",
+      'pt-BR': "Just a card game in a dark cabin with a glowing-eyed old man. Then the █████ started talking to me."
+    }
+  },
+  {
+    gameId: 'cult-of-the-lamb',
+    author: 'WoolyProphet',
+    hoursPlayed: 56.4,
+    reviewDate: '19 août 2022',
+    fullFr: "J'ai nourri mes adeptes avec des bols d'excréments, épousé un hérisson et sacrifié un vieux disciple pour organiser une soirée disco.",
+    fullEn: "Fed my followers poop bowls, married a hedgehog, and sacrificed a dissenting elder to host a cozy disco party.",
+    redactedFr: "J'ai nourri mes adeptes avec des bols douteux, épousé un hérisson et sacrifié un vieux disciple pour organiser une fête religieuse.",
+    redactedEn: "Fed my followers questionable bowls, married a hedgehog, and sacrificed an elder to host a holy ritual.",
+    fullText: {
+      fr: "J'ai nourri mes adeptes avec des bols d'excréments, épousé un hérisson et sacrifié un vieux disciple pour organiser une soirée disco.",
+      en: "Fed my followers poop bowls, married a hedgehog, and sacrificed a dissenting elder to host a cozy disco party.",
+      es: "Fed my followers poop bowls, married a hedgehog, and sacrificed a dissenting elder to host a cozy disco party.",
+      de: "Fed my followers poop bowls, married a hedgehog, and sacrificed a dissenting elder to host a cozy disco party.",
+      ja: "Fed my followers poop bowls, married a hedgehog, and sacrificed a dissenting elder to host a cozy disco party.",
+      'pt-BR': "Fed my followers poop bowls, married a hedgehog, and sacrificed a dissenting elder to host a cozy disco party."
+    },
+    redactedText: {
+      fr: "J'ai nourri mes adeptes avec des bols douteux, épousé un hérisson et sacrifié un vieux disciple pour organiser une fête religieuse.",
+      en: "Fed my followers questionable bowls, married a hedgehog, and sacrificed an elder to host a holy ritual.",
+      es: "Fed my followers questionable bowls, married a hedgehog, and sacrificed an elder to host a holy ritual.",
+      de: "Fed my followers questionable bowls, married a hedgehog, and sacrificed an elder to host a holy ritual.",
+      ja: "Fed my followers questionable bowls, married a hedgehog, and sacrificed an elder to host a holy ritual.",
+      'pt-BR': "Fed my followers questionable bowls, married a hedgehog, and sacrificed an elder to host a holy ritual."
+    }
+  },
+  {
+    gameId: 'untitled-goose-game',
+    author: 'HonkMenace',
+    hoursPlayed: 14.2,
+    reviewDate: '29 septembre 2019',
+    fullFr: "C'est un beau matin dans un charmant village anglais, et vous êtes une oie insupportable. Coin.",
+    fullEn: "It is a lovely morning in the village, and you are a horrible goose. Honk.",
+    redactedFr: "C'est un beau matin dans un charmant village anglais, et vous êtes un animal à plumes insupportable. Coin.",
+    redactedEn: "It is a lovely morning in the village, and you are a horrible winged creature. Honk.",
+    fullText: {
+      fr: "C'est un beau matin dans un charmant village anglais, et vous êtes une oie insupportable. Coin.",
+      en: "It is a lovely morning in the village, and you are a horrible goose. Honk.",
+      es: "It is a lovely morning in the village, and you are a horrible goose. Honk.",
+      de: "It is a lovely morning in the village, and you are a horrible goose. Honk.",
+      ja: "It is a lovely morning in the village, and you are a horrible goose. Honk.",
+      'pt-BR': "It is a lovely morning in the village, and you are a horrible goose. Honk."
+    },
+    redactedText: {
+      fr: "C'est un beau matin dans un charmant village anglais, et vous êtes un animal à plumes insupportable. Coin.",
+      en: "It is a lovely morning in the village, and you are a horrible winged creature. Honk.",
+      es: "It is a lovely morning in the village, and you are a horrible winged creature. Honk.",
+      de: "It is a lovely morning in the village, and you are a horrible winged creature. Honk.",
+      ja: "It is a lovely morning in the village, and you are a horrible winged creature. Honk.",
+      'pt-BR': "It is a lovely morning in the village, and you are a horrible winged creature. Honk."
+    }
+  },
+  {
+    gameId: 'hotline-miami',
+    author: 'RoosterMask_89',
+    hoursPlayed: 62.8,
+    reviewDate: '5 novembre 2013',
+    fullFr: "Aimez-vous faire du mal aux autres ? Un masque de coq sur la tête, de la synthwave à fond dans les oreilles, et 50 morts en 2 minutes.",
+    fullEn: "Do you like hurting other people? A rooster mask on, blasting synthwave in your ears, and 50 deaths in under 2 minutes.",
+    redactedFr: "Aimez-vous faire du mal aux autres ? Un masque de ████ sur la tête, de la synthwave à fond, et 50 morts en 2 minutes.",
+    redactedEn: "Do you like hurting other people? A ███████ mask on, blasting synthwave, and 50 deaths in under 2 minutes.",
+    fullText: {
+      fr: "Aimez-vous faire du mal aux autres ? Un masque de coq sur la tête, de la synthwave à fond dans les oreilles, et 50 morts en 2 minutes.",
+      en: "Do you like hurting other people? A rooster mask on, blasting synthwave in your ears, and 50 deaths in under 2 minutes.",
+      es: "Do you like hurting other people? A rooster mask on, blasting synthwave in your ears, and 50 deaths in under 2 minutes.",
+      de: "Do you like hurting other people? A rooster mask on, blasting synthwave in your ears, and 50 deaths in under 2 minutes.",
+      ja: "Do you like hurting other people? A rooster mask on, blasting synthwave in your ears, and 50 deaths in under 2 minutes.",
+      'pt-BR': "Do you like hurting other people? A rooster mask on, blasting synthwave in your ears, and 50 deaths in under 2 minutes."
+    },
+    redactedText: {
+      fr: "Aimez-vous faire du mal aux autres ? Un masque de ████ sur la tête, de la synthwave à fond, et 50 morts en 2 minutes.",
+      en: "Do you like hurting other people? A ███████ mask on, blasting synthwave, and 50 deaths in under 2 minutes.",
+      es: "Do you like hurting other people? A ███████ mask on, blasting synthwave, and 50 deaths in under 2 minutes.",
+      de: "Do you like hurting other people? A ███████ mask on, blasting synthwave, and 50 deaths in under 2 minutes.",
+      ja: "Do you like hurting other people? A ███████ mask on, blasting synthwave, and 50 deaths in under 2 minutes.",
+      'pt-BR': "Do you like hurting other people? A ███████ mask on, blasting synthwave, and 50 deaths in under 2 minutes."
+    }
+  },
+  {
+    gameId: 'firewatch',
+    author: 'TowerTwoWatcher',
+    hoursPlayed: 18.5,
+    reviewDate: '14 février 2016',
+    fullFr: "Un homme brisé s'isole au sommet d'une tour dans la forêt du Wyoming avec un talkie-walkie. Une histoire humaine inoubliable.",
+    fullEn: "A broken man takes a fire lookout job in the Wyoming wilderness with just a handheld radio. An unforgettable human story.",
+    redactedFr: "Un homme brisé s'isole au sommet d'une tour de guet dans la forêt avec un talkie-walkie. Une histoire humaine inoubliable.",
+    redactedEn: "A broken man takes a lookout job in the wilderness with just a handheld radio. An unforgettable human story.",
+    fullText: {
+      fr: "Un homme brisé s'isole au sommet d'une tour dans la forêt du Wyoming avec un talkie-walkie. Une histoire humaine inoubliable.",
+      en: "A broken man takes a fire lookout job in the Wyoming wilderness with just a handheld radio. An unforgettable human story.",
+      es: "A broken man takes a fire lookout job in the Wyoming wilderness with just a handheld radio. An unforgettable human story.",
+      de: "A broken man takes a fire lookout job in the Wyoming wilderness with just a handheld radio. An unforgettable human story.",
+      ja: "A broken man takes a fire lookout job in the Wyoming wilderness with just a handheld radio. An unforgettable human story.",
+      'pt-BR': "A broken man takes a fire lookout job in the Wyoming wilderness with just a handheld radio. An unforgettable human story."
+    },
+    redactedText: {
+      fr: "Un homme brisé s'isole au sommet d'une tour de guet dans la forêt avec un talkie-walkie. Une histoire humaine inoubliable.",
+      en: "A broken man takes a lookout job in the wilderness with just a handheld radio. An unforgettable human story.",
+      es: "A broken man takes a lookout job in the wilderness with just a handheld radio. An unforgettable human story.",
+      de: "A broken man takes a lookout job in the wilderness with just a handheld radio. An unforgettable human story.",
+      ja: "A broken man takes a lookout job in the wilderness with just a handheld radio. An unforgettable human story.",
+      'pt-BR': "A broken man takes a lookout job in the wilderness with just a handheld radio. An unforgettable human story."
+    }
+  },
+  {
+    gameId: 'what-remains-of-edith-finch',
+    author: 'HouseChronicles',
+    hoursPlayed: 9.3,
+    reviewDate: '2 mai 2017',
+    fullFr: "La malédiction d'une famille racontée à travers une succession de récits magiques : j'ai incarné un chat, un requin et un coupeur de poisson.",
+    fullEn: "A cursed family history told through surreal vignettes: I played as a cat, a shark, and a fish-cannery worker dreaming of royalty.",
+    redactedFr: "La malédiction d'une famille racontée à travers des récits poétiques dans une immense maison isolée sur une falaise.",
+    redactedEn: "A cursed family history told through poetic vignettes inside an eccentric cliffside house.",
+    fullText: {
+      fr: "La malédiction d'une famille racontée à travers une succession de récits magiques : j'ai incarné un chat, un requin et un coupeur de poisson.",
+      en: "A cursed family history told through surreal vignettes: I played as a cat, a shark, and a fish-cannery worker dreaming of royalty.",
+      es: "A cursed family history told through surreal vignettes: I played as a cat, a shark, and a fish-cannery worker dreaming of royalty.",
+      de: "A cursed family history told through surreal vignettes: I played as a cat, a shark, and a fish-cannery worker dreaming of royalty.",
+      ja: "A cursed family history told through surreal vignettes: I played as a cat, a shark, and a fish-cannery worker dreaming of royalty.",
+      'pt-BR': "A cursed family history told through surreal vignettes: I played as a cat, a shark, and a fish-cannery worker dreaming of royalty."
+    },
+    redactedText: {
+      fr: "La malédiction d'une famille racontée à travers des récits poétiques dans une immense maison isolée sur une falaise.",
+      en: "A cursed family history told through poetic vignettes inside an eccentric cliffside house.",
+      es: "A cursed family history told through poetic vignettes inside an eccentric cliffside house.",
+      de: "A cursed family history told through poetic vignettes inside an eccentric cliffside house.",
+      ja: "A cursed family history told through poetic vignettes inside an eccentric cliffside house.",
+      'pt-BR': "A cursed family history told through poetic vignettes inside an eccentric cliffside house."
+    }
+  },
+  {
+    gameId: 'darkest-dungeon',
+    author: 'AncestralEcho',
+    hoursPlayed: 188,
+    reviewDate: '24 janvier 2016',
+    fullFr: "Rappelez-vous que l'excès de confiance est un tueur lent et insidieux. Mon croisé a volé mes torches en pleine paranoïa et est mort d'une crise cardiaque.",
+    fullEn: "Remind yourself that overconfidence is a slow and insidious killer. My crusader had a paranoid breakdown, stole my torches, and died of a heart attack.",
+    redactedFr: "Rappelez-vous que l'excès de confiance est un tueur lent et insidieux. Mon aventurier est mort de crise cardiaque dans les cryptes.",
+    redactedEn: "Remind yourself that overconfidence is a slow and insidious killer. My hero died of a heart attack deep within the crypts.",
+    fullText: {
+      fr: "Rappelez-vous que l'excès de confiance est un tueur lent et insidieux. Mon croisé a volé mes torches en pleine paranoïa et est mort d'une crise cardiaque.",
+      en: "Remind yourself that overconfidence is a slow and insidious killer. My crusader had a paranoid breakdown, stole my torches, and died of a heart attack.",
+      es: "Remind yourself that overconfidence is a slow and insidious killer. My crusader had a paranoid breakdown, stole my torches, and died of a heart attack.",
+      de: "Remind yourself that overconfidence is a slow and insidious killer. My crusader had a paranoid breakdown, stole my torches, and died of a heart attack.",
+      ja: "Remind yourself that overconfidence is a slow and insidious killer. My crusader had a paranoid breakdown, stole my torches, and died of a heart attack.",
+      'pt-BR': "Remind yourself that overconfidence is a slow and insidious killer. My crusader had a paranoid breakdown, stole my torches, and died of a heart attack."
+    },
+    redactedText: {
+      fr: "Rappelez-vous que l'excès de confiance est un tueur lent et insidieux. Mon aventurier est mort de crise cardiaque dans les cryptes.",
+      en: "Remind yourself that overconfidence is a slow and insidious killer. My hero died of a heart attack deep within the crypts.",
+      es: "Remind yourself that overconfidence is a slow and insidious killer. My hero died of a heart attack deep within the crypts.",
+      de: "Remind yourself that overconfidence is a slow and insidious killer. My hero died of a heart attack deep within the crypts.",
+      ja: "Remind yourself that overconfidence is a slow and insidious killer. My hero died of a heart attack deep within the crypts.",
+      'pt-BR': "Remind yourself that overconfidence is a slow and insidious killer. My hero died of a heart attack deep within the crypts."
+    }
+  },
+  {
+    gameId: 'risk-of-rain-2',
+    author: 'CritGlassesGod',
+    hoursPlayed: 245.6,
+    reviewDate: '16 août 2020',
+    fullFr: "J'ai ramassé 40 paires de lunettes critiques et 25 canettes énergisantes. Je cours plus vite que la lumière et mon PC a failli exploser.",
+    fullEn: "Collected 40 pairs of crit glasses and 25 energy drinks. I am running faster than light and my GPU is on fire.",
+    redactedFr: "J'ai ramassé 40 paires de lunettes critiques et 25 canettes énergisantes. Je cours plus vite que la lumière sur cette planète alien.",
+    redactedEn: "Collected 40 pairs of crit glasses and 25 energy drinks. Running faster than light across an unforgiving alien world.",
+    fullText: {
+      fr: "J'ai ramassé 40 paires de lunettes critiques et 25 canettes énergisantes. Je cours plus vite que la lumière et mon PC a failli exploser.",
+      en: "Collected 40 pairs of crit glasses and 25 energy drinks. I am running faster than light and my GPU is on fire.",
+      es: "Collected 40 pairs of crit glasses and 25 energy drinks. I am running faster than light and my GPU is on fire.",
+      de: "Collected 40 pairs of crit glasses and 25 energy drinks. I am running faster than light and my GPU is on fire.",
+      ja: "Collected 40 pairs of crit glasses and 25 energy drinks. I am running faster than light and my GPU is on fire.",
+      'pt-BR': "Collected 40 pairs of crit glasses and 25 energy drinks. I am running faster than light and my GPU is on fire."
+    },
+    redactedText: {
+      fr: "J'ai ramassé 40 paires de lunettes critiques et 25 canettes énergisantes. Je cours plus vite que la lumière sur cette planète alien.",
+      en: "Collected 40 pairs of crit glasses and 25 energy drinks. Running faster than light across an unforgiving alien world.",
+      es: "Collected 40 pairs of crit glasses and 25 energy drinks. Running faster than light across an unforgiving alien world.",
+      de: "Collected 40 pairs of crit glasses and 25 energy drinks. Running faster than light across an unforgiving alien world.",
+      ja: "Collected 40 pairs of crit glasses and 25 energy drinks. Running faster than light across an unforgiving alien world.",
+      'pt-BR': "Collected 40 pairs of crit glasses and 25 energy drinks. Running faster than light across an unforgiving alien world."
+    }
+  },
+  {
+    gameId: 'ftl-faster-than-light',
+    author: 'KestrelCaptain',
+    hoursPlayed: 310.4,
+    reviewDate: '20 septembre 2013',
+    fullFr: "La salle d'oxygène est en feu, les araignées extraterrestres géantes ne sont pas une blague, et le vaisseau amiral rebelle vient de tirer 15 missiles.",
+    fullEn: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship just fired 15 missiles simultaneously.",
+    redactedFr: "La salle d'oxygène est en feu, les araignées extraterrestres géantes ne sont pas une blague, et le vaisseau amiral ennemi approche.",
+    redactedEn: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship is closing in.",
+    fullText: {
+      fr: "La salle d'oxygène est en feu, les araignées extraterrestres géantes ne sont pas une blague, et le vaisseau amiral rebelle vient de tirer 15 missiles.",
+      en: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship just fired 15 missiles simultaneously.",
+      es: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship just fired 15 missiles simultaneously.",
+      de: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship just fired 15 missiles simultaneously.",
+      ja: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship just fired 15 missiles simultaneously.",
+      'pt-BR': "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship just fired 15 missiles simultaneously."
+    },
+    redactedText: {
+      fr: "La salle d'oxygène est en feu, les araignées extraterrestres géantes ne sont pas une blague, et le vaisseau amiral ennemi approche.",
+      en: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship is closing in.",
+      es: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship is closing in.",
+      de: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship is closing in.",
+      ja: "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship is closing in.",
+      'pt-BR': "The oxygen room is ablaze, giant alien spiders are no joke, and the rebel flagship is closing in."
+    }
+  },
+  {
+    gameId: 'into-the-breach',
+    author: 'GridCommander',
+    hoursPlayed: 142.1,
+    reviewDate: '3 mars 2018',
+    fullFr: "Une partie d'échecs temporelle avec des méchas géants contre des insectes géants. Vous passerez 20 minutes à fixer un seul tour pour sauver un immeuble civil.",
+    fullEn: "Time-traveling chess with giant mechs fighting giant insects. You will stare at a single turn for 20 minutes just to save one apartment building.",
+    redactedFr: "Une partie d'échecs temporelle avec des méchas géants contre les Vek. Vous passerez 20 minutes à fixer un tour pour sauver le réseau électrique.",
+    redactedEn: "Time-traveling chess with giant mechs fighting the Vek. You will stare at a single turn for 20 minutes just to protect the power grid.",
+    fullText: {
+      fr: "Une partie d'échecs temporelle avec des méchas géants contre des insectes géants. Vous passerez 20 minutes à fixer un seul tour pour sauver un immeuble civil.",
+      en: "Time-traveling chess with giant mechs fighting giant insects. You will stare at a single turn for 20 minutes just to save one apartment building.",
+      es: "Time-traveling chess with giant mechs fighting giant insects. You will stare at a single turn for 20 minutes just to save one apartment building.",
+      de: "Time-traveling chess with giant mechs fighting giant insects. You will stare at a single turn for 20 minutes just to save one apartment building.",
+      ja: "Time-traveling chess with giant mechs fighting giant insects. You will stare at a single turn for 20 minutes just to save one apartment building.",
+      'pt-BR': "Time-traveling chess with giant mechs fighting giant insects. You will stare at a single turn for 20 minutes just to save one apartment building."
+    },
+    redactedText: {
+      fr: "Une partie d'échecs temporelle avec des méchas géants contre les Vek. Vous passerez 20 minutes à fixer un tour pour sauver le réseau électrique.",
+      en: "Time-traveling chess with giant mechs fighting the Vek. You will stare at a single turn for 20 minutes just to protect the power grid.",
+      es: "Time-traveling chess with giant mechs fighting the Vek. You will stare at a single turn for 20 minutes just to protect the power grid.",
+      de: "Time-traveling chess with giant mechs fighting the Vek. You will stare at a single turn for 20 minutes just to protect the power grid.",
+      ja: "Time-traveling chess with giant mechs fighting the Vek. You will stare at a single turn for 20 minutes just to protect the power grid.",
+      'pt-BR': "Time-traveling chess with giant mechs fighting the Vek. You will stare at a single turn for 20 minutes just to protect the power grid."
+    }
+  },
+  {
+    gameId: 'shovel-knight',
+    author: 'PogoKnight',
+    hoursPlayed: 48.3,
+    reviewDate: '12 juillet 2014',
+    fullFr: "Frappez la terre ! Un vibrant hommage à l'ère NES 8-bits avec des contrôles parfaits, un saut à la pelle façon pogo et une bande-son chiptune intemporelle.",
+    fullEn: "Strike the earth! A brilliant tribute to 8-bit NES classics with tight controls, shovel pogo jumping, and an unforgettable chiptune score.",
+    redactedFr: "Frappez la terre ! Un vibrant hommage à l'ère 8-bits avec des contrôles parfaits, un saut à la pelle et les chevaliers de l'Ordre Sans Quartier.",
+    redactedEn: "Strike the earth! A brilliant tribute to 8-bit classics with tight controls, shovel pogo jumping, and knights of the Order of No Quarter.",
+    fullText: {
+      fr: "Frappez la terre ! Un vibrant hommage à l'ère NES 8-bits avec des contrôles parfaits, un saut à la pelle façon pogo et une bande-son chiptune intemporelle.",
+      en: "Strike the earth! A brilliant tribute to 8-bit NES classics with tight controls, shovel pogo jumping, and an unforgettable chiptune score.",
+      es: "Strike the earth! A brilliant tribute to 8-bit NES classics with tight controls, shovel pogo jumping, and an unforgettable chiptune score.",
+      de: "Strike the earth! A brilliant tribute to 8-bit NES classics with tight controls, shovel pogo jumping, and an unforgettable chiptune score.",
+      ja: "Strike the earth! A brilliant tribute to 8-bit NES classics with tight controls, shovel pogo jumping, and an unforgettable chiptune score.",
+      'pt-BR': "Strike the earth! A brilliant tribute to 8-bit NES classics with tight controls, shovel pogo jumping, and an unforgettable chiptune score."
+    },
+    redactedText: {
+      fr: "Frappez la terre ! Un vibrant hommage à l'ère 8-bits avec des contrôles parfaits, un saut à la pelle et les chevaliers de l'Ordre Sans Quartier.",
+      en: "Strike the earth! A brilliant tribute to 8-bit classics with tight controls, shovel pogo jumping, and knights of the Order of No Quarter.",
+      es: "Strike the earth! A brilliant tribute to 8-bit classics with tight controls, shovel pogo jumping, and knights of the Order of No Quarter.",
+      de: "Strike the earth! A brilliant tribute to 8-bit classics with tight controls, shovel pogo jumping, and knights of the Order of No Quarter.",
+      ja: "Strike the earth! A brilliant tribute to 8-bit classics with tight controls, shovel pogo jumping, and knights of the Order of No Quarter.",
+      'pt-BR': "Strike the earth! A brilliant tribute to 8-bit classics with tight controls, shovel pogo jumping, and knights of the Order of No Quarter."
+    }
+  },
+  {
+    gameId: 'super-meat-boy',
+    author: 'BandageRunner',
+    hoursPlayed: 85,
+    reviewDate: '4 décembre 2010',
+    fullFr: "12 000 morts sur un seul écran de scies circulaires. Voir tous vos échecs rejoués en même temps à la fin du niveau est la meilleure thérapie.",
+    fullEn: "12,000 deaths on a single screen of spinning sawblades. Watching all your failed attempts splatter simultaneously at the end is pure therapy.",
+    redactedFr: "12 000 morts sur un seul écran de scies circulaires pour sauver Bandage Girl. Voir tous vos échecs rejoués ensemble au replay est un régal.",
+    redactedEn: "12,000 deaths on a single screen of spinning sawblades to save Bandage Girl. Watching all your attempts splatter at the replay is pure joy.",
+    fullText: {
+      fr: "12 000 morts sur un seul écran de scies circulaires. Voir tous vos échecs rejoués en même temps à la fin du niveau est la meilleure thérapie.",
+      en: "12,000 deaths on a single screen of spinning sawblades. Watching all your failed attempts splatter simultaneously at the end is pure therapy.",
+      es: "12,000 deaths on a single screen of spinning sawblades. Watching all your failed attempts splatter simultaneously at the end is pure therapy.",
+      de: "12,000 deaths on a single screen of spinning sawblades. Watching all your failed attempts splatter simultaneously at the end is pure therapy.",
+      ja: "12,000 deaths on a single screen of spinning sawblades. Watching all your failed attempts splatter simultaneously at the end is pure therapy.",
+      'pt-BR': "12,000 deaths on a single screen of spinning sawblades. Watching all your failed attempts splatter simultaneously at the end is pure therapy."
+    },
+    redactedText: {
+      fr: "12 000 morts sur un seul écran de scies circulaires pour sauver Bandage Girl. Voir tous vos échecs rejoués ensemble au replay est un régal.",
+      en: "12,000 deaths on a single screen of spinning sawblades to save Bandage Girl. Watching all your attempts splatter at the replay is pure joy.",
+      es: "12,000 deaths on a single screen of spinning sawblades to save Bandage Girl. Watching all your attempts splatter at the replay is pure joy.",
+      de: "12,000 deaths on a single screen of spinning sawblades to save Bandage Girl. Watching all your attempts splatter at the replay is pure joy.",
+      ja: "12,000 deaths on a single screen of spinning sawblades to save Bandage Girl. Watching all your attempts splatter at the replay is pure joy.",
+      'pt-BR': "12,000 deaths on a single screen of spinning sawblades to save Bandage Girl. Watching all your attempts splatter at the replay is pure joy."
+    }
+  },
+  {
+    gameId: 'limbo',
+    author: 'SilhouettedBoy',
+    hoursPlayed: 16.8,
+    reviewDate: '10 août 2011',
+    fullFr: "Une araignée géante m'a empalé, un piège à ours m'a décapité et des vers luisants ont pris le contrôle de mon cerveau. Tout ça en noir et blanc.",
+    fullEn: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs forced me into deep water. All in stark black and white.",
+    redactedFr: "Une araignée géante m'a empalé, un piège à ours m'a décapité et des vers luisants m'ont aveuglé. Tout ça en noir et blanc brumeux.",
+    redactedEn: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs blinded me. All in stark black and white mist.",
+    fullText: {
+      fr: "Une araignée géante m'a empalé, un piège à ours m'a décapité et des vers luisants ont pris le contrôle de mon cerveau. Tout ça en noir et blanc.",
+      en: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs forced me into deep water. All in stark black and white.",
+      es: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs forced me into deep water. All in stark black and white.",
+      de: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs forced me into deep water. All in stark black and white.",
+      ja: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs forced me into deep water. All in stark black and white.",
+      'pt-BR': "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs forced me into deep water. All in stark black and white."
+    },
+    redactedText: {
+      fr: "Une araignée géante m'a empalé, un piège à ours m'a décapité et des vers luisants m'ont aveuglé. Tout ça en noir et blanc brumeux.",
+      en: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs blinded me. All in stark black and white mist.",
+      es: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs blinded me. All in stark black and white mist.",
+      de: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs blinded me. All in stark black and white mist.",
+      ja: "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs blinded me. All in stark black and white mist.",
+      'pt-BR': "A giant spider impaled me, a bear trap decapitated me, and glowing brain-slugs blinded me. All in stark black and white mist."
+    }
+  },
+  {
+    gameId: 'dont-starve',
+    author: 'WilsonTheGentleman',
+    hoursPlayed: 195.4,
+    reviewDate: '27 avril 2013',
+    fullFr: "J'ai mangé de la viande de monstre crue, perdu la raison, été pourchassé par des ombres et je suis mort de faim en hiver avec un sac à dos plein.",
+    fullEn: "Ate raw monster meat, lost all my sanity, got hunted by shadow creatures, and starved in winter with a full inventory.",
+    redactedFr: "J'ai mangé de la viande crue, perdu la raison, été pourchassé par des ombres et suis mort de froid sous les railleries de Maxwell.",
+    redactedEn: "Ate raw monster meat, lost all sanity, got hunted by shadow creatures, and died freezing in the dark mocked by Maxwell.",
+    fullText: {
+      fr: "J'ai mangé de la viande de monstre crue, perdu la raison, été pourchassé par des ombres et je suis mort de faim en hiver avec un sac à dos plein.",
+      en: "Ate raw monster meat, lost all my sanity, got hunted by shadow creatures, and starved in winter with a full inventory.",
+      es: "Ate raw monster meat, lost all my sanity, got hunted by shadow creatures, and starved in winter with a full inventory.",
+      de: "Ate raw monster meat, lost all my sanity, got hunted by shadow creatures, and starved in winter with a full inventory.",
+      ja: "Ate raw monster meat, lost all my sanity, got hunted by shadow creatures, and starved in winter with a full inventory.",
+      'pt-BR': "Ate raw monster meat, lost all my sanity, got hunted by shadow creatures, and starved in winter with a full inventory."
+    },
+    redactedText: {
+      fr: "J'ai mangé de la viande crue, perdu la raison, été pourchassé par des ombres et suis mort de froid sous les railleries de Maxwell.",
+      en: "Ate raw monster meat, lost all sanity, got hunted by shadow creatures, and died freezing in the dark mocked by Maxwell.",
+      es: "Ate raw monster meat, lost all sanity, got hunted by shadow creatures, and died freezing in the dark mocked by Maxwell.",
+      de: "Ate raw monster meat, lost all sanity, got hunted by shadow creatures, and died freezing in the dark mocked by Maxwell.",
+      ja: "Ate raw monster meat, lost all sanity, got hunted by shadow creatures, and died freezing in the dark mocked by Maxwell.",
+      'pt-BR': "Ate raw monster meat, lost all sanity, got hunted by shadow creatures, and died freezing in the dark mocked by Maxwell."
+    }
+  },
+  {
+    gameId: 'katana-zero',
+    author: 'ChronosSamurai',
+    hoursPlayed: 34.6,
+    reviewDate: '22 avril 2019',
+    fullFr: "Ralentir le temps, renvoyer les balles au katana, et rembobiner la cassette audio à chaque échec. Une chorégraphie d'action néon sans égal.",
+    fullEn: "Slow down time, deflect bullets with a katana, and rewind the cassette tape upon dying. Peak neon cyberpunk action choreography.",
+    redactedFr: "Ralentir le temps, renvoyer les balles au sabre, et rembobiner la cassette audio à chaque échec. « Oui, cela fonctionnera ».",
+    redactedEn: "Slow down time, deflect bullets with a blade, and rewind the cassette tape upon dying. 'Yes, that will work'.",
+    fullText: {
+      fr: "Ralentir le temps, renvoyer les balles au katana, et rembobiner la cassette audio à chaque échec. Une chorégraphie d'action néon sans égal.",
+      en: "Slow down time, deflect bullets with a katana, and rewind the cassette tape upon dying. Peak neon cyberpunk action choreography.",
+      es: "Slow down time, deflect bullets with a katana, and rewind the cassette tape upon dying. Peak neon cyberpunk action choreography.",
+      de: "Slow down time, deflect bullets with a katana, and rewind the cassette tape upon dying. Peak neon cyberpunk action choreography.",
+      ja: "Slow down time, deflect bullets with a katana, and rewind the cassette tape upon dying. Peak neon cyberpunk action choreography.",
+      'pt-BR': "Slow down time, deflect bullets with a katana, and rewind the cassette tape upon dying. Peak neon cyberpunk action choreography."
+    },
+    redactedText: {
+      fr: "Ralentir le temps, renvoyer les balles au sabre, et rembobiner la cassette audio à chaque échec. « Oui, cela fonctionnera ».",
+      en: "Slow down time, deflect bullets with a blade, and rewind the cassette tape upon dying. 'Yes, that will work'.",
+      es: "Slow down time, deflect bullets with a blade, and rewind the cassette tape upon dying. 'Yes, that will work'.",
+      de: "Slow down time, deflect bullets with a blade, and rewind the cassette tape upon dying. 'Yes, that will work'.",
+      ja: "Slow down time, deflect bullets with a blade, and rewind the cassette tape upon dying. 'Yes, that will work'.",
+      'pt-BR': "Slow down time, deflect bullets with a blade, and rewind the cassette tape upon dying. 'Yes, that will work'."
+    }
+  },
+  {
+    gameId: 'baba-is-you',
+    author: 'LogicMelter',
+    hoursPlayed: 72.1,
+    reviewDate: '15 mars 2019',
+    fullFr: "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MON CERVEAU IS FONDU.",
+    fullEn: "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN IS MELTED.",
+    redactedFr: "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MON CERVEAU EST EN SURCHAUFFE.",
+    redactedEn: "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN HAS CEASED FUNCTIONING.",
+    fullText: {
+      fr: "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MON CERVEAU IS FONDU.",
+      en: "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN IS MELTED.",
+      es: "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN IS MELTED.",
+      de: "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN IS MELTED.",
+      ja: "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN IS MELTED.",
+      'pt-BR': "BABA IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN IS MELTED."
+    },
+    redactedText: {
+      fr: "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MON CERVEAU EST EN SURCHAUFFE.",
+      en: "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN HAS CEASED FUNCTIONING.",
+      es: "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN HAS CEASED FUNCTIONING.",
+      de: "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN HAS CEASED FUNCTIONING.",
+      ja: "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN HAS CEASED FUNCTIONING.",
+      'pt-BR': "████ IS YOU. WALL IS STOP. ROCK IS PUSH. FLAG IS WIN. MY BRAIN HAS CEASED FUNCTIONING."
+    }
+  },
+  {
+    gameId: 'dredge',
+    author: 'OldSaltFisher',
+    hoursPlayed: 42,
+    reviewDate: '1er avril 2023',
+    fullFr: "À midi, c'est une charmante partie de pêche relaxante. À 22h dans le brouillard, l'eau s'agite et des horreurs cosmiques lovecraftiennes me fixent.",
+    fullEn: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, cosmic eldritch horrors are staring into my soul.",
+    redactedFr: "À midi, c'est une charmante partie de pêche relaxante dans l'archipel. À 22h dans la brume, l'œil de panique s'ouvre et les abysses s'éveillent.",
+    redactedEn: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, the panic eye opens and the deep abyss awakens.",
+    fullText: {
+      fr: "À midi, c'est une charmante partie de pêche relaxante. À 22h dans le brouillard, l'eau s'agite et des horreurs cosmiques lovecraftiennes me fixent.",
+      en: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, cosmic eldritch horrors are staring into my soul.",
+      es: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, cosmic eldritch horrors are staring into my soul.",
+      de: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, cosmic eldritch horrors are staring into my soul.",
+      ja: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, cosmic eldritch horrors are staring into my soul.",
+      'pt-BR': "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, cosmic eldritch horrors are staring into my soul."
+    },
+    redactedText: {
+      fr: "À midi, c'est une charmante partie de pêche relaxante dans l'archipel. À 22h dans la brume, l'œil de panique s'ouvre et les abysses s'éveillent.",
+      en: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, the panic eye opens and the deep abyss awakens.",
+      es: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, the panic eye opens and the deep abyss awakens.",
+      de: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, the panic eye opens and the deep abyss awakens.",
+      ja: "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, the panic eye opens and the deep abyss awakens.",
+      'pt-BR': "At noon, it's a cozy relaxing fishing trip. At 10 PM in the thick fog, the panic eye opens and the deep abyss awakens."
+    }
+  },
+  {
+    gameId: 'animal-well',
+    author: 'SubterraneanExplorer',
+    hoursPlayed: 31.5,
+    reviewDate: '12 mai 2024',
+    fullFr: "Vous êtes une petite boule dans un labyrinthe souterrain sans aucune indication. Un yoyo, un slinky, un chien fantôme terrifiant et des secrets partout.",
+    fullEn: "You are a tiny blob in a subterranean labyrinth with zero hand-holding. A yoyo, a slinky, a terrifying ghost dog, and layers of secrets.",
+    redactedFr: "Vous êtes une petite boule dans un puits souterrain mystérieux. Un yoyo, un frisbee, une bulle de savon et des secrets enfouis.",
+    redactedEn: "You are a tiny blob in a mysterious well. A yoyo, a frisbee, a bubble wand, and layers of enigmatic puzzles.",
+    fullText: {
+      fr: "Vous êtes une petite boule dans un labyrinthe souterrain sans aucune indication. Un yoyo, un slinky, un chien fantôme terrifiant et des secrets partout.",
+      en: "You are a tiny blob in a subterranean labyrinth with zero hand-holding. A yoyo, a slinky, a terrifying ghost dog, and layers of secrets.",
+      es: "You are a tiny blob in a subterranean labyrinth with zero hand-holding. A yoyo, a slinky, a terrifying ghost dog, and layers of secrets.",
+      de: "You are a tiny blob in a subterranean labyrinth with zero hand-holding. A yoyo, a slinky, a terrifying ghost dog, and layers of secrets.",
+      ja: "You are a tiny blob in a subterranean labyrinth with zero hand-holding. A yoyo, a slinky, a terrifying ghost dog, and layers of secrets.",
+      'pt-BR': "You are a tiny blob in a subterranean labyrinth with zero hand-holding. A yoyo, a slinky, a terrifying ghost dog, and layers of secrets."
+    },
+    redactedText: {
+      fr: "Vous êtes une petite boule dans un puits souterrain mystérieux. Un yoyo, un frisbee, une bulle de savon et des secrets enfouis.",
+      en: "You are a tiny blob in a mysterious well. A yoyo, a frisbee, a bubble wand, and layers of enigmatic puzzles.",
+      es: "You are a tiny blob in a mysterious well. A yoyo, a frisbee, a bubble wand, and layers of enigmatic puzzles.",
+      de: "You are a tiny blob in a mysterious well. A yoyo, a frisbee, a bubble wand, and layers of enigmatic puzzles.",
+      ja: "You are a tiny blob in a mysterious well. A yoyo, a frisbee, a bubble wand, and layers of enigmatic puzzles.",
+      'pt-BR': "You are a tiny blob in a mysterious well. A yoyo, a frisbee, a bubble wand, and layers of enigmatic puzzles."
+    }
+  },
+  {
+    gameId: 'lethal-company',
+    author: 'ScrapCollector_V45',
+    hoursPlayed: 98.4,
+    reviewDate: '24 novembre 2023',
+    fullFr: "On est descendus dans un complexe abandonné pour ramasser de la ferraille pour La Compagnie. J'ai entendu un bébé pleurer et j'ai sauté sur une mine.",
+    fullEn: "Went down into an abandoned moon facility to collect scrap for The Company. Heard a baby laughing in the dark, stepped on a landmine.",
+    redactedFr: "On est descendus sur une lune industrielle pour remplir le quota de ferraille. Un bruit dans le noir, une tourelle automatique, et fin de mission.",
+    redactedEn: "Landed on an industrial moon to meet the scrap quota. A noise in the dark, a ceiling turret, and mission failed.",
+    fullText: {
+      fr: "On est descendus dans un complexe abandonné pour ramasser de la ferraille pour La Compagnie. J'ai entendu un bébé pleurer et j'ai sauté sur une mine.",
+      en: "Went down into an abandoned moon facility to collect scrap for The Company. Heard a baby laughing in the dark, stepped on a landmine.",
+      es: "Went down into an abandoned moon facility to collect scrap for The Company. Heard a baby laughing in the dark, stepped on a landmine.",
+      de: "Went down into an abandoned moon facility to collect scrap for The Company. Heard a baby laughing in the dark, stepped on a landmine.",
+      ja: "Went down into an abandoned moon facility to collect scrap for The Company. Heard a baby laughing in the dark, stepped on a landmine.",
+      'pt-BR': "Went down into an abandoned moon facility to collect scrap for The Company. Heard a baby laughing in the dark, stepped on a landmine."
+    },
+    redactedText: {
+      fr: "On est descendus sur une lune industrielle pour remplir le quota de ferraille. Un bruit dans le noir, une tourelle automatique, et fin de mission.",
+      en: "Landed on an industrial moon to meet the scrap quota. A noise in the dark, a ceiling turret, and mission failed.",
+      es: "Landed on an industrial moon to meet the scrap quota. A noise in the dark, a ceiling turret, and mission failed.",
+      de: "Landed on an industrial moon to meet the scrap quota. A noise in the dark, a ceiling turret, and mission failed.",
+      ja: "Landed on an industrial moon to meet the scrap quota. A noise in the dark, a ceiling turret, and mission failed.",
+      'pt-BR': "Landed on an industrial moon to meet the scrap quota. A noise in the dark, a ceiling turret, and mission failed."
+    }
+  },
+  {
+    gameId: 'stray',
+    author: 'MeowButtonSpammer',
+    hoursPlayed: 14.8,
+    reviewDate: '21 juillet 2022',
+    fullFr: "Appuyer sur B pour miauler. Explorer une cybercité peuplée de robots avec un petit sac à dos et un drone amical. 10/10 pour les amoureux des félins.",
+    fullEn: "Press B to meow. Roam a cyberpunk city inhabited by robots with a cute little backpack and a friendly drone. 10/10 cat simulator.",
+    redactedFr: "Appuyer sur une touche pour miauler. Se faufiler sur les toits d'une ville fortifiée oubliée parmi des robots mélancoliques.",
+    redactedEn: "Press a button to meow. Sneak across the neon rooftops of a forgotten walled city among melancholic companions.",
+    fullText: {
+      fr: "Appuyer sur B pour miauler. Explorer une cybercité peuplée de robots avec un petit sac à dos et un drone amical. 10/10 pour les amoureux des félins.",
+      en: "Press B to meow. Roam a cyberpunk city inhabited by robots with a cute little backpack and a friendly drone. 10/10 cat simulator.",
+      es: "Press B to meow. Roam a cyberpunk city inhabited by robots with a cute little backpack and a friendly drone. 10/10 cat simulator.",
+      de: "Press B to meow. Roam a cyberpunk city inhabited by robots with a cute little backpack and a friendly drone. 10/10 cat simulator.",
+      ja: "Press B to meow. Roam a cyberpunk city inhabited by robots with a cute little backpack and a friendly drone. 10/10 cat simulator.",
+      'pt-BR': "Press B to meow. Roam a cyberpunk city inhabited by robots with a cute little backpack and a friendly drone. 10/10 cat simulator."
+    },
+    redactedText: {
+      fr: "Appuyer sur une touche pour miauler. Se faufiler sur les toits d'une ville fortifiée oubliée parmi des robots mélancoliques.",
+      en: "Press a button to meow. Sneak across the neon rooftops of a forgotten walled city among melancholic companions.",
+      es: "Press a button to meow. Sneak across the neon rooftops of a forgotten walled city among melancholic companions.",
+      de: "Press a button to meow. Sneak across the neon rooftops of a forgotten walled city among melancholic companions.",
+      ja: "Press a button to meow. Sneak across the neon rooftops of a forgotten walled city among melancholic companions.",
+      'pt-BR': "Press a button to meow. Sneak across the neon rooftops of a forgotten walled city among melancholic companions."
+    }
+  },
+  {
+    gameId: 'project-zomboid',
+    author: 'SpiffoSurvivor',
+    hoursPlayed: 412,
+    reviewDate: '10 janvier 2022',
+    fullFr: "Voici comment vous êtes mort. J'ai survécu 2 mois en me barricadant, puis je me suis coupé en ouvrant une boîte de conserve et je suis mort d'infection.",
+    fullEn: "This is how you died. Survived 2 months strictly fortified, then cut my hand on a soup can and died of a fever. Peak zombie survival.",
+    redactedFr: "Voici comment vous êtes mort. J'ai fortifié une maison à Muldraugh, puis j'ai couru à travers une vitre brisée et péri d'hémorragie.",
+    redactedEn: "This is how you died. Barricaded a suburban home in Kentucky, then sprinted through broken glass and bled out in the rain.",
+    fullText: {
+      fr: "Voici comment vous êtes mort. J'ai survécu 2 mois en me barricadant, puis je me suis coupé en ouvrant une boîte de conserve et je suis mort d'infection.",
+      en: "This is how you died. Survived 2 months strictly fortified, then cut my hand on a soup can and died of a fever. Peak zombie survival.",
+      es: "This is how you died. Survived 2 months strictly fortified, then cut my hand on a soup can and died of a fever. Peak zombie survival.",
+      de: "This is how you died. Survived 2 months strictly fortified, then cut my hand on a soup can and died of a fever. Peak zombie survival.",
+      ja: "This is how you died. Survived 2 months strictly fortified, then cut my hand on a soup can and died of a fever. Peak zombie survival.",
+      'pt-BR': "This is how you died. Survived 2 months strictly fortified, then cut my hand on a soup can and died of a fever. Peak zombie survival."
+    },
+    redactedText: {
+      fr: "Voici comment vous êtes mort. J'ai fortifié une maison à Muldraugh, puis j'ai couru à travers une vitre brisée et péri d'hémorragie.",
+      en: "This is how you died. Barricaded a suburban home in Kentucky, then sprinted through broken glass and bled out in the rain.",
+      es: "This is how you died. Barricaded a suburban home in Kentucky, then sprinted through broken glass and bled out in the rain.",
+      de: "This is how you died. Barricaded a suburban home in Kentucky, then sprinted through broken glass and bled out in the rain.",
+      ja: "This is how you died. Barricaded a suburban home in Kentucky, then sprinted through broken glass and bled out in the rain.",
+      'pt-BR': "This is how you died. Barricaded a suburban home in Kentucky, then sprinted through broken glass and bled out in the rain."
+    }
+  },
+  {
+    gameId: 'buckshot-roulette',
+    author: 'ShotgunGambler',
+    hoursPlayed: 28.5,
+    reviewDate: '5 avril 2024',
+    fullFr: "Face à un croupier monstrueux dans un bar miteux avec un fusil à pompe de calibre 12, des cigarettes et des menottes. La tension est insoutenable.",
+    fullEn: "Sitting across a terrifying dealer in a grimy bathroom with a 12-gauge shotgun, beer, and handcuffs. Peak psychological tension.",
+    redactedFr: "Face à un croupier métallique dans une boîte de nuit crasseuse. Une cartouche réelle, deux à blanc, et un fusil à pompe scié sur la table.",
+    redactedEn: "Facing a metallic dealer in a dingy nightclub backroom. One live round, two blanks, and a sawed-off shotgun on the table.",
+    fullText: {
+      fr: "Face à un croupier monstrueux dans un bar miteux avec un fusil à pompe de calibre 12, des cigarettes et des menottes. La tension est insoutenable.",
+      en: "Sitting across a terrifying dealer in a grimy bathroom with a 12-gauge shotgun, beer, and handcuffs. Peak psychological tension.",
+      es: "Sitting across a terrifying dealer in a grimy bathroom with a 12-gauge shotgun, beer, and handcuffs. Peak psychological tension.",
+      de: "Sitting across a terrifying dealer in a grimy bathroom with a 12-gauge shotgun, beer, and handcuffs. Peak psychological tension.",
+      ja: "Sitting across a terrifying dealer in a grimy bathroom with a 12-gauge shotgun, beer, and handcuffs. Peak psychological tension.",
+      'pt-BR': "Sitting across a terrifying dealer in a grimy bathroom with a 12-gauge shotgun, beer, and handcuffs. Peak psychological tension."
+    },
+    redactedText: {
+      fr: "Face à un croupier métallique dans une boîte de nuit crasseuse. Une cartouche réelle, deux à blanc, et un fusil à pompe scié sur la table.",
+      en: "Facing a metallic dealer in a dingy nightclub backroom. One live round, two blanks, and a sawed-off shotgun on the table.",
+      es: "Facing a metallic dealer in a dingy nightclub backroom. One live round, two blanks, and a sawed-off shotgun on the table.",
+      de: "Facing a metallic dealer in a dingy nightclub backroom. One live round, two blanks, and a sawed-off shotgun on the table.",
+      ja: "Facing a metallic dealer in a dingy nightclub backroom. One live round, two blanks, and a sawed-off shotgun on the table.",
+      'pt-BR': "Facing a metallic dealer in a dingy nightclub backroom. One live round, two blanks, and a sawed-off shotgun on the table."
+    }
+  },
+  {
+    gameId: 'phasmophobia',
+    author: 'SpiritBoxScreamer',
+    hoursPlayed: 165.2,
+    reviewDate: '14 octobre 2020',
+    fullFr: "Mon pote a crié le nom du fantôme dans la boîte vocale, la porte s'est verrouillée, sa lampe torche s'est mise à clignoter et on a tous hurlé.",
+    fullEn: "My friend shouted the ghost's name into the spirit box, front door locked, flashlights started flickering, and we all screamed in Discord.",
+    redactedFr: "Poser le thermomètre, repérer une température glaciale, crier le nom de l'entité et paniquer quand la porte de la maison se verrouille d'un coup.",
+    redactedEn: "Checking freezing temps, shouting into the EMF reader, and panicking when the front door slams shut during a sudden hunt.",
+    fullText: {
+      fr: "Mon pote a crié le nom du fantôme dans la boîte vocale, la porte s'est verrouillée, sa lampe torche s'est mise à clignoter et on a tous hurlé.",
+      en: "My friend shouted the ghost's name into the spirit box, front door locked, flashlights started flickering, and we all screamed in Discord.",
+      es: "My friend shouted the ghost's name into the spirit box, front door locked, flashlights started flickering, and we all screamed in Discord.",
+      de: "My friend shouted the ghost's name into the spirit box, front door locked, flashlights started flickering, and we all screamed in Discord.",
+      ja: "My friend shouted the ghost's name into the spirit box, front door locked, flashlights started flickering, and we all screamed in Discord.",
+      'pt-BR': "My friend shouted the ghost's name into the spirit box, front door locked, flashlights started flickering, and we all screamed in Discord."
+    },
+    redactedText: {
+      fr: "Poser le thermomètre, repérer une température glaciale, crier le nom de l'entité et paniquer quand la porte de la maison se verrouille d'un coup.",
+      en: "Checking freezing temps, shouting into the EMF reader, and panicking when the front door slams shut during a sudden hunt.",
+      es: "Checking freezing temps, shouting into the EMF reader, and panicking when the front door slams shut during a sudden hunt.",
+      de: "Checking freezing temps, shouting into the EMF reader, and panicking when the front door slams shut during a sudden hunt.",
+      ja: "Checking freezing temps, shouting into the EMF reader, and panicking when the front door slams shut during a sudden hunt.",
+      'pt-BR': "Checking freezing temps, shouting into the EMF reader, and panicking when the front door slams shut during a sudden hunt."
+    }
+  },
+  {
+    gameId: 'factorio',
+    author: 'ConveyorBeltAddict',
+    hoursPlayed: 1450,
+    reviewDate: '15 août 2020',
+    fullFr: "L'usine doit grandir. Je n'ai pas vu la lumière du jour depuis trois semaines. Quand je ferme les yeux, je vois des tapis roulants.",
+    fullEn: "The factory must grow. I haven't seen natural sunlight in three weeks. When I close my eyes, I only see conveyor belts.",
+    redactedFr: "L'█████ doit grandir. Optimiser les ratios de circuits électroniques verts et repousser les vagues d'indigènes avec des tourelles laser.",
+    redactedEn: "The ████████ must grow. Optimizing green circuit ratios and holding off waves of native biters with perimeter laser turrets.",
+    fullText: {
+      fr: "L'usine doit grandir. Je n'ai pas vu la lumière du jour depuis trois semaines. Quand je ferme les yeux, je vois des tapis roulants.",
+      en: "The factory must grow. I haven't seen natural sunlight in three weeks. When I close my eyes, I only see conveyor belts.",
+      es: "The factory must grow. I haven't seen natural sunlight in three weeks. When I close my eyes, I only see conveyor belts.",
+      de: "The factory must grow. I haven't seen natural sunlight in three weeks. When I close my eyes, I only see conveyor belts.",
+      ja: "The factory must grow. I haven't seen natural sunlight in three weeks. When I close my eyes, I only see conveyor belts.",
+      'pt-BR': "The factory must grow. I haven't seen natural sunlight in three weeks. When I close my eyes, I only see conveyor belts."
+    },
+    redactedText: {
+      fr: "L'█████ doit grandir. Optimiser les ratios de circuits électroniques verts et repousser les vagues d'indigènes avec des tourelles laser.",
+      en: "The ████████ must grow. Optimizing green circuit ratios and holding off waves of native biters with perimeter laser turrets.",
+      es: "The ████████ must grow. Optimizing green circuit ratios and holding off waves of native biters with perimeter laser turrets.",
+      de: "The ████████ must grow. Optimizing green circuit ratios and holding off waves of native biters with perimeter laser turrets.",
+      ja: "The ████████ must grow. Optimizing green circuit ratios and holding off waves of native biters with perimeter laser turrets.",
+      'pt-BR': "The ████████ must grow. Optimizing green circuit ratios and holding off waves of native biters with perimeter laser turrets."
+    }
+  },
+  {
+    gameId: 'rimworld',
+    author: 'StoryWeaver99',
+    hoursPlayed: 890.3,
+    reviewDate: '18 octobre 2018',
+    fullFr: "Générateur d'histoires tragiques : fabriquer des chapeaux en cuir humain et subir une crise de démence parce que quelqu'un a mangé sans table.",
+    fullEn: "Tragic story generator: crafted human-leather dusters, only to have a colonist burn the base down because they ate without a table.",
+    redactedFr: "Générateur d'histoires sans pitié : un colon s'énerve parce qu'il a mangé sans table, déclenche un incendie et tue nos lamas de bât.",
+    redactedEn: "Brutal story generator: a colonist snaps because they ate without a table, sets fire to the storage room, and dooms the whole colony.",
+    fullText: {
+      fr: "Générateur d'histoires tragiques : fabriquer des chapeaux en cuir humain et subir une crise de démence parce que quelqu'un a mangé sans table.",
+      en: "Tragic story generator: crafted human-leather dusters, only to have a colonist burn the base down because they ate without a table.",
+      es: "Tragic story generator: crafted human-leather dusters, only to have a colonist burn the base down because they ate without a table.",
+      de: "Tragic story generator: crafted human-leather dusters, only to have a colonist burn the base down because they ate without a table.",
+      ja: "Tragic story generator: crafted human-leather dusters, only to have a colonist burn the base down because they ate without a table.",
+      'pt-BR': "Tragic story generator: crafted human-leather dusters, only to have a colonist burn the base down because they ate without a table."
+    },
+    redactedText: {
+      fr: "Générateur d'histoires sans pitié : un colon s'énerve parce qu'il a mangé sans table, déclenche un incendie et tue nos lamas de bât.",
+      en: "Brutal story generator: a colonist snaps because they ate without a table, sets fire to the storage room, and dooms the whole colony.",
+      es: "Brutal story generator: a colonist snaps because they ate without a table, sets fire to the storage room, and dooms the whole colony.",
+      de: "Brutal story generator: a colonist snaps because they ate without a table, sets fire to the storage room, and dooms the whole colony.",
+      ja: "Brutal story generator: a colonist snaps because they ate without a table, sets fire to the storage room, and dooms the whole colony.",
+      'pt-BR': "Brutal story generator: a colonist snaps because they ate without a table, sets fire to the storage room, and dooms the whole colony."
+    }
+  },
+  {
+    gameId: 'deep-rock-galactic',
+    author: 'KarlsDisciple',
+    hoursPlayed: 320,
+    reviewDate: '14 mai 2020',
+    fullFr: "Rock and Stone ! Minez de l'or, descendez des bières spatiales, tirez sur des nuées d'insectes aliens géants et ne laissez aucun nain derrière.",
+    fullEn: "Rock and Stone! Mine minerals, slam space beers, shoot swarms of giant bugs, and leave no dwarf behind.",
+    redactedFr: "Pour Karl ! Minez la morkite dans les grottes d'Hoxxes IV, tirez sur des arachnides géants et levez vos pioches en l'air.",
+    redactedEn: "For Karl! Mining morkite in the dark caves of Hoxxes IV, blasting giant glyphids, and raising pickaxes together.",
+    fullText: {
+      fr: "Rock and Stone ! Minez de l'or, descendez des bières spatiales, tirez sur des nuées d'insectes aliens géants et ne laissez aucun nain derrière.",
+      en: "Rock and Stone! Mine minerals, slam space beers, shoot swarms of giant bugs, and leave no dwarf behind.",
+      es: "Rock and Stone! Mine minerals, slam space beers, shoot swarms of giant bugs, and leave no dwarf behind.",
+      de: "Rock and Stone! Mine minerals, slam space beers, shoot swarms of giant bugs, and leave no dwarf behind.",
+      ja: "Rock and Stone! Mine minerals, slam space beers, shoot swarms of giant bugs, and leave no dwarf behind.",
+      'pt-BR': "Rock and Stone! Mine minerals, slam space beers, shoot swarms of giant bugs, and leave no dwarf behind."
+    },
+    redactedText: {
+      fr: "Pour Karl ! Minez la morkite dans les grottes d'Hoxxes IV, tirez sur des arachnides géants et levez vos pioches en l'air.",
+      en: "For Karl! Mining morkite in the dark caves of Hoxxes IV, blasting giant glyphids, and raising pickaxes together.",
+      es: "For Karl! Mining morkite in the dark caves of Hoxxes IV, blasting giant glyphids, and raising pickaxes together.",
+      de: "For Karl! Mining morkite in the dark caves of Hoxxes IV, blasting giant glyphids, and raising pickaxes together.",
+      ja: "For Karl! Mining morkite in the dark caves of Hoxxes IV, blasting giant glyphids, and raising pickaxes together.",
+      'pt-BR': "For Karl! Mining morkite in the dark caves of Hoxxes IV, blasting giant glyphids, and raising pickaxes together."
+    }
+  },
+  {
+    gameId: 'valheim',
+    author: 'OdinChosenOne',
+    hoursPlayed: 215.8,
+    reviewDate: '28 février 2021',
+    fullFr: "J'ai coupé un arbre pour me construire une cabane viking. L'arbre a roulé sur une pente et m'a écrasé. 10/10 meilleur simulateur de bûcheron nordique.",
+    fullEn: "Chopped down a tree to build a Viking hut. The log rolled downhill and crushed me. 10/10 best Norse survival simulator.",
+    redactedFr: "J'ai coupé un hêtre pour ma première cabane viking. Le tronc a dévalé la colline et m'a écrabouillé sur le coup. 10/10.",
+    redactedEn: "Chopped down a beech tree for my first Viking shelter. The log rolled down the hill and flattened me instantly. 10/10.",
+    fullText: {
+      fr: "J'ai coupé un arbre pour me construire une cabane viking. L'arbre a roulé sur une pente et m'a écrasé. 10/10 meilleur simulateur de bûcheron nordique.",
+      en: "Chopped down a tree to build a Viking hut. The log rolled downhill and crushed me. 10/10 best Norse survival simulator.",
+      es: "Chopped down a tree to build a Viking hut. The log rolled downhill and crushed me. 10/10 best Norse survival simulator.",
+      de: "Chopped down a tree to build a Viking hut. The log rolled downhill and crushed me. 10/10 best Norse survival simulator.",
+      ja: "Chopped down a tree to build a Viking hut. The log rolled downhill and crushed me. 10/10 best Norse survival simulator.",
+      'pt-BR': "Chopped down a tree to build a Viking hut. The log rolled downhill and crushed me. 10/10 best Norse survival simulator."
+    },
+    redactedText: {
+      fr: "J'ai coupé un hêtre pour ma première cabane viking. Le tronc a dévalé la colline et m'a écrabouillé sur le coup. 10/10.",
+      en: "Chopped down a beech tree for my first Viking shelter. The log rolled down the hill and flattened me instantly. 10/10.",
+      es: "Chopped down a beech tree for my first Viking shelter. The log rolled down the hill and flattened me instantly. 10/10.",
+      de: "Chopped down a beech tree for my first Viking shelter. The log rolled down the hill and flattened me instantly. 10/10.",
+      ja: "Chopped down a beech tree for my first Viking shelter. The log rolled down the hill and flattened me instantly. 10/10.",
+      'pt-BR': "Chopped down a beech tree for my first Viking shelter. The log rolled down the hill and flattened me instantly. 10/10."
+    }
+  },
+  {
+    gameId: 'doki-doki-literature-club',
+    author: 'PoetryClubPresident',
+    hoursPlayed: 22,
+    reviewDate: '10 octobre 2017',
+    fullFr: "Je pensais rejoindre un club de poésie avec de jolies camarades de classe. Deux heures plus tard, j'étais en train de supprimer des fichiers dans le dossier du jeu.",
+    fullEn: "Thought I was joining an innocent poetry club with cute girls. Two hours later, I was manually deleting files in the game directory.",
+    redactedFr: "Je pensais rejoindre un innocent club de littérature scolaire. Quelques poèmes plus tard, l'écran glitchait et la présidente me fixait. Juste ██████.",
+    redactedEn: "Thought I was joining an innocent literature club. A few poems later, the screen began glitching and the club president was staring. Just ██████.",
+    fullText: {
+      fr: "Je pensais rejoindre un club de poésie avec de jolies camarades de classe. Deux heures plus tard, j'étais en train de supprimer des fichiers dans le dossier du jeu.",
+      en: "Thought I was joining an innocent poetry club with cute girls. Two hours later, I was manually deleting files in the game directory.",
+      es: "Thought I was joining an innocent poetry club with cute girls. Two hours later, I was manually deleting files in the game directory.",
+      de: "Thought I was joining an innocent poetry club with cute girls. Two hours later, I was manually deleting files in the game directory.",
+      ja: "Thought I was joining an innocent poetry club with cute girls. Two hours later, I was manually deleting files in the game directory.",
+      'pt-BR': "Thought I was joining an innocent poetry club with cute girls. Two hours later, I was manually deleting files in the game directory."
+    },
+    redactedText: {
+      fr: "Je pensais rejoindre un innocent club de littérature scolaire. Quelques poèmes plus tard, l'écran glitchait et la présidente me fixait. Juste ██████.",
+      en: "Thought I was joining an innocent literature club. A few poems later, the screen began glitching and the club president was staring. Just ██████.",
+      es: "Thought I was joining an innocent literature club. A few poems later, the screen began glitching and the club president was staring. Just ██████.",
+      de: "Thought I was joining an innocent literature club. A few poems later, the screen began glitching and the club president was staring. Just ██████.",
+      ja: "Thought I was joining an innocent literature club. A few poems later, the screen began glitching and the club president was staring. Just ██████.",
+      'pt-BR': "Thought I was joining an innocent literature club. A few poems later, the screen began glitching and the club president was staring. Just ██████."
+    }
+  },
+  {
+    gameId: 'superliminal',
+    author: 'DreamTherapist',
+    hoursPlayed: 12.4,
+    reviewDate: '14 novembre 2020',
+    fullFr: "La perspective est réalité. J'ai pris une petite pomme, je l'ai levée vers le plafond, elle est devenue géante et m'a servi d'escalier vers la sortie.",
+    fullEn: "Perspective is reality. Picked up a small apple, looked up, it became the size of a building and served as a staircase to the exit.",
+    redactedFr: "La perspective est réalité. Prenez une pièce d'échecs minuscule, reculez dans le couloir de l'institut du sommeil pour qu'elle devienne un pont géant.",
+    redactedEn: "Perspective is reality. Pick up a tiny chess piece, walk backwards in the sleep institute corridor so it grows into a colossal bridge.",
+    fullText: {
+      fr: "La perspective est réalité. J'ai pris une petite pomme, je l'ai levée vers le plafond, elle est devenue géante et m'a servi d'escalier vers la sortie.",
+      en: "Perspective is reality. Picked up a small apple, looked up, it became the size of a building and served as a staircase to the exit.",
+      es: "Perspective is reality. Picked up a small apple, looked up, it became the size of a building and served as a staircase to the exit.",
+      de: "Perspective is reality. Picked up a small apple, looked up, it became the size of a building and served as a staircase to the exit.",
+      ja: "Perspective is reality. Picked up a small apple, looked up, it became the size of a building and served as a staircase to the exit.",
+      'pt-BR': "Perspective is reality. Picked up a small apple, looked up, it became the size of a building and served as a staircase to the exit."
+    },
+    redactedText: {
+      fr: "La perspective est réalité. Prenez une pièce d'échecs minuscule, reculez dans le couloir de l'institut du sommeil pour qu'elle devienne un pont géant.",
+      en: "Perspective is reality. Pick up a tiny chess piece, walk backwards in the sleep institute corridor so it grows into a colossal bridge.",
+      es: "Perspective is reality. Pick up a tiny chess piece, walk backwards in the sleep institute corridor so it grows into a colossal bridge.",
+      de: "Perspective is reality. Pick up a tiny chess piece, walk backwards in the sleep institute corridor so it grows into a colossal bridge.",
+      ja: "Perspective is reality. Pick up a tiny chess piece, walk backwards in the sleep institute corridor so it grows into a colossal bridge.",
+      'pt-BR': "Perspective is reality. Pick up a tiny chess piece, walk backwards in the sleep institute corridor so it grows into a colossal bridge."
+    }
+  },
+  {
+    gameId: 'superhot',
+    author: 'TimeStopper_77',
+    hoursPlayed: 26.2,
+    reviewDate: '26 février 2016',
+    fullFr: "Le temps n'avance que lorsque vous bougez. Esquiver une volée de balles au millimètre, lancer une tasse de café sur un ennemi rouge et ramasser son pistolet.",
+    fullEn: "Time moves only when you move. Dodging bullets in slow motion, throwing a coffee mug at a red enemy, and catching their gun mid-air.",
+    redactedFr: "Le temps n'avance que lorsque vous bougez. Éviter les tirs au ralenti, briser des corps polygonaux rouges et répéter le titre du jeu en boucle.",
+    redactedEn: "Time moves only when you move. Weaving through bullets in slow-mo, shattering red polygonal foes, and hearing the chant resonate.",
+    fullText: {
+      fr: "Le temps n'avance que lorsque vous bougez. Esquiver une volée de balles au millimètre, lancer une tasse de café sur un ennemi rouge et ramasser son pistolet.",
+      en: "Time moves only when you move. Dodging bullets in slow motion, throwing a coffee mug at a red enemy, and catching their gun mid-air.",
+      es: "Time moves only when you move. Dodging bullets in slow motion, throwing a coffee mug at a red enemy, and catching their gun mid-air.",
+      de: "Time moves only when you move. Dodging bullets in slow motion, throwing a coffee mug at a red enemy, and catching their gun mid-air.",
+      ja: "Time moves only when you move. Dodging bullets in slow motion, throwing a coffee mug at a red enemy, and catching their gun mid-air.",
+      'pt-BR': "Time moves only when you move. Dodging bullets in slow motion, throwing a coffee mug at a red enemy, and catching their gun mid-air."
+    },
+    redactedText: {
+      fr: "Le temps n'avance que lorsque vous bougez. Éviter les tirs au ralenti, briser des corps polygonaux rouges et répéter le titre du jeu en boucle.",
+      en: "Time moves only when you move. Weaving through bullets in slow-mo, shattering red polygonal foes, and hearing the chant resonate.",
+      es: "Time moves only when you move. Weaving through bullets in slow-mo, shattering red polygonal foes, and hearing the chant resonate.",
+      de: "Time moves only when you move. Weaving through bullets in slow-mo, shattering red polygonal foes, and hearing the chant resonate.",
+      ja: "Time moves only when you move. Weaving through bullets in slow-mo, shattering red polygonal foes, and hearing the chant resonate.",
+      'pt-BR': "Time moves only when you move. Weaving through bullets in slow-mo, shattering red polygonal foes, and hearing the chant resonate."
+    }
+  },
+  {
+    gameId: 'slay-the-princess',
+    author: 'HeroicVoice',
+    hoursPlayed: 19.3,
+    reviewDate: '30 octobre 2023',
+    fullFr: "Le Narrateur vous ordonne de l'éliminer pour sauver le monde. Elle a un couteau, vous avez une voix dans la tête qui trouve qu'elle a l'air sympa.",
+    fullEn: "The Narrator tells you she will end the world. You have a pristine blade, and a voice in your head saying she looks kinda cute.",
+    redactedFr: "Le Narrateur vous ordonne d'éliminer la captive dans la cabane. Vous avez une lame immaculée et des voix qui se disputent vos choix.",
+    redactedEn: "The Narrator orders you to end the captive in the basement. You carry a pristine blade and arguing voices inside your mind.",
+    fullText: {
+      fr: "Le Narrateur vous ordonne de l'éliminer pour sauver le monde. Elle a un couteau, vous avez une voix dans la tête qui trouve qu'elle a l'air sympa.",
+      en: "The Narrator tells you she will end the world. You have a pristine blade, and a voice in your head saying she looks kinda cute.",
+      es: "The Narrator tells you she will end the world. You have a pristine blade, and a voice in your head saying she looks kinda cute.",
+      de: "The Narrator tells you she will end the world. You have a pristine blade, and a voice in your head saying she looks kinda cute.",
+      ja: "The Narrator tells you she will end the world. You have a pristine blade, and a voice in your head saying she looks kinda cute.",
+      'pt-BR': "The Narrator tells you she will end the world. You have a pristine blade, and a voice in your head saying she looks kinda cute."
+    },
+    redactedText: {
+      fr: "Le Narrateur vous ordonne d'éliminer la captive dans la cabane. Vous avez une lame immaculée et des voix qui se disputent vos choix.",
+      en: "The Narrator orders you to end the captive in the basement. You carry a pristine blade and arguing voices inside your mind.",
+      es: "The Narrator orders you to end the captive in the basement. You carry a pristine blade and arguing voices inside your mind.",
+      de: "The Narrator orders you to end the captive in the basement. You carry a pristine blade and arguing voices inside your mind.",
+      ja: "The Narrator orders you to end the captive in the basement. You carry a pristine blade and arguing voices inside your mind.",
+      'pt-BR': "The Narrator orders you to end the captive in the basement. You carry a pristine blade and arguing voices inside your mind."
+    }
+  },
+  {
+    gameId: 'enter-the-gungeon',
+    author: 'HighDragunSlayer',
+    hoursPlayed: 220.1,
+    reviewDate: '15 avril 2016',
+    fullFr: "Un pistolet qui tire des balles qui tirent elles-mêmes des flingues qui tirent des projectiles. Esquiver en roulade sur des tables renversées.",
+    fullEn: "A gun that shoots bullets that shoot smaller guns that shoot bullets. Dodge-rolling through flying lead while flipping tables.",
+    redactedFr: "Une arme qui tire des balles qui tirent d'autres armes. Enchaîner les roulades d'invincibilité à travers des rideaux de plombs colorés.",
+    redactedEn: "A firearm shooting projectiles that fire smaller weapons. Chaining invulnerability dodge-rolls across intricate bullet hell patterns.",
+    fullText: {
+      fr: "Un pistolet qui tire des balles qui tirent elles-mêmes des flingues qui tirent des projectiles. Esquiver en roulade sur des tables renversées.",
+      en: "A gun that shoots bullets that shoot smaller guns that shoot bullets. Dodge-rolling through flying lead while flipping tables.",
+      es: "A gun that shoots bullets that shoot smaller guns that shoot bullets. Dodge-rolling through flying lead while flipping tables.",
+      de: "A gun that shoots bullets that shoot smaller guns that shoot bullets. Dodge-rolling through flying lead while flipping tables.",
+      ja: "A gun that shoots bullets that shoot smaller guns that shoot bullets. Dodge-rolling through flying lead while flipping tables.",
+      'pt-BR': "A gun that shoots bullets that shoot smaller guns that shoot bullets. Dodge-rolling through flying lead while flipping tables."
+    },
+    redactedText: {
+      fr: "Une arme qui tire des balles qui tirent d'autres armes. Enchaîner les roulades d'invincibilité à travers des rideaux de plombs colorés.",
+      en: "A firearm shooting projectiles that fire smaller weapons. Chaining invulnerability dodge-rolls across intricate bullet hell patterns.",
+      es: "A firearm shooting projectiles that fire smaller weapons. Chaining invulnerability dodge-rolls across intricate bullet hell patterns.",
+      de: "A firearm shooting projectiles that fire smaller weapons. Chaining invulnerability dodge-rolls across intricate bullet hell patterns.",
+      ja: "A firearm shooting projectiles that fire smaller weapons. Chaining invulnerability dodge-rolls across intricate bullet hell patterns.",
+      'pt-BR': "A firearm shooting projectiles that fire smaller weapons. Chaining invulnerability dodge-rolls across intricate bullet hell patterns."
+    }
+  },
+  {
+    gameId: 'ultrakill',
+    author: 'JudgementDayV1',
+    hoursPlayed: 185,
+    reviewDate: '12 septembre 2020',
+    fullFr: "L'humanité est morte. Le sang est du carburant. Les Enfers sont pleins. Jeter une pièce de monnaie en l'air et lui tirer dessus au revolver.",
+    fullEn: "Mankind is dead. Blood is fuel. Hell is full. Tossing a coin in mid-air and ricocheting a revolver bullet into five demons.",
+    redactedFr: "L'humanité est morte. Le sang est du carburant. Les Enfers sont pleins. Lancer une pièce en l'air et faire ricocher un tir de revolver.",
+    redactedEn: "Mankind is dead. Blood is fuel. Hell is full. Flipping a coin into the air and bouncing a revolver shot off it.",
+    fullText: {
+      fr: "L'humanité est morte. Le sang est du carburant. Les Enfers sont pleins. Jeter une pièce de monnaie en l'air et lui tirer dessus au revolver.",
+      en: "Mankind is dead. Blood is fuel. Hell is full. Tossing a coin in mid-air and ricocheting a revolver bullet into five demons.",
+      es: "Mankind is dead. Blood is fuel. Hell is full. Tossing a coin in mid-air and ricocheting a revolver bullet into five demons.",
+      de: "Mankind is dead. Blood is fuel. Hell is full. Tossing a coin in mid-air and ricocheting a revolver bullet into five demons.",
+      ja: "Mankind is dead. Blood is fuel. Hell is full. Tossing a coin in mid-air and ricocheting a revolver bullet into five demons.",
+      'pt-BR': "Mankind is dead. Blood is fuel. Hell is full. Tossing a coin in mid-air and ricocheting a revolver bullet into five demons."
+    },
+    redactedText: {
+      fr: "L'humanité est morte. Le sang est du carburant. Les Enfers sont pleins. Lancer une pièce en l'air et faire ricocher un tir de revolver.",
+      en: "Mankind is dead. Blood is fuel. Hell is full. Flipping a coin into the air and bouncing a revolver shot off it.",
+      es: "Mankind is dead. Blood is fuel. Hell is full. Flipping a coin into the air and bouncing a revolver shot off it.",
+      de: "Mankind is dead. Blood is fuel. Hell is full. Flipping a coin into the air and bouncing a revolver shot off it.",
+      ja: "Mankind is dead. Blood is fuel. Hell is full. Flipping a coin into the air and bouncing a revolver shot off it.",
+      'pt-BR': "Mankind is dead. Blood is fuel. Hell is full. Flipping a coin into the air and bouncing a revolver shot off it."
+    }
+  },
+  {
+    gameId: 'blasphemous',
+    author: 'CustodiaPenitent',
+    hoursPlayed: 64.7,
+    reviewDate: '18 septembre 2019',
+    fullFr: "Que ton cœur soit lourd, Pénitent. Une Espagne médiévale torturée, des coups de parade sanglants et un casque en pointe conique.",
+    fullEn: "Sorrowful be the heart, Penitent One. A twisted dark fantasy nightmare, visceral sword parries, and a thorned cone helmet.",
+    redactedFr: "Que ton cœur soit lourd, Pénitent. Une contrée médiévale sous le joug du Miracle, des exécutions sanglantes et l'épée Mea Culpa.",
+    redactedEn: "Sorrowful be the heart, Penitent One. A land cursed by the Miracle, visceral executions, and the Mea Culpa blade.",
+    fullText: {
+      fr: "Que ton cœur soit lourd, Pénitent. Une Espagne médiévale torturée, des coups de parade sanglants et un casque en pointe conique.",
+      en: "Sorrowful be the heart, Penitent One. A twisted dark fantasy nightmare, visceral sword parries, and a thorned cone helmet.",
+      es: "Sorrowful be the heart, Penitent One. A twisted dark fantasy nightmare, visceral sword parries, and a thorned cone helmet.",
+      de: "Sorrowful be the heart, Penitent One. A twisted dark fantasy nightmare, visceral sword parries, and a thorned cone helmet.",
+      ja: "Sorrowful be the heart, Penitent One. A twisted dark fantasy nightmare, visceral sword parries, and a thorned cone helmet.",
+      'pt-BR': "Sorrowful be the heart, Penitent One. A twisted dark fantasy nightmare, visceral sword parries, and a thorned cone helmet."
+    },
+    redactedText: {
+      fr: "Que ton cœur soit lourd, Pénitent. Une contrée médiévale sous le joug du Miracle, des exécutions sanglantes et l'épée Mea Culpa.",
+      en: "Sorrowful be the heart, Penitent One. A land cursed by the Miracle, visceral executions, and the Mea Culpa blade.",
+      es: "Sorrowful be the heart, Penitent One. A land cursed by the Miracle, visceral executions, and the Mea Culpa blade.",
+      de: "Sorrowful be the heart, Penitent One. A land cursed by the Miracle, visceral executions, and the Mea Culpa blade.",
+      ja: "Sorrowful be the heart, Penitent One. A land cursed by the Miracle, visceral executions, and the Mea Culpa blade.",
+      'pt-BR': "Sorrowful be the heart, Penitent One. A land cursed by the Miracle, visceral executions, and the Mea Culpa blade."
+    }
+  },
+  {
+    gameId: 'ori-and-the-blind-forest',
+    author: 'SpiritTreeGuardian',
+    hoursPlayed: 28.4,
+    reviewDate: '18 mars 2015',
+    fullFr: "J'ai pleuré pendant le prologue de dix minutes. La fluidité des déplacements dans la forêt de Nibel et la bande-son symphonique sont inoubliables.",
+    fullEn: "Cried during the first ten minutes. Fluid acrobatic platforming across the forest of Nibel paired with a majestic orchestral soundtrack.",
+    redactedFr: "J'ai pleuré pendant le prologue de dix minutes. La grâce acrobatique du petit esprit lumineux dans la forêt de Nibel est bouleversante.",
+    redactedEn: "Cried during the first ten minutes. The acrobatic grace of the glowing white guardian through Nibel is breathtaking.",
+    fullText: {
+      fr: "J'ai pleuré pendant le prologue de dix minutes. La fluidité des déplacements dans la forêt de Nibel et la bande-son symphonique sont inoubliables.",
+      en: "Cried during the first ten minutes. Fluid acrobatic platforming across the forest of Nibel paired with a majestic orchestral soundtrack.",
+      es: "Cried during the first ten minutes. Fluid acrobatic platforming across the forest of Nibel paired with a majestic orchestral soundtrack.",
+      de: "Cried during the first ten minutes. Fluid acrobatic platforming across the forest of Nibel paired with a majestic orchestral soundtrack.",
+      ja: "Cried during the first ten minutes. Fluid acrobatic platforming across the forest of Nibel paired with a majestic orchestral soundtrack.",
+      'pt-BR': "Cried during the first ten minutes. Fluid acrobatic platforming across the forest of Nibel paired with a majestic orchestral soundtrack."
+    },
+    redactedText: {
+      fr: "J'ai pleuré pendant le prologue de dix minutes. La grâce acrobatique du petit esprit lumineux dans la forêt de Nibel est bouleversante.",
+      en: "Cried during the first ten minutes. The acrobatic grace of the glowing white guardian through Nibel is breathtaking.",
+      es: "Cried during the first ten minutes. The acrobatic grace of the glowing white guardian through Nibel is breathtaking.",
+      de: "Cried during the first ten minutes. The acrobatic grace of the glowing white guardian through Nibel is breathtaking.",
+      ja: "Cried during the first ten minutes. The acrobatic grace of the glowing white guardian through Nibel is breathtaking.",
+      'pt-BR': "Cried during the first ten minutes. The acrobatic grace of the glowing white guardian through Nibel is breathtaking."
+    }
+  },
+  {
+    gameId: 'frostpunk',
+    author: 'CoalGeneratorStoker',
+    hoursPlayed: 88,
+    reviewDate: '29 avril 2018',
+    fullFr: "La ville doit survivre. Il fait -80°C. J'ai envoyé les enfants travailler dans les mines de charbon et servi de la soupe à la sciure de bois.",
+    fullEn: "The city must survive. It's -80°C outside. Put children to work in the coal mines and fed everyone sawdust soup around the Generator.",
+    redactedFr: "La dernière ville sur Terre doit survivre. Le thermomètre affiche -80°C. Faire fonctionner le grand générateur de chaleur à tout prix.",
+    redactedEn: "The last city on Earth must survive. The temperature drops to -80°C. Keeping the central coal generator roaring at any moral cost.",
+    fullText: {
+      fr: "La ville doit survivre. Il fait -80°C. J'ai envoyé les enfants travailler dans les mines de charbon et servi de la soupe à la sciure de bois.",
+      en: "The city must survive. It's -80°C outside. Put children to work in the coal mines and fed everyone sawdust soup around the Generator.",
+      es: "The city must survive. It's -80°C outside. Put children to work in the coal mines and fed everyone sawdust soup around the Generator.",
+      de: "The city must survive. It's -80°C outside. Put children to work in the coal mines and fed everyone sawdust soup around the Generator.",
+      ja: "The city must survive. It's -80°C outside. Put children to work in the coal mines and fed everyone sawdust soup around the Generator.",
+      'pt-BR': "The city must survive. It's -80°C outside. Put children to work in the coal mines and fed everyone sawdust soup around the Generator."
+    },
+    redactedText: {
+      fr: "La dernière ville sur Terre doit survivre. Le thermomètre affiche -80°C. Faire fonctionner le grand générateur de chaleur à tout prix.",
+      en: "The last city on Earth must survive. The temperature drops to -80°C. Keeping the central coal generator roaring at any moral cost.",
+      es: "The last city on Earth must survive. The temperature drops to -80°C. Keeping the central coal generator roaring at any moral cost.",
+      de: "The last city on Earth must survive. The temperature drops to -80°C. Keeping the central coal generator roaring at any moral cost.",
+      ja: "The last city on Earth must survive. The temperature drops to -80°C. Keeping the central coal generator roaring at any moral cost.",
+      'pt-BR': "The last city on Earth must survive. The temperature drops to -80°C. Keeping the central coal generator roaring at any moral cost."
+    }
+  },
+  {
+    gameId: 'signalis',
+    author: 'ElsterReplika',
+    hoursPlayed: 32.1,
+    reviewDate: '1er novembre 2022',
+    fullFr: "N'oublie pas notre promesse. Survival horror rétro avec des androïdes, des énigmes d'inventaire à 6 cases et une terreur cosmique glaciale.",
+    fullEn: "Remember our promise. Retro survival horror with replikas, 6-slot inventory puzzles, and haunting cosmic dread.",
+    redactedFr: "N'oublie pas notre promesse. Un chef-d'œuvre de survival horror avec des replikas amnésiques et la fréquence radio 512.",
+    redactedEn: "Remember our promise. A retro survival horror masterpiece featuring replika androids and radio frequency 512.",
+    fullText: {
+      fr: "N'oublie pas notre promesse. Survival horror rétro avec des androïdes, des énigmes d'inventaire à 6 cases et une terreur cosmique glaciale.",
+      en: "Remember our promise. Retro survival horror with replikas, 6-slot inventory puzzles, and haunting cosmic dread.",
+      es: "Remember our promise. Retro survival horror with replikas, 6-slot inventory puzzles, and haunting cosmic dread.",
+      de: "Remember our promise. Retro survival horror with replikas, 6-slot inventory puzzles, and haunting cosmic dread.",
+      ja: "Remember our promise. Retro survival horror with replikas, 6-slot inventory puzzles, and haunting cosmic dread.",
+      'pt-BR': "Remember our promise. Retro survival horror with replikas, 6-slot inventory puzzles, and haunting cosmic dread."
+    },
+    redactedText: {
+      fr: "N'oublie pas notre promesse. Un chef-d'œuvre de survival horror avec des replikas amnésiques et la fréquence radio 512.",
+      en: "Remember our promise. A retro survival horror masterpiece featuring replika androids and radio frequency 512.",
+      es: "Remember our promise. A retro survival horror masterpiece featuring replika androids and radio frequency 512.",
+      de: "Remember our promise. A retro survival horror masterpiece featuring replika androids and radio frequency 512.",
+      ja: "Remember our promise. A retro survival horror masterpiece featuring replika androids and radio frequency 512.",
+      'pt-BR': "Remember our promise. A retro survival horror masterpiece featuring replika androids and radio frequency 512."
+    }
+  },
+  {
+    gameId: 'omori',
+    author: 'WhiteSpaceDreamer',
+    hoursPlayed: 68.2,
+    reviewDate: '30 décembre 2020',
+    fullFr: "Vous attendez que quelque chose se produise ? Un monde onirique pastel avec vos meilleurs amis qui cache une vérité profondément bouleversante.",
+    fullEn: "Waiting for something to happen? A surreal pastel dreamscape with childhood friends hiding an emotionally devastating truth.",
+    redactedFr: "Vous attendez que quelque chose se produise ? Une virée poétique avec Aubrey, Kel et Hero qui cache une tragédie déchirante.",
+    redactedEn: "Waiting for something to happen? A pastel adventure with Aubrey, Kel, and Hero hiding a heartbreaking truth.",
+    fullText: {
+      fr: "Vous attendez que quelque chose se produise ? Un monde onirique pastel avec vos meilleurs amis qui cache une vérité profondément bouleversante.",
+      en: "Waiting for something to happen? A surreal pastel dreamscape with childhood friends hiding an emotionally devastating truth.",
+      es: "Waiting for something to happen? A surreal pastel dreamscape with childhood friends hiding an emotionally devastating truth.",
+      de: "Waiting for something to happen? A surreal pastel dreamscape with childhood friends hiding an emotionally devastating truth.",
+      ja: "Waiting for something to happen? A surreal pastel dreamscape with childhood friends hiding an emotionally devastating truth.",
+      'pt-BR': "Waiting for something to happen? A surreal pastel dreamscape with childhood friends hiding an emotionally devastating truth."
+    },
+    redactedText: {
+      fr: "Vous attendez que quelque chose se produise ? Une virée poétique avec Aubrey, Kel et Hero qui cache une tragédie déchirante.",
+      en: "Waiting for something to happen? A pastel adventure with Aubrey, Kel, and Hero hiding a heartbreaking truth.",
+      es: "Waiting for something to happen? A pastel adventure with Aubrey, Kel, and Hero hiding a heartbreaking truth.",
+      de: "Waiting for something to happen? A pastel adventure with Aubrey, Kel, and Hero hiding a heartbreaking truth.",
+      ja: "Waiting for something to happen? A pastel adventure with Aubrey, Kel, and Hero hiding a heartbreaking truth.",
+      'pt-BR': "Waiting for something to happen? A pastel adventure with Aubrey, Kel, and Hero hiding a heartbreaking truth."
+    }
+  },
+  {
+    gameId: 'overcooked-2',
+    author: 'OnionKingdomChef',
+    hoursPlayed: 75.3,
+    reviewDate: '12 août 2018',
+    fullFr: "La cuisine est en feu, les assiettes s'empilent, quelqu'un a jeté un steak cru dans l'eau et notre amitié de dix ans vient de prendre fin.",
+    fullEn: "The kitchen is ablaze, dirty dishes are piling up, someone threw raw meat into the river, and our ten-year friendship is officially over.",
+    redactedFr: "La cuisine est en feu, les assiettes sales s'empilent, quelqu'un a envoyé le plat par-dessus bord et notre équipe de cuistots s'entre-déchire.",
+    redactedEn: "The kitchen is ablaze, dirty dishes are piling up, someone tossed the order off the hot air balloon, and the kitchen erupted into chaos.",
+    fullText: {
+      fr: "La cuisine est en feu, les assiettes s'empilent, quelqu'un a jeté un steak cru dans l'eau et notre amitié de dix ans vient de prendre fin.",
+      en: "The kitchen is ablaze, dirty dishes are piling up, someone threw raw meat into the river, and our ten-year friendship is officially over.",
+      es: "The kitchen is ablaze, dirty dishes are piling up, someone threw raw meat into the river, and our ten-year friendship is officially over.",
+      de: "The kitchen is ablaze, dirty dishes are piling up, someone threw raw meat into the river, and our ten-year friendship is officially over.",
+      ja: "The kitchen is ablaze, dirty dishes are piling up, someone threw raw meat into the river, and our ten-year friendship is officially over.",
+      'pt-BR': "The kitchen is ablaze, dirty dishes are piling up, someone threw raw meat into the river, and our ten-year friendship is officially over."
+    },
+    redactedText: {
+      fr: "La cuisine est en feu, les assiettes sales s'empilent, quelqu'un a envoyé le plat par-dessus bord et notre équipe de cuistots s'entre-déchire.",
+      en: "The kitchen is ablaze, dirty dishes are piling up, someone tossed the order off the hot air balloon, and the kitchen erupted into chaos.",
+      es: "The kitchen is ablaze, dirty dishes are piling up, someone tossed the order off the hot air balloon, and the kitchen erupted into chaos.",
+      de: "The kitchen is ablaze, dirty dishes are piling up, someone tossed the order off the hot air balloon, and the kitchen erupted into chaos.",
+      ja: "The kitchen is ablaze, dirty dishes are piling up, someone tossed the order off the hot air balloon, and the kitchen erupted into chaos.",
+      'pt-BR': "The kitchen is ablaze, dirty dishes are piling up, someone tossed the order off the hot air balloon, and the kitchen erupted into chaos."
+    }
+  },
+  {
+    gameId: 'chained-together',
+    author: 'HellEscaper_01',
+    hoursPlayed: 24.5,
+    reviewDate: '28 juin 2024',
+    fullFr: "Enchaînés par les bras en enfer. Mon pote a sauté une demi-seconde trop tôt, nous a tous entraînés dans la lave et on a crié pendant 3 heures.",
+    fullEn: "Chained together climbing out of hell. My teammate jumped a fraction of a second too early, dragged us all into lava, and we screamed.",
+    redactedFr: "Liés les uns aux autres par une chaîne incassable pour remonter des Enfers. Un saut raté et tout le groupe est entraîné dans le vide.",
+    redactedEn: "Bound together by an unbreakable chain to climb out of the underworld. One mistimed leap drags the entire squad into the abyss.",
+    fullText: {
+      fr: "Enchaînés par les bras en enfer. Mon pote a sauté une demi-seconde trop tôt, nous a tous entraînés dans la lave et on a crié pendant 3 heures.",
+      en: "Chained together climbing out of hell. My teammate jumped a fraction of a second too early, dragged us all into lava, and we screamed.",
+      es: "Chained together climbing out of hell. My teammate jumped a fraction of a second too early, dragged us all into lava, and we screamed.",
+      de: "Chained together climbing out of hell. My teammate jumped a fraction of a second too early, dragged us all into lava, and we screamed.",
+      ja: "Chained together climbing out of hell. My teammate jumped a fraction of a second too early, dragged us all into lava, and we screamed.",
+      'pt-BR': "Chained together climbing out of hell. My teammate jumped a fraction of a second too early, dragged us all into lava, and we screamed."
+    },
+    redactedText: {
+      fr: "Liés les uns aux autres par une chaîne incassable pour remonter des Enfers. Un saut raté et tout le groupe est entraîné dans le vide.",
+      en: "Bound together by an unbreakable chain to climb out of the underworld. One mistimed leap drags the entire squad into the abyss.",
+      es: "Bound together by an unbreakable chain to climb out of the underworld. One mistimed leap drags the entire squad into the abyss.",
+      de: "Bound together by an unbreakable chain to climb out of the underworld. One mistimed leap drags the entire squad into the abyss.",
+      ja: "Bound together by an unbreakable chain to climb out of the underworld. One mistimed leap drags the entire squad into the abyss.",
+      'pt-BR': "Bound together by an unbreakable chain to climb out of the underworld. One mistimed leap drags the entire squad into the abyss."
+    }
+  },
 ];
 
 // Simple deterministic hash
@@ -699,12 +1869,12 @@ export function getDailyReviewPuzzle(dateString: string): ReviewPuzzle {
   const seed = stringToHash(`review_puzzle_${dateString}`);
   const rand = mulberry32(seed);
 
-  // 80% du temps, privilégier un jeu qui dispose d'une critique rédigée aux petits oignons
+  // 95% du temps, privilégier un jeu qui dispose d'une critique rédigée aux petits oignons
   const curatedIds = CURATED_REVIEWS.map((r) => r.gameId);
   const eligibleGames = INDIE_GAMES.filter((g) => curatedIds.includes(g.id));
 
   let targetGame: Game;
-  if (eligibleGames.length > 0 && rand() < 0.85) {
+  if (eligibleGames.length > 0 && rand() < 0.95) {
     const idx = Math.floor(rand() * eligibleGames.length);
     targetGame = eligibleGames[idx];
   } else {
@@ -745,7 +1915,7 @@ export function getRandomReviewPuzzle(seedSuffix = Date.now().toString()): Revie
   const eligibleGames = INDIE_GAMES.filter((g) => curatedIds.includes(g.id));
 
   let targetGame: Game;
-  if (eligibleGames.length > 0 && rand() < 0.85) {
+  if (eligibleGames.length > 0 && rand() < 0.95) {
     const idx = Math.floor(rand() * eligibleGames.length);
     targetGame = eligibleGames[idx];
   } else {

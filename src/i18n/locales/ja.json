@@ -8,6 +8,8 @@
     "archiveBanner": "アーカイブモード"
   },
   "nav": {
+    "discovery": "発見",
+    "odyssey": "オデッセイ",
     "gems": "名作選",
     "catalog": "カタログ",
     "games": "ミニゲーム",
@@ -971,6 +973,8 @@
     "proposeBtn": "作品を推薦する",
     "playOnline": "ブラウザで遊ぶ 🌐",
     "searchPlaceholder": "クリエイターやゲームを検索...",
+    "shuffleBtn": "シャッフル",
+    "shuffleTooltip": "ゲームをランダムにシャッフルして新しい作品を見つける",
     "noGamesTitle": "条件に一致するゲームがありません",
     "noGamesDesc": "最初の推薦者になるか、フィルターをリセットしてください！",
     "filters": {

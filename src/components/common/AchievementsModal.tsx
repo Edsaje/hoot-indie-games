@@ -43,7 +43,7 @@ interface AchievementsModalProps {
 }
 
 const renderIcon = (iconName: string, isUnlocked: boolean) => {
-  const className = `w-5 h-5 ${isUnlocked ? 'text-amber-400' : 'text-slate-500'}`;
+  const className = `w-5 h-5 ${isUnlocked ? 'text-amber-400' : 'text-slate-400'}`;
   switch (iconName) {
     case 'Feather':
       return <Feather className={className} />;
@@ -159,8 +159,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
   const challengeStatus = useMemo(() => getChallengeStatusForDate(todayStr), [todayStr]);
   const claimedRecord = useMemo(() => getClaimedDailyFeathers(todayStr), [todayStr, feathersCount]);
 
-  if (!isOpen) return null;
-
+  
   // Calculs Succès Permanents
   const filteredAchievements = allAchievements.filter((ach) => {
     if (filter === 'all') return true;
@@ -172,6 +171,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
     const validSet = new Set(allAchievements.map((a) => a.id));
     return Array.from(new Set(unlockedIds.filter((id) => validSet.has(id))));
   }, [unlockedIds, allAchievements]);
+  if (!isOpen) return null;
 
   const totalPossibleFeathers = allAchievements.reduce((acc, a) => acc + a.feathersReward, 0);
   const unlockedAchievementFeathers = validUnlockedIds.reduce((sum, id) => {
@@ -199,9 +199,9 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="achievements-modal-title"
-      className="fixed inset-0 z-[65] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-[65] flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
     >
-      <div className="relative overflow-visible w-full max-w-2xl bg-[#06241b] border-2 border-[#78350f] rounded-3xl shadow-2xl p-4 sm:p-6 flex flex-col max-h-[90dvh]">
+      <div className="relative overflow-visible w-full h-full sm:h-auto max-w-2xl bg-[#06241b] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl shadow-2xl p-4 sm:p-6 flex flex-col max-h-[100dvh] sm:max-h-[90dvh]">
         <SylvestreIvyFrame density="medium" rounded="3xl" />
 
         {/* Header */}
@@ -291,7 +291,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
             </div>
 
             {/* Category Filters */}
-            <div className="flex items-center gap-1.5 py-2.5 overflow-x-auto no-scrollbar shrink-0">
+            <div className="flex flex-wrap items-center gap-1.5 py-2.5 shrink-0">
               {(
                 [
                   { id: 'all', label: t('achievementsModal.all') },
@@ -337,10 +337,10 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
                       className={`p-3 rounded-xl border shrink-0 ${
                         unlocked
                           ? 'bg-amber-500/10 border-amber-500/40 text-amber-400'
-                          : 'bg-[#131a29] border-[#1e293b] text-slate-500'
+                          : 'bg-[#131a29] border-[#1e293b] text-slate-400'
                       }`}
                     >
-                      {isSecret ? <Lock className="w-5 h-5 text-slate-600" /> : renderIcon(achievement.icon, unlocked)}
+                      {isSecret ? <Lock className="w-5 h-5 text-slate-500" /> : renderIcon(achievement.icon, unlocked)}
                     </div>
 
                     {/* Content */}

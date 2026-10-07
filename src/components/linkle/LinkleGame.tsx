@@ -31,6 +31,7 @@ import { CustomLinkleBuilder } from './CustomLinkleBuilder';
 import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { telemetry } from '../../services/telemetry';
+import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
 
 interface LinkleGameProps {
   currentDate: string;
@@ -602,7 +603,7 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
               className={`inline-flex items-center justify-center w-5 h-5 rounded-full transition-all duration-300 ${
                 i < mistakesRemaining
                   ? 'bg-amber-500/20 text-[#f59e0b] ring-1 ring-amber-400'
-                  : 'bg-slate-800 text-slate-600'
+                  : 'bg-slate-800 text-slate-500'
               }`}
             >
               <Feather className="w-3 h-3" />
@@ -855,6 +856,12 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
               <span>Envie d'un défi rapide ? Tentez le Linkle Sprint ⚡ (60s)</span>
             </button>
           </div>
+
+          {/* Enchaînement vers le Défi Suivant */}
+          <DailyGameNextBanner
+            currentGame="linkle"
+            currentDate={currentDate}
+          />
         </div>
       )}
 

@@ -63,14 +63,18 @@ export const OwlLogo: React.FC<OwlLogoProps> = ({ onEasterEggTrigger, size = 'md
   }[size] || 'w-9 h-9';
 
   return (
-    <div
+    <button
+      type="button"
       onClick={handleClick}
-      className={`relative flex items-center justify-center cursor-pointer select-none group ${className}`}
-      title="🦉 Cliquez sur Sylvestre pour éveiller les secrets de la forêt nocturne..."
+      className={`relative inline-flex items-center justify-center cursor-pointer select-none group bg-transparent border-0 p-0 ${className}`}
+      aria-label="Logo Sylvestre — Sanctuaire Hoot Indie Games"
     >
       <img
-        src="/logo.png"
-        alt="Hoot Indie Games"
+        src="/logo-36.webp"
+        alt=""
+        aria-hidden="true"
+        width={36}
+        height={36}
         className={`${dimensions} object-contain transition-all duration-300 group-hover:scale-105 active:scale-95 ${
           isAwakened
             ? 'filter drop-shadow-[0_0_18px_rgba(245,158,11,1)] scale-110 rotate-3'
@@ -87,7 +91,7 @@ export const OwlLogo: React.FC<OwlLogoProps> = ({ onEasterEggTrigger, size = 'md
           <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
         </span>
       )}
-    </div>
+    </button>
   );
 };
 

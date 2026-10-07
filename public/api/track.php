@@ -88,6 +88,58 @@ function getClientIp() {
 
 $clientIp = getClientIp();
 
+function formatLocalizedPricingText($priceStr, $platform = 'steam', $isFree = false) {
+    if ($isFree || preg_match('/gratuit|free|gratis|kostenlos|無料|grátis/i', $priceStr) || $priceStr === '0' || $priceStr === '0€') {
+        return [
+            'fr' => 'Gratuit 🆓',
+            'en' => 'Free 🆓',
+            'es' => 'Gratis 🆓',
+            'de' => 'Kostenlos 🆓',
+            'ja' => '無料 🆓',
+            'pt-BR' => 'Grátis 🆓',
+        ];
+    }
+
+    if (preg_match('/(\d+(?:[.,]\d{1,2})?)/', $priceStr, $m)) {
+        $num = floatval(str_replace(',', '.', $m[1]));
+        $isUsd = (strpos($priceStr, '$') !== false || stripos($priceStr, 'usd') !== false);
+        $eurValue = $isUsd ? ($num / 1.08) : $num;
+
+        $eurFormatted = number_format($eurValue, 2, ',', ' ') . ' €';
+        $usdFormatted = '$' . number_format($eurValue * 1.08, 2, '.', '');
+        $jpyFormatted = '¥' . number_format(round($eurValue * 160));
+        $brlFormatted = 'R$ ' . number_format($eurValue * 5.5, 2, ',', ' ');
+
+        $suffix = [
+            'fr' => ($platform === 'itch' ? 'sur Itch.io' : ($platform === 'both' ? 'sur Steam & Itch.io' : 'sur Steam')),
+            'en' => ($platform === 'itch' ? 'on Itch.io' : ($platform === 'both' ? 'on Steam & Itch.io' : 'on Steam')),
+            'es' => ($platform === 'itch' ? 'en Itch.io' : ($platform === 'both' ? 'en Steam & Itch.io' : 'en Steam')),
+            'de' => ($platform === 'itch' ? 'auf Itch.io' : ($platform === 'both' ? 'auf Steam & Itch.io' : 'auf Steam')),
+            'ja' => ($platform === 'itch' ? 'Itch.ioにて' : ($platform === 'both' ? 'Steam & Itch.ioにて' : 'Steamにて')),
+            'pt-BR' => ($platform === 'itch' ? 'no Itch.io' : ($platform === 'both' ? 'no Steam & Itch.io' : 'no Steam')),
+        ];
+
+        return [
+            'fr' => "{$eurFormatted} {$suffix['fr']}",
+            'en' => "{$usdFormatted} {$suffix['en']}",
+            'es' => "{$eurFormatted} {$suffix['es']}",
+            'de' => "{$eurFormatted} {$suffix['de']}",
+            'ja' => "{$suffix['ja']} {$jpyFormatted}",
+            'pt-BR' => "{$brlFormatted} {$suffix['pt-BR']}",
+        ];
+    }
+
+    return [
+        'fr' => $priceStr,
+        'en' => $priceStr,
+        'es' => $priceStr,
+        'de' => $priceStr,
+        'ja' => $priceStr,
+        'pt-BR' => $priceStr,
+    ];
+}
+
+
 // Normalisation des pseudonymes pour l'administration et l'unicité
 function normalizeUsernameAdmin($name) {
     $clean = mb_strtolower(trim($name), 'UTF-8');
@@ -398,7 +450,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             session_regenerate_id(true); // Protection contre le Session Fixation (CWE-384)
             $_SESSION['admin_auth'] = true;
             $_SESSION['admin_steam_id'] = $steamId;
+            $_SESSION['steam_id'] = $steamId;
+            $_SESSION['hoot_user_id'] = 'admin_hibouxe';
             $_SESSION['admin_login_at'] = date('c');
+
+            $target = $_GET['redirect'] ?? ($_SESSION['admin_redirect_target'] ?? '');
+            unset($_SESSION['admin_redirect_target']);
+
+            if ($target === 'admin' || $target === 'dashboard' || $target === 'app') {
+                header('Location: /#admin');
+                exit;
+            }
+
             header('Location: track.php');
             exit;
         } else {
@@ -464,6 +527,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
     $isAuth = isCreatorAdminAuthorized();
 
+    if ($isAuth && isset($_GET['redirect']) && in_array($_GET['redirect'], ['admin', 'dashboard', 'app'], true) && !$isJsonReq) {
+        header('Location: /#admin');
+        exit;
+    }
+
     if (!$isAuth) {
         if ($isJsonReq) {
             http_response_code(401);
@@ -480,7 +548,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         $protocol = $isHttps ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'];
         $path = strtok($_SERVER['REQUEST_URI'], '?');
-        $returnTo = $protocol . $host . $path;
+        $returnParams = [];
+        if (!empty($_GET['redirect'])) {
+            $returnParams['redirect'] = $_GET['redirect'];
+            $_SESSION['admin_redirect_target'] = $_GET['redirect'];
+        }
+        $returnQuery = !empty($returnParams) ? '?' . http_build_query($returnParams) : '';
+        $returnTo = $protocol . $host . $path . $returnQuery;
         $realm = $protocol . $host;
 
         $steamLoginUrl = 'https://steamcommunity.com/openid/login?' . http_build_query([
@@ -491,6 +565,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             'openid.identity' => 'http://specs.openid.net/auth/2.0/identifier_select',
             'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
         ]);
+
+        if (isset($_GET['redirect']) && in_array($_GET['redirect'], ['admin', 'dashboard', 'app'], true)) {
+            header('Location: ' . $steamLoginUrl);
+            exit;
+        }
 
         header('Content-Type: text/html; charset=utf-8');
         ?>
@@ -550,10 +629,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
     // C. ACTIONS D'ADMINISTRATION
     $action = trim($_POST['action'] ?? $_GET['action'] ?? '');
 
+    // Récupération rapide d'un jeton CSRF valide pour l'administration SPA
+    if ($action === 'get_csrf_token') {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'success' => true,
+            'csrfToken' => getAdminCsrfToken(),
+        ]);
+        exit;
+    }
+
     // [SÉCURITÉ CWE-352] Les actions administratives de modification requièrent impérativement POST
     $mutatingActions = [
-        'delete_username', 'edit_user', 'toggle_ban_user', 'purge_user_scores',
-        'manage_forbidden_names', 'create_user', 'delete_suggestion', 'reset_stats'
+        'delete_username', 'edit_user', 'toggle_ban_user', 'purge_user_scores', 'give_reward',
+        'manage_forbidden_names', 'create_user', 'delete_suggestion', 'reset_stats', 'approve_micro_indie'
     ];
     if (in_array($action, $mutatingActions, true)) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -568,7 +657,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
         // [SÉCURITÉ CWE-352] Validation du jeton CSRF pour les sessions web d'administration
         if (!empty($_SESSION['admin_auth'])) {
-            $csrfToken = trim($_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+            $csrfToken = extractCsrfTokenFromRequest();
             if (!validateAdminCsrfToken($csrfToken)) {
                 http_response_code(403);
                 echo json_encode([
@@ -802,6 +891,164 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         exit;
     }
 
+    // Super-Admin : Distribution de Récompenses Souveraines (Plumes d'or & Cartes du Sanctuaire)
+    if ($action === 'give_reward') {
+        if (!$isCreatorAdmin) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Action réservée exclusivement au super-administrateur Hibouxe.']);
+            exit;
+        }
+
+        $target = strtolower(trim($_POST['target'] ?? ''));
+        $feathers = max(0, intval($_POST['feathers'] ?? 0));
+        $cardId = sanitizeStr(trim($_POST['cardId'] ?? ''));
+        $isHolo = !empty($_POST['isHolo']);
+        $reason = sanitizeStr(trim($_POST['reason'] ?? 'Cadeau offert par Hibouxe 👑'));
+
+        if (empty($target)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Veuillez spécifier le joueur destinataire.']);
+            exit;
+        }
+
+        if ($feathers <= 0 && empty($cardId)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Veuillez spécifier un montant de plumes ou une carte à offrir.']);
+            exit;
+        }
+
+        // Résolution de l'utilisateur dans registered_usernames.json
+        $uFile = __DIR__ . '/registered_usernames.json';
+        $uData = loadAndEnsureUsernamesDb($uFile);
+
+        $resolvedSteamId = null;
+        $displayName = $target;
+
+        if (isset($uData['usernames'][$target])) {
+            $resolvedSteamId = $uData['usernames'][$target]['steamId'] ?? null;
+            $displayName = $uData['usernames'][$target]['displayName'] ?? $target;
+        } elseif (preg_match('/^\d{15,20}$/', $target)) {
+            $resolvedSteamId = $target;
+            if (isset($uData['userToName'][$target])) {
+                $target = $uData['userToName'][$target];
+                $displayName = $uData['usernames'][$target]['displayName'] ?? $target;
+            }
+        }
+
+        $savesDir = __DIR__ . '/user_saves';
+        if (!is_dir($savesDir)) {
+            @mkdir($savesDir, 0755, true);
+        }
+
+        // Trouver le fichier de sauvegarde existant
+        $candidateFiles = [];
+        if (!empty($resolvedSteamId)) {
+            $candidateFiles[] = $savesDir . '/steam_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $resolvedSteamId) . '.json';
+        }
+        $candidateFiles[] = $savesDir . '/name_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json';
+        $candidateFiles[] = $savesDir . '/user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json';
+
+        $targetSaveFile = null;
+        $saveData = null;
+
+        foreach ($candidateFiles as $cand) {
+            if (file_exists($cand)) {
+                $raw = @file_get_contents($cand);
+                $decoded = json_decode($raw, true);
+                if (is_array($decoded)) {
+                    $targetSaveFile = $cand;
+                    $saveData = $decoded;
+                    break;
+                }
+            }
+        }
+
+        // Si aucune sauvegarde n'existe encore, on en crée une nouvelle
+        if (!$targetSaveFile) {
+            $targetSaveFile = $candidateFiles[0];
+            $saveData = [
+                'username' => $displayName,
+                'steamId' => $resolvedSteamId,
+                'avatarId' => 'owl',
+                'title' => 'Oisillon du Perchoir',
+                'feathers' => ['bonus' => 0, 'spent' => 0, 'claimedDaily' => new stdClass()],
+                'cardCollection' => [],
+                'achievements' => [],
+                'stats' => [],
+                'syncedAt' => date('c'),
+            ];
+        }
+
+        // 1. Créditer les plumes
+        $previousBonus = intval($saveData['feathers']['bonus'] ?? 0);
+        if ($feathers > 0) {
+            $saveData['feathers']['bonus'] = $previousBonus + $feathers;
+        }
+
+        // 2. Créditer la carte
+        $cardDetails = null;
+        if (!empty($cardId)) {
+            if (!isset($saveData['cardCollection']) || !is_array($saveData['cardCollection'])) {
+                $saveData['cardCollection'] = [];
+            }
+            if (!isset($saveData['cardCollection'][$cardId])) {
+                $saveData['cardCollection'][$cardId] = [
+                    'cardId' => $cardId,
+                    'count' => $isHolo ? 0 : 1,
+                    'countHolo' => $isHolo ? 1 : 0,
+                    'firstObtainedAt' => date('c'),
+                ];
+            } else {
+                if ($isHolo) {
+                    $saveData['cardCollection'][$cardId]['countHolo'] = intval($saveData['cardCollection'][$cardId]['countHolo'] ?? 0) + 1;
+                } else {
+                    $saveData['cardCollection'][$cardId]['count'] = intval($saveData['cardCollection'][$cardId]['count'] ?? 0) + 1;
+                }
+            }
+            $cardDetails = [
+                'cardId' => $cardId,
+                'isHolo' => $isHolo,
+            ];
+        }
+
+        // 3. Ajouter une notification en attente (pendingAdminRewards) pour célébration à la prochaine connexion
+        if (!isset($saveData['pendingAdminRewards']) || !is_array($saveData['pendingAdminRewards'])) {
+            $saveData['pendingAdminRewards'] = [];
+        }
+        $saveData['pendingAdminRewards'][] = [
+            'id' => uniqid('rew_', true),
+            'feathers' => $feathers,
+            'cardId' => $cardId ?: null,
+            'isHolo' => $isHolo,
+            'reason' => $reason,
+            'grantedAt' => date('c'),
+            'grantedBy' => 'Hibouxe',
+        ];
+
+        $saveData['syncedAt'] = date('c');
+
+        // Écriture sécurisée sur le fichier de sauvegarde principal et ses miroirs
+        $json = json_encode($saveData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        @file_put_contents($targetSaveFile, $json, LOCK_EX);
+
+        // Sauvegarder également sur les alias pour que la synchro multi-identités le trouve
+        foreach ($candidateFiles as $cand) {
+            if ($cand !== $targetSaveFile) {
+                @file_put_contents($cand, $json, LOCK_EX);
+            }
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => "Récompense attribuée avec succès à « {$displayName} » !",
+            'target' => $displayName,
+            'feathers' => $feathers,
+            'card' => $cardDetails,
+            'reason' => $reason,
+        ]);
+        exit;
+    }
+
     // Modération : Gestion de la Blacklist des Pseudos Interdits
     if ($action === 'manage_forbidden_names') {
         $subaction = trim($_POST['subaction'] ?? $_GET['subaction'] ?? 'list');
@@ -909,18 +1156,131 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
     // Modération : Supprimer une suggestion communautaire
     if ($action === 'delete_suggestion') {
-        $sugId = trim($_GET['id'] ?? '');
+        $rawInput = @file_get_contents('php://input');
+        $jsonInput = json_decode($rawInput, true) ?: [];
+        $sugId = trim((string)($_POST['id'] ?? ($_GET['id'] ?? ($jsonInput['id'] ?? ''))));
+        $appId = trim((string)($_POST['appId'] ?? ($_GET['appId'] ?? ($jsonInput['appId'] ?? ''))));
+
         $sugFile = __DIR__ . '/suggestions.json';
         if (file_exists($sugFile)) {
             $suggestions = json_decode(@file_get_contents($sugFile), true) ?: [];
-            $filtered = array_values(array_filter($suggestions, function($s) use ($sugId) {
-                return ($s['id'] ?? '') !== $sugId;
+            $filtered = array_values(array_filter($suggestions, function($s) use ($sugId, $appId) {
+                $curId = strval($s['id'] ?? '');
+                $curAppId = strval($s['appId'] ?? '');
+                if (!empty($sugId) && ($curId === $sugId || $curAppId === $sugId)) {
+                    return false;
+                }
+                if (!empty($appId) && $curAppId === $appId) {
+                    return false;
+                }
+                return true;
             }));
             @file_put_contents($sugFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
             echo json_encode(['success' => true, 'message' => 'Suggestion supprimée avec succès.']);
             exit;
         }
         echo json_encode(['success' => false, 'message' => 'Fichier de suggestions introuvable.']);
+        exit;
+    }
+
+    // Modération : Valider / Approuver un micro-indé
+    if ($action === 'approve_micro_indie') {
+        $mId = trim($_GET['id'] ?? $_POST['id'] ?? '');
+        $mFile = __DIR__ . '/micro_indies.json';
+        if (file_exists($mFile)) {
+            $items = json_decode(@file_get_contents($mFile), true) ?: [];
+            $found = false;
+            foreach ($items as &$item) {
+                if (($item['id'] ?? '') === $mId) {
+                    $item['approved'] = true;
+                    $item['approvedAt'] = date('c');
+                    $found = true;
+                    break;
+                }
+            }
+            if ($found) {
+                @file_put_contents($mFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                echo json_encode(['success' => true, 'message' => 'Micro-indé validé et publié !']);
+                exit;
+            }
+        }
+        echo json_encode(['success' => false, 'message' => 'Jeu introuvable dans les micro-indés.']);
+        exit;
+    }
+
+    // Modération : Supprimer / Rejeter un micro-indé
+    if ($action === 'delete_micro_indie') {
+        $mId = trim($_GET['id'] ?? $_POST['id'] ?? '');
+        $mFile = __DIR__ . '/micro_indies.json';
+        if (file_exists($mFile)) {
+            $items = json_decode(@file_get_contents($mFile), true) ?: [];
+            $filtered = array_values(array_filter($items, function($m) use ($mId) {
+                return ($m['id'] ?? '') !== $mId;
+            }));
+            @file_put_contents($mFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            echo json_encode(['success' => true, 'message' => 'Micro-indé retiré avec succès.']);
+            exit;
+        }
+        echo json_encode(['success' => false, 'message' => 'Fichier des micro-indés introuvable.']);
+        exit;
+    }
+
+    // Modération : Mettre à jour les métadonnées d'un micro-indé (jaquette, titre, dev...)
+    if ($action === 'update_micro_indie') {
+        $mId = trim($_POST['id'] ?? $_GET['id'] ?? '');
+        $mCover = trim($_POST['coverImage'] ?? $_GET['coverImage'] ?? '');
+        $mTitle = trim($_POST['title'] ?? $_GET['title'] ?? '');
+        $mDev = trim($_POST['developer'] ?? $_GET['developer'] ?? '');
+        $mSteamUrl = trim($_POST['steamUrl'] ?? $_GET['steamUrl'] ?? '');
+        $mItchUrl = trim($_POST['itchUrl'] ?? $_GET['itchUrl'] ?? '');
+        $mPlayUrl = trim($_POST['playInBrowserUrl'] ?? $_GET['playInBrowserUrl'] ?? '');
+        $mPitch = trim($_POST['pitch'] ?? $_GET['pitch'] ?? '');
+        $mDiscoveredBy = trim($_POST['discoveredBy'] ?? $_GET['discoveredBy'] ?? '');
+        $mPrice = trim($_POST['price'] ?? $_GET['price'] ?? '');
+        $mPricingTextRaw = trim($_POST['pricingText'] ?? $_GET['pricingText'] ?? '');
+
+        $mFile = __DIR__ . '/micro_indies.json';
+        if (file_exists($mFile)) {
+            $items = json_decode(@file_get_contents($mFile), true) ?: [];
+            $found = false;
+            foreach ($items as &$item) {
+                if (($item['id'] ?? '') === $mId) {
+                    if (!empty($mCover)) $item['coverImage'] = $mCover;
+                    if (!empty($mTitle)) $item['title'] = $mTitle;
+                    if (!empty($mDev)) $item['developer'] = $mDev;
+                    if (!empty($mSteamUrl)) $item['steamUrl'] = $mSteamUrl;
+                    if (!empty($mItchUrl)) $item['itchUrl'] = $mItchUrl;
+                    if (!empty($mPlayUrl)) $item['playInBrowserUrl'] = $mPlayUrl;
+                    if (!empty($mPitch)) {
+                        $item['tagline'] = ['fr' => $mPitch, 'en' => $mPitch];
+                        $item['description'] = ['fr' => $mPitch, 'en' => $mPitch];
+                    }
+                    if (!empty($mDiscoveredBy)) $item['discoveredBy'] = $mDiscoveredBy;
+                    if (!empty($mPrice)) {
+                        $mPlat = (!empty($mSteamUrl) && !empty($mItchUrl)) ? 'both' : (!empty($mItchUrl) ? 'itch' : 'steam');
+                        $isFreeGame = (stripos($mPrice, 'gratuit') !== false || stripos($mPrice, 'free') !== false || $mPrice === '0' || $mPrice === '0€');
+                        $item['pricingText'] = formatLocalizedPricingText($mPrice, $mPlat, $isFreeGame);
+                        $item['isFree'] = $isFreeGame;
+                    } elseif (!empty($mPricingTextRaw)) {
+                        $pt = json_decode($mPricingTextRaw, true);
+                        if (is_array($pt)) {
+                            $item['pricingText'] = $pt;
+                        } else {
+                            $item['pricingText'] = ['fr' => $mPricingTextRaw, 'en' => $mPricingTextRaw];
+                        }
+                    }
+                    $found = true;
+                    break;
+                }
+            }
+            unset($item);
+            if ($found) {
+                @file_put_contents($mFile, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                echo json_encode(['success' => true, 'message' => 'Micro-indé mis à jour avec succès.']);
+                exit;
+            }
+        }
+        echo json_encode(['success' => false, 'message' => 'Jeu introuvable dans les micro-indés.']);
         exit;
     }
 
@@ -1151,11 +1511,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             }
         }
 
+        // Chargement des micro-indés soumis
+        $mFile = __DIR__ . '/micro_indies.json';
+        $microIndiesData = ['total' => 0, 'pending' => 0, 'approved' => 0, 'list' => []];
+        if (file_exists($mFile)) {
+            $mRaw = @file_get_contents($mFile);
+            if ($mRaw) {
+                $mDec = json_decode($mRaw, true);
+                if (is_array($mDec)) {
+                    $mModified = false;
+                    foreach ($mDec as &$mItem) {
+                        $cover = $mItem['coverImage'] ?? '';
+                        $steamUrl = $mItem['steamUrl'] ?? '';
+                        $isDefaultCover = empty($cover) || strpos($cover, '2420510') !== false;
+                        if ($isDefaultCover && !empty($steamUrl)) {
+                            if (preg_match('#/app/(\d+)#', $steamUrl, $matches)) {
+                                $mItem['coverImage'] = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{$matches[1]}/header.jpg";
+                                $mModified = true;
+                            }
+                        }
+                        if (($mItem['id'] ?? '') === 'micro-crescent-bloom-2d61c0' || stripos($mItem['title'] ?? '', 'Crescent Bloom') !== false) {
+                            $proper = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg';
+                            if (($mItem['coverImage'] ?? '') !== $proper) {
+                                $mItem['coverImage'] = $proper;
+                                $mModified = true;
+                            }
+                        }
+                    }
+                    unset($mItem);
+                    if ($mModified) {
+                        @file_put_contents($mFile, json_encode($mDec, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                    }
+
+                    $mPending = count(array_filter($mDec, function($item) { return empty($item['approved']); }));
+                    $mApproved = count(array_filter($mDec, function($item) { return !empty($item['approved']); }));
+                    $microIndiesData = [
+                        'total' => count($mDec),
+                        'pending' => $mPending,
+                        'approved' => $mApproved,
+                        'list' => array_reverse($mDec)
+                    ];
+                }
+            }
+        }
+
         $system = [
             'serverTime' => date('c'),
             'statsFileSize' => file_exists($statsFile) ? filesize($statsFile) : 0,
             'usernamesFileSize' => file_exists($uFile) ? filesize($uFile) : 0,
             'suggestionsFileSize' => file_exists($sFile) ? filesize($sFile) : 0,
+            'microIndiesFileSize' => file_exists($mFile) ? filesize($mFile) : 0,
             'leaderboardFileSize' => file_exists($lbFile) ? filesize($lbFile) : 0,
             'adminSteamId' => ADMIN_STEAM_ID,
         ];
@@ -1163,9 +1568,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         echo json_encode([
             'success' => true,
             'admin' => true,
+            'csrfToken' => getAdminCsrfToken(),
             'analytics' => $stats,
             'usernames' => $usernamesData,
             'suggestions' => $suggestionsData,
+            'microIndies' => $microIndiesData,
             'leaderboard' => $leaderboardData,
             'system' => $system,
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -1625,7 +2032,7 @@ $value = isset($payload['value']) ? intval($payload['value']) : null;
 // Validation d'événement
 $isAllowed = false;
 $allowedPrefixes = [
-    'page_', 'tab_', 'screenle_', 'indledle_', 'linkle_', 'profille_',
+    'page_', 'tab_', 'session_', 'random_', 'screenle_', 'indledle_', 'linkle_', 'profille_',
     'chrono_', 'pixel_', 'review_', 'blindtest_', 'timeattack_', 'quiz_',
     'versus_', 'arcade_', 'game_', 'steam_', 'easter_', 'sound_', 'lang_',
     'streak_', 'friend_'
@@ -1637,8 +2044,9 @@ foreach ($allowedPrefixes as $prefix) {
     }
 }
 $allowedExactEvents = [
-    'page_view', 'tab_change', 'steam_redirect', 'easter_egg',
-    'sound_toggle', 'language_toggle', 'streak_rescue_yesterday', 'versus_challenge'
+    'page_view', 'session_start', 'tab_change', 'steam_redirect', 'easter_egg',
+    'sound_toggle', 'language_toggle', 'language_select', 'random_gem_pick',
+    'streak_rescue_yesterday', 'versus_challenge'
 ];
 if (in_array($event, $allowedExactEvents, true)) {
     $isAllowed = true;
@@ -1711,10 +2119,10 @@ $defaultStats = [
 ];
 
 // Ouverture transactionnelle et verrouillage exclusif
-$fp = fopen($statsFile, 'c+');
+$fp = @fopen($statsFile, 'c+');
 if (!$fp) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Erreur accès fichier stats']);
+    // Échec gracieux : ne pas exposer d'erreur HTTP 500 sur le tracking analytics non critique
+    echo json_encode(['success' => true, 'tracked' => false, 'notice' => 'storage_temporarily_unavailable']);
     exit;
 }
 flock($fp, LOCK_EX);

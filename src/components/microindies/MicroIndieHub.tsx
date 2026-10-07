@@ -7,85 +7,255 @@ import {
   Globe, 
   Search, 
   Trophy, 
-  Gamepad2
+  Gamepad2,
+  Shield,
+  Shuffle
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { soundFx } from '../../utils/audio';
 import { INITIAL_MICRO_INDIES } from '../../data/microIndies';
 import { ProposeMicroIndieModal } from './ProposeMicroIndieModal';
+import { AdminDashboardModal } from '../admin/AdminDashboardModal';
+import { useUserAccount } from '../../context/useUserAccount';
 import type { MicroIndieGame } from '../../types/microIndie';
+import { formatMicroIndiePrice } from '../../utils/currencyFormatter';
 
 type FilterType = 'all' | 'itch' | 'steam' | 'web' | 'free' | 'jam';
+
+/**
+ * Mélange aléatoire d'un tableau (Fisher-Yates) sans muter le tableau d'origine.
+ */
+function shuffleArray<T>(array: T[]): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
 export const MicroIndieHub: React.FC = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || 'fr';
+  const { isAdmin, isAuthenticated, profile } = useUserAccount();
 
-  const [games, setGames] = useState<MicroIndieGame[]>(INITIAL_MICRO_INDIES);
+  // Initialisation avec les jeux mélangés aléatoirement à l'arrivée sur la page
+  const [games, setGames] = useState<MicroIndieGame[]>(() => shuffleArray(INITIAL_MICRO_INDIES));
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
+  const [authNotice, setAuthNotice] = useState<string | null>(null);
   const [likedIds, setLikedIds] = useState<Set<string>>(() => {
     try {
+      const userKey = profile?.steam?.steamId || profile?.id || profile?.username;
+      const savedUser = userKey ? localStorage.getItem(`hoot_liked_micro_indies_${userKey}`) : null;
+      if (savedUser) return new Set(JSON.parse(savedUser));
       const saved = localStorage.getItem('hoot_liked_micro_indies');
       return saved ? new Set(JSON.parse(saved)) : new Set();
     } catch {
       return new Set();
     }
   });
+  const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set());
 
-  // Charger les propositions communautaires depuis l'API PHP
+  // Charger les propositions communautaires et les likes persistés depuis l'API PHP
   useEffect(() => {
-    fetch('/api/micro_indies.php?action=list')
+    const params = new URLSearchParams({ action: 'list' });
+    if (profile?.id) params.set('userId', profile.id);
+    if (profile?.steam?.steamId) params.set('steamId', profile.steam.steamId);
+    if (profile?.username) params.set('username', profile.username);
+
+    fetch(`/api/micro_indies.php?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.success && Array.isArray(data.microIndies) && data.microIndies.length > 0) {
+        if (data.success) {
           setGames((prev) => {
             const map = new Map<string, MicroIndieGame>();
-            // Ajouter d'abord les jeux initiaux
+            // Ajouter d'abord les jeux existants (déjà mélangés)
             prev.forEach((g) => map.set(g.id, g));
+            let hasNew = false;
             // Ajouter les jeux communautaires approuvés
-            data.microIndies.forEach((g: MicroIndieGame) => map.set(g.id, g));
-            return Array.from(map.values());
+            if (Array.isArray(data.microIndies)) {
+              data.microIndies.forEach((g: MicroIndieGame) => {
+                if (!map.has(g.id)) {
+                  hasNew = true;
+                }
+                map.set(g.id, g);
+              });
+            }
+            // Appliquer les compteurs de likes persistés sur le serveur
+            if (data.likesMap && typeof data.likesMap === 'object' && !Array.isArray(data.likesMap)) {
+              for (const [id, count] of Object.entries(data.likesMap)) {
+                const existing = map.get(id);
+                if (existing && typeof count === 'number') {
+                  map.set(id, { ...existing, likesCount: count });
+                }
+              }
+            }
+            const allGames = Array.from(map.values());
+            // Si de nouveaux jeux sont intégrés, on remélange pour conserver la surprise de découverte
+            return hasNew ? shuffleArray(allGames) : allGames;
           });
+        }
+        if (data.success && Array.isArray(data.userLikedIds)) {
+          setLikedIds(new Set(data.userLikedIds));
+          try {
+            const userKey = profile?.steam?.steamId || profile?.id || profile?.username;
+            if (userKey) {
+              localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(data.userLikedIds));
+            }
+            localStorage.setItem('hoot_liked_micro_indies', JSON.stringify(data.userLikedIds));
+          } catch {
+            // Ignorer
+          }
         }
       })
       .catch(() => {
         // Mode hors-ligne : conserve INITIAL_MICRO_INDIES
       });
-  }, []);
+  }, [profile?.id, profile?.steam?.steamId, profile?.username]);
+
+  // Synchronisation des likes du compte connecté
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const params = new URLSearchParams({
+      action: 'user_likes',
+      userId: profile.id || '',
+      steamId: profile.steam?.steamId || '',
+      username: profile.username || '',
+    });
+    fetch(`/api/micro_indies.php?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.likedIds)) {
+          setLikedIds(new Set(data.likedIds));
+          try {
+            const userKey = profile.steam?.steamId || profile.id || profile.username;
+            if (userKey) {
+              localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(data.likedIds));
+            }
+            localStorage.setItem('hoot_liked_micro_indies', JSON.stringify(data.likedIds));
+          } catch {
+            // Ignorer
+          }
+        }
+        if (data.success && data.likesMap && typeof data.likesMap === 'object' && !Array.isArray(data.likesMap)) {
+          setGames((prev) =>
+            prev.map((g) =>
+              typeof data.likesMap[g.id] === 'number'
+                ? { ...g, likesCount: data.likesMap[g.id] }
+                : g
+            )
+          );
+        }
+      })
+      .catch(() => {});
+  }, [isAuthenticated, profile.id, profile.steam?.steamId, profile.username]);
 
   const handleLike = async (gameId: string) => {
-    if (likedIds.has(gameId)) return;
-    soundFx.playClick();
+    // [Anti-triche] Obliger la connexion à un compte pour voter (empêche le spam en navigation privée)
+    if (!isAuthenticated) {
+      soundFx.playError();
+      setAuthNotice(
+        t(
+          'micro.authRequiredToLike',
+          'Connexion requise : Veuillez vous connecter à votre compte Hoot pour voter et soutenir un jeu (anti-triche navigation privée) !'
+        )
+      );
+      window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+      return;
+    }
 
-    const nextLiked = new Set(likedIds).add(gameId);
+    soundFx.playClick();
+    const isCurrentlyLiked = likedIds.has(gameId);
+    const currentGame = games.find((g) => g.id === gameId);
+    const prevCount = currentGame?.likesCount ?? 1;
+
+    // Mettre à jour l'état local (optimistic toggle)
+    const nextLiked = new Set(likedIds);
+    if (isCurrentlyLiked) {
+      nextLiked.delete(gameId);
+    } else {
+      nextLiked.add(gameId);
+    }
     setLikedIds(nextLiked);
+
     try {
+      const userKey = profile.steam?.steamId || profile.id || profile.username;
+      if (userKey) {
+        localStorage.setItem(`hoot_liked_micro_indies_${userKey}`, JSON.stringify(Array.from(nextLiked)));
+      }
       localStorage.setItem('hoot_liked_micro_indies', JSON.stringify(Array.from(nextLiked)));
     } catch {
       // Ignorer
     }
 
-    // Incrémenter localement
+    // Incrémenter ou décrémenter localement (optimiste)
+    const optimisticCount = isCurrentlyLiked ? Math.max(0, prevCount - 1) : prevCount + 1;
     setGames((prev) =>
-      prev.map((g) => (g.id === gameId ? { ...g, likesCount: (g.likesCount || 0) + 1 } : g))
+      prev.map((g) =>
+        g.id === gameId
+          ? { ...g, likesCount: optimisticCount }
+          : g
+      )
     );
 
     // Synchroniser avec l'API
     try {
-      await fetch('/api/micro_indies.php', {
+      const res = await fetch('/api/micro_indies.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'like', id: gameId }),
+        body: JSON.stringify({
+          action: isCurrentlyLiked ? 'unlike' : 'like',
+          id: gameId,
+          currentCount: prevCount,
+          userId: profile.id,
+          steamId: profile.steam?.steamId || undefined,
+          username: profile.username,
+        }),
       });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (typeof data.likesCount === 'number') {
+          setGames((prev) =>
+            prev.map((g) =>
+              g.id === gameId ? { ...g, likesCount: data.likesCount } : g
+            )
+          );
+        }
+      } else {
+        // Restaurer l'état précédent en cas d'erreur
+        setLikedIds(likedIds);
+        setGames((prev) =>
+          prev.map((g) =>
+            g.id === gameId ? { ...g, likesCount: prevCount } : g
+          )
+        );
+        if (data?.requireAuth) {
+          soundFx.playError();
+          setAuthNotice(data.error || 'Connexion requise pour voter.');
+          window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+        }
+      }
     } catch {
-      // Ignorer
+      // Restaurer l'état précédent en cas d'erreur réseau
+      setLikedIds(likedIds);
+      setGames((prev) =>
+        prev.map((g) =>
+          g.id === gameId ? { ...g, likesCount: prevCount } : g
+        )
+      );
     }
   };
 
   const handleGameAdded = (newGame: MicroIndieGame) => {
     setGames((prev) => [newGame, ...prev]);
+  };
+
+  const handleShuffle = () => {
+    soundFx.playClick();
+    setGames((prev) => shuffleArray(prev));
   };
 
   const filteredGames = useMemo(() => {
@@ -139,16 +309,33 @@ export const MicroIndieHub: React.FC = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              setIsModalOpen(true);
-            }}
-            className="px-6 py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold rounded-2xl shadow-xl shadow-amber-900/40 flex items-center gap-2.5 transition-all transform hover:-translate-y-0.5 active:translate-y-0 text-sm sm:text-base whitespace-nowrap"
-          >
-            <PlusCircle className="w-5 h-5 text-slate-950" />
-            <span>{t('micro.proposeBtn', 'Proposer un Micro-Indé')}</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  setIsAdminDashboardOpen(true);
+                }}
+                className="px-5 py-3.5 bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold rounded-2xl border border-emerald-400/40 shadow-xl shadow-emerald-950/40 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0 text-sm sm:text-base whitespace-nowrap cursor-pointer"
+                title="Accéder au panneau d'administration pour valider ou rejeter les jeux micro-indés"
+              >
+                <Shield className="w-5 h-5 text-emerald-300" />
+                <span>Modérer les Micro-Indés</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                setIsModalOpen(true);
+              }}
+              className="px-6 py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold rounded-2xl shadow-xl shadow-amber-900/40 flex items-center justify-center gap-2.5 transition-all transform hover:-translate-y-0.5 active:translate-y-0 text-sm sm:text-base whitespace-nowrap cursor-pointer"
+            >
+              <PlusCircle className="w-5 h-5 text-slate-950" />
+              <span>{t('micro.proposeBtn', 'Proposer un Micro-Indé')}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -240,16 +427,27 @@ export const MicroIndieHub: React.FC = () => {
           </button>
         </div>
 
-        {/* Barre de recherche */}
-        <div className="relative w-full md:w-72">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('micro.searchPlaceholder', 'Rechercher un créateur, un jeu...')}
-            className="w-full pl-10 pr-4 py-2 bg-[#06241b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-colors"
-          />
+        {/* Barre de recherche et bouton de mélange aléatoire */}
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="relative flex-1 md:w-72">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('micro.searchPlaceholder', 'Rechercher un créateur, un jeu...')}
+              className="w-full pl-10 pr-4 py-2 bg-[#06241b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition-colors"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleShuffle}
+            className="px-3.5 py-2 bg-[#06241b] hover:bg-emerald-900/40 text-amber-300 hover:text-amber-200 border border-emerald-900 hover:border-amber-400/50 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap active:scale-95"
+            title={t('micro.shuffleTooltip', 'Mélanger aléatoirement les jeux pour en découvrir d’autres')}
+          >
+            <Shuffle className="w-4 h-4 text-amber-400" />
+            <span className="hidden sm:inline">{t('micro.shuffleBtn', 'Mélanger')}</span>
+          </button>
         </div>
       </div>
 
@@ -285,16 +483,38 @@ export const MicroIndieHub: React.FC = () => {
                 key={game.id}
                 className="deferred-card group flex flex-col bg-gradient-to-b from-[#06241b] to-[#03150f] border-2 border-[#78350f]/60 hover:border-[#78350f] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
               >
-                {/* Image de couverture */}
-                <div className="relative aspect-video w-full overflow-hidden bg-black/50">
-                  <img
-                    src={game.coverImage}
-                    alt={game.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#03150f] via-transparent to-black/30" />
+                {/* Image de couverture avec protection anti-image noire et referrerPolicy */}
+                <div className="relative aspect-video w-full overflow-hidden bg-[#041a13]">
+                  {failedImageIds.has(game.id) || !game.coverImage ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#0a382a] via-[#041d15] to-[#010e0a] text-center select-none border-b border-amber-500/20">
+                      <div className="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-center text-amber-300 text-xl mb-1.5 shadow-inner">
+                        <Gamepad2 className="w-5 h-5 text-amber-300" />
+                      </div>
+                      <span className="text-xs font-black text-amber-100 line-clamp-1 drop-shadow px-2">
+                        {game.title}
+                      </span>
+                      <span className="text-[10px] text-emerald-300/80 font-mono mt-0.5">
+                        {game.genre.slice(0, 2).join(' • ')}
+                      </span>
+                    </div>
+                  ) : (
+                    <img
+                      src={game.coverImage}
+                      alt={game.title}
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                      onError={() => {
+                        setFailedImageIds((prev) => {
+                          const next = new Set(prev);
+                          next.add(game.id);
+                          return next;
+                        });
+                      }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#03150f] via-transparent to-black/30 pointer-events-none" />
 
                   {/* Badges de statut en haut */}
                   <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
@@ -313,17 +533,24 @@ export const MicroIndieHub: React.FC = () => {
                         Itch + Steam
                       </span>
                     )}
-                    {game.isFree ? (
-                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/30 border border-emerald-400/60 text-emerald-200 text-[10px] font-bold backdrop-blur-sm">
-                        Gratuit 🆓
-                      </span>
-                    ) : (
-                      game.pricingText && (
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-400/40 text-amber-200 text-[10px] font-bold backdrop-blur-sm">
-                          {(game.pricingText && (game.pricingText[currentLang] || game.pricingText.fr)) || ''}
-                        </span>
-                      )
-                    )}
+                    {(() => {
+                      const priceBadge = formatMicroIndiePrice(game.pricingText, game.isFree, currentLang);
+                      if (game.isFree) {
+                        return (
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-500/30 border border-emerald-400/60 text-emerald-200 text-[10px] font-bold backdrop-blur-sm">
+                            {priceBadge || 'Gratuit 🆓'}
+                          </span>
+                        );
+                      }
+                      if (priceBadge) {
+                        return (
+                          <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-400/40 text-amber-200 text-[10px] font-bold backdrop-blur-sm">
+                            {priceBadge}
+                          </span>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
 
                   {/* Game Jam tag */}
@@ -339,7 +566,14 @@ export const MicroIndieHub: React.FC = () => {
                   {/* Bouton Like / Coeur */}
                   <button
                     onClick={() => handleLike(game.id)}
-                    className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 ${
+                    title={
+                      !isAuthenticated
+                        ? t('micro.loginToVote', 'Connexion requise pour voter (anti-triche)')
+                        : isLiked
+                        ? t('micro.removeVote', 'Cliquer pour retirer votre vote')
+                        : t('micro.voteForGame', 'Voter pour cette pépite')
+                    }
+                    className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
                       isLiked
                         ? 'bg-rose-600 text-white shadow-lg shadow-rose-950/50'
                         : 'bg-black/50 text-white/80 hover:text-rose-400 hover:bg-black/70'
@@ -446,6 +680,44 @@ export const MicroIndieHub: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onGameAdded={handleGameAdded}
       />
+
+      {/* Modale d'administration Micro-Indés pour Hibouxe / Admin */}
+      {isAdmin && (
+        <AdminDashboardModal
+          isOpen={isAdminDashboardOpen}
+          onClose={() => setIsAdminDashboardOpen(false)}
+          initialTab="microIndies"
+        />
+      )}
+
+      {/* Bannière Toast Connexion requise (Anti-triche) */}
+      {authNotice && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[90%] bg-gradient-to-r from-amber-950 via-[#06241b] to-amber-950 border-2 border-amber-400 p-4 rounded-2xl shadow-2xl flex items-center justify-between gap-3 text-amber-100 animate-slideUp">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🔒</span>
+            <p className="text-xs sm:text-sm font-semibold">{authNotice}</p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthNotice(null);
+                window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+              }}
+              className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-xl text-xs transition cursor-pointer"
+            >
+              Connexion
+            </button>
+            <button
+              type="button"
+              onClick={() => setAuthNotice(null)}
+              className="p-1 text-amber-300 hover:text-white text-xs cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

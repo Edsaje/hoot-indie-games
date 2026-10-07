@@ -48,6 +48,7 @@ import {
   isArtStyleMatch,
   isCameraMatch,
 } from '../../utils/profilleCategories';
+import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
 
 interface ProfilleGameProps {
   currentDate: string;
@@ -79,7 +80,7 @@ export function normalizeGenreKey(genre: string): string {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[-_ \/]/g, '')
+    .replace(/[-_ /]/g, '')
     .trim();
 
   if (norm === 'coop' || norm === 'cooperation' || norm === 'cooperatif') return 'coop';
@@ -825,7 +826,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -944,7 +945,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1070,7 +1071,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1199,7 +1200,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1316,7 +1317,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1433,7 +1434,7 @@ https://hootindiegames.com/#profille`;
                     <span>{t('profille.pointSolved')}</span>
                   </span>
                 ) : (
-                  <span className="text-slate-500">{t('profille.attemptsEnded')}</span>
+                  <span className="text-slate-400">{t('profille.attemptsEnded')}</span>
                 )}
               </div>
             )}
@@ -1558,7 +1559,7 @@ https://hootindiegames.com/#profille`;
         </div>
 
         {/* Thumbnail Strip */}
-        <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex flex-wrap items-center gap-2 mt-3 pb-1">
           {secretGame.screenshots.map((src: string, idx: number) => (
             <button
               key={idx}
@@ -1738,6 +1739,12 @@ https://hootindiegames.com/#profille`;
               isWon={score > 0}
             />
           </div>
+
+          {/* Enchaînement vers le Défi Suivant */}
+          <DailyGameNextBanner
+            currentGame="profille"
+            currentDate={currentDate}
+          />
         </div>
       )}
 

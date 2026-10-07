@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 35
+ * Total de pépites sélectionnées : 60
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -67,6 +67,61 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "dateAdded": "2026-09-21"
   },
   {
+    "id": "micro-crescent-bloom-2d61c0",
+    "title": "Crescent Bloom",
+    "developer": "Nox Metrica",
+    "releaseYear": 2022,
+    "platform": "steam",
+    "steamUrl": "https://store.steampowered.com/app/1953920/Crescent_Bloom/",
+    "isFree": false,
+    "pricingText": {
+      "fr": "1,99 € sur Steam",
+      "en": "$1.99 on Steam",
+      "es": "1,99 € en Steam",
+      "de": "1,99 € auf Steam",
+      "ja": "Steamにて1.99ドル",
+      "pt-BR": "R$ 10,79 no Steam"
+    },
+    "genre": [
+      "Aventure",
+      "Platformer",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "Hand-drawn 2D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Une aventure narrative 2D sur les pas d'Ignis à la recherche de son frère dans un empire fantastique mystérieux.",
+      "en": "A story-rich 2D adventure following Ignis on a perilous journey to rescue her missing brother.",
+      "es": "Una aventura narrativa en 2D que sigue el peligroso viaje de Ignis en busca de su hermano desaparecido.",
+      "de": "Ein geschichtenreiches 2D-Abenteuer über Ignis' gefährliche Reise auf der Suche nach ihrem verschwundenen Bruder.",
+      "ja": "失踪した兄を探すイグニスの危険に満ちた旅を描く、物語重視の2Dアドベンチャー。",
+      "pt-BR": "Uma aventura 2D rica em história seguindo a perigosa jornada de Ignis em busca de seu irmão desaparecido."
+    },
+    "description": {
+      "fr": "Incarnez la jeune pyromancienne Ignis dans l'Empire Constantin. Lancez de puissants sorts, résolvez des énigmes de couleurs et de sons et élucidez l'invasion des redoutables créatures végétales Trians.",
+      "en": "Play as the young pyromancer Ignis in the Constantin Empire. Cast powerful spells, solve clever color and sound puzzles, and unravel the invasion of the plant-lizard Trians.",
+      "es": "Juega como la joven piromante Ignis en el Imperio Constantin. Lanza poderosos hechizos, resuelve acertijos y detén a los invasores.",
+      "de": "Schlüpfe in die Rolle der jungen Pyromantin Ignis im Konstantinischen Reich. Löse Rätsel und entdecke das Geheimnis der Trian-Invasion.",
+      "ja": "コンスタンティン帝国の若き火術師イグニスとなり、魔法を駆使して色彩と音のパズルを解き明かせ。",
+      "pt-BR": "Jogue como a jovem piromante Ignis no Império Constantin. Lance feitiços poderosos e resolva quebra-cabeças."
+    },
+    "discoveredBy": "Erozah",
+    "likesCount": 8,
+    "featured": true,
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1953920/header.jpg"
+    ],
+    "dateAdded": "2026-09-25",
+    "approved": true
+  },
+  {
     "id": "buckshot-roulette-itch",
     "title": "Buckshot Roulette",
     "developer": "Mike Klubnika",
@@ -116,7 +171,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Développé en solo sous Godot Engine. La version initiale Itch.io a prouvé que les expériences brutes et courtes ont un pouvoir immense.",
       "en": "Crafted solo using Godot Engine. The original Itch.io release proved that bite-sized tactile experiences can strike a huge chord."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 98,
     "featured": true,
     "coverImage": "https://img.itch.zone/aW1nLzE0NjIyNDk0LnBuZw==/original/iTohTc.png",
@@ -167,7 +222,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Un hommage indie bourré de contenu avec des dizaines de personnages uniques, une bande-son synthwave énergique, de la pêche, de la déco et zéro micro-transaction.",
       "en": "A massive passion project with dozens of unlockable characters, energetic original soundtracks, mini-games, home decoration, and zero microtransactions."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 165,
     "featured": true,
     "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420510/header.jpg",
@@ -261,7 +316,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Incarnez Claire le petit oiseau. Parcourez la montagne à votre rythme, planez avec le vent d'automne, pêchez, discutez avec d'adorables randonneurs et prenez de la hauteur.",
       "en": "Play as Claire the little bird. Explore mountain paths at your own pace, glide through the autumn breeze, chat with quirky hikers and reach the summit."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 119,
     "featured": true,
     "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1055540/header.jpg",
@@ -351,7 +406,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Grow from childhood to adulthood with the lonely boy next door in this near-fully customizable visual novel.",
       "en": "Grow from childhood to adulthood with the lonely boy next door in this near-fully customizable visual novel."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzcwMTIxNDMucG5n/315x250%23c/BalGQb.png",
@@ -396,7 +451,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "An interactive story about anxiety. You play *as* the anxiety",
       "en": "An interactive story about anxiety. You play *as* the anxiety"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzI3NjQ4NjUucG5n/315x250%23c/DZfV4W.png",
@@ -440,7 +495,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Enter a week long bet against the Grim Reaper to keep your soul... and maybe fall in love along the way?",
       "en": "Enter a week long bet against the Grim Reaper to keep your soul... and maybe fall in love along the way?"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzEzMjI3MDAyLnBuZw==/315x250%23c/kVaU3H.png",
@@ -484,7 +539,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Welcome to our server!",
       "en": "Welcome to our server!"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzc2OTc0OTEucG5n/315x250%23c/b%2FgqIz.png",
@@ -528,7 +583,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "All customers are monsters. Oh no. Oh yeah?",
       "en": "All customers are monsters. Oh no. Oh yeah?"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzIzMzk5OTE0LnBuZw==/315x250%23c/xwM6QL.png",
@@ -572,7 +627,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Gather unknown signals from deep, silent space",
       "en": "Gather unknown signals from deep, silent space"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzI2NDI5NTgzLmpwZw==/315x250%23c/5lRRHP.jpg",
@@ -616,7 +671,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "He's always going to be with you...",
       "en": "He's always going to be with you..."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzIxNDc2NzkxLmdpZg==/original/AWPx1Z.gif",
@@ -660,7 +715,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "A paper airplane, two new neighbors, four autumns, and a one of a kind life.",
       "en": "A paper airplane, two new neighbors, four autumns, and a one of a kind life."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzc5MTY4NzQucG5n/315x250%23c/Nu7e5v.png",
@@ -701,7 +756,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Dig, upgrade, expand... then dig deeper!",
       "en": "Dig, upgrade, expand... then dig deeper!"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzI1MDU0ODE5LnBuZw==/315x250%23c/oNTRwi.png",
@@ -741,7 +796,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Will you write the way into her heart?",
       "en": "Will you write the way into her heart?"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1hZ2UvMTA2NTk5LzU4NjAxMi5naWY=/original/%2Fz0let.gif",
@@ -781,7 +836,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh.",
       "en": "You're a writer that's been (mistakenly) invited to a serial killer server. Uh oh."
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzE4MDAyMzYzLnBuZw==/315x250%23c/ASJcG4.png",
@@ -821,7 +876,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Gay girls playing baseball and falling in love",
       "en": "Gay girls playing baseball and falling in love"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1hZ2UvMTQzODk5LzgzMTY0OC5wbmc=/315x250%23c/Q6ST2A.png",
@@ -869,10 +924,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Conçu en quelques jours pour la Ludum Dare 47 sous le thème \"Stuck in a loop\". L'énergie de la communauté a propulsé le jeu vers les sommets.",
       "en": "Made in a single weekend for Ludum Dare 47. The open-source community support turned it into an instant cultural touchstone."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 230,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzQ1MTU3MzAucG5n/original/52aZ4D.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNzkyNzc4LzQ1MjMzNTkucG5n/original/OUw2Vg.png",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvNzk2NjA2LzQ1MTU3MzcucG5n/original/Jk6xP3.png"
     ],
@@ -915,7 +970,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 115,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzExMTY4NzYucG5n/original/23nK3e.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/609490/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/609490/ss_8e5352c3c90cb64670c50bc596328a90ec4db1d9.1920x1080.jpg"
     ],
@@ -956,12 +1011,12 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Un jeu de gestion narratif charmant conçu pour la Ludum Dare 34 où chaque décision impacte l’or, le bonheur et la population de votre cour.",
       "en": "A delightful narrative management gem created for Ludum Dare 34 where every decree balances gold, population, and happiness."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 95,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNDcxODIvMjAzMjU3LnBuZw==/original/2pW7g3.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNDczNjcvMjA1ODcxLnBuZw==/original/VFJ3Yl.png",
     "screenshots": [
-      "https://img.itch.zone/aW1hZ2UvNDcxODIvMjA2NjM0LnBuZw==/original/Hw4wO3.png"
+      "https://img.itch.zone/aW1hZ2UvNDczNjcvMjA2NjM0LnBuZw==/original/Hw4wO3.png"
     ],
     "dateAdded": "2026-09-25"
   },
@@ -1002,7 +1057,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 88,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzE0NzY4OTY1LnBuZw==/original/jFq2K%2B.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2726450/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2726450/ss_225a66699cfef0ff86a51d18476b7b252084c759.1920x1080.jpg"
     ],
@@ -1041,10 +1096,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Parcourez une maison plongée dans le noir à la recherche de cassettes audio décortiquant la relation terrifiante entre l’architecture domestique et le corps humain.",
       "en": "A short lo-fi psychological horror game about wandering an empty house in the dark, collecting cassette tapes, and listening to what they have to say."
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 140,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNTM1ODIvMjQxMDgzLmpwZw==/original/M4Y4Jv.jpg",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNTUwMjMvMjQ2MDYzLnBuZw==/original/WVrLz4.png",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvNTM1ODIvMjQxMDgxLmpwZw==/original/GZ1M4E.jpg"
     ],
@@ -1086,7 +1141,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 102,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvMTQ2OTkvNDQwNDQucG5n/original/U82e07.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTYxMDYvNTg5MjkucG5n/original/qKm4Ja.png",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvMTQ2OTkvNDQwNDYucG5n/original/tD0H9%2B.png"
     ],
@@ -1126,10 +1181,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Roulez des boules de neige à travers des labyrinthes de haies soigneusement conçus. Une mécanique sokoban épurée et réconfortante.",
       "en": "Roll balls of snow through beautifully crafted garden mazes in this charming and relaxing sokoban puzzle adventure."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 76,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzE2OTExNDYucG5n/original/j1F81W.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/316610/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/316610/ss_e1e17bc84b5c777d19cfb30349f7d3077eb4fa4a.1920x1080.jpg"
     ],
@@ -1170,10 +1225,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Poussez des blocs de mots pour changer la nature même des objets : FLAG IS WIN, WALL IS STOP, BABA IS YOU. Jouable directement dans votre navigateur.",
       "en": "Push word blocks to rewrite reality: WALL IS STOP, ROCK IS PUSH, BABA IS YOU. Playable directly in your browser!"
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 198,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvMTM2Mjc1LzYyMzU4MS5wbmc=/original/zZ2rA5.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/header.jpg",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvMTM2Mjc1LzYyMzU4My5wbmc=/original/Q5j2yq.png"
     ],
@@ -1216,7 +1271,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 82,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvMzA4MTkyLzE1MDY1OTYucG5n/original/U3wYlW.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_8d34346fa0dbd7a7ff2908f02f928e4e7e60058e.1920x1080.jpg"
     ],
@@ -1259,7 +1314,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 160,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzE3MjAyMDIucG5n/original/s4Uv4g.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70110/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70110/ss_37000e318cf1bfa49c3ce36735168434771638bc.1920x1080.jpg"
     ],
@@ -1299,10 +1354,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Pivotez autour d’un hexagone central pour esquiver des murs convergents dans un tourbillon visuel et sonore ultra-addictif.",
       "en": "Rotate around a central shape to avoid incoming geometric walls to the relentless beats of Chipzel’s chiptune."
     },
-    "discoveredBy": "Communauté Hoot",
+    "discoveredBy": "Hibouxe",
     "likesCount": 130,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1nLzE3MjAyMDUucG5n/original/u20wOq.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/221640/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/221640/ss_164b73b5f25ae87747e4eb1e6d1976bb58972b22.1920x1080.jpg"
     ],
@@ -1345,7 +1400,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 155,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzI4NTY1MjgucG5n/original/cT8b7S.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242680/ss_07b9ad0964724a9191d4e028b122f4bda7b2f676.1920x1080.jpg"
     ],
@@ -1386,10 +1441,10 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "Fauchez des milliers de créatures nocturnes et survivez jusqu’à l’aube. Directement jouable dans votre navigateur !",
       "en": "Mow down thousands of night creatures and survive until dawn. Playable directly in your web browser!"
     },
-    "discoveredBy": "Quentin Beaud",
+    "discoveredBy": "Hibouxe",
     "likesCount": 210,
     "featured": true,
-    "coverImage": "https://img.itch.zone/aW1nLzc3MTYwODMucG5n/original/6x3KqF.png",
+    "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/header.jpg",
     "screenshots": [
       "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1794680/ss_f8cfc38a16db49fe8e0e98031d77759ad45ad2b9.1920x1080.jpg"
     ],
@@ -1432,9 +1487,9 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 94,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNjk5NzcvMzIxMDY0LnBuZw==/original/M7CqN9.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMTUzNjUvNTQ2NDYucG5n/original/khg%2BhM.png",
     "screenshots": [
-      "https://img.itch.zone/aW1hZ2UvNjk5NzcvMzIxMDY2LnBuZw==/original/Ocmx6v.png"
+      "https://img.itch.zone/aW1hZ2UvMTUzNjUvNTQ2NDYucG5n/original/khg%2BhM.png"
     ],
     "dateAdded": "2026-09-25"
   },
@@ -1476,7 +1531,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
     "discoveredBy": "Hibouxe",
     "likesCount": 91,
     "featured": false,
-    "coverImage": "https://img.itch.zone/aW1hZ2UvNDczMTMvMjA0MTU4LnBuZw==/original/2wTqB0.png",
+    "coverImage": "https://img.itch.zone/aW1hZ2UvNDgwNjIvMjEwNTY0LmdpZg==/original/8bMoIe.gif",
     "screenshots": [
       "https://img.itch.zone/aW1hZ2UvNDczMTMvMjA0MTYwLnBuZw==/original/g4T5g6.png"
     ],
@@ -1514,7 +1569,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "a game about news cycles, vicious cycles, infinite cycles",
       "en": "a game about news cycles, vicious cycles, infinite cycles"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1hZ2UvOTIxMTUvNDU0MDMxLnBuZw==/315x250%23c/cxthdQ.png",
@@ -1554,7 +1609,7 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "fr": "beware of toxic fungi. a slow burn yandere vn (in development)",
       "en": "beware of toxic fungi. a slow burn yandere vn (in development)"
     },
-    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "discoveredBy": "Hibouxe",
     "likesCount": 1,
     "featured": false,
     "coverImage": "https://img.itch.zone/aW1nLzExNTkxMzIxLmdpZg==/original/pECVwW.gif",
@@ -1562,5 +1617,974 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzExNTkxMzIxLmdpZg==/original/pECVwW.gif"
     ],
     "dateAdded": "2026-09-25"
+  },
+  {
+    "id": "itch-goodbye-doggy",
+    "title": "goodbye, doggy",
+    "developer": "picogram",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://picogram.itch.io/goodbye-doggy",
+    "playInBrowserUrl": "https://picogram.itch.io/goodbye-doggy",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Help your family cope with your death as a ghostly dog!",
+      "en": "Help your family cope with your death as a ghostly dog!"
+    },
+    "description": {
+      "fr": "Help your family cope with your death as a ghostly dog!",
+      "en": "Help your family cope with your death as a ghostly dog!"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE4MTkwMTMuZ2lm/original/qwkxRK.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE4MTkwMTMuZ2lm/original/qwkxRK.gif"
+    ],
+    "dateAdded": "2026-09-26"
+  },
+  {
+    "id": "itch-six-cats-under",
+    "title": "Six Cats Under",
+    "developer": "teambeanloop",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://teambeanloop.itch.io/six-cats-under",
+    "playInBrowserUrl": "https://teambeanloop.itch.io/six-cats-under",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "You died. Your unfinished business? The fate of your many cats!",
+      "en": "You died. Your unfinished business? The fate of your many cats!"
+    },
+    "description": {
+      "fr": "You died. Your unfinished business? The fate of your many cats!",
+      "en": "You died. Your unfinished business? The fate of your many cats!"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzM0NjMwNjMucG5n/315x250%23c/obcSPz.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzM0NjMwNjMucG5n/315x250%23c/obcSPz.png"
+    ],
+    "dateAdded": "2026-09-26"
+  },
+  {
+    "id": "itch-touchstarved-a-dark-romance-visual-novel",
+    "title": "TOUCHSTARVED: A Dark Romance Visual Novel",
+    "developer": "redspringstudio",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://redspringstudio.itch.io/touchstarved",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests",
+      "en": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests"
+    },
+    "description": {
+      "fr": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests",
+      "en": "Find a cure for your curse by entrusting your fate to 5 monstrous love interests"
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzExNTk1Nzk5LmpwZw==/315x250%23c/M3tL3R.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzExNTk1Nzk5LmpwZw==/315x250%23c/M3tL3R.jpg"
+    ],
+    "dateAdded": "2026-09-27"
+  },
+  {
+    "id": "itch-last-seen-online",
+    "title": "last seen online",
+    "developer": "qwook",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://qwook.itch.io/last-seen-online",
+    "playInBrowserUrl": "https://qwook.itch.io/last-seen-online",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Look through a stranger's computer. A horror puzzle game.",
+      "en": "Look through a stranger's computer. A horror puzzle game."
+    },
+    "description": {
+      "fr": "Look through a stranger's computer. A horror puzzle game.",
+      "en": "Look through a stranger's computer. A horror puzzle game."
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE5MjQ0NDc5LnBuZw==/315x250%23c/wtflM3.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE5MjQ0NDc5LnBuZw==/315x250%23c/wtflM3.png"
+    ],
+    "dateAdded": "2026-09-27"
+  },
+  {
+    "id": "itch-project-kat",
+    "title": "Project Kat",
+    "developer": "leef6010",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://leef6010.itch.io/projectkat",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A small, unconventional horror rpg.",
+      "en": "A small, unconventional horror rpg."
+    },
+    "description": {
+      "fr": "A small, unconventional horror rpg.",
+      "en": "A small, unconventional horror rpg."
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwOTcyMjIucG5n/315x250%23c/a0NL9j.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwOTcyMjIucG5n/315x250%23c/a0NL9j.png"
+    ],
+    "dateAdded": "2026-09-28"
+  },
+  {
+    "id": "itch-where-eternity-sleeps",
+    "title": "Where Eternity Sleeps",
+    "developer": "livingslime",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://livingslime.itch.io/where-eternity-sleeps",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Your quest has awakened what never sleeps.",
+      "en": "Your quest has awakened what never sleeps."
+    },
+    "description": {
+      "fr": "Your quest has awakened what never sleeps.",
+      "en": "Your quest has awakened what never sleeps."
+    },
+    "discoveredBy": "Hoot Bot (Itch Moissonnage)",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIxMzIyOTk2LnBuZw==/315x250%23c/CVV4Oa.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIxMzIyOTk2LnBuZw==/315x250%23c/CVV4Oa.png"
+    ],
+    "dateAdded": "2026-09-28"
+  },
+  {
+    "id": "itch-andromeda-six",
+    "title": "Andromeda Six",
+    "developer": "wanderlust-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://wanderlust-games.itch.io/andromeda-six",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$14.99",
+      "en": "$14.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A sci-fi themed Visual Novel game.",
+      "en": "A sci-fi themed Visual Novel game."
+    },
+    "description": {
+      "fr": "A sci-fi themed Visual Novel game.",
+      "en": "A sci-fi themed Visual Novel game."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMzNjg5MjEucG5n/315x250%23c/1yA0mb.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMzNjg5MjEucG5n/315x250%23c/1yA0mb.png"
+    ],
+    "dateAdded": "2026-09-29"
+  },
+  {
+    "id": "itch-prescription-love",
+    "title": "Prescription:LOVE",
+    "developer": "livingslime",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://livingslime.itch.io/prescriptionlove",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "You may see the doctor now... Forever ♡",
+      "en": "You may see the doctor now... Forever ♡"
+    },
+    "description": {
+      "fr": "You may see the doctor now... Forever ♡",
+      "en": "You may see the doctor now... Forever ♡"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE4Mjc4NzgyLnBuZw==/315x250%23c/nkA1x6.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE4Mjc4NzgyLnBuZw==/315x250%23c/nkA1x6.png"
+    ],
+    "dateAdded": "2026-09-29"
+  },
+  {
+    "id": "itch-deltarune",
+    "title": "DELTARUNE",
+    "developer": "tobyfox",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://tobyfox.itch.io/deltarune",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "UNDERTALE's parallel story",
+      "en": "UNDERTALE's parallel story"
+    },
+    "description": {
+      "fr": "UNDERTALE's parallel story",
+      "en": "UNDERTALE's parallel story"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzcwMDM2MDQucG5n/315x250%23c/abTUVx.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzcwMDM2MDQucG5n/315x250%23c/abTUVx.png"
+    ],
+    "dateAdded": "2026-09-30"
+  },
+  {
+    "id": "itch-online-obsession",
+    "title": "Online Obsession",
+    "developer": "sourmiiiilk",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://sourmiiiilk.itch.io/online-obsession",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "What could go wrong when you finally meet your online friend?",
+      "en": "What could go wrong when you finally meet your online friend?"
+    },
+    "description": {
+      "fr": "What could go wrong when you finally meet your online friend?",
+      "en": "What could go wrong when you finally meet your online friend?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE5NjgyMjc4LnBuZw==/315x250%23c/mdp6SI.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE5NjgyMjc4LnBuZw==/315x250%23c/mdp6SI.png"
+    ],
+    "dateAdded": "2026-09-30"
+  },
+  {
+    "id": "itch-celeste",
+    "title": "Celeste",
+    "developer": "maddymakesgamesinc",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://maddymakesgamesinc.itch.io/celeste",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$19.99",
+      "en": "$19.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!",
+      "en": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!"
+    },
+    "description": {
+      "fr": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!",
+      "en": "Brave hundreds of hand-crafted challenges as you help Madeline survive her journey to the top of Celeste Mountain!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1hZ2UvMjE2OTk2LzEwMjQyNTUucG5n/315x250%23c/BFXDdz.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1hZ2UvMjE2OTk2LzEwMjQyNTUucG5n/315x250%23c/BFXDdz.png"
+    ],
+    "dateAdded": "2026-10-01"
+  },
+  {
+    "id": "itch-a-tale-of-crowns",
+    "title": "A Tale of Crowns",
+    "developer": "qeresi",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://qeresi.itch.io/a-tale-of-crowns",
+    "playInBrowserUrl": "https://qeresi.itch.io/a-tale-of-crowns",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Middle Eastern fantasy/romance story.",
+      "en": "A Middle Eastern fantasy/romance story."
+    },
+    "description": {
+      "fr": "A Middle Eastern fantasy/romance story.",
+      "en": "A Middle Eastern fantasy/romance story."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzQxMjQ3MDcucG5n/315x250%23c/zsfJb%2F.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzQxMjQ3MDcucG5n/315x250%23c/zsfJb%2F.png"
+    ],
+    "dateAdded": "2026-10-01"
+  },
+  {
+    "id": "itch-big-bad-dogs",
+    "title": "Big Bad Dogs",
+    "developer": "spar0w",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://spar0w.itch.io/bigbaddogs",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Obedient. Wild. Possessive. What kind of dog are you feeding ?",
+      "en": "Obedient. Wild. Possessive. What kind of dog are you feeding ?"
+    },
+    "description": {
+      "fr": "Obedient. Wild. Possessive. What kind of dog are you feeding ?",
+      "en": "Obedient. Wild. Possessive. What kind of dog are you feeding ?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIyMTY5MDQxLmdpZg==/original/FqFEf8.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIyMTY5MDQxLmdpZg==/original/FqFEf8.gif"
+    ],
+    "dateAdded": "2026-10-02"
+  },
+  {
+    "id": "itch-to-eat-a-god",
+    "title": "To Eat a God",
+    "developer": "soffis-mbm",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://soffis-mbm.itch.io/to-eat-a-god",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Visual Novel Game",
+      "en": "A Visual Novel Game"
+    },
+    "description": {
+      "fr": "A Visual Novel Game",
+      "en": "A Visual Novel Game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE3OTI1MzIyLmpwZw==/315x250%23c/a3y8Lx.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE3OTI1MzIyLmpwZw==/315x250%23c/a3y8Lx.jpg"
+    ],
+    "dateAdded": "2026-10-02"
+  },
+  {
+    "id": "itch-the-freak-circus",
+    "title": "The Freak Circus",
+    "developer": "garula",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://garula.itch.io/the-freak-circus",
+    "playInBrowserUrl": "https://garula.itch.io/the-freak-circus",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "18+ Yandere",
+      "en": "18+ Yandere"
+    },
+    "description": {
+      "fr": "18+ Yandere",
+      "en": "18+ Yandere"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIxNjQxODI1LnBuZw==/315x250%23c/LC5bpl.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIxNjQxODI1LnBuZw==/315x250%23c/LC5bpl.png"
+    ],
+    "dateAdded": "2026-10-03"
+  },
+  {
+    "id": "itch-seekl",
+    "title": "seekL",
+    "developer": "robobarbie",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://robobarbie.itch.io/seekl",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Seek / Query / Love",
+      "en": "Seek / Query / Love"
+    },
+    "description": {
+      "fr": "Seek / Query / Love",
+      "en": "Seek / Query / Love"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE2MDIzNjk4LmpwZw==/315x250%23c/FvcUNb.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE2MDIzNjk4LmpwZw==/315x250%23c/FvcUNb.jpg"
+    ],
+    "dateAdded": "2026-10-03"
+  },
+  {
+    "id": "itch-obscura",
+    "title": "OBSCURA",
+    "developer": "rottenraccoons",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://rottenraccoons.itch.io/obscura",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$14.99",
+      "en": "$14.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "No one goes under the mountain without a reason.",
+      "en": "No one goes under the mountain without a reason."
+    },
+    "description": {
+      "fr": "No one goes under the mountain without a reason.",
+      "en": "No one goes under the mountain without a reason."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzEyMDMzNTMyLnBuZw==/315x250%23c/U1U6%2Fk.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzEyMDMzNTMyLnBuZw==/315x250%23c/U1U6%2Fk.png"
+    ],
+    "dateAdded": "2026-10-04"
+  },
+  {
+    "id": "itch-lookouts",
+    "title": "Lookouts",
+    "developer": "paranoidhawk",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://paranoidhawk.itch.io/lookouts",
+    "playInBrowserUrl": "https://paranoidhawk.itch.io/lookouts",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A fateful meeting of queer outlaws in the desert.",
+      "en": "A fateful meeting of queer outlaws in the desert."
+    },
+    "description": {
+      "fr": "A fateful meeting of queer outlaws in the desert.",
+      "en": "A fateful meeting of queer outlaws in the desert."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzg1NDg5OTUucG5n/315x250%23c/xFnrlZ.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzg1NDg5OTUucG5n/315x250%23c/xFnrlZ.png"
+    ],
+    "dateAdded": "2026-10-04"
+  },
+  {
+    "id": "itch-vilmonic",
+    "title": "Vilmonic",
+    "developer": "bludgeonsoft",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://bludgeonsoft.itch.io/vilmonic",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$14.99",
+      "en": "$14.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Artificial life and genetics evolution simulator sandbox game.",
+      "en": "Artificial life and genetics evolution simulator sandbox game."
+    },
+    "description": {
+      "fr": "Artificial life and genetics evolution simulator sandbox game.",
+      "en": "Artificial life and genetics evolution simulator sandbox game."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwNTEyNjU2LmdpZg==/original/0h87gC.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwNTEyNjU2LmdpZg==/original/0h87gC.gif"
+    ],
+    "dateAdded": "2026-10-05"
+  },
+  {
+    "id": "itch-adrorium-v0-14-0",
+    "title": "ADRORIUM v0.14.0",
+    "developer": "beholdernx",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://beholdernx.itch.io/adrorium",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Space survival, spaceship simulator",
+      "en": "Space survival, spaceship simulator"
+    },
+    "description": {
+      "fr": "Space survival, spaceship simulator",
+      "en": "Space survival, spaceship simulator"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE2NTEzMDQ5LnBuZw==/315x250%23c/aO5jkw.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE2NTEzMDQ5LnBuZw==/315x250%23c/aO5jkw.png"
+    ],
+    "dateAdded": "2026-10-05"
+  },
+  {
+    "id": "itch-rulehouse",
+    "title": "Rulehouse",
+    "developer": "dalichrome",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://dalichrome.itch.io/house-rules",
+    "playInBrowserUrl": "https://dalichrome.itch.io/house-rules",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Think you know chess? Forget some of that. Rulehouse is a pawn chess adventure where every stage rewrites the game.",
+      "en": "Think you know chess? Forget some of that. Rulehouse is a pawn chess adventure where every stage rewrites the game."
+    },
+    "description": {
+      "fr": "Think you know chess? Forget some of that. Rulehouse is a pawn chess adventure where every stage rewrites the game.",
+      "en": "Think you know chess? Forget some of that. Rulehouse is a pawn chess adventure where every stage rewrites the game."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI2NjM1MDIxLmdpZg==/original/%2BuXgcn.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI2NjM1MDIxLmdpZg==/original/%2BuXgcn.gif"
+    ],
+    "dateAdded": "2026-10-06"
+  },
+  {
+    "id": "itch-open-doctrines",
+    "title": "Open Doctrines",
+    "developer": "pr1nted",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pr1nted.itch.io/open-doctrines",
+    "playInBrowserUrl": "https://pr1nted.itch.io/open-doctrines",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A grand strategy game about running a country: industry, armies, research, politics and neighbours.",
+      "en": "A grand strategy game about running a country: industry, armies, research, politics and neighbours."
+    },
+    "description": {
+      "fr": "A grand strategy game about running a country: industry, armies, research, politics and neighbours.",
+      "en": "A grand strategy game about running a country: industry, armies, research, politics and neighbours."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4OTA3NDMzLnBuZw==/315x250%23c/6JgtN2.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4OTA3NDMzLnBuZw==/315x250%23c/6JgtN2.png"
+    ],
+    "dateAdded": "2026-10-06"
+  },
+  {
+    "id": "itch-quackyard",
+    "title": "Quackyard",
+    "developer": "hugimugi7",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://hugimugi7.itch.io/quackyard",
+    "playInBrowserUrl": "https://hugimugi7.itch.io/quackyard",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Help clean your duck friend's backyard",
+      "en": "Help clean your duck friend's backyard"
+    },
+    "description": {
+      "fr": "Help clean your duck friend's backyard",
+      "en": "Help clean your duck friend's backyard"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5MDY5MTc4LnBuZw==/315x250%23c/xS2l2z.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5MDY5MTc4LnBuZw==/315x250%23c/xS2l2z.png"
+    ],
+    "dateAdded": "2026-10-07"
+  },
+  {
+    "id": "itch-snacktorio",
+    "title": "Snacktorio",
+    "developer": "tngineers",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://tngineers.itch.io/snacktorio",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$7.99",
+      "en": "$7.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "An upcoming factory-cooking simulator where you must satisfy the appetites of unspeakable horrors... with food!",
+      "en": "An upcoming factory-cooking simulator where you must satisfy the appetites of unspeakable horrors... with food!"
+    },
+    "description": {
+      "fr": "An upcoming factory-cooking simulator where you must satisfy the appetites of unspeakable horrors... with food!",
+      "en": "An upcoming factory-cooking simulator where you must satisfy the appetites of unspeakable horrors... with food!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzEyNjAxMTcyLnBuZw==/315x250%23c/oAHBgk.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzEyNjAxMTcyLnBuZw==/315x250%23c/oAHBgk.png"
+    ],
+    "dateAdded": "2026-10-07"
   }
 ];

@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import confetti from 'canvas-confetti';
 import { SylvestreLeaf } from './SylvestreLeaf';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
@@ -23,13 +22,13 @@ interface LeafKey {
 }
 
 const LEAF_KEYS: LeafKey[] = [
-  { id: 'leaf-c', note: 'Do', freq: 523.25, left: '26%', top: '-6px', variant: 'emerald', size: 19, rotation: -25 },
-  { id: 'leaf-d', note: 'Ré', freq: 587.33, left: '33%', top: '-2px', variant: 'moss', size: 15, rotation: 15 },
-  { id: 'leaf-e', note: 'Mi', freq: 659.25, left: '40%', top: '-9px', variant: 'emerald', size: 19, rotation: -12 },
-  { id: 'leaf-f', note: 'Fa', freq: 698.46, left: '47%', top: '-11px', variant: 'ivy', size: 16, rotation: 20 },
-  { id: 'leaf-g', note: 'Sol', freq: 783.99, left: '54%', top: '-8px', variant: 'emerald', size: 19, rotation: -8 },
-  { id: 'leaf-a', note: 'La', freq: 880.0, left: '61%', top: '7px', variant: 'moss', size: 17, rotation: 70 },
-  { id: 'leaf-b', note: 'Si', freq: 987.77, left: '68%', top: '5px', variant: 'gold', size: 14, rotation: 85 },
+  { id: 'leaf-c', note: 'Do', freq: 523.25, left: '14%', top: '-6px', variant: 'emerald', size: 19, rotation: -25 },
+  { id: 'leaf-d', note: 'Ré', freq: 587.33, left: '25%', top: '-2px', variant: 'moss', size: 15, rotation: 15 },
+  { id: 'leaf-e', note: 'Mi', freq: 659.25, left: '35%', top: '-9px', variant: 'emerald', size: 19, rotation: -12 },
+  { id: 'leaf-f', note: 'Fa', freq: 698.46, left: '44%', top: '-11px', variant: 'ivy', size: 16, rotation: 20 },
+  { id: 'leaf-g', note: 'Sol', freq: 783.99, left: '56%', top: '-8px', variant: 'emerald', size: 19, rotation: -8 },
+  { id: 'leaf-a', note: 'La', freq: 880.0, left: '67%', top: '7px', variant: 'moss', size: 17, rotation: 70 },
+  { id: 'leaf-b', note: 'Si', freq: 987.77, left: '78%', top: '5px', variant: 'gold', size: 14, rotation: 85 },
 ];
 
 export const SylvestreBranchDivider: React.FC<SylvestreBranchDividerProps> = ({
@@ -37,13 +36,9 @@ export const SylvestreBranchDivider: React.FC<SylvestreBranchDividerProps> = ({
   withLeaves = true,
   glow = 'emerald',
 }) => {
-  let unlockAchievement: ((id: string) => void) | undefined;
-  try {
-    const ach = useAchievements();
-    unlockAchievement = ach.unlockAchievement;
-  } catch {
-    // Graceful fallback outside provider
-  }
+  const ach = useAchievements();
+  let unlockAchievement = ach?.unlockAchievement;
+  
 
   const [activeNotePopup, setActiveNotePopup] = useState<{ id: string; note: string } | null>(null);
   const [easterEggUnlocked, setEasterEggUnlocked] = useState<boolean>(false);
@@ -81,11 +76,13 @@ export const SylvestreBranchDivider: React.FC<SylvestreBranchDividerProps> = ({
     // Check for "Coucou Hibou"
     if (checkMelody(playedNotesRef.current)) {
       soundFx.playCoucouHibouJingle();
-      confetti({
-        particleCount: 100,
-        spread: 80,
-        origin: { y: 0.5 },
-        colors: ['#f59e0b', '#10b981', '#34d399', '#fbbf24', '#fef08a'],
+      import('canvas-confetti').then(({ default: confetti }) => {
+        confetti({
+          particleCount: 100,
+          spread: 80,
+          origin: { y: 0.5 },
+          colors: ['#f59e0b', '#10b981', '#34d399', '#fbbf24', '#fef08a'],
+        });
       });
 
       if (unlockAchievement) {

@@ -20,6 +20,7 @@ import {
 import { INDIE_GAMES } from '../../data/games';
 import { UPCOMING_INDIE_GAMES } from '../../data/upcomingGames';
 import { STEAM_STORE_DATA } from '../../data/steamStoreData';
+import { formatSteamPrice } from '../../utils/currencyFormatter';
 import { soundFx } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 import { getLocalizedText, getTranslatedGenre } from '../../utils/localization';
@@ -47,7 +48,7 @@ type SortOption =
   | 'price-desc';
 
 // Helper to extract store data safely
-function getStoreDetails(game: Game) {
+function getStoreDetails(game: Game, lang?: string) {
   const match = game.steamUrl ? game.steamUrl.match(/\/app\/(\d+)/) : null;
   const appId = match ? parseInt(match[1], 10) : null;
   const store = appId ? STEAM_STORE_DATA[appId] : null;
@@ -58,6 +59,7 @@ function getStoreDetails(game: Game) {
   const isFree = store ? store.isFree : false;
   const score = store ? store.positivePercent : 92;
   const totalReviews = store ? store.totalReviews : 2500;
+  const localized = formatSteamPrice(store, lang);
 
   return {
     appId,
@@ -68,9 +70,7 @@ function getStoreDetails(game: Game) {
     isFree,
     score,
     totalReviews,
-    formattedPrice: isFree
-      ? 'Gratuit'
-      : store?.formattedFinalPrice || `${finalPrice.toFixed(2)} €`,
+    formattedPrice: localized.formattedFinal || (isFree ? 'Gratuit' : `${finalPrice.toFixed(2)} €`),
   };
 }
 
@@ -661,12 +661,12 @@ export const ToolboxHub: React.FC = () => {
                   value={backlogSearch}
                   onChange={(e) => setBacklogSearch(e.target.value)}
                   placeholder="Rechercher parmi les 161 jeux..."
-                  className="w-full pl-9 pr-3 py-2 bg-[#020b08] border border-[#78350f]/50 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:border-amber-400"
+                  className="w-full pl-9 pr-3 py-2 bg-[#020b08] border border-[#78350f]/50 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                 />
               </div>
 
               {/* Duration Pills */}
-              <div className="flex items-center gap-1 shrink-0 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+              <div className="flex flex-wrap items-center gap-1 shrink-0 w-full sm:w-auto">
                 {(
                   [
                     { id: 'all', label: 'Tous' },
@@ -1005,7 +1005,7 @@ export const ToolboxHub: React.FC = () => {
                   value={gemSearch}
                   onChange={(e) => setGemSearch(e.target.value)}
                   placeholder={t('toolbox.gems.search')}
-                  className="w-full pl-9 pr-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:border-amber-400"
+                  className="w-full pl-9 pr-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-white placeholder-emerald-100/40 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                 />
               </div>
 
@@ -1013,7 +1013,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={selectedGenre}
                 onChange={(e) => setSelectedGenre(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">{t('toolbox.gems.filterGenre')}</option>
                 {allGenresList.map((genre) => (
@@ -1027,7 +1027,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={cameraFilter}
                 onChange={(e) => setCameraFilter(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">Toutes les caméras</option>
                 {allCamerasList.map((cam) => (
@@ -1041,7 +1041,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={artFilter}
                 onChange={(e) => setArtFilter(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">Tous les styles d'art</option>
                 {allArtStylesList.map((art) => (
@@ -1055,7 +1055,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={priceFilter}
                 onChange={(e) => setPriceFilter(e.target.value as any)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-emerald-100 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="all">Tous les prix</option>
                 <option value="free">Gratuits</option>
@@ -1068,7 +1068,7 @@ export const ToolboxHub: React.FC = () => {
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value as SortOption)}
-                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-[#020b08] border border-[#78350f]/60 rounded-xl text-xs text-amber-400 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 cursor-pointer"
               >
                 <option value="rating-desc">Évaluations Steam</option>
                 <option value="year-desc">Plus récents</option>
@@ -1106,7 +1106,7 @@ export const ToolboxHub: React.FC = () => {
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredGems.map((game) => {
-              const store = getStoreDetails(game);
+              const store = getStoreDetails(game, i18n.language);
               const hours = getGameDurationHours(game);
               return (
                 <div

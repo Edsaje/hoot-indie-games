@@ -1,3 +1,5 @@
+import type { SteamStoreGameData } from '../data/steamStoreData';
+
 export interface LocalizedText {
   fr: string;
   en: string;
@@ -30,6 +32,7 @@ export interface Game {
   };
   addedAt?: string; // Date d'intégration (ISO "YYYY-MM-DD") pour le cycle mensuel
   cardRarity?: 'common' | 'rare' | 'epic' | 'legendary';
+  steamStoreData?: SteamStoreGameData;
 }
 
 // Pour le Mode 3 : Connections / Linkle

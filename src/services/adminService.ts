@@ -93,13 +93,54 @@ export interface AdminSystemStatus {
   statsFileSize: number;
   usernamesFileSize: number;
   suggestionsFileSize: number;
+  microIndiesFileSize?: number;
   leaderboardFileSize: number;
   adminSteamId: string;
+}
+
+export interface AdminMicroIndieEntry {
+  id: string;
+  title: string;
+  developer: string;
+  releaseYear: number;
+  platform: 'itch' | 'steam' | 'web' | 'both';
+  itchUrl?: string;
+  steamUrl?: string;
+  playInBrowserUrl?: string;
+  isFree?: boolean;
+  pricingText?: Record<string, string>;
+  genre: string[];
+  artStyle?: Record<string, string>;
+  tagline: Record<string, string>;
+  description: Record<string, string>;
+  developerMessage?: Record<string, string>;
+  jam?: string;
+  discoveredBy?: string;
+  likesCount?: number;
+  coverImage: string;
+  screenshots: string[];
+  dateAdded: string;
+  approved: boolean;
+  approvedAt?: string;
+  ipHash?: string;
+  sourceType?: string;
+  pitch?: string;
+  submittedAt?: string;
+  gameplayUrl?: string;
+  [key: string]: any;
+}
+
+export interface AdminMicroIndiesData {
+  total: number;
+  pending: number;
+  approved: number;
+  list: AdminMicroIndieEntry[];
 }
 
 export interface AdminOverviewPayload {
   success: boolean;
   admin: boolean;
+  csrfToken?: string;
   analytics: AdminAnalyticsData;
   usernames: {
     total: number;
@@ -111,8 +152,131 @@ export interface AdminOverviewPayload {
     total: number;
     list: AdminCommunitySuggestion[];
   };
+  microIndies?: AdminMicroIndiesData;
   leaderboard: AdminLeaderboardData;
   system: AdminSystemStatus;
+}
+
+let activeCsrfToken = '';
+
+export function setAdminCsrfToken(token: string) {
+  if (token) activeCsrfToken = token;
+}
+
+export function getCachedAdminCsrfToken(): string {
+  return activeCsrfToken;
+}
+
+export async function ensureAdminCsrfToken(steamId: string = ADMIN_STEAM_ID): Promise<string> {
+  if (activeCsrfToken) return activeCsrfToken;
+  try {
+    const res = await fetch(`/api/track.php?action=get_csrf_token&steamId=${encodeURIComponent(steamId)}&t=${Date.now()}`, {
+      credentials: 'include',
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if (json?.csrfToken) {
+        activeCsrfToken = json.csrfToken;
+        return activeCsrfToken;
+      }
+    }
+  } catch {
+    // Ignore fallback
+  }
+  return '';
+}
+
+async function postAdminTrack(formData: URLSearchParams): Promise<any> {
+  const token = await ensureAdminCsrfToken();
+  if (token && !formData.has('csrf_token')) {
+    formData.append('csrf_token', token);
+  }
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    Accept: 'application/json',
+  };
+  if (token) {
+    headers['X-CSRF-Token'] = token;
+  }
+
+  let response = await fetch('/api/track.php', {
+    method: 'POST',
+    headers,
+    body: formData.toString(),
+    credentials: 'include',
+  });
+
+  if (response.status === 403) {
+    activeCsrfToken = '';
+    const freshToken = await ensureAdminCsrfToken();
+    if (freshToken) {
+      formData.set('csrf_token', freshToken);
+      headers['X-CSRF-Token'] = freshToken;
+      response = await fetch('/api/track.php', {
+        method: 'POST',
+        headers,
+        body: formData.toString(),
+        credentials: 'include',
+      });
+    }
+  }
+
+  return response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
+}
+
+async function postAdminGames(url: string, bodyJsonOrParams: any, isJson = true): Promise<any> {
+  const token = await ensureAdminCsrfToken();
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+  };
+  if (token) {
+    headers['X-CSRF-Token'] = token;
+  }
+
+  let body: any;
+  if (isJson) {
+    headers['Content-Type'] = 'application/json';
+    const payload = typeof bodyJsonOrParams === 'object' && bodyJsonOrParams !== null ? { ...bodyJsonOrParams } : {};
+    if (token) payload.csrf_token = token;
+    body = JSON.stringify(payload);
+  } else {
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    if (token && bodyJsonOrParams instanceof URLSearchParams && !bodyJsonOrParams.has('csrf_token')) {
+      bodyJsonOrParams.append('csrf_token', token);
+    }
+    body = bodyJsonOrParams.toString();
+  }
+
+  let response = await fetch(url, {
+    method: 'POST',
+    headers,
+    body,
+    credentials: 'include',
+  });
+
+  if (response.status === 403) {
+    activeCsrfToken = '';
+    const freshToken = await ensureAdminCsrfToken();
+    if (freshToken) {
+      headers['X-CSRF-Token'] = freshToken;
+      if (isJson) {
+        const payload = typeof bodyJsonOrParams === 'object' && bodyJsonOrParams !== null ? { ...bodyJsonOrParams, csrf_token: freshToken } : {};
+        body = JSON.stringify(payload);
+      } else if (bodyJsonOrParams instanceof URLSearchParams) {
+        bodyJsonOrParams.set('csrf_token', freshToken);
+        body = bodyJsonOrParams.toString();
+      }
+      response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body,
+        credentials: 'include',
+      });
+    }
+  }
+
+  return response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
 }
 
 /**
@@ -144,6 +308,10 @@ export async function fetchAdminOverview(steamId: string = ADMIN_STEAM_ID): Prom
     throw new Error(data?.message || 'Réponse administrateur invalide');
   }
 
+  if (data.csrfToken) {
+    activeCsrfToken = data.csrfToken;
+  }
+
   return data as AdminOverviewPayload;
 }
 
@@ -159,18 +327,7 @@ export async function deleteRegisteredUsername(
   formData.append('target', targetName);
   formData.append('steamId', steamId);
 
-  const response = await fetch('/api/track.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+  return postAdminTrack(formData);
 }
 
 /**
@@ -185,18 +342,75 @@ export async function deleteCommunitySuggestion(
   formData.append('id', id);
   formData.append('steamId', steamId);
 
-  const response = await fetch('/api/track.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
+  return postAdminTrack(formData);
+}
 
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+/**
+ * Approuve et publie un micro-indé soumis par un utilisateur
+ */
+export async function approveAdminMicroIndie(
+  id: string,
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'approve_micro_indie');
+  formData.append('id', id);
+  formData.append('steamId', steamId);
+
+  return postAdminTrack(formData);
+}
+
+/**
+ * Supprime ou rejette un micro-indé soumis par un utilisateur
+ */
+export async function deleteAdminMicroIndie(
+  id: string,
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'delete_micro_indie');
+  formData.append('id', id);
+  formData.append('steamId', steamId);
+
+  return postAdminTrack(formData);
+}
+
+/**
+ * Met à jour les métadonnées d'un micro-indé (jaquette, titre, développeur, liens...)
+ */
+export async function updateAdminMicroIndie(
+  id: string,
+  updates: {
+    coverImage?: string;
+    title?: string;
+    developer?: string;
+    steamUrl?: string;
+    itchUrl?: string;
+    playInBrowserUrl?: string;
+    pitch?: string;
+    discoveredBy?: string;
+    price?: string;
+    pricingText?: Record<string, string>;
+    approved?: boolean;
+  },
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string; game?: AdminMicroIndieEntry }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'update_micro_indie');
+  formData.append('id', id);
+  formData.append('steamId', steamId);
+  if (updates.coverImage !== undefined) formData.append('coverImage', updates.coverImage);
+  if (updates.title !== undefined) formData.append('title', updates.title);
+  if (updates.developer !== undefined) formData.append('developer', updates.developer);
+  if (updates.steamUrl !== undefined) formData.append('steamUrl', updates.steamUrl);
+  if (updates.itchUrl !== undefined) formData.append('itchUrl', updates.itchUrl);
+  if (updates.playInBrowserUrl !== undefined) formData.append('playInBrowserUrl', updates.playInBrowserUrl);
+  if (updates.pitch !== undefined) formData.append('pitch', updates.pitch);
+  if (updates.discoveredBy !== undefined) formData.append('discoveredBy', updates.discoveredBy);
+  if (updates.price !== undefined) formData.append('price', updates.price);
+  if (updates.pricingText !== undefined) formData.append('pricingText', JSON.stringify(updates.pricingText));
+
+  return postAdminTrack(formData);
 }
 
 /**
@@ -209,18 +423,7 @@ export async function resetServerStats(
   formData.append('action', 'reset_stats');
   formData.append('steamId', steamId);
 
-  const response = await fetch('/api/track.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+  return postAdminTrack(formData);
 }
 
 /**
@@ -247,18 +450,7 @@ export async function editAdminUser(
   if (fields.customTitle !== undefined) formData.append('customTitle', fields.customTitle);
   if (fields.note !== undefined) formData.append('note', fields.note);
 
-  const response = await fetch('/api/track.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur de communication réseau' }));
-  return data;
+  return postAdminTrack(formData);
 }
 
 /**
@@ -275,18 +467,7 @@ export async function toggleBanAdminUser(
   formData.append('target', target);
   formData.append('banned', isBanned ? '1' : '0');
 
-  const response = await fetch('/api/track.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+  return postAdminTrack(formData);
 }
 
 /**
@@ -301,18 +482,40 @@ export async function purgeUserLeaderboardScores(
   formData.append('steamId', steamId);
   formData.append('username', username);
 
-  const response = await fetch('/api/track.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
+  return postAdminTrack(formData);
+}
 
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+/**
+ * Attribue des récompenses souveraines (plumes, carte de collection) à un joueur
+ */
+export async function giveAdminReward(
+  target: string,
+  reward: {
+    feathers?: number;
+    cardId?: string;
+    isHolo?: boolean;
+    reason?: string;
+  },
+  steamId: string = ADMIN_STEAM_ID
+): Promise<{ success: boolean; message: string; target?: string; feathers?: number }> {
+  const formData = new URLSearchParams();
+  formData.append('action', 'give_reward');
+  formData.append('steamId', steamId);
+  formData.append('target', target);
+  if (reward.feathers && reward.feathers > 0) {
+    formData.append('feathers', String(reward.feathers));
+  }
+  if (reward.cardId) {
+    formData.append('cardId', reward.cardId);
+  }
+  if (reward.isHolo) {
+    formData.append('isHolo', '1');
+  }
+  if (reward.reason) {
+    formData.append('reason', reward.reason);
+  }
+
+  return postAdminTrack(formData);
 }
 
 /**
@@ -329,18 +532,7 @@ export async function manageForbiddenNames(
   formData.append('subaction', subaction);
   if (word) formData.append('word', word);
 
-  const response = await fetch('/api/track.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, forbiddenNames: [] }));
-  return data;
+  return postAdminTrack(formData);
 }
 
 /**
@@ -463,18 +655,7 @@ export async function saveAdminGame(
   steamId: string = ADMIN_STEAM_ID
 ): Promise<{ success: boolean; message: string; game?: Game }> {
   const url = `/api/admin_games.php?action=save_game&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(game),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+  return postAdminGames(url, game, true);
 }
 
 /**
@@ -497,18 +678,7 @@ export async function toggleAdminGameGemStatus(
   formData.append('isGem', isGem ? '1' : '0');
 
   const url = `/api/admin_games.php?action=toggle_gem&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau', isGem }));
-  return data;
+  return postAdminGames(url, formData, false);
 }
 
 /**
@@ -524,18 +694,7 @@ export async function toggleAdminGameVisibility(
   formData.append('hidden', hidden ? '1' : '0');
 
   const url = `/api/admin_games.php?action=toggle_visibility&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau', hidden }));
-  return data;
+  return postAdminGames(url, formData, false);
 }
 
 /**
@@ -549,18 +708,7 @@ export async function deleteAdminGame(
   formData.append('id', id);
 
   const url = `/api/admin_games.php?action=delete_game&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+  return postAdminGames(url, formData, false);
 }
 
 /**
@@ -574,18 +722,7 @@ export async function restoreAdminGame(
   formData.append('id', id);
 
   const url = `/api/admin_games.php?action=restore_game&steamId=${encodeURIComponent(steamId)}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: formData.toString(),
-    credentials: 'include',
-  });
-
-  const data = await response.json().catch(() => ({ success: false, message: 'Erreur réseau' }));
-  return data;
+  return postAdminGames(url, formData, false);
 }
 
 

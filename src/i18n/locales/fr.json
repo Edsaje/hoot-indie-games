@@ -8,6 +8,8 @@
     "archiveBanner": "Mode Archive"
   },
   "nav": {
+    "discovery": "Découverte",
+    "odyssey": "Odyssée",
     "gems": "Pépites",
     "catalog": "Catalogue",
     "games": "Mini-Jeux",
@@ -854,7 +856,15 @@
     },
     "viewAllInHub": "Voir tous les mini-jeux dans le Hub",
     "backToHub": "← Hub des Mini-Jeux",
-    "dailySolved": "Défi du jour résolu"
+    "dailySolved": "Défi du jour résolu",
+    "dailyProgressTitle": "Progression des Défis du Jour",
+    "dailyProgressSub": "Enchaînez les 8 épreuves pour illuminer votre série !",
+    "archiveProgressSub": "Archive du {{date}}",
+    "grandSlamTitle": "Grand Chelem du Jour Accompli !",
+    "grandSlamPerfect": "Score parfait de 8/8 ! Vous êtes un véritable érudit de la scène indépendante.",
+    "grandSlamCompleted": "Vous avez complété l’ensemble des 8 défis du jour. À demain pour de nouvelles énigmes !",
+    "nextChallengeLabel": "Défi Suivant Recommandé",
+    "playNext": "Jouer au Défi Suivant"
   },
   "streak": {
     "flamePreserved": "Flamme de série préservée !",
@@ -971,6 +981,13 @@
     "proposeBtn": "Proposer un Micro-Indé",
     "playOnline": "Jouer en direct 🌐",
     "searchPlaceholder": "Rechercher un créateur, un jeu...",
+    "shuffleBtn": "Mélanger",
+    "shuffleTooltip": "Mélanger aléatoirement les jeux pour en découvrir d’autres",
+    "authRequiredToLike": "Connexion requise : Veuillez vous connecter à votre compte Hoot pour voter et soutenir un jeu (anti-triche navigation privée) !",
+    "loginToVote": "Connexion requise pour voter (anti-triche)",
+    "alreadyVoted": "Vous avez voté pour cette pépite",
+    "removeVote": "Cliquer pour retirer votre vote",
+    "voteForGame": "Voter pour cette pépite",
     "noGamesTitle": "Aucun micro-indé ne correspond à ces critères",
     "noGamesDesc": "Soyez le premier à proposer une pépite méconnue ou réinitialisez les filtres !",
     "filters": {

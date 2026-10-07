@@ -34,9 +34,37 @@ async function auditDatabase() {
     console.log('----------------------------------------------------');
   }
 
+  // Vérification de la parité 1:1 avec les cartes du Sanctuaire
+  const { buildCardsFromGames } = await import('../src/data/cardsData');
+  const cards = buildCardsFromGames(INDIE_GAMES);
+  if (cards.length !== INDIE_GAMES.length) {
+    console.error(`❌ Échec parité cartes : ${INDIE_GAMES.length} jeux vs ${cards.length} cartes.`);
+    errors++;
+  } else {
+    console.log(`🎴 Parité 1:1 Pépites & Cartes vérifiée : ${cards.length}/${INDIE_GAMES.length} cartes conformes.`);
+  }
+
+  // Audit d'intégrité et anti-NSFW du Catalogue Étendu (steam_catalog.json)
+  const fs = await import('fs');
+  const path = await import('path');
+  const catalogPath = path.resolve(process.cwd(), 'public/data/steam_catalog.json');
+  if (fs.existsSync(catalogPath)) {
+    const catalogGames: any[] = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+    console.log(`\n📚 Audit d'intégrité du Catalogue Étendu (${catalogGames.length} jeux)...`);
+    for (const g of catalogGames) {
+      const audit = validateSingleGame(g, normalizedGenres);
+      if (!audit.valid) {
+        for (const err of audit.errors) {
+          console.error(`❌ [Catalogue] ${err}`);
+          errors++;
+        }
+      }
+    }
+  }
+
   if (errors === 0) {
     console.log(`✅ AUDIT RÉUSSI : 100% des ${INDIE_GAMES.length} jeux sont vérifiés, canoniques et sans incohérence !`);
-    console.log(`✨ Règle 0 Hallucination respectée.`);
+    console.log(`✨ Règle 0 Hallucination & Synchronisation Cartes respectées.`);
   } else {
     console.error(`❌ AUDIT ÉCHOUÉ : ${errors} erreurs détectées.`);
     process.exit(1);

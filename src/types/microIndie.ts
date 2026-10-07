@@ -30,6 +30,8 @@ export interface MicroIndieGame {
   likesCount?: number;
   featured?: boolean;
   dateAdded: string;
+  approved?: boolean;
+  approvedAt?: string;
 }
 
 export interface MicroIndieSubmission {
@@ -41,6 +43,7 @@ export interface MicroIndieSubmission {
   steamUrl?: string;
   playInBrowserUrl?: string;
   isFree: boolean;
+  price?: string;
   genre: string;
   artStyle: string;
   jam?: string;

@@ -34,6 +34,19 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
   // State for browsing months (viewMonth is 0-indexed)
   const [viewYear, setViewYear] = useState(() => parseInt(currentDate.split('-')[0], 10));
   const [viewMonth, setViewMonth] = useState(() => parseInt(currentDate.split('-')[1], 10) - 1);
+  const [, setUpdateTrigger] = useState(0);
+
+  React.useEffect(() => {
+    const handleUpdate = () => setUpdateTrigger((n) => n + 1);
+    window.addEventListener('hoot_daily_states_updated', handleUpdate);
+    window.addEventListener('hoot_stats_updated', handleUpdate);
+    window.addEventListener('hoot_daily_game_completed', handleUpdate);
+    return () => {
+      window.removeEventListener('hoot_daily_states_updated', handleUpdate);
+      window.removeEventListener('hoot_stats_updated', handleUpdate);
+      window.removeEventListener('hoot_daily_game_completed', handleUpdate);
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -103,9 +116,9 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="calendar-archive-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
     >
-      <div className="relative overflow-visible w-full max-w-lg bg-[#06241b] border-2 border-[#78350f] rounded-3xl shadow-2xl p-4 sm:p-6 flex flex-col max-h-[90dvh] overflow-y-auto">
+      <div className="relative overflow-visible w-full h-full sm:h-auto max-w-lg bg-[#06241b] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl shadow-2xl p-4 sm:p-6 flex flex-col max-h-[100dvh] sm:max-h-[90dvh] overflow-y-auto">
         <SylvestreIvyFrame density="medium" rounded="3xl" />
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-[#1e293b]">
@@ -142,7 +155,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
             title={isPastMonthLocked ? t('calendar.expiredMonth') : undefined}
             className={`p-2 rounded-xl border transition ${
               isPastMonthLocked
-                ? 'opacity-30 cursor-not-allowed bg-[#131a29]/40 border-slate-800 text-slate-600'
+                ? 'opacity-30 cursor-not-allowed bg-[#131a29]/40 border-slate-800 text-slate-500'
                 : 'bg-[#131a29] border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 cursor-pointer'
             }`}
           >
@@ -157,7 +170,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
             title={isCurrentOrFutureMonth ? t('calendar.lockedFutureMonth') : undefined}
             className={`p-2 rounded-xl border transition ${
               isCurrentOrFutureMonth
-                ? 'opacity-30 cursor-not-allowed bg-[#131a29]/40 border-slate-800 text-slate-600'
+                ? 'opacity-30 cursor-not-allowed bg-[#131a29]/40 border-slate-800 text-slate-500'
                 : 'bg-[#131a29] border-[#1e293b] text-slate-300 hover:text-white hover:border-amber-500/40 cursor-pointer'
             }`}
           >
@@ -166,7 +179,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
         </div>
 
         {/* Day headers */}
-        <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-slate-500 pb-2 capitalize">
+        <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-slate-400 pb-2 capitalize">
           {dayNames.map((d) => (
             <div key={d}>{d}</div>
           ))}
@@ -185,14 +198,14 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
                 <div
                   key={item.dateStr}
                   title={t('calendar.lockedFutureDay')}
-                  className="h-14 p-1.5 rounded-xl border border-slate-800/40 bg-[#0c121e]/50 text-slate-600 flex flex-col items-center justify-between text-xs opacity-40 select-none cursor-not-allowed"
+                  className="h-14 p-1.5 rounded-xl border border-slate-800/40 bg-[#0c121e]/50 text-slate-500 flex flex-col items-center justify-between text-xs opacity-40 select-none cursor-not-allowed"
                 >
                   <div className="w-full flex items-center justify-between px-1">
-                    <span className="text-[11px] font-mono text-slate-600">{item.dayNum}</span>
-                    <Lock className="w-2.5 h-2.5 text-slate-600" />
+                    <span className="text-[11px] font-mono text-slate-500">{item.dayNum}</span>
+                    <Lock className="w-2.5 h-2.5 text-slate-500" />
                   </div>
                   <div className="flex items-center justify-center pb-1">
-                    <span className="text-[9px] uppercase tracking-wider text-slate-600 font-bold">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold">
                       {t('calendar.locked')}
                     </span>
                   </div>
@@ -203,15 +216,32 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
             // Case 2: Expired past date (> 1 day ago) (locked)
             if (isDatePastExpired(item.dateStr, todayStr)) {
               const pastStatus = getChallengeStatusForDate(item.dateStr);
+              const pastWonAll =
+                pastStatus.screenle === 'won' &&
+                pastStatus.indledle === 'won' &&
+                pastStatus.linkle === 'won' &&
+                pastStatus.profille === 'won' &&
+                pastStatus.chrono === 'won' &&
+                pastStatus.pixel === 'won' &&
+                pastStatus.review === 'won' &&
+                pastStatus.blindtest === 'won';
               return (
                 <div
                   key={item.dateStr}
-                  title={`${item.dateStr} • ${t('calendar.locked')}`}
-                  className="h-14 p-1 rounded-xl border border-slate-800/30 bg-[#090d16]/60 text-slate-600 flex flex-col items-center justify-between text-xs select-none cursor-not-allowed opacity-45"
+                  title={`${item.dateStr} • ${pastWonAll ? t('calendar.won') : t('calendar.locked')}`}
+                  className={`h-14 p-1 rounded-xl border flex flex-col items-center justify-between text-xs select-none cursor-not-allowed ${
+                    pastWonAll
+                      ? 'border-amber-500/30 bg-[#090d16]/80 text-amber-300 opacity-75'
+                      : 'border-slate-800/30 bg-[#090d16]/60 text-slate-500 opacity-45'
+                  }`}
                 >
                   <div className="w-full flex items-center justify-between px-1">
-                    <span className="text-[11px] font-mono text-slate-500">{item.dayNum}</span>
-                    <Lock className="w-2.5 h-2.5 text-slate-600" />
+                    <span className="text-[11px] font-mono text-slate-400">{item.dayNum}</span>
+                    {pastWonAll ? (
+                      <Flame className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
+                    ) : (
+                      <Lock className="w-2.5 h-2.5 text-slate-500" />
+                    )}
                   </div>
                   <div className="flex items-center gap-1 pb-1">
                     <span
@@ -447,7 +477,7 @@ export const CalendarArchiveModal: React.FC<CalendarArchiveModalProps> = ({
               <span className="w-2 h-2 rounded-full bg-rose-500" />
               {t('calendar.lost')}
             </span>
-            <span className="flex items-center gap-1 text-slate-500">
+            <span className="flex items-center gap-1 text-slate-400">
               <Lock className="w-2.5 h-2.5" />
               {t('calendar.lockedLegend')}
             </span>

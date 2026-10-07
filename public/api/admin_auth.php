@@ -19,25 +19,47 @@ if (!defined('ADMIN_STEAM_ID')) {
  */
 if (!function_exists('isCloudflareIp')) {
     function isCloudflareIp($ip) {
-        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            return false;
-        }
-        $cfRanges = [
-            '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',
-            '141.101.64.0/18', '108.162.192.0/18', '190.93.240.0/20', '188.114.96.0/20',
-            '197.234.240.0/22', '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
-            '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22'
-        ];
-        $longIp = ip2long($ip);
-        if ($longIp === false) return false;
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $cfRanges = [
+                '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',
+                '141.101.64.0/18', '108.162.192.0/18', '190.93.240.0/20', '188.114.96.0/20',
+                '197.234.240.0/22', '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
+                '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22'
+            ];
+            $longIp = ip2long($ip);
+            if ($longIp === false) return false;
 
-        foreach ($cfRanges as $range) {
-            list($subnet, $bits) = explode('/', $range);
-            $subnetLong = ip2long($subnet);
-            $mask = -1 << (32 - (int)$bits);
-            if (($longIp & $mask) === ($subnetLong & $mask)) {
+            foreach ($cfRanges as $range) {
+                list($subnet, $bits) = explode('/', $range);
+                $subnetLong = ip2long($subnet);
+                $mask = -1 << (32 - (int)$bits);
+                if (($longIp & $mask) === ($subnetLong & $mask)) {
+                    return true;
+                }
+            }
+            return false;
+        } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            $cfIpv6 = [
+                '2400:cb00::/32', '2606:4700::/32', '2803:f800::/32', '2405:b500::/32',
+                '2405:8100::/32', '2a06:98c0::/29', '2c0f:f248::/32'
+            ];
+            $ipBinary = inet_pton($ip);
+            if ($ipBinary === false) return false;
+            foreach ($cfIpv6 as $range) {
+                list($subnet, $bits) = explode('/', $range);
+                $subnetBinary = inet_pton($subnet);
+                if ($subnetBinary === false) continue;
+                $bits = (int)$bits;
+                $bytes = intdiv($bits, 8);
+                $remainder = $bits % 8;
+                if (substr($ipBinary, 0, $bytes) !== substr($subnetBinary, 0, $bytes)) continue;
+                if ($remainder > 0) {
+                    $mask = 0xFF << (8 - $remainder);
+                    if ((ord($ipBinary[$bytes]) & $mask) !== (ord($subnetBinary[$bytes]) & $mask)) continue;
+                }
                 return true;
             }
+            return false;
         }
         return false;
     }
@@ -110,10 +132,31 @@ if (!function_exists('getAdminCsrfToken')) {
     }
 }
 
+if (!function_exists('extractCsrfTokenFromRequest')) {
+    function extractCsrfTokenFromRequest() {
+        $token = trim($_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+        if (!empty($token)) {
+            return $token;
+        }
+        // Tentative de lecture depuis le flux JSON brut pour les requêtes POST application/json
+        $raw = @file_get_contents('php://input');
+        if (!empty($raw)) {
+            $json = @json_decode($raw, true);
+            if (is_array($json) && !empty($json['csrf_token'])) {
+                return trim(strval($json['csrf_token']));
+            }
+        }
+        return '';
+    }
+}
+
 if (!function_exists('validateAdminCsrfToken')) {
-    function validateAdminCsrfToken($token) {
+    function validateAdminCsrfToken($token = null) {
         if (session_status() === PHP_SESSION_NONE) {
             @session_start();
+        }
+        if ($token === null || $token === '') {
+            $token = extractCsrfTokenFromRequest();
         }
         $expected = $_SESSION['admin_csrf_token'] ?? '';
         return !empty($expected) && !empty($token) && hash_equals($expected, $token);
@@ -124,12 +167,15 @@ if (!function_exists('validateAdminCsrfToken')) {
  * Vérifie si la requête actuelle est légitimement autorisée en tant qu'administrateur créateur.
  * Sécurité absolue : Aucun en-tête client (Host, User-Agent, Referer, etc.) ne peut contourner cette vérification.
  */
-function isCreatorAdminAuthorized() {
+function isCreatorAdminAuthorized($explicitKey = null) {
     // 1. Session PHP vérifiée (obtenue lors du login Steam OpenID officiel sur track.php validé par Valve)
     if (session_status() === PHP_SESSION_NONE) {
         @session_start();
     }
     if (!empty($_SESSION['admin_auth']) && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID) {
+        return true;
+    }
+    if (!empty($_SESSION['steam_id']) && strval($_SESSION['steam_id']) === ADMIN_STEAM_ID) {
         return true;
     }
 
@@ -144,18 +190,35 @@ function isCreatorAdminAuthorized() {
 
     $secret = trim(@file_get_contents($adminPassFile) ?: '');
     if (!empty($secret)) {
-        // [CWE-598] Seul l'en-tête HTTP X-Admin-Key est autorisé (interdiction stricte des paramètres d'URL GET/POST)
-        $inputKey = trim($_SERVER['HTTP_X_ADMIN_KEY'] ?? '');
+        $inputKey = '';
+        if (!empty($explicitKey) && is_string($explicitKey)) {
+            $inputKey = trim($explicitKey);
+        } elseif (!empty($_SERVER['HTTP_X_ADMIN_KEY'])) {
+            $inputKey = trim($_SERVER['HTTP_X_ADMIN_KEY']);
+        } elseif (!empty($_SERVER['REDIRECT_HTTP_X_ADMIN_KEY'])) {
+            $inputKey = trim($_SERVER['REDIRECT_HTTP_X_ADMIN_KEY']);
+        } elseif (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            foreach ($headers as $k => $v) {
+                if (strcasecmp($k, 'X-Admin-Key') === 0) {
+                    $inputKey = trim($v);
+                    break;
+                }
+            }
+        }
+
+        // Si non trouvé dans les en-têtes HTTP, vérifier dans le corps de requête JSON chiffré POST
+        if (empty($inputKey) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!empty($GLOBALS['parsedJsonBody']['adminKey']) && is_string($GLOBALS['parsedJsonBody']['adminKey'])) {
+                $inputKey = trim($GLOBALS['parsedJsonBody']['adminKey']);
+            } elseif (!empty($_POST['adminKey']) && is_string($_POST['adminKey'])) {
+                $inputKey = trim($_POST['adminKey']);
+            }
+        }
+
         if (!empty($inputKey) && hash_equals($secret, $inputKey)) {
             return true;
         }
-    }
-
-    // 3. Uniquement si strictement en CLI server local de dev (sans proxy externe)
-    $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
-    $hasForwardedIp = !empty($_SERVER['HTTP_CF_CONNECTING_IP']) || !empty($_SERVER['HTTP_X_FORWARDED_FOR']);
-    if (!$hasForwardedIp && in_array($remoteIp, ['127.0.0.1', '::1'], true) && php_sapi_name() === 'cli-server') {
-        return true;
     }
 
     return false;

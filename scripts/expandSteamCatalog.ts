@@ -234,7 +234,7 @@ async function main() {
       // Vérification stricte anti-éditeur AAA
       const publisher = (dataFR.publishers?.[0] || '').toLowerCase();
       const developer = (dataFR.developers?.[0] || '').toLowerCase();
-      if (isNonIndieOrAAA(publisher) || isNonIndieOrAAA(developer)) {
+      if (isNonIndieOrAAA(developer, publisher, appId)) {
         console.warn(`⛔ Jeu rejeté (Éditeur/Dév AAA) : "${dataFR.name}" (${publisher} / ${developer})`);
         await sleep(150);
         continue;

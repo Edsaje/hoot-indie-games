@@ -1,6 +1,7 @@
 import { INDIE_GAMES } from '../data/games';
 import type { Game } from '../types/game';
 import { inferCanonicalArtStyle, inferCanonicalCamera, inferEnrichedGenres } from '../utils/gameInference';
+import { registerSteamStoreData, getSteamStoreData, type SteamStoreGameData } from '../data/steamStoreData';
 
 export interface SteamCatalogGame extends Game {
   steamAppId?: number;
@@ -33,8 +34,27 @@ class SteamCatalogService {
       if (overridesRaw) {
         const data = JSON.parse(overridesRaw);
         if (data.hiddenGameIds) this.serverHiddenIds = new Set(data.hiddenGameIds);
-        if (data.modifiedGames) this.serverModifiedGames = new Map(Object.entries(data.modifiedGames));
-        if (data.customAdminGames) this.serverCustomGames = data.customAdminGames;
+        if (data.customAdminGames && Array.isArray(data.customAdminGames)) {
+          this.serverCustomGames = data.customAdminGames.map((g: Game) => {
+            if (g.steamStoreData) {
+              registerSteamStoreData(g.steamStoreData);
+            }
+            if (!g.cardRarity || (g.cardRarity as unknown) === null) {
+              const normId = (g.id || '').toLowerCase().trim();
+              const normTitle = (g.title || '').toLowerCase().trim();
+              if (
+                normId === 'spelunky' ||
+                normId === 'speluncky' ||
+                normId === 'spelunky-2' ||
+                normTitle.includes('spelunky') ||
+                normTitle.includes('speluncky')
+              ) {
+                return { ...g, cardRarity: 'legendary' as const };
+              }
+            }
+            return g;
+          });
+        }
         if (data.excludedFromGems) this.serverExcludedGemIds = new Set(data.excludedFromGems);
         if (data.promotedToGems) this.serverPromotedGemIds = new Set(data.promotedToGems);
       }
@@ -66,8 +86,23 @@ class SteamCatalogService {
     if (overrides.modifiedGames) {
       this.serverModifiedGames = new Map(Object.entries(overrides.modifiedGames));
     }
-    if (overrides.customAdminGames) {
-      this.serverCustomGames = overrides.customAdminGames;
+    if (overrides.customAdminGames && Array.isArray(overrides.customAdminGames)) {
+      this.serverCustomGames = overrides.customAdminGames.map((g: Game) => {
+        if (!g.cardRarity || (g.cardRarity as unknown) === null) {
+          const normId = (g.id || '').toLowerCase().trim();
+          const normTitle = (g.title || '').toLowerCase().trim();
+          if (
+            normId === 'spelunky' ||
+            normId === 'speluncky' ||
+            normId === 'spelunky-2' ||
+            normTitle.includes('spelunky') ||
+            normTitle.includes('speluncky')
+          ) {
+            return { ...g, cardRarity: 'legendary' as const };
+          }
+        }
+        return g;
+      });
     }
     if (overrides.excludedFromGems) {
       this.serverExcludedGemIds = new Set(overrides.excludedFromGems);
@@ -75,6 +110,22 @@ class SteamCatalogService {
     if (overrides.promotedToGems) {
       this.serverPromotedGemIds = new Set(overrides.promotedToGems);
     }
+
+    // Enregistrement des données Steam Store officielles pour les jeux personnalisés et surchargés
+    for (const g of this.serverCustomGames) {
+      if (g.steamStoreData) {
+        registerSteamStoreData(g.steamStoreData);
+      }
+    }
+    for (const g of this.serverModifiedGames.values()) {
+      if (g.steamStoreData) {
+        registerSteamStoreData(g.steamStoreData);
+      }
+    }
+
+    // Auto-récupération en tâche de fond pour les jeux personnalisés n'ayant pas encore de métadonnées
+    this.ensureStoreDataForCustomGames();
+
     if (typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem(
@@ -94,11 +145,90 @@ class SteamCatalogService {
     }
   }
 
+  private isEnsuringStoreData = false;
+
+  /**
+   * Garantit que chaque jeu personnalisé Steam dispose de ses données de prix et d'avis certifiées
+   */
+  public async ensureStoreDataForCustomGames(): Promise<void> {
+    if (this.isEnsuringStoreData || typeof window === 'undefined') return;
+    this.isEnsuringStoreData = true;
+
+    try {
+      const gamesToFetch: { appId: number; gameId: string }[] = [];
+      for (const g of this.serverCustomGames) {
+        const appId = g.steamAppId || (g.steamUrl ? parseInt(g.steamUrl.match(/\/app\/(\d+)/)?.[1] || '0', 10) : 0);
+        if (appId > 0 && !getSteamStoreData(appId)) {
+          gamesToFetch.push({ appId, gameId: g.id });
+        }
+      }
+
+      for (const item of gamesToFetch) {
+        try {
+          const res = await fetch(`/api/suggest_game.php?action=lookup&appId=${item.appId}`);
+          if (res.ok) {
+            const json = await res.json();
+            if (json.status === 'success' && json.dataFR) {
+              const priceOverview = json.dataFR.price_overview;
+              const isFree = !!json.dataFR.is_free || (!priceOverview && json.dataFR.is_free);
+              const currency = priceOverview?.currency || 'EUR';
+              const initialPriceCents = typeof priceOverview?.initial === 'number' ? priceOverview.initial : 0;
+              const finalPriceCents = typeof priceOverview?.final === 'number' ? priceOverview.final : 0;
+              const discountPercent = typeof priceOverview?.discount_percent === 'number' ? priceOverview.discount_percent : 0;
+              const formattedFinalPrice = priceOverview?.final_formatted || (isFree ? 'Gratuit' : '');
+              const formattedInitialPrice = priceOverview?.initial_formatted || '';
+
+              const reviews = json.reviews;
+              const descFr = typeof reviews?.reviewScoreDesc === 'object' && reviews?.reviewScoreDesc
+                ? (reviews.reviewScoreDesc.fr || reviews.reviewScoreDesc.en || 'Très positives')
+                : (typeof reviews?.reviewScoreDesc === 'string' ? reviews.reviewScoreDesc : 'Très positives');
+              const descEn = typeof reviews?.reviewScoreDesc === 'object' && reviews?.reviewScoreDesc
+                ? (reviews.reviewScoreDesc.en || reviews.reviewScoreDesc.fr || 'Very Positive')
+                : (typeof reviews?.reviewScoreDesc === 'string' ? reviews.reviewScoreDesc : 'Very Positive');
+
+              const storeData: SteamStoreGameData = {
+                appId: item.appId,
+                isFree,
+                currency,
+                initialPriceCents,
+                finalPriceCents,
+                discountPercent,
+                formattedFinalPrice,
+                formattedInitialPrice,
+                totalReviews: reviews?.totalReviews || 0,
+                totalPositive: reviews?.totalPositive || 0,
+                positivePercent: reviews?.positivePercent || 0,
+                reviewScoreDesc: {
+                  fr: descFr,
+                  en: descEn,
+                },
+              };
+
+              registerSteamStoreData(storeData);
+
+              const target = this.serverCustomGames.find((cg) => cg.id === item.gameId);
+              if (target) {
+                target.steamStoreData = storeData;
+              }
+            }
+          }
+        } catch {
+          // Ignorer les échecs individuels réseau
+        }
+      }
+    } finally {
+      this.isEnsuringStoreData = false;
+    }
+  }
+
   /**
    * Synchronise les surcharges et ajouts de jeux souverains depuis l'API PHP
    */
   public async syncServerOverrides(): Promise<void> {
     try {
+      if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        return;
+      }
       const response = await fetch(`/api/admin_games.php?action=public_overrides&t=${Date.now()}`);
       if (response.ok) {
         const data = await response.json();

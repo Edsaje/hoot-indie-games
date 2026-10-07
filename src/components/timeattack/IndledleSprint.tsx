@@ -260,7 +260,12 @@ export const IndledleSprint: React.FC<IndledleSprintProps> = ({ games, onBackToH
     if (gameState !== 'playing' || !currentQuestion) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (['1', '2', '3', '4'].includes(e.key)) {
+      
+      const target = e.target as HTMLElement;
+      if (target && (['INPUT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable)) {
+        return;
+      }
+if (['1', '2', '3', '4'].includes(e.key)) {
         const index = parseInt(e.key, 10) - 1;
         if (currentQuestion.choices[index]) {
           handleSelectChoice(currentQuestion.choices[index]);
@@ -381,7 +386,7 @@ export const IndledleSprint: React.FC<IndledleSprintProps> = ({ games, onBackToH
 
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold text-xs">
-                <Flame className={`w-4 h-4 ${combo > 1 ? 'animate-bounce text-amber-400' : 'text-slate-500'}`} />
+                <Flame className={`w-4 h-4 ${combo > 1 ? 'animate-bounce text-amber-400' : 'text-slate-400'}`} />
                 <span>{t('timeattack.hud.combo', { combo })}</span>
               </div>
 
@@ -429,7 +434,7 @@ export const IndledleSprint: React.FC<IndledleSprintProps> = ({ games, onBackToH
                 } else if (isSelected) {
                   btnStyle = 'bg-rose-500/20 border-rose-500 text-rose-300 ring-2 ring-rose-500/30';
                 } else {
-                  btnStyle = 'opacity-40 border-[#1e293b] text-slate-500';
+                  btnStyle = 'opacity-40 border-[#1e293b] text-slate-400';
                 }
               }
 

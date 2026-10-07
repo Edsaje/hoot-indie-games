@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { INDIE_GAMES } from '../src/data/games';
+import { INDIE_GAMES, getDailyGame } from '../src/data/games';
 import type { Game } from '../src/types/game';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -156,14 +156,94 @@ function buildFaqSchema(totalCount: number) {
   ];
 }
 
-export function generateSeoIndexHtml(): string {
+interface HeroImagePaths {
+  desktop: string;
+  mobile: string;
+}
+
+async function prepareDailyHeroImage(screenshotUrl: string): Promise<HeroImagePaths> {
+  if (!screenshotUrl) return { desktop: '', mobile: '' };
+  const publicDesktopWebp = path.resolve(__dirname, '../public/daily-hero.webp');
+  const publicMobileWebp = path.resolve(__dirname, '../public/daily-hero-mobile.webp');
+  if (fs.existsSync(publicDesktopWebp) && fs.existsSync(publicMobileWebp)) {
+    return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
+  }
+  try {
+    const res = await fetch(screenshotUrl, { signal: AbortSignal.timeout(8000) });
+    if (res.ok) {
+      const buf = Buffer.from(await res.arrayBuffer());
+      const sharp = (await import('sharp')).default;
+
+      // 1. Desktop version: 520x292, quality 70 (~10 kB)
+      const webpDesktop = await sharp(buf)
+        .resize({ width: 520, height: 292, fit: 'cover' })
+        .webp({ quality: 70, effort: 6 })
+        .toBuffer();
+      fs.writeFileSync(publicDesktopWebp, webpDesktop);
+
+      // 2. Mobile version: 380x214, quality 64 (~4.5 kB, ultra-fast 4G single RTT)
+      const webpMobile = await sharp(buf)
+        .resize({ width: 380, height: 214, fit: 'cover' })
+        .webp({ quality: 64, effort: 6 })
+        .toBuffer();
+      fs.writeFileSync(publicMobileWebp, webpMobile);
+
+      console.log(`⚡ Images WebP créées avec succès: desktop (${(webpDesktop.length / 1024).toFixed(1)} kB) & mobile (${(webpMobile.length / 1024).toFixed(1)} kB)`);
+      return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
+    }
+  } catch (err) {
+    console.warn('⚠️ Erreur téléchargement/compression hero WebP:', err);
+  }
+  if (fs.existsSync(publicDesktopWebp) && fs.existsSync(publicMobileWebp)) {
+    return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
+  }
+  return { desktop: screenshotUrl, mobile: screenshotUrl };
+}
+
+async function prepareLogoWebp(): Promise<void> {
+  const publicLogoWebp = path.resolve(__dirname, '../public/logo-36.webp');
+  const sourceFavicon = path.resolve(__dirname, '../public/favicon-96x96.png');
+  if (fs.existsSync(publicLogoWebp)) return;
+  if (fs.existsSync(sourceFavicon)) {
+    try {
+      const sharp = (await import('sharp')).default;
+      await sharp(sourceFavicon)
+        .resize(72, 72)
+        .webp({ quality: 75, effort: 6 })
+        .toFile(publicLogoWebp);
+    } catch {
+      // fallback
+    }
+  }
+}
+
+export async function generateSeoIndexHtml(): Promise<string> {
+  await prepareLogoWebp();
   const allCuratedGames = loadAllCuratedGames();
   const totalCount = allCuratedGames.length;
   const categorized = categorizeGames(allCuratedGames);
   const faqs = buildFaqSchema(totalCount);
 
-  // 1. Build ItemList for VideoGame Schema.org (Limit to Top 25 to reduce HTML weight)
-  const topGames = allCuratedGames.slice(0, 25);
+  // Compute today's Daily Gem for LCP image preload
+  const todayStr = new Date().toISOString().split('T')[0];
+  const dailyGame = getDailyGame(todayStr, 17, allCuratedGames);
+  const rawScreenshot = dailyGame?.screenshots?.[5] || dailyGame?.screenshots?.[0] || '';
+  const rawDailyScreenshot = rawScreenshot.replace('1920x1080.jpg', '600x338.jpg');
+  const dailyScreenshot = await prepareDailyHeroImage(rawDailyScreenshot);
+
+  // Persist daily gem for ultra-fast LCP rendering without bundling 274 games
+  try {
+    const dailyGemPath = path.resolve(__dirname, '../src/data/dailyGem.ts');
+    fs.writeFileSync(
+      dailyGemPath,
+      `import type { Game } from '../types/game';\n\nexport const TODAY_DATE = ${JSON.stringify(todayStr)};\n\nexport const TODAY_DAILY_GEM: Game = ${JSON.stringify(dailyGame, null, 2)};\n`
+    );
+  } catch {
+    // fallback
+  }
+
+  // 1. Build ItemList for VideoGame Schema.org (Limit to Top 10 to reduce HTML weight)
+  const topGames = allCuratedGames.slice(0, 10);
   const videoGameItems = topGames.map((game, index) => ({
     '@type': 'ListItem',
     position: index + 1,
@@ -267,7 +347,7 @@ export function generateSeoIndexHtml(): string {
         '@id': `${CANONICAL_DOMAIN}/#organization`,
         name: 'Hoot Indie Games',
         url: `${CANONICAL_DOMAIN}/`,
-        logo: `${CANONICAL_DOMAIN}/favicon.svg`,
+        logo: `${CANONICAL_DOMAIN}/logo-512.png`,
         sameAs: [
           'https://github.com/Edsaje/hoot-indie-games',
           'https://youtube.com/@Hibouxe',
@@ -427,6 +507,9 @@ export function generateSeoIndexHtml(): string {
   let catalogHtml = '';
   for (const [categoryName, games] of Object.entries(categorized)) {
     if (games.length === 0) continue;
+    const featuredGames = games.slice(0, 1);
+    const otherGames = games.slice(1);
+
     catalogHtml += `
       <section class="seo-category" style="margin-bottom: 2.5rem;">
         <h3 style="color: #f59e0b; font-size: 1.4rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; margin-top: 1.5rem;">
@@ -435,33 +518,54 @@ export function generateSeoIndexHtml(): string {
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
     `;
 
-    for (const game of games) {
+    for (const game of featuredGames) {
       catalogHtml += `
         <article class="seo-game-card" style="background: #131a29; border: 1px solid #1e293b; border-radius: 8px; padding: 1rem; color: #cbd5e1;">
           <h4 style="color: #f8fafc; margin: 0 0 0.4rem 0; font-size: 1.1rem;">
             ${escapeHtml(game.title)} <span style="color: #f59e0b; font-size: 0.85rem; font-weight: normal;">(${game.releaseYear})</span>
           </h4>
           <p style="margin: 0 0 0.4rem 0; font-size: 0.85rem; color: #94a3b8;">
-            <strong>Studio :</strong> ${escapeHtml(game.developer)}<br>
-            <strong>Genres :</strong> ${escapeHtml(game.genre.join(', '))}<br>
-            <strong>Style :</strong> ${escapeHtml(game.artStyle.fr)} | <strong>Vue :</strong> ${escapeHtml(game.camera.fr)}
+            <strong>Studio :</strong> ${escapeHtml(game.developer)} | <strong>Genres :</strong> ${escapeHtml(game.genre.join(', '))}
           </p>
           <p style="margin: 0 0 0.6rem 0; font-size: 0.9rem; font-style: italic; color: #e2e8f0; line-height: 1.4;">
             « ${escapeHtml(game.hints.tagline.fr)} »
           </p>
           ${
             game.steamUrl
-              ? `<a href="${escapeHtml(game.steamUrl)}" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; font-size: 0.85rem; text-decoration: underline;">Voir la page Steam officielle</a>`
+              ? `<a href="${escapeHtml(game.steamUrl)}" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; font-size: 0.85rem; text-decoration: underline;">Voir sur Steam</a>`
               : ''
           }
         </article>
       `;
     }
 
-    catalogHtml += `
+    if (otherGames.length > 0) {
+      catalogHtml += `
+        </div>
+        <div style="margin-top: 1rem; background: #0b0f19; padding: 1rem; border-radius: 8px; border: 1px solid #1e293b;">
+          <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: 600;">Autres pépites de la catégorie :</p>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.85rem;">
+      `;
+      for (const game of otherGames.slice(0, 8)) {
+        catalogHtml += `
+          <li>
+            ${game.steamUrl ? `<a href="${escapeHtml(game.steamUrl)}" target="_blank" rel="noopener noreferrer" style="color: #cbd5e1; text-decoration: none;">` : ''}
+            <strong>${escapeHtml(game.title)}</strong> (${game.releaseYear}) - ${escapeHtml(game.developer)}
+            ${game.steamUrl ? `</a>` : ''}
+          </li>
+        `;
+      }
+      catalogHtml += `
+          </ul>
         </div>
       </section>
-    `;
+      `;
+    } else {
+      catalogHtml += `
+        </div>
+      </section>
+      `;
+    }
   }
 
   let faqHtml = '';
@@ -768,13 +872,16 @@ export function generateSeoIndexHtml(): string {
 <html lang="fr" dir="ltr">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="apple-touch-icon" href="/logo-512.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.webmanifest">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- DNS prefetch for Steam CDN lazy loaded media -->
+    <link rel="dns-prefetch" href="https://shared.akamai.steamstatic.com">
+    ${dailyScreenshot.desktop ? `<!-- Responsive Preload for LCP Daily Gem Screenshot -->
+    <link rel="preload" as="image" type="image/webp" href="${escapeHtml(dailyScreenshot.mobile || dailyScreenshot.desktop)}" media="(max-width: 640px)" fetchpriority="high">
+    <link rel="preload" as="image" type="image/webp" href="${escapeHtml(dailyScreenshot.desktop)}" media="(min-width: 641px)" fetchpriority="high">\n` : ''}
     
     <!-- Primary SEO Meta Tags -->
     <title>Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants</title>
@@ -795,9 +902,9 @@ export function generateSeoIndexHtml(): string {
     <meta property="og:type" content="website">
     <meta property="og:url" content="${CANONICAL_DOMAIN}/">
     <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
-    <meta property="og:description" content="Explorez ${totalCount} pépites indés certifiées Steam ! Collectionnez les cartes de jeux et ouvrez vos boosters, relevez 17+ mini-jeux : 8 défis quotidiens (Screenle, Indledle, Blind Test OST...), 8 bornes d'arcade rétro, quiz trivia, sprints Time Attack et duels 1v1 en direct.">
-    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
-    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
+    <meta property="og:description" content="Explorez ${totalCount} pépites indés certifiées Steam ! Collectionnez les cartes de jeux et ouvrez vos boosters, relevez 18+ mini-jeux : 9 défis quotidiens (Screenle, Indledle, Blind Test OST, Critique...), 8 bornes d'arcade rétro, quiz trivia, sprints Time Attack et duels 1v1 en direct.">
+    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
+    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -810,20 +917,16 @@ export function generateSeoIndexHtml(): string {
     <meta name="twitter:site" content="@Hibouxe">
     <meta name="twitter:creator" content="@Hibouxe">
     <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
-    <meta name="twitter:description" content="${totalCount} pépites indés certifiées, collection de cartes &amp; boosters sylvestres, 17+ mini-jeux (8 défis quotidiens, 8 bornes d'arcade 1982), quiz trivia, Time Attack et duels 1v1 P2P.">
-    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=2">
+    <meta name="twitter:description" content="${totalCount} pépites indés certifiées, collection de cartes &amp; boosters sylvestres, 18+ mini-jeux (9 défis quotidiens dont Critique et Blind Test, 8 bornes d'arcade 1982), quiz trivia, Time Attack et duels 1v1 P2P.">
+    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
     <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants">
 
     <!-- Mobile & PWA Theme -->
     <meta name="theme-color" content="#0b0f19">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <!-- Structured Data (JSON-LD Schema.org) -->
-    <script type="application/ld+json">
-${JSON.stringify(jsonLdGraph, null, 2)}
-    </script>
-    <!-- Critical Inline Styles to Prevent FOUC & Display Loading Screen -->
+    <!-- Critical Inline Styles to Prevent FOUC & Display Sanctuary Background -->
     <style>
       :root { color-scheme: dark; }
       html, body {
@@ -833,52 +936,108 @@ ${JSON.stringify(jsonLdGraph, null, 2)}
         color: #f1f5f9;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
-      #app-loading {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: radial-gradient(ellipse 120% 75% at 50% -10%, rgba(13, 59, 44, 0.42) 0%, rgba(2, 22, 15, 0.7) 45%, #010805 85%), #010604;
-        color: #e2e8f0;
-        text-align: center;
-        padding: 1.5rem;
-        box-sizing: border-box;
-      }
-      @keyframes hoot-pulse {
-        0%, 100% { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4)); }
-        50% { transform: scale(1.06); opacity: 1; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.6)); }
-      }
       @keyframes hoot-spin {
         to { transform: rotate(360deg); }
       }
     </style>
   </head>
   <body class="bg-[#010604] text-slate-100 antialiased" style="margin: 0; background-color: #010604; color: #f1f5f9;">
+    <div id="root">
+      <header style="width: 100%; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid rgba(120, 53, 15, 0.3); box-sizing: border-box;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <img src="/logo-36.webp" alt="" aria-hidden="true" width="36" height="36" style="width: 36px; height: 36px; object-fit: contain;">
+          <a href="/" style="font-size: 1.25rem; font-weight: 800; color: #f59e0b; text-decoration: none; letter-spacing: 0.5px;">HOOT INDIE GAMES</a>
+        </div>
+        <nav aria-label="Navigation principale" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <a href="#gems" style="color: #cbd5e1; text-decoration: none; font-size: 0.85rem; font-weight: 600;">💎 Pépites</a>
+          <a href="#cards" style="color: #cbd5e1; text-decoration: none; font-size: 0.85rem; font-weight: 600;">🃏 Cartes</a>
+          <a href="#minigames" style="color: #cbd5e1; text-decoration: none; font-size: 0.85rem; font-weight: 600;">🎮 Mini-Jeux</a>
+          <a href="#arcade" style="color: #cbd5e1; text-decoration: none; font-size: 0.85rem; font-weight: 600;">🕹️ Arcade</a>
+          <a href="#roost" style="color: #cbd5e1; text-decoration: none; font-size: 0.85rem; font-weight: 600;">🦉 Le Perchoir</a>
+        </nav>
+      </header>
+
+      <main id="main-content" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 1rem 1rem 2rem 1rem; box-sizing: border-box;">
+        <!-- Discovery Sub-Nav Placeholder (Matches React DiscoverySubNav height & position) -->
+        <div style="max-width: 576px; margin: 0.5rem auto 1.5rem auto; padding: 0.375rem; border-radius: 1rem; background: #06241b; border: 1px solid #78350f; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+          <span style="background: #f59e0b; color: #020617; padding: 0.5rem 0.75rem; border-radius: 0.75rem; font-weight: 900; display: inline-flex; align-items: center; gap: 0.35rem;">🧭 Pépites <span style="font-family: monospace; font-size: 0.65rem; background: rgba(0,0,0,0.2); padding: 0.1rem 0.35rem; border-radius: 0.25rem;">${totalCount}</span></span>
+          <span style="color: #cbd5e1; padding: 0.5rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">📁 Catalogue <span style="font-family: monospace; font-size: 0.65rem; color: #fbbf24;">405</span></span>
+          <span style="color: #cbd5e1; padding: 0.5rem 0.75rem;">🌱 Micro-Indés</span>
+        </div>
+
+        <!-- Hero Spotlight (Matches React GemExplorerHome structure pixel for pixel) -->
+        <div style="width: 100%; max-width: 1152px; margin: 0 auto 2rem auto; border-radius: 1.5rem; background: linear-gradient(135deg, #093a2b, #05261c, #021711); border: 2px solid #78350f; padding: 1.5rem; box-sizing: border-box; box-shadow: inset 0 2px 2px rgba(217,119,6,0.3), 0 16px 40px rgba(0,0,0,0.8);">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; align-items: center;">
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div style="display: inline-flex; align-items: center; gap: 0.35rem; width: fit-content; padding: 0.25rem 0.75rem; border-radius: 0.5rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+                <span>🧭 EXPLORATEUR DE PÉPITES</span>
+              </div>
+              <h1 style="font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 900; color: #ffffff; margin: 0; line-height: 1.15; letter-spacing: -0.02em;">
+                Découvrez la Pépite <span style="color: #fbbf24;">du Jour</span>
+              </h1>
+              <p style="font-size: 0.95rem; color: #cbd5e1; margin: 0; line-height: 1.5; max-width: 576px;">
+                Chaque jour, une merveille du jeu indépendant sélectionnée pour son génie de conception et son authenticité.
+              </p>
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                <a href="#screenle" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.25rem; border-radius: 1rem; background: #f59e0b; color: #020617; font-weight: 900; font-size: 0.85rem; text-decoration: none; text-transform: uppercase;">
+                  <span>📸 DÉFI SCREENLE DU JOUR →</span>
+                </a>
+              </div>
+            </div>
+            <div>
+              <div style="background: #131a29; border: 1px solid #78350f; border-radius: 1rem; padding: 1rem; box-sizing: border-box;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                  <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0.5rem; border-radius: 0.375rem; background: #f59e0b; color: #020617; font-size: 0.75rem; font-weight: 900; text-transform: uppercase;">
+                    ⭐ PÉPITE DU JOUR
+                  </span>
+                  <span style="font-size: 0.75rem; font-family: monospace; font-weight: 700; color: #fde68a;">
+                    ${escapeHtml(todayStr)}
+                  </span>
+                </div>
+                <div style="position: relative; aspect-ratio: 16/9; border-radius: 0.75rem; overflow: hidden; background: #020617; border: 1px solid #4a3424;">
+                  <picture style="width: 100%; height: 100%; display: block;">
+                    ${dailyScreenshot.mobile ? `<source media="(max-width: 640px)" srcset="${escapeHtml(dailyScreenshot.mobile)}" type="image/webp">` : ''}
+                    <img
+                      src="${escapeHtml(dailyScreenshot.desktop || rawDailyScreenshot)}"
+                      alt="${escapeHtml(dailyGame.title)}"
+                      width="520"
+                      height="292"
+                      fetchpriority="high"
+                      decoding="sync"
+                      style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                    />
+                  </picture>
+                  <div style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.15rem 0.5rem; border-radius: 0.375rem; background: rgba(0,0,0,0.8); font-size: 0.75rem; font-family: monospace; font-weight: 700; color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">
+                    ${dailyGame.releaseYear}
+                  </div>
+                </div>
+                <div style="margin-top: 0.75rem;">
+                  <h2 style="font-size: 1.25rem; font-weight: 900; color: #fef3c7; margin: 0 0 0.25rem 0;">
+                    ${escapeHtml(dailyGame.title)}
+                  </h2>
+                  <p style="font-size: 0.8rem; color: #fde68a; opacity: 0.7; margin: 0;">
+                    ${escapeHtml(dailyGame.developer)} • ${escapeHtml(dailyGame.genre.join(', '))}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer id="app-shell-footer" style="width: 100%; max-width: 1200px; margin: 3rem auto 0 auto; padding: 2rem 1.5rem; border-top: 1px solid rgba(120, 53, 15, 0.3); text-align: center; color: #cbd5e1; font-size: 0.85rem;">
+        <p style="margin: 0 0 0.5rem 0; color: #cbd5e1;">🦉 <strong style="color: #fef3c7;">Hoot Indie Games</strong> — Créé avec passion par <a href="https://quentinbeaud.com" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; text-decoration: underline;">Quentin Beaud (Hibouxe)</a>.</p>
+        <p style="margin: 0; font-size: 0.8rem; color: #94a3b8;">Catalogue de ${totalCount} jeux certifiés Steam • Données authentiques • Tous droits réservés.</p>
+      </footer>
+    </div>
     <noscript>
-      <div style="max-width: 800px; margin: 2rem auto; padding: 2rem; background: #131a29; border: 1px solid #f59e0b; border-radius: 12px; color: #e2e8f0; font-family: sans-serif; line-height: 1.6; text-align: center;">
-        <h1 style="color: #f59e0b; font-size: 1.8rem; margin-top: 0;">🦉 Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants</h1>
-        <p>Bienvenue sur <strong>Hoot Indie Games</strong>, la plateforme consacrée aux pépites du jeu vidéo indépendant.</p>
-        <p>Explorez notre catalogue certifié de ${totalCount} jeux indépendants, notre <strong>collection de ${totalCount} cartes à collectionner &amp; boosters</strong>, et nos <strong>17+ mini-jeux gratuits</strong> (8 défis quotidiens, 8 bornes d'arcade rétro 1982, grand quiz trivia, Time Attack et duels 1v1).</p>
-        <p style="color: #94a3b8; font-size: 0.9rem;">Pour lancer les jeux interactifs, ouvrir vos boosters et défier des joueurs en 1v1, veuillez activer JavaScript dans votre navigateur.</p>
-      </div>
       ${rootPrerenderContent}
     </noscript>
-    <div id="root">
-      <div id="app-loading">
-        <div style="position: relative; margin-bottom: 1.25rem;">
-          <img src="/logo-512.png" alt="Hoot Indie Games" width="80" height="80" style="width: 80px; height: 80px; animation: hoot-pulse 2s ease-in-out infinite;">
-        </div>
-        <div style="font-size: 1.25rem; font-weight: 700; color: #f59e0b; letter-spacing: 0.5px; margin-bottom: 0.5rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
-          Hoot Indie Games
-        </div>
-        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: #94a3b8; font-size: 0.875rem;">
-          <div style="width: 14px; height: 14px; border: 2px solid #059669; border-top-color: #f59e0b; border-radius: 50%; animation: hoot-spin 0.8s linear infinite;"></div>
-          <span>Chargement du sanctuaire...</span>
-        </div>
-      </div>
-    </div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Structured Data (JSON-LD Schema.org) placed at the end of body for fast initial DOM paint -->
+    <script type="application/ld+json">
+${JSON.stringify(jsonLdGraph)}
+    </script>
   </body>
 </html>
 `;
@@ -889,7 +1048,13 @@ ${JSON.stringify(jsonLdGraph, null, 2)}
 // Run when executed directly
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   console.log(`🦉 Génération de la suite SEO sémantique pour Hoot Indie Games...`);
-  const outputHtml = generateSeoIndexHtml();
-  fs.writeFileSync(indexPath, outputHtml, 'utf-8');
-  console.log(`✅ index.html mis à jour avec succès avec les pépites certifiées, le schéma JSON-LD (FAQPage + ItemList + SiteNavigation) et le contenu sémantique pré-rendu !`);
+  generateSeoIndexHtml()
+    .then((outputHtml) => {
+      fs.writeFileSync(indexPath, outputHtml, 'utf-8');
+      console.log(`✅ index.html mis à jour avec succès avec les pépites certifiées, le schéma JSON-LD (FAQPage + ItemList + SiteNavigation) et le contenu sémantique pré-rendu !`);
+    })
+    .catch((err) => {
+      console.error('❌ Erreur lors de la génération SEO:', err);
+      process.exit(1);
+    });
 }

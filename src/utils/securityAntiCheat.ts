@@ -8,7 +8,6 @@
  * 4. Anti-Tampering LocalStorage : Vérification de checksum pour empêcher la modification triviale de records via F12.
  */
 
-import confetti from 'canvas-confetti';
 import { soundFx } from './audio';
 
 declare global {
@@ -298,12 +297,14 @@ Amusez-vous, découvrez des chefs-d'œuvre et soutenez les studios indépendants
   try {
     window.hootRain = () => {
       soundFx.playSuccess();
-      confetti({
-        particleCount: 90,
-        spread: 120,
-        origin: { y: 0.15 },
-        colors: ['#f59e0b', '#10b981', '#34d399', '#fbbf24', '#fef08a', '#d97706'],
-        disableForReducedMotion: false,
+      import('canvas-confetti').then(({ default: confetti }) => {
+        confetti({
+          particleCount: 90,
+          spread: 120,
+          origin: { y: 0.15 },
+          colors: ['#f59e0b', '#10b981', '#34d399', '#fbbf24', '#fef08a', '#d97706'],
+          disableForReducedMotion: false,
+        });
       });
       console.log(
         '%c🪶 Pluie de plumes dorées et feuilles de Sylvestre invoquée avec succès ! ✨',

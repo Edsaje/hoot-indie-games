@@ -7,21 +7,23 @@ import {
   Gift,
   RefreshCw,
   ShoppingBag,
+  ArrowLeftRight,
 } from 'lucide-react';
-import { ALL_CARDS, buildCardsFromGames, setDynamicCardsPool } from '../../data/cardsData';
+import { ALL_CARDS, buildCardsFromGames, setDynamicCardsPool, getCardById, createFallbackCard } from '../../data/cardsData';
 import type { CardItem, CardRarity, BoosterOpenResult, UserCardCollection } from '../../types/cards';
 import { BOOSTER_COST } from '../../types/cards';
 import {
   getCardCollection,
-  canClaimDailyBooster,
   claimDailyBooster,
   buyBoosterWithFeathers,
   getCollectionStats,
+  useFreeBoostersStock,
 } from '../../services/cardCollectionService';
 import { formatFeathers, isLocalAdminProfile } from '../../utils/featherEconomy';
 import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
+import { useTrades } from '../../context/useTrades';
 import { soundFx } from '../../utils/audio';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { CardView } from './CardView';
@@ -44,8 +46,11 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
   const { isAdmin, isCreator } = useUserAccount();
   const isSuperAdmin = Boolean(isAdmin || isCreator || isLocalAdminProfile());
   const { curatedGems } = useSteamCatalog();
+  const { openTradeModal, pendingIncomingCount } = useTrades();
 
-  const allCards = useMemo(() => {
+  const [collection, setCollection] = useState<UserCardCollection>(() => getCardCollection());
+
+  const baseCards = useMemo(() => {
     if (curatedGems && curatedGems.length > 0) {
       return buildCardsFromGames(curatedGems);
     }
@@ -53,11 +58,23 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
   }, [curatedGems]);
 
   useEffect(() => {
-    setDynamicCardsPool(allCards);
-  }, [allCards]);
+    setDynamicCardsPool(baseCards);
+  }, [baseCards]);
 
-  const [collection, setCollection] = useState<UserCardCollection>(() => getCardCollection());
-  const [isDailyAvailable, setIsDailyAvailable] = useState<boolean>(() => canClaimDailyBooster(undefined, isSuperAdmin));
+  const allCards = useMemo(() => {
+    const activeIds = new Set(baseCards.map((c) => c.id));
+    const extraOrphanCards: CardItem[] = [];
+    if (collection) {
+      for (const [cardId, entry] of Object.entries(collection)) {
+        if (!activeIds.has(cardId) && entry && ((entry.count || 0) > 0 || (entry.countHolo || 0) > 0)) {
+          const resolved = getCardById(cardId) || createFallbackCard(cardId);
+          extraOrphanCards.push(resolved);
+        }
+      }
+    }
+    return extraOrphanCards.length > 0 ? [...baseCards, ...extraOrphanCards] : baseCards;
+  }, [baseCards, collection]);
+  const boostersStock = useFreeBoostersStock(isSuperAdmin);
 
   // Modals state
   const [selectedCard, setSelectedCard] = useState<CardItem | null>(null);
@@ -90,7 +107,6 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
       } else {
         setCollection(getCardCollection());
       }
-      setIsDailyAvailable(canClaimDailyBooster(undefined, isSuperAdmin));
     };
 
     window.addEventListener('hoot_cards_updated', handleCollectionUpdate);
@@ -99,7 +115,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
       window.removeEventListener('hoot_cards_updated', handleCollectionUpdate);
       window.removeEventListener('hoot_daily_booster_claimed', handleCollectionUpdate);
     };
-  }, [isSuperAdmin]);
+  }, []);
 
   // Détecter les propositions d'échanges directes via URL (#cards?trade=... ou #trade=...)
   useEffect(() => {
@@ -125,7 +141,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
 
   const stats = useMemo(() => getCollectionStats(collection, allCards), [collection, allCards]);
 
-  // Handle Daily Pack opening
+  // Handle Daily / Free Pack opening
   const handleClaimDailyPack = () => {
     try {
       soundFx.playClick();
@@ -133,17 +149,14 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
       if (res && res.cards && res.cards.length > 0) {
         setBoosterResult(res);
         setIsOpeningModalOpen(true);
-        if (!isSuperAdmin) {
-          setIsDailyAvailable(false);
-        }
         setCollection(getCardCollection());
       } else {
         soundFx.playError();
-        setErrorMessage("Le booster gratuit du jour a déjà été réclamé. Revenez demain à minuit !");
+        setErrorMessage("Aucun booster gratuit disponible pour le moment. Prochaine recharge dans quelques heures !");
         setTimeout(() => setErrorMessage(null), 4000);
       }
     } catch (err) {
-      console.error("[Cards] Erreur ouverture booster quotidien:", err);
+      console.error("[Cards] Erreur ouverture booster gratuit:", err);
       soundFx.playError();
       setErrorMessage("Une erreur est survenue lors de l'ouverture du booster.");
       setTimeout(() => setErrorMessage(null), 4000);
@@ -245,9 +258,29 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
         <SylvestreIvyFrame density="medium" />
 
         <div className="relative z-10 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-black uppercase tracking-wider mb-2.5">
-            <Package className="w-3.5 h-3.5 text-amber-400" />
-            <span>Collection Officielle • 185 Cartes</span>
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-2.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-black uppercase tracking-wider">
+              <Package className="w-3.5 h-3.5 text-amber-400" />
+              <span>Collection Officielle • {allCards.length} Cartes</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                openTradeModal();
+              }}
+              className="relative inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/25 to-amber-600/25 hover:from-amber-500/40 hover:to-amber-600/40 border border-amber-500/60 text-amber-300 hover:text-white text-xs font-black uppercase tracking-wider transition cursor-pointer active:scale-95 shadow-sm"
+              title="Centre d'Échanges Bilatéral avec vos compagnons"
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5 text-amber-400" />
+              <span>Centre d'Échanges</span>
+              {pendingIncomingCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-black animate-pulse">
+                  {pendingIncomingCount}
+                </span>
+              )}
+            </button>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
@@ -255,51 +288,100 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-            Collectionnez les 185 chefs-d'œuvre du sanctuaire, découvrez des versions holographiques
+            Collectionnez les {allCards.length} chefs-d'œuvre du sanctuaire, découvrez des versions holographiques
             rares et recyclez vos doubles en Plumes d'Or 🪶 !
           </p>
 
           {/* Action Boxes : Booster Quotidien & Acheter Booster */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-6 text-left">
-            {/* Box 1: Booster Quotidien Gratuit */}
+            {/* Box 1: Booster Quotidien Gratuit & Réserve de 2 boosters (Recharge 12h) */}
             <div
-              className={`p-4 rounded-2xl border-2 flex items-center justify-between gap-3 transition ${
-                isDailyAvailable || isSuperAdmin
+              className={`p-4 rounded-2xl border-2 flex flex-col justify-between gap-3 transition ${
+                boostersStock.canClaim
                   ? 'bg-gradient-to-br from-[#0a4835] to-[#042419] border-emerald-400/80 shadow-lg shadow-emerald-500/20'
-                  : 'bg-[#02140f] border-[#78350f]/60 opacity-85'
+                  : 'bg-[#02140f] border-[#78350f]/60 opacity-90'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl border-2 shrink-0 ${
-                    isDailyAvailable || isSuperAdmin
-                      ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 animate-pulse'
-                      : 'bg-slate-800/60 border-slate-700 text-slate-400'
-                  }`}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl border-2 shrink-0 ${
+                      boostersStock.canClaim
+                        ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 animate-pulse'
+                        : 'bg-slate-800/60 border-slate-700 text-slate-400'
+                    }`}
+                  >
+                    <Gift className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] uppercase font-black tracking-wider text-emerald-400">
+                        Réserve de Boosters
+                      </span>
+                      {/* Badge compteur de boosters empilés */}
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-black tracking-wide border flex items-center gap-1 ${
+                          boostersStock.count === 2
+                            ? 'bg-emerald-500/25 border-emerald-400 text-emerald-300'
+                            : boostersStock.count === 1
+                            ? 'bg-amber-500/20 border-amber-400 text-amber-300'
+                            : 'bg-slate-800 border-slate-700 text-slate-400'
+                        }`}
+                      >
+                        <span>{boostersStock.count} / {boostersStock.max}</span>
+                        {boostersStock.count === 2 && <Sparkles className="w-2.5 h-2.5" />}
+                      </span>
+                    </div>
+
+                    <h3 className="text-sm font-black text-white mt-0.5">
+                      Boosters Gratuits (5 Cartes)
+                    </h3>
+
+                    <div className="text-[11px] text-slate-300 mt-0.5">
+                      {boostersStock.count === 2
+                        ? 'Réserve pleine (2/2) ! 2 boosters prêts à être ouverts.'
+                        : boostersStock.count === 1
+                        ? `1 booster disponible • Prochain dans ${boostersStock.formattedCountdown}`
+                        : `Recharge en cours • Prochain dans ${boostersStock.formattedCountdown}`}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleClaimDailyPack}
+                  disabled={!boostersStock.canClaim}
+                  className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shrink-0 transition cursor-pointer shadow-md shadow-emerald-900/40 active:scale-95 flex items-center gap-1.5"
                 >
-                  <Gift className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase font-black tracking-wider text-emerald-400">
-                    Cadeau du Jour
-                  </div>
-                  <h3 className="text-sm font-black text-white">Booster Quotidien (5 Cartes)</h3>
-                  <div className="text-[11px] text-slate-300 mt-0.5">
-                    {isDailyAvailable || isSuperAdmin
-                      ? 'Disponible ! Paquet gratuit offert aujourd’hui.'
-                      : 'Déjà récupéré aujourd’hui. Prochain demain à minuit.'}
-                  </div>
-                </div>
+                  <Gift className="w-4 h-4" />
+                  <span>
+                    {boostersStock.count > 0
+                      ? `Ouvrir (${boostersStock.count} dispo)`
+                      : isSuperAdmin
+                      ? 'Ouvrir 👑'
+                      : 'En recharge'}
+                  </span>
+                </button>
               </div>
 
-              <button
-                type="button"
-                onClick={handleClaimDailyPack}
-                disabled={!isDailyAvailable && !isSuperAdmin}
-                className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shrink-0 transition cursor-pointer shadow-md shadow-emerald-900/40 active:scale-95"
-              >
-                {isDailyAvailable || isSuperAdmin ? 'Ouvrir' : 'Reçu ✓'}
-              </button>
+              {/* Barre de progression de la recharge 12h (active tant que le stock est < 2) */}
+              {!boostersStock.isFull && (
+                <div className="w-full pt-1">
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1 font-mono">
+                    <span className="flex items-center gap-1">
+                      <RefreshCw className="w-2.5 h-2.5 animate-spin text-emerald-400" />
+                      <span>Recharge +1 booster (12h)</span>
+                    </span>
+                    <span className="font-bold text-emerald-300">{boostersStock.formattedCountdown}</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-900/80 rounded-full overflow-hidden border border-emerald-900/40">
+                    <div
+                      className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-1000 ease-linear"
+                      style={{ width: `${boostersStock.progressPercent}%` }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Box 2: Acheter un booster pour 150 Plumes */}
@@ -426,14 +508,14 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher une carte, un studio, un genre..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#020e0a] border border-[#78350f]/70 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#020e0a] border border-[#78350f]/70 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition"
           />
         </div>
 
         {/* Filters Group */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
           {/* Rarity Tabs */}
-          <div className="flex items-center gap-1 bg-[#020e0a] p-1 rounded-xl border border-[#78350f]/60 overflow-x-auto scrollbar-none">
+          <div className="flex flex-wrap items-center gap-1 bg-[#020e0a] p-1 rounded-xl border border-[#78350f]/60">
             {[
               { id: 'all', label: 'Toutes' },
               { id: 'common', label: 'Communes' },
@@ -503,7 +585,7 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
           Affichage de <strong className="text-white">{filteredCards.length}</strong> carte
           {filteredCards.length > 1 ? 's' : ''}
         </span>
-        <span className="text-[11px] text-slate-500">
+        <span className="text-[11px] text-slate-400">
           Cliquez sur une carte pour l'examiner en 3D ou recycler ses doubles.
         </span>
       </div>
@@ -528,9 +610,9 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
       {/* Empty State */}
       {filteredCards.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center text-slate-400">
-          <Layers className="w-12 h-12 text-slate-600 mb-2" />
+          <Layers className="w-12 h-12 text-slate-500 mb-2" />
           <h3 className="text-base font-bold text-slate-300">Aucune carte trouvée</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm">
+          <p className="text-xs text-slate-400 mt-1 max-w-sm">
             Aucune carte ne correspond aux filtres ou à la recherche sélectionnés.
           </p>
         </div>
@@ -578,8 +660,15 @@ export const CardsBinderView: React.FC<CardsBinderViewProps> = ({
               setIsOpeningModalOpen(false);
               setBoosterResult(null);
             }}
-            onOpenAnother={handleBuyPack}
-            canOpenAnother={isSuperAdmin || feathersCount >= BOOSTER_COST}
+            onOpenAnother={boostersStock.count > 0 ? handleClaimDailyPack : handleBuyPack}
+            canOpenAnother={isSuperAdmin || boostersStock.count > 0 || feathersCount >= BOOSTER_COST}
+            openAnotherLabel={
+              boostersStock.count > 0
+                ? `Ouvrir gratuit (${boostersStock.count} en réserve)`
+                : isSuperAdmin
+                ? 'Ouvrir un autre (Gratuit 👑)'
+                : `Ouvrir un autre (${BOOSTER_COST} 🪶)`
+            }
           />
         </ErrorBoundary>
       )}

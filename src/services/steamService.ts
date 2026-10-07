@@ -87,27 +87,7 @@ export function buildSteamOpenIdUrl(): string {
   return openIdUrl.toString();
 }
 
-/**
- * Extrait le SteamID64 depuis la réponse de retour Steam OpenID
- */
-export function extractSteamIdFromOpenId(searchParams: URLSearchParams): string | null {
-  const claimedId = searchParams.get('openid.claimed_id') || searchParams.get('openid.identity');
-  if (!claimedId) return null;
-
-  const match = claimedId.match(/\/id\/(\d{17})/);
-  return match ? match[1] : null;
-}
-
-/**
- * Extrait l'AppID d'une URL de magasin Steam (ex: https://store.steampowered.com/app/1145360/...)
- */
-export function getAppIdFromSteamUrl(url?: string | null): number | null {
-  if (!url) return null;
-  const match = url.match(/\/app\/(\d+)/);
-  if (!match) return null;
-  const num = parseInt(match[1], 10);
-  return isNaN(num) ? null : num;
-}
+export { extractSteamIdFromOpenId, getAppIdFromSteamUrl } from '../utils/steamUrl';
 
 /**
  * Analyse une entrée textuelle ou JSON pour extraire une liste d'AppIDs

@@ -94,6 +94,57 @@ function fetchSteamApiUrl($url, $timeout = 8) {
     ];
 }
 
+// Helper: Détection stricte anti-NSFW et contenu adulte
+function checkAdultOrInappropriateGame($appData) {
+    if (!$appData || !is_array($appData)) return false;
+    $bannedAppIds = [4198330, 4739660, 1888160, 1325200, 2072450];
+    if (in_array((int)($appData['steam_appid'] ?? 0), $bannedAppIds, true)) {
+        return 'Jeu interdit ou exclu du sanctuaire.';
+    }
+
+    // 1. Âge requis Steam (18+ = rejet strict)
+    $reqAge = (int)($appData['required_age'] ?? 0);
+    if ($reqAge >= 18) {
+        return 'Ce jeu est classé 18+ (contenu pour adultes formellement interdit sur Hoot Indie Games).';
+    }
+
+    // 2. Content Descriptors officiels de Valve (Steam)
+    // 1: Nudity/Sexual, 3: Mature, 4: Sexual Content, 5: Explicit Sexual Content
+    $cd = $appData['content_descriptors'] ?? null;
+    if ($cd && is_array($cd)) {
+        $ids = $cd['ids'] ?? [];
+        if (is_array($ids)) {
+            foreach ([1, 3, 4, 5] as $badId) {
+                if (in_array($badId, $ids, true)) {
+                    return 'Ce jeu est étiqueté comme contenu à caractère sexuel ou adulte par Steam.';
+                }
+            }
+        }
+        $notes = strtolower((string)($cd['notes'] ?? ''));
+        if (preg_match('/\b(sexual|sex|masturbat|nudity|nude|erotic|porn|intercourse|nsfw)\b/i', $notes)) {
+            return 'Ce jeu comporte des avertissements officiels de contenu sexuel explicite.';
+        }
+    }
+
+    // 3. Genres / Catégories Steam
+    if (!empty($appData['genres']) && is_array($appData['genres'])) {
+        foreach ($appData['genres'] as $g) {
+            $desc = strtolower((string)($g['description'] ?? ''));
+            if (preg_match('/\b(adulte|adult|sexual|sexuel|erotic|érotique|hentai|nudity|nudité)\b/i', $desc)) {
+                return 'Ce jeu relève du genre adulte/érotique sur Steam.';
+            }
+        }
+    }
+
+    // 4. Mots-clés textuels (titre, résumé, description)
+    $text = ($appData['name'] ?? '') . ' ' . ($appData['short_description'] ?? '') . ' ' . ($appData['detailed_description'] ?? '');
+    if (preg_match('/\b(femboy|twink|hentai|sexual|sexuel|sexuelle|nsfw|nudity|nudité|erotic|érotique|porn|porno|adult only|adult game|jeux adultes|jeu adulte|masturbation|eroge|ecchi|waifu|dating sim|harem)\b/i', $text)) {
+        return 'Ce jeu comporte des termes ou thématiques adultes interdits sur le sanctuaire.';
+    }
+
+    return false;
+}
+
 // 1. Initialisation du Rate Limiting
 $now = time();
 $rateLimits = [];
@@ -199,6 +250,17 @@ if ($action === 'lookup') {
     $dataFR = $dataFR ?: $dataEN;
     $dataEN = $dataEN ?: $dataFR;
 
+    // Contrôle strict de non-obscénité / anti-NSFW
+    $adultErr = checkAdultOrInappropriateGame($dataFR) ?: checkAdultOrInappropriateGame($dataEN);
+    if ($adultErr) {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => "⛔ Impossible de suggérer ce jeu : {$adultErr}"
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     $reviewsData = null;
     if ($resReviews['ok']) {
         $reviewsJson = json_decode($resReviews['body'] ?? '', true);
@@ -258,11 +320,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    $bannedAppIds = [4198330, 4739660, 1888160, 1325200, 2072450];
+    if (in_array($appId, $bannedAppIds, true)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Ce jeu est exclu du sanctuaire.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     // 4. Assainir les champs textuels
     $title = trim(strip_tags($payload['title'] ?? ''));
     if (empty($title)) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Le titre du jeu est obligatoire.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $comment = trim(strip_tags($payload['comment'] ?? ''));
+    if (preg_match('/\b(femboy|twink|hentai|sexual|sexuel|sexuelle|nsfw|nudity|nudité|erotic|érotique|porn|porno|adult only|adult game|jeux adultes|jeu adulte|masturbation|eroge|ecchi|waifu|dating sim|harem)\b/i', $title . ' ' . $comment)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Contenu pour adultes formellement interdit sur le sanctuaire.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
     if (mb_strlen($title) > 120) {

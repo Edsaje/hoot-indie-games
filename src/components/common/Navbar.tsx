@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import {
   Compass,
   Volume2,
+  Volume1,
   VolumeX,
+  Sliders,
   BarChart3,
   Globe,
   Feather,
@@ -15,7 +17,6 @@ import {
   Puzzle,
   Trophy,
   Crown,
-  Database,
   Layers,
   Check,
   ChevronDown,
@@ -27,13 +28,15 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+// framer-motion removed from Navbar to keep initial bundle lightweight
+import { ensureLanguageLoaded } from '../../i18n';
 import { OwlLogo } from './OwlLogo';
 import { SteamIcon } from './SteamIcon';
-import { soundFx } from '../../utils/audio';
+import { soundFx, useAudioSettings } from '../../utils/audio';
 import { useAchievements } from '../../context/useAchievements';
 import { useUserAccount } from '../../context/useUserAccount';
 import { useFriends } from '../../context/useFriends';
+import { useTrades } from '../../context/useTrades';
 import { useChat } from '../../context/useChat';
 import { SUPPORTED_LANGUAGES, getAppLanguage, type AppLanguage } from '../../utils/localization';
 import { INDIE_AVATARS } from '../../data/avatars';
@@ -60,7 +63,9 @@ export type NavTab =
   | 'cards'
   | 'timeattack'
   | 'toolbox'
-  | 'roost';
+  | 'roost'
+  | 'odyssey'
+  | 'discovery';
 
 interface NavbarProps {
   currentTab: NavTab;
@@ -68,7 +73,7 @@ interface NavbarProps {
   onOpenStats: () => void;
   onOpenAchievements: () => void;
   onOpenCalendar: () => void;
-  onOpenProfile: () => void;
+  onOpenProfile: (initialTab?: 'profile' | 'steam' | 'cloud' | 'settings') => void;
   onOpenAuth: () => void;
   onOpenLeaderboard?: () => void;
   onOpenAdminDashboard?: () => void;
@@ -96,9 +101,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { t, i18n } = useTranslation();
   const { feathersCount, unlockAchievement } = useAchievements();
   const { profile, isAuthenticated, isAdmin, isSteamConnected, steamAccount, logout } = useUserAccount();
-  const { totalFriendsCount, friendsActiveTodayCount, friendsOnlineCount } = useFriends();
+  const { totalFriendsCount, friendsActiveTodayCount, friendsOnlineCount, pendingRequestsCount } = useFriends();
+  const { pendingIncomingCount } = useTrades();
   const { openChat, unreadCount } = useChat();
-  const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
+  const {
+    soundEnabled,
+    masterVolume,
+    sfxVolume,
+    musicVolume,
+    toggleSound,
+    setSoundEnabled,
+    setMasterVolume,
+    setSfxVolume,
+    setMusicVolume,
+  } = useAudioSettings();
 
   const currentAvatar = INDIE_AVATARS.find((a) => a.id === profile.avatarId) || INDIE_AVATARS[0];
   const todayStr = getTodayDateString();
@@ -121,21 +137,25 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  const isDiscoveryActive =
+    currentTab === 'gems' || currentTab === 'microindies' || currentTab === 'catalog';
+
   const isMinigamesActive =
     currentTab === 'minigames' ||
     ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'timeattack', 'versus'].includes(currentTab);
 
-  const toggleSound = () => {
-    const next = soundFx.toggleSound();
-    setSoundEnabled(next);
+  const handleToggleSound = () => {
+    const next = toggleSound();
     telemetry.track('interaction', 'sound_toggle', next ? 'on' : 'off');
   };
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isPlayerMenuOpen, setIsPlayerMenuOpen] = useState(false);
+  const [isAudioMenuOpen, setIsAudioMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
   const playerMenuRef = useRef<HTMLDivElement>(null);
+  const audioMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -159,8 +179,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       if (playerMenuRef.current && !playerMenuRef.current.contains(target)) {
         setIsPlayerMenuOpen(false);
       }
+      if (audioMenuRef.current && !audioMenuRef.current.contains(target)) {
+        setIsAudioMenuOpen(false);
+      }
     };
-    if (isLangMenuOpen || isPlayerMenuOpen) {
+    if (isLangMenuOpen || isPlayerMenuOpen || isAudioMenuOpen) {
       document.addEventListener('mousedown', handleOutsideClick);
       document.addEventListener('touchstart', handleOutsideClick);
     }
@@ -168,10 +191,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       document.removeEventListener('mousedown', handleOutsideClick);
       document.removeEventListener('touchstart', handleOutsideClick);
     };
-  }, [isLangMenuOpen, isPlayerMenuOpen]);
+  }, [isLangMenuOpen, isPlayerMenuOpen, isAudioMenuOpen]);
 
-  const selectLanguage = (langId: AppLanguage) => {
+  const selectLanguage = async (langId: AppLanguage) => {
     soundFx.playClick();
+    await ensureLanguageLoaded(langId);
     i18n.changeLanguage(langId);
     unlockAchievement('polyglot');
     telemetry.track('interaction', 'language_select', langId);
@@ -195,7 +219,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 setIsMobileMenuOpen((prev) => !prev);
               }}
-              className="xl:hidden p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-400 hover:text-white hover:border-amber-400 transition flex items-center justify-center shrink-0 min-h-[38px] min-w-[38px] cursor-pointer touch-manipulation"
+              className="xl:hidden p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-400 hover:text-white hover:border-amber-400 transition flex items-center justify-center shrink-0 touch-target-comfortable  cursor-pointer touch-manipulation"
               title={isMobileMenuOpen ? 'Fermer le menu' : 'Menu des onglets'}
               aria-label="Menu principal"
               aria-expanded={isMobileMenuOpen}
@@ -222,59 +246,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Center Navigation Tabs (Consolidated 7 tabs, Desktop xl+) */}
-          <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-1 bg-[#06241b] p-1 rounded-2xl border border-[#78350f] shrink-0">
-            {/* 1. Pépites */}
+          <nav
+            aria-label={t('nav.mainNav', 'Navigation principale')}
+            className="hidden xl:flex items-center gap-0.5 2xl:gap-1 bg-[#06241b] p-1 rounded-2xl border border-[#78350f] shrink-0"
+          >
+            {/* 1. Découverte (Pépites, Catalogue, Micro-Indés) */}
             <a
               href="#gems"
               onClick={(e) => handleTabSelect('gems', e)}
               className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                currentTab === 'gems'
+                isDiscoveryActive
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <Compass className="w-3.5 h-3.5 shrink-0" />
-              <span>{t('nav.gems')}</span>
+              <span>{t('nav.discovery', 'Découverte')}</span>
             </a>
 
-            {/* 2. Micro-Indés & Itch.io */}
-            <a
-              href="#microindies"
-              onClick={(e) => handleTabSelect('microindies', e)}
-              className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                currentTab === 'microindies'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-400" />
-              <span>{t('nav.microindies', 'Micro-Indés')}</span>
-              <span
-                className={`hidden min-[1800px]:inline text-[9px] font-black px-1 py-0.2 rounded border ${
-                  currentTab === 'microindies'
-                    ? 'bg-slate-950/20 text-slate-950 border-slate-950/30'
-                    : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
-                }`}
-              >
-                Itch
-              </span>
-            </a>
-
-            {/* 3. Catalogue */}
-            <a
-              href="#catalog"
-              onClick={(e) => handleTabSelect('catalog', e)}
-              className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                currentTab === 'catalog'
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Database className="w-3.5 h-3.5 shrink-0" />
-              <span>{t('nav.catalog', 'Catalogue')}</span>
-            </a>
-
-            {/* 3. Mini-jeux */}
+            {/* 2. Mini-jeux */}
             <a
               href="#minigames"
               onClick={(e) => handleTabSelect('minigames', e)}
@@ -294,6 +284,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 11
+              </span>
+            </a>
+
+            {/* 3. Odyssée Sylvestre (Idle Game) */}
+            <a
+              href="#odyssey"
+              onClick={(e) => handleTabSelect('odyssey', e)}
+              className={`flex items-center gap-1 2xl:gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl text-[11px] 2xl:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                currentTab === 'odyssey'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{t('nav.odyssey', 'Odyssée')}</span>
+              <span
+                className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded border ${
+                  currentTab === 'odyssey'
+                    ? 'bg-slate-950/20 text-slate-950 border-slate-950/30'
+                    : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                }`}
+              >
+                BÊTA
               </span>
             </a>
 
@@ -323,6 +336,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Layers className="w-3.5 h-3.5 shrink-0" />
               <span>{t('nav.cards', 'Cartes')}</span>
+              {pendingIncomingCount > 0 && (
+                <span
+                  className="min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-mono font-black bg-rose-600 text-white flex items-center justify-center border border-[#06241b] shadow-sm shadow-rose-500/50 animate-pulse"
+                  title={`${pendingIncomingCount} offre(s) d'échange reçue(s)`}
+                >
+                  {pendingIncomingCount}
+                </span>
+              )}
             </a>
 
             <div className="h-4 w-px bg-[#78350f] mx-0.5 xl:mx-1 shrink-0" />
@@ -364,7 +385,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 onOpenCalendar();
               }}
-              className={`hidden min-[1800px]:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-mono transition cursor-pointer min-h-[36px] ${
+              className={`hidden min-[1800px]:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-mono transition cursor-pointer touch-target-comfortable ${
                 isYesterday
                   ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25'
                   : 'bg-[#06241b] border-[#78350f] text-slate-300 hover:text-white hover:border-amber-500/40'
@@ -388,19 +409,167 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
 
-            {/* Bouton Son direct (visible sur sm+, accessible dans le menu joueur sur mobile) */}
-            <button
-              onClick={toggleSound}
-              className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 hover:text-white hover:bg-slate-800 transition shrink-0 cursor-pointer min-h-[36px] items-center justify-center touch-manipulation"
-              title={soundEnabled ? t('nav.soundOn') : t('nav.soundOff')}
-              aria-label={soundEnabled ? t('nav.soundOn') : t('nav.soundOff')}
-            >
-              {soundEnabled ? (
-                <Volume2 className="w-4 h-4 text-emerald-400" />
-              ) : (
-                <VolumeX className="w-4 h-4 text-slate-500" />
+            {/* Contrôle Audio Rapide (Bouton Sourdine Direct + Popover Volumes) */}
+            <div className="relative hidden sm:block" ref={audioMenuRef}>
+              <div className="flex items-center rounded-xl bg-[#06241b] border border-[#78350f] overflow-hidden">
+                <button
+                  type="button"
+                  onClick={handleToggleSound}
+                  className="p-1.5 sm:p-2 text-slate-300 hover:text-white hover:bg-slate-800 transition shrink-0 cursor-pointer touch-target-comfortable flex items-center justify-center touch-manipulation"
+                  title={
+                    soundEnabled && masterVolume > 0
+                      ? `Son activé (${Math.round(masterVolume * 100)}%) - Couper`
+                      : 'Son en sourdine - Activer'
+                  }
+                  aria-label={
+                    soundEnabled && masterVolume > 0
+                      ? `Son activé à ${Math.round(masterVolume * 100)}%`
+                      : 'Son en sourdine'
+                  }
+                >
+                  {soundEnabled && masterVolume > 0 ? (
+                    masterVolume > 0.4 ? (
+                      <Volume2 className="w-4 h-4 text-emerald-400" />
+                    ) : (
+                      <Volume1 className="w-4 h-4 text-emerald-400" />
+                    )
+                  ) : (
+                    <VolumeX className="w-4 h-4 text-slate-400" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick();
+                    setIsAudioMenuOpen(!isAudioMenuOpen);
+                  }}
+                  className={`p-1.5 sm:p-2 pr-2 text-slate-400 hover:text-amber-300 hover:bg-slate-800 transition shrink-0 cursor-pointer flex items-center justify-center touch-manipulation border-l border-[#78350f]/60 ${
+                    isAudioMenuOpen ? 'bg-slate-800 text-amber-300' : ''
+                  }`}
+                  title="Ajuster les volumes sonores"
+                  aria-label="Ajuster les volumes sonores"
+                  aria-expanded={isAudioMenuOpen}
+                >
+                  <Sliders className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Popover rapide des volumes */}
+              {isAudioMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-64 p-3 rounded-2xl bg-[#06241b] border-2 border-[#78350f] shadow-2xl shadow-black/90 backdrop-blur-xl z-50 space-y-3 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="flex items-center justify-between border-b border-[#78350f]/60 pb-2">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-400/90 flex items-center gap-1.5">
+                      <Sliders className="w-3 h-3 text-amber-400" />
+                      <span>Volumes Audio</span>
+                    </span>
+                    <span className="font-mono text-[10px] font-bold text-amber-300 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-500/30">
+                      {soundEnabled && masterVolume > 0 ? `${Math.round(masterVolume * 100)}%` : 'Coupé'}
+                    </span>
+                  </div>
+
+                  {/* Curseur Master */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-slate-300">
+                      <label htmlFor="nav-popover-master-volume">Volume Général</label>
+                      <span className="font-mono text-emerald-400 text-[10px]">
+                        {soundEnabled ? `${Math.round(masterVolume * 100)}%` : '0%'}
+                      </span>
+                    </div>
+                    <input
+                      id="nav-popover-master-volume"
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={soundEnabled ? Math.round(masterVolume * 100) : 0}
+                      onChange={(e) => {
+                        const val = Number(e.target.value) / 100;
+                        if (!soundEnabled && val > 0) setSoundEnabled(true);
+                        setMasterVolume(val);
+                      }}
+                      aria-label="Volume général"
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={soundEnabled ? Math.round(masterVolume * 100) : 0}
+                      aria-valuetext={`${soundEnabled ? Math.round(masterVolume * 100) : 0}%`}
+                      className="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+                    />
+                  </div>
+
+                  {/* Curseur SFX */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-slate-300">
+                      <label htmlFor="nav-popover-sfx-volume">Bruitages (SFX)</label>
+                      <span className="font-mono text-amber-300 text-[10px]">
+                        {Math.round(sfxVolume * 100)}%
+                      </span>
+                    </div>
+                    <input
+                      id="nav-popover-sfx-volume"
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={Math.round(sfxVolume * 100)}
+                      onChange={(e) => setSfxVolume(Number(e.target.value) / 100)}
+                      aria-label="Volume des effets sonores"
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={Math.round(sfxVolume * 100)}
+                      aria-valuetext={`${Math.round(sfxVolume * 100)}%`}
+                      className="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                    />
+                  </div>
+
+                  {/* Curseur Musique */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-slate-300">
+                      <label htmlFor="nav-popover-music-volume">Musique & Blind-Test</label>
+                      <span className="font-mono text-cyan-300 text-[10px]">
+                        {Math.round(musicVolume * 100)}%
+                      </span>
+                    </div>
+                    <input
+                      id="nav-popover-music-volume"
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={Math.round(musicVolume * 100)}
+                      onChange={(e) => setMusicVolume(Number(e.target.value) / 100)}
+                      aria-label="Volume de la musique"
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={Math.round(musicVolume * 100)}
+                      aria-valuetext={`${Math.round(musicVolume * 100)}%`}
+                      className="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                    />
+                  </div>
+
+                  {/* Boutons d'action dans le popover */}
+                  <div className="pt-2 border-t border-[#78350f]/60 flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={handleToggleSound}
+                      className="text-[11px] font-bold text-slate-300 hover:text-white transition cursor-pointer"
+                    >
+                      {soundEnabled ? '🔇 Couper' : '🔊 Activer'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFx.playClick();
+                        setIsAudioMenuOpen(false);
+                        onOpenProfile('settings');
+                      }}
+                      className="text-[11px] font-bold text-amber-400 hover:text-amber-300 transition cursor-pointer flex items-center gap-1"
+                    >
+                      <span>Plus d'options ⚙️</span>
+                    </button>
+                  </div>
+                </div>
               )}
-            </button>
+            </div>
 
             {/* Unified Player Records, Trophies & Stats Dropdown */}
             <div className="relative" ref={playerMenuRef}>
@@ -410,13 +579,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   setIsPlayerMenuOpen(!isPlayerMenuOpen);
                 }}
-                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer min-h-[36px] touch-manipulation ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer touch-target-comfortable touch-manipulation ${
                   isPlayerMenuOpen
                     ? 'border-amber-400 text-amber-300 shadow-md shadow-amber-500/20'
                     : 'border-[#78350f] text-slate-200 hover:border-amber-500/50 hover:text-amber-300'
                 }`}
                 title={t('nav.playerHubTip')}
-                aria-label={t('nav.playerHub')}
+                aria-label={`${formatFeathers(feathersCount)} - ${t('nav.playerHub')}`}
                 aria-expanded={isPlayerMenuOpen}
               >
                 <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -441,33 +610,64 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   </div>
 
-                  {/* Contrôle du Son (pratique sur mobile pour couper/activer le son sans encombrer la barre) */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      toggleSound();
-                    }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs transition cursor-pointer hover:bg-[#03150f] group text-left border-b border-[#78350f]/40 pb-2 mb-1"
-                  >
-                    <div className={`w-7 h-7 rounded-lg border flex items-center justify-center transition shrink-0 ${
-                      soundEnabled
-                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 group-hover:border-emerald-400'
-                        : 'bg-slate-800/40 border-slate-700 text-slate-400'
-                    }`}>
-                      {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
+                  {/* Contrôle & Paramètres Audio dans le Menu Joueur */}
+                  <div className="px-3 py-2 border-b border-[#78350f]/40 pb-2.5 mb-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={handleToggleSound}
+                        className="flex items-center gap-2 text-xs font-bold text-slate-100 hover:text-amber-300 transition cursor-pointer"
+                      >
+                        <div className={`w-6 h-6 rounded-lg border flex items-center justify-center transition shrink-0 ${
+                          soundEnabled && masterVolume > 0
+                            ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
+                            : 'bg-slate-800/40 border-slate-700 text-slate-400'
+                        }`}>
+                          {soundEnabled && masterVolume > 0 ? (
+                            masterVolume > 0.4 ? <Volume2 className="w-3.5 h-3.5" /> : <Volume1 className="w-3.5 h-3.5" />
+                          ) : (
+                            <VolumeX className="w-3.5 h-3.5" />
+                          )}
+                        </div>
+                        <span>{t('nav.soundTitle', 'Sons & Audio')}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundFx.playClick();
+                          setIsPlayerMenuOpen(false);
+                          onOpenProfile('settings');
+                        }}
+                        className="text-[10px] font-mono font-bold text-amber-400 hover:text-amber-300 transition underline underline-offset-2"
+                      >
+                        Paramètres ⚙️
+                      </button>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-slate-100 font-bold group-hover:text-amber-300 flex items-center justify-between">
-                        <span>{t('nav.soundTitle', 'Effets Sonores')}</span>
-                        <span className={`text-[10px] font-mono font-bold ${soundEnabled ? 'text-emerald-400' : 'text-slate-400'}`}>
-                          {soundEnabled ? t('nav.soundOn', 'Activés') : t('nav.soundOff', 'Coupés')}
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-slate-400 truncate">
-                        {soundEnabled ? 'Audio et effets actifs' : 'Audio en sourdine'}
-                      </p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        id="player-hub-master-volume"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={soundEnabled ? Math.round(masterVolume * 100) : 0}
+                        onChange={(e) => {
+                          const val = Number(e.target.value) / 100;
+                          if (!soundEnabled && val > 0) setSoundEnabled(true);
+                          setMasterVolume(val);
+                        }}
+                        aria-label="Volume général"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={soundEnabled ? Math.round(masterVolume * 100) : 0}
+                        aria-valuetext={`${soundEnabled ? Math.round(masterVolume * 100) : 0}%`}
+                        className="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+                      />
+                      <span className="text-[10px] font-mono font-bold text-slate-400 w-8 text-right">
+                        {soundEnabled ? `${Math.round(masterVolume * 100)}%` : '0%'}
+                      </span>
                     </div>
-                  </button>
+                  </div>
 
                   {/* 1. Succès */}
                   <button
@@ -557,7 +757,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-slate-100 font-bold group-hover:text-emerald-300 flex items-center justify-between">
-                          <span>Compagnons</span>
+                          <span className="flex items-center gap-1.5">
+                            <span>Compagnons</span>
+                            {pendingRequestsCount > 0 && (
+                              <span className="px-1.5 py-0.2 rounded-full text-[9px] font-black bg-rose-500 text-white animate-pulse">
+                                {pendingRequestsCount} reçue{pendingRequestsCount > 1 ? 's' : ''}
+                              </span>
+                            )}
+                          </span>
                           {totalFriendsCount > 0 && (
                             <span className="text-[10px] font-mono text-emerald-400 font-bold">
                               {friendsOnlineCount > 0 ? `${friendsOnlineCount} en ligne` : `${friendsActiveTodayCount}/${totalFriendsCount} actif${friendsActiveTodayCount > 1 ? 's' : ''}`}
@@ -612,7 +819,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div className="flex-1 min-w-0">
                         <div className="text-amber-300 font-bold group-hover:text-amber-200 flex items-center justify-between">
                           <span>Boutique du Sanctuaire</span>
-                          <span className="text-[10px] font-mono text-amber-400 font-black">🪶 Shop</span>
+                          <span className="text-[10px] font-mono text-amber-400 font-bold">Shop</span>
                         </div>
                         <p className="text-[10px] text-slate-400 truncate">
                           Avatars, titres, cadres & renommage express
@@ -637,7 +844,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="text-emerald-300 font-bold group-hover:text-emerald-200 flex items-center justify-between">
                         <span>{t('chat.discussion')} ({t('nav.roost')})</span>
-                        <span className="text-[10px] font-mono text-emerald-400 font-bold">💬 Salons & Idées</span>
+                        <span className="text-[10px] font-mono text-emerald-400 font-bold">Salons</span>
                       </div>
                       <p className="text-[10px] text-slate-400 truncate">
                         Discussions mondiales, salons multilingues & retours
@@ -674,25 +881,25 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Language Switcher Dropdown - Ultra-compact on mobile, full on desktop */}
-            <div className="relative" ref={langMenuRef}>
+            {/* Language Switcher Dropdown - Accessible on sm+ in topbar, and in burger drawer on mobile */}
+            <div className="relative hidden sm:block" ref={langMenuRef}>
               <button
                 type="button"
                 onClick={() => {
                   soundFx.playClick();
                   setIsLangMenuOpen(!isLangMenuOpen);
                 }}
-                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer min-h-[36px] sm:min-h-[40px] touch-manipulation ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#06241b] border transition shrink-0 cursor-pointer touch-target-comfortable sm:touch-target-comfortable touch-manipulation ${
                   isLangMenuOpen
                     ? 'border-amber-400 text-amber-300 shadow-md shadow-amber-500/20'
                     : 'border-[#78350f] text-slate-200 hover:border-amber-500/50 hover:text-amber-400'
                 }`}
                 title={t('nav.switchLang')}
-                aria-label={t('nav.switchLang')}
+                aria-label={`${currentLangMeta.shortCode} - ${t('nav.switchLang')}`}
                 aria-expanded={isLangMenuOpen}
               >
                 <Globe className="hidden min-[1800px]:inline w-3.5 h-3.5 text-[#f59e0b] shrink-0" />
-                <span className="text-xs shrink-0">{currentLangMeta.flag}</span>
+                <span className="text-xs shrink-0" aria-hidden="true">{currentLangMeta.flag}</span>
                 <span className="font-mono text-[11px] sm:text-xs font-bold">{currentLangMeta.shortCode}</span>
                 <ChevronDown className={`hidden min-[1800px]:inline w-3 h-3 text-slate-400 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180 text-amber-400' : ''}`} />
               </button>
@@ -710,7 +917,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         key={langOption.id}
                         type="button"
                         onClick={() => selectLanguage(langOption.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition cursor-pointer min-h-[38px] text-left ${
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition cursor-pointer touch-target-comfortable text-left ${
                           isSelected
                             ? 'bg-amber-500/20 text-amber-300 font-bold border-l-2 border-amber-400'
                             : 'text-slate-300 hover:bg-[#03150f] hover:text-emerald-300'
@@ -740,38 +947,45 @@ export const Navbar: React.FC<NavbarProps> = ({
                     window.open('/api/track.php', '_blank');
                   }
                 }}
-                className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition items-center justify-center shrink-0 min-h-[40px] shadow-sm shadow-amber-500/10 cursor-pointer group touch-manipulation"
-                title="Tableau de Bord Administrateur (👑 Accès Souverain)"
+                className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 hover:bg-amber-500/30 transition items-center justify-center shrink-0 touch-target-comfortable shadow-sm shadow-amber-500/10 cursor-pointer group touch-manipulation"
+                title="Tableau de Bord Administrateur (Accès Souverain)"
                 aria-label="Tableau de Bord Administrateur"
               >
                 <Crown className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
               </button>
             )}
 
-            {/* Friends / Cercle des Compagnons Direct Button */}
+            {/* Friends / Cercle des Compagnons Direct Button (accessible sur sm+, et dans le menu burger & hub sur mobile) */}
             {onOpenFriends && (
               <button
                 onClick={() => {
                   soundFx.playClick();
                   onOpenFriends();
                 }}
-                className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-emerald-300 hover:text-white hover:border-emerald-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 min-h-[40px] cursor-pointer relative group touch-manipulation"
+                className="hidden sm:flex p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-emerald-300 hover:text-white hover:border-emerald-500/50 hover:bg-[#093a2b] transition items-center justify-center shrink-0 touch-target-comfortable cursor-pointer relative group touch-manipulation"
                 title={
-                  friendsOnlineCount > 0
+                  pendingRequestsCount > 0
+                    ? `Cercle des Compagnons (${pendingRequestsCount} demande${pendingRequestsCount > 1 ? 's' : ''} en attente)`
+                    : friendsOnlineCount > 0
                     ? `Cercle des Compagnons (${friendsOnlineCount} en ligne)`
                     : 'Cercle des Compagnons (Amis & Duels 1v1)'
                 }
                 aria-label="Cercle des Compagnons"
               >
                 <Users className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
-                {/* Nombre fixe d'amis connectés sans clignotement, affiché uniquement si >= 1 connecté */}
-                {friendsOnlineCount > 0 && (
+                {pendingRequestsCount > 0 ? (
+                  <span
+                    className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-[9px] font-mono font-black bg-rose-600 text-white flex items-center justify-center border border-[#06241b] shadow-sm shadow-rose-500/50 animate-pulse"
+                  >
+                    {pendingRequestsCount > 9 ? '9+' : pendingRequestsCount}
+                  </span>
+                ) : friendsOnlineCount > 0 ? (
                   <span
                     className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-mono font-bold bg-emerald-600 text-white flex items-center justify-center border border-[#06241b] shadow-sm shadow-emerald-500/30"
                   >
                     {friendsOnlineCount}
                   </span>
-                )}
+                ) : null}
               </button>
             )}
 
@@ -781,7 +995,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundFx.playClick();
                 openChat();
               }}
-              className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-300 hover:text-white hover:border-amber-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 min-h-[40px] cursor-pointer relative group touch-manipulation"
+              className="p-2 rounded-xl bg-[#06241b] border border-[#78350f] text-amber-300 hover:text-white hover:border-amber-500/50 hover:bg-[#093a2b] transition flex items-center justify-center shrink-0 touch-target-comfortable cursor-pointer relative group touch-manipulation"
               title={
                 unreadCount > 0
                   ? `${t('chat.discussion')} (${unreadCount} nouveau${unreadCount > 1 ? 'x' : ''})`
@@ -802,16 +1016,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Sign In / Sign Up Button OR Authenticated User Profile */}
             {!isAuthenticated ? (
               <button
+                type="button"
                 onClick={() => {
                   soundFx.playClick();
                   onOpenAuth();
                 }}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer shrink-0 min-h-[40px] touch-manipulation"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer shrink-0 touch-target-comfortable touch-manipulation"
                 title={t('nav.authTip')}
                 aria-label={t('nav.signIn')}
               >
-                <LogIn className="w-3.5 h-3.5 shrink-0" />
-                <span className="font-black whitespace-nowrap hidden sm:inline">
+                <LogIn className="w-4 h-4 shrink-0 text-slate-950" />
+                <span className="font-black whitespace-nowrap text-xs">
                   {t('nav.signIn')}
                 </span>
                 <span className="hidden min-[1850px]:inline font-black whitespace-nowrap">
@@ -824,7 +1039,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundFx.playClick();
                   onOpenProfile();
                 }}
-                className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#06241b] border border-[#78350f] hover:border-amber-500/50 hover:bg-[#093a2b] transition group relative cursor-pointer shrink-0 min-h-[40px] touch-manipulation"
+                className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#06241b] border border-[#78350f] hover:border-amber-500/50 hover:bg-[#093a2b] transition group relative cursor-pointer shrink-0 touch-target-comfortable touch-manipulation"
                 title={isSteamConnected ? `Profil (${steamAccount?.personaName} sur Steam)` : t('nav.profile')}
                 aria-label={t('nav.profile')}
               >
@@ -833,6 +1048,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <img
                       src={currentAvatar.imageUrl}
                       alt={currentAvatar.name}
+                      width={20}
+                      height={20}
                       className="w-5 h-5 rounded-full object-contain drop-shadow-sm"
                     />
                   ) : (
@@ -854,26 +1071,18 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Mobile Burger Menu Drawer (remplace le scroll horizontal sur mobile) */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <>
-              {/* Dark Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="fixed inset-0 top-16 sm:top-[72px] lg:top-[76px] bg-black/80 backdrop-blur-md z-40 xl:hidden"
-              />
+        {isMobileMenuOpen && (
+          <>
+            {/* Dark Backdrop */}
+            <div
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 top-16 sm:top-[72px] lg:top-[76px] bg-black/80 backdrop-blur-md z-40 xl:hidden animate-fade-in"
+            />
 
-              {/* Mobile Drawer Panel */}
-              <motion.div
-                initial={{ opacity: 0, y: -14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.2 }}
-                className="fixed inset-x-0 top-16 sm:top-[72px] lg:top-[76px] bg-[#02130e] border-b-2 border-[#78350f] shadow-2xl shadow-black/95 z-50 xl:hidden max-h-[calc(100vh-76px)] overflow-y-auto no-scrollbar p-3.5 sm:p-5 text-slate-100"
-              >
+            {/* Mobile Drawer Panel */}
+            <div
+              className="fixed inset-x-0 top-16 sm:top-[72px] lg:top-[76px] bg-[#02130e] border-b-2 border-[#78350f] shadow-2xl shadow-black/95 z-50 xl:hidden max-h-[calc(100vh-76px)] overflow-y-auto no-scrollbar p-3.5 sm:p-5 text-slate-100 animate-slide-down"
+            >
                 <div className="flex items-center justify-between px-1 pb-3 mb-3 border-b border-[#78350f]/60 text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
                   <span className="flex items-center gap-1.5">
                     <Compass className="w-3.5 h-3.5 text-amber-400" />
@@ -882,28 +1091,132 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsMobileMenuOpen(false)}
+                    aria-label={t('common.close', 'Fermer le menu')}
                     className="p-1 rounded-lg text-slate-400 hover:text-white"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                {/* Grid of the 8 navigation tabs */}
+                {/* Mobile Auth Banner: Prominent Sign In CTA or Authenticated User Card */}
+                {!isAuthenticated ? (
+                  <div className="mb-3.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFx.playClick();
+                        setIsMobileMenuOpen(false);
+                        onOpenAuth();
+                      }}
+                      className="w-full flex items-center justify-between p-3 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black shadow-lg shadow-amber-500/20 active:scale-[0.99] cursor-pointer transition border border-amber-300"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-slate-950/20 flex items-center justify-center shrink-0">
+                          <LogIn className="w-4 h-4 text-slate-950" />
+                        </div>
+                        <div className="text-left">
+                          <div className="text-xs font-black leading-tight flex items-center gap-1.5">
+                            <span>{t('nav.signIn', 'Se connecter')} / {t('nav.signUp', 'Créer un compte')}</span>
+                          </div>
+                          <div className="text-[10px] text-slate-900/80 font-semibold">
+                            Sauvegardez vos pépites, succès & collection de cartes
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-lg bg-slate-950/20 shrink-0">
+                        Gratuit
+                      </span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mb-3.5 p-2.5 rounded-2xl bg-[#06241b] border border-[#78350f] flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFx.playClick();
+                        setIsMobileMenuOpen(false);
+                        onOpenProfile();
+                      }}
+                      className="flex items-center gap-2.5 text-left flex-1 min-w-0 cursor-pointer group"
+                    >
+                      <div className="relative w-8 h-8 rounded-full bg-slate-900 border border-amber-500/40 flex items-center justify-center shrink-0">
+                        {currentAvatar.imageUrl ? (
+                          <img
+                            src={currentAvatar.imageUrl}
+                            alt={currentAvatar.name}
+                            width={24}
+                            height={24}
+                            className="w-6 h-6 rounded-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-sm">{currentAvatar.emoji}</span>
+                        )}
+                        {isSteamConnected && (
+                          <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-[#171a21] border border-cyan-400 flex items-center justify-center text-cyan-400 shadow-sm">
+                            <SteamIcon className="w-2 h-2" />
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-bold text-white group-hover:text-amber-300 flex items-center gap-1">
+                          <span className="truncate">{profile.username}</span>
+                          {isAdmin && <Crown className="w-3 h-3 text-amber-400 shrink-0" />}
+                        </div>
+                        <div className="text-[10px] text-amber-400 font-mono font-bold flex items-center gap-1">
+                          <Feather className="w-2.5 h-2.5" />
+                          <span>{formatFeathers(feathersCount)} plumes</span>
+                        </div>
+                      </div>
+                    </button>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundFx.playClick();
+                          setIsMobileMenuOpen(false);
+                          onOpenProfile();
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold hover:bg-amber-500/30 cursor-pointer"
+                      >
+                        {t('nav.profile', 'Profil')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          soundFx.playClick();
+                          setIsMobileMenuOpen(false);
+                          await logout();
+                        }}
+                        aria-label="Se déconnecter"
+                        className="p-1 rounded-lg text-rose-400/80 hover:text-rose-300 hover:bg-rose-950/40 cursor-pointer"
+                      >
+                        <LogOut className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Grid of the 7 consolidated navigation tabs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                   {(
                     [
-                      { id: 'gems' as NavTab, label: t('nav.gems'), desc: 'Pépites certifiées & actualités', icon: Compass },
-                      { id: 'microindies' as NavTab, label: t('nav.microindies', 'Micro-Indés'), desc: 'Pépites Itch.io & Game Jams', icon: Sparkles, badge: 'Itch' },
-                      { id: 'catalog' as NavTab, label: t('nav.catalog', 'Catalogue'), desc: '185 chefs-d’œuvre indépendants', icon: Database },
+                      { id: 'gems' as NavTab, label: t('nav.discovery', 'Découverte'), desc: 'Pépites, Grand Catalogue & Micro-Indés', icon: Compass },
                       { id: 'minigames' as NavTab, label: t('nav.games', 'Mini-Jeux'), desc: '11 défis quotidiens, sprint & duel 1v1', icon: Puzzle, badge: '11' },
+                      { id: 'odyssey' as NavTab, label: t('nav.odyssey', 'Odyssée Sylvestre'), desc: 'Aventure idle, Arbre Céleste & Compagnons', icon: Sparkles, badge: 'BÊTA' },
                       { id: 'arcade' as NavTab, label: t('nav.arcade'), desc: 'Salle de jeux rétro & classements', icon: Gamepad2 },
-                      { id: 'cards' as NavTab, label: t('nav.cards', 'Cartes'), desc: 'Album de 185 cartes & boosters', icon: Layers, badge: '185' },
+                      { id: 'cards' as NavTab, label: t('nav.cards', 'Cartes'), desc: 'Album de cartes, échanges & boosters', icon: Layers, badge: pendingIncomingCount > 0 ? `${pendingIncomingCount} Échange` : undefined },
                       { id: 'toolbox' as NavTab, label: t('nav.toolbox'), desc: 'Filtres, générateurs & outils indés', icon: Wrench },
                       { id: 'roost' as NavTab, label: t('nav.roost'), desc: 'Communauté, retours & créateur', icon: Feather },
                     ]
                   ).map((item) => {
                     const Icon = item.icon;
-                    const active = item.id === 'minigames' ? isMinigamesActive : currentTab === item.id;
+                    const active =
+                      item.id === 'minigames'
+                        ? isMinigamesActive
+                        : item.id === 'gems'
+                        ? isDiscoveryActive
+                        : currentTab === item.id;
 
                     return (
                       <a
@@ -960,8 +1273,43 @@ export const Navbar: React.FC<NavbarProps> = ({
                   })}
                 </div>
 
+                {/* Mobile Language Selector Strip */}
+                <div className="mt-3.5 pt-3 border-t border-[#78350f]/60">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-emerald-400/80 mb-2 px-1">
+                    <span className="flex items-center gap-1">
+                      <Globe className="w-3.5 h-3.5 text-amber-400" />
+                      <span>{t('nav.switchLang', 'Langue')}</span>
+                    </span>
+                    <span className="text-[10px] text-amber-400 font-bold">{currentLangMeta.label}</span>
+                  </div>
+                  <div className="grid grid-cols-6 gap-1">
+                    {SUPPORTED_LANGUAGES.map((langOption) => {
+                      const isSelected = currentLangCode === langOption.id;
+                      return (
+                        <button
+                          key={langOption.id}
+                          type="button"
+                          onClick={() => {
+                            selectLanguage(langOption.id);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          aria-label={`Changer la langue en ${langOption.label}`}
+                          className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl border transition cursor-pointer text-center ${
+                            isSelected
+                              ? 'bg-amber-500/20 text-amber-300 border-amber-400 font-bold shadow-sm'
+                              : 'bg-[#06241b] text-slate-300 border-[#78350f] hover:text-white hover:border-emerald-500/40'
+                          }`}
+                        >
+                          <span className="text-base" aria-hidden="true">{langOption.flag}</span>
+                          <span className="text-[9px] font-mono mt-0.5">{langOption.shortCode}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 {/* Quick Utilities Footer in Drawer */}
-                <div className="mt-3.5 pt-3.5 border-t border-[#78350f]/60 grid grid-cols-2 gap-2 text-xs">
+                <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                   {/* Calendar / Date */}
                   <button
                     type="button"
@@ -972,35 +1320,95 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 hover:text-white cursor-pointer active:scale-95"
                   >
-                    <Calendar className="w-4 h-4 text-amber-400" />
-                    <span className="font-mono font-bold text-xs">{currentDate}</span>
+                    <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span className="font-mono font-bold text-xs truncate">{currentDate}</span>
                   </button>
 
-                  {/* Sound Toggle */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      toggleSound();
-                    }}
-                    className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 hover:text-white cursor-pointer active:scale-95"
-                  >
-                    {soundEnabled ? (
-                      <>
-                        <Volume2 className="w-4 h-4 text-emerald-400" />
-                        <span className="font-bold text-xs text-emerald-300">Son Activé</span>
-                      </>
-                    ) : (
-                      <>
-                        <VolumeX className="w-4 h-4 text-slate-400" />
-                        <span className="font-bold text-xs text-slate-400">Son Coupé</span>
-                      </>
-                    )}
-                  </button>
+                  {/* Sound Toggle & Quick Slider in Drawer */}
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-[#06241b] border border-[#78350f] text-slate-300 flex flex-col justify-between gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={handleToggleSound}
+                        className="flex items-center gap-1.5 text-xs font-bold text-slate-200 hover:text-white cursor-pointer active:scale-95"
+                      >
+                        {soundEnabled && masterVolume > 0 ? (
+                          <>
+                            <Volume2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span className="text-[11px] text-emerald-300 font-bold truncate">Son ({Math.round(masterVolume * 100)}%)</span>
+                          </>
+                        ) : (
+                          <>
+                            <VolumeX className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <span className="text-[11px] text-slate-400 font-bold truncate">Sourdine</span>
+                          </>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundFx.playClick();
+                          setIsMobileMenuOpen(false);
+                          onOpenProfile('settings');
+                        }}
+                        className="text-[10px] font-bold text-amber-400 hover:text-amber-300 px-1 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 cursor-pointer"
+                        title="Ouvrir les paramètres audio complets"
+                        aria-label="Ouvrir les paramètres audio complets"
+                      >
+                        ⚙️
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        id="drawer-audio-master-volume"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={soundEnabled ? Math.round(masterVolume * 100) : 0}
+                        onChange={(e) => {
+                          const val = Number(e.target.value) / 100;
+                          if (!soundEnabled && val > 0) setSoundEnabled(true);
+                          setMasterVolume(val);
+                        }}
+                        aria-label="Volume audio mobile"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={soundEnabled ? Math.round(masterVolume * 100) : 0}
+                        aria-valuetext={`${soundEnabled ? Math.round(masterVolume * 100) : 0}%`}
+                        className="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Compagnons / Amis */}
+                  {onOpenFriends && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFx.playClick();
+                        setIsMobileMenuOpen(false);
+                        onOpenFriends();
+                      }}
+                      className="col-span-2 sm:col-span-1 flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#06241b] border border-[#78350f] text-emerald-300 hover:text-white cursor-pointer active:scale-95 relative"
+                    >
+                      <Users className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="font-bold text-xs truncate">Compagnons</span>
+                      {pendingRequestsCount > 0 ? (
+                        <span className="min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-mono font-black bg-rose-600 text-white flex items-center justify-center border border-[#06241b]">
+                          {pendingRequestsCount}
+                        </span>
+                      ) : friendsOnlineCount > 0 ? (
+                        <span className="min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-mono font-bold bg-emerald-600 text-white flex items-center justify-center border border-[#06241b]">
+                          {friendsOnlineCount}
+                        </span>
+                      ) : null}
+                    </button>
+                  )}
                 </div>
-              </motion.div>
+              </div>
             </>
           )}
-        </AnimatePresence>
       </div>
     </header>
   );

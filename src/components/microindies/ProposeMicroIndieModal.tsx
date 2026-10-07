@@ -28,6 +28,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
   const [playUrl, setPlayUrl] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [isFree, setIsFree] = useState(true);
+  const [priceInput, setPriceInput] = useState('');
   const [genre, setGenre] = useState('Aventure');
   const [artStyle, setArtStyle] = useState('Pixel Art');
   const [jam, setJam] = useState('');
@@ -75,6 +76,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
           playInBrowserUrl: playUrl.trim() || undefined,
           coverImage: coverImage.trim() || undefined,
           isFree,
+          price: isFree ? undefined : (priceInput.trim() || undefined),
           genre,
           artStyle,
           jam: jam.trim() || undefined,
@@ -106,8 +108,8 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
         playInBrowserUrl: playUrl.trim() || undefined,
         isFree,
         pricingText: {
-          fr: isFree ? 'Gratuit / Free 🆓' : 'Prix libre / Payant',
-          en: isFree ? '100% Free 🆓' : 'Paid / Name your price',
+          fr: isFree ? 'Gratuit / Free 🆓' : (priceInput.trim() || 'Payant / Prix libre'),
+          en: isFree ? '100% Free 🆓' : (priceInput.trim() || 'Paid / Name your price'),
         },
         genre: [genre],
         artStyle: { fr: artStyle, en: artStyle },
@@ -203,7 +205,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="ex: Celeste Classic, Buckshot Roulette..."
-                    className="w-full px-3.5 py-2.5 bg-[#02100b] border border-emerald-800/80 rounded-xl text-white placeholder:text-emerald-700 focus:outline-none focus:border-amber-400 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#02100b] border border-emerald-800/80 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-sm"
                   />
                 </div>
                 <div>
@@ -216,7 +218,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                     value={developer}
                     onChange={(e) => setDeveloper(e.target.value)}
                     placeholder="ex: Maddy Thorson, Mike Klubnika..."
-                    className="w-full px-3.5 py-2.5 bg-[#02100b] border border-emerald-800/80 rounded-xl text-white placeholder:text-emerald-700 focus:outline-none focus:border-amber-400 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#02100b] border border-emerald-800/80 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-sm"
                   />
                 </div>
               </div>
@@ -293,9 +295,20 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                           : 'bg-[#02100b] border-emerald-900 text-emerald-500 hover:text-emerald-300'
                       }`}
                     >
-                      Payant / Prix libre 💎
+                      Payant / Prix réel
                     </button>
                   </div>
+                  {!isFree && (
+                    <div className="mt-2 animate-fadeIn">
+                      <input
+                        type="text"
+                        value={priceInput}
+                        onChange={(e) => setPriceInput(e.target.value)}
+                        placeholder="Prix réel (ex: 1,99 €, 4,99 $, Prix libre...)"
+                        className="w-full px-3 py-1.5 bg-[#02100b] border border-amber-500/50 rounded-xl text-amber-200 placeholder:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -310,16 +323,44 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                     value={itchUrl}
                     onChange={(e) => setItchUrl(e.target.value)}
                     placeholder="https://createur.itch.io/nom-du-jeu"
-                    className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 focus:outline-none focus:border-red-400 text-xs sm:text-sm"
+                    className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:border-red-400 text-xs sm:text-sm"
                   />
                 )}
                 {(platform === 'steam' || platform === 'both') && (
                   <input
                     type="url"
                     value={steamUrl}
-                    onChange={(e) => setSteamUrl(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSteamUrl(val);
+                      const m = val.match(/\/app\/(\d+)/);
+                      if (m && m[1]) {
+                        if (!coverImage) {
+                          setCoverImage(`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${m[1]}/header.jpg`);
+                        }
+                        // Récupération automatique du prix Steam et du titre
+                        fetch(`/api/micro_indies.php?action=get_steam_info&appId=${m[1]}`)
+                          .then((r) => r.json())
+                          .then((data) => {
+                            if (data && data.success) {
+                              if (data.isFree) {
+                                setIsFree(true);
+                              } else {
+                                setIsFree(false);
+                                if (!priceInput && data.priceFormatted) {
+                                  setPriceInput(data.priceFormatted);
+                                }
+                              }
+                              if (!title.trim() && data.name) {
+                                setTitle(data.name);
+                              }
+                            }
+                          })
+                          .catch(() => {});
+                      }
+                    }}
                     placeholder="https://store.steampowered.com/app/123456/..."
-                    className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 focus:outline-none focus:border-sky-400 text-xs sm:text-sm"
+                    className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:border-sky-400 text-xs sm:text-sm"
                   />
                 )}
                 <input
@@ -327,7 +368,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                   value={playUrl}
                   onChange={(e) => setPlayUrl(e.target.value)}
                   placeholder="Lien direct pour jouer dans le navigateur (HTML5 / WebGL) — optionnel"
-                  className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 focus:outline-none focus:border-amber-400 text-xs sm:text-sm"
+                  className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs sm:text-sm"
                 />
               </div>
 
@@ -342,7 +383,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                   value={pitch}
                   onChange={(e) => setPitch(e.target.value)}
                   placeholder="De quoi parle ce jeu ? Pourquoi est-il unique et mémorable ?"
-                  className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 focus:outline-none focus:border-amber-400 text-xs sm:text-sm resize-none"
+                  className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs sm:text-sm resize-none"
                 />
               </div>
 
@@ -356,7 +397,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                   value={developerMessage}
                   onChange={(e) => setDeveloperMessage(e.target.value)}
                   placeholder="ex: Prototype conçu en 48h lors de la Ludum Dare..."
-                  className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 focus:outline-none focus:border-amber-400 text-xs sm:text-sm"
+                  className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs sm:text-sm"
                 />
               </div>
 
@@ -369,7 +410,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                   <select
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white text-xs sm:text-sm focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                   >
                     <option value="Aventure">Aventure</option>
                     <option value="Action">Action</option>
@@ -390,7 +431,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                   <select
                     value={artStyle}
                     onChange={(e) => setArtStyle(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white text-xs sm:text-sm focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                   >
                     <option value="Pixel Art">Pixel Art</option>
                     <option value="2D Dessiné à la main">2D Dessiné</option>
@@ -409,7 +450,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                     value={jam}
                     onChange={(e) => setJam(e.target.value)}
                     placeholder="ex: GMTK 2024, Ludum Dare 55"
-                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 text-xs sm:text-sm focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                   />
                 </div>
               </div>
@@ -420,13 +461,26 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                   <label className="block text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-1">
                     URL Image / Jaquette (Optionnel)
                   </label>
-                  <input
-                    type="url"
-                    value={coverImage}
-                    onChange={(e) => setCoverImage(e.target.value)}
-                    placeholder="https://... image PNG ou JPG"
-                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 text-xs sm:text-sm focus:outline-none focus:border-amber-400"
-                  />
+                  <div className="flex items-center gap-2">
+                    {coverImage && (
+                      <img
+                        src={coverImage}
+                        alt="Aperçu"
+                        referrerPolicy="no-referrer"
+                        className="w-9 h-9 rounded-lg object-cover border border-emerald-700 bg-slate-900 shrink-0"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                    )}
+                    <input
+                      type="url"
+                      value={coverImage}
+                      onChange={(e) => setCoverImage(e.target.value)}
+                      placeholder="https://... image PNG ou JPG (détecté auto si Steam)"
+                      className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-1">
@@ -437,7 +491,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                     value={submittedBy}
                     onChange={(e) => setSubmittedBy(e.target.value)}
                     placeholder="Votre pseudonyme"
-                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-700 text-xs sm:text-sm focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                   />
                 </div>
               </div>

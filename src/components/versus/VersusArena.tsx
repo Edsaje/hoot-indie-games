@@ -576,6 +576,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
   const relayLastMsgIdRef = useRef<number>(0);
   const relayPollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isHostRef = useRef<boolean>(false);
+  const opponentRef = useRef<OpponentData | null>(null);
   const currentRoundGameRef = useRef<Game>(INDIE_GAMES[0]);
   const playerScoreRef = useRef<number>(0);
   const opponentScoreRef = useRef<number>(0);
@@ -600,7 +601,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     playerScoreRef.current = playerScore;
     opponentScoreRef.current = opponentScore;
     roundNumRef.current = currentRoundNumber;
-  }, [currentRoundGame, playerScore, opponentScore, currentRoundNumber]);
+    opponentRef.current = opponent;
+  }, [currentRoundGame, playerScore, opponentScore, currentRoundNumber, opponent]);
 
   const filteredGames = guessQuery.trim().length > 0
     ? gamePool.filter((g) =>
@@ -951,31 +953,41 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     soundFx.playClick();
     cleanupP2P();
     setPhase('queueing');
+    isHostRef.current = true; // Mode solo contre bot : le joueur local est l'hôte arbitre
 
     setTimeout(() => {
-      setOpponent(getRandomBot(profile.versusStats.eloRating));
-      startCountdownScreen();
+      const bot = getRandomBot(profile.versusStats.eloRating);
+      setOpponent(bot);
+      opponentRef.current = bot;
+      startCountdownScreen(bot);
     }, 1500);
   };
 
   // Compte à rebours 3-2-1
-  const startCountdownScreen = () => {
+  const startCountdownScreen = (activeOpponent?: OpponentData) => {
+    const opp = activeOpponent || opponentRef.current || opponent;
+    if (activeOpponent) {
+      setOpponent(activeOpponent);
+      opponentRef.current = activeOpponent;
+    }
+
     setPhase('countdown');
     setCountdown(3);
     setPlayerScore(0);
     setOpponentScore(0);
     setCurrentRoundNumber(1);
 
-    telemetry.track('versus', 'versus_play', opponent?.name || 'Duel 1v1', undefined, {
-      opponentElo: opponent?.elo || 1000,
-      isBot: Boolean(opponent?.isBot),
+    telemetry.track('versus', 'versus_play', opp?.name || 'Duel 1v1', undefined, {
+      opponentElo: opp?.elo || 1000,
+      isBot: Boolean(opp?.isBot),
     });
 
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          if (isHostRef.current || opponent?.isBot) {
+          const isBot = Boolean(opp?.isBot || opponentRef.current?.isBot);
+          if (isHostRef.current || isBot) {
             // L'hôte choisit le jeu initial, la discipline et les 4 choix
             const disc = pickRoundDiscipline(1);
             const game = pickRandomGame(gamePool);
@@ -995,15 +1007,17 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
               playVersusAudio(btp);
             }
 
-            sendP2P({
-              type: 'round_start',
-              gameId: game.id,
-              roundNum: 1,
-              discipline: disc,
-              choiceIds: choices.map((c) => c.id),
-              puzzleSeed: seed,
-            });
-            beginRoundExecution(1, 0, 0);
+            if (!isBot) {
+              sendP2P({
+                type: 'round_start',
+                gameId: game.id,
+                roundNum: 1,
+                discipline: disc,
+                choiceIds: choices.map((c) => c.id),
+                puzzleSeed: seed,
+              });
+            }
+            beginRoundExecution(1, 0, 0, isBot);
           }
           return 0;
         }
@@ -1017,7 +1031,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
   const beginRoundExecution = (
     roundNum: number,
     currentPScore: number,
-    currentOScore: number
+    currentOScore: number,
+    isBotMatchParam?: boolean
   ) => {
     clearAllTimers();
     roundResolvedRef.current = false;
@@ -1029,13 +1044,17 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     setIsLockedOut(false);
     setOpponentPenaltyNotice(null);
 
+    const isBotMatch = isBotMatchParam ?? Boolean(opponentRef.current?.isBot || opponent?.isBot);
+
     // Timer du round
     roundTimerRef.current = setInterval(() => {
       setTimerSeconds((prev) => {
         if (prev <= 1) {
           clearInterval(roundTimerRef.current!);
-          if (isHostRef.current || opponent?.isBot) {
-            sendP2P({ type: 'round_timeout' });
+          if (isHostRef.current || isBotMatch) {
+            if (!isBotMatch) {
+              sendP2P({ type: 'round_timeout' });
+            }
             handleRoundTimeout(currentPScore, currentOScore, roundNum);
           }
           return 0;
@@ -1045,7 +1064,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     }, 1000);
 
     // Si on joue contre le bot IA, déclencher sa décision simulée
-    if (opponent?.isBot) {
+    if (isBotMatch) {
       const bot = getBotDecision();
       if (bot.willGuess) {
         botTimerRef.current = setTimeout(() => {
@@ -1148,7 +1167,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     if (pScore >= 2 || oScore >= 2 || roundNum >= 3) {
       endMatch(pScore, oScore);
     } else {
-      if (isHostRef.current || opponent?.isBot) {
+      const isBotMatch = Boolean(opponentRef.current?.isBot || opponent?.isBot);
+      if (isHostRef.current || isBotMatch) {
         const nextDisc = pickRoundDiscipline(roundNum + 1);
         const nextGame = pickRandomGame(gamePool);
         const choices = generateRoundChoices(nextGame, gamePool);
@@ -1167,15 +1187,17 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
           playVersusAudio(btp);
         }
 
-        sendP2P({
-          type: 'round_start',
-          gameId: nextGame.id,
-          roundNum: roundNum + 1,
-          discipline: nextDisc,
-          choiceIds: choices.map((c) => c.id),
-          puzzleSeed: seed,
-        });
-        beginRoundExecution(roundNum + 1, pScore, oScore);
+        if (!isBotMatch) {
+          sendP2P({
+            type: 'round_start',
+            gameId: nextGame.id,
+            roundNum: roundNum + 1,
+            discipline: nextDisc,
+            choiceIds: choices.map((c) => c.id),
+            puzzleSeed: seed,
+          });
+        }
+        beginRoundExecution(roundNum + 1, pScore, oScore, isBotMatch);
       }
     }
   };
@@ -1299,29 +1321,39 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     return VERSUS_DISCIPLINES.find((d) => d.id === disc) || VERSUS_DISCIPLINES[0];
   };
 
+  const handlePlayerGuessRef = useRef(handlePlayerGuess);
+  useEffect(() => {
+    handlePlayerGuessRef.current = handlePlayerGuess;
+  });
+
   // Raccourcis clavier (1, 2, 3, 4) pour buzzer instantanément sur les 4 choix
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (phase !== 'playing' || isLockedOut || searchFocused) return;
+      
+      const target = e.target as HTMLElement;
+      if (target && (['INPUT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable)) {
+        return;
+      }
+if (phase !== 'playing' || isLockedOut || searchFocused) return;
 
       if (['1', '&'].includes(e.key) && currentRoundChoices[0]) {
         e.preventDefault();
-        handlePlayerGuess(currentRoundChoices[0]);
+        handlePlayerGuessRef.current(currentRoundChoices[0]);
       } else if (['2', 'é'].includes(e.key) && currentRoundChoices[1]) {
         e.preventDefault();
-        handlePlayerGuess(currentRoundChoices[1]);
+        handlePlayerGuessRef.current(currentRoundChoices[1]);
       } else if (['3', '"'].includes(e.key) && currentRoundChoices[2]) {
         e.preventDefault();
-        handlePlayerGuess(currentRoundChoices[2]);
+        handlePlayerGuessRef.current(currentRoundChoices[2]);
       } else if (['4', "'"].includes(e.key) && currentRoundChoices[3]) {
         e.preventDefault();
-        handlePlayerGuess(currentRoundChoices[3]);
+        handlePlayerGuessRef.current(currentRoundChoices[3]);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [phase, isLockedOut, searchFocused, currentRoundChoices, handlePlayerGuess]);
+  }, [phase, isLockedOut, searchFocused, currentRoundChoices]);
 
   const renderDisciplineChallenge = () => {
     switch (currentRoundDiscipline) {
@@ -1452,23 +1484,23 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
             </div>
             <div className="grid grid-cols-2 gap-2 max-w-md w-full text-left">
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Genre</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Genre</div>
                 <div className="text-xs font-bold text-white truncate">{currentRoundGame.genre.join(', ')}</div>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Année</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Année</div>
                 <div className="text-xs font-bold text-amber-400">
                   {timerSeconds <= 10 ? currentRoundGame.releaseYear : 'Débloqué à 10s'}
                 </div>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Développeur</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Développeur</div>
                 <div className="text-xs font-bold text-sky-400 truncate">
                   {timerSeconds <= 14 ? currentRoundGame.developer : 'Débloqué à 14s'}
                 </div>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <div className="text-[10px] text-slate-500 font-bold uppercase">Direction Artistique</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">Direction Artistique</div>
                 <div className="text-xs font-bold text-emerald-400 truncate">
                   {currentRoundGame.artStyle?.fr || 'Indé culte'}
                 </div>
@@ -1647,7 +1679,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
             {/* Séparateur */}
             <div className="relative flex py-1 items-center">
               <div className="flex-grow border-t border-slate-800"></div>
-              <span className="flex-shrink mx-3 text-[10px] font-black uppercase tracking-wider text-slate-500">
+              <span className="flex-shrink mx-3 text-[10px] font-black uppercase tracking-wider text-slate-400">
                 Ou par e-mail &amp; mot de passe
               </span>
               <div className="flex-grow border-t border-slate-800"></div>
@@ -2211,7 +2243,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
                   {timerSeconds <= 12 ? (
                     <span>Genre : <strong className="text-amber-400">{currentRoundGame.genre.slice(0, 2).join(', ')}</strong></span>
                   ) : (
-                    <span className="text-slate-500 italic">Indice genre à 12s...</span>
+                    <span className="text-slate-400 italic">Indice genre à 12s...</span>
                   )}
                 </div>
 
@@ -2219,7 +2251,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
                   {timerSeconds <= 6 ? (
                     <span>Année : <strong className="text-amber-400">{currentRoundGame.releaseYear}</strong></span>
                   ) : (
-                    <span className="text-slate-500 italic">Indice année à 6s...</span>
+                    <span className="text-slate-400 italic">Indice année à 6s...</span>
                   )}
                 </div>
               </div>
@@ -2417,7 +2449,8 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
               onClick={() => {
                 soundFx.playClick();
                 if (opponent.isBot) {
-                  startCountdownScreen();
+                  isHostRef.current = true;
+                  startCountdownScreen(opponent);
                 } else {
                   launchMatchP2P();
                 }

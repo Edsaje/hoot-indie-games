@@ -13,6 +13,7 @@ interface BoosterOpeningModalProps {
   onClose: () => void;
   onOpenAnother?: () => void;
   canOpenAnother?: boolean;
+  openAnotherLabel?: string;
 }
 
 export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
@@ -21,6 +22,7 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
   onClose,
   onOpenAnother,
   canOpenAnother = false,
+  openAnotherLabel,
 }) => {
   const [openedStep, setOpenedStep] = useState<'sealed' | 'opening' | 'revealing'>('sealed');
   const [revealedIndices, setRevealedIndices] = useState<number[]>([]);
@@ -66,21 +68,15 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
     startTearSequence();
   };
 
-  // Lancement automatique fluide de l'animation dès l'ouverture du booster
+  // Initialisation à l'état scellé dès l'ouverture du booster (ouverture manuelle par le joueur)
   useEffect(() => {
     if (isOpen && result) {
       setOpenedStep('sealed');
       setRevealedIndices([]);
-
-      const autoTearTimer = setTimeout(() => {
-        startTearSequence();
-      }, 550);
-
-      return () => {
-        clearTimeout(autoTearTimer);
-        if (tearTimeoutRef.current) clearTimeout(tearTimeoutRef.current);
-      };
     }
+    return () => {
+      if (tearTimeoutRef.current) clearTimeout(tearTimeoutRef.current);
+    };
   }, [isOpen, result]);
 
   useEffect(() => {
@@ -89,7 +85,6 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
     };
   }, []);
 
-  if (!isOpen || !result) return null;
 
   const handleFlipCard = (index: number) => {
     if (revealedIndices.includes(index) || !result?.cards?.[index]) return;
@@ -137,10 +132,11 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
       }
     }
   }, [allRevealed]);
+  if (!isOpen || !result) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[80] overflow-y-auto flex flex-col p-2.5 sm:p-4">
+      <div className="fixed inset-0 z-[80] overflow-y-auto flex flex-col p-0 sm:p-4">
         {/* Backdrop sombre */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -160,7 +156,7 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
           initial={{ scale: 0.95, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 15 }}
-          className="relative w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] bg-[#03150f] rounded-none sm:rounded-2xl border-2 border-[#78350f] shadow-2xl shadow-black/95 flex flex-col overflow-hidden z-10 text-slate-100 p-3.5 sm:p-6 m-auto"
+          className="relative w-full max-w-4xl max-h-[100dvh] h-full sm:h-auto sm:max-h-[90vh] bg-[#03150f] rounded-none sm:rounded-2xl sm:border-2 border-0 border-[#78350f] shadow-2xl shadow-black/95 flex flex-col overflow-hidden z-10 text-slate-100 p-3.5 sm:p-6 m-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <SylvestreIvyFrame density="medium" />
@@ -440,7 +436,7 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
                               )}
                             </>
                           ) : (
-                            <span className="text-[10px] text-slate-500 font-bold font-mono">
+                            <span className="text-[10px] text-slate-400 font-bold font-mono">
                               Carte #{index + 1}
                             </span>
                           )}
@@ -472,7 +468,7 @@ export const BoosterOpeningModal: React.FC<BoosterOpeningModalProps> = ({
                         className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer active:scale-95"
                       >
                         <Package className="w-4 h-4" />
-                        <span>Ouvrir un autre (150 🪶)</span>
+                        <span>{openAnotherLabel || 'Ouvrir un autre (150 🪶)'}</span>
                       </button>
                     )}
 

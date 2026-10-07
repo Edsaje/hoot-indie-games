@@ -24,6 +24,7 @@ import type { Game } from '../../types/game';
 import type { SteamCatalogGame } from '../../services/steamCatalog';
 import { soundFx } from '../../utils/audio';
 import { getSteamStoreData } from '../../data/steamStoreData';
+import { formatSteamPrice } from '../../utils/currencyFormatter';
 import { getAppIdFromSteamUrl } from '../../services/steamService';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { SteamIcon } from '../common/SteamIcon';
@@ -189,8 +190,8 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
         return false;
       }
 
-      const appId = getAppIdFromSteamUrl(game.steamUrl);
-      const storeData = getSteamStoreData(appId);
+      const appId = getAppIdFromSteamUrl(game.steamUrl) || (game as SteamCatalogGame).steamAppId;
+      const storeData = getSteamStoreData(appId) || game.steamStoreData;
 
       // Filtre Prix & Soldes
       if (priceFilter === 'sale') {
@@ -232,8 +233,8 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
     });
 
     list = [...list].sort((a, b) => {
-      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl));
-      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl));
+      const storeA = getSteamStoreData(getAppIdFromSteamUrl(a.steamUrl) || (a as SteamCatalogGame).steamAppId) || a.steamStoreData;
+      const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl) || (b as SteamCatalogGame).steamAppId) || b.steamStoreData;
 
       switch (sortBy) {
         case 'yearDesc':
@@ -582,7 +583,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
               value={importInput}
               onChange={(e) => setImportInput(e.target.value)}
               placeholder="URL de la page Steam Store ou AppID (ex: 1145360)..."
-              className="flex-1 px-4 py-2.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-white text-xs placeholder:text-slate-400 focus:outline-none focus:border-amber-500"
             />
             <button
               type="submit"
@@ -600,7 +601,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             onChange={(e) => setUserComment(e.target.value)}
             placeholder="Pourquoi cette pépite mérite d'être mise en avant ? (direction artistique, musique, gameplay innovant... - facultatif)"
             maxLength={300}
-            className="w-full px-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-200 text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50"
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:border-amber-500/50"
           />
         </form>
 
@@ -629,12 +630,12 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('catalog.searchPlaceholder')}
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#131a29] border border-[#1e293b] text-white text-xs placeholder:text-slate-400 focus:outline-none focus:border-amber-500"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -984,7 +985,8 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             const steamGame = game as SteamCatalogGame;
             const coverUrl = steamGame.headerImage || game.screenshots[game.screenshots.length - 1];
             const appId = getAppIdFromSteamUrl(game.steamUrl) || steamGame.steamAppId;
-            const storeData = getSteamStoreData(appId);
+            const storeData = getSteamStoreData(appId) || game.steamStoreData;
+            const localizedPrice = formatSteamPrice(storeData, i18n.language, Boolean(game.itchUrl));
 
             return (
               <div
@@ -1015,25 +1017,23 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                       </span>
                     </div>
 
-                    {storeData ? (
-                      storeData.discountPercent > 0 ? (
+                    {storeData || game.itchUrl ? (
+                      localizedPrice.discountPercent > 0 ? (
                         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shadow-md">
-                          <span className="line-through text-slate-500 text-[9px]">{storeData.formattedInitialPrice}</span>
-                          <span>{storeData.formattedFinalPrice}</span>
+                          {localizedPrice.formattedInitial && (
+                            <span className="line-through text-slate-400 text-[9px]">{localizedPrice.formattedInitial}</span>
+                          )}
+                          <span>{localizedPrice.formattedFinal}</span>
                         </div>
-                      ) : storeData.isFree ? (
+                      ) : localizedPrice.isFree ? (
                         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
                           {t('catalog.free')}
                         </div>
                       ) : (
                         <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-black/85 backdrop-blur-md text-[11px] font-mono font-bold text-slate-200 border border-white/10 shadow-md">
-                          {storeData.formattedFinalPrice}
+                          {localizedPrice.formattedFinal}
                         </div>
                       )
-                    ) : game.itchUrl ? (
-                      <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg bg-emerald-950/85 backdrop-blur-md text-[11px] font-mono font-bold text-emerald-300 border border-emerald-500/40 shadow-md">
-                        {t('catalog.free')}
-                      </div>
                     ) : null}
 
                     <div className="absolute top-2 left-2 flex items-center gap-1">
@@ -1059,7 +1059,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                     <div className="flex items-center gap-1.5 mt-1.5 text-xs text-sky-400">
                       <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
                       <span className="font-bold font-mono">{storeData.positivePercent}%</span>
-                      <span className="text-slate-500 text-[11px]">({getLocalizedText(storeData.reviewScoreDesc, i18n.language)})</span>
+                      <span className="text-slate-400 text-[11px]">({getLocalizedText(storeData.reviewScoreDesc, i18n.language)})</span>
                     </div>
                   )}
                 </div>
@@ -1165,7 +1165,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             </div>
 
             {/* Miniatures Screenshots */}
-            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+            <div className="flex flex-wrap gap-2 pb-1">
               {selectedGameForModal.screenshots.map((s, idx) => (
                 <button
                   key={idx}
@@ -1183,7 +1183,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             <div className="p-4 bg-[#0b0f19] border border-[#1e293b] rounded-2xl space-y-3">
               {(() => {
                 const modalAppId = getAppIdFromSteamUrl(selectedGameForModal.steamUrl) || (selectedGameForModal as SteamCatalogGame).steamAppId;
-                const modalStore = getSteamStoreData(modalAppId);
+                const modalStore = getSteamStoreData(modalAppId) || selectedGameForModal.steamStoreData;
                 if (!modalStore) {
                   if (selectedGameForModal.itchUrl) {
                     return (
@@ -1201,17 +1201,24 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                   <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#131a29] border border-[#1e293b]">
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-slate-400 font-bold uppercase">{t('catalog.steamPrice')}</span>
-                      {modalStore.discountPercent > 0 ? (
-                        <div className="flex items-center gap-1.5">
-                          <span className="line-through text-slate-500 text-xs">{modalStore.formattedInitialPrice}</span>
-                          <span className="text-emerald-400 font-black text-sm">{modalStore.formattedFinalPrice}</span>
-                          <span className="px-2 py-0.5 rounded bg-emerald-500 text-black font-black text-xs">-{modalStore.discountPercent}%</span>
-                        </div>
-                      ) : modalStore.isFree ? (
-                        <span className="text-cyan-300 font-black text-sm">{t('catalog.free')}</span>
-                      ) : (
-                        <span className="text-white font-black text-sm">{modalStore.formattedFinalPrice}</span>
-                      )}
+                    {(() => {
+                      const modalPrice = formatSteamPrice(modalStore, i18n.language);
+                      if (modalStore.discountPercent > 0) {
+                        return (
+                          <div className="flex items-center gap-1.5">
+                            {modalPrice.formattedInitial && (
+                              <span className="line-through text-slate-400 text-xs">{modalPrice.formattedInitial}</span>
+                            )}
+                            <span className="text-emerald-400 font-black text-sm">{modalPrice.formattedFinal}</span>
+                            <span className="px-2 py-0.5 rounded bg-emerald-500 text-black font-black text-xs">-{modalStore.discountPercent}%</span>
+                          </div>
+                        );
+                      }
+                      if (modalPrice.isFree) {
+                        return <span className="text-cyan-300 font-black text-sm">{t('catalog.free')}</span>;
+                      }
+                      return <span className="text-white font-black text-sm">{modalPrice.formattedFinal}</span>;
+                    })()}
                     </div>
 
                     {modalStore.totalReviews > 0 && (
@@ -1221,7 +1228,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                           <span>{modalStore.positivePercent}%</span>
                         </span>
                         <span className="text-slate-300 font-semibold">{getLocalizedText(modalStore.reviewScoreDesc, i18n.language)}</span>
-                        <span className="text-slate-500">({modalStore.totalReviews.toLocaleString()} {t('catalog.reviewsSuffix')})</span>
+                        <span className="text-slate-400">({modalStore.totalReviews.toLocaleString()} {t('catalog.reviewsSuffix')})</span>
                       </div>
                     )}
                   </div>

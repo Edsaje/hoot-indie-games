@@ -310,6 +310,11 @@ class TelemetryEngine {
   private sendToServer(event: TelemetryEvent): void {
     if (typeof window === 'undefined') return;
 
+    // Ne pas émettre d'appels réseau en local/preview/audit (évite les erreurs 401 en console)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return;
+    }
+
     try {
       const payload = JSON.stringify({
         event: event.action,

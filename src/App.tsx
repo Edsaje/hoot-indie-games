@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navbar } from './components/common/Navbar';
 import type { NavTab } from './components/common/Navbar';
-import { Footer } from './components/common/Footer';
 import { FirefliesBackground } from './components/common/FirefliesBackground';
-import { MiniGamesNav, type MiniGameSubTab } from './components/minigames/MiniGamesNav';
+const Footer = React.lazy(() => import('./components/common/Footer').then(module => ({ default: module.Footer })));
+import type { MiniGameSubTab } from './components/minigames/MiniGamesNav';
 import type { ArcadeGameId } from './components/arcade/ArcadeModal';
+
+const MiniGamesNav = React.lazy(() => import('./components/minigames/MiniGamesNav').then(m => ({ default: m.MiniGamesNav })));
 
 // Modals (Lazy Loaded)
 const StatsModal = React.lazy(() => import('./components/common/StatsModal').then(module => ({ default: module.StatsModal })));
@@ -20,9 +22,13 @@ const AdminDashboardModal = React.lazy(() => import('./components/admin/AdminDas
 const FriendsModal = React.lazy(() => import('./components/friends/FriendsModal').then(module => ({ default: module.FriendsModal })));
 const FeatherShopModal = React.lazy(() => import('./components/shop/FeatherShopModal').then(module => ({ default: module.FeatherShopModal })));
 const ChatDrawer = React.lazy(() => import('./components/chat/ChatDrawer').then(module => ({ default: module.ChatDrawer })));
+const AdminRewardCelebrationModal = React.lazy(() => import('./components/common/AdminRewardCelebrationModal').then(module => ({ default: module.AdminRewardCelebrationModal })));
+const TradeModal = React.lazy(() => import('./components/cards/TradeModal').then(module => ({ default: module.TradeModal })));
+
+import { GemExplorerHome } from './components/gems/GemExplorerHome';
+import { DiscoverySubNav } from './components/discovery/DiscoverySubNav';
 
 // Main Views & Hubs (Lazy Loaded)
-const GemExplorerHome = React.lazy(() => import('./components/gems/GemExplorerHome').then(module => ({ default: module.GemExplorerHome })));
 const MiniGamesHub = React.lazy(() => import('./components/minigames/MiniGamesHub').then(module => ({ default: module.MiniGamesHub })));
 const SteamCatalogExplorer = React.lazy(() => import('./components/steam/SteamCatalogExplorer').then(module => ({ default: module.SteamCatalogExplorer })));
 const MicroIndieHub = React.lazy(() => import('./components/microindies/MicroIndieHub').then(module => ({ default: module.MicroIndieHub })));
@@ -30,6 +36,8 @@ const TheRoostHub = React.lazy(() => import('./components/roost/TheRoostHub').th
 const ArcadeHallView = React.lazy(() => import('./components/arcade/ArcadeHallView').then(module => ({ default: module.ArcadeHallView })));
 const ToolboxHub = React.lazy(() => import('./components/toolbox/ToolboxHub').then(module => ({ default: module.ToolboxHub })));
 const CardsBinderView = React.lazy(() => import('./components/cards/CardsBinderView').then(module => ({ default: module.CardsBinderView })));
+const OdysseyHub = React.lazy(() => import('./components/odyssey/OdysseyHub').then(module => ({ default: module.OdysseyHub })));
+const OdysseyMiniHud = React.lazy(() => import('./components/odyssey/OdysseyMiniHud').then(module => ({ default: module.OdysseyMiniHud })));
 
 // Mini-Games (Lazy Loaded)
 const ScreenleGame = React.lazy(() => import('./components/screenle/ScreenleGame').then(module => ({ default: module.ScreenleGame })));
@@ -53,6 +61,8 @@ import { UserAccountProvider } from './context/UserAccountProvider';
 import { useUserAccount } from './context/useUserAccount';
 import { SteamCatalogProvider } from './context/SteamCatalogProvider';
 import { FriendsProvider } from './context/FriendsProvider';
+import { TradesProvider } from './context/TradesProvider';
+import { useTrades } from './context/useTrades';
 import { ChatProvider } from './context/ChatProvider';
 import { getAppLanguage } from './utils/localization';
 import { useKonamiCode } from './utils/useKonamiCode';
@@ -65,6 +75,30 @@ import { getTodayDateString, getYesterdayDateString, isDatePlayable } from './ut
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { isAuthenticated, isAdmin } = useUserAccount();
+  const { isTradeModalOpen, openTradeModal } = useTrades();
+
+  // Defer non-critical floating gadgets (Chat & Odyssey Mini-HUD) until user interaction or quiet period
+  const [isIdleReady, setIsIdleReady] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const trigger = () => {
+      setIsIdleReady(true);
+      window.removeEventListener('scroll', trigger);
+      window.removeEventListener('touchstart', trigger);
+      window.removeEventListener('click', trigger);
+    };
+    window.addEventListener('scroll', trigger, { passive: true, once: true });
+    window.addEventListener('touchstart', trigger, { passive: true, once: true });
+    window.addEventListener('click', trigger, { passive: true, once: true });
+    const timer = setTimeout(trigger, 6000);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', trigger);
+      window.removeEventListener('touchstart', trigger);
+      window.removeEventListener('click', trigger);
+    };
+  }, []);
+
 
   // Mini-game sub-tab state (Hub or one of the 7 disciplines)
   const [activeMiniGame, setActiveMiniGame] = useState<MiniGameSubTab>(() => {
@@ -108,6 +142,7 @@ export const AppContent: React.FC = () => {
       ) {
         return 'minigames';
       }
+      if (hash.startsWith('#odyssey') || hash.startsWith('#idle') || hash.startsWith('#sanctuary')) return 'odyssey';
       if (hash.startsWith('#micro') || hash.startsWith('#itch')) return 'microindies';
       if (hash.startsWith('#catalog') || hash.startsWith('#steam')) return 'catalog';
       if (hash.startsWith('#arcade')) return 'arcade';
@@ -133,6 +168,7 @@ export const AppContent: React.FC = () => {
   const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
+  const [profileInitialTab, setProfileInitialTab] = useState<'profile' | 'steam' | 'cloud' | 'settings'>('profile');
   const [isFriendsOpen, setIsFriendsOpen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase();
@@ -147,7 +183,13 @@ export const AppContent: React.FC = () => {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [leaderboardCategory, setLeaderboardCategory] = useState<LeaderboardCategory>('arcade');
   const [leaderboardGame, setLeaderboardGame] = useState<string>('snake');
-  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState<boolean>(false);
+  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      return hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard');
+    }
+    return false;
+  });
   const [isShopOpen, setIsShopOpen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase();
@@ -156,6 +198,29 @@ export const AppContent: React.FC = () => {
     return false;
   });
   const [isCardsModalOpen, setIsCardsModalOpen] = useState<boolean>(false);
+  
+
+  useEffect(() => {
+    const handleRewardReceived = (e: Event) => {
+      const customEvent = e as CustomEvent<unknown[]>;
+      if (Array.isArray(customEvent.detail) && customEvent.detail.length > 0) {
+        
+      }
+    };
+    window.addEventListener('hoot_admin_reward_received', handleRewardReceived);
+    return () => {
+      window.removeEventListener('hoot_admin_reward_received', handleRewardReceived);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.startsWith('#trade') || hash.startsWith('#echange')) {
+        openTradeModal();
+      }
+    }
+  }, [openTradeModal]);
 
   const { unlockAchievement } = useAchievements();
 
@@ -294,8 +359,12 @@ export const AppContent: React.FC = () => {
       } else if (hash.startsWith('#quiz') || hash.startsWith('#quizz')) {
         setCurrentTab('minigames');
         setActiveMiniGame('quiz');
+      } else if (hash.startsWith('#odyssey') || hash.startsWith('#idle') || hash.startsWith('#sanctuary')) {
+        setCurrentTab('odyssey');
       } else if (hash.startsWith('#catalog') || hash.startsWith('#steam')) {
         setCurrentTab('catalog');
+      } else if (hash.startsWith('#micro') || hash.startsWith('#itch')) {
+        setCurrentTab('microindies');
       } else if (hash.startsWith('#arcade')) {
         setCurrentTab('arcade');
       } else if (hash.startsWith('#cards') || hash.startsWith('#album') || hash.startsWith('#binder')) {
@@ -311,10 +380,14 @@ export const AppContent: React.FC = () => {
         } else {
           handleOpenLeaderboard('arcade');
         }
+      } else if (hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard')) {
+        setIsAdminDashboardOpen(true);
       } else if (hash.startsWith('#friends') || hash.startsWith('#friend=')) {
         setIsFriendsOpen(true);
       } else if (hash.startsWith('#shop') || hash.startsWith('#boutique')) {
         setIsShopOpen(true);
+      } else if (hash.startsWith('#trade') || hash.startsWith('#echange')) {
+        openTradeModal();
       } else if (hash.startsWith('#gems') || hash === '') {
         setCurrentTab('gems');
       }
@@ -413,11 +486,14 @@ export const AppContent: React.FC = () => {
     }
   }, [currentTab, activeMiniGame, i18n.language, t]);
 
-  // Scroll to top automatically whenever tab or mini-game sub-mode changes
+  // Scroll to top automatically whenever tab or mini-game sub-mode changes (skipping initial mount)
+  const isFirstScrollMountRef = React.useRef(true);
   useEffect(() => {
+    if (isFirstScrollMountRef.current) {
+      isFirstScrollMountRef.current = false;
+      return;
+    }
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
   }, [currentTab, activeMiniGame]);
 
   const todayStr = getTodayDateString();
@@ -435,7 +511,7 @@ export const AppContent: React.FC = () => {
 
   const isDailyPuzzleActive =
     currentTab === 'minigames' &&
-    ['screenle', 'indledle', 'linkle', 'profille'].includes(activeMiniGame);
+    ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'].includes(activeMiniGame);
 
   return (
     <div className="relative min-h-screen w-full max-w-full overflow-x-hidden flex flex-col bg-transparent bg-ambient-stars text-slate-100 selection:bg-amber-500 selection:text-slate-950 font-sans">
@@ -449,7 +525,10 @@ export const AppContent: React.FC = () => {
         onOpenStats={() => setIsStatsOpen(true)}
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         onOpenCalendar={() => setIsCalendarOpen(true)}
-        onOpenProfile={() => setIsProfileOpen(true)}
+        onOpenProfile={(initialTab) => {
+          setProfileInitialTab(initialTab || 'profile');
+          setIsProfileOpen(true);
+        }}
         onOpenFriends={() => setIsFriendsOpen(true)}
         onOpenShop={() => setIsShopOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
@@ -477,7 +556,7 @@ export const AppContent: React.FC = () => {
               <Calendar className="w-3.5 h-3.5 text-[#f59e0b]" />
               <span className="font-semibold">{t('app.puzzleDate')}</span>
               <span className="text-amber-400 font-mono font-bold">{currentDate}</span>
-              <Archive className="w-3 h-3 text-slate-500 ml-1" />
+              <Archive className="w-3 h-3 text-slate-400 ml-1" />
             </button>
 
             {isYesterdayMode ? (
@@ -509,15 +588,20 @@ export const AppContent: React.FC = () => {
       )}
 
       {/* Main View Area */}
-      <React.Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-12 h-12 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" /></div>}>
-        <main className="flex-1 w-full relative z-10">
+      <main className="flex-1 w-full relative z-10">
+        <React.Suspense fallback={null}>
           {currentTab === 'gems' && (
-            <GemExplorerHome
-            currentDate={currentDate}
-            onNavigateTab={handleTabChange}
-            onOpenArcade={handleOpenArcade}
-          />
-        )}
+            <div>
+              <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pt-4 sm:pt-6">
+                <DiscoverySubNav currentTab="gems" onSelectTab={handleTabChange} />
+              </div>
+              <GemExplorerHome
+                currentDate={currentDate}
+                onNavigateTab={handleTabChange}
+                onOpenArcade={handleOpenArcade}
+              />
+            </div>
+          )}
 
         {currentTab === 'minigames' && (
           <div>
@@ -619,14 +703,24 @@ export const AppContent: React.FC = () => {
           </div>
         )}
 
+        {currentTab === 'odyssey' && (
+          <OdysseyHub />
+        )}
+
         {currentTab === 'microindies' && (
-          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 animate-in fade-in duration-300">
+          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 animate-in fade-in duration-300">
+            <React.Suspense fallback={null}>
+              <DiscoverySubNav currentTab="microindies" onSelectTab={handleTabChange} />
+            </React.Suspense>
             <MicroIndieHub />
           </div>
         )}
 
         {currentTab === 'catalog' && (
-          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 animate-in fade-in duration-300">
+          <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 animate-in fade-in duration-300">
+            <React.Suspense fallback={null}>
+              <DiscoverySubNav currentTab="catalog" onSelectTab={handleTabChange} />
+            </React.Suspense>
             <SteamCatalogExplorer />
           </div>
         )}
@@ -652,14 +746,13 @@ export const AppContent: React.FC = () => {
             onNavigateMiniGames={() => handleTabChange('minigames')}
           />
         )}
+        </React.Suspense>
       </main>
-      </React.Suspense>
 
       {/* Global Modals - Isolated Suspense & ErrorBoundary so they never unmount the page */}
       <ErrorBoundary isModal>
         <React.Suspense fallback={null}>
-          {isStatsOpen && (
-            <StatsModal
+          <StatsModal
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           initialTab={
@@ -669,10 +762,8 @@ export const AppContent: React.FC = () => {
               : 'screenle'
           }
         />
-      )}
 
-      {isAchievementsOpen && (
-        <AchievementsModal
+      <AchievementsModal
           isOpen={isAchievementsOpen}
           onClose={() => setIsAchievementsOpen(false)}
           onNavigateGame={(gameMode) => {
@@ -680,10 +771,8 @@ export const AppContent: React.FC = () => {
             handleTabChange(gameMode as any);
           }}
         />
-      )}
 
-      {isCalendarOpen && (
-        <CalendarArchiveModal
+      <CalendarArchiveModal
           isOpen={isCalendarOpen}
           onClose={() => setIsCalendarOpen(false)}
           currentDate={currentDate}
@@ -693,11 +782,10 @@ export const AppContent: React.FC = () => {
             }
           }}
         />
-      )}
 
-      {isProfileOpen && (
-        <ProfileModal
+      <ProfileModal
           isOpen={isProfileOpen}
+          initialTab={profileInitialTab}
           onClose={() => setIsProfileOpen(false)}
           onOpenAdminDashboard={() => {
             if (isAuthenticated && isAdmin) {
@@ -708,18 +796,17 @@ export const AppContent: React.FC = () => {
           onOpenShop={() => setIsShopOpen(true)}
           onOpenAuth={() => setIsAuthOpen(true)}
         />
-      )}
 
-      {isShopOpen && (
-        <FeatherShopModal
+      <FeatherShopModal
           isOpen={isShopOpen}
           onClose={() => setIsShopOpen(false)}
-          onOpenProfile={() => setIsProfileOpen(true)}
+          onOpenProfile={() => {
+            setProfileInitialTab('profile');
+            setIsProfileOpen(true);
+          }}
         />
-      )}
 
-      {isFriendsOpen && (
-        <FriendsModal
+      <FriendsModal
           isOpen={isFriendsOpen}
           onClose={() => setIsFriendsOpen(false)}
           onOpenAuth={() => setIsAuthOpen(true)}
@@ -730,47 +817,52 @@ export const AppContent: React.FC = () => {
             setActiveMiniGame('versus');
           }}
         />
-      )}
 
-      {isAuthOpen && (
-        <AuthModal
+      <AuthModal
           isOpen={isAuthOpen}
           onClose={() => setIsAuthOpen(false)}
         />
-      )}
 
-      {isEasterEggOpen && (
-        <OwlEasterEggModal
+      <OwlEasterEggModal
           isOpen={isEasterEggOpen}
           onClose={() => setIsEasterEggOpen(false)}
           onOpenArcade={() => handleOpenArcade('snake')}
         />
-      )}
 
-      {isArcadeOpen && (
-        <ArcadeModal
+      <ArcadeModal
           isOpen={isArcadeOpen}
           initialGame={arcadeGame}
           onClose={() => setIsArcadeOpen(false)}
           onOpenLeaderboard={(gameId) => handleOpenLeaderboard('arcade', gameId)}
         />
-      )}
 
-      {isLeaderboardOpen && (
-        <LeaderboardModal
+      <LeaderboardModal
           isOpen={isLeaderboardOpen}
           onClose={() => setIsLeaderboardOpen(false)}
           initialCategory={leaderboardCategory}
           initialGame={leaderboardGame}
         />
-      )}
 
       {isAdminDashboardOpen && isAuthenticated && isAdmin && (
         <AdminDashboardModal
           isOpen={isAdminDashboardOpen}
-          onClose={() => setIsAdminDashboardOpen(false)}
+          onClose={() => {
+            setIsAdminDashboardOpen(false);
+            if (typeof window !== 'undefined') {
+              const hash = window.location.hash.toLowerCase();
+              if (hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard')) {
+                history.replaceState(null, '', window.location.pathname + window.location.search);
+              }
+            }
+          }}
         />
       )}
+
+      {/* Célébration Décret Royal / Récompense Souveraine Hibouxe */}
+      <AdminRewardCelebrationModal />
+
+      {/* Centre d'Échange Bilatéral de Cartes */}
+      <TradeModal />
 
       {(() => {
         const isAnyModalOpen = Boolean(
@@ -785,9 +877,22 @@ export const AppContent: React.FC = () => {
           isLeaderboardOpen ||
           isAdminDashboardOpen ||
           isShopOpen ||
-          isCardsModalOpen
+          isCardsModalOpen ||
+          isTradeModalOpen
         );
-        return <ChatDrawer onOpenAuth={() => setIsAuthOpen(true)} isModalActive={isAnyModalOpen} />;
+        return (
+          <>
+            {isIdleReady && (
+              <>
+                <ChatDrawer onOpenAuth={() => setIsAuthOpen(true)} isModalActive={isAnyModalOpen} />
+                <OdysseyMiniHud
+                  onNavigateToOdyssey={() => handleTabChange('odyssey')}
+                  isModalActive={isAnyModalOpen || currentTab === 'odyssey'}
+                />
+              </>
+            )}
+          </>
+        );
       })()}
         </React.Suspense>
       </ErrorBoundary>
@@ -818,12 +923,14 @@ export const AppContent: React.FC = () => {
         />
       )}
 
-      {/* Footer */}
+      {/* Footer (Lazy Loaded) */}
       <div className="relative z-10">
-        <Footer
-          onSelectTab={handleTabChange}
-          onEasterEggTrigger={() => setIsEasterEggOpen(true)}
-        />
+        <React.Suspense fallback={null}>
+          <Footer
+            onSelectTab={handleTabChange}
+            onEasterEggTrigger={() => setIsEasterEggOpen(true)}
+          />
+        </React.Suspense>
       </div>
     </div>
   );
@@ -834,15 +941,17 @@ export default function App() {
     <UserAccountProvider>
       <GameStatsProvider>
         <AchievementsProvider>
-          <SteamCatalogProvider>
-            <FriendsProvider>
-              <ChatProvider>
-                <ErrorBoundary>
-                  <AppContent />
-                </ErrorBoundary>
-              </ChatProvider>
-            </FriendsProvider>
-          </SteamCatalogProvider>
+          <FriendsProvider>
+            <TradesProvider>
+              <SteamCatalogProvider>
+                <ChatProvider>
+                  <ErrorBoundary>
+                    <AppContent />
+                  </ErrorBoundary>
+                </ChatProvider>
+              </SteamCatalogProvider>
+            </TradesProvider>
+          </FriendsProvider>
         </AchievementsProvider>
       </GameStatsProvider>
     </UserAccountProvider>

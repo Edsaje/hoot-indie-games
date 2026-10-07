@@ -223,6 +223,7 @@ export const GameSearchBar: React.FC<GameSearchBarProps> = ({
               ? t('search.searchCluePlaceholder', { count: candidateGamesAvailable.length })
               : placeholder || t('common.guess')
           }
+          aria-label={placeholder || t('common.guess')}
           className="w-full pl-11 pr-24 py-3.5 bg-[#06241b] border-2 border-[#78350f] focus:border-[#f59e0b] rounded-2xl text-white placeholder-slate-400 font-medium text-base sm:text-sm focus:outline-none transition shadow-xl focus:shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
         />
 
@@ -236,6 +237,11 @@ export const GameSearchBar: React.FC<GameSearchBarProps> = ({
               setIsOpen(true);
               requestAnimationFrame(updatePlacement);
             }}
+            aria-label={
+              filterByClues
+                ? t('search.filterCluesActive')
+                : t('search.filterCluesInactive')
+            }
             title={
               filterByClues
                 ? t('search.filterCluesActive')
@@ -334,7 +340,7 @@ export const GameSearchBar: React.FC<GameSearchBarProps> = ({
                     </div>
                     <ChevronRight
                       className={`w-4 h-4 shrink-0 transition-transform ${
-                        isHighlighted ? 'text-[#f59e0b] translate-x-0.5' : 'text-slate-500'
+                        isHighlighted ? 'text-[#f59e0b] translate-x-0.5' : 'text-slate-400'
                       }`}
                     />
                   </div>

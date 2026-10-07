@@ -365,7 +365,12 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
   // Raccourcis clavier (1, 2, 3, 4, Espace)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameState !== 'playing' || feedback !== null || !currentQuestion) return;
+      
+      const target = e.target as HTMLElement;
+      if (target && (['INPUT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable)) {
+        return;
+      }
+if (gameState !== 'playing' || feedback !== null || !currentQuestion) return;
 
       if (['1', '&'].includes(e.key) && currentQuestion.choices[0]) {
         e.preventDefault();
@@ -579,7 +584,7 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
             </div>
 
             {/* Contrôle Muet & Passer */}
-            <div className="w-full flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-800">
+            <div className="w-full flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
               <button
                 onClick={() => setIsMuted((prev) => !prev)}
                 className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer"
@@ -612,7 +617,7 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
                 } else if (isSelected && !isTarget) {
                   btnStyle = 'bg-rose-600/30 border-rose-500 text-rose-300 font-bold';
                 } else {
-                  btnStyle = 'bg-slate-800/40 border-slate-800 text-slate-500 opacity-50';
+                  btnStyle = 'bg-slate-800/40 border-slate-800 text-slate-400 opacity-50';
                 }
               }
 

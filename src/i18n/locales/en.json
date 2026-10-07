@@ -8,6 +8,8 @@
     "archiveBanner": "Archive Mode"
   },
   "nav": {
+    "discovery": "Discovery",
+    "odyssey": "Odyssey",
     "gems": "Gems",
     "catalog": "Catalog",
     "games": "Mini-Games",
@@ -854,7 +856,15 @@
     },
     "viewAllInHub": "View all mini-games in Hub",
     "backToHub": "← Games Hub",
-    "dailySolved": "Daily puzzle solved"
+    "dailySolved": "Daily puzzle solved",
+    "dailyProgressTitle": "Daily Challenges Progress",
+    "dailyProgressSub": "Conquer all 8 trials to keep your streak glowing!",
+    "archiveProgressSub": "Archive from {{date}}",
+    "grandSlamTitle": "Daily Grand Slam Achieved!",
+    "grandSlamPerfect": "Flawless 8/8 score! You are a true connoisseur of the indie scene.",
+    "grandSlamCompleted": "You have completed all 8 challenges today. See you tomorrow for new puzzles!",
+    "nextChallengeLabel": "Recommended Next Challenge",
+    "playNext": "Play Next Challenge"
   },
   "streak": {
     "flamePreserved": "Streak Flame Preserved!",
@@ -971,6 +981,13 @@
     "proposeBtn": "Submit a Micro-Indie",
     "playOnline": "Play in Browser 🌐",
     "searchPlaceholder": "Search a creator, game...",
+    "shuffleBtn": "Shuffle",
+    "shuffleTooltip": "Shuffle games randomly to discover new ones",
+    "authRequiredToLike": "Login required: Please log in to your Hoot account to vote and support this game (incognito anti-cheat)!",
+    "loginToVote": "Login required to vote (anti-cheat)",
+    "alreadyVoted": "You already voted for this gem",
+    "removeVote": "Click to remove your vote",
+    "voteForGame": "Vote for this gem",
     "noGamesTitle": "No micro-indies match these criteria",
     "noGamesDesc": "Be the first to submit an overlooked gem or reset your filters!",
     "filters": {

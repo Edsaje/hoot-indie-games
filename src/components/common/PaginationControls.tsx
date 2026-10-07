@@ -97,7 +97,6 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
 
   return (
     <nav
-      role="navigation"
       aria-label="Pagination"
       className={`flex flex-col lg:flex-row items-center justify-between gap-4 pt-6 pb-2 border-t border-[#1e293b]/70 ${className}`}
     >
@@ -111,7 +110,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
           defaultValue: `Affichage de ${startIdx} à ${endIdx} sur ${totalItems} ${resolvedItemName}`,
         })}
         {totalPages > 1 && (
-          <span className="hidden md:inline text-slate-500 ml-2">
+          <span className="hidden md:inline text-slate-400 ml-2">
             • {t('pagination.page', { current: currentPage, total: totalPages, defaultValue: `Page ${currentPage} sur ${totalPages}` })}
           </span>
         )}
@@ -185,7 +184,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
                 p === '...' ? (
                   <span
                     key={`ellipsis-${idx}`}
-                    className="w-7 h-8 flex items-center justify-center text-slate-500 font-bold text-xs"
+                    className="w-7 h-8 flex items-center justify-center text-slate-400 font-bold text-xs"
                     aria-hidden="true"
                   >
                     …

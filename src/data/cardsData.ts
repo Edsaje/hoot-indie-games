@@ -36,6 +36,9 @@ const LEGENDARY_GAME_IDS = new Set([
   'outlast',
   'astroneer',
   'gunfire-reborn',
+  'spelunky',
+  'speluncky',
+  'spelunky-2',
 ]);
 
 // Chefs-d'œuvre majeurs acclamés (Épiques)
@@ -142,7 +145,6 @@ const RARE_GAME_IDS = new Set([
   'rogue-legacy-2',
   'unturned',
   'moonlighter',
-  'spelunky-2',
   'blasphemous-2',
   'content-warning',
   'tcg-card-shop-simulator',
@@ -267,19 +269,31 @@ const RARE_GAME_IDS = new Set([
 
 /**
  * Seuils officiels d'évaluations Steam pour l'attribution automatique des raretés de cartes.
+ * Calibrés spécifiquement pour le jeu indépendant (où 25k avis est un jalon colossal).
  */
 export const STEAM_RARITY_THRESHOLDS = {
-  // 🟡 Légendaire : >= 100 000 avis Steam (ou >= 75 000 avis avec score ultra-positif >= 95%)
-  LEGENDARY_MIN_REVIEWS: 100000,
-  LEGENDARY_ALT_MIN_REVIEWS: 75000,
+  // 🟡 Légendaire : >= 90 000 avis Steam (ou >= 60 000 avis avec score ultra-positif >= 95%)
+  LEGENDARY_MIN_REVIEWS: 90000,
+  LEGENDARY_ALT_MIN_REVIEWS: 60000,
   LEGENDARY_ALT_MIN_POSITIVE: 95,
 
-  // 🟣 Épique : >= 25 000 avis Steam
+  // 🟣 Épique : >= 25 000 avis Steam (ou >= 15 000 avis avec score >= 92%)
   EPIC_MIN_REVIEWS: 25000,
+  EPIC_ALT_MIN_REVIEWS: 15000,
+  EPIC_ALT_MIN_POSITIVE: 92,
 
-  // 🔵 Rare : >= 5 000 avis Steam
-  RARE_MIN_REVIEWS: 5000,
+  // 🔵 Rare : >= 4 000 avis Steam (ou >= 2 000 avis avec score >= 88%)
+  RARE_MIN_REVIEWS: 4000,
+  RARE_ALT_MIN_REVIEWS: 2000,
+  RARE_ALT_MIN_POSITIVE: 88,
 } as const;
+
+export interface SteamReviewMetrics {
+  totalReviews?: number;
+  totalPositive?: number;
+  positivePercent?: number;
+  reviewScoreDesc?: string;
+}
 
 /**
  * Extrait l'AppID Steam numérique d'un objet Game
@@ -303,12 +317,16 @@ export function extractSteamAppId(game?: Partial<Game> | null): number | null {
  * Détermine la rareté d'une carte d'après les seuils officiels d'évaluations Steam et l'aura du jeu.
  * Priorités :
  * 1. Surcharge manuelle (game.cardRarity si définie par l'Admin)
- * 2. Panthéon sacré intemporel (LEGENDARY_GAME_IDS)
+ * 2. Panthéon sacré intemporel (LEGENDARY_GAME_IDS avec normalisation slug & titre)
  * 3. Données officielles certifiées Steam Store (nombre d'avis et taux d'approbation)
  * 4. Listes historiques de prestige (EPIC_GAME_IDS, RARE_GAME_IDS)
  * 5. Commune par défaut (pépites confidentielles / micro-indés)
  */
-export function computeGameRarity(gameId: string, game?: Partial<Game>): CardRarity {
+export function computeGameRarity(
+  gameId: string,
+  game?: Partial<Game> & { steamReviews?: SteamReviewMetrics },
+  reviewsData?: SteamReviewMetrics
+): CardRarity {
   // 1. Surcharge manuelle forcée
   if (game && game.cardRarity) {
     if (['common', 'rare', 'epic', 'legendary'].includes(game.cardRarity)) {
@@ -316,42 +334,72 @@ export function computeGameRarity(gameId: string, game?: Partial<Game>): CardRar
     }
   }
 
-  // 2. Panthéon sacré intemporel
-  if (LEGENDARY_GAME_IDS.has(gameId)) {
+  const normId = (gameId || game?.id || '').toLowerCase().trim();
+  const normTitle = (game?.title || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  // 2. Panthéon sacré intemporel (vérification stricte du slug et du titre normalisé)
+  if (
+    LEGENDARY_GAME_IDS.has(normId) ||
+    (normTitle && LEGENDARY_GAME_IDS.has(normTitle)) ||
+    normId === 'spelunky' ||
+    normId === 'speluncky' ||
+    normTitle === 'spelunky' ||
+    normTitle === 'speluncky'
+  ) {
     return 'legendary';
   }
 
   // 3. Calcul automatique d'après les évaluations Steam certifiées
   const appId = extractSteamAppId(game);
-  if (appId) {
-    const store = getSteamStoreData(appId);
-    if (store && typeof store.totalReviews === 'number' && store.totalReviews > 0) {
-      const reviews = store.totalReviews;
-      const posPercent = store.positivePercent || 0;
+  const store = appId ? getSteamStoreData(appId) : undefined;
+  const gameAny = game as { steamReviews?: SteamReviewMetrics } | undefined;
 
-      if (
-        reviews >= STEAM_RARITY_THRESHOLDS.LEGENDARY_MIN_REVIEWS ||
-        (reviews >= STEAM_RARITY_THRESHOLDS.LEGENDARY_ALT_MIN_REVIEWS &&
-          posPercent >= STEAM_RARITY_THRESHOLDS.LEGENDARY_ALT_MIN_POSITIVE)
-      ) {
-        return 'legendary';
-      }
+  const totalReviews =
+    reviewsData?.totalReviews ??
+    gameAny?.steamReviews?.totalReviews ??
+    store?.totalReviews ??
+    0;
 
-      if (reviews >= STEAM_RARITY_THRESHOLDS.EPIC_MIN_REVIEWS) {
-        return 'epic';
-      }
+  const positivePercent =
+    reviewsData?.positivePercent ??
+    gameAny?.steamReviews?.positivePercent ??
+    store?.positivePercent ??
+    0;
 
-      if (reviews >= STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS) {
-        return 'rare';
-      }
-
-      return 'common';
+  if (totalReviews > 0) {
+    if (
+      totalReviews >= STEAM_RARITY_THRESHOLDS.LEGENDARY_MIN_REVIEWS ||
+      (totalReviews >= STEAM_RARITY_THRESHOLDS.LEGENDARY_ALT_MIN_REVIEWS &&
+        positivePercent >= STEAM_RARITY_THRESHOLDS.LEGENDARY_ALT_MIN_POSITIVE)
+    ) {
+      return 'legendary';
     }
+
+    if (
+      totalReviews >= STEAM_RARITY_THRESHOLDS.EPIC_MIN_REVIEWS ||
+      (totalReviews >= STEAM_RARITY_THRESHOLDS.EPIC_ALT_MIN_REVIEWS &&
+        positivePercent >= STEAM_RARITY_THRESHOLDS.EPIC_ALT_MIN_POSITIVE)
+    ) {
+      return 'epic';
+    }
+
+    if (
+      totalReviews >= STEAM_RARITY_THRESHOLDS.RARE_MIN_REVIEWS ||
+      (totalReviews >= STEAM_RARITY_THRESHOLDS.RARE_ALT_MIN_REVIEWS &&
+        positivePercent >= STEAM_RARITY_THRESHOLDS.RARE_ALT_MIN_POSITIVE)
+    ) {
+      return 'rare';
+    }
+
+    return 'common';
   }
 
   // 4. Fallback sur les listes canoniques de prestige
-  if (EPIC_GAME_IDS.has(gameId)) return 'epic';
-  if (RARE_GAME_IDS.has(gameId)) return 'rare';
+  if (EPIC_GAME_IDS.has(normId) || (normTitle && EPIC_GAME_IDS.has(normTitle))) return 'epic';
+  if (RARE_GAME_IDS.has(normId) || (normTitle && RARE_GAME_IDS.has(normTitle))) return 'rare';
 
   // 5. Défaut : Commune
   return 'common';
@@ -424,11 +472,66 @@ let dynamicCardsPool: CardItem[] = ALL_CARDS;
 export function setDynamicCardsPool(pool: CardItem[]): void {
   if (Array.isArray(pool) && pool.length > 0) {
     dynamicCardsPool = pool;
+    // Maintenir le registre global CARDS_BY_ID à jour
+    for (const card of pool) {
+      if (card && card.id) {
+        CARDS_BY_ID.set(card.id, card);
+      }
+    }
   }
 }
 
 export function getDynamicCardsPool(): CardItem[] {
   return dynamicCardsPool;
+}
+
+/**
+ * Recherche une carte par son ID dans le pool dynamique en cours ou dans le registre global
+ */
+export function getCardById(cardId: string): CardItem | undefined {
+  if (!cardId) return undefined;
+  const inDynamic = dynamicCardsPool.find((c) => c && c.id === cardId);
+  if (inDynamic) return inDynamic;
+  if (CARDS_BY_ID.has(cardId)) {
+    return CARDS_BY_ID.get(cardId);
+  }
+  return undefined;
+}
+
+/**
+ * Crée une carte de repli gracieuse pour une pépite retirée ou orpheline
+ */
+export function createFallbackCard(cardId: string, fallbackTitle?: string, fallbackRarity?: CardRarity): CardItem {
+  const cleanTitle =
+    fallbackTitle ||
+    cardId
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  return {
+    id: cardId,
+    gameId: cardId,
+    title: cleanTitle,
+    cardNumber: 0,
+    rarity: fallbackRarity || 'common',
+    releaseYear: 2024,
+    developer: 'Studio Indé',
+    genres: ['Indépendant'],
+    imageUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/header.jpg',
+    tagline: {
+      fr: 'Carte d’archive du Sanctuaire',
+      en: 'Sanctuary Archive Card',
+    },
+  };
+}
+
+/**
+ * Récupère une carte existante ou génère une carte de repli sûre
+ */
+export function getOrCreateCard(cardId: string, fallbackTitle?: string, fallbackRarity?: CardRarity): CardItem {
+  const existing = getCardById(cardId);
+  if (existing) return existing;
+  return createFallbackCard(cardId, fallbackTitle, fallbackRarity);
 }
 
 /**

@@ -68,7 +68,7 @@ export const CardView: React.FC<CardViewProps> = ({
       >
         <div className="absolute inset-1 border border-slate-700/20 pointer-events-none" />
         {/* Header mystère */}
-        <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
+        <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
           <span>#{String(card.cardNumber).padStart(3, '0')}</span>
           <span className="text-[9px] uppercase px-1.5 py-0.5 rounded-none border border-slate-700 bg-slate-800/80 text-slate-400">
             {rarityName}
@@ -77,18 +77,18 @@ export const CardView: React.FC<CardViewProps> = ({
 
         {/* Cœur mystère : silhouette sombre */}
         <div className="my-auto flex flex-col items-center justify-center text-center py-4">
-          <div className="w-12 h-12 rounded-none bg-slate-800/50 border border-slate-700/60 flex items-center justify-center text-slate-500 mb-2 group-hover:scale-105 transition-transform">
-            <Lock className="w-5 h-5 text-slate-500 group-hover:text-amber-400 transition-colors" />
+          <div className="w-12 h-12 rounded-none bg-slate-800/50 border border-slate-700/60 flex items-center justify-center text-slate-400 mb-2 group-hover:scale-105 transition-transform">
+            <Lock className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" />
           </div>
           <div className="text-xs font-bold text-slate-400 line-clamp-1 group-hover:text-slate-300">
             {card.title}
           </div>
-          <div className="text-[10px] text-slate-600 font-mono mt-0.5">{card.releaseYear}</div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">{card.releaseYear}</div>
         </div>
 
         {/* Footer */}
         <div className="text-center pt-2 border-t border-slate-800/60">
-          <span className="text-[9px] text-slate-500 font-semibold uppercase tracking-wider">
+          <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
             Non obtenue
           </span>
         </div>
@@ -126,7 +126,7 @@ export const CardView: React.FC<CardViewProps> = ({
       {/* En-tête : Numéro, Rareté & Badge d'exemplaires */}
       <div className="relative z-20 flex items-center justify-between gap-1 text-[10px]">
         <span className="font-mono font-bold text-slate-300">
-          #{String(card.cardNumber).padStart(3, '0')}
+          {card.cardNumber > 0 ? `#${String(card.cardNumber).padStart(3, '0')}` : 'ARCHIVE'}
         </span>
 
         <div className="flex items-center gap-1">

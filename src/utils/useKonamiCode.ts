@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { readGamepadSnapshot } from './gamepad';
 
 /**
  * Hook souverain d'écoute du Code Konami légendaire (↑ ↑ ↓ ↓ ← → ← → B A)
@@ -65,7 +64,12 @@ export function useKonamiCode({ enabled = true, onSuccess }: UseKonamiCodeOption
 
     // 1. Écoute Clavier
     const handleKeyDown = (e: KeyboardEvent) => {
-      const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+      
+      const target = e.target as HTMLElement;
+      if (target && (['INPUT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable)) {
+        return;
+      }
+const activeTag = (document.activeElement?.tagName || '').toLowerCase();
       if (activeTag === 'input' || activeTag === 'textarea' || (document.activeElement as HTMLElement)?.isContentEditable) {
         return;
       }
@@ -85,26 +89,73 @@ export function useKonamiCode({ enabled = true, onSuccess }: UseKonamiCodeOption
 
     window.addEventListener('keydown', handleKeyDown, { passive: true });
 
-    // 2. Écoute Manette (Gamepad Polling discret)
+    // 2. Écoute Manette active uniquement si une manette est connectée (évite 22kB et une boucle rAF inutile au chargement)
     let animId: number | null = null;
-    const pollGamepad = () => {
-      const snap = readGamepadSnapshot(0.35);
-      if (snap && snap.connected) {
-        if (snap.justUp) processInput('ArrowUp');
-        else if (snap.justDown) processInput('ArrowDown');
-        else if (snap.justLeft) processInput('ArrowLeft');
-        else if (snap.justRight) processInput('ArrowRight');
-        else if (snap.justActionB) processInput('KeyB');
-        else if (snap.justActionA) processInput('KeyA');
+    let readGamepadSnapshotFn: ((deadzone?: number) => any) | null = null;
+    let isPolling = false;
+
+    const startGamepadPolling = async () => {
+      if (isPolling) return;
+      isPolling = true;
+      try {
+        if (!readGamepadSnapshotFn) {
+          const mod = await import('./gamepad');
+          readGamepadSnapshotFn = mod.readGamepadSnapshot;
+        }
+      } catch {
+        return;
       }
-      animId = requestAnimationFrame(pollGamepad);
+
+      const poll = () => {
+        if (!isPolling) return;
+        if (readGamepadSnapshotFn) {
+          const snap = readGamepadSnapshotFn(0.35);
+          if (snap && snap.connected) {
+            if (snap.justUp) processInput('ArrowUp');
+            else if (snap.justDown) processInput('ArrowDown');
+            else if (snap.justLeft) processInput('ArrowLeft');
+            else if (snap.justRight) processInput('ArrowRight');
+            else if (snap.justActionB) processInput('KeyB');
+            else if (snap.justActionA) processInput('KeyA');
+          }
+        }
+        animId = requestAnimationFrame(poll);
+      };
+
+      animId = requestAnimationFrame(poll);
     };
 
-    animId = requestAnimationFrame(pollGamepad);
+    const stopGamepadPolling = () => {
+      isPolling = false;
+      if (animId !== null) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    };
+
+    const handleConnected = () => {
+      startGamepadPolling();
+    };
+
+    const handleDisconnected = () => {
+      const remaining = typeof navigator !== 'undefined' && navigator.getGamepads ? Array.from(navigator.getGamepads()).filter(Boolean) : [];
+      if (remaining.length === 0) {
+        stopGamepadPolling();
+      }
+    };
+
+    window.addEventListener('gamepadconnected', handleConnected);
+    window.addEventListener('gamepaddisconnected', handleDisconnected);
+
+    if (typeof navigator !== 'undefined' && navigator.getGamepads && Array.from(navigator.getGamepads()).some(Boolean)) {
+      startGamepadPolling();
+    }
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      if (animId !== null) cancelAnimationFrame(animId);
+      window.removeEventListener('gamepadconnected', handleConnected);
+      window.removeEventListener('gamepaddisconnected', handleDisconnected);
+      stopGamepadPolling();
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
     };
   }, [enabled]);

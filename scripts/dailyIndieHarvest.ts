@@ -4,8 +4,8 @@ import type { Game } from '../src/types/game';
 import { INDIE_GAMES } from '../src/data/games';
 import { UPCOMING_INDIE_GAMES, type UpcomingGame } from '../src/data/upcomingGames';
 import { INITIAL_MICRO_INDIES } from '../src/data/microIndies';
-import type { MicroIndieGame } from '../src/types/microIndie';
-import { BANNED_APP_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
+import { BANNED_APP_IDS, ADULT_CONTENT_DESCRIPTOR_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
+import { runSyncOdysseyRoutes } from './syncOdysseyRoutes';
 
 /**
  * 🦉 Hoot Indie Games — Script d'Alimentation & Synchronisation Quotidienne Automatique
@@ -17,16 +17,16 @@ import { BANNED_APP_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA 
  *    stricts de qualité (Règle 0 Hallucination, avis positifs > 80%, captures HD certifiées).
  */
 
-// Configuration des seuils de qualité stricts pour le sanctuaire des Pépites d'Or
+// Configuration des seuils de qualité pour le sanctuaire des Pépites d'Or et le Catalogue Étendu
 const CONFIG = {
-  MIN_REVIEWS: 500,          // Seuil de notoriété strict : au moins 500 avis Steam pour Pépites (défis quotidiens)
-  MIN_POSITIVE_RATIO: 0.85, // Seuil d'excellence : au moins 85% d'avis positifs (Très positifs / Extrêmement positifs)
-  MIN_CATALOG_REVIEWS: 30,   // Seuil pour le Catalogue Étendu (jeux émergents, micro-studios)
-  MIN_CATALOG_POSITIVE: 0.70, // 70% d'avis positifs minimum pour le Catalogue Étendu
+  MIN_REVIEWS: 350,          // Seuil d'avis pour Pépites (défis quotidiens) : 350+ avis (capte les perles indés renommées)
+  MIN_POSITIVE_RATIO: 0.82,  // 82%+ d'avis positifs pour Pépite ("Très positifs" ou "Extrêmement positifs")
+  MIN_CATALOG_REVIEWS: 5,    // Dès 5 avis pour le Catalogue Étendu (permet aux créations émergentes d'entrer)
+  MIN_CATALOG_POSITIVE: 0.50, // Dès 50% d'avis positifs pour le Catalogue (même des jeux moins bien notés comme demandé)
   MAX_NEW_PEPITES_PER_DAY: 3, // Nombre max de nouvelles pépites par jour (panthéon sélectif)
-  MAX_NEW_CATALOG_PER_DAY: 10, // Nombre max de nouveaux jeux catalogue par jour
-  TARGET_RADAR_COUNT: 9,    // Nombre cible de jeux à venir dans le Radar
-  REQUEST_DELAY_MS: 350,    // Délai poli entre requêtes Steam API
+  MAX_NEW_CATALOG_PER_DAY: 25, // Nombre max de nouveaux jeux catalogue par jour
+  TARGET_RADAR_COUNT: 12,    // Nombre cible de jeux à venir dans le Radar
+  REQUEST_DELAY_MS: 200,    // Délai poli entre requêtes Steam API
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -67,14 +67,62 @@ function isReadableLatinText(text: string): boolean {
   return Boolean(latinMatches && latinMatches.length / text.length >= 0.55);
 }
 
-// Filtre strict anti-contenu adulte / NSFW / shovelware / drogues / éditeurs AAA non-indés
+// Filtre strict anti-contenu adulte / NSFW / shovelware
 function isAdultOrInappropriate(details: SteamDetails): boolean {
+  if (!details) return true;
   if (BANNED_APP_IDS.has(details.steam_appid)) return true;
-  const devPub = (details.developers || []).join(' ') + ' ' + (details.publishers || []).join(' ');
-  if (isNonIndieOrAAA(devPub)) return true;
-  const text = details.name + ' ' + details.short_description + ' ' + (details.detailed_description || '');
-  const check = checkAdultContent(text);
-  return check.hasAdult;
+
+  // 1. Contrôle impératif des Content Descriptors officiels de Valve (Steam)
+  // ID 3: Adult Only Sexual Content, ID 4: Frequent Sexual Content / Frequent Nudity
+  if (details.content_descriptors) {
+    const ids = details.content_descriptors.ids || [];
+    const matchedId = ids.find((id) => ADULT_CONTENT_DESCRIPTOR_IDS.has(id));
+    if (matchedId !== undefined) {
+      console.warn(`   ⛔ [Filtré Content Descriptor ${matchedId}] "${details.name}" taggué adulte par Valve.`);
+      return true;
+    }
+    if (details.content_descriptors.notes) {
+      const notesCheck = checkAdultContent(details.content_descriptors.notes);
+      if (notesCheck.hasAdult) {
+        console.warn(`   ⛔ [Filtré Notes Valve] "${details.name}" (${notesCheck.keywords.join(', ')}).`);
+        return true;
+      }
+    }
+  }
+
+  // 2. Contrôle des genres & catégories Steam
+  if (details.genres && Array.isArray(details.genres)) {
+    for (const g of details.genres) {
+      const gDesc = (g.description || '').toLowerCase();
+      if (
+        gDesc.includes('adulte') ||
+        gDesc.includes('adult') ||
+        gDesc.includes('erotic') ||
+        gDesc.includes('érotique') ||
+        gDesc.includes('hentai') ||
+        gDesc.includes('sexual content') ||
+        gDesc.includes('contenu sexuel')
+      ) {
+        console.warn(`   ⛔ [Filtré Genre Adulte] "${details.name}" (${g.description}).`);
+        return true;
+      }
+    }
+  }
+
+  // 3. Analyse textuelle exhaustive (titre, résumé, description complète, notes)
+  const fullText = [
+    details.name || '',
+    details.short_description || '',
+    details.detailed_description || '',
+    details.content_descriptors?.notes || '',
+  ].join(' ');
+  const check = checkAdultContent(fullText);
+  if (check.hasAdult) {
+    console.warn(`   ⛔ [Filtré Mots-clés Adultes] "${details.name}" (${check.keywords.join(', ')}).`);
+    return true;
+  }
+
+  return false;
 }
 
 // Validation d'audit interne stricte (Règle 0 Hallucination & Intégrité)
@@ -217,6 +265,11 @@ interface SteamDetails {
   release_date?: { coming_soon?: boolean; date: string };
   genres?: Array<{ id: string; description: string }>;
   screenshots?: Array<{ id: number; path_full: string; path_thumbnail: string }>;
+  required_age?: number | string;
+  content_descriptors?: {
+    ids?: number[];
+    notes?: string;
+  };
 }
 
 async function fetchGameDetails(appId: number, lang: 'french' | 'english'): Promise<SteamDetails | null> {
@@ -235,53 +288,98 @@ async function fetchGameDetails(appId: number, lang: 'french' | 'english'): Prom
   }
 }
 
-// Récupération des AppIDs candidats depuis Steam
+// Récupération des AppIDs candidats depuis Steam (Flux étendus, Pépites de référence & Recherches thématiques)
 async function fetchCandidateAppIds(): Promise<number[]> {
   const candidates = new Set<number>();
 
-  console.log('🔍 [2/4] Interrogation des flux Steam Nouveautés & Tendances Indés...');
+  console.log('🔍 [2/4] Interrogation des flux Steam Nouveautés, Tendances & Pépites Indés...');
 
-  try {
-    const genreUrl = 'https://store.steampowered.com/api/getappsingenre/?genre=Indie&l=french';
-    const genreRes = await fetch(genreUrl);
-    if (genreRes.ok) {
-      const genreData = (await genreRes.json()) as {
-        tabs?: {
-          newreleases?: { items?: Array<{ id: number }> };
-          topsellers?: { items?: Array<{ id: number }> };
-        };
-      };
-
-      const newReleases = genreData.tabs?.newreleases?.items || [];
-      const topSellers = genreData.tabs?.topsellers?.items || [];
-
-      newReleases.forEach((item) => candidates.add(item.id));
-      topSellers.forEach((item) => candidates.add(item.id));
-      console.log(`   ➔ ${candidates.size} candidats trouvés dans les onglets Indés Steam.`);
+  // 1. Réapprovisionner depuis la liste des pépites indés cibles (target_appids.json)
+  const targetPath = path.join(process.cwd(), 'scripts/target_appids.json');
+  if (fs.existsSync(targetPath)) {
+    try {
+      const targetObj = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
+      for (const appIdStr of Object.keys(targetObj)) {
+        const id = parseInt(appIdStr, 10);
+        if (id && !BANNED_APP_IDS.has(id)) {
+          candidates.add(id);
+        }
+      }
+      console.log(`   ➔ ${candidates.size} pépites indés de référence chargées depuis target_appids.json.`);
+    } catch (err) {
+      console.warn('   ⚠️ Erreur lecture target_appids.json :', err);
     }
-  } catch (err) {
-    console.warn('   ⚠️ Erreur lors de l\'interrogation de getappsingenre :', err);
   }
 
+  // 2. Flux getappsingenre pour les genres majeurs du monde indépendant
+  for (const g of ['Indie', 'Action', 'Adventure', 'Strategy', 'RPG']) {
+    try {
+      const genreUrl = `https://store.steampowered.com/api/getappsingenre/?genre=${g}&l=french`;
+      const genreRes = await fetch(genreUrl);
+      if (genreRes.ok) {
+        const genreData = (await genreRes.json()) as {
+          tabs?: Record<string, { items?: Array<{ id: number }> }>;
+        };
+        for (const tab of Object.values(genreData.tabs || {})) {
+          for (const item of tab.items || []) {
+            if (item.id && !BANNED_APP_IDS.has(item.id)) candidates.add(item.id);
+          }
+        }
+      }
+    } catch {}
+    await delay(120);
+  }
+
+  // 3. Steam Search API : Moissonnage riche par tags (Pépites les plus acclamées, sorties récentes et sous-genres)
+  const searchQueries = [
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&sort_by=Reviews_DESC&json=1',
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&sort_by=Released_DESC&json=1',
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&json=1',
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,1662&category1=998&json=1', // Roguelike
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,3871&category1=998&json=1', // 2D Platformer
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,3964&category1=998&json=1', // Pixel Art
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,1664&category1=998&json=1', // Metroidvania
+    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,32322&category1=998&json=1', // Deckbuilder
+  ];
+
+  for (const sUrl of searchQueries) {
+    try {
+      const res = await fetch(sUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { items?: Array<{ logo?: string; name?: string }> };
+        for (const it of data.items || []) {
+          const match = it.logo?.match(/\/apps\/(\d+)\//);
+          if (match) {
+            const id = parseInt(match[1], 10);
+            if (id && !BANNED_APP_IDS.has(id)) candidates.add(id);
+          }
+        }
+      }
+    } catch {}
+    await delay(150);
+  }
+
+  // 4. Featured categories (nouveautés, meilleures ventes, sélections)
   try {
     const featUrl = 'https://store.steampowered.com/api/featuredcategories';
     const featRes = await fetch(featUrl);
     if (featRes.ok) {
-      const featData = (await featRes.json()) as {
-        new_releases?: { items?: Array<{ id: number }> };
-        top_sellers?: { items?: Array<{ id: number }> };
-      };
-
-      const items = [
-        ...(featData.new_releases?.items || []),
-        ...(featData.top_sellers?.items || []),
-      ];
-      items.forEach((item) => candidates.add(item.id));
+      const featData = (await featRes.json()) as Record<string, { items?: Array<{ id: number }> }>;
+      for (const section of Object.values(featData)) {
+        if (section && Array.isArray(section.items)) {
+          for (const item of section.items) {
+            if (item.id && !BANNED_APP_IDS.has(item.id)) candidates.add(item.id);
+          }
+        }
+      }
     }
   } catch (err) {
     console.warn('   ⚠️ Erreur lors de l\'interrogation de featuredcategories :', err);
   }
 
+  console.log(`   ➔ Au total : ${candidates.size} jeux candidats indés identifiés pour le traitement.`);
   return Array.from(candidates);
 }
 
@@ -351,6 +449,14 @@ async function syncUpcomingRadar(
 
       await delay(CONFIG.REQUEST_DELAY_MS);
       const detailsEn = await fetchGameDetails(appId, 'english');
+
+      const devText = (detailsFr.developers || []).join(', ');
+      const pubText = (detailsFr.publishers || []).join(', ');
+      if (isNonIndieOrAAA(devText, pubText, appId)) {
+        console.warn(`   ⛔ [Promotion Rejetée AAA] "${upcoming.title}" est associé à un éditeur/studio AAA (${devText || pubText}).`);
+        hasChanges = true;
+        continue;
+      }
 
       if (isAdultOrInappropriate(detailsFr) || (detailsEn && isAdultOrInappropriate(detailsEn))) {
         console.warn(`   ⛔ [Promotion Rejetée Adulte] "${upcoming.title}" contient du contenu inapproprié.`);
@@ -517,6 +623,10 @@ async function refillUpcomingRadar(
       );
       if (!isIndie) continue;
 
+      const devText = (detailsFr.developers || []).join(', ');
+      const pubText = (detailsFr.publishers || []).join(', ');
+      if (isNonIndieOrAAA(devText, pubText, appId)) continue;
+
       if (isAdultOrInappropriate(detailsFr)) continue;
 
       // Exclure les jeux F2P ou MMO
@@ -604,7 +714,7 @@ function loadCurrentGamesDatabase(): Game[] {
   if (fs.existsSync(targetPath)) {
     try {
       const content = fs.readFileSync(targetPath, 'utf8');
-      const match = content.match(/export const INDIE_GAMES: Game\[\] = (\[[\s\S]*?\]);\n\n\/\/ Pool/);
+      const match = content.match(/export const INDIE_GAMES: Game\[\] = (\[[\s\S]*?\]);\n\n/);
       if (match) {
         return JSON.parse(match[1]);
       }
@@ -613,6 +723,20 @@ function loadCurrentGamesDatabase(): Game[] {
     }
   }
   return INDIE_GAMES;
+}
+
+function loadExcludedGameIds(): string[] {
+  const targetPath = path.join(process.cwd(), 'src/data/games.ts');
+  if (fs.existsSync(targetPath)) {
+    try {
+      const content = fs.readFileSync(targetPath, 'utf8');
+      const match = content.match(/export const EXCLUDED_FROM_MINI_GAMES: string\[\] = (\[[\s\S]*?\]);/);
+      if (match) {
+        return JSON.parse(match[1]);
+      }
+    } catch {}
+  }
+  return [];
 }
 
 function saveGamesDatabase(gamesList: Game[]) {
@@ -661,8 +785,10 @@ function saveGamesDatabase(gamesList: Game[]) {
     return;
   }
 
+  const excludedIds = loadExcludedGameIds();
+
   const fileHeader = `import type { Game } from '../types/game';
-import { getScheduledDailyGame, getScheduledDay } from '../utils/monthlyScheduler';
+import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../utils/monthlyScheduler';
 
 /**
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
@@ -674,9 +800,14 @@ export const INDIE_GAMES: Game[] = `;
 
   const fileFooter = `;
 
-// Pool stable pour les jeux quotidiens (sanctuarisé sur INDIE_GAMES)
+// Liste d'exclusion des micro-jeux confidentiels / prototypes itch.io pour les mini-jeux quotidiens
+// (Permet de garantir que 100% des jeux proposés dans Screenle, Indledle, Chrono, Critique, Pixel, BlindTest sont connus du public)
+export const EXCLUDED_FROM_MINI_GAMES: string[] = ${JSON.stringify(excludedIds, null, 2)};
+
+// Pool sain et reconnu pour tous les défis quotidiens et mini-jeux
 export function getActiveDailyPool(): Game[] {
-  return INDIE_GAMES;
+  const excludedSet = new Set(EXCLUDED_FROM_MINI_GAMES);
+  return INDIE_GAMES.filter((g) => !excludedSet.has(g.id));
 }
 
 export function setCustomDailyPool(_pool: Game[] | null) {
@@ -685,18 +816,18 @@ export function setCustomDailyPool(_pool: Game[] | null) {
 
 // Helper déterministe pour obtenir le jeu du jour basé sur le calendrier mensuel équitable
 export function getDailyGame(dateString: string, offset = 0, pool?: Game[]): Game {
+  const gamesPool = pool && pool.length > 0 ? pool : INDIE_GAMES;
   if (offset === 0) {
-    return getScheduledDailyGame(dateString, 'screenle', pool);
+    return getScheduledDailyGame(dateString, 'screenle', gamesPool);
   }
   if (offset === 3) {
-    return getScheduledDailyGame(dateString, 'indledle', pool);
+    return getScheduledDailyGame(dateString, 'indledle', gamesPool);
   }
   if (offset === 17) {
-    return getScheduledDailyGame(dateString, 'dailyGem', pool);
+    return getScheduledDailyGame(dateString, 'dailyGem', gamesPool);
   }
 
   // Repli déterministe si offset personnalisé
-  const gamesPool = pool && pool.length > 0 ? pool : INDIE_GAMES;
   let hash = 0;
   for (let i = 0; i < dateString.length; i++) {
     hash = (hash << 5) - hash + dateString.charCodeAt(i);
@@ -708,8 +839,12 @@ export function getDailyGame(dateString: string, offset = 0, pool?: Game[]): Gam
 
 // Helper déterministe pour obtenir le jeu du jour pour Profille (sans collision avec Screenle ni Indledle)
 export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
-  return getScheduledDailyGame(dateString, 'profille', pool);
+  const gamesPool = pool && pool.length > 0 ? pool : INDIE_GAMES;
+  return getScheduledDailyGame(dateString, 'profille', gamesPool);
 }
+
+// Initialise le pool par défaut pour le planificateur mensuel
+setDefaultGamesPool(INDIE_GAMES);
 
 export { getScheduledDailyGame, getScheduledDay };
 `;
@@ -777,7 +912,7 @@ function saveSteamCatalogDatabase(newGames: any[], promotedGameIds: Set<string> 
     // Filtrer les jeux sans titre latin, les playtests ou les éditeurs AAA
     if (!/[a-zA-Z]/.test(g.title)) continue;
     if (g.title.toLowerCase().includes('playtest')) continue;
-    if (isNonIndieOrAAA(g.developer)) continue;
+    if (isNonIndieOrAAA(g.developer, undefined, appId || undefined)) continue;
     if (appId && BANNED_APP_IDS.has(appId)) continue;
 
     if (!existingIds.has(g.id) && (!appId || !existingAppIds.has(appId))) {
@@ -878,7 +1013,7 @@ async function harvestItchMicroIndies(
             fr: rawDesc,
             en: rawDesc,
           },
-          discoveredBy: 'Hoot Bot (Itch Moissonnage)',
+          discoveredBy: 'Hibouxe',
           likesCount: 1,
           featured: false,
           coverImage: cover,
@@ -1033,7 +1168,15 @@ export async function runDailyHarvest() {
     );
     if (!isIndie) continue;
 
-    // 4. Filtrer contenu adulte / NSFW
+    // 4. Contrôle éditeur / studio AAA non-indépendant
+    const devText = (detailsFr.developers || []).join(', ');
+    const pubText = (detailsFr.publishers || []).join(', ');
+    if (isNonIndieOrAAA(devText, pubText, appId)) {
+      console.log(`   ⛔ [Filtré Studio AAA] "${detailsFr.name}" (${devText || pubText}).`);
+      continue;
+    }
+
+    // 5. Filtrer contenu adulte / NSFW
     if (isAdultOrInappropriate(detailsFr)) {
       console.log(`   ⛔ [Filtré Adulte FR] ${detailsFr.name} contient du contenu inapproprié.`);
       continue;
@@ -1160,6 +1303,14 @@ export async function runDailyHarvest() {
     saveGamesDatabase(updatedGamesList);
     console.log(`\n🎉 [4/4] Base des Pépites mise à jour ! ${allNewPepites.length} pépite(s) ajoutée(s) (dont ${radarSync.promotedPepites.length} issue(s) du Radar).`);
     console.log(`📚 Nouveau panthéon des Pépites : ${loadCurrentGamesDatabase().length} chefs-d'œuvre certifiés.`);
+
+    // Synchronisation automatique des routes de l'Odyssée (Chantier 12)
+    try {
+      console.log('\n🌲 Actualisation automatique des routes & biomes de l’Odyssée...');
+      runSyncOdysseyRoutes(false);
+    } catch (err) {
+      console.warn('⚠️ Avertissement lors de la mise à jour des routes de l’Odyssée :', err);
+    }
   } else {
     console.log('\n☕ [4/4] Aucune nouvelle Pépite majeure à intégrer aujourd\'hui. Le sanctuaire reste sélectif et pur.');
   }

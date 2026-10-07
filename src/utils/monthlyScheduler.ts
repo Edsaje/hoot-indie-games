@@ -1,5 +1,10 @@
 import type { Game } from '../types/game';
-import { INDIE_GAMES } from '../data/games';
+
+let defaultGamesPool: Game[] = [];
+
+export function setDefaultGamesPool(pool: Game[]): void {
+  defaultGamesPool = pool;
+}
 
 /**
  * 🦉 Hoot Indie Games — Générateur Automatique de Saisons Mensuelles
@@ -25,8 +30,8 @@ export interface DailyScheduleDay {
 // Cache mémoire des plannings mensuels générés
 const monthlySchedulesCache = new Map<string, Map<string, DailyScheduleDay>>();
 
-// Clé de stockage local pour la persistance hors-ligne
-const STORAGE_PREFIX = 'hoot_season_schedule_v1_';
+// Clé de stockage local pour la persistance hors-ligne (v2 : régénération avec jeux connus garantis)
+const STORAGE_PREFIX = 'hoot_season_schedule_v2_';
 
 /**
  * Hash déterministe d'une chaîne de caractères (32 bits)
@@ -71,20 +76,23 @@ function seededShuffle<T>(array: T[], random: () => number): T[] {
  * pour ce mois, ce qui garantit que le mois ne change jamais une fois démarré.
  */
 export function getEligibleMonthlyPool(allGems: Game[], monthKey: string): Game[] {
-  const pool = allGems && allGems.length > 0 ? allGems : INDIE_GAMES;
+  const rawPool = allGems && allGems.length > 0 ? allGems : defaultGamesPool;
+  const pool = (rawPool || []).filter((g): g is Game => Boolean(g && g.id));
+  if (pool.length === 0) return [];
   const firstDayOfMonth = `${monthKey}-01`;
 
   const eligible = pool.filter((game) => {
     // Si pas de date d'ajout (base fondatrice certifiée) -> éligible
     if (!game.addedAt) return true;
-    // Si date d'ajout antérieure ou égale à la date de référence initiale
-    if (game.addedAt <= '2026-09-24') return true;
+    // Si date d'ajout antérieure ou égale à la date de référence (inclut la promo v1.2.6)
+    if (game.addedAt <= '2026-09-25') return true;
     // Sinon, le jeu doit avoir été intégré AVANT le début du mois en question
     return game.addedAt < firstDayOfMonth;
   });
 
   // Tri alphabétique par slug ID pour garantir une graine d'entrée universelle et identique sur tout navigateur
-  return (eligible.length >= 4 ? eligible : pool).slice().sort((a, b) => a.id.localeCompare(b.id));
+  const selected = eligible.length >= 4 ? eligible : pool;
+  return selected.slice().sort((a, b) => a.id.localeCompare(b.id));
 }
 
 /**
@@ -108,7 +116,7 @@ export function generateMonthlySchedule(
           JSON.parse(stored);
         const mapById = new Map<string, Game>();
         allGems.forEach((g) => mapById.set(g.id, g));
-        INDIE_GAMES.forEach((g) => {
+        defaultGamesPool.forEach((g) => {
           if (!mapById.has(g.id)) mapById.set(g.id, g);
         });
 
@@ -146,6 +154,9 @@ export function generateMonthlySchedule(
 
   // 3. Génération mathématique déterministe
   const eligiblePool = getEligibleMonthlyPool(allGems, monthKey);
+  if (!eligiblePool || eligiblePool.length === 0) {
+    return new Map();
+  }
   const [yearStr, monthStr] = monthKey.split('-');
   const year = parseInt(yearStr, 10);
   const month = parseInt(monthStr, 10);
@@ -173,37 +184,37 @@ export function generateMonthlySchedule(
     // B. Indledle : garantie 100% unique dans le mois + distinct de Screenle ce jour-là
     let idxI = (d - 1) % deckIndledle.length;
     let attemptsI = 0;
-    while (deckIndledle[idxI].id === screenleGame.id && attemptsI < deckIndledle.length) {
+    while (deckIndledle[idxI]?.id === screenleGame?.id && attemptsI < deckIndledle.length) {
       idxI = (idxI + 1) % deckIndledle.length;
       attemptsI++;
     }
-    const indledleGame = deckIndledle[idxI];
+    const indledleGame = deckIndledle[idxI] || screenleGame;
 
     // C. Profille : garantie 100% unique dans le mois + distinct de Screenle et Indledle ce jour-là
     let idxP = (d - 1) % deckProfille.length;
     let attemptsP = 0;
     while (
-      (deckProfille[idxP].id === screenleGame.id || deckProfille[idxP].id === indledleGame.id) &&
+      (deckProfille[idxP]?.id === screenleGame?.id || deckProfille[idxP]?.id === indledleGame?.id) &&
       attemptsP < deckProfille.length
     ) {
       idxP = (idxP + 1) % deckProfille.length;
       attemptsP++;
     }
-    const profilleGame = deckProfille[idxP];
+    const profilleGame = deckProfille[idxP] || screenleGame;
 
     // D. DailyGem : distinct des 3 mini-jeux de ce jour-là
     let idxG = (d - 1) % deckDailyGem.length;
     let attemptsG = 0;
     while (
-      (deckDailyGem[idxG].id === screenleGame.id ||
-        deckDailyGem[idxG].id === indledleGame.id ||
-        deckDailyGem[idxG].id === profilleGame.id) &&
+      (deckDailyGem[idxG]?.id === screenleGame?.id ||
+        deckDailyGem[idxG]?.id === indledleGame?.id ||
+        deckDailyGem[idxG]?.id === profilleGame?.id) &&
       attemptsG < deckDailyGem.length
     ) {
       idxG = (idxG + 1) % deckDailyGem.length;
       attemptsG++;
     }
-    const dailyGem = deckDailyGem[idxG];
+    const dailyGem = deckDailyGem[idxG] || screenleGame;
 
     const dayObj: DailyScheduleDay = {
       date,
@@ -242,14 +253,36 @@ export function generateMonthlySchedule(
  */
 export function getScheduledDay(dateString: string, allGems?: Game[]): DailyScheduleDay {
   const monthKey = dateString.slice(0, 7);
-  const pool = allGems && allGems.length > 0 ? allGems : INDIE_GAMES;
-  const schedule = generateMonthlySchedule(pool, monthKey);
+  const rawPool = allGems && allGems.length > 0 ? allGems : defaultGamesPool;
+  const pool = (rawPool || []).filter((g): g is Game => Boolean(g && g.id));
 
+  if (pool.length === 0) {
+    const dummyGame: Game = {
+      id: 'default-gem',
+      title: 'Hoot Indie Game',
+      releaseYear: 2026,
+      genre: ['Indie'],
+      artStyle: { fr: 'Pixel Art', en: 'Pixel Art' },
+      camera: { fr: '2D', en: '2D' },
+      developer: 'Indie Studio',
+      screenshots: ['/daily-hero.webp'],
+      hints: { tagline: { fr: 'Pépite indé', en: 'Indie Gem' } }
+    };
+    return {
+      date: dateString,
+      screenleGame: dummyGame,
+      indledleGame: dummyGame,
+      profilleGame: dummyGame,
+      dailyGem: dummyGame,
+    };
+  }
+
+  const schedule = generateMonthlySchedule(pool, monthKey);
   const entry = schedule.get(dateString);
   if (entry) return entry;
 
   // Repli de sécurité déterministe si date hors du mois normal
-  const fallback = pool[hashString(dateString) % pool.length];
+  const fallback = pool[hashString(dateString) % pool.length] || pool[0];
   return {
     date: dateString,
     screenleGame: fallback,

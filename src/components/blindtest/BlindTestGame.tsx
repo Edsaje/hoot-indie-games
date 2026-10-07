@@ -43,6 +43,7 @@ import { AttemptDistributionChart } from '../common/AttemptDistributionChart';
 import { recordDailyCommunityCompletion } from '../../services/leaderboardService';
 import { type ShareCardData } from '../../utils/generateShareCard';
 import { telemetry } from '../../services/telemetry';
+import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
 import { getClueLabel, getClueValue } from '../../utils/localization';
 
 interface BlindTestGameProps {
@@ -148,7 +149,8 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
   const mistakesCount = guesses.length;
   const currentStep = Math.min(mistakesCount, AUDIO_UNLOCK_DURATIONS.length - 1);
-  const maxAllowedDuration = isCompleted ? 20.0 : AUDIO_UNLOCK_DURATIONS[currentStep];
+  const TOTAL_MAX_DURATION = AUDIO_UNLOCK_DURATIONS[AUDIO_UNLOCK_DURATIONS.length - 1];
+  const maxAllowedDuration = isCompleted ? TOTAL_MAX_DURATION : AUDIO_UNLOCK_DURATIONS[currentStep];
 
   // Préchargement transparent de la piste officielle
   useEffect(() => {
@@ -157,14 +159,27 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
     }
   }, [puzzle?.audioUrl]);
 
-  // Réaction instantanée au bouton Mute sans coupure de lecture
+  // Réaction instantanée au bouton Mute et aux réglages de volume sonores sans coupure de lecture
   useEffect(() => {
-    if (masterGainRef.current && audioCtxRef.current) {
-      masterGainRef.current.gain.setValueAtTime(
-        isMuted ? 0 : 0.6,
-        audioCtxRef.current.currentTime
-      );
-    }
+    const updateGain = () => {
+      if (masterGainRef.current && audioCtxRef.current) {
+        const target = (isMuted || !soundFx.isEnabled())
+          ? 0
+          : 0.75 * soundFx.getMasterVolume() * soundFx.getMusicVolume();
+        masterGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+        masterGainRef.current.gain.setValueAtTime(
+          target,
+          audioCtxRef.current.currentTime
+        );
+      }
+    };
+
+    updateGain();
+
+    window.addEventListener('hoot_audio_settings_changed', updateGain);
+    return () => {
+      window.removeEventListener('hoot_audio_settings_changed', updateGain);
+    };
   }, [isMuted]);
 
   // Sauvegarde quotidienne
@@ -247,13 +262,15 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
     analyserRef.current = analyser;
 
     const masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(isMuted ? 0 : 0.6, ctx.currentTime);
+    const initialVol = (isMuted || !soundFx.isEnabled())
+      ? 0
+      : 0.75 * soundFx.getMasterVolume() * soundFx.getMusicVolume();
+    masterGain.gain.setValueAtTime(initialVol, ctx.currentTime);
     masterGain.connect(analyser);
     analyser.connect(ctx.destination);
     masterGainRef.current = masterGain;
 
     const playDuration = maxAllowedDuration;
-    setIsPlaying(true);
 
     const handle = await playBlindTestAudioClip({
       ctx,
@@ -265,19 +282,18 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
     playbackHandleRef.current = handle;
     setIsOfficialClip(handle.isOfficialClip);
+    setIsPlaying(true);
 
-    const startRealTime = performance.now();
-
-    // Boucle d'animation pour l'égaliseur et la barre de progression
+    // Boucle d'animation synchronisée avec l'horloge matérielle AudioContext pour une précision absolue
     const updateLoop = () => {
-      const elapsed = (performance.now() - startRealTime) / 1000;
+      const elapsed = Math.max(0, ctx.currentTime - handle.startTime);
       if (elapsed >= playDuration) {
         stopAudio();
         return;
       }
 
       setPlaybackSeconds(Number(Math.min(elapsed, playDuration).toFixed(1)));
-      setPlaybackProgress(Math.min(1, elapsed / 18.0));
+      setPlaybackProgress(Math.min(1, elapsed / TOTAL_MAX_DURATION));
 
       if (analyserRef.current) {
         const data = new Uint8Array(analyserRef.current.frequencyBinCount);
@@ -293,7 +309,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
     playbackTimeoutRef.current = setTimeout(() => {
       stopAudio();
-    }, playDuration * 1000 + 100);
+    }, playDuration * 1000 + 120);
   };
 
   // Télémétrie
@@ -658,7 +674,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
             {/* Compteur de Temps */}
             <div className="text-xs font-mono text-slate-300">
               <span className="font-bold text-pink-400">{playbackSeconds.toFixed(1)}s</span>
-              <span className="text-slate-500"> / {maxAllowedDuration.toFixed(1)}s</span>
+              <span className="text-slate-400"> / {maxAllowedDuration.toFixed(1)}s</span>
             </div>
           </div>
 
@@ -668,7 +684,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
               {/* Zone débloquée du palier courant */}
               <div
                 className="absolute top-0.5 bottom-0.5 left-0.5 bg-purple-500/25 rounded-full pointer-events-none transition-all duration-300"
-                style={{ width: `${Math.min(100, (maxAllowedDuration / 18.0) * 100)}%` }}
+                style={{ width: `${Math.min(100, (maxAllowedDuration / TOTAL_MAX_DURATION) * 100)}%` }}
               />
 
               {/* Remplissage de lecture active */}
@@ -679,7 +695,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
               {/* Lignes de découpe des paliers d'écoute */}
               {AUDIO_UNLOCK_DURATIONS.map((dur, i) => {
-                const leftPct = (dur / 18.0) * 100;
+                const leftPct = (dur / TOTAL_MAX_DURATION) * 100;
                 return (
                   <div
                     key={i}
@@ -690,17 +706,31 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
               })}
             </div>
 
-            {/* Paliers temporels sous la barre */}
-            <div className="flex justify-between text-[10px] font-mono text-slate-500 px-1">
-              <span>0s</span>
-              {AUDIO_UNLOCK_DURATIONS.map((dur, i) => (
-                <span
-                  key={i}
-                  className={i <= currentStep ? 'text-purple-300 font-bold' : 'text-slate-600'}
-                >
-                  {dur}s
-                </span>
-              ))}
+            {/* Paliers temporels sous la barre avec alignement exact sur chaque marqueur */}
+            <div className="relative w-full h-4 text-[10px] font-mono text-slate-400 select-none">
+              <span className="absolute left-0 text-slate-400">0s</span>
+              {AUDIO_UNLOCK_DURATIONS.map((dur, i) => {
+                const leftPct = (dur / TOTAL_MAX_DURATION) * 100;
+                const isCurrent = dur === maxAllowedDuration;
+                const isUnlocked = dur <= maxAllowedDuration;
+                const isLast = i === AUDIO_UNLOCK_DURATIONS.length - 1;
+
+                return (
+                  <span
+                    key={i}
+                    className={`absolute transition-colors ${
+                      isCurrent
+                        ? 'text-pink-400 font-bold'
+                        : isUnlocked
+                        ? 'text-purple-300 font-semibold'
+                        : 'text-slate-500'
+                    } ${isLast ? 'right-0' : '-translate-x-1/2'}`}
+                    style={isLast ? undefined : { left: `${leftPct}%` }}
+                  >
+                    {dur}s
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -722,7 +752,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                     ? 'bg-rose-500/20 text-rose-400 border-rose-500/50'
                     : isCurrent
                     ? 'bg-purple-500/20 text-purple-300 border-purple-400 ring-2 ring-purple-500/30'
-                    : 'bg-[#131b2e]/60 text-slate-600 border-[#1e293b]'
+                    : 'bg-[#131b2e]/60 text-slate-500 border-[#1e293b]'
                 }`}
               >
                 {isCorrectGuess ? (
@@ -755,7 +785,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                 className={`p-3 rounded-xl border transition-all ${
                   isUnlocked
                     ? 'bg-[#0f172a] border-purple-500/30 text-white shadow-sm'
-                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-500'
+                    : 'bg-[#0b0f19]/60 border-[#1e293b]/60 text-slate-400'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -763,12 +793,12 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                     {isUnlocked ? (
                       <Unlock className="w-3 h-3 text-purple-400" />
                     ) : (
-                      <Lock className="w-3 h-3 text-slate-600" />
+                      <Lock className="w-3 h-3 text-slate-500" />
                     )}
                     {getClueLabel(clue.labelFr, i18n.language)}
                   </span>
                   {!isUnlocked && (
-                    <span className="text-[9px] font-mono text-slate-500">
+                    <span className="text-[9px] font-mono text-slate-400">
                       {t('blindtest.guessCount', { count: idx + 1 })}
                     </span>
                   )}
@@ -778,7 +808,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                   {isUnlocked ? (
                     <span className="text-slate-200">{getClueValue(clue, i18n.language)}</span>
                   ) : (
-                    <span className="italic text-slate-600">
+                    <span className="italic text-slate-500">
                       {t('blindtest.clueLocked')}
                     </span>
                   )}
@@ -877,7 +907,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
                           {game.developer} • {game.releaseYear}
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-slate-500 shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
                     </button>
                   ))}
                 </motion.div>
@@ -994,6 +1024,12 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
               />
             </div>
           )}
+
+          {/* Enchaînement vers le Défi Suivant */}
+          <DailyGameNextBanner
+            currentGame="blindtest"
+            currentDate={currentDate}
+          />
         </motion.div>
       )}
 

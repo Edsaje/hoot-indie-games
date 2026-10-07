@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Crown,
@@ -44,11 +45,15 @@ import {
   MessageSquareText,
   FileSpreadsheet,
   ChevronDown,
+  Gift,
 } from 'lucide-react';
 import {
   fetchAdminOverview,
   deleteRegisteredUsername,
   deleteCommunitySuggestion,
+  approveAdminMicroIndie,
+  deleteAdminMicroIndie,
+  updateAdminMicroIndie,
   saveAdminGame,
   resetServerStats,
   editAdminUser,
@@ -56,13 +61,18 @@ import {
   purgeUserLeaderboardScores,
   manageForbiddenNames,
   createAdminUser,
+  giveAdminReward,
   getAdminExportCsvUrl,
   getAdminExportJsonUrl,
   ADMIN_STEAM_ID,
   type AdminOverviewPayload,
   type AdminUsernameEntry,
   type AdminCommunitySuggestion,
+  type AdminMicroIndieEntry,
 } from '../../services/adminService';
+import { getDynamicCardsPool, computeGameRarity } from '../../data/cardsData';
+import { registerSteamStoreData, type SteamStoreGameData } from '../../data/steamStoreData';
+import { RARITY_CONFIG } from '../../types/cards';
 import {
   inferCanonicalArtStyle,
   inferCanonicalCamera,
@@ -82,24 +92,33 @@ import { AdminGamesManager } from './AdminGamesManager';
 interface AdminDashboardModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialTab?: AdminTab;
 }
 
-type AdminTab = 'overview' | 'catalog' | 'games' | 'usernames' | 'suggestions' | 'system';
+type AdminTab = 'overview' | 'catalog' | 'games' | 'usernames' | 'suggestions' | 'microIndies' | 'system';
 
-export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen, onClose }) => {
+export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen, onClose, initialTab }) => {
   const { profile, isAuthenticated, isAdmin } = useUserAccount();
 
-  if (!isOpen || !isAuthenticated || !isAdmin) {
-    return null;
-  }
 
-  const currentSteamId = profile.steam?.steamId || ADMIN_STEAM_ID;
+  const currentSteamId = profile?.steam?.steamId || ADMIN_STEAM_ID;
 
-  const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const [activeTab, setActiveTab] = useState<AdminTab>(initialTab || 'overview');
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   const [data, setData] = useState<AdminOverviewPayload | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setActionNotice(null);
+      if (initialTab) {
+        setActiveTab(initialTab);
+      }
+    }
+  }
 
   // Filtres et gestion des utilisateurs
   const [usernameFilter, setUsernameFilter] = useState<string>('');
@@ -139,13 +158,39 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
   const [purgingUser, setPurgingUser] = useState<AdminUsernameEntry | null>(null);
   const [isPurgingScores, setIsPurgingScores] = useState<boolean>(false);
 
+  // Modale d'attribution de récompense souveraine (Gift)
+  const [rewardingUser, setRewardingUser] = useState<AdminUsernameEntry | null>(null);
+  const [rewardFeathers, setRewardFeathers] = useState<number>(100);
+  const [rewardCardId, setRewardCardId] = useState<string>('');
+  const [rewardIsHolo, setRewardIsHolo] = useState<boolean>(false);
+  const [rewardReason, setRewardReason] = useState<string>('Récompense souveraine offerte par Hibouxe 👑');
+  const [rewardCardSearch, setRewardCardSearch] = useState<string>('');
+  const [isSubmittingReward, setIsSubmittingReward] = useState<boolean>(false);
+
   // Confirmation de suppression
   const [confirmDeleteUsername, setConfirmDeleteUsername] = useState<string | null>(null);
   const [confirmDeleteSuggestion, setConfirmDeleteSuggestion] = useState<string | null>(null);
+  const [confirmDeleteMicroIndie, setConfirmDeleteMicroIndie] = useState<string | null>(null);
   const [confirmResetStats, setConfirmResetStats] = useState<boolean>(false);
 
   // Validation / Intégration de suggestion de jeu
   const [validatingSuggestionId, setValidatingSuggestionId] = useState<string | null>(null);
+  const [validatingMicroIndieId, setValidatingMicroIndieId] = useState<string | null>(null);
+  const [microIndieFilter, setMicroIndieFilter] = useState<'all' | 'pending' | 'approved'>('pending');
+
+  // Modale d'édition micro-indé
+  const [editingMicroIndie, setEditingMicroIndie] = useState<AdminMicroIndieEntry | null>(null);
+  const [editMicroTitle, setEditMicroTitle] = useState<string>('');
+  const [editMicroDev, setEditMicroDev] = useState<string>('');
+  const [editMicroCover, setEditMicroCover] = useState<string>('');
+  const [editMicroSteamUrl, setEditMicroSteamUrl] = useState<string>('');
+  const [editMicroItchUrl, setEditMicroItchUrl] = useState<string>('');
+  const [editMicroPlayUrl, setEditMicroPlayUrl] = useState<string>('');
+  const [editMicroPitch, setEditMicroPitch] = useState<string>('');
+  const [editMicroDiscoveredBy, setEditMicroDiscoveredBy] = useState<string>('');
+  const [editMicroPrice, setEditMicroPrice] = useState<string>('');
+  const [isSavingMicroIndie, setIsSavingMicroIndie] = useState<boolean>(false);
+
   const [prefilledGameForCatalog, setPrefilledGameForCatalog] = useState<{
     game: Partial<Game>;
     suggestionId?: string;
@@ -197,8 +242,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
 
   useEffect(() => {
     if (isOpen) {
-      loadData();
-      setActionNotice(null);
+      const timer = setTimeout(() => {
+        void loadData();
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [isOpen, loadData]);
 
@@ -318,6 +365,53 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     }
   };
 
+  // Liste des cartes filtrées pour la modale de récompense
+  const availableCards = useMemo(() => {
+    const pool = getDynamicCardsPool();
+    if (!rewardCardSearch.trim()) return pool;
+    const q = rewardCardSearch.toLowerCase().trim();
+    return pool.filter(
+      (c) =>
+        c.title.toLowerCase().includes(q) ||
+        c.developer.toLowerCase().includes(q) ||
+        c.rarity.toLowerCase().includes(q)
+    );
+  }, [rewardCardSearch]);
+
+  // Attribuer une récompense souveraine (plumes / carte) à un utilisateur
+  const handleSendReward = async () => {
+    if (!rewardingUser) return;
+    if (rewardFeathers <= 0 && !rewardCardId) {
+      showNotice('error', 'Veuillez spécifier un montant de plumes ou choisir une carte.');
+      return;
+    }
+    soundFx.playClick();
+    setIsSubmittingReward(true);
+    try {
+      const res = await giveAdminReward(
+        rewardingUser.normalized,
+        {
+          feathers: rewardFeathers > 0 ? rewardFeathers : undefined,
+          cardId: rewardCardId || undefined,
+          isHolo: rewardIsHolo,
+          reason: rewardReason.trim() || undefined,
+        },
+        currentSteamId
+      );
+      if (res.success) {
+        soundFx.playVictory();
+        showNotice('success', res.message || `Récompense attribuée avec succès à « ${rewardingUser.displayName} » !`);
+        setRewardingUser(null);
+      } else {
+        showNotice('error', res.message || 'Impossible d\'attribuer la récompense.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de l\'attribution de la récompense.');
+    } finally {
+      setIsSubmittingReward(false);
+    }
+  };
+
   // Créer / réserver un utilisateur
   const handleCreateUser = async () => {
     if (!createUsername.trim()) return;
@@ -401,6 +495,18 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       if (res.success) {
         showNotice('success', res.message);
         setConfirmDeleteSuggestion(null);
+        setData((prev) => {
+          if (!prev || !prev.suggestions) return prev;
+          const nextList = prev.suggestions.list.filter((s) => s.id !== id && String(s.appId) !== id);
+          return {
+            ...prev,
+            suggestions: {
+              ...prev.suggestions,
+              total: nextList.length,
+              list: nextList,
+            },
+          };
+        });
         await loadData();
       } else {
         showNotice('error', res.message || 'Échec de la suppression.');
@@ -433,6 +539,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     try {
       let dataFR: any = null;
       let dataEN: any = null;
+      let fetchedReviews: {
+        totalReviews: number;
+        totalPositive: number;
+        positivePercent: number;
+        reviewScoreDesc?: string | { fr?: string; en?: string };
+      } | null = null;
 
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${s.appId}`);
@@ -441,6 +553,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           if (lookupJson.status === 'success' && lookupJson.dataFR) {
             dataFR = lookupJson.dataFR;
             dataEN = lookupJson.dataEN || lookupJson.dataFR;
+            if (lookupJson.reviews) {
+              fetchedReviews = lookupJson.reviews;
+            }
           }
         }
       } catch (err) {
@@ -474,7 +589,65 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       const taglineFR = (dataFR?.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '').trim();
       const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '').trim();
 
-      const gameToSave: Partial<Game> & { isCustomAdmin: boolean } = {
+      let storeDataToSave: SteamStoreGameData | undefined = undefined;
+      if (s.appId) {
+        const priceOverview = dataFR?.price_overview;
+        const isFree = !!dataFR?.is_free || (!priceOverview && dataFR?.is_free);
+        const currency = priceOverview?.currency || 'EUR';
+        const initialPriceCents = typeof priceOverview?.initial === 'number' ? priceOverview.initial : 0;
+        const finalPriceCents = typeof priceOverview?.final === 'number' ? priceOverview.final : 0;
+        const discountPercent = typeof priceOverview?.discount_percent === 'number' ? priceOverview.discount_percent : 0;
+        const formattedFinalPrice = priceOverview?.final_formatted || (isFree ? 'Gratuit' : '');
+        const formattedInitialPrice = priceOverview?.initial_formatted || '';
+
+        const descFr = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.fr || fetchedReviews.reviewScoreDesc.en || 'Très positives')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Très positives');
+        const descEn = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.en || fetchedReviews.reviewScoreDesc.fr || 'Very Positive')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Very Positive');
+
+        storeDataToSave = {
+          appId: s.appId,
+          isFree,
+          currency,
+          initialPriceCents,
+          finalPriceCents,
+          discountPercent,
+          formattedFinalPrice,
+          formattedInitialPrice,
+          totalReviews: fetchedReviews?.totalReviews || 0,
+          totalPositive: fetchedReviews?.totalPositive || 0,
+          positivePercent: fetchedReviews?.positivePercent || 0,
+          reviewScoreDesc: {
+            fr: descFr,
+            en: descEn,
+          },
+        };
+        registerSteamStoreData(storeDataToSave);
+      }
+
+      const computedCardRarity = computeGameRarity(
+        slug,
+        {
+          id: slug,
+          title,
+          steamAppId: s.appId,
+          steamUrl: s.steamUrl || `https://store.steampowered.com/app/${s.appId}/`,
+        },
+        fetchedReviews
+          ? {
+              totalReviews: fetchedReviews.totalReviews,
+              totalPositive: fetchedReviews.totalPositive,
+              positivePercent: fetchedReviews.positivePercent,
+              reviewScoreDesc: typeof fetchedReviews.reviewScoreDesc === 'object'
+                ? (fetchedReviews.reviewScoreDesc?.fr || fetchedReviews.reviewScoreDesc?.en || 'Très positives')
+                : (fetchedReviews.reviewScoreDesc || 'Très positives'),
+            }
+          : undefined
+      );
+
+      const gameToSave: Partial<Game> & { isCustomAdmin: boolean; isGem?: boolean } = {
         id: slug,
         title,
         developer,
@@ -489,7 +662,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
         hints: {
           tagline: { fr: taglineFR, en: taglineEN },
         },
+        cardRarity: computedCardRarity,
+        steamStoreData: storeDataToSave,
         isCustomAdmin: true,
+        isGem: true,
       };
 
       const saveRes = await saveAdminGame(gameToSave, currentSteamId);
@@ -499,6 +675,19 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
 
       // Nettoyer la suggestion approuvée de la file d'attente
       await deleteCommunitySuggestion(s.id, currentSteamId);
+
+      setData((prev) => {
+        if (!prev || !prev.suggestions) return prev;
+        const nextList = prev.suggestions.list.filter((entry) => entry.id !== s.id && entry.appId !== s.appId);
+        return {
+          ...prev,
+          suggestions: {
+            ...prev.suggestions,
+            total: nextList.length,
+            list: nextList,
+          },
+        };
+      });
 
       soundFx.playVictory();
       showNotice('success', `La pépite « ${title} » a été validée et intégrée au catalogue public !`);
@@ -518,6 +707,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
     try {
       let dataFR: any = null;
       let dataEN: any = null;
+      let fetchedReviews: {
+        totalReviews: number;
+        totalPositive: number;
+        positivePercent: number;
+        reviewScoreDesc?: string | { fr?: string; en?: string };
+      } | null = null;
 
       try {
         const lookupRes = await fetch(`/api/suggest_game.php?action=lookup&appId=${s.appId}`);
@@ -526,6 +721,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           if (lookupJson.status === 'success' && lookupJson.dataFR) {
             dataFR = lookupJson.dataFR;
             dataEN = lookupJson.dataEN || lookupJson.dataFR;
+            if (lookupJson.reviews) {
+              fetchedReviews = lookupJson.reviews;
+            }
           }
         }
       } catch (err) {
@@ -559,6 +757,64 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       const taglineFR = (dataFR?.short_description || `${title} par ${developer}`).replace(/<[^>]+>/g, '').trim();
       const taglineEN = (dataEN?.short_description || `${title} by ${developer}`).replace(/<[^>]+>/g, '').trim();
 
+      let storeDataToSave: SteamStoreGameData | undefined = undefined;
+      if (s.appId) {
+        const priceOverview = dataFR?.price_overview;
+        const isFree = !!dataFR?.is_free || (!priceOverview && dataFR?.is_free);
+        const currency = priceOverview?.currency || 'EUR';
+        const initialPriceCents = typeof priceOverview?.initial === 'number' ? priceOverview.initial : 0;
+        const finalPriceCents = typeof priceOverview?.final === 'number' ? priceOverview.final : 0;
+        const discountPercent = typeof priceOverview?.discount_percent === 'number' ? priceOverview.discount_percent : 0;
+        const formattedFinalPrice = priceOverview?.final_formatted || (isFree ? 'Gratuit' : '');
+        const formattedInitialPrice = priceOverview?.initial_formatted || '';
+
+        const descFr = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.fr || fetchedReviews.reviewScoreDesc.en || 'Très positives')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Très positives');
+        const descEn = typeof fetchedReviews?.reviewScoreDesc === 'object' && fetchedReviews?.reviewScoreDesc
+          ? (fetchedReviews.reviewScoreDesc.en || fetchedReviews.reviewScoreDesc.fr || 'Very Positive')
+          : (typeof fetchedReviews?.reviewScoreDesc === 'string' ? fetchedReviews.reviewScoreDesc : 'Very Positive');
+
+        storeDataToSave = {
+          appId: s.appId,
+          isFree,
+          currency,
+          initialPriceCents,
+          finalPriceCents,
+          discountPercent,
+          formattedFinalPrice,
+          formattedInitialPrice,
+          totalReviews: fetchedReviews?.totalReviews || 0,
+          totalPositive: fetchedReviews?.totalPositive || 0,
+          positivePercent: fetchedReviews?.positivePercent || 0,
+          reviewScoreDesc: {
+            fr: descFr,
+            en: descEn,
+          },
+        };
+        registerSteamStoreData(storeDataToSave);
+      }
+
+      const computedCardRarity = computeGameRarity(
+        slug,
+        {
+          id: slug,
+          title,
+          steamAppId: s.appId,
+          steamUrl: s.steamUrl || `https://store.steampowered.com/app/${s.appId}/`,
+        },
+        fetchedReviews
+          ? {
+              totalReviews: fetchedReviews.totalReviews,
+              totalPositive: fetchedReviews.totalPositive,
+              positivePercent: fetchedReviews.positivePercent,
+              reviewScoreDesc: typeof fetchedReviews.reviewScoreDesc === 'object'
+                ? (fetchedReviews.reviewScoreDesc?.fr || fetchedReviews.reviewScoreDesc?.en || 'Très positives')
+                : (fetchedReviews.reviewScoreDesc || 'Très positives'),
+            }
+          : undefined
+      );
+
       const gameToPrefill: Partial<Game> = {
         id: slug,
         title,
@@ -574,6 +830,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
         hints: {
           tagline: { fr: taglineFR, en: taglineEN },
         },
+        cardRarity: computedCardRarity,
+        steamStoreData: storeDataToSave,
       };
 
       setPrefilledGameForCatalog({ game: gameToPrefill, suggestionId: s.id });
@@ -600,6 +858,115 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       }
     } catch {
       showNotice('error', 'Erreur réseau lors de la réinitialisation.');
+    }
+  };
+
+  // Modération Micro-Indés : Valider et Publier
+  const handleApproveMicroIndie = async (item: AdminMicroIndieEntry) => {
+    soundFx.playClick();
+    setValidatingMicroIndieId(item.id);
+    try {
+      const res = await approveAdminMicroIndie(item.id, currentSteamId);
+      if (res.success) {
+        showNotice('success', `Le micro-indé « ${item.title} » a été validé et publié avec succès !`);
+        await loadData();
+      } else {
+        showNotice('error', res.message || "Échec de l'approbation du micro-indé.");
+      }
+    } catch {
+      showNotice('error', "Erreur réseau lors de la validation du micro-indé.");
+    } finally {
+      setValidatingMicroIndieId(null);
+    }
+  };
+
+  // Modération Micro-Indés : Supprimer / Rejeter
+  const handleDeleteMicroIndie = async (id: string) => {
+    soundFx.playClick();
+    try {
+      const res = await deleteAdminMicroIndie(id, currentSteamId);
+      if (res.success) {
+        showNotice('success', 'Proposition micro-indé supprimée.');
+        setConfirmDeleteMicroIndie(null);
+        await loadData();
+      } else {
+        showNotice('error', res.message || 'Échec de la suppression.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de la suppression.');
+    }
+  };
+
+  // Modération Micro-Indés : Ouvrir l'éditeur
+  const handleOpenEditMicroIndie = (m: AdminMicroIndieEntry) => {
+    soundFx.playClick();
+    setEditingMicroIndie(m);
+    setEditMicroTitle(m.title || '');
+    setEditMicroDev(m.developer || '');
+    setEditMicroCover(m.coverImage || '');
+    setEditMicroSteamUrl(m.steamUrl || '');
+    setEditMicroItchUrl(m.itchUrl || '');
+    setEditMicroPlayUrl(m.playInBrowserUrl || '');
+    setEditMicroPitch(m.pitch || m.tagline?.fr || m.tagline?.en || m.description?.fr || '');
+    setEditMicroDiscoveredBy(m.discoveredBy || '');
+    setEditMicroPrice(m.pricingText?.fr || m.pricingText?.en || (m.isFree ? 'Gratuit 🆓' : ''));
+  };
+
+  // Modération Micro-Indés : Auto-détection de la jaquette Steam et du prix
+  const handleAutoDetectSteamCover = () => {
+    soundFx.playClick();
+    const url = editMicroSteamUrl.trim();
+    const match = url.match(/\/app\/(\d+)/);
+    if (match && match[1]) {
+      const steamCover = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${match[1]}/header.jpg`;
+      setEditMicroCover(steamCover);
+      fetch(`/api/micro_indies.php?action=get_steam_info&appId=${match[1]}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.success) {
+            if (data.priceFormatted) setEditMicroPrice(data.priceFormatted);
+            if (!editMicroTitle.trim() && data.name) setEditMicroTitle(data.name);
+          }
+        })
+        .catch(() => {});
+      showNotice('success', `Jaquette et données Steam officielles détectées pour l'AppID ${match[1]} !`);
+    } else {
+      showNotice('error', 'Aucun AppID Steam valide trouvé dans le lien.');
+    }
+  };
+
+  // Modération Micro-Indés : Enregistrer les modifications
+  const handleSaveMicroIndie = async () => {
+    if (!editingMicroIndie) return;
+    soundFx.playClick();
+    setIsSavingMicroIndie(true);
+    try {
+      const res = await updateAdminMicroIndie(
+        editingMicroIndie.id,
+        {
+          title: editMicroTitle.trim() || editingMicroIndie.title,
+          developer: editMicroDev.trim() || editingMicroIndie.developer,
+          coverImage: editMicroCover.trim(),
+          steamUrl: editMicroSteamUrl.trim() || undefined,
+          itchUrl: editMicroItchUrl.trim() || undefined,
+          playInBrowserUrl: editMicroPlayUrl.trim() || undefined,
+          pitch: editMicroPitch.trim() || undefined,
+          discoveredBy: editMicroDiscoveredBy.trim() || undefined,
+          price: editMicroPrice.trim() || undefined,
+        },
+        currentSteamId
+      );
+      if (res.success) {
+        showNotice('success', 'Fiche micro-indé mise à jour avec succès !');
+        setEditingMicroIndie(null);
+        await loadData();
+      } else {
+        showNotice('error', res.message || 'Échec de la modification.');
+      }
+    } catch {
+      showNotice('error', 'Erreur réseau lors de la mise à jour.');
+    } finally {
+      setIsSavingMicroIndie(false);
     }
   };
 
@@ -642,7 +1009,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
         (u.customTitle && u.customTitle.toLowerCase().includes(q)) ||
         (u.note && u.note.toLowerCase().includes(q))
     );
-  }, [data?.usernames?.list, usernameFilter, userStatusFilter]);
+  }, [data, usernameFilter, userStatusFilter]);
 
   // Liste filtrée des événements récents
   const filteredRecentEvents = useMemo(() => {
@@ -682,9 +1049,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
       ? Math.round((summary.games_won / summary.games_played) * 100)
       : 0;
 
+  if (!isOpen || !isAuthenticated || !isAdmin) return null;
+  
+
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-5 overflow-y-auto">
         {/* Backdrop sombre avec blur */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -700,7 +1070,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 15 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="relative overflow-visible w-full max-w-5xl bg-[#052118] border-2 border-[#78350f] rounded-3xl shadow-2xl z-10 flex flex-col max-h-[92vh]"
+          className="relative overflow-visible w-full h-full sm:h-auto max-w-5xl bg-[#052118] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl shadow-2xl z-10 flex flex-col max-h-[100dvh] sm:max-h-[92vh]"
         >
           <SylvestreIvyFrame density="medium" />
           {/* Ligne d'accent en dégradé supérieur */}
@@ -857,7 +1227,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
           )}
 
           {/* Bandeau de navigation par Onglets */}
-          <div className="flex overflow-x-auto border-b border-white/5 px-4 sm:px-6 bg-[#090d16] no-scrollbar shrink-0 gap-2 pt-3">
+          <div className="flex flex-wrap border-b border-white/5 px-4 sm:px-6 bg-[#090d16] shrink-0 gap-2 pt-3">
             {[
               { id: 'overview' as AdminTab, label: "Vue d'Ensemble & Trafic", icon: Activity },
               { id: 'catalog' as AdminTab, label: 'Catalogue & CRUD Jeux', icon: Sparkles },
@@ -873,6 +1243,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                 label: 'Boîte à Pépites',
                 icon: Lightbulb,
                 badge: data?.suggestions?.total ? String(data.suggestions.total) : undefined,
+              },
+              {
+                id: 'microIndies' as AdminTab,
+                label: 'Micro-Indés',
+                icon: Gamepad2,
+                badge: data?.microIndies?.pending ? String(data.microIndies.pending) : undefined,
               },
               { id: 'system' as AdminTab, label: 'Système & Fichiers', icon: Server },
             ].map((tab) => {
@@ -927,7 +1303,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                 </div>
                 <div className="flex items-center justify-center gap-2.5 flex-wrap pt-2">
                   <a
-                    href="/api/track.php"
+                    href="/api/track.php?redirect=admin"
                     className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition inline-flex items-center gap-2 shadow-md shadow-amber-500/20"
                   >
                     <Crown className="w-4 h-4" />
@@ -1123,7 +1499,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         </h3>
 
                         {Object.keys(referrers).length === 0 ? (
-                          <div className="text-xs text-slate-500 py-4 text-center">Aucun référent enregistré pour le moment.</div>
+                          <div className="text-xs text-slate-400 py-4 text-center">Aucun référent enregistré pour le moment.</div>
                         ) : (
                           <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                             {Object.entries(referrers)
@@ -1180,11 +1556,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             value={eventFilter}
                             onChange={(e) => setEventFilter(e.target.value)}
                             placeholder="Filtrer un événement ou mot-clé..."
-                            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
+                            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400"
                           />
                         </div>
 
-                        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+                        <div className="flex flex-wrap items-center gap-1">
                           {[
                             { id: 'all' as const, label: 'Tous' },
                             { id: 'game' as const, label: 'Parties' },
@@ -1208,7 +1584,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                       </div>
 
                       {filteredRecentEvents.length === 0 ? (
-                        <div className="text-xs text-slate-500 py-4 text-center">
+                        <div className="text-xs text-slate-400 py-4 text-center">
                           Aucun événement ne correspond aux critères de recherche.
                         </div>
                       ) : (
@@ -1247,7 +1623,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                     </span>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-2 text-[10px] text-slate-500 shrink-0 font-mono">
+                                <div className="flex items-center gap-2 text-[10px] text-slate-400 shrink-0 font-mono">
                                   {item.device && <span className="uppercase">{item.device}</span>}
                                   <span>{new Date(item.timestamp || (item as any).time || 0).toLocaleTimeString()}</span>
                                 </div>
@@ -1270,7 +1646,20 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     onPrefillConsumed={() => {}}
                     onGameSaved={async () => {
                       if (prefilledGameForCatalog?.suggestionId) {
-                        await deleteCommunitySuggestion(prefilledGameForCatalog.suggestionId, currentSteamId);
+                        const sugId = prefilledGameForCatalog.suggestionId;
+                        await deleteCommunitySuggestion(sugId, currentSteamId);
+                        setData((prev) => {
+                          if (!prev || !prev.suggestions) return prev;
+                          const nextList = prev.suggestions.list.filter((s) => s.id !== sugId);
+                          return {
+                            ...prev,
+                            suggestions: {
+                              ...prev.suggestions,
+                              total: nextList.length,
+                              list: nextList,
+                            },
+                          };
+                        });
                         setPrefilledGameForCatalog(null);
                         await loadData();
                       }
@@ -1289,7 +1678,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                           Sessions & Performances par Mode de Jeu (12 Disciplines)
                         </h3>
-                        <p className="text-xs text-slate-500 mt-0.5">
+                        <p className="text-xs text-slate-400 mt-0.5">
                           Télémétrie des 8 énigmes quotidiennes + modes compétitifs et arcade
                         </p>
                       </div>
@@ -1457,7 +1846,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           value={usernameFilter}
                           onChange={(e) => setUsernameFilter(e.target.value)}
                           placeholder="Rechercher par nom, slug, Steam ID, titre ou note..."
-                          className="w-full pl-9 pr-8 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                          className="w-full pl-9 pr-8 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 transition"
                         />
                         {usernameFilter && (
                           <button
@@ -1471,7 +1860,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                       </div>
 
                       {/* Filtres par catégorie */}
-                      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+                      <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                         {[
                           { id: 'all', label: 'Tous', count: data.usernames?.list?.length || 0 },
                           { id: 'steam', label: 'Steam', count: data.usernames?.list?.filter((u) => !!u.steamId).length || 0 },
@@ -1542,7 +1931,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           <tbody className="divide-y divide-white/5">
                             {filteredUsernames.length === 0 ? (
                               <tr>
-                                <td colSpan={6} className="p-8 text-center text-slate-500">
+                                <td colSpan={6} className="p-8 text-center text-slate-400">
                                   Aucun utilisateur ne correspond à vos critères de recherche.
                                 </td>
                               </tr>
@@ -1599,7 +1988,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                               </span>
                                             )}
                                           </div>
-                                          <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5">
+                                          <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
                                             <span>@{u.normalized}</span>
                                             {u.isAdminReserved && !isCreator && (
                                               <span className="text-amber-400/80">• Réservé admin</span>
@@ -1623,7 +2012,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                           <ExternalLink className="w-3 h-3 shrink-0" />
                                         </a>
                                       ) : (
-                                        <span className="text-slate-500 text-[10px]">Local / Sans Steam</span>
+                                        <span className="text-slate-400 text-[10px]">Local / Sans Steam</span>
                                       )}
                                     </td>
 
@@ -1675,7 +2064,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                           <span className="truncate italic">« {u.note} »</span>
                                         </div>
                                       ) : (
-                                        <span className="text-slate-600 text-[10px]">—</span>
+                                        <span className="text-slate-500 text-[10px]">—</span>
                                       )}
                                     </td>
 
@@ -1683,7 +2072,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                     <td className="p-3 hidden md:table-cell text-slate-400 text-[11px]">
                                       <div>{u.claimedAt ? new Date(u.claimedAt).toLocaleDateString() : 'N/A'}</div>
                                       {u.lastSeenAt && (
-                                        <div className="text-[10px] text-slate-500">
+                                        <div className="text-[10px] text-slate-400">
                                           Vu : {new Date(u.lastSeenAt).toLocaleDateString()}
                                         </div>
                                       )}
@@ -1692,6 +2081,23 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                     {/* Colonne 6: Actions */}
                                     <td className="p-3 text-right">
                                       <div className="flex items-center justify-end gap-1">
+                                        {/* Bouton Offrir Cadeau (Plumes / Cartes) */}
+                                        <button
+                                          onClick={() => {
+                                            soundFx.playClick();
+                                            setRewardingUser(u);
+                                            setRewardFeathers(100);
+                                            setRewardCardId('');
+                                            setRewardIsHolo(false);
+                                            setRewardReason('Récompense souveraine offerte par Hibouxe 👑');
+                                            setRewardCardSearch('');
+                                          }}
+                                          className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition cursor-pointer"
+                                          title="Offrir des plumes ou une carte à ce joueur"
+                                        >
+                                          <Gift className="w-3.5 h-3.5" />
+                                        </button>
+
                                         {/* Bouton Éditer */}
                                         <button
                                           onClick={() => handleOpenEditUser(u)}
@@ -1730,8 +2136,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
 
                                         {/* Bouton Supprimer / Libérer */}
                                         {isCreator || isCurrentAdmin ? (
-                                          <span className="p-1.5 text-slate-600 cursor-not-allowed inline-flex items-center justify-center" title="Compte inaliénable">
-                                            <Lock className="w-3.5 h-3.5 text-slate-600" />
+                                          <span className="p-1.5 text-slate-500 cursor-not-allowed inline-flex items-center justify-center" title="Compte inaliénable">
+                                            <Lock className="w-3.5 h-3.5 text-slate-500" />
                                           </span>
                                         ) : confirmDeleteUsername === u.normalized ? (
                                           <div className="flex items-center gap-1">
@@ -1857,7 +2263,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                             </div>
 
                             <div className="flex flex-wrap items-center justify-between pt-2.5 border-t border-white/5 gap-2 text-xs">
-                              <span className="text-[10px] text-slate-500 font-mono">
+                              <span className="text-[10px] text-slate-400 font-mono">
                                 Proposé le {new Date(s.submittedAt).toLocaleDateString()}
                               </span>
 
@@ -1917,7 +2323,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                                 ) : (
                                   <button
                                     onClick={() => setConfirmDeleteSuggestion(s.id)}
-                                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
                                     title="Rejeter / Supprimer la suggestion"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
@@ -1934,6 +2340,285 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                 )}
 
                 {/* ------------------------------------------------------------- */}
+                {/* ONGLET MICRO-INDÉS : MODÉRATION & VALIDATION                 */}
+                {/* ------------------------------------------------------------- */}
+                {activeTab === 'microIndies' && (
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0c1220] p-4 rounded-2xl border border-white/5">
+                      <div>
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                          <Gamepad2 className="w-4 h-4 text-amber-400" />
+                          <span>Validation & Modération des Micro-Indés</span>
+                        </h3>
+                        <p className="text-xs text-slate-400 mt-1">
+                          Consultez, testez et validez en 1-clic les jeux indés soumis par les créateurs ou la communauté.
+                        </p>
+                      </div>
+
+                      {/* Filtres d'état */}
+                      <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            soundFx.playClick();
+                            setMicroIndieFilter('pending');
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                            microIndieFilter === 'pending'
+                              ? 'bg-amber-500 text-slate-950 shadow'
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <span>En attente</span>
+                          <span
+                            className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                              microIndieFilter === 'pending'
+                                ? 'bg-black/20 text-slate-900 font-bold'
+                                : 'bg-amber-500/20 text-amber-300'
+                            }`}
+                          >
+                            {data.microIndies?.pending || 0}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            soundFx.playClick();
+                            setMicroIndieFilter('approved');
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                            microIndieFilter === 'approved'
+                              ? 'bg-emerald-500 text-slate-950 shadow'
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <span>Publiés</span>
+                          <span
+                            className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                              microIndieFilter === 'approved'
+                                ? 'bg-black/20 text-slate-900 font-bold'
+                                : 'bg-emerald-500/20 text-emerald-300'
+                            }`}
+                          >
+                            {data.microIndies?.approved || 0}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            soundFx.playClick();
+                            setMicroIndieFilter('all');
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                            microIndieFilter === 'all'
+                              ? 'bg-white/20 text-white'
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <span>Tous ({data.microIndies?.total || 0})</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Liste des micro-indés filtrés */}
+                    {(() => {
+                      const list = (data.microIndies?.list || []).filter((item) => {
+                        if (microIndieFilter === 'pending') return !item.approved;
+                        if (microIndieFilter === 'approved') return !!item.approved;
+                        return true;
+                      });
+
+                      if (list.length === 0) {
+                        return (
+                          <div className="p-12 rounded-2xl bg-[#0c1220] border border-white/5 text-center space-y-2">
+                            <Gamepad2 className="w-8 h-8 text-amber-400/50 mx-auto" />
+                            <p className="text-sm font-bold text-white">
+                              {microIndieFilter === 'pending'
+                                ? 'Aucun micro-indé en attente de validation'
+                                : 'Aucun jeu dans cette catégorie'}
+                            </p>
+                            <p className="text-xs text-slate-400">
+                              {microIndieFilter === 'pending'
+                                ? 'Toutes les propositions communautaires ont été traitées !'
+                                : 'Les jeux ajoutés apparaîtront ici.'}
+                            </p>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {list.map((m) => {
+                            const isPending = !m.approved;
+                            const platformLabel = m.platform || m.sourceType || 'itch';
+                            const pitchText = m.pitch || m.tagline?.fr || m.tagline?.en || m.description?.fr || m.description?.en || '';
+                            const dateStr = m.submittedAt || m.dateAdded;
+                            const playUrl = m.playInBrowserUrl || m.itchUrl || m.steamUrl || m.gameplayUrl;
+                            return (
+                              <div
+                                key={m.id}
+                                className={`p-4 rounded-2xl border flex flex-col justify-between gap-3 transition ${
+                                  isPending
+                                    ? 'bg-[#181308] border-amber-500/40 hover:border-amber-400'
+                                    : 'bg-[#0c1220] border-white/5 hover:border-emerald-500/30'
+                                }`}
+                              >
+                                <div className="space-y-3">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="flex items-center gap-3">
+                                      {m.coverImage ? (
+                                        <img
+                                          src={m.coverImage}
+                                          alt={m.title}
+                                          referrerPolicy="no-referrer"
+                                          className="w-14 h-14 rounded-xl object-cover border border-white/10 shrink-0 bg-slate-900"
+                                          onError={(e) => {
+                                            (e.currentTarget as HTMLElement).style.display = 'none';
+                                          }}
+                                        />
+                                      ) : (
+                                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-950 to-amber-950 border border-amber-500/30 flex items-center justify-center shrink-0">
+                                          <Gamepad2 className="w-6 h-6 text-amber-400" />
+                                        </div>
+                                      )}
+                                      <div>
+                                        <h4 className="font-bold text-white text-base leading-tight">
+                                          {m.title}
+                                        </h4>
+                                        <p className="text-xs text-slate-400 mt-0.5">
+                                          Par <strong className="text-slate-200">{m.developer}</strong>
+                                          {m.releaseYear ? ` (${m.releaseYear})` : ''}
+                                        </p>
+                                        <div className="flex flex-wrap items-center gap-2 mt-1">
+                                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-white/5 text-slate-300 border border-white/10">
+                                            {platformLabel}
+                                          </span>
+                                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                                            {m.pricingText?.fr || m.pricingText?.en || (m.isFree ? 'Gratuit 🆓' : 'Payant')}
+                                          </span>
+                                          {m.discoveredBy && (
+                                            <span className="text-[10px] text-amber-300/80">
+                                              Déniché par : <strong>{m.discoveredBy}</strong>
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Badge statut */}
+                                    <span
+                                      className={`text-[10px] font-bold px-2.5 py-1 rounded-full border shrink-0 ${
+                                        isPending
+                                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                                          : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                                      }`}
+                                    >
+                                      {isPending ? '⏳ En attente' : '✅ En ligne'}
+                                    </span>
+                                  </div>
+
+                                  {/* Pitch / description */}
+                                  {pitchText && (
+                                    <p className="text-xs text-slate-300 bg-black/30 p-2.5 rounded-xl border border-white/5 italic leading-relaxed">
+                                      « {pitchText} »
+                                    </p>
+                                  )}
+
+                                  {dateStr && (
+                                    <div className="text-[10px] text-slate-400 font-mono">
+                                      Soumis le {new Date(dateStr).toLocaleDateString()}
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex flex-wrap items-center justify-between pt-3 border-t border-white/5 gap-2">
+                                  <div className="flex items-center gap-1.5">
+                                    {playUrl && (
+                                      <a
+                                        href={playUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 transition cursor-pointer"
+                                        title="Ouvrir la page officielle du jeu"
+                                      >
+                                        <span>Tester le jeu</span>
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                      </a>
+                                    )}
+                                  </div>
+
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleOpenEditMicroIndie(m)}
+                                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-xs font-bold text-amber-300 hover:bg-amber-500/25 transition cursor-pointer"
+                                      title="Modifier les informations ou corriger l'image de couverture"
+                                    >
+                                      <Edit3 className="w-3.5 h-3.5" />
+                                      <span>Éditer</span>
+                                    </button>
+
+                                    {isPending ? (
+                                      <button
+                                        type="button"
+                                        disabled={validatingMicroIndieId === m.id}
+                                        onClick={() => handleApproveMicroIndie(m)}
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-950/40 cursor-pointer disabled:opacity-50 active:scale-95"
+                                        title="Approuver et rendre visible ce micro-indé sur le site"
+                                      >
+                                        {validatingMicroIndieId === m.id ? (
+                                          <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                                        ) : (
+                                          <Check className="w-3.5 h-3.5" />
+                                        )}
+                                        <span>Valider & Publier</span>
+                                      </button>
+                                    ) : (
+                                      <span className="text-[11px] text-emerald-400 font-semibold px-2 py-1 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                                        Validé
+                                      </span>
+                                    )}
+
+                                    {confirmDeleteMicroIndie === m.id ? (
+                                      <div className="flex items-center gap-1">
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteMicroIndie(m.id)}
+                                          className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold cursor-pointer"
+                                        >
+                                          Confirmer
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => setConfirmDeleteMicroIndie(null)}
+                                          className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 text-xs cursor-pointer"
+                                        >
+                                          Annuler
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={() => setConfirmDeleteMicroIndie(m.id)}
+                                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
+                                        title="Supprimer ce jeu micro-indé"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+
+                {/* ------------------------------------------------------------- */}
                 {/* ONGLET 5 : SYSTÈME & FICHIERS                                 */}
                 {/* ------------------------------------------------------------- */}
                 {activeTab === 'system' && (
@@ -1945,7 +2630,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                         <span>État des Bases de Données Souveraines (JSON)</span>
                       </h3>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                         <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
                           <div className="text-[11px] text-slate-400 font-mono">stats.json</div>
                           <div className="text-base font-bold text-white">
@@ -1973,6 +2658,16 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                           </div>
                           <div className="text-[10px] text-emerald-400 flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3" /> Anti-spam rate-limit
+                          </div>
+                        </div>
+
+                        <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                          <div className="text-[11px] text-slate-400 font-mono">micro_indies.json</div>
+                          <div className="text-base font-bold text-white">
+                            {Math.round((data.system?.microIndiesFileSize || 0) / 1024)} Ko
+                          </div>
+                          <div className="text-[10px] text-emerald-400 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" /> Modération souveraine
                           </div>
                         </div>
 
@@ -2180,14 +2875,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Nom d'affichage */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Pseudonyme Affiché <span className="text-slate-500 font-normal">(2 à 24 caractères)</span>
+                        Pseudonyme Affiché <span className="text-slate-400 font-normal">(2 à 24 caractères)</span>
                       </label>
                       <input
                         type="text"
                         value={editDisplayName}
                         onChange={(e) => setEditDisplayName(e.target.value)}
                         maxLength={24}
-                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                       />
                       {editDisplayName.trim().toLowerCase() !== editingUser.normalized && (
                         <p className="text-[10px] text-amber-400 mt-1 flex items-center gap-1">
@@ -2262,17 +2957,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Titre Personnalisé */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Titre Personnalisé <span className="text-slate-500 font-normal">(Affiché à côté du pseudo)</span>
+                        Titre Personnalisé <span className="text-slate-400 font-normal">(Affiché à côté du pseudo)</span>
                       </label>
                       <div className="relative">
-                        <Tag className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Tag className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={editCustomTitle}
                           onChange={(e) => setEditCustomTitle(e.target.value)}
                           placeholder="ex: Maître du Pixel, Hibou Alpha..."
                           maxLength={32}
-                          className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:border-amber-400"
+                          className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
                         />
                       </div>
                     </div>
@@ -2280,14 +2975,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Note interne privée */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Note Privée Administrateur <span className="text-slate-500 font-normal">(Invisible pour les visiteurs)</span>
+                        Note Privée Administrateur <span className="text-slate-400 font-normal">(Invisible pour les visiteurs)</span>
                       </label>
                       <textarea
                         value={editNote}
                         onChange={(e) => setEditNote(e.target.value)}
                         placeholder="Commentaire ou motif de surveillance..."
                         rows={2}
-                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 resize-none"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 resize-none"
                       />
                     </div>
                   </div>
@@ -2358,7 +3053,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Pseudonyme */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Pseudonyme <span className="text-cyan-400">*</span> <span className="text-slate-500 font-normal">(2 à 24 caractères)</span>
+                        Pseudonyme <span className="text-cyan-400">*</span> <span className="text-slate-400 font-normal">(2 à 24 caractères)</span>
                       </label>
                       <input
                         type="text"
@@ -2373,7 +3068,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Steam ID 64 */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Steam ID 64 <span className="text-slate-500 font-normal">(Optionnel, 17 chiffres)</span>
+                        Steam ID 64 <span className="text-slate-400 font-normal">(Optionnel, 17 chiffres)</span>
                       </label>
                       <input
                         type="text"
@@ -2418,10 +3113,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Titre Personnalisé */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Titre Personnalisé <span className="text-slate-500 font-normal">(Optionnel)</span>
+                        Titre Personnalisé <span className="text-slate-400 font-normal">(Optionnel)</span>
                       </label>
                       <div className="relative">
-                        <Tag className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Tag className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={createCustomTitle}
@@ -2436,7 +3131,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     {/* Note */}
                     <div>
                       <label className="block text-slate-300 font-bold mb-1">
-                        Note Privée Administrateur <span className="text-slate-500 font-normal">(Optionnel)</span>
+                        Note Privée Administrateur <span className="text-slate-400 font-normal">(Optionnel)</span>
                       </label>
                       <textarea
                         value={createNote}
@@ -2639,6 +3334,452 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({ isOpen
                     >
                       {isPurgingScores ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                       <span>Purger Définitivement</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE : ATTRIBUTION DE RÉCOMPENSE SOUVERAINE (GIFT)        */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {rewardingUser && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setRewardingUser(null)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-lg bg-[#0d1424] border border-amber-500/40 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10 max-h-[90vh] flex flex-col"
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                        <Gift className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-black text-white flex items-center gap-1.5">
+                          <span>Offrir un Cadeau Souverain</span>
+                          <Crown className="w-3.5 h-3.5 text-amber-400" />
+                        </h3>
+                        <p className="text-xs text-slate-400 font-mono">
+                          Destinataire : <span className="text-amber-300 font-bold">{rewardingUser.displayName}</span> (@{rewardingUser.normalized})
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setRewardingUser(null)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Body (scrollable) */}
+                  <div className="space-y-4 text-xs overflow-y-auto pr-1 flex-1">
+                    {/* Section 1 : Plumes d'Or */}
+                    <div className="p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/20 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                          <span>🪶 Plumes d'Or à Offrir</span>
+                        </label>
+                        <span className="text-[11px] font-mono text-amber-400/90 font-bold">
+                          Total : +{rewardFeathers.toLocaleString()} Plumes
+                        </span>
+                      </div>
+
+                      {/* Presets rapides */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {[0, 50, 100, 250, 500, 1000, 2500, 5000].map((amt) => (
+                          <button
+                            key={amt}
+                            type="button"
+                            onClick={() => setRewardFeathers(amt)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                              rewardFeathers === amt
+                                ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/30'
+                                : 'bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'
+                            }`}
+                          >
+                            {amt === 0 ? '0' : `+${amt}`}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Champ montant personnalisé */}
+                      <input
+                        type="number"
+                        min="0"
+                        max="100000"
+                        step="10"
+                        value={rewardFeathers}
+                        onChange={(e) => setRewardFeathers(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                        className="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white font-mono text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                        placeholder="Montant libre de plumes..."
+                      />
+                    </div>
+
+                    {/* Section 2 : Carte de Collection */}
+                    <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+                          <span>Carte de Collection (Optionnel)</span>
+                        </label>
+                        {rewardCardId && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setRewardCardId('');
+                              setRewardIsHolo(false);
+                            }}
+                            className="text-[10px] text-red-400 hover:underline cursor-pointer"
+                          >
+                            Retirer la carte
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Barre de recherche de carte */}
+                      <div className="relative">
+                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          value={rewardCardSearch}
+                          onChange={(e) => setRewardCardSearch(e.target.value)}
+                          placeholder="Rechercher par nom de jeu, dev, rareté..."
+                          className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* Liste compacte des cartes */}
+                      <div className="max-h-36 overflow-y-auto space-y-1 pr-1 border border-white/5 rounded-xl p-1 bg-black/20">
+                        {availableCards.length === 0 ? (
+                          <div className="text-center py-4 text-slate-400 text-[11px]">
+                            Aucune carte trouvée pour cette recherche
+                          </div>
+                        ) : (
+                          availableCards.slice(0, 50).map((card) => {
+                            const isSelected = rewardCardId === card.id;
+                            const rCfg = RARITY_CONFIG[card.rarity];
+                            return (
+                              <button
+                                key={card.id}
+                                type="button"
+                                onClick={() => {
+                                  if (isSelected) {
+                                    setRewardCardId('');
+                                    setRewardIsHolo(false);
+                                  } else {
+                                    setRewardCardId(card.id);
+                                  }
+                                }}
+                                className={`w-full flex items-center gap-2 p-1.5 rounded-lg text-left transition cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-amber-500/20 border border-amber-400 text-white'
+                                    : 'hover:bg-white/5 text-slate-300'
+                                }`}
+                              >
+                                <img
+                                  src={card.imageUrl}
+                                  alt={card.title}
+                                  className="w-6 h-8 object-cover rounded bg-slate-900 shrink-0"
+                                  loading="lazy"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-bold text-xs truncate flex items-center gap-1.5">
+                                    <span>{card.title}</span>
+                                    <span className={`text-[9px] px-1.5 py-0.2 rounded border ${rCfg?.badgeClass || ''}`}>
+                                      {rCfg?.nameFr || card.rarity}
+                                    </span>
+                                  </div>
+                                  <div className="text-[10px] text-slate-400 truncate">{card.developer}</div>
+                                </div>
+                                {isSelected && <Check className="w-4 h-4 text-amber-400 shrink-0" />}
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+
+                      {/* Option Holographique si une carte est sélectionnée */}
+                      {rewardCardId && (
+                        <div className="flex items-center justify-between p-2.5 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
+                            <div>
+                              <div className="text-xs font-bold text-yellow-200">Variante Holographique (Brillante)</div>
+                              <div className="text-[10px] text-yellow-300/70">Effet arc-en-ciel brillant rare</div>
+                            </div>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={rewardIsHolo}
+                            onChange={(e) => setRewardIsHolo(e.target.checked)}
+                            className="w-4 h-4 accent-amber-400 cursor-pointer"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Section 3 : Motif / Message */}
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Motif ou Message du Don <span className="text-slate-400 font-normal">(Visible par le joueur)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={rewardReason}
+                        onChange={(e) => setRewardReason(e.target.value)}
+                        placeholder="ex: Récompense souveraine offerte par Hibouxe 👑"
+                        maxLength={80}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 text-xs"
+                      />
+                      {/* Presets rapides de motif */}
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {[
+                          'Cadeau offert par Hibouxe 👑',
+                          'Vainqueur Tournoi de la Communauté 🏆',
+                          'Remerciement Signalement de Bug 🐛',
+                          'Bienvenue parmi nous ! 🎉',
+                        ].map((m) => (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => setRewardReason(m)}
+                            className="px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-400 text-[10px] cursor-pointer"
+                          >
+                            {m}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setRewardingUser(null)}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleSendReward}
+                      disabled={isSubmittingReward || (rewardFeathers <= 0 && !rewardCardId)}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isSubmittingReward ? (
+                        <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Gift className="w-3.5 h-3.5" />
+                      )}
+                      <span>Envoyer le Cadeau</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* ================================================================= */}
+          {/* SOUS-MODALE 5 : MODIFICATION D'UN MICRO-INDÉ (IMAGE, TITRE, DEV...) */}
+          {/* ================================================================= */}
+          <AnimatePresence>
+            {editingMicroIndie && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setEditingMicroIndie(null)}
+                  className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative w-full max-w-xl bg-[#0c1220] border border-amber-500/40 rounded-2xl shadow-2xl p-6 space-y-4 text-white z-10 max-h-[90vh] overflow-y-auto"
+                >
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                        <Edit3 className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Modifier le Micro-Indé</h3>
+                        <p className="text-xs text-amber-300/80 font-mono">{editingMicroIndie.title}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setEditingMicroIndie(null)}
+                      className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 text-xs">
+                    {/* Prévisualisation Jaquette & Input */}
+                    <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 space-y-3">
+                      <label className="block text-xs font-bold text-amber-300 uppercase tracking-wider">
+                        Image de Couverture / Jaquette
+                      </label>
+                      <div className="flex items-center gap-3">
+                        {editMicroCover ? (
+                          <img
+                            src={editMicroCover}
+                            alt="Aperçu"
+                            referrerPolicy="no-referrer"
+                            className="w-20 h-20 rounded-xl object-cover border border-white/15 bg-slate-900 shrink-0"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLElement).style.opacity = '0.3';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-20 h-20 rounded-xl bg-slate-900 border border-white/15 flex items-center justify-center text-slate-400 shrink-0 text-[10px]">
+                            Pas d'image
+                          </div>
+                        )}
+                        <div className="flex-1 space-y-2">
+                          <input
+                            type="url"
+                            value={editMicroCover}
+                            onChange={(e) => setEditMicroCover(e.target.value)}
+                            placeholder="https://... URL de l'image (JPG, PNG, GIF)"
+                            className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                          />
+                          {editMicroSteamUrl && (
+                            <button
+                              type="button"
+                              onClick={handleAutoDetectSteamCover}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/25 font-bold text-[11px] transition cursor-pointer"
+                            >
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span>Récupérer l'image Steam officielle</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Titre & Développeur */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Titre du jeu</label>
+                        <input
+                          type="text"
+                          value={editMicroTitle}
+                          onChange={(e) => setEditMicroTitle(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Créateur / Développeur</label>
+                        <input
+                          type="text"
+                          value={editMicroDev}
+                          onChange={(e) => setEditMicroDev(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Liens : Steam, Itch, Web */}
+                    <div className="space-y-2">
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Lien Steam</label>
+                        <input
+                          type="url"
+                          value={editMicroSteamUrl}
+                          onChange={(e) => setEditMicroSteamUrl(e.target.value)}
+                          placeholder="https://store.steampowered.com/app/..."
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-cyan-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Lien Itch.io</label>
+                        <input
+                          type="url"
+                          value={editMicroItchUrl}
+                          onChange={(e) => setEditMicroItchUrl(e.target.value)}
+                          placeholder="https://createur.itch.io/nom-du-jeu"
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-rose-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-slate-300 mb-1">Lien direct navigateur (HTML5/WebGL)</label>
+                        <input
+                          type="url"
+                          value={editMicroPlayUrl}
+                          onChange={(e) => setEditMicroPlayUrl(e.target.value)}
+                          placeholder="https://..."
+                          className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white font-mono text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Pitch & Déniché par */}
+                    <div>
+                      <label className="block font-bold text-slate-300 mb-1">Pitch / Description</label>
+                      <textarea
+                        rows={2}
+                        value={editMicroPitch}
+                        onChange={(e) => setEditMicroPitch(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 resize-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-300 mb-1">Déniché par</label>
+                      <input
+                        type="text"
+                        value={editMicroDiscoveredBy}
+                        onChange={(e) => setEditMicroDiscoveredBy(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-300 mb-1">Prix réel / Modèle de tarification</label>
+                      <input
+                        type="text"
+                        value={editMicroPrice}
+                        onChange={(e) => setEditMicroPrice(e.target.value)}
+                        placeholder="Ex: 1,99 €, 4,99 $, Gratuit 🆓..."
+                        className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-amber-200 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setEditingMicroIndie(null)}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSavingMicroIndie}
+                      onClick={handleSaveMicroIndie}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isSavingMicroIndie ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                      <span>Enregistrer les Modifications</span>
                     </button>
                   </div>
                 </motion.div>
