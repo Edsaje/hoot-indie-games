@@ -54,8 +54,27 @@ Aujourd'hui, le profil joueur réside entièrement dans une modale (`ProfileModa
 
 ---
 
+- **Mini-Jeu de Bataille de Cartes (Inspiré de "Triple Triad" ou Duel d'Attributs)** :
+  - Donner une utilité ludique aux cartes de collection ! 
+  - Chaque carte possède des caractéristiques (Année de sortie, Rareté, Nombre d'avis Steam, Score Metacritic, Complexité).
+  - Duel rapide 1v1 ou contre une IA Hibou avec 5 cartes par manche.
+- **Fusion & Alchimie Sylvestre** :
+  - Fusionner 3 doublons d'un même univers ou studio pour tenter de débloquer une variante Holo ou une carte dorée d'archive.
+- **Sets & Albums Thématiques à Compléter** :
+  - Exemples : *"L'Âge d'Or du Pixel"*, *"Les Légendes du Rogue-lite"*, *"Pépites Métroidvania"*.
+  - Compléter une page d'album débloque un cosmétique exclusif (cadre d'avatar, titre unique, bannière de profil).
+
+---
+
 ## 💬 3. Communauté & Multijoueur
 
+- **Salons Multijoueurs à Plusieurs (Perchoir Party / Battle Royale 4 à 8 joueurs)** :
+  - Étendre le 1v1 actuel à des salons de mini-jeux en temps réel (BlindTest collectif, Pixel Battle en direct où le premier qui buzz gagne).
+- **Système de "Volées" (Guildes / Clubs de joueurs)** :
+  - Créer ou rejoindre une Volée (ex: *L'Ordre des Roguelikes*, *Les Archéologues du Rétro*).
+  - Cagnotte de plumes collective et défi hebdomadaire de guilde.
+- **Livre d'or & "Perchoir des Visiteurs" sur les Profils** :
+  - Pouvoir visiter le profil d'un ami et lui laisser une plume dorée d'encouragement ou un petit mot prédéfini.
 - **Défis Amis Asynchrones** :
   - Défier un ami sur le mini-jeu du jour (ex: battre son score au Pixel Sprint ou BlindTest).
 - **Salons personnalisés Versus** :
@@ -65,18 +84,39 @@ Aujourd'hui, le profil joueur réside entièrement dans une modale (`ProfileModa
 
 ---
 
-## 🎮 4. Mini-Jeux & Découverte Indé
+## 🎮 4. Mini-Jeux, Odyssée & Découverte Indé
 
-- **Mode Quotidien "Tout-en-un" (Grand Chelem)** :
-  - Une suite enchaînée des jeux du jour (Screenle -> Pixel -> Chrono -> Indledle...) avec un score global quotidien.
-- **Intégration Itch.io / GameJams** :
-  - Section mettant en avant des prototypes et projets gratuits de créateurs francophones et indépendants.
+- **Boss Mondial Coopératif de l'Odyssée (World Boss Hebdomadaire)** :
+  - Un titan corrompu apparaît chaque dimanche dans le Sanctuaire.
+  - Chaque session d'Odyssée jouée par n'importe quel joueur inflige des dégâts au boss commun. Si la communauté le terrasse avant minuit, tout le monde reçoit un booster rare !
+- **BlindTest / Audio Rush en Direct** :
+  - Version ultra-rapide façon Heardle : 1 seconde d'extrait pour deviner, puis 2 secondes, etc.
+- **Compteur Communautaire "Wishlists Développeurs"** :
+  - Mettre en valeur l'impact du site : afficher un compteur *"1 450 jeux indés ajoutés à la Wishlist Steam grâce aux Hiboux"*.
+  - Mini-bouton en 1 clic pour ouvrir la fiche Steam directement.
+- **Micro-Critiques du Perchoir** :
+  - Permettre aux joueurs de poster une phrase de recommandation sincère ("La raison pour laquelle vous devez y jouer") sous chaque fiche de jeu.
+- **Mode Quotidien "Grand Chelem" (All-in-One)** :
+  - Enchaîner tous les jeux quotidiens d'une traite avec un récapitulatif graphique partageable (style grille Wordle).
 
 ---
 
-## 📝 5. Notes & Suggestions en Vrac
+## 🎧 5. Ambiance, Immersion & Confort (UX)
+
+- **Lecteur Radio Lofi / Chiptune Flottant ("La Fréquence du Sanctuaire")** :
+  - Un mini-lecteur discret en bas de page diffusant des musiques relaxantes indé / chiptune libres de droits pendant qu'on explore ou qu'on joue.
+- **Mascotte Interactive du Perchoir (Mini-Tamagotchi)** :
+  - Un petit hibou animé sur le perchoir ou le profil qu'on peut caresser, nourrir avec quelques plumes, et qui réagit aux séries de victoires.
+- **Mode PWA / Installation Bureau & Mobile** :
+  - Possibilité d'installer le site comme une application native avec icône personnalisée et notifications de renouvellement des jeux du jour.
+
+---
+
+## 📝 6. Notes & Suggestions en Vrac
 *(À compléter au fil des idées de l'équipe et des retours de la communauté)*
 
 - [ ] Créer la route `/profile` et découper `ProfileModal` en composants réutilisables.
 - [ ] Préparer la table Supabase `user_profile_customization` ou étendre `user_profiles.save_data` pour stocker bannières, bio et cartes en vitrine.
 - [ ] Proposer des bannières débloquées par des succès (ex: "Avoir fini 10 Odyssées", "Posséder 50 cartes uniques").
+- [ ] Maquetter le duel de cartes rapide avec les cartes du Sanctuaire.
+
