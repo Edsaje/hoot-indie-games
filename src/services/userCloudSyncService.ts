@@ -750,7 +750,7 @@ export async function pushUserCloudSave(
     payload.syncedAt = new Date().toISOString();
 
     const upsertData: any = {
-      username: identifiers.username || 'unknown',
+      username: identifiers.username || `unknown_${Math.random().toString(36).substring(2, 9)}`,
       save_data: payload,
       last_synced_at: new Date().toISOString()
     };
