@@ -473,21 +473,21 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
   
   const scoreMultiplier = difficulty === 'expert' ? 1.5 : difficulty === 'detente' ? 0.8 : 1.0;
-  const handleScoreAdd = (pts: number) => {
+  const handleScoreAdd = useCallback((pts: number) => {
     const scaled = Math.max(1, Math.round(pts * scoreMultiplier));
     scoreRef.current += scaled;
     if (scoreSpanRef.current) {
       scoreSpanRef.current.textContent = String(scoreRef.current);
     }
     saveHighScore(scoreRef.current);
-  };
+  }, [scoreMultiplier, saveHighScore]);
 
-  const handleGameOver = () => {
+  const handleGameOver = useCallback(() => {
     setScore(scoreRef.current);
     setHighScore(highScoreRef.current);
     setIsGameOver(true);
     soundFx.playError();
-  };
+  }, []);
 
   
   
@@ -497,7 +497,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     keysDownRef.current.delete(code);
   };
 
-  const isKeyDown = (codes: readonly string[]) => {
+  const isKeyDown = useCallback((codes: readonly string[]) => {
     const kb = keyboardKeysRef.current;
     const gp = gamepadKeysRef.current;
     const kd = keysDownRef.current;
@@ -508,7 +508,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
       }
     }
     return false;
-  };
+  }, []);
 
   return (
     <HeadlessModal
