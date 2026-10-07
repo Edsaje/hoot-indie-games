@@ -710,7 +710,9 @@ export async function fetchUserCloudSave(identifiers: {
 
     let query = supabase.from('user_profiles').select('save_data');
     
-    if (identifiers.userId) {
+    const isValidUUID = (id?: string) => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+    if (isValidUUID(identifiers.userId)) {
       query = query.eq('id', identifiers.userId);
     } else if (identifiers.steamId) {
       query = query.eq('steam_id', identifiers.steamId);
@@ -749,26 +751,33 @@ export async function pushUserCloudSave(
 
     payload.syncedAt = new Date().toISOString();
 
-    const upsertData: any = {
+    const isValidUUID = (id?: string) => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    let targetId = isValidUUID(identifiers.userId) ? identifiers.userId : null;
+
+    if (!targetId && identifiers.steamId) {
+      const { data: existing } = await supabase.from('user_profiles').select('id').eq('steam_id', identifiers.steamId).maybeSingle();
+      if (existing?.id) targetId = existing.id;
+    }
+    if (!targetId && identifiers.username) {
+      const { data: existing } = await supabase.from('user_profiles').select('id').eq('username', identifiers.username).maybeSingle();
+      if (existing?.id) targetId = existing.id;
+    }
+
+    const payloadData: any = {
       username: identifiers.username || `unknown_${Math.random().toString(36).substring(2, 9)}`,
       save_data: payload,
       last_synced_at: new Date().toISOString()
     };
-    
-    if (identifiers.userId) {
-      upsertData.id = identifiers.userId;
-    }
-    if (identifiers.steamId) {
-      upsertData.steam_id = identifiers.steamId;
-    }
+    if (identifiers.steamId) payloadData.steam_id = identifiers.steamId;
 
-    // Determine the conflict target. If we have userId, use 'id'. Otherwise, use 'username' if it's unique, or steam_id.
-    // The migration set 'id' as PRIMARY KEY, 'username' as UNIQUE, 'friend_code' as UNIQUE.
-    const conflictTarget = identifiers.userId ? 'id' : (identifiers.username ? 'username' : 'id');
-
-    const { error } = await supabase
-      .from('user_profiles')
-      .upsert(upsertData, { onConflict: conflictTarget });
+    let error = null;
+    if (targetId) {
+      const { error: updErr } = await supabase.from('user_profiles').update(payloadData).eq('id', targetId);
+      error = updErr;
+    } else {
+      const { error: insErr } = await supabase.from('user_profiles').insert(payloadData);
+      error = insErr;
+    }
 
     if (error) throw error;
 
