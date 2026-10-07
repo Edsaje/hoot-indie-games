@@ -78,7 +78,7 @@ export const AppContent: React.FC = () => {
   const { isTradeModalOpen, openTradeModal } = useTrades();
 
   // Defer non-critical floating gadgets (Chat & Odyssey Mini-HUD) until user interaction or quiet period
-  const [isIdleReady, setIsIdleReady] = useState(false);
+  const [isIdleReady, setIsIdleReady] = useState(true);
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const trigger = () => {
