@@ -695,7 +695,7 @@ export function applyCloudSaveToLocalStorage(
 /**
  * Charge la sauvegarde cloud distante pour un utilisateur
  */
-export async function fetchUserCloudSave(_identifiers: {
+export async function fetchUserCloudSave(identifiers: {
   steamId?: string;
   userId?: string;
   username?: string;
@@ -704,14 +704,21 @@ export async function fetchUserCloudSave(_identifiers: {
     const supabase = await getSupabaseClient();
     if (!supabase) throw new Error('Supabase not configured');
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+    if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
+      throw new Error('Not authenticated');
+    }
 
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .select('save_data')
-      .eq('id', user.id)
-      .single();
+    let query = supabase.from('user_profiles').select('save_data');
+    
+    if (identifiers.userId) {
+      query = query.eq('id', identifiers.userId);
+    } else if (identifiers.steamId) {
+      query = query.eq('steam_id', identifiers.steamId);
+    } else if (identifiers.username) {
+      query = query.eq('username', identifiers.username);
+    }
+
+    const { data, error } = await query.maybeSingle();
 
     if (error) {
       if (error.code === 'PGRST116') return { success: true, exists: false };
@@ -736,20 +743,32 @@ export async function pushUserCloudSave(
     const supabase = await getSupabaseClient();
     if (!supabase) throw new Error('Supabase not configured');
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+    if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
+      throw new Error('Not authenticated');
+    }
 
     payload.syncedAt = new Date().toISOString();
 
+    const upsertData: any = {
+      username: identifiers.username || 'unknown',
+      save_data: payload,
+      last_synced_at: new Date().toISOString()
+    };
+    
+    if (identifiers.userId) {
+      upsertData.id = identifiers.userId;
+    }
+    if (identifiers.steamId) {
+      upsertData.steam_id = identifiers.steamId;
+    }
+
+    // Determine the conflict target. If we have userId, use 'id'. Otherwise, use 'username' if it's unique, or steam_id.
+    // The migration set 'id' as PRIMARY KEY, 'username' as UNIQUE, 'friend_code' as UNIQUE.
+    const conflictTarget = identifiers.userId ? 'id' : (identifiers.username ? 'username' : 'id');
+
     const { error } = await supabase
       .from('user_profiles')
-      .upsert({
-        id: user.id,
-        username: identifiers.username || 'unknown',
-        steam_id: identifiers.steamId,
-        save_data: payload,
-        last_synced_at: new Date().toISOString()
-      }, { onConflict: 'id' });
+      .upsert(upsertData, { onConflict: conflictTarget });
 
     if (error) throw error;
 
