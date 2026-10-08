@@ -182,10 +182,10 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-950 mb-3 border border-[#4a3424] shadow-inner">
                   <picture className="w-full h-full block">
                     {currentDate === TODAY_DATE && (
-                      <source media="(max-width: 640px)" srcSet="/daily-hero-mobile.webp?v=1" type="image/webp" />
+                      <source media="(max-width: 640px)" srcSet={`/daily-hero-mobile.webp?v=${TODAY_DATE}`} type="image/webp" />
                     )}
                     <img
-                      src={currentDate === TODAY_DATE ? '/daily-hero.webp?v=1' : (dailyGem.screenshots[5] || dailyGem.screenshots[0] || '').replace('1920x1080.jpg', '600x338.jpg')}
+                      src={currentDate === TODAY_DATE ? `/daily-hero.webp?v=${TODAY_DATE}` : (dailyGem.screenshots[5] || dailyGem.screenshots[0] || '').replace('1920x1080.jpg', '600x338.jpg')}
                       alt={dailyGem.title}
                       width={520}
                       height={292}

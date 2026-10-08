@@ -161,13 +161,11 @@ interface HeroImagePaths {
   mobile: string;
 }
 
-async function prepareDailyHeroImage(screenshotUrl: string): Promise<HeroImagePaths> {
+async function prepareDailyHeroImage(screenshotUrl: string, todayStr: string): Promise<HeroImagePaths> {
   if (!screenshotUrl) return { desktop: '', mobile: '' };
   const publicDesktopWebp = path.resolve(__dirname, '../public/daily-hero.webp');
   const publicMobileWebp = path.resolve(__dirname, '../public/daily-hero-mobile.webp');
-  if (fs.existsSync(publicDesktopWebp) && fs.existsSync(publicMobileWebp)) {
-    return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
-  }
+
   try {
     const res = await fetch(screenshotUrl, { signal: AbortSignal.timeout(8000) });
     if (res.ok) {
@@ -189,13 +187,13 @@ async function prepareDailyHeroImage(screenshotUrl: string): Promise<HeroImagePa
       fs.writeFileSync(publicMobileWebp, webpMobile);
 
       console.log(`⚡ Images WebP créées avec succès: desktop (${(webpDesktop.length / 1024).toFixed(1)} kB) & mobile (${(webpMobile.length / 1024).toFixed(1)} kB)`);
-      return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
+      return { desktop: `/daily-hero.webp?v=${todayStr}`, mobile: `/daily-hero-mobile.webp?v=${todayStr}` };
     }
   } catch (err) {
     console.warn('⚠️ Erreur téléchargement/compression hero WebP:', err);
   }
   if (fs.existsSync(publicDesktopWebp) && fs.existsSync(publicMobileWebp)) {
-    return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
+    return { desktop: `/daily-hero.webp?v=${todayStr}`, mobile: `/daily-hero-mobile.webp?v=${todayStr}` };
   }
   return { desktop: screenshotUrl, mobile: screenshotUrl };
 }
@@ -229,7 +227,7 @@ export async function generateSeoIndexHtml(): Promise<string> {
   const dailyGame = getDailyGame(todayStr, 17, allCuratedGames);
   const rawScreenshot = dailyGame?.screenshots?.[5] || dailyGame?.screenshots?.[0] || '';
   const rawDailyScreenshot = rawScreenshot.replace('1920x1080.jpg', '600x338.jpg');
-  const dailyScreenshot = await prepareDailyHeroImage(rawDailyScreenshot);
+  const dailyScreenshot = await prepareDailyHeroImage(rawDailyScreenshot, todayStr);
 
   // Persist daily gem for ultra-fast LCP rendering without bundling 274 games
   try {
