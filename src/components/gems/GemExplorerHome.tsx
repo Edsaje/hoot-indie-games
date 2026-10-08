@@ -19,12 +19,13 @@ import {
   Zap,
   Swords,
 } from 'lucide-react';
-import { TODAY_DAILY_GEM } from '../../data/dailyGem';
+import { TODAY_DAILY_GEM, TODAY_DATE } from '../../data/dailyGem';
 import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { ItchIcon } from '../common/ItchIcon';
 import { soundFx } from '../../utils/audio';
-import { getChallengeStatusForDate, getTodayDateString } from '../../utils/streakManager';
+import { getChallengeStatusForDate } from '../../utils/streakManager';
+import { getScheduledDailyGame } from '../../utils/monthlyScheduler';
 import type { NavTab } from '../common/Navbar';
 import type { ArcadeGameId } from '../arcade/ArcadeModal';
 import { SylvestreHudFrame } from '../sylvestre/SylvestreHudFrame';
@@ -75,7 +76,12 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   }, []);
 
   // La pépite du jour en vedette (issue du calendrier mensuel déterministe)
-  const dailyGem = TODAY_DAILY_GEM;
+  const dailyGem = useMemo(() => {
+    if (currentDate === TODAY_DATE) {
+      return TODAY_DAILY_GEM;
+    }
+    return getScheduledDailyGame(currentDate, 'dailyGem');
+  }, [currentDate]);
 
   // Check today's game completion status for all 8 daily disciplines
   const dailyStatus = useMemo(() => {
@@ -175,11 +181,11 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
                 {/* Thumbnail */}
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-950 mb-3 border border-[#4a3424] shadow-inner">
                   <picture className="w-full h-full block">
-                    {currentDate === getTodayDateString() && (
+                    {currentDate === TODAY_DATE && (
                       <source media="(max-width: 640px)" srcSet="/daily-hero-mobile.webp?v=1" type="image/webp" />
                     )}
                     <img
-                      src={currentDate === getTodayDateString() ? '/daily-hero.webp?v=1' : (dailyGem.screenshots[5] || dailyGem.screenshots[0] || '').replace('1920x1080.jpg', '600x338.jpg')}
+                      src={currentDate === TODAY_DATE ? '/daily-hero.webp?v=1' : (dailyGem.screenshots[5] || dailyGem.screenshots[0] || '').replace('1920x1080.jpg', '600x338.jpg')}
                       alt={dailyGem.title}
                       width={520}
                       height={292}
