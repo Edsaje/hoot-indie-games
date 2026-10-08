@@ -4,7 +4,7 @@ import type { Game } from '../src/types/game';
 import { INDIE_GAMES } from '../src/data/games';
 import { UPCOMING_INDIE_GAMES, type UpcomingGame } from '../src/data/upcomingGames';
 import { INITIAL_MICRO_INDIES } from '../src/data/microIndies';
-import { BANNED_APP_IDS, ADULT_CONTENT_DESCRIPTOR_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
+import { BANNED_APP_IDS, KNOWN_INDIE_APP_IDS, ADULT_CONTENT_DESCRIPTOR_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
 import { runSyncOdysseyRoutes } from './syncOdysseyRoutes';
 
 /**
@@ -71,6 +71,7 @@ function isReadableLatinText(text: string): boolean {
 function isAdultOrInappropriate(details: SteamDetails): boolean {
   if (!details) return true;
   if (BANNED_APP_IDS.has(details.steam_appid)) return true;
+  if (KNOWN_INDIE_APP_IDS.has(details.steam_appid)) return false;
 
   // 1. Contrôle impératif des Content Descriptors officiels de Valve (Steam)
   // ID 3: Adult Only Sexual Content, ID 4: Frequent Sexual Content / Frequent Nudity

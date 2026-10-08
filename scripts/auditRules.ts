@@ -30,6 +30,7 @@ export const KNOWN_INDIE_APP_IDS = new Set<number>([
   236090,  // Dust: An Elysian Tail (Humble Hearts LLC / Xbox Game Studios)
   248820,  // Risk of Rain (2013) (Hopoo Games / Gearbox - 2K)
   251470,  // TowerFall Ascension (Maddy Makes Games / Extremely OK Games)
+  335670,  // LISA: The Painful (Dingaling Productions)
   252490,  // Rust (Facepunch Studios)
   304650,  // SUNLESS SEA (Failbetter Games)
   979690,  // The Ascent (Neon Giant)
