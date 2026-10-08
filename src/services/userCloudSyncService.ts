@@ -451,31 +451,29 @@ export function applyCloudSaveToLocalStorage(
 
     // 5. Profil utilisateur
     const rawProfile = localStorage.getItem(STORAGE_USER_PROFILE);
-    if (rawProfile) {
-      const currentProfile = JSON.parse(rawProfile);
-      const mergedAvatars = isReplace
-        ? (cloudData.unlockedAvatars || ['owl'])
-        : Array.from(new Set([...(currentProfile.unlockedAvatars || []), ...(cloudData.unlockedAvatars || [])]));
-      const mergedTitles = isReplace
-        ? (cloudData.unlockedTitles || ['Oisillon du Perchoir'])
-        : Array.from(new Set([...(currentProfile.unlockedTitles || []), ...(cloudData.unlockedTitles || [])]));
-      const mergedFrames = isReplace
-        ? (cloudData.unlockedFrames || ['frame_wood'])
-        : Array.from(new Set([...(currentProfile.unlockedFrames || []), ...(cloudData.unlockedFrames || [])]));
+    const currentProfile = rawProfile ? JSON.parse(rawProfile) : {};
+    const mergedAvatars = isReplace
+      ? (cloudData.unlockedAvatars || ['owl'])
+      : Array.from(new Set([...(currentProfile.unlockedAvatars || []), ...(cloudData.unlockedAvatars || [])]));
+    const mergedTitles = isReplace
+      ? (cloudData.unlockedTitles || ['Oisillon du Perchoir'])
+      : Array.from(new Set([...(currentProfile.unlockedTitles || []), ...(cloudData.unlockedTitles || [])]));
+    const mergedFrames = isReplace
+      ? (cloudData.unlockedFrames || ['frame_wood'])
+      : Array.from(new Set([...(currentProfile.unlockedFrames || []), ...(cloudData.unlockedFrames || [])]));
 
-      const updatedProfile = {
-        ...currentProfile,
-        username: cloudData.username && cloudData.username !== 'Hibou Mystère' ? cloudData.username : currentProfile.username,
-        avatarId: cloudData.avatarId || currentProfile.avatarId,
-        title: cloudData.title || currentProfile.title,
-        activeFrame: cloudData.activeFrame || currentProfile.activeFrame,
-        unlockedAvatars: mergedAvatars,
-        unlockedTitles: mergedTitles,
-        unlockedFrames: mergedFrames,
-        isCloudSynced: true,
-      };
-      localStorage.setItem(STORAGE_USER_PROFILE, JSON.stringify(updatedProfile));
-    }
+    const updatedProfile = {
+      ...currentProfile,
+      username: cloudData.username && cloudData.username !== 'Hibou Mystère' ? cloudData.username : currentProfile.username,
+      avatarId: cloudData.avatarId || currentProfile.avatarId,
+      title: cloudData.title || currentProfile.title,
+      activeFrame: cloudData.activeFrame || currentProfile.activeFrame,
+      unlockedAvatars: mergedAvatars,
+      unlockedTitles: mergedTitles,
+      unlockedFrames: mergedFrames,
+      isCloudSynced: true,
+    };
+    localStorage.setItem(STORAGE_USER_PROFILE, JSON.stringify(updatedProfile));
 
     // 6. Collection de cartes
     if (cloudData.cardCollection && typeof cloudData.cardCollection === 'object') {
@@ -820,6 +818,10 @@ function computeSaveFingerprint(data: UserCloudSavePayload): string {
     stats: data.stats,
     dailyCount: Object.keys(data.dailyGameStates || {}).length,
     taPlayed: Object.keys(data.timeAttackStats || {}).length,
+    cardsCount: Object.keys(data.cardCollection || {}).length,
+    cardsTotal: Object.values(data.cardCollection || {}).reduce((sum: number, c: any) => sum + (c.count || 0) + (c.countHolo || 0), 0),
+    lastBooster: data.lastDailyBoosterClaim,
+    freeStock: data.freeBoostersStock?.count,
     odysseySap: data.odysseyState?.starSap || 0,
     odysseyTotalSap: data.odysseyState?.totalStarSapEarned || 0,
     odysseyBiome: data.odysseyState?.highestBiomeUnlocked || 1,
