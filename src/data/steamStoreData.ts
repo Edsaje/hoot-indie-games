@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 528 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 530 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -7272,6 +7272,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Overwhelmingly Positive"
     }
   },
+  "2235200": {
+    "appId": 2235200,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1950,
+    "finalPriceCents": 1560,
+    "discountPercent": 20,
+    "formattedFinalPrice": "15,60€",
+    "formattedInitialPrice": "19,50€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "2272250": {
     "appId": 2272250,
     "isFree": false,
@@ -8672,6 +8689,22 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 10,
     "formattedFinalPrice": "5,53€",
     "formattedInitialPrice": "6,15€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5005680": {
+    "appId": 5005680,
+    "isFree": true,
+    "currency": "EUR",
+    "initialPriceCents": 0,
+    "finalPriceCents": 0,
+    "discountPercent": 0,
+    "formattedFinalPrice": "Gratuit",
     "totalReviews": 0,
     "totalPositive": 0,
     "positivePercent": 90,

@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 60
+ * Total de pépites sélectionnées : 62
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2586,5 +2586,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzEyNjAxMTcyLnBuZw==/315x250%23c/oAHBgk.png"
     ],
     "dateAdded": "2026-10-07"
+  },
+  {
+    "id": "itch-offbeat",
+    "title": "OFFBEAT",
+    "developer": "pantaloon-io",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pantaloon-io.itch.io/offbeat",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$10.19",
+      "en": "$10.19"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Build the recording studio of your dreams!",
+      "en": "Build the recording studio of your dreams!"
+    },
+    "description": {
+      "fr": "Build the recording studio of your dreams!",
+      "en": "Build the recording studio of your dreams!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI3MDkzNjM5LnBuZw==/315x250%23c/%2FDBEkG.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI3MDkzNjM5LnBuZw==/315x250%23c/%2FDBEkG.png"
+    ],
+    "dateAdded": "2026-10-08"
+  },
+  {
+    "id": "itch-forget-me-not",
+    "title": "FORGET ME NOT",
+    "developer": "pepsica",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pepsica.itch.io/forget-me-not",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Will you forget or remember?",
+      "en": "Will you forget or remember?"
+    },
+    "description": {
+      "fr": "Will you forget or remember?",
+      "en": "Will you forget or remember?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4MTQ4MjcyLnBuZw==/315x250%23c/iSFE8R.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4MTQ4MjcyLnBuZw==/315x250%23c/iSFE8R.png"
+    ],
+    "dateAdded": "2026-10-08"
   }
 ];

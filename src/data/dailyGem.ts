@@ -1,44 +1,45 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-07";
+export const TODAY_DATE = "2026-10-08";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "blasphemous",
-  "title": "Blasphemous",
-  "releaseYear": 2019,
+  "id": "doki-doki-literature-club",
+  "title": "Doki Doki Literature Club!",
+  "releaseYear": 2017,
   "genre": [
-    "Metroidvania",
-    "Action",
-    "Souls-like",
-    "Dark Fantasy"
+    "Visual Novel",
+    "Psychologique",
+    "Horreur",
+    "Narratif"
   ],
   "artStyle": {
-    "fr": "Pixel Art",
-    "en": "Pixel Art"
+    "fr": "2D Dessiné à la main",
+    "en": "2D Hand-drawn"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Première personne",
+    "en": "First-Person"
   },
-  "developer": "The Game Kitchen",
-  "steamUrl": "https://store.steampowered.com/app/774361/Blasphemous/",
+  "developer": "Team Salvato",
+  "steamUrl": "https://store.steampowered.com/app/698780/",
+  "itchUrl": "https://teamsalvato.itch.io/ddlc",
+  "isFree": true,
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_770720a3db9408ae7ae6625ba157bfb9195a3a68.1920x1080.jpg?t=1780479368",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_b74f57919e88283fac75389e76ead2fed73997e5.1920x1080.jpg?t=1780479368",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_bd57bcb1e9183cbea61339727a97bcc5206677b2.1920x1080.jpg?t=1780479368",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_933510ac0fd13c6bd4ecc4c187e0506d520f2e70.1920x1080.jpg?t=1780479368",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_957b6216519c614984ee71c6f6a524d75ea6353b.1920x1080.jpg?t=1780479368",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774361/ss_959ffc1230d2ca57e18a9c96f3c56f5643b5cce7.1920x1080.jpg?t=1780479368"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/698780/ss_3941e57f278958dd15c9855f42ab069da3a19608.1920x1080.jpg?t=1681943582",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/698780/ss_fb10c409c498a8f2f512d2195a169fed0bbb1526.1920x1080.jpg?t=1681943582",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/698780/ss_3030d47cf865cb5910746bc3897217c9cc8ce5fb.1920x1080.jpg?t=1681943582",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/698780/ss_c60999c236a809c04321017aa14e97e5ac9856a1.1920x1080.jpg?t=1681943582",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/698780/ss_34bca0d2db214a00dc0d02d006ae7f86506e3157.1920x1080.jpg?t=1681943582"
   ],
   "hints": {
     "tagline": {
-      "fr": "Incarnez le Pénitent dans un monde de cauchemar ravagé par une terrible malédiction religieuse.",
-      "en": "A punishing action-platformer that combines fast-paced, skilled hack-and-slash combat with deep lore.",
-      "es": "Un implacable juego de acción y plataformas que combina combates hack and slash con una mitología oscura.",
-      "de": "Ein kompromissloser Action-Plattformer mit rasanten Kämpfen und düsterer religiöser Lore.",
-      "ja": "過酷な呪いに苛まれた悪夢の世界で、悔悛者として過激な戦闘に身を投じるアクションRPG。",
-      "pt-BR": "Encarne o Penitente em um mundo de pesadelo assolado por uma terrível maldição religiosa."
+      "fr": "Rejoignez un club de poésie aux apparences mignonnes qui bascule dans l'horreur psychologique pure.",
+      "en": "Join a seemingly cheerful poetry club that unravels into a disturbing psychological narrative experience.",
+      "es": "Únete a un club escolar de poesía aparentemente adorable que oculta un oscuro descenso al terror psicológico.",
+      "de": "Tritt einem scheinbar harmlosen Literaturklub bei, der sich schleichend in puren psychologischen Horror verwandelt.",
+      "ja": "可愛い女の子たちとの穏やかな文芸部での日々が、次第に背筋の凍る悪夢へと変貌していく伝説のメタホラー。",
+      "pt-BR": "Entre em um clube de poesia aparentemente fofo que se transforma em uma perturbadora experiência de horror psicológico."
     },
-    "composer": "Carlos Viola"
+    "composer": "Dan Salvato"
   }
 };

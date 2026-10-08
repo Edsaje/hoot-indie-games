@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 277
+ * Total de jeux : 280
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -10574,6 +10574,106 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-07"
+  },
+  {
+    "id": "aviary-attorney",
+    "title": "Aviary Attorney",
+    "releaseYear": 2015,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Sketchy Logic",
+    "steamUrl": "https://store.steampowered.com/app/384630/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_92cad3d06e54d0058103a0db5ae13458d4eacd34.1920x1080.jpg?t=1717762618",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_53bbbedb6973ec88412db36b28845950a21ef3ff.1920x1080.jpg?t=1717762618",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_8e9c1d563ede84e206cd67591d39440c80bb2d42.1920x1080.jpg?t=1717762618",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_bcb06b99ef711766c57039a7308898e4d7f53591.1920x1080.jpg?t=1717762618",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_a6454c3bbd692de6c2ba66d5d679c441dd2a748e.1920x1080.jpg?t=1717762618",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/header.jpg?t=1717762618"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "The hottest bird lawyering game to come out of 1840s France! Join Jayjay Falcon and his witty apprentice, Sparrowson, as the two take on clients, interview witnesses, collect evidence, and deliver justice to the guilty.",
+        "en": "The hottest bird lawyering game to come out of 1840s France! Join Jayjay Falcon and his witty apprentice, Sparrowson, as the two take on clients, interview witnesses, collect evidence, and deliver justice to the guilty."
+      }
+    },
+    "addedAt": "2026-10-08"
+  },
+  {
+    "id": "rabi-ribi",
+    "title": "Rabi-Ribi",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "CreSpirit, GemaYue",
+    "steamUrl": "https://store.steampowered.com/app/400910/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_a0685d94bc241b8f92922cc5a407ab33b2b2d8cd.1920x1080.jpg?t=1728971155",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_f4c4964cb52311e222207e7c09902047f9e44cad.1920x1080.jpg?t=1728971155",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_b9e3eac9d9c95a9809b2b2c255801e82767f44ec.1920x1080.jpg?t=1728971155",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_9901fb3edefc2e7337378479586dc9930eb22f27.1920x1080.jpg?t=1728971155",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_9d1029bc27c41377b1dfd294935cbb62550bf3b2.1920x1080.jpg?t=1728971155",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_68d67a9c852c2bae7e8918c4cee59d665d7ac6a0.1920x1080.jpg?t=1728971155"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dodge bullets, missiles and lasers in battle as you wrap your head around that bunny girl costume! Combo away with your mighty Piko Hammer or spam various spells from afar with your fiery fairy friend. Explore and explode through Rabi-Rabi Island as you collect power-ups and uncover secrets...",
+        "en": "Dodge bullets, missiles and lasers in battle as you wrap your head around that bunny girl costume! Combo away with your mighty Piko Hammer or spam various spells from afar with your fiery fairy friend. Explore and explode through Rabi-Rabi Island as you collect power-ups and uncover secrets..."
+      }
+    },
+    "addedAt": "2026-10-08"
+  },
+  {
+    "id": "devil-daggers",
+    "title": "Devil Daggers",
+    "releaseYear": 2016,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Sorath",
+    "steamUrl": "https://store.steampowered.com/app/422970/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_27ebb40c8186b926befe4cb95d73904471427636.1920x1080.jpg?t=1724973461",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_89f97dd1bf7f8f57403e8831b08dd914bb97b41f.1920x1080.jpg?t=1724973461",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_5f08d0fc5a418ab6e236d61c04808b7e4b02478a.1920x1080.jpg?t=1724973461",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_ccff2b98a3488dacf5b35c9fa2f650bbf78f8dab.1920x1080.jpg?t=1724973461",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_b62784b208a72f525afd509da82d8255f255d828.1920x1080.jpg?t=1724973461",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_d95de23f6e19cd1d2c5586ad5ac051e9e9dfa488.1920x1080.jpg?t=1724973461"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Devil Daggers is a fast-paced shooter that places you in an abyssal arena to face endless legions of demons. Armed with versatile magic daggers and a fluid movement system, fight to survive as long as you can.",
+        "en": "Devil Daggers is a fast-paced shooter that places you in an abyssal arena to face endless legions of demons. Armed with versatile magic daggers and a fluid movement system, fight to survive as long as you can."
+      }
+    },
+    "addedAt": "2026-10-08"
   }
 ];
 

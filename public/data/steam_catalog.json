@@ -1769,40 +1769,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383870/41a7d0ff4c2dab4ed69c53c9a29c931e6f62948d/header.jpg?t=1755789801"
   },
   {
-    "id": "aviary-attorney",
-    "title": "Aviary Attorney",
-    "releaseYear": 2015,
-    "genre": [
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Sketchy Logic",
-    "steamUrl": "https://store.steampowered.com/app/384630/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_92cad3d06e54d0058103a0db5ae13458d4eacd34.1920x1080.jpg?t=1717762618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_53bbbedb6973ec88412db36b28845950a21ef3ff.1920x1080.jpg?t=1717762618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_8e9c1d563ede84e206cd67591d39440c80bb2d42.1920x1080.jpg?t=1717762618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_bcb06b99ef711766c57039a7308898e4d7f53591.1920x1080.jpg?t=1717762618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/ss_a6454c3bbd692de6c2ba66d5d679c441dd2a748e.1920x1080.jpg?t=1717762618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/header.jpg?t=1717762618"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "The hottest bird lawyering game to come out of 1840s France! Join Jayjay Falcon and his witty apprentice, Sparrowson, as the two take on clients, interview witnesses, collect evidence, and deliver justice to the guilty.",
-        "en": "The hottest bird lawyering game to come out of 1840s France! Join Jayjay Falcon and his witty apprentice, Sparrowson, as the two take on clients, interview witnesses, collect evidence, and deliver justice to the guilty."
-      }
-    },
-    "steamAppId": 384630,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/384630/header.jpg?t=1717762618"
-  },
-  {
     "id": "ultimate-chicken-horse",
     "title": "Ultimate Chicken Horse",
     "releaseYear": 2016,
@@ -1905,42 +1871,6 @@
     },
     "steamAppId": 391540,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg?t=1757349115"
-  },
-  {
-    "id": "rabi-ribi",
-    "title": "Rabi-Ribi",
-    "releaseYear": 2016,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "CreSpirit",
-    "steamUrl": "https://store.steampowered.com/app/400910/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_a0685d94bc241b8f92922cc5a407ab33b2b2d8cd.1920x1080.jpg?t=1728971155",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_f4c4964cb52311e222207e7c09902047f9e44cad.1920x1080.jpg?t=1728971155",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_b9e3eac9d9c95a9809b2b2c255801e82767f44ec.1920x1080.jpg?t=1728971155",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_9901fb3edefc2e7337378479586dc9930eb22f27.1920x1080.jpg?t=1728971155",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_9d1029bc27c41377b1dfd294935cbb62550bf3b2.1920x1080.jpg?t=1728971155",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/ss_68d67a9c852c2bae7e8918c4cee59d665d7ac6a0.1920x1080.jpg?t=1728971155"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Dodge bullets, missiles and lasers in battle as you wrap your head around that bunny girl costume! Combo away with your mighty Piko Hammer or spam various spells from afar with your fiery fairy friend. Explore and explode through Rabi-Rabi Island as you collect power-ups and uncover secrets...",
-        "en": "Dodge bullets, missiles and lasers in battle as you wrap your head around that bunny girl costume! Combo away with your mighty Piko Hammer or spam various spells from afar with your fiery fairy friend. Explore and explode through Rabi-Rabi Island as you collect power-ups and uncover secrets..."
-      }
-    },
-    "steamAppId": 400910,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400910/header.jpg?t=1728971155"
   },
   {
     "id": "pony-island",
@@ -2081,40 +2011,6 @@
     },
     "steamAppId": 420530,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420530/header.jpg?t=1785326211"
-  },
-  {
-    "id": "devil-daggers",
-    "title": "Devil Daggers",
-    "releaseYear": 2016,
-    "genre": [
-      "Action"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Sorath",
-    "steamUrl": "https://store.steampowered.com/app/422970/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_27ebb40c8186b926befe4cb95d73904471427636.1920x1080.jpg?t=1724973461",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_89f97dd1bf7f8f57403e8831b08dd914bb97b41f.1920x1080.jpg?t=1724973461",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_5f08d0fc5a418ab6e236d61c04808b7e4b02478a.1920x1080.jpg?t=1724973461",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_ccff2b98a3488dacf5b35c9fa2f650bbf78f8dab.1920x1080.jpg?t=1724973461",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_b62784b208a72f525afd509da82d8255f255d828.1920x1080.jpg?t=1724973461",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/ss_d95de23f6e19cd1d2c5586ad5ac051e9e9dfa488.1920x1080.jpg?t=1724973461"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Devil Daggers is a fast-paced shooter that places you in an abyssal arena to face endless legions of demons. Armed with versatile magic daggers and a fluid movement system, fight to survive as long as you can.",
-        "en": "Devil Daggers is a fast-paced shooter that places you in an abyssal arena to face endless legions of demons. Armed with versatile magic daggers and a fluid movement system, fight to survive as long as you can."
-      }
-    },
-    "steamAppId": 422970,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/422970/header.jpg?t=1724973461"
   },
   {
     "id": "abiotic-factor",
@@ -14510,5 +14406,80 @@
     "addedAt": "2026-10-07",
     "steamAppId": 4034080,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4034080/b30e19dee50bcb00caffad0cce0e00ae578ee071/header.jpg?t=1791295601"
+  },
+  {
+    "id": "neon-abyss-2",
+    "title": "Neon Abyss 2",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Veewo Games",
+    "steamUrl": "https://store.steampowered.com/app/2235200/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2235200/aec6fa82f10f4383d7517e170942dc760a96da64/ss_aec6fa82f10f4383d7517e170942dc760a96da64.1920x1080.jpg?t=1791431953",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2235200/faa84f6e9df4abae5c17b9761bb73d505ef3bf02/ss_faa84f6e9df4abae5c17b9761bb73d505ef3bf02.1920x1080.jpg?t=1791431953",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2235200/b4ffced08c00903569430a94d3b9a3e9ef51cc85/ss_b4ffced08c00903569430a94d3b9a3e9ef51cc85.1920x1080.jpg?t=1791431953",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2235200/6ffa57513af47e6895f60abf8ab48f6d40e77c71/ss_6ffa57513af47e6895f60abf8ab48f6d40e77c71.1920x1080.jpg?t=1791431953",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2235200/302ecc4d902bbc1ee303124dfad70daef418ce8f/ss_302ecc4d902bbc1ee303124dfad70daef418ce8f.1920x1080.jpg?t=1791431953",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2235200/2977ab97d3af356594acbb40c6e9065797356350/ss_2977ab97d3af356594acbb40c6e9065797356350.1920x1080.jpg?t=1791431953"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Plongez dans le chaos cybernétique de Neon Abyss 2. Dans ce nouveau rogue-like jouable jusqu'à 4 joueurs en ligne et offrant de nombreux styles de combat différents et des synergies d'objets illimitées, chaque run vous fera découvrir une expérience pleine d'action que vous n'êtes pas d'oublier.",
+        "en": "Dive into the cybermyth roguelike chaos of Neon Abyss 2! Now featuring up to 4-player online co-op, more combat styles, and unlimited item synergies, every run delivers a dramatic, action-packed experience you won't forget."
+      }
+    },
+    "addedAt": "2026-10-08",
+    "steamAppId": 2235200,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2235200/4e69a837d1d47cc03ccf92e961255ac67d5d51fa/header_alt_assets_0.jpg?t=1791431953"
+  },
+  {
+    "id": "catpoker",
+    "title": "CatPoker",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Free-to-play",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "HotpotGames",
+    "steamUrl": "https://store.steampowered.com/app/5005680/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/8955bac586b800b906034fff6a42a7160e50df41/ss_8955bac586b800b906034fff6a42a7160e50df41.1920x1080.jpg?t=1791437185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/bf096843653b2e4353775ab0050cce4b8a5cc6cb/ss_bf096843653b2e4353775ab0050cce4b8a5cc6cb.1920x1080.jpg?t=1791437185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/12f65524d943c59e5b645753d232562ce887da2a/ss_12f65524d943c59e5b645753d232562ce887da2a.1920x1080.jpg?t=1791437185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/ff56e3de0681485d97e58e6a22d3168282decf93/ss_ff56e3de0681485d97e58e6a22d3168282decf93.1920x1080.jpg?t=1791437185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/e06625e12fd516a1a52af64c36229caedabc83d5/ss_e06625e12fd516a1a52af64c36229caedabc83d5.1920x1080.jpg?t=1791437185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/c91e08a40676f1ca2ffa6fc5f08abb123bb696d0/header.jpg?t=1791437185"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Build your deck, bomb your friends into oblivion, and score 9,999 gold with a single card. CatPoker is an online 1–3 player roguelike Dou Dizhu game, packed with adorable cats and tons of fun items. Gather your friends for a match of Dou Dizhu where strategy meets friendship-ending chaos!",
+        "en": "Build your deck, bomb your friends into oblivion, and score 9,999 gold with a single card. CatPoker is an online 1–3 player roguelike Dou Dizhu game, packed with adorable cats and tons of fun items. Gather your friends for a match of Dou Dizhu where strategy meets friendship-ending chaos!"
+      }
+    },
+    "addedAt": "2026-10-08",
+    "isFree": true,
+    "steamAppId": 5005680,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/c91e08a40676f1ca2ffa6fc5f08abb123bb696d0/header.jpg?t=1791437185"
   }
 ]
