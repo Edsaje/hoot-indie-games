@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 62
+ * Total de pépites sélectionnées : 64
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2666,5 +2666,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI4MTQ4MjcyLnBuZw==/315x250%23c/iSFE8R.png"
     ],
     "dateAdded": "2026-10-08"
+  },
+  {
+    "id": "itch-the-margot-collapse",
+    "title": "The Margot Collapse",
+    "developer": "funday-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://funday-games.itch.io/the-margot-collapse",
+    "playInBrowserUrl": "https://funday-games.itch.io/the-margot-collapse",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Incremental mystery game",
+      "en": "Incremental mystery game"
+    },
+    "description": {
+      "fr": "Incremental mystery game",
+      "en": "Incremental mystery game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwNjUxMjE3LmdpZg==/original/q5h2jE.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwNjUxMjE3LmdpZg==/original/q5h2jE.gif"
+    ],
+    "dateAdded": "2026-10-09"
+  },
+  {
+    "id": "itch-toss-office",
+    "title": "Toss Office",
+    "developer": "ravenous-den",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://ravenous-den.itch.io/toss-office",
+    "playInBrowserUrl": "https://ravenous-den.itch.io/toss-office",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Shred some paper. Toss the rest in a bin.",
+      "en": "Shred some paper. Toss the rest in a bin."
+    },
+    "description": {
+      "fr": "Shred some paper. Toss the rest in a bin.",
+      "en": "Shred some paper. Toss the rest in a bin."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5NDM0Mzk4LnBuZw==/315x250%23c/ubLP64.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5NDM0Mzk4LnBuZw==/315x250%23c/ubLP64.png"
+    ],
+    "dateAdded": "2026-10-09"
   }
 ];

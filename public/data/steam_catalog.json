@@ -1490,41 +1490,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/332200/header.jpg?t=1645563574"
   },
   {
-    "id": "lisa-the-painful",
-    "title": "LISA: The Painful",
-    "releaseYear": 2014,
-    "genre": [
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Dingaling Productions",
-    "steamUrl": "https://store.steampowered.com/app/335670/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_35434b67f64960426ed2b04b7ef836c99465bc0c.1920x1080.jpg?t=1756162720",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_a79a8037d0cf59b11150428751aae7a80befdcba.1920x1080.jpg?t=1756162720",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_5ffe78863e50f968260ae09e46a6e64b6622881a.1920x1080.jpg?t=1756162720",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_8e9e7306707df666298cfd4ec558dad7056998f2.1920x1080.jpg?t=1756162720",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_60a45864a16314e515774ba646731b9b87efc3a1.1920x1080.jpg?t=1756162720",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_75c8eafcec9c186b05b968a6ea74d9e875de8ab0.1920x1080.jpg?t=1756162720"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Le voyage misérable d’un homme brisé...",
-        "en": "The miserable journey of a broken man..."
-      }
-    },
-    "steamAppId": 335670,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/header.jpg?t=1756162720"
-  },
-  {
     "id": "stephen-s-sausage-roll",
     "title": "Stephen's Sausage Roll",
     "releaseYear": 2016,
@@ -2087,42 +2052,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/427520/ab9a2df0a77caebde20dc45adc021de8cdcf7cc5/header.jpg?t=1787348817"
   },
   {
-    "id": "momodora-reverie-under-the-moonlight",
-    "title": "Momodora: Reverie Under The Moonlight",
-    "releaseYear": 2016,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Plateforme"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Bombservice",
-    "steamUrl": "https://store.steampowered.com/app/428550/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_051cd90e0d4329259efe71cba64c439cdd607beb.1920x1080.jpg?t=1734415917",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_13295e95e06dc2f83061fe7e788c38e62464c930.1920x1080.jpg?t=1734415917",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_a55bea5554e3c611a740d90bc0cb6281ea4a1eed.1920x1080.jpg?t=1734415917",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_da33aec54363c15d013ee1fdd57e8b429df66f0f.1920x1080.jpg?t=1734415917",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_bbd84596e4568fffd71639dea09562d946edd185.1920x1080.jpg?t=1734415917",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/header.jpg?t=1734415917"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Reverie Under the Moonlight est le quatrième opus dans la série populaire de jeux de plate-formes en 2D Momodora. Faites usage des combos et de l'agilité de Kaho pour vous frayer un chemin dans une contrée maudite, prendre audience auprès de la Reine, et dissiper le mal qui menace l'humanité.",
-        "en": "Momodora: Reverie Under The Moonlight is the fourth installment in the beloved Momodora series of 2D platformers. Unleash ravaging combos against a variety of formidable monsters and deftly dodge your way through a cursed land to seek audience with the Queen and dispel the evil that threatens all life."
-      }
-    },
-    "steamAppId": 428550,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/header.jpg?t=1734415917"
-  },
-  {
     "id": "slime-rancher",
     "title": "Slime Rancher",
     "releaseYear": 2017,
@@ -2157,41 +2086,6 @@
     },
     "steamAppId": 433340,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/433340/header.jpg?t=1758651509"
-  },
-  {
-    "id": "the-count-lucanor",
-    "title": "The Count Lucanor",
-    "releaseYear": 2016,
-    "genre": [
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Baroque Decay",
-    "steamUrl": "https://store.steampowered.com/app/440880/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_c304fda9f689d5b95bbe70cf4eddf431f3f1d80f.1920x1080.jpg?t=1784813644",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_46003c0795da1ad6d9608ca1998afbb68de90f1b.1920x1080.jpg?t=1784813644",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_acf08d9e516d69cec95cbdac8afb9f15471b20ec.1920x1080.jpg?t=1784813644",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_e0258b41a1bead66b89306ac70e7bee37caf9390.1920x1080.jpg?t=1784813644",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_57d39a6cc644b340e11796020447ff21066319f2.1920x1080.jpg?t=1784813644",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_361abf12f732db79a3a7d2cde6f2c2657f3e0011.1920x1080.jpg?t=1784813644"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Une aventure pixelissée inspirée par les grands classiques tels que Zelda et Silent Hill.",
-        "en": "Pixel adventure inspired by classics like Zelda and Silent Hill."
-      }
-    },
-    "steamAppId": 440880,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/header.jpg?t=1784813644"
   },
   {
     "id": "wizard-of-legend",
@@ -14481,5 +14375,190 @@
     "isFree": true,
     "steamAppId": 5005680,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005680/c91e08a40676f1ca2ffa6fc5f08abb123bb696d0/header.jpg?t=1791437185"
+  },
+  {
+    "id": "autochart",
+    "title": "AutoChart",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "1rwy",
+    "steamUrl": "https://store.steampowered.com/app/5201270/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/0592801f758d831c102558321dda8935a750721c/ss_0592801f758d831c102558321dda8935a750721c.1920x1080.jpg?t=1791528772",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/a2153b2d610a38074b3dec280c152e0ee41f0dba/ss_a2153b2d610a38074b3dec280c152e0ee41f0dba.1920x1080.jpg?t=1791528772",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/0cf9dbadad591eaa6eb4d569ee0dca2f8a57ce88/ss_0cf9dbadad591eaa6eb4d569ee0dca2f8a57ce88.1920x1080.jpg?t=1791528772",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/99562b16f0a305052108d583e46092d4aff36662/ss_99562b16f0a305052108d583e46092d4aff36662.1920x1080.jpg?t=1791528772",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/496b4f66c3c9abb6e1471632227d9c6bff4e950b/ss_496b4f66c3c9abb6e1471632227d9c6bff4e950b.1920x1080.jpg?t=1791528772",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/f31186aac98fad65edc703e056f715f57ca94104/ss_f31186aac98fad65edc703e056f715f57ca94104.1920x1080.jpg?t=1791528772"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "AutoChart est un jeu de rythme au clavier qui donne vie à votre musique. Importez un fichier audio ou vidéo : l’IA génère une partition. Choisissez la difficulté et de 4 à 8 touches, jouez les notes qui défilent au rythme de la musique et battez votre record.",
+        "en": "AutoChart is a key-based rhythm game powered by your own music. Import an audio or video file and let AI generate a note chart. Choose your difficulty and a 4–8 key layout, hit the falling notes to the beat, and chase your personal best."
+      }
+    },
+    "addedAt": "2026-10-09",
+    "steamAppId": 5201270,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/327c3aefbb9c03a8eba10d458cfeb0f74e93f58f/header.jpg?t=1791528772"
+  },
+  {
+    "id": "celestay-craft-slowlife",
+    "title": "CELESTAY Craft&Slowlife",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "BUBBLE GUM LLC",
+    "steamUrl": "https://store.steampowered.com/app/4183770/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4183770/8bebaa7ca10814db8929991c1d56fa0e0301a930/ss_8bebaa7ca10814db8929991c1d56fa0e0301a930.1920x1080.jpg?t=1791514870",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4183770/b0cd4353c58d03add8bbc1fe40751cff0386421f/ss_b0cd4353c58d03add8bbc1fe40751cff0386421f.1920x1080.jpg?t=1791514870",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4183770/1cde83227462e470adbc1885057d5110a74c04ed/ss_1cde83227462e470adbc1885057d5110a74c04ed.1920x1080.jpg?t=1791514870",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4183770/f5aa5442f691a64edf23620296c42d7464b88139/ss_f5aa5442f691a64edf23620296c42d7464b88139.1920x1080.jpg?t=1791514870",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4183770/8cdca30642bfffd870f1b72d0890d4b815973f0d/ss_8cdca30642bfffd870f1b72d0890d4b815973f0d.1920x1080.jpg?t=1791514870",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4183770/1774511940d299144bddc9caf2436cf89dcf5d1e/ss_1774511940d299144bddc9caf2436cf89dcf5d1e.1920x1080.jpg?t=1791514870"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "CELESTAY est un jeu de construction idle et apaisant : pêche des matériaux et fais monter ta maison vers le ciel. Dans un monde calme recouvert d’eau, tu empiles des toits et regardes les étoiles. Plus haut tu vas, plus constellations et souvenirs apparaissent.",
+        "en": "CELESTAY is a calm idle building game where you fish for materials and grow your home toward the sky. In a world sunk beneath the sea, you stack pieces of a house and spend quiet days fishing and watching the stars. The higher you build, the more constellations and memories fill your world."
+      }
+    },
+    "addedAt": "2026-10-09",
+    "steamAppId": 4183770,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4183770/361bb8cfdf7993a6654bd52422dae2defcea4b2b/header.jpg?t=1791514870"
+  },
+  {
+    "id": "silver-pines",
+    "title": "Silver Pines",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG",
+      "Metroidvania"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Wych Elm",
+    "steamUrl": "https://store.steampowered.com/app/2333000/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2333000/a7630a1d9bee1267d7ebec560e2285aff46d82c9/ss_a7630a1d9bee1267d7ebec560e2285aff46d82c9.1920x1080.jpg?t=1791483390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2333000/0f7aa4408737846524bdbe60d02279df99c6ab3a/ss_0f7aa4408737846524bdbe60d02279df99c6ab3a.1920x1080.jpg?t=1791483390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2333000/3ab713a4a26d907522067941ecff9376bd5e7401/ss_3ab713a4a26d907522067941ecff9376bd5e7401.1920x1080.jpg?t=1791483390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2333000/db5c8786cb3398017379a6d8d9df505b7e40eb46/ss_db5c8786cb3398017379a6d8d9df505b7e40eb46.1920x1080.jpg?t=1791483390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2333000/57ae4a463c25fe5a06ad03dcdefc48b9b4d3ebb9/ss_57ae4a463c25fe5a06ad03dcdefc48b9b4d3ebb9.1920x1080.jpg?t=1791483390",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2333000/2e1a1a86a223ee5e2e8eb64e61cffabbc669d866/ss_2e1a1a86a223ee5e2e8eb64e61cffabbc669d866.1920x1080.jpg?t=1791483390"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Silver Pines est un metroidvania d'horreur et de survie qui se déroule dans un petit village américain. Affrontez des monstres effrayants et résolvez des puzzles, mais pensez à gérer vos ressources pour réussir à percer les mystères et sauver votre âme.",
+        "en": "Silver Pines is a survival horror metroidvania set in small town America. Fight nightmarish terrors and solve puzzles, while carefully managing your scarce resources as you uncover the mysteries that could hold the key to redemption."
+      }
+    },
+    "addedAt": "2026-10-09",
+    "steamAppId": 2333000,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2333000/2ce661be5b6e60b8fcc92ecdf3f9dc2dca2a9037/header.jpg?t=1791483390"
+  },
+  {
+    "id": "invokyr",
+    "title": "Invokyr",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Simulation",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Ludogram",
+    "steamUrl": "https://store.steampowered.com/app/3883570/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3883570/431a16b39f728e0db989db171e23607db8bbecf1/ss_431a16b39f728e0db989db171e23607db8bbecf1.1920x1080.jpg?t=1791485649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3883570/343c53ef3c2d2fc26dbb22ec8ddd893d26f3ffe0/ss_343c53ef3c2d2fc26dbb22ec8ddd893d26f3ffe0.1920x1080.jpg?t=1791485649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3883570/ad9c2a4218ed3793b7e52c1e2a2fe4d10a0a39b0/ss_ad9c2a4218ed3793b7e52c1e2a2fe4d10a0a39b0.1920x1080.jpg?t=1791485649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3883570/0015a567807cec0f6ed83461f92f5c5277b5476d/ss_0015a567807cec0f6ed83461f92f5c5277b5476d.1920x1080.jpg?t=1791485649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3883570/3c4b51d5f97f46fc7560ed000a176321c9723635/ss_3c4b51d5f97f46fc7560ed000a176321c9723635.1920x1080.jpg?t=1791485649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3883570/e2688f084a311268222ce435f9d6e8ce2aadb95f/ss_e2688f084a311268222ce435f9d6e8ce2aadb95f.1920x1080.jpg?t=1791485649"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un survival horror coopératif autour d’un jeu de société maudit. Jouez avec un groupe de 6. Lancez les dés, survivez aux horreurs invoquées et battez le maître du jeu pour gagner votre liberté.",
+        "en": "A co-op survival horror game about a cursed board game. Play in a group of 6 players. Roll the dice, survive the horrors that are summoned, and beat the Gamemaster to win your freedom."
+      }
+    },
+    "addedAt": "2026-10-09",
+    "steamAppId": 3883570,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3883570/a1d37fb2bf0de54d1746d1aa4b83fb7ca81700d8/header.jpg?t=1791485649"
+  },
+  {
+    "id": "blosharper",
+    "title": "Blosharper",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Roguelike",
+      "Deckbuilder"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Joon x Jin Works",
+    "steamUrl": "https://store.steampowered.com/app/4718270/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/47d5d327cc46f8d1efa2dae8ccfed2feb7314cdf/ss_47d5d327cc46f8d1efa2dae8ccfed2feb7314cdf.1920x1080.jpg?t=1791515348",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/90c4102b9221451f93c53f90c644c76a644e564e/ss_90c4102b9221451f93c53f90c644c76a644e564e.1920x1080.jpg?t=1791515348",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/e945a6c309bd272dab672ff0d5a2a4957f99b8a0/ss_e945a6c309bd272dab672ff0d5a2a4957f99b8a0.1920x1080.jpg?t=1791515348",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/278dcf750415267518f73de93496797ba5cc7503/ss_278dcf750415267518f73de93496797ba5cc7503.1920x1080.jpg?t=1791515348",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/c7361634b655c9d06c374119e4610ff236ad3e20/ss_c7361634b655c9d06c374119e4610ff236ad3e20.1920x1080.jpg?t=1791515348",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/7677ce4762ca7429e992b8e0f16bbb870aa49acd/ss_7677ce4762ca7429e992b8e0f16bbb870aa49acd.1920x1080.jpg?t=1791515348"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Blosharper is a card-shark noir roguelike deckbuilder: forge Korean Hwatu card combos to smash each round's target score. Don't rely on luck—use illicit &quot;cheat&quot; skills to rig the deck and survive a deadly underground gambling den. Pay off your debt, defeat the bosses, become the ultimate sharp!",
+        "en": "Blosharper is a card-shark noir roguelike deckbuilder: forge Korean Hwatu card combos to smash each round's target score. Don't rely on luck—use illicit &quot;cheat&quot; skills to rig the deck and survive a deadly underground gambling den. Pay off your debt, defeat the bosses, become the ultimate sharp!"
+      }
+    },
+    "addedAt": "2026-10-09",
+    "steamAppId": 4718270,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/c653dde5a53b9d8dc23966af0d5a6b59ba9f15e6/header.jpg?t=1791515348"
   }
 ]

@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 280
+ * Total de jeux : 283
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -10674,6 +10674,108 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-08"
+  },
+  {
+    "id": "lisa-the-painful",
+    "title": "LISA: The Painful",
+    "releaseYear": 2014,
+    "genre": [
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Dingaling Productions",
+    "steamUrl": "https://store.steampowered.com/app/335670/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_35434b67f64960426ed2b04b7ef836c99465bc0c.1920x1080.jpg?t=1756162720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_a79a8037d0cf59b11150428751aae7a80befdcba.1920x1080.jpg?t=1756162720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_5ffe78863e50f968260ae09e46a6e64b6622881a.1920x1080.jpg?t=1756162720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_8e9e7306707df666298cfd4ec558dad7056998f2.1920x1080.jpg?t=1756162720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_60a45864a16314e515774ba646731b9b87efc3a1.1920x1080.jpg?t=1756162720",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/335670/ss_75c8eafcec9c186b05b968a6ea74d9e875de8ab0.1920x1080.jpg?t=1756162720"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le voyage misérable d’un homme brisé...",
+        "en": "The miserable journey of a broken man..."
+      }
+    },
+    "addedAt": "2026-10-09"
+  },
+  {
+    "id": "momodora-reverie-under-the-moonlight",
+    "title": "Momodora: Reverie Under The Moonlight",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Bombservice",
+    "steamUrl": "https://store.steampowered.com/app/428550/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_051cd90e0d4329259efe71cba64c439cdd607beb.1920x1080.jpg?t=1734415917",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_13295e95e06dc2f83061fe7e788c38e62464c930.1920x1080.jpg?t=1734415917",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_a55bea5554e3c611a740d90bc0cb6281ea4a1eed.1920x1080.jpg?t=1734415917",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_da33aec54363c15d013ee1fdd57e8b429df66f0f.1920x1080.jpg?t=1734415917",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/ss_bbd84596e4568fffd71639dea09562d946edd185.1920x1080.jpg?t=1734415917",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/428550/header.jpg?t=1734415917"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Reverie Under the Moonlight est le quatrième opus dans la série populaire de jeux de plate-formes en 2D Momodora. Faites usage des combos et de l'agilité de Kaho pour vous frayer un chemin dans une contrée maudite, prendre audience auprès de la Reine, et dissiper le mal qui menace l'humanité.",
+        "en": "Momodora: Reverie Under The Moonlight is the fourth installment in the beloved Momodora series of 2D platformers. Unleash ravaging combos against a variety of formidable monsters and deftly dodge your way through a cursed land to seek audience with the Queen and dispel the evil that threatens all life."
+      }
+    },
+    "addedAt": "2026-10-09"
+  },
+  {
+    "id": "the-count-lucanor",
+    "title": "The Count Lucanor",
+    "releaseYear": 2016,
+    "genre": [
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Baroque Decay",
+    "steamUrl": "https://store.steampowered.com/app/440880/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_c304fda9f689d5b95bbe70cf4eddf431f3f1d80f.1920x1080.jpg?t=1790939721",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_46003c0795da1ad6d9608ca1998afbb68de90f1b.1920x1080.jpg?t=1790939721",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_acf08d9e516d69cec95cbdac8afb9f15471b20ec.1920x1080.jpg?t=1790939721",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_e0258b41a1bead66b89306ac70e7bee37caf9390.1920x1080.jpg?t=1790939721",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_57d39a6cc644b340e11796020447ff21066319f2.1920x1080.jpg?t=1790939721",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440880/ss_361abf12f732db79a3a7d2cde6f2c2657f3e0011.1920x1080.jpg?t=1790939721"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Une aventure pixelissée inspirée par les grands classiques tels que Zelda et Silent Hill.",
+        "en": "Pixel adventure inspired by classics like Zelda and Silent Hill."
+      }
+    },
+    "addedAt": "2026-10-09"
   }
 ];
 

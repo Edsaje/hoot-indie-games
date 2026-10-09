@@ -553,40 +553,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1790323342"
   },
   {
-    "id": "autochart",
-    "title": "AutoChart",
-    "developer": "1rwy",
-    "publisher": "1rwy",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5201270/",
-    "description": {
-      "fr": "AutoChart est un jeu de rythme au clavier qui donne vie à votre musique. Importez un fichier audio ou vidéo : l’IA génère une partition. Choisissez la difficulté et de 4 à 8 touches, jouez les notes qui défilent au rythme de la musique et battez votre record.",
-      "en": "AutoChart is a key-based rhythm game powered by your own music. Import an audio or video file and let AI generate a note chart. Choose your difficulty and a 4–8 key layout, hit the falling notes to the beat, and chase your personal best."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/4ed4ba97c641dc5596b95b93364f207dfd66834b/header.jpg?t=1790652014"
-  },
-  {
     "id": "how-to-wait-for-the-bus",
     "title": "How to Wait for the Bus",
     "developer": "Benevolent Anarchy",
@@ -619,5 +585,39 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 95,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791213606"
+  },
+  {
+    "id": "rock-core",
+    "title": "ROCK CORE",
+    "developer": "DNA ARMY GAMING",
+    "publisher": "DNA ARMY GAMING",
+    "expectedDate": {
+      "fr": "9 oct. 2026",
+      "en": "Oct 9, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5343270/",
+    "description": {
+      "fr": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!",
+      "en": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!"
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/bb5852b59c7500c3a30846db92ac32f789339f6b/header.jpg?t=1790925137"
   }
 ];
