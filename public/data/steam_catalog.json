@@ -2088,77 +2088,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/433340/header.jpg?t=1758651509"
   },
   {
-    "id": "wizard-of-legend",
-    "title": "Wizard of Legend",
-    "releaseYear": 2018,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Roguelike"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Contingent99",
-    "steamUrl": "https://store.steampowered.com/app/445980/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_8efdb01e68a2c7a5d2c7570eaaebbb9322c4cdc9.1920x1080.jpg?t=1788993018",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_6c0a7594ca36e2ab1bf77b518ed1de8938942bd9.1920x1080.jpg?t=1788993018",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_f17aaafd345cea9633340e4310bc0c682fa00907.1920x1080.jpg?t=1788993018",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_61a78766bbd6afe8341ba1b049c4f9650eaaca68.1920x1080.jpg?t=1788993018",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_1d8250d3c14f0e01130db3490d0bface52ee3ba1.1920x1080.jpg?t=1788993018",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_ae129c61777730c586d36b107d7e165a3ae11566.1920x1080.jpg?t=1788993018"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Wizard of Legend est un dungeon crawler à l’action intense qui met l’accent sur des combats magiques dynamiques. Les déplacements rapides et l’utilisation encore plus rapide de sorts vous permet d’enchaîner les sorts pour déclencher des combinaisons dévastatrices contre vos ennemis !",
-        "en": "Wizard of Legend is a no-nonsense, action-packed take on wizardry that emphasizes precise movements and smart comboing of spells in a rogue-like dungeon crawler that features over a hundred unique spells and relics!"
-      }
-    },
-    "steamAppId": 445980,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/header.jpg?t=1788993018"
-  },
-  {
-    "id": "ape-out",
-    "title": "APE OUT",
-    "releaseYear": 2019,
-    "genre": [
-      "Action",
-      "Survie"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Gabe Cuzzillo",
-    "steamUrl": "https://store.steampowered.com/app/447150/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_c3829a1b40e0f3c88f33530d1e06d6888d85d211.1920x1080.jpg?t=1785434966",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_2bbf3b25845bab2b4d32d3cd5201be9e7cc745a1.1920x1080.jpg?t=1785434966",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aaa4a17ce60a909664f5e1eba7187c1d792e32e6.1920x1080.jpg?t=1785434966",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_9b4c28fd4b68bbade791effd9b32a849cf7827b2.1920x1080.jpg?t=1785434966",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_a8c90ab1ef884b1bee441b8e1b4292a6f9dde5ea.1920x1080.jpg?t=1785434966",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aec2303d9d65fdcebf8c046fbb6859de1633dc22.1920x1080.jpg?t=1785434966"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Jeu de destruction massive – ou « smash'em up » pour les intimes – aux couleurs criardes, à l'ambiance explosive et au style survitaminé, Ape Out mêle et entremêle instinct de survie primitif, violence rythmique et jazz frénétique.",
-        "en": "APE OUT is a wildly intense and colorfully stylized smash ‘em up about primal escape, rhythmic violence, and frenetic jazz."
-      }
-    },
-    "steamAppId": 447150,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/header.jpg?t=1785434966"
-  },
-  {
     "id": "va-11-hall-a-cyberpunk-bartender-action",
     "title": "VA-11 Hall-A: Cyberpunk Bartender Action",
     "releaseYear": 2016,
@@ -2192,42 +2121,6 @@
     },
     "steamAppId": 447530,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/header.jpg?t=1730740610"
-  },
-  {
-    "id": "overcooked",
-    "title": "Overcooked",
-    "releaseYear": 2016,
-    "genre": [
-      "Action",
-      "Occasionnel",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Ghost Town Games Ltd.",
-    "steamUrl": "https://store.steampowered.com/app/448510/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_11cb84e3a78ffd9ed0b5f65a8306fe80f363587a.1920x1080.jpg?t=1788969012",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_2a35c15c78f06dd4f23dab8a1e1917a835d0062d.1920x1080.jpg?t=1788969012",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_9d46372cef71acf4e85306c82c8005491f27b714.1920x1080.jpg?t=1788969012",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_0f5e9b48f8cf604d10e83af1160b5d87cbea3167.1920x1080.jpg?t=1788969012",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_058c688a6f07a4624b4f775b3e71df8037ef4df2.1920x1080.jpg?t=1788969012",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_c307c59c18be77c920050a2d70d76929a2295879.1920x1080.jpg?t=1788969012"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Overcooked est un jeu de cuisine chaotique de coopération en local pour un à quatre joueurs. En travaillant en équipe, vos camarades cuisiniers et vous devez préparer, cuisiner et servir toute une variété de plats délicieux avant que le client affamé ne claque la porte.",
-        "en": "Overcooked is a chaotic couch co-op cooking game for one to four players. Working as a team, you and your fellow chefs must prepare, cook and serve up a variety of tasty orders before the baying customers storm out in a huff."
-      }
-    },
-    "steamAppId": 448510,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/header.jpg?t=1788969012"
   },
   {
     "id": "oxygen-not-included",
@@ -14560,5 +14453,260 @@
     "addedAt": "2026-10-09",
     "steamAppId": 4718270,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4718270/c653dde5a53b9d8dc23966af0d5a6b59ba9f15e6/header.jpg?t=1791515348"
+  },
+  {
+    "id": "apocalypse-intern",
+    "title": "Apocalypse Intern",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "WizardHistory",
+    "steamUrl": "https://store.steampowered.com/app/5275800/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/c89e802f0319b1f448b6e065d2d2ce013361bc92/ss_c89e802f0319b1f448b6e065d2d2ce013361bc92.1920x1080.jpg?t=1791547437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/124a9e0e63a16277065289f88a911937d2c7e41f/ss_124a9e0e63a16277065289f88a911937d2c7e41f.1920x1080.jpg?t=1791547437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/f80a716ad497d516444e0d009aa5fac5c584d57c/ss_f80a716ad497d516444e0d009aa5fac5c584d57c.1920x1080.jpg?t=1791547437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/9a56fe9d288c0666c854a80a9ac119febc83cf0a/ss_9a56fe9d288c0666c854a80a9ac119febc83cf0a.1920x1080.jpg?t=1791547437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/2492960595f23e0c64b076f4aa7259bfc835fcd7/ss_2492960595f23e0c64b076f4aa7259bfc835fcd7.1920x1080.jpg?t=1791547437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/0c4a03cdcd1a5ef3b15169509ee8856afa42ef17/ss_0c4a03cdcd1a5ef3b15169509ee8856afa42ef17.1920x1080.jpg?t=1791547437"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee.",
+        "en": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee."
+      }
+    },
+    "addedAt": "2026-10-10",
+    "steamAppId": 5275800,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1791547437"
+  },
+  {
+    "id": "rock-core",
+    "title": "ROCK CORE",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "DNA ARMY GAMING",
+    "steamUrl": "https://store.steampowered.com/app/5343270/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/6f188c9d91d94759e9cc02562c78748dc5629c69/ss_6f188c9d91d94759e9cc02562c78748dc5629c69.1920x1080.jpg?t=1791545185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/5c4109971e36ee45f240b9deb09633b5f72102d9/ss_5c4109971e36ee45f240b9deb09633b5f72102d9.1920x1080.jpg?t=1791545185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/921ee3c65667d3b13b2e39e230bd209fb81a5d53/ss_921ee3c65667d3b13b2e39e230bd209fb81a5d53.1920x1080.jpg?t=1791545185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/f9959f02f7047b8baf0b44ff693307ea44d9451b/ss_f9959f02f7047b8baf0b44ff693307ea44d9451b.1920x1080.jpg?t=1791545185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/74e54810ea2b439db3c4ae2f4276fcfce1e1b1fc/ss_74e54810ea2b439db3c4ae2f4276fcfce1e1b1fc.1920x1080.jpg?t=1791545185",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/00bf0f91c2d26df0150a553b713c6b560fae9382/ss_00bf0f91c2d26df0150a553b713c6b560fae9382.1920x1080.jpg?t=1791545185"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!",
+        "en": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!"
+      }
+    },
+    "addedAt": "2026-10-10",
+    "steamAppId": 5343270,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/bb5852b59c7500c3a30846db92ac32f789339f6b/header.jpg?t=1791545185"
+  },
+  {
+    "id": "the-szyk",
+    "title": "The Szyk",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Free-to-play",
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Pieware",
+    "steamUrl": "https://store.steampowered.com/app/4150920/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4150920/e4b3f6ed446920e762be01dc0de16474ff49d7ea/ss_e4b3f6ed446920e762be01dc0de16474ff49d7ea.1920x1080.jpg?t=1791617385",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4150920/1e326559ff46999456d89ecdd9c05e206f1a0749/ss_1e326559ff46999456d89ecdd9c05e206f1a0749.1920x1080.jpg?t=1791617385",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4150920/5fd99d5aeefae3ad8c1d122e0e29c3121300d9ac/ss_5fd99d5aeefae3ad8c1d122e0e29c3121300d9ac.1920x1080.jpg?t=1791617385",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4150920/f9376f953072988abcd35e4ae73b69750950d2d7/ss_f9376f953072988abcd35e4ae73b69750950d2d7.1920x1080.jpg?t=1791617385",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4150920/479064f11be5a2b4bf8a9dc43d375315d87cb05e/ss_479064f11be5a2b4bf8a9dc43d375315d87cb05e.1920x1080.jpg?t=1791617385",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4150920/680c3404b3e164693a6ab829fbef956d46f33d6f/header.jpg?t=1791617385"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "2D top-down survival game with multiplayer and procedural world generation",
+        "en": "2D top-down survival game with multiplayer and procedural world generation"
+      }
+    },
+    "addedAt": "2026-10-10",
+    "isFree": true,
+    "steamAppId": 4150920,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4150920/680c3404b3e164693a6ab829fbef956d46f33d6f/header.jpg?t=1791617385"
+  },
+  {
+    "id": "light-work",
+    "title": "Light Work",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Thinking of Z",
+    "steamUrl": "https://store.steampowered.com/app/4632980/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4632980/7c6e02ad717bcf7c2ebf6f36103fd6d6e5ec3e68/ss_7c6e02ad717bcf7c2ebf6f36103fd6d6e5ec3e68.1920x1080.jpg?t=1791590287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4632980/0c1f44327e5f408c2da438c9a0b6eb97ddefd114/ss_0c1f44327e5f408c2da438c9a0b6eb97ddefd114.1920x1080.jpg?t=1791590287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4632980/47672962ef2d169011861761056d7fe6f5a46792/ss_47672962ef2d169011861761056d7fe6f5a46792.1920x1080.jpg?t=1791590287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4632980/75e3116788289bc4adde5b495402d796a5e7f5f2/ss_75e3116788289bc4adde5b495402d796a5e7f5f2.1920x1080.jpg?t=1791590287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4632980/e620e553bdc57684d253a898c0a08d2528d181e4/ss_e620e553bdc57684d253a898c0a08d2528d181e4.1920x1080.jpg?t=1791590287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4632980/b23dde9d311d3134e46bcb21ed5520be72d98b68/header.jpg?t=1791590287"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "In this first person experience, you are returning home after a long day of work. Turn off all of the lights on each floor of the office before you depart. Use the elevator to travel between floors, and be on the lookout for any unusual behavior from your coworkers.",
+        "en": "In this first person experience, you are returning home after a long day of work. Turn off all of the lights on each floor of the office before you depart. Use the elevator to travel between floors, and be on the lookout for any unusual behavior from your coworkers."
+      }
+    },
+    "addedAt": "2026-10-10",
+    "isFree": true,
+    "steamAppId": 4632980,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4632980/b23dde9d311d3134e46bcb21ed5520be72d98b68/header.jpg?t=1791590287"
+  },
+  {
+    "id": "paperhead",
+    "title": "PAPERHEAD",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Rétro Low-poly",
+      "en": "Retro Low-poly 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Paperhead te4m",
+    "steamUrl": "https://store.steampowered.com/app/2680280/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2680280/2b9ea7222a5ec9de63eb636217893c717ebc0443/ss_2b9ea7222a5ec9de63eb636217893c717ebc0443.1920x1080.jpg?t=1791581527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2680280/4454301515306da36cb08ab999283bc8efef1c56/ss_4454301515306da36cb08ab999283bc8efef1c56.1920x1080.jpg?t=1791581527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2680280/0e77e046aa1e50f287acb489a309e07004337629/ss_0e77e046aa1e50f287acb489a309e07004337629.1920x1080.jpg?t=1791581527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2680280/9b66435bfec75f5243a6529366f7daf1d700c8aa/ss_9b66435bfec75f5243a6529366f7daf1d700c8aa.1920x1080.jpg?t=1791581527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2680280/acc2e8d1355b239bcc34fd633fe36c47ca37f91f/ss_acc2e8d1355b239bcc34fd633fe36c47ca37f91f.1920x1080.jpg?t=1791581527",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2680280/de9fd635284f78ebcc152d080edfcd33521db703/ss_de9fd635284f78ebcc152d080edfcd33521db703.1920x1080.jpg?t=1791581527"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dans un monde de carton tout mignon, quelque chose a effroyablement dégénéré... Utilisez le crayon magique, le bon vieux pompe et diverses autres armes, sans oublier la force de vos puissantes bottes, pour percer la sombre vérité et découvrir POURQUOI DU CARTON... QUI SAIGNE ?",
+        "en": "In the cute cardboard world, something went horribly wrong... Use the magical pencil, a good old shotgun, and various other weapons as well as the strength of your mighty boots, to uncover the dark truth and find out WHY WOULD CARDBOARD... BLEED?"
+      }
+    },
+    "addedAt": "2026-10-10",
+    "steamAppId": 2680280,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2680280/0b30058f0a9d5ad4ed698367b19bad97001faa02/header.jpg?t=1791581527"
+  },
+  {
+    "id": "sidewalk-simulator",
+    "title": "Sidewalk Simulator",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "XCCWARE LLC",
+    "steamUrl": "https://store.steampowered.com/app/3324100/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3324100/ss_ccebc08cb1791cdbd0d17344150dfbe7d3e9239d.1920x1080.jpg?t=1791590228",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3324100/ss_e21c988ebe9794f13834f8d0e45931f745ee0d6f.1920x1080.jpg?t=1791590228",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3324100/ss_5d54b43ebff97e1216b1f7c15792addec35b738b.1920x1080.jpg?t=1791590228",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3324100/ss_bcffeaf7b5b33b269fa65baa8e1c44014fa8e99a.1920x1080.jpg?t=1791590228",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3324100/ss_868116ae26d42a54aa7a7856463d9d33b2728b6e.1920x1080.jpg?t=1791590228",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3324100/ss_a0ff700298175aa9d4480b5d22061a0ff9b0981a.1920x1080.jpg?t=1791590228"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Sidewalk Simulator combines fast-paced shootout combat with a deep tower defense upgrade economy. Build, dodge, unlock, and fight to survive endless waves of 100+ unique enemies. Find balance between movement, power, and defense in each strange world you encounter.",
+        "en": "Sidewalk Simulator combines fast-paced shootout combat with a deep tower defense upgrade economy. Build, dodge, unlock, and fight to survive endless waves of 100+ unique enemies. Find balance between movement, power, and defense in each strange world you encounter."
+      }
+    },
+    "addedAt": "2026-10-10",
+    "steamAppId": 3324100,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3324100/header.jpg?t=1791590228"
+  },
+  {
+    "id": "towerfolk",
+    "title": "Towerfolk",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "99 Interactive",
+    "steamUrl": "https://store.steampowered.com/app/3948100/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/6202d1b198310dcbbbdf8696bd102b0c53737709/ss_6202d1b198310dcbbbdf8696bd102b0c53737709.1920x1080.jpg?t=1791561384",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/a89162b8e028dabf88d410f5caf4ba10d7c457c4/ss_a89162b8e028dabf88d410f5caf4ba10d7c457c4.1920x1080.jpg?t=1791561384",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/6cd4ff38517ebe7ca241586069deeeb77c25d3a6/ss_6cd4ff38517ebe7ca241586069deeeb77c25d3a6.1920x1080.jpg?t=1791561384",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/eada86eeb9058b442993ab4d9226aedd13838751/ss_eada86eeb9058b442993ab4d9226aedd13838751.1920x1080.jpg?t=1791561384",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/4d48c42f0cde57d3aad6c72daa4dd3bcaddb1cb1/ss_4d48c42f0cde57d3aad6c72daa4dd3bcaddb1cb1.1920x1080.jpg?t=1791561384",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/4e55b2870a2638bcf410ed7ff429bd06c57e0e72/header.jpg?t=1791561384"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dans un monde médiéval, rassemblez des ressources, construisez votre ville et gérez votre peuple. Faites face aux vols, accomplissez des missions royales et combattez vos ennemis. Utilisez la stratégie et la gestion économique pour faire prospérer votre ville.",
+        "en": "In a medieval world, gather resources, build your city, and manage your people. Deal with theft and internal conflicts, complete royal missions, and fight enemies on the battlefield. Use strategy and economic management to keep your city thriving."
+      }
+    },
+    "addedAt": "2026-10-10",
+    "steamAppId": 3948100,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/4e55b2870a2638bcf410ed7ff429bd06c57e0e72/header.jpg?t=1791561384"
   }
 ]

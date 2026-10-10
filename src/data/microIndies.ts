@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 64
+ * Total de pépites sélectionnées : 66
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2748,5 +2748,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI5NDM0Mzk4LnBuZw==/315x250%23c/ubLP64.png"
     ],
     "dateAdded": "2026-10-09"
+  },
+  {
+    "id": "itch-battle-healer-hildegard",
+    "title": "Battle Healer Hildegard",
+    "developer": "funday-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://funday-games.itch.io/battle-healer-hildegard",
+    "playInBrowserUrl": "https://funday-games.itch.io/battle-healer-hildegard",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "The healer finally gets to be the hero!",
+      "en": "The healer finally gets to be the hero!"
+    },
+    "description": {
+      "fr": "The healer finally gets to be the hero!",
+      "en": "The healer finally gets to be the hero!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwMzY5NzEwLmdpZg==/original/dkBYWK.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwMzY5NzEwLmdpZg==/original/dkBYWK.gif"
+    ],
+    "dateAdded": "2026-10-10"
+  },
+  {
+    "id": "itch-time-survivor",
+    "title": "Time Survivor",
+    "developer": "logos-psychagogia",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://logos-psychagogia.itch.io/time-survivor",
+    "playInBrowserUrl": "https://logos-psychagogia.itch.io/time-survivor",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Minimal Survivor Incremental",
+      "en": "Minimal Survivor Incremental"
+    },
+    "description": {
+      "fr": "Minimal Survivor Incremental",
+      "en": "Minimal Survivor Incremental"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwNjk1NDY0LnBuZw==/315x250%23c/y0D5OZ.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwNjk1NDY0LnBuZw==/315x250%23c/y0D5OZ.png"
+    ],
+    "dateAdded": "2026-10-10"
   }
 ];

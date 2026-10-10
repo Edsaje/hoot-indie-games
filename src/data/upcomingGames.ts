@@ -519,40 +519,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1790194422"
   },
   {
-    "id": "apocalypse-intern",
-    "title": "Apocalypse Intern",
-    "developer": "WizardHistory",
-    "publisher": "WizardHistory",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5275800/",
-    "description": {
-      "fr": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee.",
-      "en": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1790323342"
-  },
-  {
     "id": "how-to-wait-for-the-bus",
     "title": "How to Wait for the Bus",
     "developer": "Benevolent Anarchy",
@@ -587,37 +553,67 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791213606"
   },
   {
-    "id": "rock-core",
-    "title": "ROCK CORE",
-    "developer": "DNA ARMY GAMING",
-    "publisher": "DNA ARMY GAMING",
+    "id": "bounty-hunter-horrors",
+    "title": "Bounty Hunter Horrors",
+    "developer": "RacerX_Games",
+    "publisher": "RacerX_Games",
     "expectedDate": {
-      "fr": "9 oct. 2026",
-      "en": "Oct 9, 2026"
+      "fr": "10 oct. 2026",
+      "en": "Oct 10, 2026"
     },
     "genres": [
       {
-        "fr": "Aventure",
-        "en": "Aventure"
+        "fr": "Action",
+        "en": "Action"
       },
       {
-        "fr": "Indépendant",
-        "en": "Indépendant"
+        "fr": "Aventure",
+        "en": "Aventure"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5343270/",
+    "steamUrl": "https://store.steampowered.com/app/3627560/",
     "description": {
-      "fr": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!",
-      "en": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!"
+      "fr": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching.",
+      "en": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/bb5852b59c7500c3a30846db92ac32f789339f6b/header.jpg?t=1790925137"
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/6e8a2da31174d37aa5bc545596553cfd7dd62183/header.jpg?t=1790814064"
+  },
+  {
+    "id": "don-t-give-up",
+    "title": "Don't Give Up",
+    "developer": "Dylan Rose",
+    "publisher": "Dylan Rose",
+    "expectedDate": {
+      "fr": "11 oct. 2026",
+      "en": "Oct 11, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Free-to-play",
+        "en": "Free-to-play"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5138180/",
+    "description": {
+      "fr": "Don't Give Up is an incremental, minimalist and emotional game about loss. As you gain more passions, friends and dreams they become harder to manage. Each one ignoring your weakening cries as they slowly leave your circle and life. Is it possible to stop everything you love from leaving you?",
+      "en": "Don't Give Up is an incremental, minimalist and emotional game about loss. As you gain more passions, friends and dreams they become harder to manage. Each one ignoring your weakening cries as they slowly leave your circle and life. Is it possible to stop everything you love from leaving you?"
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/dbc3ec153a9787ee9ba07f83af909fcf5821c767/header.jpg?t=1790541460"
   }
 ];

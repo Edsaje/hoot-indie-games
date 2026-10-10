@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 283
+ * Total de jeux : 286
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -10776,6 +10776,109 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-09"
+  },
+  {
+    "id": "wizard-of-legend",
+    "title": "Wizard of Legend",
+    "releaseYear": 2018,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Contingent99",
+    "steamUrl": "https://store.steampowered.com/app/445980/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_8efdb01e68a2c7a5d2c7570eaaebbb9322c4cdc9.1920x1080.jpg?t=1788993018",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_6c0a7594ca36e2ab1bf77b518ed1de8938942bd9.1920x1080.jpg?t=1788993018",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_f17aaafd345cea9633340e4310bc0c682fa00907.1920x1080.jpg?t=1788993018",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_61a78766bbd6afe8341ba1b049c4f9650eaaca68.1920x1080.jpg?t=1788993018",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_1d8250d3c14f0e01130db3490d0bface52ee3ba1.1920x1080.jpg?t=1788993018",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/445980/ss_ae129c61777730c586d36b107d7e165a3ae11566.1920x1080.jpg?t=1788993018"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Wizard of Legend est un dungeon crawler à l’action intense qui met l’accent sur des combats magiques dynamiques. Les déplacements rapides et l’utilisation encore plus rapide de sorts vous permet d’enchaîner les sorts pour déclencher des combinaisons dévastatrices contre vos ennemis !",
+        "en": "Wizard of Legend is a no-nonsense, action-packed take on wizardry that emphasizes precise movements and smart comboing of spells in a rogue-like dungeon crawler that features over a hundred unique spells and relics!"
+      }
+    },
+    "addedAt": "2026-10-10"
+  },
+  {
+    "id": "ape-out",
+    "title": "APE OUT",
+    "releaseYear": 2019,
+    "genre": [
+      "Action",
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Gabe Cuzzillo, Bennett Foddy, Maxi Boch",
+    "steamUrl": "https://store.steampowered.com/app/447150/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_c3829a1b40e0f3c88f33530d1e06d6888d85d211.1920x1080.jpg?t=1785434966",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_2bbf3b25845bab2b4d32d3cd5201be9e7cc745a1.1920x1080.jpg?t=1785434966",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aaa4a17ce60a909664f5e1eba7187c1d792e32e6.1920x1080.jpg?t=1785434966",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_9b4c28fd4b68bbade791effd9b32a849cf7827b2.1920x1080.jpg?t=1785434966",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_a8c90ab1ef884b1bee441b8e1b4292a6f9dde5ea.1920x1080.jpg?t=1785434966",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aec2303d9d65fdcebf8c046fbb6859de1633dc22.1920x1080.jpg?t=1785434966"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Jeu de destruction massive – ou « smash'em up » pour les intimes – aux couleurs criardes, à l'ambiance explosive et au style survitaminé, Ape Out mêle et entremêle instinct de survie primitif, violence rythmique et jazz frénétique.",
+        "en": "APE OUT is a wildly intense and colorfully stylized smash ‘em up about primal escape, rhythmic violence, and frenetic jazz."
+      }
+    },
+    "addedAt": "2026-10-10"
+  },
+  {
+    "id": "overcooked",
+    "title": "Overcooked",
+    "releaseYear": 2016,
+    "genre": [
+      "Action",
+      "Simulation",
+      "Co-op"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Ghost Town Games Ltd.",
+    "steamUrl": "https://store.steampowered.com/app/448510/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_11cb84e3a78ffd9ed0b5f65a8306fe80f363587a.1920x1080.jpg?t=1788969012",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_2a35c15c78f06dd4f23dab8a1e1917a835d0062d.1920x1080.jpg?t=1788969012",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_9d46372cef71acf4e85306c82c8005491f27b714.1920x1080.jpg?t=1788969012",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_0f5e9b48f8cf604d10e83af1160b5d87cbea3167.1920x1080.jpg?t=1788969012",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_058c688a6f07a4624b4f775b3e71df8037ef4df2.1920x1080.jpg?t=1788969012",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/448510/ss_c307c59c18be77c920050a2d70d76929a2295879.1920x1080.jpg?t=1788969012"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Overcooked est un jeu de cuisine chaotique de coopération en local pour un à quatre joueurs. En travaillant en équipe, vos camarades cuisiniers et vous devez préparer, cuisiner et servir toute une variété de plats délicieux avant que le client affamé ne claque la porte.",
+        "en": "Overcooked is a chaotic couch co-op cooking game for one to four players. Working as a team, you and your fellow chefs must prepare, cook and serve up a variety of tasty orders before the baying customers storm out in a huff."
+      }
+    },
+    "addedAt": "2026-10-10"
   }
 ];
 
