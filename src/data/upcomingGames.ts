@@ -553,40 +553,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791213606"
   },
   {
-    "id": "bounty-hunter-horrors",
-    "title": "Bounty Hunter Horrors",
-    "developer": "RacerX_Games",
-    "publisher": "RacerX_Games",
-    "expectedDate": {
-      "fr": "10 oct. 2026",
-      "en": "Oct 10, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/3627560/",
-    "description": {
-      "fr": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching.",
-      "en": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/6e8a2da31174d37aa5bc545596553cfd7dd62183/header.jpg?t=1790814064"
-  },
-  {
     "id": "don-t-give-up",
     "title": "Don't Give Up",
     "developer": "Dylan Rose",
@@ -615,5 +581,43 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 92,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/dbc3ec153a9787ee9ba07f83af909fcf5821c767/header.jpg?t=1790541460"
+  },
+  {
+    "id": "flotte-fantome",
+    "title": "Flotte Fantôme",
+    "developer": "DevMakerMin",
+    "publisher": "DMM",
+    "expectedDate": {
+      "fr": "11 oct. 2026",
+      "en": "Oct 11, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      },
+      {
+        "fr": "Roguelike",
+        "en": "Roguelike"
+      },
+      {
+        "fr": "Deckbuilder",
+        "en": "Deckbuilder"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5332620/",
+    "description": {
+      "fr": "Menez le Hollow King dans un roguelite d'action navale. Coulez des navires, récoltez des âmes et recrutez votre flotte. Choisissez vos cartes et cinq compétences automatiques. Brisez les blocus de dix mers et repartez plus fort grâce aux améliorations permanentes du chantier naval.",
+      "en": "Command Hollow King in a naval action roguelite. Sink ships, harvest souls, and recruit a ghost fleet. Shape your build with upgrade cards and five automatic skill slots. Break blockades across ten seas, then rise stronger after sinking with permanent shipyard upgrades."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1791241193"
   }
 ];

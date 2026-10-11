@@ -2228,41 +2228,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/466560/45008ebe47821718edc5ac93e392023813403e91/header.jpg?t=1786542947"
   },
   {
-    "id": "manifold-garden",
-    "title": "Manifold Garden",
-    "releaseYear": 2020,
-    "genre": [
-      "Aventure",
-      "Puzzle"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "William Chyr Studio",
-    "steamUrl": "https://store.steampowered.com/app/473950/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_1b3cb13f0969b365821a884f0be6c8f616061385.1920x1080.jpg?t=1603220474",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_7751cdc646a4a596d3e568fc6cce5fda1334f152.1920x1080.jpg?t=1603220474",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_44e2f962e262a5773c6ffe2ba69dc96843171b47.1920x1080.jpg?t=1603220474",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_3e156148e13921611c3715a57dc6e3d72355fc2a.1920x1080.jpg?t=1603220474",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_e54d5a60472bfbc7c1f008f73fdae6731298cec2.1920x1080.jpg?t=1603220474",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_2bbb566ef595c703701ce93c3b82345a762156de.1920x1080.jpg?t=1603220474"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Redécouvrez la gravité et explorez un monde Escherien à l’architecture impossible. Observez l'infini à la première personne, et appropriez-vous de ses règles pour résoudre des puzzles défiant la physique. Cultivez un jardin pour ouvrir de nouveaux chemins, où une étendue éternelle attend.",
-        "en": "Rediscover gravity and explore an Escher-esque world of impossible architecture. Witness infinity in first-person and master its rules to solve physics-defying puzzles. Cultivate a garden to open new paths forward, where an eternal expanse awaits."
-      }
-    },
-    "steamAppId": 473950,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/header.jpg?t=1603220474"
-  },
-  {
     "id": "human-fall-flat",
     "title": "Human Fall Flat",
     "releaseYear": 2016,
@@ -2332,41 +2297,6 @@
     },
     "steamAppId": 481510,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/481510/header.jpg?t=1783360222"
-  },
-  {
-    "id": "kingdom-new-lands",
-    "title": "Kingdom: New Lands",
-    "releaseYear": 2016,
-    "genre": [
-      "Simulation",
-      "Stratégie"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Noio",
-    "steamUrl": "https://store.steampowered.com/app/496300/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_1585b78b6f58ec3ad9f6b7b8a48f01064952ba4b.1920x1080.jpg?t=1788873284",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_a47feaf983b58fc4901d356015e86dc93b4a990b.1920x1080.jpg?t=1788873284",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_39be32c53e6129bdc754a12cd626d44ba530f10a.1920x1080.jpg?t=1788873284",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_3cf818049f7414b2d4d0b76e4d9ce265644c129b.1920x1080.jpg?t=1788873284",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_12071cdc0e7088e2730681c573a4f6021127b09c.1920x1080.jpg?t=1788873284",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_365cc31710820045b4d9438f34f6113c035299c6.1920x1080.jpg?t=1788873284"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Kingdom: New Lands développe le gameplay primé et les mystères de Kingdom en introduisant une abondance de nouveaux contenus au jeu nominé à l'IGF, tout en conservant la simplicité et la profondeur dont des légions de monarques ont pu faire l'expérience et les apprécier.",
-        "en": "Kingdom: New Lands builds upon the award-winning gameplay and mystery of Kingdom by introducing an abundance of new content to the IGF-nominated title while maintaining the simplicity and depth that legions of monarchs have come to experience and enjoy."
-      }
-    },
-    "steamAppId": 496300,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/header.jpg?t=1788873284"
   },
   {
     "id": "what-remains-of-edith-finch",
@@ -2472,41 +2402,6 @@
     },
     "steamAppId": 508440,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/508440/header.jpg?t=1730715415"
-  },
-  {
-    "id": "the-hex",
-    "title": "The Hex",
-    "releaseYear": 2018,
-    "genre": [
-      "Aventure",
-      "Action"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Daniel Mullins Games",
-    "steamUrl": "https://store.steampowered.com/app/510420/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_9667ae61db4d2a58e3e3e2708ffd5dce7e13cec0.1920x1080.jpg?t=1710862504",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_9cab31ea5d92706273c4ac9814dff281194651e4.1920x1080.jpg?t=1710862504",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_c3649d5d4a6ce1bcbc7466526c4c94f6376cf25e.1920x1080.jpg?t=1710862504",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_4ae876dfef9d255e7900f186726be45f1d731b4b.1920x1080.jpg?t=1710862504",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_1d65e05d1214bbf17f828212ad0cf181f3bd0bf8.1920x1080.jpg?t=1710862504",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_0a5f102046d56f091153af3176e1e5e9c14a6f81.1920x1080.jpg?t=1710862504"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Près d'une vieille auberge, dans un coin oublié de l'univers vidéoludique, une tempête fait rage. Un appel anonyme laisse à penser qu'un meurtre est en préparation. Six protagonistes de jeux vidéo sont les seuls suspects...",
-        "en": "In a creaky old tavern, in a forgotten corner of the video-game universe, a storm is raging. An anonymous caller suggests that there is a murder plot. Six video game protagonists are the only plausible suspects..."
-      }
-    },
-    "steamAppId": 510420,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/header.jpg?t=1710862504"
   },
   {
     "id": "streets-of-rogue",
@@ -14708,5 +14603,297 @@
     "addedAt": "2026-10-10",
     "steamAppId": 3948100,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3948100/4e55b2870a2638bcf410ed7ff429bd06c57e0e72/header.jpg?t=1791561384"
+  },
+  {
+    "id": "bounty-hunter-horrors",
+    "title": "Bounty Hunter Horrors",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "RacerX_Games",
+    "steamUrl": "https://store.steampowered.com/app/3627560/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/138f117f60479eeb8a7438b01608564a7b52585e/ss_138f117f60479eeb8a7438b01608564a7b52585e.1920x1080.jpg?t=1791648048",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/790b42aad6310e8d4a2a944f7393e0e68b0832ac/ss_790b42aad6310e8d4a2a944f7393e0e68b0832ac.1920x1080.jpg?t=1791648048",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/f6e23aecd12ef336f709e799f433e0baf44a1076/ss_f6e23aecd12ef336f709e799f433e0baf44a1076.1920x1080.jpg?t=1791648048",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/fbacce058c39b0bfedddca10155de191c29487bd/ss_fbacce058c39b0bfedddca10155de191c29487bd.1920x1080.jpg?t=1791648048",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/bf95c618b0555e7268786280dfc7a8193f140ceb/ss_bf95c618b0555e7268786280dfc7a8193f140ceb.1920x1080.jpg?t=1791648048",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/3709e879d8d9e312f8d2db4b29e451f002b0e32b/ss_3709e879d8d9e312f8d2db4b29e451f002b0e32b.1920x1080.jpg?t=1791648048"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching.",
+        "en": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching."
+      }
+    },
+    "addedAt": "2026-10-11",
+    "steamAppId": 3627560,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/6e8a2da31174d37aa5bc545596553cfd7dd62183/header.jpg?t=1791648048"
+  },
+  {
+    "id": "nekotrak",
+    "title": "NekoTrak",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Bocchi The Dev",
+    "steamUrl": "https://store.steampowered.com/app/5249210/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5249210/74d8e869e4097cf923c9b4040735e78fa950956f/ss_74d8e869e4097cf923c9b4040735e78fa950956f.1920x1080.jpg?t=1791691089",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5249210/0c480140712e5dd928111300000274652c7b8137/ss_0c480140712e5dd928111300000274652c7b8137.1920x1080.jpg?t=1791691089",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5249210/e930c224e44fdd9e391e64b72d9c78a6d545c685/ss_e930c224e44fdd9e391e64b72d9c78a6d545c685.1920x1080.jpg?t=1791691089",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5249210/dcf6a7779471c67e19c6d807f2fcdb97b6e316ed/ss_dcf6a7779471c67e19c6d807f2fcdb97b6e316ed.1920x1080.jpg?t=1791691089",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5249210/d7e3b9af1dd80514cec4208d3f008b5554c7f4df/ss_d7e3b9af1dd80514cec4208d3f008b5554c7f4df.1920x1080.jpg?t=1791691089",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5249210/a5d52d13b6ae3e0e13ce03ae17a80d1f5fa1ca01/ss_a5d52d13b6ae3e0e13ce03ae17a80d1f5fa1ca01.1920x1080.jpg?t=1791691089"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "NekoTrak mêle suivi du temps et évolution de votre chat. Élevez un chat pixelisé sur votre bureau. Gagnez de l’expérience, ramassez des pièces et débloquez des chats, jouez à plusieurs pour qu’ils se rencontrent. Suivez vos applications et partagez activités, musique et tâches sur Steam et Discord.",
+        "en": "NekoTrak blends time tracking with focus-based pet care. Raise a cat that roams your desktop. Earn experience, collect coins, and unlock cats, and play multiplayer so your cats can meet. It tracks app and website time and shares your activity, music, and tasks on Steam and Discord."
+      }
+    },
+    "addedAt": "2026-10-11",
+    "steamAppId": 5249210,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5249210/d3ff6eb306d18e4ec59def351b4370e7d93653b0/header.jpg?t=1791691089"
+  },
+  {
+    "id": "cybercowboys",
+    "title": "CyberCowboys",
+    "releaseYear": 2026,
+    "genre": [
+      "Massivement multijoueur",
+      "RPG",
+      "Simulation",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Homestead Games",
+    "steamUrl": "https://store.steampowered.com/app/5136630/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5136630/1b747710253eafda4843a52bed6ef37c9b514697/ss_1b747710253eafda4843a52bed6ef37c9b514697.1920x1080.jpg?t=1791672464",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5136630/d993df4a7c6b268bb938575e1795755030ae908d/ss_d993df4a7c6b268bb938575e1795755030ae908d.1920x1080.jpg?t=1791672464",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5136630/f8aa9482cbadc361dd2cee9c2b7dd16dd7158ef7/ss_f8aa9482cbadc361dd2cee9c2b7dd16dd7158ef7.1920x1080.jpg?t=1791672464",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5136630/74c43d007075554476ecfdbdd7d23a037bab0967/ss_74c43d007075554476ecfdbdd7d23a037bab0967.1920x1080.jpg?t=1791672464",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5136630/509307a840e7e0c88a1d345afc177846a2408f4b/ss_509307a840e7e0c88a1d345afc177846a2408f4b.1920x1080.jpg?t=1791672464",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5136630/8d2b7a6c99edc3aebb98b4cce8ef17497dad24a5/header.jpg?t=1791672464"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Saddle up for the wildest idle RPG this side of the Mississippi. Fight outlaws, duel rival cowboys, craft legendary gear, conquer world bosses, and build your frontier legacy — all set on a retro desktop OS straight outta 1998.",
+        "en": "Saddle up for the wildest idle RPG this side of the Mississippi. Fight outlaws, duel rival cowboys, craft legendary gear, conquer world bosses, and build your frontier legacy — all set on a retro desktop OS straight outta 1998."
+      }
+    },
+    "addedAt": "2026-10-11",
+    "isFree": true,
+    "steamAppId": 5136630,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5136630/8d2b7a6c99edc3aebb98b4cce8ef17497dad24a5/header.jpg?t=1791672464"
+  },
+  {
+    "id": "on-hold-call-center-simulator",
+    "title": "On Hold - Call Center Simulator",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Throwdown Games",
+    "steamUrl": "https://store.steampowered.com/app/4847040/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4847040/096f599538efa84dd5c312de1997b834853cc7c9/ss_096f599538efa84dd5c312de1997b834853cc7c9.1920x1080.jpg?t=1791701842",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4847040/3a0efe71710d5040d731d5b9d29a5b121f3377e7/ss_3a0efe71710d5040d731d5b9d29a5b121f3377e7.1920x1080.jpg?t=1791701842",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4847040/51249a5946860eaabccc084a32fd7757e69d27a7/ss_51249a5946860eaabccc084a32fd7757e69d27a7.1920x1080.jpg?t=1791701842",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4847040/0eefe575310350a7a31f537ae6de785bfe350d0c/ss_0eefe575310350a7a31f537ae6de785bfe350d0c.1920x1080.jpg?t=1791701842",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4847040/abe6644cfe7cd4b0b7320a85a41e9a2096d8eb52/ss_abe6644cfe7cd4b0b7320a85a41e9a2096d8eb52.1920x1080.jpg?t=1791701842",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4847040/22bc7d2309d436009028b0a9e197075d6de288c9/ss_22bc7d2309d436009028b0a9e197075d6de288c9.1920x1080.jpg?t=1791701842"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A dark comedy call center simulator where you answer calls, verify identities, catch fraudsters, and run side hustles under your supervisor's watchful eye. The queue never empties. The pay never improves.",
+        "en": "A dark comedy call center simulator where you answer calls, verify identities, catch fraudsters, and run side hustles under your supervisor's watchful eye. The queue never empties. The pay never improves."
+      }
+    },
+    "addedAt": "2026-10-11",
+    "steamAppId": 4847040,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4847040/c00c66806253fe13e11bd6e03779f4636f798f50/header.jpg?t=1791701842"
+  },
+  {
+    "id": "boss-arena-the-goldilock-one-trials",
+    "title": "BOSS ARENA: The Goldilock One Trials",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "RPG",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Shed of Ideas",
+    "steamUrl": "https://store.steampowered.com/app/1965430/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1965430/362e4fcc19f099644c99b4d209c4df44cd3c91ed/ss_362e4fcc19f099644c99b4d209c4df44cd3c91ed.1920x1080.jpg?t=1791638459",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1965430/c82171fc843ec9083c155539071ef4860aaf1486/ss_c82171fc843ec9083c155539071ef4860aaf1486.1920x1080.jpg?t=1791638459",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1965430/3c3819f8aaf9089f1d8d2a36c30b6cd2e1870724/ss_3c3819f8aaf9089f1d8d2a36c30b6cd2e1870724.1920x1080.jpg?t=1791638459",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1965430/62f2afe465f9b760f88372ef385c5122c3fad139/ss_62f2afe465f9b760f88372ef385c5122c3fad139.1920x1080.jpg?t=1791638459",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1965430/ss_da83fcc9bde59f39e4dc68f0699130e45e1775db.1920x1080.jpg?t=1791638459",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1965430/ss_aedab7a9ca5db40e066ff139d18083f3c1b5d22c.1920x1080.jpg?t=1791638459"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Chaque porte cache un défi. Affrontez des vagues incessantes et des boss puissants dans ce RPG d'action arcade gratuit et autonome. Gagnez de l'XP, développez votre combattant et combinez armes, armures et talents. Anticipez les attaques, maîtrisez votre timing et faites vos preuves dans l'Arène.",
+        "en": "Every door holds a new challenge. Face relentless waves and powerful bosses in this free standalone arcade/action RPG. Earn XP, shape your fighter, and combine weapons, armor, and abilities into your own build. Read enemy attacks, master your timing, and prove yourself in the Arena."
+      }
+    },
+    "addedAt": "2026-10-11",
+    "isFree": true,
+    "steamAppId": 1965430,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1965430/02c57d8ea1acc6b1232ede1238ddd24159b6ccfc/header.jpg?t=1791638459"
+  },
+  {
+    "id": "lord-liberty-quest-ii-pure-white",
+    "title": "Lord Liberty Quest II ~Pure White~",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "BLACK PANDA",
+    "steamUrl": "https://store.steampowered.com/app/4330940/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4330940/ed93f808efc5a6765cacc366009cf2484152bfb5/ss_ed93f808efc5a6765cacc366009cf2484152bfb5.1920x1080.jpg?t=1791601203",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4330940/25a7c601ba01f97267dc4ebbb43ee8f3319e53e4/ss_25a7c601ba01f97267dc4ebbb43ee8f3319e53e4.1920x1080.jpg?t=1791601203",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4330940/60bf5df230c8a1efbf181256686fc42c0fa9ec27/ss_60bf5df230c8a1efbf181256686fc42c0fa9ec27.1920x1080.jpg?t=1791601203",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4330940/aeec4b0778ac6f72e8cb8562357752888f5c190e/ss_aeec4b0778ac6f72e8cb8562357752888f5c190e.1920x1080.jpg?t=1791601203",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4330940/a8e0e70b03573ee30184256248b9de08341e5a9b/ss_a8e0e70b03573ee30184256248b9de08341e5a9b.1920x1080.jpg?t=1791601203",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4330940/12ee8f52255d223c79d40276d271fb6967ea4004/ss_12ee8f52255d223c79d40276d271fb6967ea4004.1920x1080.jpg?t=1791601203"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Someone is secretly hastening the revival of the &quot;Black Devil&quot; that assaults the Disodart Continent every few decades. Taking the situation gravely, the royal capital entrusts the tower's investigation to a church priestess. But that priestess is a young, innocent maiden…",
+        "en": "Someone is secretly hastening the revival of the &quot;Black Devil&quot; that assaults the Disodart Continent every few decades. Taking the situation gravely, the royal capital entrusts the tower's investigation to a church priestess. But that priestess is a young, innocent maiden…"
+      }
+    },
+    "addedAt": "2026-10-11",
+    "steamAppId": 4330940,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4330940/0c2109955641c4b9bfd831867603277ac2a35f90/header.jpg?t=1791601203"
+  },
+  {
+    "id": "evenin-shift",
+    "title": "Evenin' Shift",
+    "releaseYear": 2026,
+    "genre": [
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "DuckTalk Games",
+    "steamUrl": "https://store.steampowered.com/app/4711830/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711830/b6c643d538efb9a8cb554cd7e7b1b770d1baa563/ss_b6c643d538efb9a8cb554cd7e7b1b770d1baa563.1920x1080.jpg?t=1791659363",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711830/52d92a21ad250787309293603ab7168b36f9602a/ss_52d92a21ad250787309293603ab7168b36f9602a.1920x1080.jpg?t=1791659363",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711830/3167ea2a3d1bfb581014de44e2e10d4f5b99d68a/ss_3167ea2a3d1bfb581014de44e2e10d4f5b99d68a.1920x1080.jpg?t=1791659363",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711830/56c9d1d767500102cdf24a9cd2611b7ea171f845/ss_56c9d1d767500102cdf24a9cd2611b7ea171f845.1920x1080.jpg?t=1791659363",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711830/c524c707941176b2248f07f6e352111d41c05bdc/ss_c524c707941176b2248f07f6e352111d41c05bdc.1920x1080.jpg?t=1791659363",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711830/c92a2655e0c2107c1ac05d4e1447fd187b74812e/ss_c92a2655e0c2107c1ac05d4e1447fd187b74812e.1920x1080.jpg?t=1791659363"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Comedy horror set in Somerset. You're on the night shift again. Look lively, you get all sorts turning up round these parts. Let the right ones in, send the wronguns on their way and try not to make any enemies— there are strange folk about.",
+        "en": "Comedy horror set in Somerset. You're on the night shift again. Look lively, you get all sorts turning up round these parts. Let the right ones in, send the wronguns on their way and try not to make any enemies— there are strange folk about."
+      }
+    },
+    "addedAt": "2026-10-11",
+    "isFree": true,
+    "steamAppId": 4711830,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711830/69e52302ad3621b83ef123cd8b7ab0e960e1df5c/header.jpg?t=1791659363"
+  },
+  {
+    "id": "death-angel-requiem",
+    "title": "告死天使招魂令 Death Angel Requiem",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "五十岚夜莺",
+    "steamUrl": "https://store.steampowered.com/app/4789070/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4789070/78d60b9656cd2a25f99244ff659b4afaa1d94e0c/ss_78d60b9656cd2a25f99244ff659b4afaa1d94e0c.1920x1080.jpg?t=1791599858",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4789070/f3d0f400330f0a3282524aa85033bd7ba0bd2c71/ss_f3d0f400330f0a3282524aa85033bd7ba0bd2c71.1920x1080.jpg?t=1791599858",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4789070/1880732a9d75ea407140a91c944afdd7953c82f9/ss_1880732a9d75ea407140a91c944afdd7953c82f9.1920x1080.jpg?t=1791599858",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4789070/d9f8886aa2b3d7f9e69929a5ce700ac52ea6ef19/ss_d9f8886aa2b3d7f9e69929a5ce700ac52ea6ef19.1920x1080.jpg?t=1791599858",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4789070/4a99a3591592eb52c51320bc38480a18be364a0a/ss_4a99a3591592eb52c51320bc38480a18be364a0a.1920x1080.jpg?t=1791599858",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4789070/123ef8a0ec921b15ee726e59584611ca8971997b/ss_123ef8a0ec921b15ee726e59584611ca8971997b.1920x1080.jpg?t=1791599858"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A 5-hour horror game where investigator Igarashi, tasked by the police, enters a haunted campus after a murder case kills four students. With her partner Shimo, she sets out to uncover the truth behind the &quot;ghost killings.&quot;",
+        "en": "A 5-hour horror game where investigator Igarashi, tasked by the police, enters a haunted campus after a murder case kills four students. With her partner Shimo, she sets out to uncover the truth behind the &quot;ghost killings.&quot;"
+      }
+    },
+    "addedAt": "2026-10-11",
+    "steamAppId": 4789070,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4789070/a2954d20306fd1fe154b874193d358742ba2ead2/header.jpg?t=1791599858"
   }
 ]

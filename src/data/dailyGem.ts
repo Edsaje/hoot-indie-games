@@ -1,44 +1,41 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-10";
+export const TODAY_DATE = "2026-10-11";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "balatro",
-  "title": "Balatro",
-  "releaseYear": 2024,
+  "id": "noita",
+  "title": "Noita",
+  "releaseYear": 2020,
   "genre": [
-    "Deckbuilder",
-    "Roguelike",
-    "Stratégie",
-    "Cartes"
+    "Action",
+    "Aventure",
+    "RPG",
+    "Simulation",
+    "Roguelike"
   ],
   "artStyle": {
     "fr": "Pixel Art",
     "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Vue du dessus 2D",
-    "en": "2D Top-down"
+    "fr": "Vue de côté 2D",
+    "en": "2D Side-scroller"
   },
-  "developer": "LocalThunk",
-  "steamUrl": "https://store.steampowered.com/app/2379780/Balatro/",
+  "developer": "Nolla Games",
+  "steamUrl": "https://store.steampowered.com/app/881100/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/96208723dbedef49d71bf1b0a74aee1689018c50/ss_96208723dbedef49d71bf1b0a74aee1689018c50.1920x1080.jpg?t=1788961800",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_4862112e5030f74a5818cd4c31347d699ac5adf3.1920x1080.jpg?t=1788961800",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_3be65a7dd3be072d567e11883d208861a7e959fa.1920x1080.jpg?t=1788961800",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_e32ac94d7d1d6be7dd015d78f2b52aeb4cc282ed.1920x1080.jpg?t=1788961800",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_b8455573ec1fd2c9412f22bd8df05f2d8027a95b.1920x1080.jpg?t=1788961800",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2379780/ss_075cb45cbfa97d8139fb11f21667d6e35f908640.1920x1080.jpg?t=1788961800"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_626b401fd6d78ab335ecb8ff1e4b0a8ce7d25f66.1920x1080.jpg?t=1675987871",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_96308c4c5951740a0e46e0aa66e67bd04e99286a.1920x1080.jpg?t=1675987871",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c02b4406a18dc2e3fe213a6c1948d975ba191985.1920x1080.jpg?t=1675987871",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c9c81f5abbc75b9e5408c23d44bfab14e6759cb7.1920x1080.jpg?t=1675987871",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c65fea857e3a2168c0c103952f0955094aacf329.1920x1080.jpg?t=1675987871",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_56b342c3dbddae9409f6af8582cfa804de3e1229.1920x1080.jpg?t=1675987871"
   ],
   "hints": {
     "tagline": {
-      "fr": "Un roguelike de poker hypnotique où des cartes Joker modificateurs créent des combos démesurés.",
-      "en": "A poker-themed roguelike deckbuilder about creating powerful synergies and winning big.",
-      "es": "Un roguelike de póker hipnótico donde las cartas comodín crean sinergias demoledoras.",
-      "de": "Ein fesselndes Poker-Roguelike, in dem Joker-Karten mächtige Synergien und riesige Gewinne entfesseln.",
-      "ja": "ポーカーとローグライクが融合した、ジョーカーの相乗効果で大勝を狙うデッキビルダー。",
-      "pt-BR": "Um roguelike de pôquer hipnótico onde curingas criam sinergias devastadoras e pontuações astronômicas."
-    },
-    "composer": "Louis F."
-  }
+      "fr": "Noita est un roguelite d'action magique dans un monde où chaque pixel est simulé physiquement. Combattez, explorez, faites fondre, brûlez, gelez et évaporez tout sur votre chemin dans un monde entièrement destructible avec des sorts que vous aurez créés. Ou bien faites le maximum de bêtises !",
+      "en": "Noita is a magical action roguelite set in a world where every pixel is physically simulated. Fight, explore, melt, burn, freeze and evaporate your way through the procedurally generated world using spells you've created yourself."
+    }
+  },
+  "addedAt": "2026-09-25"
 };

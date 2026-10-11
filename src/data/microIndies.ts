@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 66
+ * Total de pépites sélectionnées : 68
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2830,5 +2830,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMwNjk1NDY0LnBuZw==/315x250%23c/y0D5OZ.png"
     ],
     "dateAdded": "2026-10-10"
+  },
+  {
+    "id": "itch-dispatches-1940",
+    "title": "Dispatches 1940",
+    "developer": "dispatches",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://dispatches.itch.io/dispatches-1940",
+    "playInBrowserUrl": "https://dispatches.itch.io/dispatches-1940",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$5.59",
+      "en": "$5.59"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "1940. Europe is fractured. The war room awaits.",
+      "en": "1940. Europe is fractured. The war room awaits."
+    },
+    "description": {
+      "fr": "1940. Europe is fractured. The war room awaits.",
+      "en": "1940. Europe is fractured. The war room awaits."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4NTY3NTgwLnBuZw==/315x250%23c/iaX29S.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4NTY3NTgwLnBuZw==/315x250%23c/iaX29S.png"
+    ],
+    "dateAdded": "2026-10-11"
+  },
+  {
+    "id": "itch-project-silverfish-early-access",
+    "title": "Project Silverfish Early Access",
+    "developer": "siris-pendrake",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://siris-pendrake.itch.io/project-silverfish",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$29.99",
+      "en": "$29.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "tagline": {
+      "fr": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!",
+      "en": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!"
+    },
+    "description": {
+      "fr": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!",
+      "en": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIxNzQ4ODM5LnBuZw==/315x250%23c/RTP9Oy.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIxNzQ4ODM5LnBuZw==/315x250%23c/RTP9Oy.png"
+    ],
+    "dateAdded": "2026-10-11"
   }
 ];

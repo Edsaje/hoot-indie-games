@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 286
+ * Total de jeux : 289
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -10879,6 +10879,108 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-10"
+  },
+  {
+    "id": "manifold-garden",
+    "title": "Manifold Garden",
+    "releaseYear": 2020,
+    "genre": [
+      "Aventure",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "William Chyr Studio",
+    "steamUrl": "https://store.steampowered.com/app/473950/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_1b3cb13f0969b365821a884f0be6c8f616061385.1920x1080.jpg?t=1603220474",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_7751cdc646a4a596d3e568fc6cce5fda1334f152.1920x1080.jpg?t=1603220474",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_44e2f962e262a5773c6ffe2ba69dc96843171b47.1920x1080.jpg?t=1603220474",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_3e156148e13921611c3715a57dc6e3d72355fc2a.1920x1080.jpg?t=1603220474",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_e54d5a60472bfbc7c1f008f73fdae6731298cec2.1920x1080.jpg?t=1603220474",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/473950/ss_2bbb566ef595c703701ce93c3b82345a762156de.1920x1080.jpg?t=1603220474"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Redécouvrez la gravité et explorez un monde Escherien à l’architecture impossible. Observez l'infini à la première personne, et appropriez-vous de ses règles pour résoudre des puzzles défiant la physique. Cultivez un jardin pour ouvrir de nouveaux chemins, où une étendue éternelle attend.",
+        "en": "Rediscover gravity and explore an Escher-esque world of impossible architecture. Witness infinity in first-person and master its rules to solve physics-defying puzzles. Cultivate a garden to open new paths forward, where an eternal expanse awaits."
+      }
+    },
+    "addedAt": "2026-10-11"
+  },
+  {
+    "id": "kingdom-new-lands",
+    "title": "Kingdom: New Lands",
+    "releaseYear": 2016,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Noio",
+    "steamUrl": "https://store.steampowered.com/app/496300/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_1585b78b6f58ec3ad9f6b7b8a48f01064952ba4b.1920x1080.jpg?t=1788873284",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_a47feaf983b58fc4901d356015e86dc93b4a990b.1920x1080.jpg?t=1788873284",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_39be32c53e6129bdc754a12cd626d44ba530f10a.1920x1080.jpg?t=1788873284",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_3cf818049f7414b2d4d0b76e4d9ce265644c129b.1920x1080.jpg?t=1788873284",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_12071cdc0e7088e2730681c573a4f6021127b09c.1920x1080.jpg?t=1788873284",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/496300/ss_365cc31710820045b4d9438f34f6113c035299c6.1920x1080.jpg?t=1788873284"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Kingdom: New Lands développe le gameplay primé et les mystères de Kingdom en introduisant une abondance de nouveaux contenus au jeu nominé à l'IGF, tout en conservant la simplicité et la profondeur dont des légions de monarques ont pu faire l'expérience et les apprécier.",
+        "en": "Kingdom: New Lands builds upon the award-winning gameplay and mystery of Kingdom by introducing an abundance of new content to the IGF-nominated title while maintaining the simplicity and depth that legions of monarchs have come to experience and enjoy."
+      }
+    },
+    "addedAt": "2026-10-11"
+  },
+  {
+    "id": "the-hex",
+    "title": "The Hex",
+    "releaseYear": 2018,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Daniel Mullins Games",
+    "steamUrl": "https://store.steampowered.com/app/510420/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_9667ae61db4d2a58e3e3e2708ffd5dce7e13cec0.1920x1080.jpg?t=1710862504",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_9cab31ea5d92706273c4ac9814dff281194651e4.1920x1080.jpg?t=1710862504",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_c3649d5d4a6ce1bcbc7466526c4c94f6376cf25e.1920x1080.jpg?t=1710862504",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_4ae876dfef9d255e7900f186726be45f1d731b4b.1920x1080.jpg?t=1710862504",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_1d65e05d1214bbf17f828212ad0cf181f3bd0bf8.1920x1080.jpg?t=1710862504",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/510420/ss_0a5f102046d56f091153af3176e1e5e9c14a6f81.1920x1080.jpg?t=1710862504"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Près d'une vieille auberge, dans un coin oublié de l'univers vidéoludique, une tempête fait rage. Un appel anonyme laisse à penser qu'un meurtre est en préparation. Six protagonistes de jeux vidéo sont les seuls suspects...",
+        "en": "In a creaky old tavern, in a forgotten corner of the video-game universe, a storm is raging. An anonymous caller suggests that there is a murder plot. Six video game protagonists are the only plausible suspects..."
+      }
+    },
+    "addedAt": "2026-10-11"
   }
 ];
 
