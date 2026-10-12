@@ -329,7 +329,8 @@
   },
   "blindtest": {
     "title": "Blind Test",
-    "subtitle": "Indie OST Blind Test: recognize cult themes synthesized in real-time",
+    "subtitle": "Indie OST Blind Test: recognize iconic video game soundtracks",
+    "audioLoadError": "Unable to load the official audio track. In accordance with our 0 Hallucination rule, no synthetic placeholder is played.",
     "play": "Listen to snippet",
     "stop": "Stop",
     "unlockNext": "Unlock next snippet",

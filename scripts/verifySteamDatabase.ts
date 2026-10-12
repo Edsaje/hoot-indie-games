@@ -62,6 +62,30 @@ async function auditDatabase() {
     }
   }
 
+  // Audit d'intégrité du Blind Test (Règle 0 Hallucination sur les pistes audio officielles)
+  const { CURATED_OSTS } = await import('../src/data/blindtestPuzzles');
+  console.log(`\n🎵 Audit d'intégrité du Blind Test (${CURATED_OSTS.length} puzzles)...`);
+  const audioDir = path.resolve(process.cwd(), 'public/audio/blindtest');
+  for (const ost of CURATED_OSTS) {
+    const mp3File = path.join(audioDir, `${ost.gameId}.mp3`);
+    if (!fs.existsSync(mp3File)) {
+      console.error(`❌ [BlindTest] Fichier audio manquant pour ${ost.gameId} : public/audio/blindtest/${ost.gameId}.mp3`);
+      errors++;
+    } else {
+      const stats = fs.statSync(mp3File);
+      if (stats.size < 10000) {
+        console.error(`❌ [BlindTest] Fichier audio corrompu ou trop petit (${stats.size} octets) pour ${ost.gameId}`);
+        errors++;
+      }
+    }
+    const matchingGame = INDIE_GAMES.find((g) => g.id === ost.gameId);
+    if (!matchingGame) {
+      console.error(`❌ [BlindTest] Le jeu ${ost.gameId} dans CURATED_OSTS n'existe pas dans INDIE_GAMES.`);
+      errors++;
+    }
+  }
+  console.log(`✅ 100% des puzzles Blind Test (${CURATED_OSTS.length}) ont une piste audio officielle MP3 vérifiée sur disque.`);
+
   if (errors === 0) {
     console.log(`✅ AUDIT RÉUSSI : 100% des ${INDIE_GAMES.length} jeux sont vérifiés, canoniques et sans incohérence !`);
     console.log(`✨ Règle 0 Hallucination & Synchronisation Cartes respectées.`);

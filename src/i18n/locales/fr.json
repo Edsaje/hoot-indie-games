@@ -329,7 +329,8 @@
   },
   "blindtest": {
     "title": "Blind Test",
-    "subtitle": "Blind Test OST : reconnaissez les mélodies cultes du jeu indé au synthétiseur",
+    "subtitle": "Blind Test OST : reconnaissez les bandes originales cultes du jeu indépendant",
+    "audioLoadError": "Impossible de charger l'extrait audio officiel. Conformément à la règle 0 Hallucination, aucun son inventé n'est joué.",
     "play": "Écouter l'extrait",
     "stop": "Arrêter",
     "unlockNext": "Débloquer palier suivant",
