@@ -7,6 +7,7 @@
     "prebuild": "npx tsx scripts/generateSeoIndex.ts",
     "generate-seo": "npx tsx scripts/generateSeoIndex.ts",
     "generate-og": "npx tsx scripts/generateOgBanner.ts",
+    "generate-linkedin": "npx tsx scripts/generateLinkedinBanner.ts",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
