@@ -901,8 +901,8 @@ export async function generateSeoIndexHtml(): Promise<string> {
     <meta property="og:url" content="${CANONICAL_DOMAIN}/">
     <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
     <meta property="og:description" content="Explorez ${totalCount} pépites indés certifiées Steam ! Collectionnez les cartes de jeux et ouvrez vos boosters, relevez 18+ mini-jeux : 9 défis quotidiens (Screenle, Indledle, Blind Test OST, Critique...), 8 bornes d'arcade rétro, quiz trivia, sprints Time Attack et duels 1v1 en direct.">
-    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
-    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
+    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=4">
+    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=4">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -916,7 +916,7 @@ export async function generateSeoIndexHtml(): Promise<string> {
     <meta name="twitter:creator" content="@Hibouxe">
     <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
     <meta name="twitter:description" content="${totalCount} pépites indés certifiées, collection de cartes &amp; boosters sylvestres, 18+ mini-jeux (9 défis quotidiens dont Critique et Blind Test, 8 bornes d'arcade 1982), quiz trivia, Time Attack et duels 1v1 P2P.">
-    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
+    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=4">
     <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants">
 
     <!-- Mobile & PWA Theme -->
