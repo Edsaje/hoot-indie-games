@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 292
+ * Total de jeux : 295
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11080,6 +11080,106 @@ export const INDIE_GAMES: Game[] = [
       "tagline": {
         "fr": "A musical platforming adventure with an emotional story. Play as a silly bard and use music to interact with everything on a journey around the world. Along the way you'll explore, solve puzzles, and meet a huge cast of characters!",
         "en": "A musical platforming adventure with an emotional story. Play as a silly bard and use music to interact with everything on a journey around the world. Along the way you'll explore, solve puzzles, and meet a huge cast of characters!"
+      }
+    },
+    "addedAt": "2026-10-12"
+  },
+  {
+    "id": "guacamelee-2",
+    "title": "Guacamelee! 2",
+    "releaseYear": 2018,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Drinkbox Studios",
+    "steamUrl": "https://store.steampowered.com/app/534550/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/534550/ss_f0150cbfaca77bcc19adf1a00cf9bebe5ac77999.1920x1080.jpg?t=1771966042",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/534550/ss_73fb1b02622f663524078c48d36b7a1e095bee49.1920x1080.jpg?t=1771966042",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/534550/ss_a68efe0e2c4966cf36cee1c1135b00acd89239eb.1920x1080.jpg?t=1771966042",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/534550/ss_239e3ff68287a26efa6eba61bb0052e75629ac5f.1920x1080.jpg?t=1771966042",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/534550/ss_7f1af6b5969ffad7ea5aec99bb37d0cfa0f47b1f.1920x1080.jpg?t=1771966042",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/534550/ss_5e1ee551a982aceaa283206c2eef040eb834c4fb.1920x1080.jpg?t=1771966042"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Retournez au Mexivers dans la suite tant attendue du jeu à succès Guacamelee ! Taillez-vous un chemin à grand renfort de coups de poing dans de superbes niveaux inédits réalisés à la main pour décrocher la victoire.",
+        "en": "Head back to the Mexiverse in this long-awaited sequel to the smash hit Guacamelee! Uppercut your way to victory across stunning new hand-crafted levels. Featuring a dense and colorful world, new luchador moves, sassy new bosses, twice the enemies, and 300% more chickens!"
+      }
+    },
+    "addedAt": "2026-10-12"
+  },
+  {
+    "id": "sally-face-episode-one",
+    "title": "Sally Face - Episode One",
+    "releaseYear": 2016,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Portable Moose",
+    "steamUrl": "https://store.steampowered.com/app/541570/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/541570/ss_bf7808c412a1cda079b7430645b4f7593e8d6e6b.1920x1080.jpg?t=1787576437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/541570/ss_a5f7b9f1034bc8c26808ec85546c2481ddbd8d3b.1920x1080.jpg?t=1787576437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/541570/ss_3da0e76ddf6f0cf67bdad0fd1c4312f518698a79.1920x1080.jpg?t=1787576437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/541570/ss_7cacdd53c353f96953ff5b696885ea8a701e3869.1920x1080.jpg?t=1787576437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/541570/ss_15010ffa13ebda0f683744383b4e86f79cc503e1.1920x1080.jpg?t=1787576437",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/541570/ss_3f1c3d3278b99e25da857bcf3ad0ef65cbd58b1a.1920x1080.jpg?t=1787576437"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "L'aventure troublante d'un garçon portant une prothèse faciale. Après une série de meurtres mystérieux, Sal et ses trois amis découvrent qu'une sinistre menace plane sur leur petite ville.",
+        "en": "An unsettling adventure following a boy with a prosthetic face. After a string of mysterious murders, Sal and his three friends discover something truly sinister casting shadows over their small town."
+      }
+    },
+    "addedAt": "2026-10-12"
+  },
+  {
+    "id": "detention",
+    "title": "Detention",
+    "releaseYear": 2017,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "RedCandleGames",
+    "steamUrl": "https://store.steampowered.com/app/555220/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/555220/ss_12b49760815166f6b3bf96ed7addcf3db582a26b.1920x1080.jpg?t=1778126197",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/555220/ss_91cea56fcacd8c16c631f60eff7ae971fa39f710.1920x1080.jpg?t=1778126197",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/555220/ss_2de6ae33d45fa0eb745034400286dc3163b63270.1920x1080.jpg?t=1778126197",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/555220/ss_6ade8401589ceb7fc4f101c919b3e05c629c1537.1920x1080.jpg?t=1778126197",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/555220/ss_d3c47718570d3d0df1ffc9ba5e1343e853fe661f.1920x1080.jpg?t=1778126197",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/555220/ss_9a916420323e90c6469385c88b6cfd9f7fa8e16b.1920x1080.jpg?t=1778126197"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Detention is an atmospheric horror game set in 1960s Taiwan under martial law. Incorporated religious elements based in Taiwanese/Chinese culture and mythology, the game provided players with unique graphics and gaming experience.",
+        "en": "Detention is an atmospheric horror game set in 1960s Taiwan under martial law. Incorporated religious elements based in Taiwanese/Chinese culture and mythology, the game provided players with unique graphics and gaming experience."
       }
     },
     "addedAt": "2026-10-12"

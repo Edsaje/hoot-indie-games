@@ -31,6 +31,107 @@ const CONFIG = {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 8000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return res;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+// =============================================================
+// GESTION DU CACHE PERSISTANT DES JEUX REJETÉS (ANTI-GOULOT D'ÉTRANGLEMENT)
+// =============================================================
+export interface RejectedRecord {
+  title?: string;
+  reason:
+    | 'adult'
+    | 'aaa'
+    | 'not_indie'
+    | 'not_game'
+    | 'non_latin'
+    | 'insufficient_screenshots'
+    | 'audit_failed'
+    | 'low_reviews'
+    | 'low_positive_ratio'
+    | 'banned';
+  permanent: boolean;
+  rejectedAt: string; // YYYY-MM-DD
+  retryAfter?: string; // YYYY-MM-DD
+  notes?: string;
+}
+
+export type RejectedCache = Record<string, RejectedRecord>;
+
+const REJECTED_CACHE_PATH = path.join(process.cwd(), 'scripts/harvest_rejected.json');
+
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(dateStr);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+function loadRejectedCache(): RejectedCache {
+  if (fs.existsSync(REJECTED_CACHE_PATH)) {
+    try {
+      return JSON.parse(fs.readFileSync(REJECTED_CACHE_PATH, 'utf8'));
+    } catch (err) {
+      console.warn('⚠️ Erreur lecture scripts/harvest_rejected.json :', err);
+    }
+  }
+  return {};
+}
+
+function saveRejectedCache(cache: RejectedCache) {
+  try {
+    fs.writeFileSync(REJECTED_CACHE_PATH, JSON.stringify(cache, null, 2), 'utf8');
+  } catch (err) {
+    console.error('⚠️ Erreur écriture scripts/harvest_rejected.json :', err);
+  }
+}
+
+function isAppCurrentlyRejected(appId: number, rejectedCache: RejectedCache, today: string): boolean {
+  if (BANNED_APP_IDS.has(appId)) return true;
+  if (KNOWN_INDIE_APP_IDS.has(appId)) return false;
+  const record = rejectedCache[appId.toString()];
+  if (!record) return false;
+  if (record.permanent) return true;
+  if (record.retryAfter) {
+    return today < record.retryAfter;
+  }
+  return true;
+}
+
+function recordRejection(
+  rejectedCache: RejectedCache,
+  appId: number,
+  title: string | undefined,
+  reason: RejectedRecord['reason'],
+  permanent: boolean,
+  cooldownDays?: number,
+  notes?: string
+) {
+  if (KNOWN_INDIE_APP_IDS.has(appId) && (reason === 'aaa' || reason === 'adult' || reason === 'not_indie')) {
+    return;
+  }
+  const today = new Date().toISOString().split('T')[0];
+  const existing = rejectedCache[appId.toString()];
+  rejectedCache[appId.toString()] = {
+    title: title || existing?.title,
+    reason,
+    permanent,
+    rejectedAt: today,
+    ...(notes ? { notes } : {}),
+    ...(!permanent && cooldownDays ? { retryAfter: addDays(today, cooldownDays) } : {}),
+  };
+}
+
 function decodeXmlEntities(str: string): string {
   if (!str) return '';
   return str
@@ -217,7 +318,7 @@ async function checkGameReviews(appId: number): Promise<{
 }> {
   try {
     const url = `https://store.steampowered.com/appreviews/${appId}?json=1&language=all&purchase_type=all`;
-    const res = await fetch(url);
+    const res = await fetchWithTimeout(url, {}, 8000);
     if (!res.ok) return { eligible: false, tier: 'none', totalReviews: 0, positiveRatio: 0, scoreDesc: '' };
 
     const data = (await res.json()) as {
@@ -276,7 +377,7 @@ interface SteamDetails {
 async function fetchGameDetails(appId: number, lang: 'french' | 'english'): Promise<SteamDetails | null> {
   try {
     const url = `https://store.steampowered.com/api/appdetails?appids=${appId}&l=${lang}`;
-    const res = await fetch(url);
+    const res = await fetchWithTimeout(url, {}, 8000);
     if (!res.ok) return null;
 
     const data = (await res.json()) as Record<string, { success: boolean; data?: SteamDetails }>;
@@ -289,11 +390,23 @@ async function fetchGameDetails(appId: number, lang: 'french' | 'english'): Prom
   }
 }
 
-// Récupération des AppIDs candidats depuis Steam (Flux étendus, Pépites de référence & Recherches thématiques)
-async function fetchCandidateAppIds(): Promise<number[]> {
+// Récupération des AppIDs candidats depuis Steam (Flux étendus, Pépites de référence, Pagination approfondie & Filtre anti-goulot)
+async function fetchCandidateAppIds(
+  pepiteAppIds: Set<number> = new Set(),
+  rejectedCache: RejectedCache = {}
+): Promise<number[]> {
   const candidates = new Set<number>();
+  const today = new Date().toISOString().split('T')[0];
 
-  console.log('🔍 [2/4] Interrogation des flux Steam Nouveautés, Tendances & Pépites Indés...');
+  const addCandidate = (id: number) => {
+    if (!id || id <= 0) return;
+    if (pepiteAppIds.has(id)) return;
+    if (BANNED_APP_IDS.has(id)) return;
+    if (isAppCurrentlyRejected(id, rejectedCache, today)) return;
+    candidates.add(id);
+  };
+
+  console.log('🔍 [2/4] Interrogation des flux Steam Nouveautés, Tendances & Pépites Indés (Pagination approfondie)...');
 
   // 1. Réapprovisionner depuis la liste des pépites indés cibles (target_appids.json)
   const targetPath = path.join(process.cwd(), 'scripts/target_appids.json');
@@ -302,11 +415,9 @@ async function fetchCandidateAppIds(): Promise<number[]> {
       const targetObj = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
       for (const appIdStr of Object.keys(targetObj)) {
         const id = parseInt(appIdStr, 10);
-        if (id && !BANNED_APP_IDS.has(id)) {
-          candidates.add(id);
-        }
+        addCandidate(id);
       }
-      console.log(`   ➔ ${candidates.size} pépites indés de référence chargées depuis target_appids.json.`);
+      console.log(`   ➔ Pépites indés de référence chargées depuis target_appids.json.`);
     } catch (err) {
       console.warn('   ⚠️ Erreur lecture target_appids.json :', err);
     }
@@ -316,14 +427,14 @@ async function fetchCandidateAppIds(): Promise<number[]> {
   for (const g of ['Indie', 'Action', 'Adventure', 'Strategy', 'RPG']) {
     try {
       const genreUrl = `https://store.steampowered.com/api/getappsingenre/?genre=${g}&l=french`;
-      const genreRes = await fetch(genreUrl);
+      const genreRes = await fetchWithTimeout(genreUrl, {}, 8000);
       if (genreRes.ok) {
         const genreData = (await genreRes.json()) as {
           tabs?: Record<string, { items?: Array<{ id: number }> }>;
         };
         for (const tab of Object.values(genreData.tabs || {})) {
           for (const item of tab.items || []) {
-            if (item.id && !BANNED_APP_IDS.has(item.id)) candidates.add(item.id);
+            if (item.id) addCandidate(item.id);
           }
         }
       }
@@ -331,47 +442,78 @@ async function fetchCandidateAppIds(): Promise<number[]> {
     await delay(120);
   }
 
-  // 3. Steam Search API : Moissonnage riche par tags (Pépites les plus acclamées, sorties récentes et sous-genres)
-  const searchQueries = [
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&sort_by=Reviews_DESC&json=1',
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&sort_by=Released_DESC&json=1',
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492&category1=998&json=1',
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,1662&category1=998&json=1', // Roguelike
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,3871&category1=998&json=1', // 2D Platformer
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,3964&category1=998&json=1', // Pixel Art
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,1664&category1=998&json=1', // Metroidvania
-    'https://store.steampowered.com/search/results/?query=&start=0&count=50&tags=492,32322&category1=998&json=1', // Deckbuilder
+  // 3. Steam Search API : Moissonnage riche par tags avec pagination approfondie (Pépites, sorties récentes & sous-genres)
+  const searchQueries: string[] = [];
+
+  // Pépites les plus acclamées (Reviews_DESC) : pages 1 à 3 (150 jeux)
+  for (const start of [0, 50, 100]) {
+    searchQueries.push(
+      `https://store.steampowered.com/search/results/?query=&start=${start}&count=50&tags=492&category1=998&sort_by=Reviews_DESC&json=1`
+    );
+  }
+
+  // Nouveautés récentes (Released_DESC) : pages 1 à 3 (150 jeux)
+  for (const start of [0, 50, 100]) {
+    searchQueries.push(
+      `https://store.steampowered.com/search/results/?query=&start=${start}&count=50&tags=492&category1=998&sort_by=Released_DESC&json=1`
+    );
+  }
+
+  // Tendances générales indés : pages 1 à 2 (100 jeux)
+  for (const start of [0, 50]) {
+    searchQueries.push(
+      `https://store.steampowered.com/search/results/?query=&start=${start}&count=50&tags=492&category1=998&json=1`
+    );
+  }
+
+  // Sous-genres phares de la scène indépendante : pages 1 à 2 (100 jeux par sous-genre)
+  const subGenreTags = [
+    '492,1662',  // Roguelike
+    '492,3871',  // 2D Platformer
+    '492,3964',  // Pixel Art
+    '492,1664',  // Metroidvania
+    '492,32322', // Deckbuilder
+    '492,122',   // RPG
+    '492,9',     // Stratégie
   ];
+
+  for (const tag of subGenreTags) {
+    for (const start of [0, 50]) {
+      searchQueries.push(
+        `https://store.steampowered.com/search/results/?query=&start=${start}&count=50&tags=${tag}&category1=998&json=1`
+      );
+    }
+  }
 
   for (const sUrl of searchQueries) {
     try {
-      const res = await fetch(sUrl, {
+      const res = await fetchWithTimeout(sUrl, {
         headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      });
+      }, 8000);
       if (res.ok) {
         const data = (await res.json()) as { items?: Array<{ logo?: string; name?: string }> };
         for (const it of data.items || []) {
           const match = it.logo?.match(/\/apps\/(\d+)\//);
           if (match) {
             const id = parseInt(match[1], 10);
-            if (id && !BANNED_APP_IDS.has(id)) candidates.add(id);
+            addCandidate(id);
           }
         }
       }
     } catch {}
-    await delay(150);
+    await delay(120);
   }
 
   // 4. Featured categories (nouveautés, meilleures ventes, sélections)
   try {
     const featUrl = 'https://store.steampowered.com/api/featuredcategories';
-    const featRes = await fetch(featUrl);
+    const featRes = await fetchWithTimeout(featUrl, {}, 8000);
     if (featRes.ok) {
       const featData = (await featRes.json()) as Record<string, { items?: Array<{ id: number }> }>;
       for (const section of Object.values(featData)) {
         if (section && Array.isArray(section.items)) {
           for (const item of section.items) {
-            if (item.id && !BANNED_APP_IDS.has(item.id)) candidates.add(item.id);
+            if (item.id) addCandidate(item.id);
           }
         }
       }
@@ -380,7 +522,7 @@ async function fetchCandidateAppIds(): Promise<number[]> {
     console.warn('   ⚠️ Erreur lors de l\'interrogation de featuredcategories :', err);
   }
 
-  console.log(`   ➔ Au total : ${candidates.size} jeux candidats indés identifiés pour le traitement.`);
+  console.log(`   ➔ Au total : ${candidates.size} nouveaux jeux candidats indés retenus pour évaluation approfondie.`);
   return Array.from(candidates);
 }
 
@@ -597,7 +739,7 @@ async function refillUpcomingRadar(
 
   try {
     const genreUrl = 'https://store.steampowered.com/api/getappsingenre/?genre=Indie&l=french';
-    const res = await fetch(genreUrl);
+    const res = await fetchWithTimeout(genreUrl, {}, 8000);
     if (!res.ok) return { newUpcoming: currentUpcoming, hasChanges: false };
 
     const data = (await res.json()) as {
@@ -946,7 +1088,7 @@ async function harvestItchMicroIndies(
   for (const feedUrl of urls) {
     if (newlyFound.length >= 2) break;
     try {
-      const res = await fetch(feedUrl);
+      const res = await fetchWithTimeout(feedUrl, {}, 8000);
       if (!res.ok) continue;
       const xml = await res.text();
       const itemRegex = /<item>([\s\S]*?)<\/item>/g;
@@ -1085,9 +1227,22 @@ export async function runDailyHarvest() {
     }
   }
 
+  // Charger le cache des rejets persistants et nettoyer tout jeu déjà présent dans la base
+  const rejectedCache = loadRejectedCache();
+  const today = new Date().toISOString().split('T')[0];
+  const rejectedCountStart = Object.keys(rejectedCache).length;
+
+  for (const appId of pepiteAppIds) {
+    delete rejectedCache[appId.toString()];
+  }
+  for (const appId of catalogAppIds) {
+    delete rejectedCache[appId.toString()];
+  }
+
   console.log(`📦 Base actuelle des Pépites d'Or : ${currentPepites.length} chefs-d'œuvre certifiés.`);
   console.log(`📖 Catalogue Étendu : ${existingCatalog.length} jeux indépendants.`);
-  console.log(`🔭 Radar actuel de sorties : ${UPCOMING_INDIE_GAMES.length} jeux en surveillance.\n`);
+  console.log(`🔭 Radar actuel de sorties : ${UPCOMING_INDIE_GAMES.length} jeux en surveillance.`);
+  console.log(`🛡️ Cache de rejets : ${rejectedCountStart} jeux déjà exclus ou en cooldown.\n`);
 
   // 1. Surveillance et synchronisation du Radar
   const radarSync = await syncUpcomingRadar(existingSlugs, pepiteAppIds, catalogAppIds, existingNormalizedGenres);
@@ -1107,14 +1262,18 @@ export async function runDailyHarvest() {
   }
 
   // 2. Recherche et moissonnage des nouveautés / tendances indépendantes Steam
-  const candidateIds = await fetchCandidateAppIds();
-  // On élimine uniquement les jeux déjà sanctifiés dans les Pépites ou bannis
-  const newCandidates = candidateIds.filter((id) => !pepiteAppIds.has(id) && !BANNED_APP_IDS.has(id));
-  console.log(`✨ [3/4] ${newCandidates.length} nouveautés / tendances Steam à filtrer...\n`);
+  const candidateIds = await fetchCandidateAppIds(pepiteAppIds, rejectedCache);
+  // Élimine les jeux déjà sanctifiés dans les Pépites, bannis ou en période de rejet/cooldown
+  const newCandidates = candidateIds.filter(
+    (id) => !pepiteAppIds.has(id) && !BANNED_APP_IDS.has(id) && !isAppCurrentlyRejected(id, rejectedCache, today)
+  );
+  console.log(`✨ [3/4] ${newCandidates.length} nouveautés / tendances Steam à évaluer...\n`);
 
   const newlyHarvestedPepites: Game[] = [];
   const newlyHarvestedCatalog: any[] = [];
   const promotedFromCatalogIds = new Set<string>();
+
+  let evaluatedCount = 0;
 
   for (const appId of newCandidates) {
     const isExistingCatalogGame = catalogAppIds.has(appId);
@@ -1129,14 +1288,43 @@ export async function runDailyHarvest() {
     }
 
     if (BANNED_APP_IDS.has(appId)) {
+      recordRejection(rejectedCache, appId, undefined, 'banned', true, undefined, 'Banned App ID');
       continue;
+    }
+
+    evaluatedCount++;
+    if (evaluatedCount % 15 === 0) {
+      saveRejectedCache(rejectedCache);
     }
 
     await delay(CONFIG.REQUEST_DELAY_MS);
 
-    // Vérification des avis (Double seuil : >= 500 & >= 85% pour Pépite, >= 30 & >= 70% pour Catalogue)
+    // Vérification des avis (Double seuil : >= 350 & >= 82% pour Pépite, >= 5 & >= 50% pour Catalogue)
     const reviewCheck = await checkGameReviews(appId);
     if (!reviewCheck.eligible) {
+      if (!isExistingCatalogGame) {
+        if (reviewCheck.totalReviews < CONFIG.MIN_CATALOG_REVIEWS) {
+          recordRejection(
+            rejectedCache,
+            appId,
+            undefined,
+            'low_reviews',
+            false,
+            14,
+            `Seulement ${reviewCheck.totalReviews} avis (< ${CONFIG.MIN_CATALOG_REVIEWS})`
+          );
+        } else if (reviewCheck.positiveRatio < CONFIG.MIN_CATALOG_POSITIVE) {
+          recordRejection(
+            rejectedCache,
+            appId,
+            undefined,
+            'low_positive_ratio',
+            false,
+            30,
+            `Ratio positif ${Math.round(reviewCheck.positiveRatio * 100)}% (< ${Math.round(CONFIG.MIN_CATALOG_POSITIVE * 100)}%)`
+          );
+        }
+      }
       continue;
     }
 
@@ -1145,7 +1333,7 @@ export async function runDailyHarvest() {
       continue;
     }
 
-    // Si le quota pour son niveau est déjà atteint, on passe
+    // Si le quota pour son niveau est déjà atteint, on passe (sans rejeter, car le jeu est valide pour un prochain cycle)
     if (reviewCheck.tier === 'pepite' && newlyHarvestedPepites.length >= CONFIG.MAX_NEW_PEPITES_PER_DAY) {
       continue;
     }
@@ -1155,46 +1343,65 @@ export async function runDailyHarvest() {
 
     // Récupération des détails FR et EN
     const detailsFr = await fetchGameDetails(appId, 'french');
-    if (!detailsFr || detailsFr.type !== 'game') continue;
+    if (!detailsFr) continue;
+
+    if (detailsFr.type !== 'game') {
+      console.log(`   ⛔ [Filtré Type ${detailsFr.type}] "${detailsFr.name}" n'est pas un jeu complet.`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'not_game', true, undefined, `Steam type: ${detailsFr.type}`);
+      continue;
+    }
 
     // 1. Vérifier que le titre contient des caractères latins lisibles
     if (!hasLatinLetters(detailsFr.name)) {
       console.log(`   ⛔ [Filtré Titre Non-Latin] "${detailsFr.name}" ne comporte aucun caractère latin.`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'non_latin', true, undefined, 'Titre non latin');
       continue;
     }
 
-    // 3. Vérifier que c'est bien un jeu indépendant
-    const isIndie = detailsFr.genres?.some((g) =>
+    // 2. Vérifier que c'est bien un jeu indépendant
+    const isIndie = KNOWN_INDIE_APP_IDS.has(appId) || detailsFr.genres?.some((g) =>
       ['indépendant', 'indie'].includes(g.description.toLowerCase())
     );
-    if (!isIndie) continue;
+    if (!isIndie) {
+      console.log(`   ⛔ [Filtré Genre Non-Indé] "${detailsFr.name}" ne possède pas le tag Indépendant.`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'not_indie', true, undefined, 'Absence de genre indé');
+      continue;
+    }
 
-    // 4. Contrôle éditeur / studio AAA non-indépendant
+    // 3. Contrôle éditeur / studio AAA non-indépendant
     const devText = (detailsFr.developers || []).join(', ');
     const pubText = (detailsFr.publishers || []).join(', ');
     if (isNonIndieOrAAA(devText, pubText, appId)) {
       console.log(`   ⛔ [Filtré Studio AAA] "${detailsFr.name}" (${devText || pubText}).`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'aaa', true, undefined, `Studio ou éditeur AAA: ${devText || pubText}`);
       continue;
     }
 
-    // 5. Filtrer contenu adulte / NSFW
+    // 4. Filtrer contenu adulte / NSFW
     if (isAdultOrInappropriate(detailsFr)) {
       console.log(`   ⛔ [Filtré Adulte FR] ${detailsFr.name} contient du contenu inapproprié.`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'adult', true, undefined, 'Contenu adulte FR');
       continue;
     }
 
-    if (!detailsFr.screenshots || detailsFr.screenshots.length < 5) continue;
+    if (!detailsFr.screenshots || detailsFr.screenshots.length < 5) {
+      console.log(`   ⛔ [Filtré Screenshots] ${detailsFr.name} a moins de 5 screenshots.`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'insufficient_screenshots', false, 30, `Screenshots: ${detailsFr.screenshots?.length || 0}`);
+      continue;
+    }
 
     await delay(CONFIG.REQUEST_DELAY_MS);
     const detailsEn = await fetchGameDetails(appId, 'english');
     if (detailsEn && isAdultOrInappropriate(detailsEn)) {
       console.log(`   ⛔ [Filtré Adulte EN] ${detailsEn.name} contient du contenu inapproprié.`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'adult', true, undefined, 'Contenu adulte EN');
       continue;
     }
 
     // 5. Doit avoir une description textuelle latine lisible (FR ou EN)
     if (!isReadableLatinText(detailsFr.short_description) && !isReadableLatinText(detailsEn?.short_description || '')) {
       console.log(`   ⛔ [Filtré Langue] ${detailsFr.name} n'a pas de description en alphabet latin.`);
+      recordRejection(rejectedCache, appId, detailsFr.name, 'non_latin', true, undefined, 'Description non latine');
       continue;
     }
 
@@ -1262,8 +1469,12 @@ export async function runDailyHarvest() {
     const audit = auditCandidateGame(gameObj, existingNormalizedGenres);
     if (!audit.valid) {
       console.warn(`   ⚠️ [Candidat rejeté par l'audit] ${gameObj.title}: ${audit.reason}`);
+      recordRejection(rejectedCache, appId, gameObj.title, 'audit_failed', true, undefined, audit.reason);
       continue;
     }
+
+    // Le jeu a passé tous les filtres avec succès ! On le retire du cache de rejet s'il y figurait
+    delete rejectedCache[appId.toString()];
 
     if (reviewCheck.tier === 'pepite') {
       if (isExistingCatalogGame) {
@@ -1293,6 +1504,11 @@ export async function runDailyHarvest() {
       catalogAppIds.add(appId);
     }
   }
+
+  // Sauvegarder le cache des rejets actualisé
+  saveRejectedCache(rejectedCache);
+  const rejectedCountEnd = Object.keys(rejectedCache).length;
+  console.log(`🛡️ [Cache Anti-Goulot Sauvegardé] ${rejectedCountEnd} jeux répertoriés dans harvest_rejected.json (+${rejectedCountEnd - rejectedCountStart} ajouts).\n`);
 
   // 3. Fusion et sauvegarde des bases
   const allNewPepites = [...radarSync.promotedPepites, ...newlyHarvestedPepites];

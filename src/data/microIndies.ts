@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 68
+ * Total de pépites sélectionnées : 70
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2911,5 +2911,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzIxNzQ4ODM5LnBuZw==/315x250%23c/RTP9Oy.png"
     ],
     "dateAdded": "2026-10-11"
+  },
+  {
+    "id": "itch-mops-mobs-a-sweeping-dungeon-adventure",
+    "title": "Mops & Mobs: A Sweeping Dungeon Adventure",
+    "developer": "ratking",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://ratking.itch.io/mops-and-mobs",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "You're the new janitor in a badly managed dungeon full of loveable monsters",
+      "en": "You're the new janitor in a badly managed dungeon full of loveable monsters"
+    },
+    "description": {
+      "fr": "You're the new janitor in a badly managed dungeon full of loveable monsters",
+      "en": "You're the new janitor in a badly managed dungeon full of loveable monsters"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwMDcyMDY0LmpwZw==/315x250%23c/HREPuN.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwMDcyMDY0LmpwZw==/315x250%23c/HREPuN.jpg"
+    ],
+    "dateAdded": "2026-10-12"
+  },
+  {
+    "id": "itch-microlandia",
+    "title": "Microlandia",
+    "developer": "explodi",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://explodi.itch.io/microlandia",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$8.99",
+      "en": "$8.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Brutally honest city builder",
+      "en": "Brutally honest city builder"
+    },
+    "description": {
+      "fr": "Brutally honest city builder",
+      "en": "Brutally honest city builder"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI1NjU1NDU1LnBuZw==/315x250%23c/TLJhD4.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI1NjU1NDU1LnBuZw==/315x250%23c/TLJhD4.png"
+    ],
+    "dateAdded": "2026-10-12"
   }
 ];

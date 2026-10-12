@@ -566,12 +566,17 @@
 ## 🟠 Phase 2 : Rétention Quotidienne, Social & Jeu de Cartes (Priorité P1)
 
 ### 5. 🌾 Adaptation & Automatisation du workflow « Daily Harvest » (Nouveaux jeux & Pépites) `[✅ 100% Terminé]`
-- **Constat :** L'action automatisée « Daily Harvest » devait être adaptée pour être 100% compatible avec la nouvelle architecture refactorisée du site, injecter continuellement de nouveaux jeux chaque jour (y compris des créations émergentes ou moins bien notées) et enrichir la sélection de pépites certifiées.
+- **Constat :** L'action automatisée « Daily Harvest » devait être adaptée pour être 100% compatible avec la nouvelle architecture refactorisée du site, injecter continuellement de nouveaux jeux chaque jour (y compris des créations émergentes ou moins bien notées) et enrichir la sélection de pépites certifiées. De plus, les jeux rejetés (éditeurs AAA, contenu adulte, jeux sans caractères latins ou avis encore insuffisants) saturaient les 50 premiers résultats Steam et bloquaient la découverte de nouveaux jeux les jours suivants (goulot d'étranglement).
 - **Actions réalisées :**
   - [x] Révision des seuils dans `scripts/dailyIndieHarvest.ts` : assouplissement de `MIN_CATALOG_REVIEWS` à 5 et `MIN_CATALOG_POSITIVE` à 0.50 pour capturer les jeux émergents et confidentiels ; seuil pépites certifiées ajusté à 350 reviews (82%+ positif).
-  - [x] Décuplement du sourcing : intégration de 403 pépites curatées (`target_appids.json`), requêtes multi-genres Steam (Roguelike, Metroidvania, Deckbuilder, Pixel Art, Platformer, etc.) et pagination étendue.
+  - [x] Décuplement du sourcing : intégration de 403 pépites curatées (`target_appids.json`), requêtes multi-genres Steam (Roguelike, Metroidvania, Deckbuilder, Pixel Art, Platformer, etc.) et pagination étendue (pages 1 à 3 / jusqu'à 150 jeux par critère au lieu de 50).
+  - [x] **Résolution du goulot d'étranglement & Cache persistant de rejet (`scripts/harvest_rejected.json`)** :
+    - Séparation stricte entre rejets permanents (`permanent: true` : AAA, contenu adulte Valve ID 3-4, titres non-latins, DLCs/démos, règles d'audit) et rejets temporaires avec période de récupération (`permanent: false` : 14 jours pour moins de 5 avis, 30 jours pour moins de 50% d'avis positifs ou captures d'écran insuffisantes).
+    - Filtrage précoce dès l'interrogation Steam évitant le gaspillage de requêtes HTTP.
+    - Purge automatique du cache de rejet dès qu'un jeu atteint les critères d'intégration au sanctuaire ou au catalogue étendu.
+    - Sécurisation réseau via `fetchWithTimeout` (8s) contre les blocages de sockets distants.
   - [x] Préservation automatique de `EXCLUDED_FROM_MINI_GAMES` et des règles d'audit anti-hallucination (`npm run audit-db` à 100%).
-  - [x] Mise à jour du workflow GitHub Actions `.github/workflows/daily-indie-harvest.yml` avec conservation du cache des métadonnées Steam (`steam_cache.json`, `steam_store_cache.json`).
+  - [x] Mise à jour du workflow GitHub Actions `.github/workflows/daily-indie-harvest.yml` avec conservation et commit automatique du cache des jeux rejetés (`scripts/harvest_rejected.json`) et des métadonnées Steam (`steam_cache.json`, `steam_store_cache.json`).
 
 ### 6. ☁️ Synchronisation Cloud Multi-Appareils au chargement du site `[✅ 100% Terminé]`
 - **Constat :** Lorsqu'un joueur connecté arrivait sur le site depuis un autre appareil (ex: second PC, smartphone), sa progression locale antérieure pouvait écraser ou ne pas refléter sa dernière sauvegarde Cloud synchronisée.
