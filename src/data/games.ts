@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 289
+ * Total de jeux : 292
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -10981,6 +10981,108 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-11"
+  },
+  {
+    "id": "streets-of-rogue",
+    "title": "Streets of Rogue",
+    "releaseYear": 2019,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Matt Dabrowski",
+    "steamUrl": "https://store.steampowered.com/app/512900/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/512900/ss_9fc33552a95fada32c6bc0a75b6d899244c4779c.1920x1080.jpg?t=1758274145",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/512900/ss_8122938569ac3e6caa7e327baa186504ae7556ad.1920x1080.jpg?t=1758274145",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/512900/ss_80291e409b1ba92e59a9bc2c66bf3105efae90fa.1920x1080.jpg?t=1758274145",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/512900/ss_e615a10f008ac6de99c8812d1e36248124abcac9.1920x1080.jpg?t=1758274145",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/512900/ss_00f8e5306dc99a4e6713585bccadcfd33a4163b9.1920x1080.jpg?t=1758274145",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/512900/ss_a31772aedcf3b7cf05b3cda525b26313459db4a8.1920x1080.jpg?t=1758274145"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Luttez, faufilez-vous et piratez pour progresser dans des villes générées aléatoirement. C'est comme si Nuclear Throne rencontrait Deus Ex, avec un peu du côté anarchiste de GTA. Quand un rogue-lite se prend d'affection pour un sim immersif, tout part de travers.",
+        "en": "Fight, sneak, and hack your way through randomly generated cities. It's like Nuclear Throne meets Deus Ex, mixed with the anarchy of GTA. Rogue-lite meets immersive sim, and goes completely insane."
+      }
+    },
+    "addedAt": "2026-10-12"
+  },
+  {
+    "id": "synthetik-legion-rising",
+    "title": "SYNTHETIK: Legion Rising",
+    "releaseYear": 2018,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Flow Fire Games",
+    "steamUrl": "https://store.steampowered.com/app/528230/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/528230/ss_9106672c29ac485fa7ee2f96701435b6aa1e28cc.1920x1080.jpg?t=1707857791",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/528230/ss_c230568ec536dddf3fba14a71ab05cbaf45f34a0.1920x1080.jpg?t=1707857791",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/528230/ss_f11fd4a0c51f82a6491949a2b55f23daa0d8bde1.1920x1080.jpg?t=1707857791",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/528230/ss_e7997f3e9226b8cc8377ff0050e09dc33cd035b4.1920x1080.jpg?t=1707857791",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/528230/ss_7a8c5dd4bb0aa577cc2c4d1c33a6e1e2ffc29d8d.1920x1080.jpg?t=1707857791",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/528230/ss_57ce2f6a9e5dbf370236331d0e6bc4c368ced463.1920x1080.jpg?t=1707857791"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "SYNTHETIK est un impitoyable shooter rogue-lite qui se déroule dans un monde envahi par les machines. Frayez-vous un chemin à travers les étages en éliminant les forces robotiques implacables, et passez au niveau supérieur des jeux de tir. Parviendrez-vous à vaincre le Cœur de l'Armageddon ?",
+        "en": "SYNTHETIK is an unforgiving tactical shooter rogue-lite where freedom and experimentation is key. Fight in a world overrun by the Machine Legion and their Gods. Experience the next level in gun-play and dive into unparalleled build options and Android upgrades. Can you defeat the Heart of Armageddon?"
+      }
+    },
+    "addedAt": "2026-10-12"
+  },
+  {
+    "id": "wandersong",
+    "title": "Wandersong",
+    "releaseYear": 2018,
+    "genre": [
+      "Aventure",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Wishes Ultd., Greg Lobanov, A Shell in the Pit",
+    "steamUrl": "https://store.steampowered.com/app/530320/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/530320/ss_eb7c3d7a2485586dfe0402550fd5524a2836914f.1920x1080.jpg?t=1728309447",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/530320/ss_1ccb5bdd2cfc8ffce9af0b9c1ea7d4f5a63bdfb6.1920x1080.jpg?t=1728309447",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/530320/ss_a03e759ec21f4ead60baaf518a6bcd2811f78508.1920x1080.jpg?t=1728309447",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/530320/ss_1bb1f7e78972168322146fba10a5eaf13000536e.1920x1080.jpg?t=1728309447",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/530320/ss_e33d6af31ccd92c234f2f8aed6a52b8cc3fe55d2.1920x1080.jpg?t=1728309447",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/530320/ss_8272cfa522cbe2c16385b42ab92908b7555fa0ad.1920x1080.jpg?t=1728309447"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A musical platforming adventure with an emotional story. Play as a silly bard and use music to interact with everything on a journey around the world. Along the way you'll explore, solve puzzles, and meet a huge cast of characters!",
+        "en": "A musical platforming adventure with an emotional story. Play as a silly bard and use music to interact with everything on a journey around the world. Along the way you'll explore, solve puzzles, and meet a huge cast of characters!"
+      }
+    },
+    "addedAt": "2026-10-12"
   }
 ];
 

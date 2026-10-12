@@ -553,43 +553,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791213606"
   },
   {
-    "id": "don-t-give-up",
-    "title": "Don't Give Up",
-    "developer": "Dylan Rose",
-    "publisher": "Dylan Rose",
-    "expectedDate": {
-      "fr": "11 oct. 2026",
-      "en": "Oct 11, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Free-to-play",
-        "en": "Free-to-play"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5138180/",
-    "description": {
-      "fr": "Don't Give Up is an incremental, minimalist and emotional game about loss. As you gain more passions, friends and dreams they become harder to manage. Each one ignoring your weakening cries as they slowly leave your circle and life. Is it possible to stop everything you love from leaving you?",
-      "en": "Don't Give Up is an incremental, minimalist and emotional game about loss. As you gain more passions, friends and dreams they become harder to manage. Each one ignoring your weakening cries as they slowly leave your circle and life. Is it possible to stop everything you love from leaving you?"
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/dbc3ec153a9787ee9ba07f83af909fcf5821c767/header.jpg?t=1790541460"
-  },
-  {
     "id": "flotte-fantome",
     "title": "Flotte Fantôme",
     "developer": "DevMakerMin",
     "publisher": "DMM",
     "expectedDate": {
-      "fr": "11 oct. 2026",
-      "en": "Oct 11, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -619,5 +589,35 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 92,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1791241193"
+  },
+  {
+    "id": "the-traveller-s-sight",
+    "title": "The Traveller's Sight",
+    "developer": "Burning Sunset",
+    "publisher": "Burning Sunset",
+    "expectedDate": {
+      "fr": "12 oct. 2026",
+      "en": "Oct 12, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/3356000/",
+    "description": {
+      "fr": "Vincent Dumas, enquêteur aux pouvoirs surnaturels, est envoyé dans une petite ville de France à l'histoire obscure afin de découvrir la vérité sur la mort de Laurène Delgado. Utilisant sa capacité à entrer en contact avec les morts, il se lance à la recherche d'indices afin de retrouver l'assassin.",
+      "en": "Vincent Dumas, an investigator with supernatural powers, is sent to a small town in France with a murky history to uncover the truth behind the death of Laurène Delgado. Using his ability to communicate with the dead, he sets out to find clues that will lead him to the killer."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3356000/e275f1766aa7b632aa019f7629e756fda34d81dd/header.jpg?t=1791493062"
   }
 ];

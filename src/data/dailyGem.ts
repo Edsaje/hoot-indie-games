@@ -1,41 +1,43 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-11";
+export const TODAY_DATE = "2026-10-12";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "noita",
-  "title": "Noita",
-  "releaseYear": 2020,
+  "id": "enter-the-gungeon",
+  "title": "Enter the Gungeon",
+  "releaseYear": 2016,
   "genre": [
-    "Action",
-    "Aventure",
-    "RPG",
-    "Simulation",
-    "Roguelike"
+    "Roguelike",
+    "Bullet Hell",
+    "Action"
   ],
   "artStyle": {
     "fr": "Pixel Art",
     "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Vue du dessus 2D",
+    "en": "2D Top-down"
   },
-  "developer": "Nolla Games",
-  "steamUrl": "https://store.steampowered.com/app/881100/",
+  "developer": "Dodge Roll",
+  "steamUrl": "https://store.steampowered.com/app/311690/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_626b401fd6d78ab335ecb8ff1e4b0a8ce7d25f66.1920x1080.jpg?t=1675987871",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_96308c4c5951740a0e46e0aa66e67bd04e99286a.1920x1080.jpg?t=1675987871",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c02b4406a18dc2e3fe213a6c1948d975ba191985.1920x1080.jpg?t=1675987871",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c9c81f5abbc75b9e5408c23d44bfab14e6759cb7.1920x1080.jpg?t=1675987871",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_c65fea857e3a2168c0c103952f0955094aacf329.1920x1080.jpg?t=1675987871",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881100/ss_56b342c3dbddae9409f6af8582cfa804de3e1229.1920x1080.jpg?t=1675987871"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_bca0036bc452b872a7d9ee3de9e0c9548e8cd4f5.1920x1080.jpg?t=1779733990",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_9d3f304b18e8cd1cf6ac4a886bec474e0b677800.1920x1080.jpg?t=1779733990",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_de49a9579b13337e98719d39df0f5bc46b9fe886.1920x1080.jpg?t=1779733990",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_ecdf8986898c7d866d419943eb7c7cbef42754bd.1920x1080.jpg?t=1779733990",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_009d6fd10948fccb1cbf06ceb4d7f2035cb415a4.1920x1080.jpg?t=1779733990",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_9a74ab65fb19e85cac6a64b7dbe05da5411cfb7b.1920x1080.jpg?t=1779733990"
   ],
   "hints": {
     "tagline": {
-      "fr": "Noita est un roguelite d'action magique dans un monde où chaque pixel est simulé physiquement. Combattez, explorez, faites fondre, brûlez, gelez et évaporez tout sur votre chemin dans un monde entièrement destructible avec des sorts que vous aurez créés. Ou bien faites le maximum de bêtises !",
-      "en": "Noita is a magical action roguelite set in a world where every pixel is physically simulated. Fight, explore, melt, burn, freeze and evaporate your way through the procedurally generated world using spells you've created yourself."
-    }
-  },
-  "addedAt": "2026-09-25"
+      "fr": "Tirez, esquivez et pillez pour atteindre l'arme ultime capable de tuer le passé dans ce bullet hell effréné.",
+      "en": "A bullet hell dungeon crawler following a band of misfits seeking to shoot, loot, and dodge roll their way to absolve their past.",
+      "es": "Un frenético dungeon crawler de bullet hell donde disparas y ruedas para alcanzar el arma que puede matar el pasado.",
+      "de": "Ein rasanter Bullet-Hell-Dungeon-Crawler, in dem du schießt, ausweichst und die Vergangenheit bezwingst.",
+      "ja": "銃弾が飛び交うガンジョンをドッジロールで潜り抜け、過去を抹消する伝説の銃を求める弾幕ローグライク。",
+      "pt-BR": "Atire, role e saqueie para encontrar a arma suprema capaz de matar o passado neste alucinante bullet hell."
+    },
+    "composer": "doseone"
+  }
 };
