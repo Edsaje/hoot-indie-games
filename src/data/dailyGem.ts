@@ -3,41 +3,42 @@ import type { Game } from '../types/game';
 export const TODAY_DATE = "2026-10-12";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "enter-the-gungeon",
-  "title": "Enter the Gungeon",
-  "releaseYear": 2016,
+  "id": "valheim",
+  "title": "Valheim",
+  "releaseYear": 2021,
   "genre": [
-    "Roguelike",
-    "Bullet Hell",
-    "Action"
+    "Survie",
+    "Co-op",
+    "Sandbox",
+    "Aventure"
   ],
   "artStyle": {
-    "fr": "Pixel Art",
-    "en": "Pixel Art"
+    "fr": "3D Rétro Low-poly",
+    "en": "Retro Low-poly 3D"
   },
   "camera": {
-    "fr": "Vue du dessus 2D",
-    "en": "2D Top-down"
+    "fr": "Troisième personne",
+    "en": "Third-Person"
   },
-  "developer": "Dodge Roll",
-  "steamUrl": "https://store.steampowered.com/app/311690/",
+  "developer": "Iron Gate Studio",
+  "steamUrl": "https://store.steampowered.com/app/892970/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_bca0036bc452b872a7d9ee3de9e0c9548e8cd4f5.1920x1080.jpg?t=1779733990",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_9d3f304b18e8cd1cf6ac4a886bec474e0b677800.1920x1080.jpg?t=1779733990",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_de49a9579b13337e98719d39df0f5bc46b9fe886.1920x1080.jpg?t=1779733990",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_ecdf8986898c7d866d419943eb7c7cbef42754bd.1920x1080.jpg?t=1779733990",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_009d6fd10948fccb1cbf06ceb4d7f2035cb415a4.1920x1080.jpg?t=1779733990",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311690/ss_9a74ab65fb19e85cac6a64b7dbe05da5411cfb7b.1920x1080.jpg?t=1779733990"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/5a31353178f635b67f0c8720ebb8a1a95b637276/ss_5a31353178f635b67f0c8720ebb8a1a95b637276.1920x1080.jpg?t=1789470462",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/bc7c361dab1780543a3ceca50c8fba831e5bc8db/ss_bc7c361dab1780543a3ceca50c8fba831e5bc8db.1920x1080.jpg?t=1789470462",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/ss_a600a7d4ca954543e22f571a9629521a13f82143.1920x1080.jpg?t=1789470462",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/f7a47b4bd150ce1a2c6ec88f7d79fd57e7c538c8/ss_f7a47b4bd150ce1a2c6ec88f7d79fd57e7c538c8.1920x1080.jpg?t=1789470462",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/ss_cd0262c5abf8a90ee5e1059acafc5a92b6be0e73.1920x1080.jpg?t=1789470462",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/ss_3db385fc1223914dadb199ac8682683a8c59454e.1920x1080.jpg?t=1789470462"
   ],
   "hints": {
     "tagline": {
-      "fr": "Tirez, esquivez et pillez pour atteindre l'arme ultime capable de tuer le passé dans ce bullet hell effréné.",
-      "en": "A bullet hell dungeon crawler following a band of misfits seeking to shoot, loot, and dodge roll their way to absolve their past.",
-      "es": "Un frenético dungeon crawler de bullet hell donde disparas y ruedas para alcanzar el arma que puede matar el pasado.",
-      "de": "Ein rasanter Bullet-Hell-Dungeon-Crawler, in dem du schießt, ausweichst und die Vergangenheit bezwingst.",
-      "ja": "銃弾が飛び交うガンジョンをドッジロールで潜り抜け、過去を抹消する伝説の銃を求める弾幕ローグライク。",
-      "pt-BR": "Atire, role e saqueie para encontrar a arma suprema capaz de matar o passado neste alucinante bullet hell."
+      "fr": "Forgez vos armes, bâtissez d'immenses forteresses et terrassez les monstres primordiaux au nom d'Odin.",
+      "en": "A brutal exploration and survival game for 1-10 players, set in a procedurally-generated purgatory inspired by Viking culture.",
+      "es": "Un desafiante juego de exploración y supervivencia vikinga en un vasto purgatorio procedural.",
+      "de": "Erkunde, baue und kämpfe in einer rauen, von der Wikingerkultur inspirierten Welt für die Gunst Odins.",
+      "ja": "北欧神話の第十世界を舞台に、仲間とともに巨大な城塞を築き太古の巨神たちを討つバイキングサバイバルRPG。",
+      "pt-BR": "Forje armas, construa fortalezas vikings e derrote feras primordiais em nome de Odin."
     },
-    "composer": "doseone"
+    "composer": "Patrik Jarlestam"
   }
 };

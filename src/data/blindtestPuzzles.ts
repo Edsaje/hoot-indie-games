@@ -1,5 +1,6 @@
 import { INDIE_GAMES } from './games';
 import type { Game } from '../types/game';
+import { getScheduledDailyGame, setDefaultBlindtestIds } from '../utils/monthlyScheduler';
 
 export interface NoteEvent {
   note: string; // e.g. "C", "D#", "Eb", "F", "G", "A", "B", "REST"
@@ -2435,19 +2436,10 @@ function createSoundtrackForGame(game: Game): {
 
 /**
  * Génère le puzzle Blind Test quotidien pour une date donnée.
- * Règle 0 Hallucination : tire exclusivement parmi les jeux disposant d'un extrait audio officiel vérifié.
+ * Règle 0 Hallucination : calendrier mensuel unifié sans doublon, tiré exclusivement parmi les jeux certifiés avec audio officiel.
  */
 export function getDailyBlindTestPuzzle(dateString: string): BlindTestPuzzle {
-  const seed = stringToHash(`blindtest_puzzle_${dateString}`);
-  const rand = mulberry32(seed);
-
-  // Pool strict : jeux disposant d'une piste audio officielle dans CURATED_OSTS
-  const curatedIds = CURATED_OSTS.map((o) => o.gameId);
-  const eligibleGames = INDIE_GAMES.filter((g) => curatedIds.includes(g.id));
-  const pool = eligibleGames.length > 0 ? eligibleGames : [INDIE_GAMES[0]];
-
-  const idx = Math.floor(rand() * pool.length);
-  const targetGame = pool[idx];
+  const targetGame = getScheduledDailyGame(dateString, 'blindtest', INDIE_GAMES);
 
   const ostData = createSoundtrackForGame(targetGame);
   const clues = buildClues(targetGame, ostData.composer);
@@ -2493,3 +2485,7 @@ export function getRandomBlindTestPuzzle(seedSuffix = Date.now().toString()): Bl
     clues,
   };
 }
+
+// Initialise le pool de Blind Test dans le planificateur mensuel
+setDefaultBlindtestIds(CURATED_OSTS.map((o) => o.gameId));
+

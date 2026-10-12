@@ -11229,7 +11229,14 @@ export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
   return getScheduledDailyGame(dateString, 'profille', gamesPool);
 }
 
+// Helper déterministe pour obtenir le jeu du jour pour le Blind Test (sans collision)
+export function getDailyBlindTestGame(dateString: string, pool?: Game[]): Game {
+  const gamesPool = pool && pool.length > 0 ? pool : INDIE_GAMES;
+  return getScheduledDailyGame(dateString, 'blindtest', gamesPool);
+}
+
 // Initialise le pool par défaut pour le planificateur mensuel
 setDefaultGamesPool(INDIE_GAMES);
 
 export { getScheduledDailyGame, getScheduledDay };
+

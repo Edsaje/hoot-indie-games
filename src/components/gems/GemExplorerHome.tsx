@@ -20,6 +20,7 @@ import {
   Swords,
 } from 'lucide-react';
 import { TODAY_DAILY_GEM, TODAY_DATE } from '../../data/dailyGem';
+import { INDIE_GAMES } from '../../data/games';
 import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { ItchIcon } from '../common/ItchIcon';
@@ -80,7 +81,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     if (currentDate === TODAY_DATE) {
       return TODAY_DAILY_GEM;
     }
-    return getScheduledDailyGame(currentDate, 'dailyGem');
+    return getScheduledDailyGame(currentDate, 'dailyGem', INDIE_GAMES);
   }, [currentDate]);
 
   // Check today's game completion status for all 8 daily disciplines
