@@ -253,12 +253,12 @@ const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 63
 
   <!-- Summary Micro-line with accurate numbers & features -->
   <text x="600" y="282" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="13.5" fill="#cbd5e1" letter-spacing="0.5">
-    274 Pépites Steam Certifiées • Classeur Sylvestre &amp; Boosters • 17+ Mini-Jeux • Salle d'Arcade 1982
+    300+ Pépites Steam Certifiées • Classeur Sylvestre &amp; Boosters • 17+ Mini-Jeux • Salle d'Arcade 1982
   </text>
 
   <!-- ==================== 6. THE 4 PILLARS (SYLVESTRE DA CARDS) ==================== -->
   
-  <!-- Card 1: 274 Pépites Steam (Amber/Gold Theme) -->
+  <!-- Card 1: 300+ Pépites Steam (Amber/Gold Theme) -->
   <g transform="translate(68, 308)">
     <rect width="248" height="144" rx="16" fill="url(#cardGrad)" stroke="url(#borderAmber)" stroke-width="1.8" />
     <rect x="25" y="0" width="198" height="2.5" rx="1.2" fill="#f59e0b" opacity="0.9" />
@@ -269,7 +269,7 @@ const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 63
       <polygon points="0,-13 5,-4 0,12 -5,-4" fill="none" stroke="#f59e0b" stroke-width="1.6" />
       <line x1="-12" y1="-4" x2="12" y2="-4" stroke="#fbbf24" stroke-width="1.6" />
     </g>
-    <text x="124" y="80" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="16" fill="#fef3c7" letter-spacing="1">274 PÉPITES</text>
+    <text x="124" y="80" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="16" fill="#fef3c7" letter-spacing="1">300+ PÉPITES</text>
     <text x="124" y="101" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="12.5" fill="#fbbf24">Catalogue Certifié Steam</text>
     <text x="124" y="122" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="11" fill="#94a3b8">Fiches, Avis &amp; OST Audio</text>
   </g>

@@ -250,11 +250,11 @@ const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1584 39
 
     <!-- Line 4: 4 Feature Pillar Badges -->
     <g transform="translate(0, 206)">
-      <!-- Badge 1: 274 Pépites -->
+      <!-- Badge 1: 300+ Pépites -->
       <g transform="translate(0, 0)">
         <rect width="168" height="64" rx="12" fill="url(#pillGrad)" stroke="#f59e0b" stroke-width="1.4" />
         <rect x="18" y="0" width="132" height="2" rx="1" fill="#f59e0b" />
-        <text x="84" y="27" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900" font-size="13" fill="#fef3c7" letter-spacing="0.5">💎 274 PÉPITES</text>
+        <text x="84" y="27" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900" font-size="13" fill="#fef3c7" letter-spacing="0.5">💎 300+ PÉPITES</text>
         <text x="84" y="47" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="600" font-size="11" fill="#fbbf24">Catalogue Steam Certifié</text>
       </g>
 
