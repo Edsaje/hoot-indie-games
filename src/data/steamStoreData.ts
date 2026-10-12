@@ -289,16 +289,34 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "appId": 214560,
     "isFree": false,
     "currency": "EUR",
-    "initialPriceCents": 0,
-    "finalPriceCents": 0,
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
     "discountPercent": 0,
-    "formattedFinalPrice": "Gratuit",
-    "totalReviews": 0,
-    "totalPositive": 0,
-    "positivePercent": 90,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "16,79€",
+    "totalReviews": 6601,
+    "totalPositive": 6338,
+    "positivePercent": 96,
     "reviewScoreDesc": {
-      "fr": "Très positifs",
-      "en": "Very Positive"
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
+    }
+  },
+  "860950": {
+    "appId": 860950,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1679,
+    "finalPriceCents": 1679,
+    "discountPercent": 0,
+    "formattedFinalPrice": "16,79€",
+    "formattedInitialPrice": "16,79€",
+    "totalReviews": 6601,
+    "totalPositive": 6338,
+    "positivePercent": 96,
+    "reviewScoreDesc": {
+      "fr": "Extrêmement positifs",
+      "en": "Overwhelmingly Positive"
     }
   },
   "214770": {

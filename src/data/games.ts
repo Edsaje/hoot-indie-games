@@ -10059,8 +10059,8 @@ export const INDIE_GAMES: Game[] = [
   },
   {
     "id": "mark-of-the-ninja",
-    "title": "Mark of the Ninja",
-    "releaseYear": 2026,
+    "title": "Mark of the Ninja: Remastered",
+    "releaseYear": 2018,
     "genre": [
       "Action",
       "Aventure"
@@ -10074,14 +10074,14 @@ export const INDIE_GAMES: Game[] = [
       "en": "2D Side-scroller"
     },
     "developer": "Klei Entertainment",
-    "steamUrl": "https://store.steampowered.com/app/214560/",
+    "steamUrl": "https://store.steampowered.com/app/860950/",
     "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_e0e5bff3ff1aa40dd71296ca9becf8279910da2b.1920x1080.jpg?t=1668892924",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_5ca2235feff99db0b31a9e5578a64ef3806e9581.1920x1080.jpg?t=1668892924",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_152fb144da101f023f0440b2755b0a9f9e3847ce.1920x1080.jpg?t=1668892924",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_99576c9f2ce7bad1077482929ea68e100a825e81.1920x1080.jpg?t=1668892924",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_3fae382f516aa00cbffa1deac3a20c9889a8f27e.1920x1080.jpg?t=1668892924",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214560/ss_06c44458d747cb051caae433a90c4a3e1c364996.1920x1080.jpg?t=1668892924"
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860950/ss_9b8226dd2a991a87676e2c98cf2d8d2de08f9359.1920x1080.jpg?t=1781206898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860950/ss_187e513e6fde575ccded11cdb181cb7b3fe8f02a.1920x1080.jpg?t=1781206898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860950/ss_427aedb40d99153ab5c9ba3e8397ceca9090e05d.1920x1080.jpg?t=1781206898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860950/ss_a746922d83cd8bb276b902f6ce059a4d4af2daca.1920x1080.jpg?t=1781206898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860950/ss_7b59a6dbb372bbb31fcaf416aee165bb15f60686.1920x1080.jpg?t=1781206898",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860950/ss_9fbc0952edd1b7c88eec4d8251154154f4ca18fa.1920x1080.jpg?t=1781206898"
     ],
     "hints": {
       "tagline": {

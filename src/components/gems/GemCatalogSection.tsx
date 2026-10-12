@@ -580,15 +580,15 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="bg-[#0b0f19] border border-[#1e293b] text-white text-xs rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer"
               >
-                <option value="yearDesc" className="bg-slate-900">{t('catalog.sortYearDesc', '📅 Plus récents')}</option>
-                <option value="yearAsc" className="bg-slate-900">{t('catalog.sortYearAsc', '⏳ Classiques (Anciens)')}</option>
-                <option value="priceAsc" className="bg-slate-900">{t('catalog.sortPriceAsc', '💸 Prix croissant')}</option>
-                <option value="priceDesc" className="bg-slate-900">{t('catalog.sortPriceDesc', '💎 Prix décroissant')}</option>
-                <option value="discountDesc" className="bg-slate-900">{t('catalog.sortDiscountDesc', '🔥 Meilleures réductions (%)')}</option>
-                <option value="ratingDesc" className="bg-slate-900">{t('catalog.sortRatingDesc', '⭐ Meilleures évaluations')}</option>
-                <option value="reviewsCountDesc" className="bg-slate-900">{t('catalog.sortReviewsDesc', '👥 Popularité (Avis)')}</option>
-                <option value="titleAsc" className="bg-slate-900">{t('catalog.sortTitleAsc', '🔤 Titre (A → Z)')}</option>
-                <option value="titleDesc" className="bg-slate-900">{t('catalog.sortTitleDesc', '🔤 Titre (Z → A)')}</option>
+                <option value="yearDesc" className="bg-slate-900">{t('catalog.sortYearDesc', 'Plus récents')}</option>
+                <option value="yearAsc" className="bg-slate-900">{t('catalog.sortYearAsc', 'Classiques (Anciens)')}</option>
+                <option value="priceAsc" className="bg-slate-900">{t('catalog.sortPriceAsc', 'Prix croissant')}</option>
+                <option value="priceDesc" className="bg-slate-900">{t('catalog.sortPriceDesc', 'Prix décroissant')}</option>
+                <option value="discountDesc" className="bg-slate-900">{t('catalog.sortDiscountDesc', 'Meilleures réductions (%)')}</option>
+                <option value="ratingDesc" className="bg-slate-900">{t('catalog.sortRatingDesc', 'Meilleures évaluations')}</option>
+                <option value="reviewsCountDesc" className="bg-slate-900">{t('catalog.sortReviewsDesc', 'Popularité (Avis)')}</option>
+                <option value="titleAsc" className="bg-slate-900">{t('catalog.sortTitleAsc', 'Titre (A → Z)')}</option>
+                <option value="titleDesc" className="bg-slate-900">{t('catalog.sortTitleDesc', 'Titre (Z → A)')}</option>
               </select>
             </div>
 
@@ -652,7 +652,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                   : 'bg-[#0b0f19] text-slate-300 hover:bg-slate-800 border border-[#1e293b]'
               }`}
             >
-              {t('catalog.toDiscover', { count: curatedGems.length - ownedCount, defaultValue: `✨ À découvrir (${curatedGems.length - ownedCount})` })}
+              {t('catalog.toDiscover', { count: curatedGems.length - ownedCount, defaultValue: `À découvrir (${curatedGems.length - ownedCount})` })}
             </button>
 
             {ownedCount > 0 && (

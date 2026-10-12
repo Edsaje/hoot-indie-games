@@ -793,7 +793,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                 : 'bg-[#0b0f19] text-slate-400 hover:text-emerald-300 border-[#1e293b]'
             }`}
           >
-            🏷️ {t('catalog.onSale')}
+            {t('catalog.onSale')}
           </button>
 
           <button
@@ -805,7 +805,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                 : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b]'
             }`}
           >
-            💸 &lt; 10 €
+            &lt; 10 €
           </button>
 
           <button
@@ -817,7 +817,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                 : 'bg-[#0b0f19] text-slate-400 hover:text-amber-300 border-[#1e293b]'
             }`}
           >
-            🌟 Top Avis (≥ 95%)
+            Top Avis (≥ 95%)
           </button>
 
           <button
