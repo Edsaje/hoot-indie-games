@@ -505,7 +505,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                 onChange={(e) => setSelectedGenre(e.target.value)}
                 className="bg-transparent text-white w-full focus:outline-none cursor-pointer"
               >
-                <option value="all" className="bg-slate-900">{t('catalog.allGenres')}</option>
+                <option value="all" className="bg-slate-900">{t('catalog.allGenres', 'Tous les genres')}</option>
                 {allGenresList.map((g) => (
                   <option key={g} value={g} className="bg-slate-900">
                     {getTranslatedGenre(g, i18n.language)}
@@ -528,9 +528,9 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                 }}
                 className="bg-transparent text-white w-full focus:outline-none cursor-pointer"
               >
-                <option value="all" className="bg-slate-900">{t('catalog.ownershipAll')}</option>
-                <option value="unowned" className="bg-slate-900">{t('catalog.ownershipUnowned', { count: curatedGems.length - ownedCount })}</option>
-                <option value="owned" className="bg-slate-900">{t('catalog.ownershipOwned', { count: ownedCount })}</option>
+                <option value="all" className="bg-slate-900">{t('catalog.ownershipAll', 'Tous les jeux')}</option>
+                <option value="unowned" className="bg-slate-900">{t('catalog.ownershipUnowned', { count: curatedGems.length - ownedCount, defaultValue: `À découvrir (${curatedGems.length - ownedCount})` })}</option>
+                <option value="owned" className="bg-slate-900">{t('catalog.ownershipOwned', { count: ownedCount, defaultValue: `Dans ma bibliothèque (${ownedCount})` })}</option>
               </select>
             </div>
 
@@ -543,12 +543,12 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                 onChange={(e) => setPriceFilter(e.target.value as any)}
                 className="bg-transparent text-white w-full focus:outline-none cursor-pointer"
               >
-                <option value="all" className="bg-slate-900">{t('catalog.pricesAll')}</option>
-                <option value="sale" className="bg-slate-900">{t('catalog.onSaleOnly')}</option>
-                <option value="free" className="bg-slate-900">{t('catalog.freeOrItch')}</option>
-                <option value="under10" className="bg-slate-900">{t('catalog.under10')}</option>
-                <option value="under20" className="bg-slate-900">{t('catalog.under20')}</option>
-                <option value="20plus" className="bg-slate-900">{t('catalog.above20')}</option>
+                <option value="all" className="bg-slate-900">{t('catalog.pricesAll', 'Tous les prix')}</option>
+                <option value="sale" className="bg-slate-900">{t('catalog.onSaleOnly', 'En promotion / Soldes')}</option>
+                <option value="free" className="bg-slate-900">{t('catalog.freeOrItch', 'Gratuits & Démo Itch')}</option>
+                <option value="under10" className="bg-slate-900">{t('catalog.under10', 'Moins de 10 €')}</option>
+                <option value="under20" className="bg-slate-900">{t('catalog.under20', 'Moins de 20 €')}</option>
+                <option value="20plus" className="bg-slate-900">{t('catalog.above20', '20 € et plus')}</option>
               </select>
             </div>
 
@@ -561,10 +561,10 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                 onChange={(e) => setRatingFilter(e.target.value as any)}
                 className="bg-transparent text-white w-full focus:outline-none cursor-pointer"
               >
-                <option value="all" className="bg-slate-900">{t('catalog.ratingsAll')}</option>
-                <option value="overwhelming" className="bg-slate-900">{t('catalog.ratingOverwhelming')}</option>
-                <option value="very_positive" className="bg-slate-900">{t('catalog.ratingVeryPositive')}</option>
-                <option value="positive" className="bg-slate-900">{t('catalog.ratingPositive')}</option>
+                <option value="all" className="bg-slate-900">{t('catalog.ratingsAll', 'Toutes les notes')}</option>
+                <option value="overwhelming" className="bg-slate-900">{t('catalog.ratingOverwhelming', 'Extrêmement positifs (≥ 95%)')}</option>
+                <option value="very_positive" className="bg-slate-900">{t('catalog.ratingVeryPositive', 'Très positifs (≥ 80%)')}</option>
+                <option value="positive" className="bg-slate-900">{t('catalog.ratingPositive', 'Positifs (≥ 70%)')}</option>
               </select>
             </div>
           </div>
@@ -573,22 +573,22 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-[#1e293b]">
             <div className="flex items-center gap-2">
               <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span className="text-xs text-slate-400">{t('catalog.sortBy')} :</span>
+              <span className="text-xs text-slate-400">{t('catalog.sortBy', 'Trier par')} :</span>
               <select
                 aria-label={t('catalog.sortBy', 'Trier le catalogue')}
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="bg-[#0b0f19] border border-[#1e293b] text-white text-xs rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer"
               >
-                <option value="yearDesc" className="bg-slate-900">{t('catalog.sortYearDesc')}</option>
-                <option value="yearAsc" className="bg-slate-900">{t('catalog.sortYearAsc')}</option>
-                <option value="priceAsc" className="bg-slate-900">{t('catalog.sortPriceAsc')}</option>
-                <option value="priceDesc" className="bg-slate-900">{t('catalog.sortPriceDesc')}</option>
-                <option value="discountDesc" className="bg-slate-900">{t('catalog.sortDiscountDesc')}</option>
-                <option value="ratingDesc" className="bg-slate-900">{t('catalog.sortRatingDesc')}</option>
-                <option value="reviewsCountDesc" className="bg-slate-900">{t('catalog.sortReviewsDesc')}</option>
-                <option value="titleAsc" className="bg-slate-900">{t('catalog.sortTitleAsc')}</option>
-                <option value="titleDesc" className="bg-slate-900">{t('catalog.sortTitleDesc')}</option>
+                <option value="yearDesc" className="bg-slate-900">{t('catalog.sortYearDesc', 'Plus récents')}</option>
+                <option value="yearAsc" className="bg-slate-900">{t('catalog.sortYearAsc', 'Classiques (Anciens)')}</option>
+                <option value="priceAsc" className="bg-slate-900">{t('catalog.sortPriceAsc', 'Prix croissant')}</option>
+                <option value="priceDesc" className="bg-slate-900">{t('catalog.sortPriceDesc', 'Prix décroissant')}</option>
+                <option value="discountDesc" className="bg-slate-900">{t('catalog.sortDiscountDesc', 'Meilleures réductions (%)')}</option>
+                <option value="ratingDesc" className="bg-slate-900">{t('catalog.sortRatingDesc', 'Meilleures évaluations')}</option>
+                <option value="reviewsCountDesc" className="bg-slate-900">{t('catalog.sortReviewsDesc', 'Popularité (Avis)')}</option>
+                <option value="titleAsc" className="bg-slate-900">{t('catalog.sortTitleAsc', 'Titre (A → Z)')}</option>
+                <option value="titleDesc" className="bg-slate-900">{t('catalog.sortTitleDesc', 'Titre (Z → A)')}</option>
               </select>
             </div>
 
@@ -597,10 +597,10 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                 type="button"
                 onClick={handleRandomPick}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition active:scale-95 cursor-pointer shadow-sm"
-                title={t('catalog.randomPickTooltip')}
+                title={t('catalog.randomPickTooltip', 'Tirer une pépite au hasard')}
               >
                 <Dice5 className="w-3.5 h-3.5" />
-                <span>{t('catalog.randomPickBtn')}</span>
+                <span>{t('catalog.randomPickBtn', 'Pépite Aléatoire')}</span>
               </button>
 
               {activeFiltersCount > 0 && (
@@ -608,10 +608,10 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                   type="button"
                   onClick={handleResetFilters}
                   className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-950/40 hover:bg-red-900/50 border border-red-500/40 text-red-300 text-xs font-semibold transition active:scale-95 cursor-pointer"
-                  title={t('catalog.resetFilters')}
+                  title={t('catalog.resetFilters', 'Réinitialiser')}
                 >
                   <RotateCcw className="w-3 h-3" />
-                  <span>{t('catalog.resetFiltersBtn')} ({activeFiltersCount})</span>
+                  <span>{t('catalog.resetFiltersBtn', 'Réinitialiser')} ({activeFiltersCount})</span>
                 </button>
               )}
             </div>
@@ -621,7 +621,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             <span className="text-[11px] text-slate-400 flex items-center gap-1 mr-1">
               <Tag className="w-3 h-3 text-slate-500" />
-              <span>{t('catalog.quickTags')} :</span>
+              <span>{t('catalog.quickTags', 'Filtres rapides')} :</span>
             </span>
 
             <button
@@ -638,7 +638,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                   : 'bg-[#0b0f19] text-slate-300 hover:bg-slate-800 border border-[#1e293b]'
               }`}
             >
-              {t('catalog.allGames', { count: curatedGems.length })}
+              {t('catalog.allGames', { count: curatedGems.length, defaultValue: `Tous les jeux (${curatedGems.length})` })}
             </button>
 
             <button
@@ -652,7 +652,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                   : 'bg-[#0b0f19] text-slate-300 hover:bg-slate-800 border border-[#1e293b]'
               }`}
             >
-              {t('catalog.toDiscover', { count: curatedGems.length - ownedCount })}
+              {t('catalog.toDiscover', { count: curatedGems.length - ownedCount, defaultValue: `À découvrir (${curatedGems.length - ownedCount})` })}
             </button>
 
             {ownedCount > 0 && (
@@ -668,7 +668,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                 }`}
               >
                 <SteamIcon className="w-3 h-3" />
-                <span>{t('catalog.owned')} ({ownedCount})</span>
+                <span>{t('catalog.owned', 'Possédé')} ({ownedCount})</span>
               </button>
             )}
 
@@ -681,7 +681,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
               }`}
             >
               <Flame className="w-3 h-3 text-emerald-400" />
-              <span>{t('catalog.salesTag')}</span>
+              <span>{t('catalog.salesTag', 'Promotions en cours')}</span>
             </button>
 
             <button
@@ -693,7 +693,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
               }`}
             >
               <ItchIcon className="w-3 h-3 text-[#fa5c5c]" />
-              <span>{t('catalog.itchMicroGems', { count: itchCount })}</span>
+              <span>{t('catalog.itchMicroGems', { count: itchCount, defaultValue: `Pépites Itch.io (${itchCount})` })}</span>
             </button>
           </div>
         </div>
@@ -703,13 +703,13 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
           <div className="flex flex-wrap items-center gap-2 mb-5 px-3 py-2 rounded-xl bg-[#0b0f19]/70 border border-[#1e293b]">
             <span className="text-xs text-slate-400 flex items-center gap-1">
               <Sliders className="w-3 h-3 text-amber-400" />
-              <span>{t('catalog.activeFilters')} :</span>
+              <span>{t('catalog.activeFilters', 'Filtres actifs')} :</span>
             </span>
 
             {searchQuery && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs">
                 <span>"{searchQuery}"</span>
-                <button type="button" onClick={() => setSearchQuery('')} className="hover:text-white" aria-label={t('catalog.clearFilter')} title={t('catalog.clearFilter')}>
+                <button type="button" onClick={() => setSearchQuery('')} className="hover:text-white" aria-label={t('catalog.clearFilter', 'Supprimer ce filtre')} title={t('catalog.clearFilter', 'Supprimer ce filtre')}>
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -718,7 +718,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
             {selectedGenre !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs">
                 <span>{getTranslatedGenre(selectedGenre, i18n.language)}</span>
-                <button type="button" onClick={() => setSelectedGenre('all')} className="hover:text-white" aria-label={t('catalog.clearFilter')} title={t('catalog.clearFilter')}>
+                <button type="button" onClick={() => setSelectedGenre('all')} className="hover:text-white" aria-label={t('catalog.clearFilter', 'Supprimer ce filtre')} title={t('catalog.clearFilter', 'Supprimer ce filtre')}>
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -726,7 +726,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
 
             {ownershipFilter !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs">
-                <span>{ownershipFilter === 'owned' ? t('catalog.filterOwned') : t('catalog.filterUnowned')}</span>
+                <span>{ownershipFilter === 'owned' ? t('catalog.filterOwned', 'Possédés') : t('catalog.filterUnowned', 'À découvrir')}</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -734,8 +734,8 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
                     setHideOwnedGames(false);
                   }}
                   className="hover:text-white"
-                  aria-label={t('catalog.clearFilter')}
-                  title={t('catalog.clearFilter')}
+                  aria-label={t('catalog.clearFilter', 'Supprimer ce filtre')}
+                  title={t('catalog.clearFilter', 'Supprimer ce filtre')}
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -746,16 +746,16 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs">
                 <span>
                   {priceFilter === 'sale'
-                    ? t('catalog.filterSale')
+                    ? t('catalog.filterSale', 'En solde')
                     : priceFilter === 'free'
-                    ? t('catalog.filterFree')
+                    ? t('catalog.filterFree', 'Gratuit')
                     : priceFilter === 'under10'
-                    ? t('catalog.filterUnder10')
+                    ? t('catalog.filterUnder10', '< 10 €')
                     : priceFilter === 'under20'
-                    ? t('catalog.filterUnder20')
-                    : t('catalog.filterAbove20')}
+                    ? t('catalog.filterUnder20', '< 20 €')
+                    : t('catalog.filterAbove20', '≥ 20 €')}
                 </span>
-                <button type="button" onClick={() => setPriceFilter('all')} className="hover:text-white" aria-label={t('catalog.clearFilter')} title={t('catalog.clearFilter')}>
+                <button type="button" onClick={() => setPriceFilter('all')} className="hover:text-white" aria-label={t('catalog.clearFilter', 'Supprimer ce filtre')} title={t('catalog.clearFilter', 'Supprimer ce filtre')}>
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -764,7 +764,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
             {ratingFilter !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-xs">
                 <span>{ratingFilter === 'overwhelming' ? '≥ 95%' : ratingFilter === 'very_positive' ? '≥ 80%' : '≥ 70%'}</span>
-                <button type="button" onClick={() => setRatingFilter('all')} className="hover:text-white" aria-label={t('catalog.clearFilter')} title={t('catalog.clearFilter')}>
+                <button type="button" onClick={() => setRatingFilter('all')} className="hover:text-white" aria-label={t('catalog.clearFilter', 'Supprimer ce filtre')} title={t('catalog.clearFilter', 'Supprimer ce filtre')}>
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -773,7 +773,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
             {storeFilter === 'itch' && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-[#fa5c5c]/20 text-[#fa5c5c] border border-[#fa5c5c]/40 text-xs">
                 <span>Itch.io</span>
-                <button type="button" onClick={() => setStoreFilter('all')} className="hover:text-white" aria-label={t('catalog.clearFilter')} title={t('catalog.clearFilter')}>
+                <button type="button" onClick={() => setStoreFilter('all')} className="hover:text-white" aria-label={t('catalog.clearFilter', 'Supprimer ce filtre')} title={t('catalog.clearFilter', 'Supprimer ce filtre')}>
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -981,16 +981,16 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({ onNavigate
         {filteredGems.length === 0 && (
           <div className="py-16 text-center bg-[#072a20] rounded-3xl border-2 border-[#78350f] p-8 shadow-xl">
             <Filter className="w-12 h-12 text-amber-500/40 mx-auto mb-3" />
-            <h3 className="text-xl font-bold text-white mb-2">{t('catalog.noGemsFound')}</h3>
+            <h3 className="text-xl font-bold text-white mb-2">{t('catalog.noGemsFound', 'Aucune pépite trouvée')}</h3>
             <p className="text-sm text-slate-400 mb-5 max-w-md mx-auto">
-              {t('catalog.noGemsFoundDesc')}
+              {t('catalog.noGemsFoundDesc', 'Aucun jeu ne correspond à l’ensemble de vos filtres actuels. Essayez d’ajuster vos critères de prix, de note ou de genre.')}
             </p>
             <button
               onClick={handleResetFilters}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider transition shadow-lg cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>{t('catalog.resetFiltersBtn')}</span>
+              <span>{t('catalog.resetFiltersBtn', 'Réinitialiser')}</span>
             </button>
           </div>
         )}

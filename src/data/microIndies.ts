@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 60
+ * Total de pépites sélectionnées : 70
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2586,5 +2586,410 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzEyNjAxMTcyLnBuZw==/315x250%23c/oAHBgk.png"
     ],
     "dateAdded": "2026-10-07"
+  },
+  {
+    "id": "itch-offbeat",
+    "title": "OFFBEAT",
+    "developer": "pantaloon-io",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pantaloon-io.itch.io/offbeat",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$10.19",
+      "en": "$10.19"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Build the recording studio of your dreams!",
+      "en": "Build the recording studio of your dreams!"
+    },
+    "description": {
+      "fr": "Build the recording studio of your dreams!",
+      "en": "Build the recording studio of your dreams!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI3MDkzNjM5LnBuZw==/315x250%23c/%2FDBEkG.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI3MDkzNjM5LnBuZw==/315x250%23c/%2FDBEkG.png"
+    ],
+    "dateAdded": "2026-10-08"
+  },
+  {
+    "id": "itch-forget-me-not",
+    "title": "FORGET ME NOT",
+    "developer": "pepsica",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pepsica.itch.io/forget-me-not",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Will you forget or remember?",
+      "en": "Will you forget or remember?"
+    },
+    "description": {
+      "fr": "Will you forget or remember?",
+      "en": "Will you forget or remember?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4MTQ4MjcyLnBuZw==/315x250%23c/iSFE8R.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4MTQ4MjcyLnBuZw==/315x250%23c/iSFE8R.png"
+    ],
+    "dateAdded": "2026-10-08"
+  },
+  {
+    "id": "itch-the-margot-collapse",
+    "title": "The Margot Collapse",
+    "developer": "funday-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://funday-games.itch.io/the-margot-collapse",
+    "playInBrowserUrl": "https://funday-games.itch.io/the-margot-collapse",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Incremental mystery game",
+      "en": "Incremental mystery game"
+    },
+    "description": {
+      "fr": "Incremental mystery game",
+      "en": "Incremental mystery game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwNjUxMjE3LmdpZg==/original/q5h2jE.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwNjUxMjE3LmdpZg==/original/q5h2jE.gif"
+    ],
+    "dateAdded": "2026-10-09"
+  },
+  {
+    "id": "itch-toss-office",
+    "title": "Toss Office",
+    "developer": "ravenous-den",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://ravenous-den.itch.io/toss-office",
+    "playInBrowserUrl": "https://ravenous-den.itch.io/toss-office",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Shred some paper. Toss the rest in a bin.",
+      "en": "Shred some paper. Toss the rest in a bin."
+    },
+    "description": {
+      "fr": "Shred some paper. Toss the rest in a bin.",
+      "en": "Shred some paper. Toss the rest in a bin."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5NDM0Mzk4LnBuZw==/315x250%23c/ubLP64.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5NDM0Mzk4LnBuZw==/315x250%23c/ubLP64.png"
+    ],
+    "dateAdded": "2026-10-09"
+  },
+  {
+    "id": "itch-battle-healer-hildegard",
+    "title": "Battle Healer Hildegard",
+    "developer": "funday-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://funday-games.itch.io/battle-healer-hildegard",
+    "playInBrowserUrl": "https://funday-games.itch.io/battle-healer-hildegard",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "The healer finally gets to be the hero!",
+      "en": "The healer finally gets to be the hero!"
+    },
+    "description": {
+      "fr": "The healer finally gets to be the hero!",
+      "en": "The healer finally gets to be the hero!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwMzY5NzEwLmdpZg==/original/dkBYWK.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwMzY5NzEwLmdpZg==/original/dkBYWK.gif"
+    ],
+    "dateAdded": "2026-10-10"
+  },
+  {
+    "id": "itch-time-survivor",
+    "title": "Time Survivor",
+    "developer": "logos-psychagogia",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://logos-psychagogia.itch.io/time-survivor",
+    "playInBrowserUrl": "https://logos-psychagogia.itch.io/time-survivor",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Minimal Survivor Incremental",
+      "en": "Minimal Survivor Incremental"
+    },
+    "description": {
+      "fr": "Minimal Survivor Incremental",
+      "en": "Minimal Survivor Incremental"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwNjk1NDY0LnBuZw==/315x250%23c/y0D5OZ.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwNjk1NDY0LnBuZw==/315x250%23c/y0D5OZ.png"
+    ],
+    "dateAdded": "2026-10-10"
+  },
+  {
+    "id": "itch-dispatches-1940",
+    "title": "Dispatches 1940",
+    "developer": "dispatches",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://dispatches.itch.io/dispatches-1940",
+    "playInBrowserUrl": "https://dispatches.itch.io/dispatches-1940",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$5.59",
+      "en": "$5.59"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "1940. Europe is fractured. The war room awaits.",
+      "en": "1940. Europe is fractured. The war room awaits."
+    },
+    "description": {
+      "fr": "1940. Europe is fractured. The war room awaits.",
+      "en": "1940. Europe is fractured. The war room awaits."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4NTY3NTgwLnBuZw==/315x250%23c/iaX29S.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4NTY3NTgwLnBuZw==/315x250%23c/iaX29S.png"
+    ],
+    "dateAdded": "2026-10-11"
+  },
+  {
+    "id": "itch-project-silverfish-early-access",
+    "title": "Project Silverfish Early Access",
+    "developer": "siris-pendrake",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://siris-pendrake.itch.io/project-silverfish",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$29.99",
+      "en": "$29.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "tagline": {
+      "fr": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!",
+      "en": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!"
+    },
+    "description": {
+      "fr": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!",
+      "en": "An Open-World, Survival-Horror, FPS focusing on exploration and dungeon  crawling!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIxNzQ4ODM5LnBuZw==/315x250%23c/RTP9Oy.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIxNzQ4ODM5LnBuZw==/315x250%23c/RTP9Oy.png"
+    ],
+    "dateAdded": "2026-10-11"
+  },
+  {
+    "id": "itch-mops-mobs-a-sweeping-dungeon-adventure",
+    "title": "Mops & Mobs: A Sweeping Dungeon Adventure",
+    "developer": "ratking",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://ratking.itch.io/mops-and-mobs",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "You're the new janitor in a badly managed dungeon full of loveable monsters",
+      "en": "You're the new janitor in a badly managed dungeon full of loveable monsters"
+    },
+    "description": {
+      "fr": "You're the new janitor in a badly managed dungeon full of loveable monsters",
+      "en": "You're the new janitor in a badly managed dungeon full of loveable monsters"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwMDcyMDY0LmpwZw==/315x250%23c/HREPuN.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwMDcyMDY0LmpwZw==/315x250%23c/HREPuN.jpg"
+    ],
+    "dateAdded": "2026-10-12"
+  },
+  {
+    "id": "itch-microlandia",
+    "title": "Microlandia",
+    "developer": "explodi",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://explodi.itch.io/microlandia",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$8.99",
+      "en": "$8.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Brutally honest city builder",
+      "en": "Brutally honest city builder"
+    },
+    "description": {
+      "fr": "Brutally honest city builder",
+      "en": "Brutally honest city builder"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI1NjU1NDU1LnBuZw==/315x250%23c/TLJhD4.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI1NjU1NDU1LnBuZw==/315x250%23c/TLJhD4.png"
+    ],
+    "dateAdded": "2026-10-12"
   }
 ];

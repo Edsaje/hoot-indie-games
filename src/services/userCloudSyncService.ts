@@ -451,31 +451,29 @@ export function applyCloudSaveToLocalStorage(
 
     // 5. Profil utilisateur
     const rawProfile = localStorage.getItem(STORAGE_USER_PROFILE);
-    if (rawProfile) {
-      const currentProfile = JSON.parse(rawProfile);
-      const mergedAvatars = isReplace
-        ? (cloudData.unlockedAvatars || ['owl'])
-        : Array.from(new Set([...(currentProfile.unlockedAvatars || []), ...(cloudData.unlockedAvatars || [])]));
-      const mergedTitles = isReplace
-        ? (cloudData.unlockedTitles || ['Oisillon du Perchoir'])
-        : Array.from(new Set([...(currentProfile.unlockedTitles || []), ...(cloudData.unlockedTitles || [])]));
-      const mergedFrames = isReplace
-        ? (cloudData.unlockedFrames || ['frame_wood'])
-        : Array.from(new Set([...(currentProfile.unlockedFrames || []), ...(cloudData.unlockedFrames || [])]));
+    const currentProfile = rawProfile ? JSON.parse(rawProfile) : {};
+    const mergedAvatars = isReplace
+      ? (cloudData.unlockedAvatars || ['owl'])
+      : Array.from(new Set([...(currentProfile.unlockedAvatars || []), ...(cloudData.unlockedAvatars || [])]));
+    const mergedTitles = isReplace
+      ? (cloudData.unlockedTitles || ['Oisillon du Perchoir'])
+      : Array.from(new Set([...(currentProfile.unlockedTitles || []), ...(cloudData.unlockedTitles || [])]));
+    const mergedFrames = isReplace
+      ? (cloudData.unlockedFrames || ['frame_wood'])
+      : Array.from(new Set([...(currentProfile.unlockedFrames || []), ...(cloudData.unlockedFrames || [])]));
 
-      const updatedProfile = {
-        ...currentProfile,
-        username: cloudData.username && cloudData.username !== 'Hibou Mystère' ? cloudData.username : currentProfile.username,
-        avatarId: cloudData.avatarId || currentProfile.avatarId,
-        title: cloudData.title || currentProfile.title,
-        activeFrame: cloudData.activeFrame || currentProfile.activeFrame,
-        unlockedAvatars: mergedAvatars,
-        unlockedTitles: mergedTitles,
-        unlockedFrames: mergedFrames,
-        isCloudSynced: true,
-      };
-      localStorage.setItem(STORAGE_USER_PROFILE, JSON.stringify(updatedProfile));
-    }
+    const updatedProfile = {
+      ...currentProfile,
+      username: cloudData.username && cloudData.username !== 'Hibou Mystère' ? cloudData.username : currentProfile.username,
+      avatarId: cloudData.avatarId || currentProfile.avatarId,
+      title: cloudData.title || currentProfile.title,
+      activeFrame: cloudData.activeFrame || currentProfile.activeFrame,
+      unlockedAvatars: mergedAvatars,
+      unlockedTitles: mergedTitles,
+      unlockedFrames: mergedFrames,
+      isCloudSynced: true,
+    };
+    localStorage.setItem(STORAGE_USER_PROFILE, JSON.stringify(updatedProfile));
 
     // 6. Collection de cartes
     if (cloudData.cardCollection && typeof cloudData.cardCollection === 'object') {
@@ -695,7 +693,7 @@ export function applyCloudSaveToLocalStorage(
 /**
  * Charge la sauvegarde cloud distante pour un utilisateur
  */
-export async function fetchUserCloudSave(_identifiers: {
+export async function fetchUserCloudSave(identifiers: {
   steamId?: string;
   userId?: string;
   username?: string;
@@ -704,14 +702,23 @@ export async function fetchUserCloudSave(_identifiers: {
     const supabase = await getSupabaseClient();
     if (!supabase) throw new Error('Supabase not configured');
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+    if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
+      throw new Error('Not authenticated');
+    }
 
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .select('save_data')
-      .eq('id', user.id)
-      .single();
+    let query = supabase.from('user_profiles').select('save_data');
+    
+    const isValidUUID = (id?: string) => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+    if (isValidUUID(identifiers.userId)) {
+      query = query.eq('id', identifiers.userId);
+    } else if (identifiers.steamId) {
+      query = query.eq('steam_id', identifiers.steamId);
+    } else if (identifiers.username) {
+      query = query.eq('username', identifiers.username);
+    }
+
+    const { data, error } = await query.maybeSingle();
 
     if (error) {
       if (error.code === 'PGRST116') return { success: true, exists: false };
@@ -736,20 +743,39 @@ export async function pushUserCloudSave(
     const supabase = await getSupabaseClient();
     if (!supabase) throw new Error('Supabase not configured');
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+    if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
+      throw new Error('Not authenticated');
+    }
 
     payload.syncedAt = new Date().toISOString();
 
-    const { error } = await supabase
-      .from('user_profiles')
-      .upsert({
-        id: user.id,
-        username: identifiers.username || 'unknown',
-        steam_id: identifiers.steamId,
-        save_data: payload,
-        last_synced_at: new Date().toISOString()
-      }, { onConflict: 'id' });
+    const isValidUUID = (id?: string) => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    let targetId = isValidUUID(identifiers.userId) ? identifiers.userId : null;
+
+    if (!targetId && identifiers.steamId) {
+      const { data: existing } = await supabase.from('user_profiles').select('id').eq('steam_id', identifiers.steamId).maybeSingle();
+      if (existing?.id) targetId = existing.id;
+    }
+    if (!targetId && identifiers.username) {
+      const { data: existing } = await supabase.from('user_profiles').select('id').eq('username', identifiers.username).maybeSingle();
+      if (existing?.id) targetId = existing.id;
+    }
+
+    const payloadData: any = {
+      username: identifiers.username || `unknown_${Math.random().toString(36).substring(2, 9)}`,
+      save_data: payload,
+      last_synced_at: new Date().toISOString()
+    };
+    if (identifiers.steamId) payloadData.steam_id = identifiers.steamId;
+
+    let error = null;
+    if (targetId) {
+      const { error: updErr } = await supabase.from('user_profiles').update(payloadData).eq('id', targetId);
+      error = updErr;
+    } else {
+      const { error: insErr } = await supabase.from('user_profiles').insert(payloadData);
+      error = insErr;
+    }
 
     if (error) throw error;
 
@@ -792,6 +818,10 @@ function computeSaveFingerprint(data: UserCloudSavePayload): string {
     stats: data.stats,
     dailyCount: Object.keys(data.dailyGameStates || {}).length,
     taPlayed: Object.keys(data.timeAttackStats || {}).length,
+    cardsCount: Object.keys(data.cardCollection || {}).length,
+    cardsTotal: Object.values(data.cardCollection || {}).reduce((sum: number, c: any) => sum + (c.count || 0) + (c.countHolo || 0), 0),
+    lastBooster: data.lastDailyBoosterClaim,
+    freeStock: data.freeBoostersStock?.count,
     odysseySap: data.odysseyState?.starSap || 0,
     odysseyTotalSap: data.odysseyState?.totalStarSapEarned || 0,
     odysseyBiome: data.odysseyState?.highestBiomeUnlocked || 1,

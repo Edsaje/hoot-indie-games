@@ -1,12 +1,13 @@
 {
   "name": "hoot-indie-games",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.2",
   "type": "module",
   "scripts": {
     "prebuild": "npx tsx scripts/generateSeoIndex.ts",
     "generate-seo": "npx tsx scripts/generateSeoIndex.ts",
     "generate-og": "npx tsx scripts/generateOgBanner.ts",
+    "generate-linkedin": "npx tsx scripts/generateLinkedinBanner.ts",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",

@@ -27,9 +27,11 @@ export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([3, 4]);
  */
 export const KNOWN_INDIE_APP_IDS = new Set<number>([
   214560,  // Mark of the Ninja (Klei Entertainment / édité initialement via XBLA Microsoft Studios)
+  860950,  // Mark of the Ninja: Remastered (Klei Entertainment)
   236090,  // Dust: An Elysian Tail (Humble Hearts LLC / Xbox Game Studios)
   248820,  // Risk of Rain (2013) (Hopoo Games / Gearbox - 2K)
   251470,  // TowerFall Ascension (Maddy Makes Games / Extremely OK Games)
+  335670,  // LISA: The Painful (Dingaling Productions)
   252490,  // Rust (Facepunch Studios)
   304650,  // SUNLESS SEA (Failbetter Games)
   979690,  // The Ascent (Neon Giant)

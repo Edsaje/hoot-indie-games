@@ -161,13 +161,11 @@ interface HeroImagePaths {
   mobile: string;
 }
 
-async function prepareDailyHeroImage(screenshotUrl: string): Promise<HeroImagePaths> {
+async function prepareDailyHeroImage(screenshotUrl: string, todayStr: string): Promise<HeroImagePaths> {
   if (!screenshotUrl) return { desktop: '', mobile: '' };
   const publicDesktopWebp = path.resolve(__dirname, '../public/daily-hero.webp');
   const publicMobileWebp = path.resolve(__dirname, '../public/daily-hero-mobile.webp');
-  if (fs.existsSync(publicDesktopWebp) && fs.existsSync(publicMobileWebp)) {
-    return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
-  }
+
   try {
     const res = await fetch(screenshotUrl, { signal: AbortSignal.timeout(8000) });
     if (res.ok) {
@@ -189,13 +187,13 @@ async function prepareDailyHeroImage(screenshotUrl: string): Promise<HeroImagePa
       fs.writeFileSync(publicMobileWebp, webpMobile);
 
       console.log(`⚡ Images WebP créées avec succès: desktop (${(webpDesktop.length / 1024).toFixed(1)} kB) & mobile (${(webpMobile.length / 1024).toFixed(1)} kB)`);
-      return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
+      return { desktop: `/daily-hero.webp?v=${todayStr}`, mobile: `/daily-hero-mobile.webp?v=${todayStr}` };
     }
   } catch (err) {
     console.warn('⚠️ Erreur téléchargement/compression hero WebP:', err);
   }
   if (fs.existsSync(publicDesktopWebp) && fs.existsSync(publicMobileWebp)) {
-    return { desktop: '/daily-hero.webp?v=1', mobile: '/daily-hero-mobile.webp?v=1' };
+    return { desktop: `/daily-hero.webp?v=${todayStr}`, mobile: `/daily-hero-mobile.webp?v=${todayStr}` };
   }
   return { desktop: screenshotUrl, mobile: screenshotUrl };
 }
@@ -229,7 +227,7 @@ export async function generateSeoIndexHtml(): Promise<string> {
   const dailyGame = getDailyGame(todayStr, 17, allCuratedGames);
   const rawScreenshot = dailyGame?.screenshots?.[5] || dailyGame?.screenshots?.[0] || '';
   const rawDailyScreenshot = rawScreenshot.replace('1920x1080.jpg', '600x338.jpg');
-  const dailyScreenshot = await prepareDailyHeroImage(rawDailyScreenshot);
+  const dailyScreenshot = await prepareDailyHeroImage(rawDailyScreenshot, todayStr);
 
   // Persist daily gem for ultra-fast LCP rendering without bundling 274 games
   try {
@@ -903,8 +901,8 @@ export async function generateSeoIndexHtml(): Promise<string> {
     <meta property="og:url" content="${CANONICAL_DOMAIN}/">
     <meta property="og:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
     <meta property="og:description" content="Explorez ${totalCount} pépites indés certifiées Steam ! Collectionnez les cartes de jeux et ouvrez vos boosters, relevez 18+ mini-jeux : 9 défis quotidiens (Screenle, Indledle, Blind Test OST, Critique...), 8 bornes d'arcade rétro, quiz trivia, sprints Time Attack et duels 1v1 en direct.">
-    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
-    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
+    <meta property="og:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=4">
+    <meta property="og:image:secure_url" content="${CANONICAL_DOMAIN}/og-banner.png?v=4">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -918,7 +916,7 @@ export async function generateSeoIndexHtml(): Promise<string> {
     <meta name="twitter:creator" content="@Hibouxe">
     <meta name="twitter:title" content="Hoot Indie Games | Le Sanctuaire des Jeux Vidéo Indépendants">
     <meta name="twitter:description" content="${totalCount} pépites indés certifiées, collection de cartes &amp; boosters sylvestres, 18+ mini-jeux (9 défis quotidiens dont Critique et Blind Test, 8 bornes d'arcade 1982), quiz trivia, Time Attack et duels 1v1 P2P.">
-    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=3">
+    <meta name="twitter:image" content="${CANONICAL_DOMAIN}/og-banner.png?v=4">
     <meta name="twitter:image:alt" content="Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants">
 
     <!-- Mobile & PWA Theme -->

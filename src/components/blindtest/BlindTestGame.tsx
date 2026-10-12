@@ -19,6 +19,7 @@ import {
   ExternalLink,
   ChevronRight,
   Disc,
+  AlertTriangle,
 } from 'lucide-react';
 import { INDIE_GAMES } from '../../data/games';
 import type { Game } from '../../types/game';
@@ -138,6 +139,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [frequencies, setFrequencies] = useState<number[]>(new Array(16).fill(0));
   const [isOfficialClip, setIsOfficialClip] = useState<boolean>(false);
+  const [audioError, setAudioError] = useState<string | null>(null);
 
   // Audio references
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -272,13 +274,26 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
 
     const playDuration = maxAllowedDuration;
 
-    const handle = await playBlindTestAudioClip({
-      ctx,
-      audioUrl: puzzle.audioUrl,
-      audioConfig: puzzle.audioConfig,
-      playDuration,
-      masterGain,
-    });
+    setAudioError(null);
+
+    let handle: PlayBlindTestHandle;
+    try {
+      handle = await playBlindTestAudioClip({
+        ctx,
+        audioUrl: puzzle.audioUrl,
+        audioConfig: puzzle.audioConfig,
+        playDuration,
+        masterGain,
+      });
+    } catch (err: unknown) {
+      stopAudio();
+      const msg =
+        err instanceof Error
+          ? err.message
+          : t('blindtest.audioLoadError', "Impossible de charger l'extrait audio officiel.");
+      setAudioError(msg);
+      return;
+    }
 
     playbackHandleRef.current = handle;
     setIsOfficialClip(handle.isOfficialClip);
@@ -629,6 +644,25 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
             </span>
           </div>
         </div>
+
+        {/* Alerte Erreur Audio — Règle 0 Hallucination */}
+        {audioError && (
+          <div className="mx-4 mt-4 p-3 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>{audioError}</span>
+            </div>
+            <button
+              onClick={() => {
+                setAudioError(null);
+                playAudio();
+              }}
+              className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold transition shrink-0 cursor-pointer"
+            >
+              {t('common.retry', 'Réessayer')}
+            </button>
+          </div>
+        )}
 
         {/* Visualiseur de Fréquences Réactif */}
         <div className="p-6 flex flex-col items-center justify-center space-y-6">

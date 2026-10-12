@@ -1,5 +1,6 @@
-import { INDIE_GAMES, getActiveDailyPool } from './games';
+import { INDIE_GAMES } from './games';
 import type { Game } from '../types/game';
+import { getScheduledDailyGame, setDefaultBlindtestIds } from '../utils/monthlyScheduler';
 
 export interface NoteEvent {
   note: string; // e.g. "C", "D#", "Eb", "F", "G", "A", "B", "REST"
@@ -76,7 +77,7 @@ interface CuratedOST {
 }
 
 // Bibliothèque de thèmes musicaux cultes indés (Arrangements complets 18-20 secondes)
-const CURATED_OSTS: CuratedOST[] = [
+export const CURATED_OSTS: CuratedOST[] = [
   {
     gameId: 'undertale',
     trackTitle: 'Megalovania',
@@ -1016,8 +1017,8 @@ const CURATED_OSTS: CuratedOST[] = [
   },
   {
     gameId: 'vampire-survivors',
-    trackTitle: "Reincarnation on a Meadow",
-    composer: "Lorenzo Silva & Daniele Zandara",
+    trackTitle: "Reincarnated Echoes",
+    composer: "Daniele Zandara",
     instrument: 'chiptune',
     bpm: 130,
     melody: [
@@ -1285,60 +1286,42 @@ const CURATED_OSTS: CuratedOST[] = [
   {
     gameId: 'dave-the-diver',
     trackTitle: "The Blue Hole",
-    composer: "Dook",
+    composer: "Jukio Kallio",
     instrument: 'guitar',
-    bpm: 102,
+    bpm: 90,
     melody: [
-      {
-            "note": "C",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "E",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "G",
-            "octave": 4,
-            "duration": 0.5
-      },
-      {
-            "note": "B",
-            "octave": 4,
-            "duration": 0.5
-      },
-      {
-            "note": "A",
-            "octave": 4,
-            "duration": 0.6
-      },
-      {
-            "note": "G",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "E",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "D",
-            "octave": 4,
-            "duration": 0.6
-      },
-      {
-            "note": "C",
-            "octave": 4,
-            "duration": 1.2
-      }
-]
+      // Mesure 1 (Bbmaj7)
+      { note: 'Bb', octave: 3, duration: 0.35 },
+      { note: 'F', octave: 4, duration: 0.35 },
+      { note: 'C', octave: 5, duration: 0.5 },
+      { note: 'F', octave: 5, duration: 0.4 },
+      { note: 'E', octave: 5, duration: 0.4 },
+      { note: 'C', octave: 5, duration: 0.65 },
+      // Mesure 2 (Fmaj7/A)
+      { note: 'A', octave: 3, duration: 0.35 },
+      { note: 'F', octave: 4, duration: 0.35 },
+      { note: 'C', octave: 5, duration: 0.5 },
+      { note: 'E', octave: 5, duration: 0.4 },
+      { note: 'F', octave: 5, duration: 0.4 },
+      { note: 'C', octave: 5, duration: 0.65 },
+      // Mesure 3 (Gm7)
+      { note: 'G', octave: 3, duration: 0.35 },
+      { note: 'D', octave: 4, duration: 0.35 },
+      { note: 'Bb', octave: 4, duration: 0.5 },
+      { note: 'D', octave: 5, duration: 0.4 },
+      { note: 'C', octave: 5, duration: 0.4 },
+      { note: 'Bb', octave: 4, duration: 0.65 },
+      // Mesure 4 (C / F)
+      { note: 'F', octave: 3, duration: 0.35 },
+      { note: 'C', octave: 4, duration: 0.35 },
+      { note: 'E', octave: 4, duration: 0.5 },
+      { note: 'G', octave: 4, duration: 0.4 },
+      { note: 'F', octave: 4, duration: 0.8 },
+    ],
   },
   {
     gameId: 'chants-of-sennaar',
-    trackTitle: "Devotion",
+    trackTitle: "Out Of The Cavern And Into The Light",
     composer: "Thomas Brunet",
     instrument: 'bell',
     bpm: 86,
@@ -1387,7 +1370,7 @@ const CURATED_OSTS: CuratedOST[] = [
   },
   {
     gameId: 'return-of-the-obra-dinn',
-    trackTitle: "Soldier's Tale",
+    trackTitle: "Soldiers of the Sea",
     composer: "Lucas Pope",
     instrument: 'bass',
     bpm: 112,
@@ -1559,7 +1542,7 @@ const CURATED_OSTS: CuratedOST[] = [
   },
   {
     gameId: 'baba-is-you',
-    trackTitle: "Map Theme",
+    trackTitle: "On the Island",
     composer: "Arvi Teikari",
     instrument: 'chiptune',
     bpm: 105,
@@ -1613,7 +1596,7 @@ const CURATED_OSTS: CuratedOST[] = [
   },
   {
     gameId: 'dredge',
-    trackTitle: "The Marrows",
+    trackTitle: "Main Theme",
     composer: "David Mason",
     instrument: 'piano',
     bpm: 82,
@@ -1858,7 +1841,7 @@ const CURATED_OSTS: CuratedOST[] = [
   },
   {
     gameId: 'firewatch',
-    trackTitle: "Ol' Shoshone",
+    trackTitle: "Prologue",
     composer: "Chris Remo",
     instrument: 'guitar',
     bpm: 84,
@@ -1951,7 +1934,7 @@ const CURATED_OSTS: CuratedOST[] = [
   },
   {
     gameId: 'blasphemous',
-    trackTitle: "Proclamation of the Penitent",
+    trackTitle: "Dame Tu Tormento",
     composer: "Carlos Viola",
     instrument: 'guitar',
     bpm: 88,
@@ -2437,79 +2420,26 @@ function createSoundtrackForGame(game: Game): {
     };
   }
 
-  // Fallback mélodique procédural harmonique adapté au jeu (Suite cinématographique 19.3 secondes)
+  // Règle 0 Hallucination : pas de mélodie inventée
   const composer = game.hints.composer || `${game.developer} Sound Team`;
-  const defaultMelody: NoteEvent[] = [
-    // Phrase 1 (Thème mystère)
-    { note: 'D', octave: 4, duration: 0.4 },
-    { note: 'F', octave: 4, duration: 0.4 },
-    { note: 'A', octave: 4, duration: 0.4 },
-    { note: 'D', octave: 5, duration: 0.8 },
-    { note: 'C', octave: 5, duration: 0.4 },
-    { note: 'G', octave: 4, duration: 0.4 },
-    { note: 'Bb', octave: 4, duration: 0.6 },
-    { note: 'A', octave: 4, duration: 1.0 },
-    // Phrase 2 (Ascension)
-    { note: 'F', octave: 4, duration: 0.4 },
-    { note: 'E', octave: 4, duration: 0.4 },
-    { note: 'D', octave: 4, duration: 0.5 },
-    { note: 'F', octave: 4, duration: 0.4 },
-    { note: 'G', octave: 4, duration: 0.4 },
-    { note: 'A', octave: 4, duration: 0.6 },
-    { note: 'C', octave: 5, duration: 0.6 },
-    { note: 'D', octave: 5, duration: 0.8 },
-    { note: 'E', octave: 5, duration: 1.0 },
-    // Phrase 3 (Variation dramatique)
-    { note: 'F', octave: 5, duration: 0.5 },
-    { note: 'E', octave: 5, duration: 0.4 },
-    { note: 'D', octave: 5, duration: 0.5 },
-    { note: 'C', octave: 5, duration: 0.5 },
-    { note: 'Bb', octave: 4, duration: 0.6 },
-    { note: 'A', octave: 4, duration: 0.6 },
-    { note: 'G', octave: 4, duration: 0.5 },
-    { note: 'F', octave: 4, duration: 0.5 },
-    { note: 'E', octave: 4, duration: 0.8 },
-    // Phrase 4 (Résolution grandiose)
-    { note: 'D', octave: 4, duration: 0.4 },
-    { note: 'F', octave: 4, duration: 0.4 },
-    { note: 'G', octave: 4, duration: 0.4 },
-    { note: 'A', octave: 4, duration: 0.6 },
-    { note: 'D', octave: 5, duration: 1.0 },
-    { note: 'C#', octave: 5, duration: 0.6 },
-    { note: 'D', octave: 5, duration: 1.6 },
-  ];
-
   return {
-    trackTitle: `Thème Principal — ${game.title}`,
+    trackTitle: `Bande-son — ${game.title}`,
     composer,
+    audioUrl: undefined,
     audioConfig: {
       instrument: 'synth',
-      bpm: 110,
-      melody: defaultMelody,
+      bpm: 100,
+      melody: [],
     },
   };
 }
 
 /**
- * Génère le puzzle Blind Test quotidien pour une date donnée
+ * Génère le puzzle Blind Test quotidien pour une date donnée.
+ * Règle 0 Hallucination : calendrier mensuel unifié sans doublon, tiré exclusivement parmi les jeux certifiés avec audio officiel.
  */
 export function getDailyBlindTestPuzzle(dateString: string): BlindTestPuzzle {
-  const seed = stringToHash(`blindtest_puzzle_${dateString}`);
-  const rand = mulberry32(seed);
-
-  // 80% du temps, privilégier un des thèmes emblématiques composés
-  const curatedIds = CURATED_OSTS.map((o) => o.gameId);
-  const eligibleGames = INDIE_GAMES.filter((g) => curatedIds.includes(g.id));
-
-  let targetGame: Game;
-  if (eligibleGames.length > 0) {
-    const idx = Math.floor(rand() * eligibleGames.length);
-    targetGame = eligibleGames[idx];
-  } else {
-    const pool = getActiveDailyPool();
-    const idx = Math.floor(rand() * pool.length);
-    targetGame = pool[idx];
-  }
+  const targetGame = getScheduledDailyGame(dateString, 'blindtest', INDIE_GAMES);
 
   const ostData = createSoundtrackForGame(targetGame);
   const clues = buildClues(targetGame, ostData.composer);
@@ -2527,24 +2457,20 @@ export function getDailyBlindTestPuzzle(dateString: string): BlindTestPuzzle {
 }
 
 /**
- * Génère un puzzle Blind Test aléatoire pour les parties d'entraînement
+ * Génère un puzzle Blind Test aléatoire pour les parties d'entraînement.
+ * Règle 0 Hallucination : tire exclusivement parmi les jeux disposant d'un extrait audio officiel vérifié.
  */
 export function getRandomBlindTestPuzzle(seedSuffix = Date.now().toString()): BlindTestPuzzle {
   const seed = stringToHash(`blindtest_rand_${seedSuffix}`);
   const rand = mulberry32(seed);
 
+  // Pool strict : jeux disposant d'une piste audio officielle dans CURATED_OSTS
   const curatedIds = CURATED_OSTS.map((o) => o.gameId);
   const eligibleGames = INDIE_GAMES.filter((g) => curatedIds.includes(g.id));
+  const pool = eligibleGames.length > 0 ? eligibleGames : [INDIE_GAMES[0]];
 
-  let targetGame: Game;
-  if (eligibleGames.length > 0) {
-    const idx = Math.floor(rand() * eligibleGames.length);
-    targetGame = eligibleGames[idx];
-  } else {
-    const pool = getActiveDailyPool();
-    const idx = Math.floor(rand() * pool.length);
-    targetGame = pool[idx];
-  }
+  const idx = Math.floor(rand() * pool.length);
+  const targetGame = pool[idx];
 
   const ostData = createSoundtrackForGame(targetGame);
   const clues = buildClues(targetGame, ostData.composer);
@@ -2559,3 +2485,7 @@ export function getRandomBlindTestPuzzle(seedSuffix = Date.now().toString()): Bl
     clues,
   };
 }
+
+// Initialise le pool de Blind Test dans le planificateur mensuel
+setDefaultBlindtestIds(CURATED_OSTS.map((o) => o.gameId));
+

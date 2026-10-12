@@ -1,9 +1,26 @@
 import type { Game } from '../types/game';
 
+const DEFAULT_CURATED_BLINDTEST_IDS = [
+  'undertale', 'celeste', 'hollow-knight', 'outer-wilds', 'shovel-knight',
+  'hotline-miami', 'hades', 'stardew-valley', 'balatro', 'sea-of-stars',
+  'gris', 'slay-the-spire', 'cuphead', 'dead-cells', 'tunic',
+  'fez', 'katana-zero', 'the-binding-of-isaac-rebirth', 'hyper-light-drifter', 'terraria',
+  'vampire-survivors', 'subnautica', 'cult-of-the-lamb', 'pizza-tower', 'dave-the-diver',
+  'chants-of-sennaar', 'return-of-the-obra-dinn', 'disco-elysium', 'furi', 'baba-is-you',
+  'dredge', 'animal-well', 'lethal-company', 'stray', 'dont-starve',
+  'firewatch', 'omori', 'blasphemous', 'ori-and-the-blind-forest', 'risk-of-rain-2',
+  'super-meat-boy', 'ftl-faster-than-light', 'papers-please', 'enter-the-gungeon', 'doki-doki-literature-club'
+];
+
 let defaultGamesPool: Game[] = [];
+let defaultBlindtestIds: string[] = DEFAULT_CURATED_BLINDTEST_IDS;
 
 export function setDefaultGamesPool(pool: Game[]): void {
   defaultGamesPool = pool;
+}
+
+export function setDefaultBlindtestIds(ids: string[]): void {
+  defaultBlindtestIds = ids;
 }
 
 /**
@@ -25,13 +42,14 @@ export interface DailyScheduleDay {
   indledleGame: Game;
   profilleGame: Game;
   dailyGem: Game;
+  blindtestGame?: Game;
 }
 
 // Cache mémoire des plannings mensuels générés
 const monthlySchedulesCache = new Map<string, Map<string, DailyScheduleDay>>();
 
-// Clé de stockage local pour la persistance hors-ligne (v2 : régénération avec jeux connus garantis)
-const STORAGE_PREFIX = 'hoot_season_schedule_v2_';
+// Clé de stockage local pour la persistance hors-ligne (v3 : tirage réactualisé pour octobre 2026)
+const STORAGE_PREFIX = 'hoot_season_schedule_v3_';
 
 /**
  * Hash déterministe d'une chaîne de caractères (32 bits)
@@ -84,8 +102,8 @@ export function getEligibleMonthlyPool(allGems: Game[], monthKey: string): Game[
   const eligible = pool.filter((game) => {
     // Si pas de date d'ajout (base fondatrice certifiée) -> éligible
     if (!game.addedAt) return true;
-    // Si date d'ajout antérieure ou égale à la date de référence (inclut la promo v1.2.6)
-    if (game.addedAt <= '2026-09-25') return true;
+    // Si date d'ajout antérieure ou égale à la date de référence actuelle (inclut l'ensemble des 295 pépites)
+    if (game.addedAt <= '2026-10-12') return true;
     // Sinon, le jeu doit avoir été intégré AVANT le début du mois en question
     return game.addedAt < firstDayOfMonth;
   });
@@ -112,7 +130,7 @@ export function generateMonthlySchedule(
     try {
       const stored = localStorage.getItem(`${STORAGE_PREFIX}${monthKey}`);
       if (stored) {
-        const parsed: Record<string, { screenleId: string; indledleId: string; profilleId: string; dailyGemId: string }> =
+        const parsed: Record<string, { screenleId: string; indledleId: string; profilleId: string; dailyGemId: string; blindtestId?: string }> =
           JSON.parse(stored);
         const mapById = new Map<string, Game>();
         allGems.forEach((g) => mapById.set(g.id, g));
@@ -128,6 +146,7 @@ export function generateMonthlySchedule(
           const i = mapById.get(ids.indledleId);
           const p = mapById.get(ids.profilleId);
           const d = mapById.get(ids.dailyGemId);
+          const b = ids.blindtestId ? mapById.get(ids.blindtestId) : undefined;
           if (s && i && p && d) {
             scheduleMap.set(dateStr, {
               date: dateStr,
@@ -135,6 +154,7 @@ export function generateMonthlySchedule(
               indledleGame: i,
               profilleGame: p,
               dailyGem: d,
+              blindtestGame: b || s,
             });
           } else {
             valid = false;
@@ -152,7 +172,7 @@ export function generateMonthlySchedule(
     }
   }
 
-  // 3. Génération mathématique déterministe
+  // 3. Génération mathématique déterministe (Saison v3)
   const eligiblePool = getEligibleMonthlyPool(allGems, monthKey);
   if (!eligiblePool || eligiblePool.length === 0) {
     return new Map();
@@ -162,59 +182,111 @@ export function generateMonthlySchedule(
   const month = parseInt(monthStr, 10);
   const totalDays = new Date(year, month, 0).getDate(); // Nombre exact de jours (28, 29, 30 ou 31)
 
-  const rng = mulberry32(hashString(`hoot-season-${monthKey}`));
+  const rng = mulberry32(hashString(`hoot-season-v3-${monthKey}`));
 
-  // 4 jeux de cartes mélangés équitablement
+  // Jeux de cartes mélangés équitablement
   const deckScreenle = seededShuffle(eligiblePool, rng);
   const deckIndledle = seededShuffle(eligiblePool, rng);
   const deckProfille = seededShuffle(eligiblePool, rng);
   const deckDailyGem = seededShuffle(eligiblePool, rng);
 
+  // Deck BlindTest (jeux disposant d'un audio officiel certifié)
+  const blindtestPool = eligiblePool.filter((g) =>
+    defaultBlindtestIds.length > 0 ? defaultBlindtestIds.includes(g.id) : true
+  );
+  const deckBlindtest = seededShuffle(
+    blindtestPool.length > 0 ? blindtestPool : eligiblePool,
+    rng
+  );
+
   const scheduleMap = new Map<string, DailyScheduleDay>();
-  const toPersist: Record<string, { screenleId: string; indledleId: string; profilleId: string; dailyGemId: string }> =
+  const toPersist: Record<string, { screenleId: string; indledleId: string; profilleId: string; dailyGemId: string; blindtestId?: string }> =
     {};
 
   for (let d = 1; d <= totalDays; d++) {
     const dayStr = String(d).padStart(2, '0');
     const date = `${monthKey}-${dayStr}`;
 
+    const i = d - 1;
+
     // A. Screenle : garantie 100% unique dans le mois
-    const screenleGame = deckScreenle[(d - 1) % deckScreenle.length];
+    const screenleGame = deckScreenle[i % deckScreenle.length];
 
     // B. Indledle : garantie 100% unique dans le mois + distinct de Screenle ce jour-là
-    let idxI = (d - 1) % deckIndledle.length;
-    let attemptsI = 0;
-    while (deckIndledle[idxI]?.id === screenleGame?.id && attemptsI < deckIndledle.length) {
-      idxI = (idxI + 1) % deckIndledle.length;
-      attemptsI++;
+    if (i < deckIndledle.length && deckIndledle[i].id === screenleGame.id) {
+      for (let s = i + 1; s < deckIndledle.length; s++) {
+        if (deckIndledle[s].id !== screenleGame.id) {
+          const tmp = deckIndledle[i];
+          deckIndledle[i] = deckIndledle[s];
+          deckIndledle[s] = tmp;
+          break;
+        }
+      }
     }
-    const indledleGame = deckIndledle[idxI] || screenleGame;
+    const indledleGame = deckIndledle[i % deckIndledle.length] || screenleGame;
 
     // C. Profille : garantie 100% unique dans le mois + distinct de Screenle et Indledle ce jour-là
-    let idxP = (d - 1) % deckProfille.length;
-    let attemptsP = 0;
-    while (
-      (deckProfille[idxP]?.id === screenleGame?.id || deckProfille[idxP]?.id === indledleGame?.id) &&
-      attemptsP < deckProfille.length
+    if (
+      i < deckProfille.length &&
+      (deckProfille[i].id === screenleGame.id || deckProfille[i].id === indledleGame.id)
     ) {
-      idxP = (idxP + 1) % deckProfille.length;
-      attemptsP++;
+      for (let s = i + 1; s < deckProfille.length; s++) {
+        if (
+          deckProfille[s].id !== screenleGame.id &&
+          deckProfille[s].id !== indledleGame.id
+        ) {
+          const tmp = deckProfille[i];
+          deckProfille[i] = deckProfille[s];
+          deckProfille[s] = tmp;
+          break;
+        }
+      }
     }
-    const profilleGame = deckProfille[idxP] || screenleGame;
+    const profilleGame = deckProfille[i % deckProfille.length] || screenleGame;
 
-    // D. DailyGem : distinct des 3 mini-jeux de ce jour-là
-    let idxG = (d - 1) % deckDailyGem.length;
-    let attemptsG = 0;
-    while (
-      (deckDailyGem[idxG]?.id === screenleGame?.id ||
-        deckDailyGem[idxG]?.id === indledleGame?.id ||
-        deckDailyGem[idxG]?.id === profilleGame?.id) &&
-      attemptsG < deckDailyGem.length
+    // D. DailyGem : garantie 100% unique dans le mois + distinct des 3 mini-jeux ce jour-là
+    if (
+      i < deckDailyGem.length &&
+      (deckDailyGem[i].id === screenleGame.id ||
+        deckDailyGem[i].id === indledleGame.id ||
+        deckDailyGem[i].id === profilleGame.id)
     ) {
-      idxG = (idxG + 1) % deckDailyGem.length;
-      attemptsG++;
+      for (let s = i + 1; s < deckDailyGem.length; s++) {
+        if (
+          deckDailyGem[s].id !== screenleGame.id &&
+          deckDailyGem[s].id !== indledleGame.id &&
+          deckDailyGem[s].id !== profilleGame.id
+        ) {
+          const tmp = deckDailyGem[i];
+          deckDailyGem[i] = deckDailyGem[s];
+          deckDailyGem[s] = tmp;
+          break;
+        }
+      }
     }
-    const dailyGem = deckDailyGem[idxG] || screenleGame;
+    const dailyGem = deckDailyGem[i % deckDailyGem.length] || screenleGame;
+
+    // E. BlindTest : tirage garanti parmi les jeux du pool audio officiel, 100% unique dans le mois
+    if (
+      i < deckBlindtest.length &&
+      (deckBlindtest[i].id === screenleGame.id ||
+        deckBlindtest[i].id === indledleGame.id ||
+        deckBlindtest[i].id === profilleGame.id)
+    ) {
+      for (let s = i + 1; s < deckBlindtest.length; s++) {
+        if (
+          deckBlindtest[s].id !== screenleGame.id &&
+          deckBlindtest[s].id !== indledleGame.id &&
+          deckBlindtest[s].id !== profilleGame.id
+        ) {
+          const tmp = deckBlindtest[i];
+          deckBlindtest[i] = deckBlindtest[s];
+          deckBlindtest[s] = tmp;
+          break;
+        }
+      }
+    }
+    const blindtestGame = deckBlindtest[i % deckBlindtest.length] || screenleGame;
 
     const dayObj: DailyScheduleDay = {
       date,
@@ -222,6 +294,7 @@ export function generateMonthlySchedule(
       indledleGame,
       profilleGame,
       dailyGem,
+      blindtestGame,
     };
 
     scheduleMap.set(date, dayObj);
@@ -230,6 +303,7 @@ export function generateMonthlySchedule(
       indledleId: indledleGame.id,
       profilleId: profilleGame.id,
       dailyGemId: dailyGem.id,
+      blindtestId: blindtestGame.id,
     };
   }
 
@@ -274,6 +348,7 @@ export function getScheduledDay(dateString: string, allGems?: Game[]): DailySche
       indledleGame: dummyGame,
       profilleGame: dummyGame,
       dailyGem: dummyGame,
+      blindtestGame: dummyGame,
     };
   }
 
@@ -289,6 +364,7 @@ export function getScheduledDay(dateString: string, allGems?: Game[]): DailySche
     indledleGame: fallback,
     profilleGame: fallback,
     dailyGem: fallback,
+    blindtestGame: fallback,
   };
 }
 
@@ -297,7 +373,7 @@ export function getScheduledDay(dateString: string, allGems?: Game[]): DailySche
  */
 export function getScheduledDailyGame(
   dateString: string,
-  mode: 'screenle' | 'indledle' | 'profille' | 'dailyGem',
+  mode: 'screenle' | 'indledle' | 'profille' | 'dailyGem' | 'blindtest',
   allGems?: Game[]
 ): Game {
   const day = getScheduledDay(dateString, allGems);
@@ -310,6 +386,8 @@ export function getScheduledDailyGame(
       return day.profilleGame;
     case 'dailyGem':
       return day.dailyGem;
+    case 'blindtest':
+      return day.blindtestGame || day.screenleGame;
     default:
       return day.screenleGame;
   }

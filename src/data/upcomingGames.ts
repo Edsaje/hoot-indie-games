@@ -519,74 +519,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1790194422"
   },
   {
-    "id": "apocalypse-intern",
-    "title": "Apocalypse Intern",
-    "developer": "WizardHistory",
-    "publisher": "WizardHistory",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5275800/",
-    "description": {
-      "fr": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee.",
-      "en": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1790323342"
-  },
-  {
-    "id": "autochart",
-    "title": "AutoChart",
-    "developer": "1rwy",
-    "publisher": "1rwy",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5201270/",
-    "description": {
-      "fr": "AutoChart est un jeu de rythme au clavier qui donne vie à votre musique. Importez un fichier audio ou vidéo : l’IA génère une partition. Choisissez la difficulté et de 4 à 8 touches, jouez les notes qui défilent au rythme de la musique et battez votre record.",
-      "en": "AutoChart is a key-based rhythm game powered by your own music. Import an audio or video file and let AI generate a note chart. Choose your difficulty and a 4–8 key layout, hit the falling notes to the beat, and chase your personal best."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5201270/4ed4ba97c641dc5596b95b93364f207dfd66834b/header.jpg?t=1790652014"
-  },
-  {
     "id": "how-to-wait-for-the-bus",
     "title": "How to Wait for the Bus",
     "developer": "Benevolent Anarchy",
@@ -619,5 +551,73 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 95,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791213606"
+  },
+  {
+    "id": "flotte-fantome",
+    "title": "Flotte Fantôme",
+    "developer": "DevMakerMin",
+    "publisher": "DMM",
+    "expectedDate": {
+      "fr": "Prochainement",
+      "en": "Prochainement"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      },
+      {
+        "fr": "Roguelike",
+        "en": "Roguelike"
+      },
+      {
+        "fr": "Deckbuilder",
+        "en": "Deckbuilder"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5332620/",
+    "description": {
+      "fr": "Menez le Hollow King dans un roguelite d'action navale. Coulez des navires, récoltez des âmes et recrutez votre flotte. Choisissez vos cartes et cinq compétences automatiques. Brisez les blocus de dix mers et repartez plus fort grâce aux améliorations permanentes du chantier naval.",
+      "en": "Command Hollow King in a naval action roguelite. Sink ships, harvest souls, and recruit a ghost fleet. Shape your build with upgrade cards and five automatic skill slots. Break blockades across ten seas, then rise stronger after sinking with permanent shipyard upgrades."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1791241193"
+  },
+  {
+    "id": "babel-invent-a-way",
+    "title": "BABEL: Invent a Way",
+    "developer": "NthAxs",
+    "publisher": "NthAxs",
+    "expectedDate": {
+      "fr": "12 oct. 2026",
+      "en": "12 Oct, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5306000/",
+    "description": {
+      "fr": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only.",
+      "en": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/b8e88ce9b363530c335a81d240e434871925e246/header.jpg?t=1791082066"
   }
 ];
