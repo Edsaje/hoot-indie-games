@@ -1285,56 +1285,38 @@ const CURATED_OSTS: CuratedOST[] = [
   {
     gameId: 'dave-the-diver',
     trackTitle: "The Blue Hole",
-    composer: "Dook",
+    composer: "Jukio Kallio",
     instrument: 'guitar',
-    bpm: 102,
+    bpm: 90,
     melody: [
-      {
-            "note": "C",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "E",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "G",
-            "octave": 4,
-            "duration": 0.5
-      },
-      {
-            "note": "B",
-            "octave": 4,
-            "duration": 0.5
-      },
-      {
-            "note": "A",
-            "octave": 4,
-            "duration": 0.6
-      },
-      {
-            "note": "G",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "E",
-            "octave": 4,
-            "duration": 0.4
-      },
-      {
-            "note": "D",
-            "octave": 4,
-            "duration": 0.6
-      },
-      {
-            "note": "C",
-            "octave": 4,
-            "duration": 1.2
-      }
-]
+      // Mesure 1 (Bbmaj7)
+      { note: 'Bb', octave: 3, duration: 0.35 },
+      { note: 'F', octave: 4, duration: 0.35 },
+      { note: 'C', octave: 5, duration: 0.5 },
+      { note: 'F', octave: 5, duration: 0.4 },
+      { note: 'E', octave: 5, duration: 0.4 },
+      { note: 'C', octave: 5, duration: 0.65 },
+      // Mesure 2 (Fmaj7/A)
+      { note: 'A', octave: 3, duration: 0.35 },
+      { note: 'F', octave: 4, duration: 0.35 },
+      { note: 'C', octave: 5, duration: 0.5 },
+      { note: 'E', octave: 5, duration: 0.4 },
+      { note: 'F', octave: 5, duration: 0.4 },
+      { note: 'C', octave: 5, duration: 0.65 },
+      // Mesure 3 (Gm7)
+      { note: 'G', octave: 3, duration: 0.35 },
+      { note: 'D', octave: 4, duration: 0.35 },
+      { note: 'Bb', octave: 4, duration: 0.5 },
+      { note: 'D', octave: 5, duration: 0.4 },
+      { note: 'C', octave: 5, duration: 0.4 },
+      { note: 'Bb', octave: 4, duration: 0.65 },
+      // Mesure 4 (C / F)
+      { note: 'F', octave: 3, duration: 0.35 },
+      { note: 'C', octave: 4, duration: 0.35 },
+      { note: 'E', octave: 4, duration: 0.5 },
+      { note: 'G', octave: 4, duration: 0.4 },
+      { note: 'F', octave: 4, duration: 0.8 },
+    ],
   },
   {
     gameId: 'chants-of-sennaar',

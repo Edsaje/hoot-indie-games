@@ -799,7 +799,7 @@ export const INDIE_GAMES: Game[] = [
         "ja": "昼は神秘的なブルーホールを探検して魚を獲り、夜は繁盛寿司屋を経営する海洋アドベンチャー。",
         "pt-BR": "Explore as profundezas do misterioso Buraco Azul de dia e administre um restaurante de sushi à noite."
       },
-      "composer": "Dday"
+      "composer": "Jukio Kallio & D'Anthoni Wooten"
     }
   },
   {
