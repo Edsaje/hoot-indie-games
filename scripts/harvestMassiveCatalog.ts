@@ -35,11 +35,11 @@ const CANDIDATES_FILE = path.join(process.cwd(), 'scripts/discovered_candidates.
 
 // Configuration du moissonnage
 const CONFIG = {
-  MIN_REVIEWS: 25,            // Dès 25 avis pour capter les vraies pépites indés émergentes
-  MIN_POSITIVE_RATIO: 0.75,   // Seuil ajusté à 75% comme demandé par l'utilisateur
-  MAX_NEW_GAMES: 600,         // Objectif d'ajout massif sur cette session
-  SEARCH_DELAY_MS: 1200,      // Délai poli pour les requêtes de recherche par tag
-  DETAIL_DELAY_MS: 900,       // Délai poli entre fiches de jeux (préserve le quota Valve)
+  MIN_REVIEWS: 20,            // Dès 20 avis pour maximiser le nombre de découvertes indés
+  MIN_POSITIVE_RATIO: 0.45,   // Seuil abaissé à 45% minimum comme demandé par l'utilisateur !
+  MAX_NEW_GAMES: 1000,        // Objectif maximal d'ajouts
+  SEARCH_DELAY_MS: 700,       // Délai poli pour les requêtes de recherche
+  DETAIL_DELAY_MS: 650,       // Délai poli entre fiches de jeux (préserve le quota Valve)
   MAX_RETRIES_429: 6,         // Nombre de tentatives en cas de limitation HTTP 429
 };
 
@@ -113,57 +113,182 @@ function parseReleaseYear(dateStr?: string): number {
 // Dictionnaire officiel des styles artistiques reconnus
 function inferArtStyle(text: string, genres: string[]): { fr: string; en: string } {
   const lower = (text + ' ' + genres.join(' ')).toLowerCase();
-  if (lower.includes('pixel') || lower.includes('16-bit') || lower.includes('8-bit') || lower.includes('retro 2d')) {
-    return { fr: 'Pixel Art', en: 'Pixel Art' };
-  }
+
   if (
-    lower.includes('hand-drawn') ||
-    lower.includes('dessiné') ||
-    lower.includes('watercolor') ||
-    lower.includes('cartoon') ||
-    lower.includes('anime') ||
-    lower.includes('clay') ||
-    lower.includes('sketch')
+    lower.includes('1-bit') ||
+    lower.includes('monochrome') ||
+    lower.includes('black and white') ||
+    lower.includes('noir et blanc') ||
+    lower.includes('minimalist art')
   ) {
-    return { fr: '2D Dessiné à la main', en: '2D Hand-drawn' };
+    return { fr: 'Monochrome / Minimaliste', en: 'Monochrome' };
   }
+
   if (
     lower.includes('low poly') ||
     lower.includes('low-poly') ||
     lower.includes('ps1') ||
     lower.includes('psx') ||
+    lower.includes('n64') ||
+    lower.includes('retro 3d') ||
     lower.includes('polygonal') ||
-    lower.includes('retro 3d')
+    lower.includes('boomer shooter')
   ) {
     return { fr: '3D Rétro Low-poly', en: 'Retro Low-poly 3D' };
   }
-  if (lower.includes('realistic') || lower.includes('photorealist') || lower.includes('réaliste') || lower.includes('unreal engine 5')) {
+
+  if (
+    lower.includes('photorealistic') ||
+    lower.includes('photorealist') ||
+    lower.includes('unreal engine 5') ||
+    lower.includes('ue5') ||
+    lower.includes('3d réaliste') ||
+    lower.includes('realistic 3d') ||
+    (lower.includes('realistic') && lower.includes('3d'))
+  ) {
     return { fr: '3D Réaliste', en: 'Realistic 3D' };
   }
-  if (lower.includes('monochrome') || lower.includes('black and white') || lower.includes('minimalist') || lower.includes('noir et blanc')) {
-    return { fr: 'Monochrome / Minimaliste', en: 'Monochrome' };
+
+  if (
+    lower.includes('pixel graphics') ||
+    lower.includes('pixel art') ||
+    lower.includes('pixel-art') ||
+    lower.includes('16-bit') ||
+    lower.includes('8-bit') ||
+    lower.includes('retro 2d') ||
+    lower.includes('sprites 2d')
+  ) {
+    return { fr: 'Pixel Art', en: 'Pixel Art' };
   }
+
+  if (
+    lower.includes('hand-drawn') ||
+    lower.includes('hand drawn') ||
+    lower.includes('dessiné à la main') ||
+    lower.includes('watercolor') ||
+    lower.includes('aquarelle') ||
+    lower.includes('cartoon') ||
+    lower.includes('anime') ||
+    lower.includes('comic book') ||
+    genres.includes('Visual Novel') ||
+    ((genres.includes('Deckbuilder') || genres.includes('Cartes')) && !lower.includes('3d')) ||
+    (genres.includes('Idle / Clicker') && !lower.includes('3d')) ||
+    (genres.includes('Point & Click') && !lower.includes('3d'))
+  ) {
+    return { fr: '2D Dessiné à la main', en: '2D Hand-drawn' };
+  }
+
+  if (
+    lower.includes('stylized 3d') ||
+    lower.includes('cel-shaded') ||
+    lower.includes('cel shading') ||
+    lower.includes('voxel') ||
+    lower.includes('3d')
+  ) {
+    return { fr: '3D Stylisé', en: 'Stylized 3D' };
+  }
+
+  if (lower.includes('2d')) {
+    return { fr: '2D Dessiné à la main', en: '2D Hand-drawn' };
+  }
+
   return { fr: '3D Stylisé', en: 'Stylized 3D' };
 }
 
 // Dictionnaire officiel des caméras reconnues
 function inferCamera(text: string, genres: string[]): { fr: string; en: string } {
   const lower = (text + ' ' + genres.join(' ')).toLowerCase();
-  if (lower.includes('first-person') || lower.includes('première personne') || lower.includes('fps') || lower.includes('fpv')) {
+
+  // 1. Première personne
+  if (
+    lower.includes('first-person') ||
+    lower.includes('first person') ||
+    lower.includes('première personne') ||
+    lower.includes('fps') ||
+    lower.includes('fpv') ||
+    lower.includes('boomer shooter') ||
+    lower.includes('vr') ||
+    genres.includes('FPS') ||
+    genres.includes('Fast-FPS') ||
+    genres.includes('Immersive Sim')
+  ) {
     return { fr: 'Vue à la première personne', en: 'First-Person' };
   }
-  if (lower.includes('isometric') || lower.includes('isométrique') || lower.includes('2.5d')) {
+
+  // 2. Isométrique / 2.5D
+  if (
+    lower.includes('isometric') ||
+    lower.includes('isométrique') ||
+    lower.includes('2.5d') ||
+    genres.includes('City Builder')
+  ) {
     return { fr: '2.5D Isométrique', en: 'Isometric / 2.5D' };
   }
-  if (lower.includes('top-down') || lower.includes('vue de dessus') || lower.includes('twin-stick') || lower.includes('twin stick') || lower.includes('vertical')) {
+
+  // 3. Vue du dessus 2D
+  if (
+    lower.includes('top-down') ||
+    lower.includes('topdown') ||
+    lower.includes('vue de dessus') ||
+    lower.includes('vue du dessus') ||
+    lower.includes('twin-stick') ||
+    lower.includes('twin stick') ||
+    genres.includes('Auto-Shooter') ||
+    genres.includes('Twin-stick') ||
+    genres.includes('Colony Sim') ||
+    genres.includes('Idle / Clicker') ||
+    genres.includes('Incrémental') ||
+    (genres.includes('Bullet Hell') && !genres.includes('Metroidvania'))
+  ) {
     return { fr: '2D Vue de dessus', en: '2D Top-down' };
   }
-  if (lower.includes('third-person') || lower.includes('troisième personne') || lower.includes('behind') || lower.includes('over the shoulder')) {
+
+  // 4. Troisième personne
+  if (
+    lower.includes('third-person') ||
+    lower.includes('third person') ||
+    lower.includes('troisième personne') ||
+    lower.includes('3d platformer') ||
+    lower.includes('plateforme 3d') ||
+    genres.includes('Course') ||
+    genres.includes('Conduite') ||
+    (genres.includes('Souls-like') && lower.includes('3d'))
+  ) {
     return { fr: '3D Vue à la troisième personne', en: 'Third-Person' };
   }
-  if (lower.includes('platformer') || lower.includes('metroidvania') || lower.includes('side-scroller') || lower.includes('défilement horizontal') || lower.includes('vue de côté')) {
+
+  // 5. Vue de côté 2D
+  if (
+    lower.includes('side-scroller') ||
+    lower.includes('side-scrolling') ||
+    lower.includes('sidescroller') ||
+    lower.includes('vue de côté') ||
+    lower.includes('metroidvania') ||
+    genres.includes('Metroidvania') ||
+    genres.includes('Plateforme') ||
+    genres.includes('Platformer')
+  ) {
     return { fr: '2D Vue de côté', en: '2D Side-scroller' };
   }
+
+  // 6. Contextuel par genres
+  if (genres.includes('Farming') && lower.includes('2d')) {
+    return { fr: '2D Vue de dessus', en: '2D Top-down' };
+  }
+  if (genres.includes('Course')) {
+    return { fr: '3D Vue à la troisième personne', en: 'Third-Person' };
+  }
+  if (genres.includes('Deckbuilder') || genres.includes('Cartes')) {
+    return { fr: '2D Vue de dessus', en: '2D Top-down' };
+  }
+
+  if (lower.includes('3d')) {
+    if (lower.includes('shooter') || lower.includes('cockpit') || lower.includes('horror')) {
+      return { fr: 'Vue à la première personne', en: 'First-Person' };
+    }
+    return { fr: '3D Vue à la troisième personne', en: 'Third-Person' };
+  }
+
   return { fr: '2D Vue de côté', en: '2D Side-scroller' };
 }
 
@@ -254,6 +379,14 @@ const CANONICAL_GENRE_MAP: Record<string, string> = {
   automatisation: 'Automatisation',
   automation: 'Automatisation',
   idleclicker: 'Idle / Clicker',
+  idle: 'Idle / Clicker',
+  clicker: 'Idle / Clicker',
+  towerdefense: 'Stratégie',
+  cardbattler: 'Deckbuilder',
+  cardgame: 'Cartes',
+  turnbased: 'Tour par tour',
+  turnbasedstrategy: 'Tour par tour',
+  turnbasedtactics: 'Tactique',
   immersivesim: 'Immersive Sim',
   runner: 'Runner',
   minijeux: 'Mini-Jeux',
@@ -308,26 +441,21 @@ function sanitizeAndCanonicalizeGenres(
   const banned = ['independant', 'indépendant', 'accesanticipe', 'accès anticipé', 'indie', 'earlyaccess', 'early access', 'freetoplay', 'gratuit'];
   const detected = new Set<string>();
 
-  // 1. Ajouter le genre cible de découverte s'il est canonique
+  // 1. Ajouter le genre cible de découverte s'il est canonique (PRIORITÉ MAXIMALE)
   const canonCategory = normalizeGenreName(discoveredCategoryName);
   if (canonCategory) detected.add(canonCategory);
 
-  // 2. Traiter les genres Steam officiels
-  for (const g of steamGenres) {
-    const raw = g.description.trim();
-    const canon = normalizeGenreName(raw);
-    const key = raw.toLowerCase().replace(/[-_ \/]/g, '').trim();
-    if (banned.includes(key)) continue;
-    if (canon) {
-      detected.add(canon);
-    }
-  }
-
-  // 3. Détecter des sous-genres contextuels forts dans la description
+  // 2. Détecter des sous-genres contextuels forts dans la description (PRIORITÉ HAUTE)
   const lower = desc.toLowerCase();
+  if (lower.includes('idle') || lower.includes('clicker')) detected.add('Idle / Clicker');
+  if (lower.includes('incremental') || lower.includes('incrémental')) {
+    detected.add('Incrémental');
+    detected.add('Idle / Clicker');
+  }
   if (lower.includes('metroidvania')) detected.add('Metroidvania');
-  if (lower.includes('roguelike') || lower.includes('roguelite')) detected.add('Roguelike');
-  if (lower.includes('deckbuilder') || lower.includes('card battler')) detected.add('Deckbuilder');
+  if (lower.includes('deckbuilder') || lower.includes('card battler') || lower.includes('deck-builder')) detected.add('Deckbuilder');
+  if (lower.includes('tower defense') || lower.includes('tower-defense')) detected.add('Stratégie');
+  if (lower.includes('autoshooter') || lower.includes('auto-shooter') || lower.includes('bullet heaven') || lower.includes('survivors-like')) detected.add('Auto-Shooter');
   if (lower.includes('city builder') || lower.includes('city-builder')) detected.add('City Builder');
   if (lower.includes('colony sim') || lower.includes('gestion de colonie')) detected.add('Colony Sim');
   if (lower.includes('farming') || lower.includes('ferme')) detected.add('Farming');
@@ -341,61 +469,104 @@ function sanitizeAndCanonicalizeGenres(
   if (lower.includes('boomer shooter') || lower.includes('retro fps')) detected.add('FPS');
   if (lower.includes('sokoban')) detected.add('Puzzle');
   if (lower.includes('automation') || lower.includes('automatisation')) detected.add('Automatisation');
+  if (lower.includes('roguelike') || lower.includes('roguelite')) detected.add('Roguelike');
+
+  // 3. Traiter les genres Steam officiels en complément
+  for (const g of steamGenres) {
+    const raw = g.description.trim();
+    const canon = normalizeGenreName(raw);
+    const key = raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[-_ \/]/g, '').trim();
+    if (banned.includes(key)) continue;
+    if (canon) {
+      detected.add(canon);
+    }
+  }
 
   const list = Array.from(detected);
   if (list.length === 0) return ['Aventure', 'Action'];
   return list.slice(0, 5); // Conserver jusqu'à 5 genres canoniques riches
 }
 
-// 23 Familles de Tags Steam ciblées pour repeupler tous les styles orphelins
-const TARGET_GENRE_TAGS: Array<{ name: string; tag: string }> = [
-  // 1. Course & Conduite (actuellement 2 jeux)
-  { name: 'Course', tag: '699' },
-  { name: 'Conduite', tag: '11006' },
+// Familles de Recherches et Tags Steam ciblées pour repeupler massivement tous les styles orphelins
+const TARGET_SEARCHES: Array<{ name: string; query: string; pages: number[] }> = [
+  // 1. Idle, Clicker & Incrémental (Demande prioritaire de l'utilisateur)
+  { name: 'Idle / Clicker', query: 'term=idle&tags=492', pages: [0, 50, 100] },
+  { name: 'Idle / Clicker', query: 'term=clicker&tags=492', pages: [0, 50, 100] },
+  { name: 'Incrémental', query: 'term=incremental&tags=492', pages: [0, 50, 100] },
 
-  // 2. Sport & Glisse (actuellement 3 jeux)
-  { name: 'Sport', tag: '701' },
+  // 2. Metroidvania (Style très demandé en souffrance - seulement 15 jeux)
+  { name: 'Metroidvania', query: 'tags=492,1628', pages: [0, 50, 100] },
 
-  // 3. Rythme & Musique (actuellement 3-5 jeux)
-  { name: 'Rythme', tag: '1752' },
-  { name: 'Musique', tag: '1621' },
+  // 3. Deckbuilder & Cartes (Seulement 26 jeux)
+  { name: 'Deckbuilder', query: 'tags=492,32322', pages: [0, 50, 100] },
+  { name: 'Cartes', query: 'tags=492,1666', pages: [0, 50] },
 
-  // 4. City Builder, Colonie & Automatisation (actuellement 2-4 jeux)
-  { name: 'City Builder', tag: '4328' },
-  { name: 'Colony Sim', tag: '1753' },
-  { name: 'Automatisation', tag: '18594' },
-  { name: 'Farming', tag: '87918' },
+  // 4. Tour par tour & Tactique
+  { name: 'Tour par tour', query: 'tags=492,1677', pages: [0, 50, 100] },
+  { name: 'Tactique', query: 'tags=492,1741', pages: [0, 50, 100] },
 
-  // 5. Point & Click, Enquête, Visual Novel (actuellement 4-5 jeux)
-  { name: 'Point & Click', tag: '1698' },
-  { name: 'Visual Novel', tag: '3799' },
-  { name: 'Mystère', tag: '5716' },
+  // 5. Stratégie & Tower Defense
+  { name: 'Stratégie', query: 'tags=492,1645', pages: [0, 50, 100] }, // Tower Defense
+  { name: 'Stratégie', query: 'term=tower+defense&tags=492', pages: [0, 50] },
 
-  // 6. Beat 'em up, Combat & Hack and Slash (actuellement 1-3 jeux)
-  { name: 'Beat them all', tag: '4158' },
-  { name: 'Combat', tag: '1743' },
-  { name: 'Hack and Slash', tag: '1646' },
+  // 6. Auto-Shooter & Bullet Hell (Auto-Shooter n'avait que 2 jeux !)
+  { name: 'Auto-Shooter', query: 'term=autoshooter&tags=492', pages: [0, 50] },
+  { name: 'Auto-Shooter', query: 'term=survivors&tags=492', pages: [0, 50] },
+  { name: 'Auto-Shooter', query: 'term=bullet+heaven&tags=492', pages: [0, 50] },
+  { name: 'Bullet Hell', query: 'tags=492,4885', pages: [0, 50] },
+  { name: 'Twin-stick', query: 'tags=492,4255', pages: [0, 50] },
 
-  // 7. Dungeon Crawler & Tactique Tour par Tour (actuellement 2-5 jeux)
-  { name: 'Dungeon Crawler', tag: '1720' },
-  { name: 'Tactique', tag: '1741' },
-  { name: 'Tour par tour', tag: '1677' },
+  // 7. City Builder, Colony Sim, Automatisation & Farming
+  { name: 'City Builder', query: 'tags=492,4328', pages: [0, 50, 100] },
+  { name: 'Colony Sim', query: 'tags=492,1753', pages: [0, 50, 100] },
+  { name: 'Automatisation', query: 'tags=492,18594', pages: [0, 50, 100] },
+  { name: 'Farming', query: 'tags=492,87918', pages: [0, 50, 100] },
 
-  // 8. FPS Rétro & Boomer Shooter (actuellement 2-3 jeux)
-  { name: 'FPS', tag: '7432' },
-  { name: 'Fast-FPS', tag: '4234' },
+  // 8. Donjon, Roguelike & Roguelite
+  { name: 'Dungeon Crawler', query: 'tags=492,1720', pages: [0, 50, 100] },
+  { name: 'Roguelike', query: 'tags=492,1716', pages: [0, 50] },
+  { name: 'Roguelite', query: 'tags=492,3959', pages: [0, 50] },
 
-  // 9. Party Game & Co-op Local (actuellement 1-2 jeux)
-  { name: 'Party Game', tag: '7107' },
-  { name: 'Co-op', tag: '4840' },
+  // 9. Point & Click, Visual Novel, Mystère & Enquête
+  { name: 'Point & Click', query: 'tags=492,1698', pages: [0, 50, 100] },
+  { name: 'Visual Novel', query: 'tags=492,3799', pages: [0, 50, 100] },
+  { name: 'Enquête', query: 'tags=492,5613', pages: [0, 50] },
+  { name: 'Mystère', query: 'tags=492,5716', pages: [0, 50] },
 
-  // 10. Auto-Shooter & Bullet Hell (actuellement 5 jeux)
-  { name: 'Bullet Hell', tag: '4885' },
-  { name: 'Twin-stick', tag: '4255' },
+  // 10. Beat 'em up, Combat & Hack and Slash
+  { name: 'Beat them all', query: 'tags=492,4158', pages: [0, 50, 100] },
+  { name: 'Combat', query: 'tags=492,1743', pages: [0, 50] },
+  { name: 'Hack and Slash', query: 'tags=492,1646', pages: [0, 50] },
 
-  // 11. Puzzle pur, Sokoban & Logique
-  { name: 'Puzzle', tag: '1734' },
-  { name: 'Puzzle', tag: '6129' },
+  // 11. FPS Rétro & Fast-FPS
+  { name: 'FPS', query: 'tags=492,7432', pages: [0, 50, 100] },
+  { name: 'Fast-FPS', query: 'tags=492,4234', pages: [0, 50] },
+
+  // 12. Course & Conduite
+  { name: 'Course', query: 'tags=492,699', pages: [0, 50, 100] },
+  { name: 'Conduite', query: 'tags=492,11006', pages: [0, 50] },
+
+  // 13. Sport & Glisse
+  { name: 'Sport', query: 'tags=492,701', pages: [0, 50, 100] },
+
+  // 14. Rythme & Musique
+  { name: 'Rythme', query: 'tags=492,1752', pages: [0, 50, 100] },
+  { name: 'Musique', query: 'tags=492,1621', pages: [0, 50] },
+
+  // 15. Party Game & Co-op Local
+  { name: 'Party Game', query: 'tags=492,7107', pages: [0, 50, 100] },
+  { name: 'Co-op', query: 'tags=492,4840', pages: [0, 50] },
+
+  // 16. Puzzle & Logique
+  { name: 'Puzzle', query: 'tags=492,1734', pages: [0, 50] },
+  { name: 'Puzzle', query: 'tags=492,6129', pages: [0, 50] },
+
+  // 17. Souls-like & Immersive Sim
+  { name: 'Souls-like', query: 'tags=492,29438', pages: [0, 50] },
+  { name: 'Immersive Sim', query: 'tags=492,9204', pages: [0, 50] },
+
+  // 18. Cozy & Méditatif
+  { name: 'Cozy', query: 'tags=492,3834', pages: [0, 50] },
 ];
 
 function saveAllData(catalog: Game[], cache: Record<string, any>, storeDataMap: Record<number, SteamStoreGameData>) {
@@ -519,12 +690,11 @@ async function main() {
 
   if (candidates.length === 0) {
     const seenCandidates = new Set<number>();
-    for (const genreTag of TARGET_GENRE_TAGS) {
-      console.log(`   ➔ Exploration du style "${genreTag.name}" (Tag Steam: ${genreTag.tag})...`);
+    for (const target of TARGET_SEARCHES) {
+      console.log(`   ➔ Exploration du style "${target.name}" (${target.query})...`);
 
-      // Interroger la page 1 et la page 2 (jusqu'à 100 jeux par tag)
-      for (const start of [0, 50]) {
-        const url = `https://store.steampowered.com/search/results/?query=&start=${start}&count=50&tags=492,${genreTag.tag}&category1=998&sort_by=Reviews_DESC&json=1`;
+      for (const start of target.pages) {
+        const url = `https://store.steampowered.com/search/results/?start=${start}&count=50&${target.query}&category1=998&sort_by=Reviews_DESC&json=1`;
         try {
           const res = await fetchWithRetry(url, 3);
           for (const item of res?.items || []) {
@@ -537,12 +707,12 @@ async function main() {
                 !seenCandidates.has(appId)
               ) {
                 seenCandidates.add(appId);
-                candidates.push({ appId, categoryName: genreTag.name });
+                candidates.push({ appId, categoryName: target.name });
               }
             }
           }
         } catch (err) {
-          console.warn(`⚠️ Erreur sur le tag ${genreTag.name}:`, err);
+          console.warn(`⚠️ Erreur sur la recherche ${target.name}:`, err);
         }
         await sleep(CONFIG.SEARCH_DELAY_MS);
       }
@@ -700,20 +870,23 @@ async function main() {
     const totalPositive = summary.total_positive;
     const positivePercent = Math.round((totalPositive / totalReviews) * 100);
 
-    let scoreDescFR = 'Très positifs';
-    let scoreDescEN = 'Very Positive';
+    let scoreDescFR = 'Plutôt positifs';
+    let scoreDescEN = 'Mostly Positive';
     if (positivePercent >= 95) {
       scoreDescFR = 'Extrêmement positifs';
       scoreDescEN = 'Overwhelmingly Positive';
     } else if (positivePercent >= 80) {
       scoreDescFR = 'Très positifs';
       scoreDescEN = 'Very Positive';
-    } else {
+    } else if (positivePercent >= 70) {
       scoreDescFR = 'Plutôt positifs';
       scoreDescEN = 'Mostly Positive';
+    } else {
+      scoreDescFR = 'Moyens';
+      scoreDescEN = 'Mixed';
     }
 
-    storeDataMap[appId] = {
+    const storeEntry: SteamStoreGameData = {
       appId,
       isFree,
       currency: priceOverview?.currency ?? 'EUR',
@@ -721,7 +894,7 @@ async function main() {
       finalPriceCents,
       discountPercent,
       formattedFinalPrice,
-      formattedInitialPrice,
+      formattedInitialPrice: formattedInitialPrice || '',
       totalReviews,
       totalPositive,
       positivePercent,
@@ -730,6 +903,9 @@ async function main() {
         en: scoreDescEN,
       },
     };
+
+    storeDataMap[appId] = storeEntry;
+    (catalogItem as any).steamStoreData = storeEntry;
 
     catalog.push(catalogItem);
     cache[appIdStr] = catalogItem;

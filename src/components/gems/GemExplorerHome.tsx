@@ -34,6 +34,9 @@ import { SylvestreBranchDivider } from '../sylvestre/SylvestreBranchDivider';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { getLocalizedText, getTranslatedGenre } from '../../utils/localization';
 
+import { RandomGemModal } from './RandomGemModal';
+import type { Game } from '../../types/game';
+
 const GemCatalogSection = React.lazy(() =>
   import('./GemCatalogSection').then((m) => ({ default: m.GemCatalogSection }))
 );
@@ -89,14 +92,30 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     return getChallengeStatusForDate(currentDate);
   }, [currentDate]);
 
+  const [randomPickedGame, setRandomPickedGame] = useState<Game | null>(null);
+  const [highlightedGemId, setHighlightedGemId] = useState<string | null>(null);
+
   const handleRandomPickFromHero = () => {
     soundFx.playClick();
-    const btn = document.querySelector<HTMLButtonElement>('[data-random-pick-trigger]');
-    if (btn) {
-      btn.click();
-    } else {
-      document.getElementById('gems-grid-top')?.scrollIntoView({ behavior: 'smooth' });
+    const pool = INDIE_GAMES;
+    if (!pool || pool.length === 0) return;
+    let candidates = pool;
+    if (randomPickedGame && pool.length > 1) {
+      candidates = pool.filter((g) => g.id !== randomPickedGame.id);
     }
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    const chosen = candidates[randomIndex];
+    setRandomPickedGame(chosen);
+  };
+
+  const handleLocateRandomGemInCatalog = (game: Game) => {
+    soundFx.playClick();
+    setRandomPickedGame(null);
+    setIsCatalogVisible(true);
+    setHighlightedGemId(game.id);
+    setTimeout(() => {
+      document.getElementById('gems-grid-top')?.scrollIntoView({ behavior: 'smooth' });
+    }, 80);
   };
 
   return (
@@ -736,7 +755,10 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
               </div>
             }
           >
-            <GemCatalogSection onNavigateTab={onNavigateTab} />
+            <GemCatalogSection
+              onNavigateTab={onNavigateTab}
+              highlightedGameId={highlightedGemId}
+            />
           </React.Suspense>
         ) : (
           <div className="py-16 text-center text-slate-600/40 select-none font-mono text-xs" aria-hidden="true">
@@ -744,6 +766,14 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
           </div>
         )}
       </div>
+
+      {/* Modale Pépite Découverte au Hasard depuis le Hero */}
+      <RandomGemModal
+        game={randomPickedGame}
+        onClose={() => setRandomPickedGame(null)}
+        onPickAnother={handleRandomPickFromHero}
+        onLocateInCatalog={handleLocateRandomGemInCatalog}
+      />
     </div>
   );
 };

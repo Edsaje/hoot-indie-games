@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ChevronLeft,
@@ -53,6 +53,8 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
   className = '',
 }) => {
   const { t } = useTranslation();
+  const [jumpInput, setJumpInput] = useState<string>('');
+  const jumpInputRef = useRef<HTMLInputElement>(null);
 
   // Si aucun élément, ne rien afficher
   if (totalItems === 0) {
@@ -92,6 +94,15 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
     soundFx.playClick();
     if (onItemsPerPageChange) {
       onItemsPerPageChange(opt);
+    }
+  };
+
+  const handleJumpSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const target = parseInt(jumpInput, 10);
+    if (!isNaN(target) && target >= 1 && target <= totalPages) {
+      handlePageClick(target);
+      setJumpInput('');
     }
   };
 
@@ -182,13 +193,18 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
             <div className="flex items-center gap-1 mx-1">
               {pages.map((p, idx) =>
                 p === '...' ? (
-                  <span
+                  <button
                     key={`ellipsis-${idx}`}
-                    className="w-7 h-8 flex items-center justify-center text-slate-400 font-bold text-xs"
-                    aria-hidden="true"
+                    type="button"
+                    onClick={() => {
+                      soundFx.playClick();
+                      jumpInputRef.current?.focus();
+                    }}
+                    title={t('pagination.jumpTo', { defaultValue: 'Aller à une page' })}
+                    className="w-7 h-8 flex items-center justify-center text-slate-400 hover:text-amber-400 font-bold text-xs cursor-pointer rounded-lg hover:bg-slate-800/40 transition"
                   >
                     …
-                  </span>
+                  </button>
                 ) : (
                   <button
                     key={p}
@@ -231,6 +247,39 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
               >
                 <ChevronsRight className="w-4 h-4" />
               </button>
+            )}
+
+            {/* Aller directement à une page */}
+            {totalPages > 3 && (
+              <form
+                onSubmit={handleJumpSubmit}
+                className="flex items-center gap-1.5 ml-1.5 pl-2 border-l border-[#1e293b]"
+              >
+                <label htmlFor="jump-to-page-input" className="text-xs text-slate-400 hidden sm:inline whitespace-nowrap">
+                  {t('pagination.jumpTo', { defaultValue: 'Aller à :' })}
+                </label>
+                <input
+                  ref={jumpInputRef}
+                  id="jump-to-page-input"
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  value={jumpInput}
+                  onChange={(e) => setJumpInput(e.target.value)}
+                  placeholder={String(currentPage)}
+                  title={`${t('pagination.page', { defaultValue: 'Page' })} 1 - ${totalPages}`}
+                  aria-label={t('pagination.jumpTo', { defaultValue: 'Aller à la page' })}
+                  className="w-12 sm:w-14 h-8 px-1 text-center text-xs font-mono font-bold bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-white outline-none placeholder:text-slate-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                <button
+                  type="submit"
+                  disabled={!jumpInput || parseInt(jumpInput, 10) < 1 || parseInt(jumpInput, 10) > totalPages}
+                  aria-label={t('pagination.goToPage', { defaultValue: 'Accéder à la page' })}
+                  className="px-2.5 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500 hover:text-slate-950 disabled:opacity-25 disabled:pointer-events-none transition text-xs font-bold cursor-pointer flex items-center justify-center active:scale-95"
+                >
+                  OK
+                </button>
+              </form>
             )}
           </div>
         )}
