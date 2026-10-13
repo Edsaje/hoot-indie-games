@@ -18,6 +18,7 @@
     "audit-cards": "npx tsx scripts/auditGemsCardsSync.ts",
     "audit-links": "npx tsx scripts/auditExternalLinks.ts",
     "harvest-daily": "npx tsx scripts/dailyIndieHarvest.ts",
+    "harvest-massive": "npx tsx scripts/harvestMassiveCatalog.ts",
     "sync-odyssey": "npx tsx scripts/syncOdysseyRoutes.ts",
     "sync-store": "npx tsx scripts/syncSteamStoreData.ts",
     "fetch-steam": "npx tsx scripts/fetchSteamCatalog.ts"

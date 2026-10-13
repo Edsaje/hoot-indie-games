@@ -63,6 +63,11 @@ class SteamCatalogService {
         const items = JSON.parse(catalogRaw);
         if (Array.isArray(items) && items.length > 0) {
           this.catalog = items;
+          for (const item of items) {
+            if ((item as any).steamStoreData) {
+              registerSteamStoreData((item as any).steamStoreData);
+            }
+          }
         }
       }
     } catch {
@@ -252,12 +257,17 @@ class SteamCatalogService {
     this.loadPromise = (async () => {
       try {
         const [steamRes] = await Promise.all([
-          fetch('/data/steam_catalog.json').catch(() => null),
+          fetch(`/data/steam_catalog.json?v=${Date.now()}`).catch(() => null),
           this.syncServerOverrides().catch(() => {}),
         ]);
         if (steamRes && steamRes.ok) {
           const items: SteamCatalogGame[] = await steamRes.json();
           this.catalog = items;
+          for (const item of items) {
+            if ((item as any).steamStoreData) {
+              registerSteamStoreData((item as any).steamStoreData);
+            }
+          }
           if (typeof localStorage !== 'undefined') {
             try {
               localStorage.setItem(STORAGE_KEY_STEAM_CATALOG, JSON.stringify(items));

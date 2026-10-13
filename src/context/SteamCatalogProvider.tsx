@@ -41,56 +41,36 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
         setCuratedGems(gems);
         setStats(steamCatalog.getStats());
 
-        const triggerLoadCatalog = () => {
-          steamCatalog.loadCatalog().then(async (items) => {
-            if (!isMounted) return;
-            setCatalog(items);
-            const updatedPlayable = steamCatalog.getAllPlayableGames();
-            const updatedGems = steamCatalog.getCuratedGems();
-            setAllGames(updatedPlayable);
-            setCuratedGems(updatedGems);
-            setStats(steamCatalog.getStats());
-            try {
-              const { buildCardsFromGames, setDynamicCardsPool } = await import('../data/cardsData');
-              setDynamicCardsPool(buildCardsFromGames(updatedGems));
-            } catch {
-              // Ignore
-            }
-            setIsLoading(false);
-          });
-        };
-
-        let idleTimer: any;
-        const onInteraction = () => {
-          if (idleTimer) clearTimeout(idleTimer);
-          window.removeEventListener('scroll', onInteraction);
-          window.removeEventListener('touchstart', onInteraction);
-          window.removeEventListener('click', onInteraction);
-          triggerLoadCatalog();
-        };
-
-        window.addEventListener('scroll', onInteraction, { passive: true, once: true });
-        window.addEventListener('touchstart', onInteraction, { passive: true, once: true });
-        window.addEventListener('click', onInteraction, { passive: true, once: true });
-        idleTimer = setTimeout(onInteraction, 8000);
+        // Lancer immédiatement le chargement asynchrone en tâche de fond
+        steamCatalog.loadCatalog().then(async (items) => {
+          if (!isMounted) return;
+          setCatalog(items);
+          const updatedPlayable = steamCatalog.getAllPlayableGames();
+          const updatedGems = steamCatalog.getCuratedGems();
+          setAllGames(updatedPlayable);
+          setCuratedGems(updatedGems);
+          setStats(steamCatalog.getStats());
+          try {
+            const { buildCardsFromGames, setDynamicCardsPool } = await import('../data/cardsData');
+            setDynamicCardsPool(buildCardsFromGames(updatedGems));
+          } catch {
+            // Ignore
+          }
+          setIsLoading(false);
+        });
       } catch (err) {
         console.warn('[SteamCatalogProvider] Background load error:', err);
       }
     };
 
-    let initTimer: any;
-    const triggerInit = () => {
-      if (initTimer) clearTimeout(initTimer);
-      window.removeEventListener('scroll', triggerInit);
-      window.removeEventListener('touchstart', triggerInit);
-      window.removeEventListener('click', triggerInit);
-      loadService();
-    };
-
-    window.addEventListener('scroll', triggerInit, { passive: true, once: true });
-    window.addEventListener('touchstart', triggerInit, { passive: true, once: true });
-    window.addEventListener('click', triggerInit, { passive: true, once: true });
-    initTimer = setTimeout(triggerInit, 4000);
+    let timerId: { isIdle: boolean; id: any } | null = null;
+    if (typeof requestIdleCallback !== 'undefined') {
+      const handle = requestIdleCallback(() => loadService(), { timeout: 800 });
+      timerId = { isIdle: true, id: handle };
+    } else {
+      const id = setTimeout(loadService, 50);
+      timerId = { isIdle: false, id };
+    }
 
     const handleUpdate = async () => {
       if (!steamCatalogRef.current) return;
@@ -112,10 +92,11 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
     window.addEventListener('hoot_steam_store_data_updated', handleUpdate);
     return () => {
       isMounted = false;
-      if (initTimer) clearTimeout(initTimer);
-      window.removeEventListener('scroll', triggerInit);
-      window.removeEventListener('touchstart', triggerInit);
-      window.removeEventListener('click', triggerInit);
+      if (timerId?.isIdle && typeof cancelIdleCallback !== 'undefined') {
+        cancelIdleCallback(timerId.id);
+      } else if (timerId) {
+        clearTimeout(timerId.id);
+      }
       window.removeEventListener('hoot_steam_catalog_updated', handleUpdate);
       window.removeEventListener('hoot_steam_store_data_updated', handleUpdate);
     };

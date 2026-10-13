@@ -55,6 +55,13 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
       setOwnershipFilter('unowned');
     }
   }, [hideOwnedGames]);
+
+  // S'assurer que le catalogue étendu est immédiatement chargé dès l'ouverture de l'explorateur
+  useEffect(() => {
+    import('../../services/steamCatalog').then(({ steamCatalog }) => {
+      steamCatalog.loadCatalog();
+    });
+  }, []);
   const [priceFilter, setPriceFilter] = useState<'all' | 'sale' | 'free' | 'under10' | 'under20' | '20plus'>('all');
   const [ratingFilter, setRatingFilter] = useState<
     'all' | 'overwhelming' | 'very_positive' | 'positive' | 'mostly_positive' | 'mixed'
@@ -1055,11 +1062,13 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                   </p>
 
                   {/* Note Steam */}
-                  {storeData && storeData.totalReviews > 0 && (
+                  {storeData && (storeData.totalReviews > 0 || storeData.positivePercent > 0) && (
                     <div className="flex items-center gap-1.5 mt-1.5 text-xs text-sky-400">
                       <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
                       <span className="font-bold font-mono">{storeData.positivePercent}%</span>
-                      <span className="text-slate-400 text-[11px]">({getLocalizedText(storeData.reviewScoreDesc, i18n.language)})</span>
+                      {storeData.reviewScoreDesc && (
+                        <span className="text-slate-400 text-[11px]">({getLocalizedText(storeData.reviewScoreDesc, i18n.language)})</span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1221,14 +1230,18 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                     })()}
                     </div>
 
-                    {modalStore.totalReviews > 0 && (
+                    {Boolean(modalStore.totalReviews > 0 || modalStore.positivePercent > 0) && (
                       <div className="flex items-center gap-1.5 text-xs">
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-950/50 border border-sky-500/40 text-sky-300 font-mono font-bold">
                           <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
                           <span>{modalStore.positivePercent}%</span>
                         </span>
-                        <span className="text-slate-300 font-semibold">{getLocalizedText(modalStore.reviewScoreDesc, i18n.language)}</span>
-                        <span className="text-slate-400">({modalStore.totalReviews.toLocaleString()} {t('catalog.reviewsSuffix')})</span>
+                        {modalStore.reviewScoreDesc && (
+                          <span className="text-slate-300 font-semibold">{getLocalizedText(modalStore.reviewScoreDesc, i18n.language)}</span>
+                        )}
+                        {modalStore.totalReviews > 0 && (
+                          <span className="text-slate-400">({modalStore.totalReviews.toLocaleString()} {t('catalog.reviewsSuffix')})</span>
+                        )}
                       </div>
                     )}
                   </div>
