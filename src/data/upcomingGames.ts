@@ -591,13 +591,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1791241193"
   },
   {
-    "id": "babel-invent-a-way",
-    "title": "BABEL: Invent a Way",
-    "developer": "NthAxs",
-    "publisher": "NthAxs",
+    "id": "yume-tenshi",
+    "title": "Yume Tenshi",
+    "developer": "GoreFreak",
+    "publisher": "Cakesin",
     "expectedDate": {
-      "fr": "12 oct. 2026",
-      "en": "12 Oct, 2026"
+      "fr": "13 oct. 2026",
+      "en": "Oct 13, 2026"
     },
     "genres": [
       {
@@ -608,16 +608,16 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5306000/",
+    "steamUrl": "https://store.steampowered.com/app/5033710/",
     "description": {
-      "fr": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only.",
-      "en": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only."
+      "fr": "Yume Tenshi—A Game Boy Yume Nikki fangame where you journey through Reisuki’s dreams. Explore the spirit world, and collect mystical transformations.",
+      "en": "Yume Tenshi—A Game Boy Yume Nikki fangame where you journey through Reisuki’s dreams. Explore the spirit world, and collect mystical transformations."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/b8e88ce9b363530c335a81d240e434871925e246/header.jpg?t=1791082066"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5033710/29c08ec21294da3f226401ebc135c37e0200ec49/header.jpg?t=1790747714"
   }
 ];

@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 578 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 585 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -8212,6 +8212,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Mixed"
     }
   },
+  "3048840": {
+    "appId": 3048840,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1479,
+    "finalPriceCents": 1183,
+    "discountPercent": 20,
+    "formattedFinalPrice": "11,83€",
+    "formattedInitialPrice": "14,79€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "3070070": {
     "appId": 3070070,
     "isFree": false,
@@ -8385,6 +8402,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 25,
     "formattedFinalPrice": "6,11€",
     "formattedInitialPrice": "8,15€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "3301010": {
+    "appId": 3301010,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1549,
+    "finalPriceCents": 1316,
+    "discountPercent": 15,
+    "formattedFinalPrice": "13,16€",
+    "formattedInitialPrice": "15,49€",
     "totalReviews": 0,
     "totalPositive": 0,
     "positivePercent": 90,
@@ -8656,6 +8690,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Very Positive"
     }
   },
+  "3778610": {
+    "appId": 3778610,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1549,
+    "finalPriceCents": 1394,
+    "discountPercent": 10,
+    "formattedFinalPrice": "13,94€",
+    "formattedInitialPrice": "15,49€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "3804370": {
     "appId": 3804370,
     "isFree": false,
@@ -8698,6 +8749,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 10,
     "formattedFinalPrice": "5,53€",
     "formattedInitialPrice": "6,15€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "3859210": {
+    "appId": 3859210,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1025,
+    "finalPriceCents": 922,
+    "discountPercent": 10,
+    "formattedFinalPrice": "9,22€",
+    "formattedInitialPrice": "10,25€",
     "totalReviews": 0,
     "totalPositive": 0,
     "positivePercent": 90,
@@ -8822,6 +8890,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "4024440": {
+    "appId": 4024440,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1025,
+    "finalPriceCents": 820,
+    "discountPercent": 20,
+    "formattedFinalPrice": "8,20€",
+    "formattedInitialPrice": "10,25€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "4034080": {
@@ -9197,6 +9282,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "totalReviews": 252,
     "totalPositive": 230,
     "positivePercent": 91,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "4773180": {
+    "appId": 4773180,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 549,
+    "finalPriceCents": 466,
+    "discountPercent": 15,
+    "formattedFinalPrice": "4,66€",
+    "formattedInitialPrice": "5,49€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -9578,6 +9680,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 40,
     "formattedFinalPrice": "59,99€",
     "formattedInitialPrice": "99,99€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5306000": {
+    "appId": 5306000,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 719,
+    "finalPriceCents": 611,
+    "discountPercent": 15,
+    "formattedFinalPrice": "6,11€",
+    "formattedInitialPrice": "7,19€",
     "totalReviews": 0,
     "totalPositive": 0,
     "positivePercent": 90,

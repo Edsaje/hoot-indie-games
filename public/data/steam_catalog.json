@@ -2615,112 +2615,6 @@
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/557600/header.jpg?t=1729099787"
   },
   {
-    "id": "opus-magnum",
-    "title": "Opus Magnum",
-    "releaseYear": 2017,
-    "genre": [
-      "Simulation",
-      "Puzzle"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Zachtronics",
-    "steamUrl": "https://store.steampowered.com/app/558990/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_e54f24ab7b2bebaee812be7e46e907ccc6323643.1920x1080.jpg?t=1774910584",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_e395f88a023ad623f64a622d343eee17e1e6ea9d.1920x1080.jpg?t=1774910584",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_0e35cab840c52b9d39b988d0b0c96b8fe9117264.1920x1080.jpg?t=1774910584",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_92c30b0f0d8737cfe8c0b70364bbb3712e2bdd43.1920x1080.jpg?t=1774910584",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_b699747de6a3335040160f7fc4af3b5158981b43.1920x1080.jpg?t=1774910584",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/6d8aa1ce08dd0c0e711e0eb068d9d9af6fdb3317/header.jpg?t=1774910584"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Opus Magnum est le dernier jeu de puzzle ouvert créé par Zachtronics, le créateur de SpaceChem, Infinifactory et SHENZHEN I/O. Grâce au moteur de transmutation, l'outil le plus sophistiqué en ingénierie alchimique, développez et assemblez des machines pour créer des potions, poisons et bien plus !",
-        "en": "Opus Magnum is the latest open-ended puzzle game from Zachtronics, the creators of SpaceChem, Infinifactory, and SHENZHEN I/O. Design and build machines that assemble potions, poisons, and more using the alchemical engineer’s most advanced tool: the transmutation engine!"
-      }
-    },
-    "steamAppId": 558990,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/6d8aa1ce08dd0c0e711e0eb068d9d9af6fdb3317/header.jpg?t=1774910584"
-  },
-  {
-    "id": "ion-fury",
-    "title": "Ion Fury",
-    "releaseYear": 2019,
-    "genre": [
-      "Action"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "Voidpoint, LLC",
-    "steamUrl": "https://store.steampowered.com/app/562860/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_406b0b080e523ff37d843151449fcd7149c7ef72.1920x1080.jpg?t=1766678226",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_00450debad7dc1e3732169be08bbc803d5c0129f.1920x1080.jpg?t=1766678226",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_15a7842420b1b0bcaa2049ee23b4b57f3dbf4b0d.1920x1080.jpg?t=1766678226",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_33a162fb386f1afa245774195fa65021972d3658.1920x1080.jpg?t=1766678226",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_48d345e7468b03065de67b632baab31ae6791091.1920x1080.jpg?t=1766678226",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_838e34057a6393a041268e93f6c9f6f21f97218e.1920x1080.jpg?t=1766678226"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "3D Realms, creators of Duke Nukem 3D, Prey, and Max Payne, team up with Voidpoint to bring back the legendary Build Engine, famous for classic shooters like Duke Nukem 3D, Shadow Warrior, and Blood. Fast-paced FPS combat across huge, secret-packed levels. Ion Fury is the real deal!",
-        "en": "3D Realms, creators of Duke Nukem 3D, Prey, and Max Payne, team up with Voidpoint to bring back the legendary Build Engine, famous for classic shooters like Duke Nukem 3D, Shadow Warrior, and Blood. Fast-paced FPS combat across huge, secret-packed levels. Ion Fury is the real deal!"
-      }
-    },
-    "steamAppId": 562860,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/header.jpg?t=1766678226"
-  },
-  {
-    "id": "steamworld-dig-2",
-    "title": "SteamWorld Dig 2",
-    "releaseYear": 2017,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Metroidvania",
-      "Plateforme"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Image & Form Games",
-    "steamUrl": "https://store.steampowered.com/app/571310/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_7072c34bfa84ab8894da321f9d991eab8f4dfef8.1920x1080.jpg?t=1726132098",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_26b9325c7e66c42ae586e499bd92da3de7995525.1920x1080.jpg?t=1726132098",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_e1b87e496208b2f111e57f178052492351849501.1920x1080.jpg?t=1726132098",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_91135f5607a8d361aa8b980c9c0345be3532c2ad.1920x1080.jpg?t=1726132098",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_55ba00ab6ff370fe68ce82fb5c213a68046101d2.1920x1080.jpg?t=1726132098",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_4ddbc40397860fa4c915841ff525117d38df08f3.1920x1080.jpg?t=1726132098"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "SteamWorld Dig est de retour ! Creuse dans les profondeurs pour obtenir des richesses et affronte les terreurs du monde souterrain dans ce jeu de plateformes et d’aventure minière inspiré par Metroidvania.",
-        "en": "SteamWorld Dig is back! Dig deep, gain riches and unearth the terrors of the underworld in this platform mining adventure influenced by classic Metroidvania style games."
-      }
-    },
-    "steamAppId": 571310,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/header.jpg?t=1726132098"
-  },
-  {
     "id": "dead-cells",
     "title": "Dead Cells",
     "releaseYear": 2018,
@@ -15659,5 +15553,256 @@
     "addedAt": "2026-10-12",
     "steamAppId": 3493400,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3493400/7a4c9c7bd53b28483a8b2ae9f5b60f6d0a775056/header.jpg?t=1789394010"
+  },
+  {
+    "id": "babel-invent-a-way",
+    "title": "BABEL: Invent a Way",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "NthAxs",
+    "steamUrl": "https://store.steampowered.com/app/5306000/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/510ae2c838a7aa5b2a8c2aa2f06d047e714c7233/ss_510ae2c838a7aa5b2a8c2aa2f06d047e714c7233.1920x1080.jpg?t=1791806534",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/d452bc11b9fc11ccf44ee0364cb7a96aafbf33fe/ss_d452bc11b9fc11ccf44ee0364cb7a96aafbf33fe.1920x1080.jpg?t=1791806534",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/89601843cbce243f9a451a77a13c040f316ab3cc/ss_89601843cbce243f9a451a77a13c040f316ab3cc.1920x1080.jpg?t=1791806534",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/83941054e2d176172514f6c823969b73fa418914/ss_83941054e2d176172514f6c823969b73fa418914.1920x1080.jpg?t=1791806534",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/975e9bfd108ee69dc4d48c7cb846247f9c300204/ss_975e9bfd108ee69dc4d48c7cb846247f9c300204.1920x1080.jpg?t=1791806534",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/b8e88ce9b363530c335a81d240e434871925e246/header.jpg?t=1791806534"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only.",
+        "en": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only."
+      }
+    },
+    "addedAt": "2026-10-13",
+    "steamAppId": 5306000,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/b8e88ce9b363530c335a81d240e434871925e246/header.jpg?t=1791806534"
+  },
+  {
+    "id": "rhythm-animal-cafe",
+    "title": "Rhythm Animal Café",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Salt Game Studio",
+    "steamUrl": "https://store.steampowered.com/app/3859210/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3859210/69282dc3e4a7af63ac21ab0669bf406b43ef5e68/ss_69282dc3e4a7af63ac21ab0669bf406b43ef5e68.1920x1080.jpg?t=1791859127",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3859210/36f9485c5972fa02d3fd02560fbda9d7eb0b7f2d/ss_36f9485c5972fa02d3fd02560fbda9d7eb0b7f2d.1920x1080.jpg?t=1791859127",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3859210/e68f42d2015b2c52f108a0be627aaf4825cba883/ss_e68f42d2015b2c52f108a0be627aaf4825cba883.1920x1080.jpg?t=1791859127",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3859210/fc046b5994718aa3556618b764b359fa8f2a78ff/ss_fc046b5994718aa3556618b764b359fa8f2a78ff.1920x1080.jpg?t=1791859127",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3859210/26c4592c26a64a5e3bdc33b2b8aa48b957d6d815/ss_26c4592c26a64a5e3bdc33b2b8aa48b957d6d815.1920x1080.jpg?t=1791859127",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3859210/7dc59365a75c38b4a1a6e2255b7df6f16da1e271/ss_7dc59365a75c38b4a1a6e2255b7df6f16da1e271.1920x1080.jpg?t=1791859127"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Welcome to ​Rhythm Animal Café​! Animals' daily chaos meets funky beats: boss hype, colleague woes, your slacking, unfair blame—all become hilarious one-tap rhythm games! Simple controls, joyful groove. Feel music fuse with daily life’s warmth!",
+        "en": "Welcome to ​Rhythm Animal Café​! Animals' daily chaos meets funky beats: boss hype, colleague woes, your slacking, unfair blame—all become hilarious one-tap rhythm games! Simple controls, joyful groove. Feel music fuse with daily life’s warmth!"
+      }
+    },
+    "addedAt": "2026-10-13",
+    "steamAppId": 3859210,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3859210/50516e4f79566baacafa4bad7ca8fc0db89db654/header.jpg?t=1791859127"
+  },
+  {
+    "id": "for-the-cat-sorcerer-s-revenge",
+    "title": "For The Cat! Sorcerer's Revenge",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "RPG",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Jasio Games",
+    "steamUrl": "https://store.steampowered.com/app/4773180/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4773180/2dd4df18a4ee3fbde1de8ae4cf2cf70ba7587482/ss_2dd4df18a4ee3fbde1de8ae4cf2cf70ba7587482.1920x1080.jpg?t=1791827787",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4773180/2fdbaa198e4c986a174ca1c013273171025979ce/ss_2fdbaa198e4c986a174ca1c013273171025979ce.1920x1080.jpg?t=1791827787",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4773180/007176ee9eb4c6caa3e7f1356fcd7d2ed6d85088/ss_007176ee9eb4c6caa3e7f1356fcd7d2ed6d85088.1920x1080.jpg?t=1791827787",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4773180/a941a3d4c29ee7369677e51d89dc2f1e4b0a2f04/ss_a941a3d4c29ee7369677e51d89dc2f1e4b0a2f04.1920x1080.jpg?t=1791827787",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4773180/85a3c8e1e563b0e3fc7393bde64460c388a07834/ss_85a3c8e1e563b0e3fc7393bde64460c388a07834.1920x1080.jpg?t=1791827787",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4773180/8096d756615dc3249c202a07f72b277bc0a1e0a8/ss_8096d756615dc3249c202a07f72b277bc0a1e0a8.1920x1080.jpg?t=1791827787"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Ils ont tué votre chat. Grosse erreur. Dans ce bullet-heaven roguelike saturé de magie, faites évoluer votre mage, améliorez vos sorts, récupérez des objets et créez des builds déwaistateurs face à des hordes d'ennemis.",
+        "en": "They killed your cat. Fatal mistake. In this magic-infused bullet-heaven roguelike, develop your wizard, upgrade and evolve spells, collect items, and create unstoppable builds while battling hordes of enemies."
+      }
+    },
+    "addedAt": "2026-10-13",
+    "steamAppId": 4773180,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4773180/142aeb0f4196f37dd752174644ff1a935b43786d/header.jpg?t=1791827787"
+  },
+  {
+    "id": "haunted-heist",
+    "title": "Haunted Heist",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "autotroph games",
+    "steamUrl": "https://store.steampowered.com/app/4024440/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4024440/19ce0ae976fdd87513e865b16ea38b5af6065839/ss_19ce0ae976fdd87513e865b16ea38b5af6065839.1920x1080.jpg?t=1791865800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4024440/90cb35dcae371546d13310ebcf274083782245a6/ss_90cb35dcae371546d13310ebcf274083782245a6.1920x1080.jpg?t=1791865800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4024440/2c304e3fb7a2649a84d1bd0657a0343a3f3d6380/ss_2c304e3fb7a2649a84d1bd0657a0343a3f3d6380.1920x1080.jpg?t=1791865800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4024440/907c5d3c1c23e00cf8dec6aadb026a4d082053b3/ss_907c5d3c1c23e00cf8dec6aadb026a4d082053b3.1920x1080.jpg?t=1791865800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4024440/2db531d0ffac88d700db0e4a435006896788a423/ss_2db531d0ffac88d700db0e4a435006896788a423.1920x1080.jpg?t=1791865800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4024440/895b34b7143be832b36c0f88106eea05d6eb4b9b/ss_895b34b7143be832b36c0f88106eea05d6eb4b9b.1920x1080.jpg?t=1791865800"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "« Haunted Heist » est un jeu d'horreur multijoueur en mode PvP, pour 3 à 8 joueurs, se déroulant par manches, dans lequel les Braqueurs doivent récupérer des gemmes dans un manoir généré procéduralement, tandis que les Filous utilisent des pouvoirs pour les perturber afin de protéger leur demeure.",
+        "en": "Haunted Heist is a 3-8 player round-based PvP horror party game where Heisters find and retrieve gems in a procedurally generated mansion, while Tricksters use chaotic abilities to distress, disrupt, and dispose of them to protect their home."
+      }
+    },
+    "addedAt": "2026-10-13",
+    "steamAppId": 4024440,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4024440/a0c648f8b640efae435a68f2d05eff10e2c33b96/header.jpg?t=1791865800"
+  },
+  {
+    "id": "colorbound",
+    "title": "Colorbound",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Panpipe Studio",
+    "steamUrl": "https://store.steampowered.com/app/3778610/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/ee6e2e856ea840caddaeaf957381b0cadaff2482/ss_ee6e2e856ea840caddaeaf957381b0cadaff2482.1920x1080.jpg?t=1791824439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/f2385a726af03d735121765600ef2555da401d77/ss_f2385a726af03d735121765600ef2555da401d77.1920x1080.jpg?t=1791824439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/ecd89e50d267c1a81db24a1ef420d3c02d34607f/ss_ecd89e50d267c1a81db24a1ef420d3c02d34607f.1920x1080.jpg?t=1791824439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/9b4ebd79c7e1fdc724d44272d7017d6738f77d1c/ss_9b4ebd79c7e1fdc724d44272d7017d6738f77d1c.1920x1080.jpg?t=1791824439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/98b691ab9fb537af658d6038d2e2c65395fe10ae/ss_98b691ab9fb537af658d6038d2e2c65395fe10ae.1920x1080.jpg?t=1791824439",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/c77d1e9fe9f93b834aabc506e04edd4de8a4722c/ss_c77d1e9fe9f93b834aabc506e04edd4de8a4722c.1920x1080.jpg?t=1791824439"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dans Colorbound, la couleur est bien plus qu'une simple teinte. Dans la peau d'Anku, un garçon aymara, vous exploiterez le pouvoir des couleurs pour modeler l'environnement lui-même, dévoilant ainsi des chemins cachés qui vous permettront de résoudre des énigmes complexes et difficiles.",
+        "en": "In Colorbound, color is more than just hue. As Anku, an Aymara boy with a unique gift, you’ll harness the power of color to shape the environment itself, uncovering hidden paths to navigate challenging and complex puzzles."
+      }
+    },
+    "addedAt": "2026-10-13",
+    "steamAppId": 3778610,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/a0e2dcc62adad30cc2d930190dde4d82fd6b7fb0/header.jpg?t=1791824439"
+  },
+  {
+    "id": "hungry-horrors",
+    "title": "Hungry Horrors",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Deckbuilder"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Clumsy Bear Studio",
+    "steamUrl": "https://store.steampowered.com/app/3048840/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3048840/4e286ae40c5ea3162ebe876fa78e51489f31ce71/ss_4e286ae40c5ea3162ebe876fa78e51489f31ce71.1920x1080.jpg?t=1791882332",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3048840/f649c1d5179fea2ecf8e283becb723aaaff7303e/ss_f649c1d5179fea2ecf8e283becb723aaaff7303e.1920x1080.jpg?t=1791882332",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3048840/c2ee9c6f67965d589c7f1b3c645dc5a7e0f5664d/ss_c2ee9c6f67965d589c7f1b3c645dc5a7e0f5664d.1920x1080.jpg?t=1791882332",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3048840/5d107215fa18afca5f1fa059b5bb431d82fee0ca/ss_5d107215fa18afca5f1fa059b5bb431d82fee0ca.1920x1080.jpg?t=1791882332",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3048840/9259f60ca865e3d891bbe6cd90474eca8581bff3/ss_9259f60ca865e3d891bbe6cd90474eca8581bff3.1920x1080.jpg?t=1791882332",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3048840/d73c75298979ff03b5956bc1c38c0d9ce6a52e32/ss_d73c75298979ff03b5956bc1c38c0d9ce6a52e32.1920x1080.jpg?t=1791882332"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Hungry Horrors est un deckbuilder narratif ancré dans le folklore des îles Britanniques. Cuisinez de véritables plats traditionnels, enchaînez les synergies de saveurs, rencontrez des personnages mythiques et nourrissez de légendaires Horreurs avant qu'elles ne se nourrissent de vous.",
+        "en": "Hungry Horrors is a story-driven deckbuilder set in the folklore of the British Isles. Cook real traditional dishes, chain flavour synergies, meet mythical characters, and feed legendary Horrors before they feed on you."
+      }
+    },
+    "addedAt": "2026-10-13",
+    "steamAppId": 3048840,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3048840/f70f5f981319578229f71a9ccb841f5e31915427/header.jpg?t=1791882332"
+  },
+  {
+    "id": "den-den-tokyo-horror",
+    "title": "Den-Den: Tokyo Horror",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Frozen Lake Software",
+    "steamUrl": "https://store.steampowered.com/app/3301010/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/5571d519232e275df1eaf7d39243560cfba34893/ss_5571d519232e275df1eaf7d39243560cfba34893.1920x1080.jpg?t=1791818455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/c57bacb6f5e0302776ffd1dc5aabb756a3970d02/ss_c57bacb6f5e0302776ffd1dc5aabb756a3970d02.1920x1080.jpg?t=1791818455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/424d769c7fa7945a957e7f8b1688382f9efb7b8f/ss_424d769c7fa7945a957e7f8b1688382f9efb7b8f.1920x1080.jpg?t=1791818455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/8ea9cd03649b20278f926500be74010a58d4732d/ss_8ea9cd03649b20278f926500be74010a58d4732d.1920x1080.jpg?t=1791818455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/3c780443179065783ce0b3bf3ded0f7975049d76/ss_3c780443179065783ce0b3bf3ded0f7975049d76.1920x1080.jpg?t=1791818455",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/3b87a061d2774afd65e0c387e2d24c9225f9154f/ss_3b87a061d2774afd65e0c387e2d24c9225f9154f.1920x1080.jpg?t=1791818455"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Den-Den: Tokyo Horror est un RPG J-horror où les événements se déroulent en temps réel. Survivez à une nuit dans une ville où chacun de vos choix influence le monde qui vous entoure. Combien de morts aurez-vous sur la conscience ce soir ?",
+        "en": "Den-Den: Tokyo Horror is a J-horror RPG where events unfold in real-time. Survive one night in a city where every choice you make impacts the world around you. How many deaths will you be responsible for tonight?"
+      }
+    },
+    "addedAt": "2026-10-13",
+    "steamAppId": 3301010,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/09815a8cd4f0d34dccaa431a0572312d54dde0ef/header.jpg?t=1791818455"
   }
 ]

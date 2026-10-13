@@ -1,44 +1,38 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-12";
+export const TODAY_DATE = "2026-10-13";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "valheim",
-  "title": "Valheim",
-  "releaseYear": 2021,
+  "id": "ape-out",
+  "title": "APE OUT",
+  "releaseYear": 2019,
   "genre": [
-    "Survie",
-    "Co-op",
-    "Sandbox",
-    "Aventure"
+    "Action",
+    "Survie"
   ],
   "artStyle": {
-    "fr": "3D Rétro Low-poly",
-    "en": "Retro Low-poly 3D"
+    "fr": "3D Stylisée",
+    "en": "Stylized 3D"
   },
   "camera": {
-    "fr": "Troisième personne",
-    "en": "Third-Person"
+    "fr": "Vue de côté 2D",
+    "en": "2D Side-scroller"
   },
-  "developer": "Iron Gate Studio",
-  "steamUrl": "https://store.steampowered.com/app/892970/",
+  "developer": "Gabe Cuzzillo, Bennett Foddy, Maxi Boch",
+  "steamUrl": "https://store.steampowered.com/app/447150/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/5a31353178f635b67f0c8720ebb8a1a95b637276/ss_5a31353178f635b67f0c8720ebb8a1a95b637276.1920x1080.jpg?t=1789470462",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/bc7c361dab1780543a3ceca50c8fba831e5bc8db/ss_bc7c361dab1780543a3ceca50c8fba831e5bc8db.1920x1080.jpg?t=1789470462",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/ss_a600a7d4ca954543e22f571a9629521a13f82143.1920x1080.jpg?t=1789470462",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/f7a47b4bd150ce1a2c6ec88f7d79fd57e7c538c8/ss_f7a47b4bd150ce1a2c6ec88f7d79fd57e7c538c8.1920x1080.jpg?t=1789470462",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/ss_cd0262c5abf8a90ee5e1059acafc5a92b6be0e73.1920x1080.jpg?t=1789470462",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/ss_3db385fc1223914dadb199ac8682683a8c59454e.1920x1080.jpg?t=1789470462"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_c3829a1b40e0f3c88f33530d1e06d6888d85d211.1920x1080.jpg?t=1785434966",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_2bbf3b25845bab2b4d32d3cd5201be9e7cc745a1.1920x1080.jpg?t=1785434966",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aaa4a17ce60a909664f5e1eba7187c1d792e32e6.1920x1080.jpg?t=1785434966",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_9b4c28fd4b68bbade791effd9b32a849cf7827b2.1920x1080.jpg?t=1785434966",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_a8c90ab1ef884b1bee441b8e1b4292a6f9dde5ea.1920x1080.jpg?t=1785434966",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aec2303d9d65fdcebf8c046fbb6859de1633dc22.1920x1080.jpg?t=1785434966"
   ],
   "hints": {
     "tagline": {
-      "fr": "Forgez vos armes, bâtissez d'immenses forteresses et terrassez les monstres primordiaux au nom d'Odin.",
-      "en": "A brutal exploration and survival game for 1-10 players, set in a procedurally-generated purgatory inspired by Viking culture.",
-      "es": "Un desafiante juego de exploración y supervivencia vikinga en un vasto purgatorio procedural.",
-      "de": "Erkunde, baue und kämpfe in einer rauen, von der Wikingerkultur inspirierten Welt für die Gunst Odins.",
-      "ja": "北欧神話の第十世界を舞台に、仲間とともに巨大な城塞を築き太古の巨神たちを討つバイキングサバイバルRPG。",
-      "pt-BR": "Forje armas, construa fortalezas vikings e derrote feras primordiais em nome de Odin."
-    },
-    "composer": "Patrik Jarlestam"
-  }
+      "fr": "Jeu de destruction massive – ou « smash'em up » pour les intimes – aux couleurs criardes, à l'ambiance explosive et au style survitaminé, Ape Out mêle et entremêle instinct de survie primitif, violence rythmique et jazz frénétique.",
+      "en": "APE OUT is a wildly intense and colorfully stylized smash ‘em up about primal escape, rhythmic violence, and frenetic jazz."
+    }
+  },
+  "addedAt": "2026-10-10"
 };

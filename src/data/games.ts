@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 295
+ * Total de jeux : 298
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11183,6 +11183,109 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-12"
+  },
+  {
+    "id": "opus-magnum",
+    "title": "Opus Magnum",
+    "releaseYear": 2017,
+    "genre": [
+      "Simulation",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Zachtronics",
+    "steamUrl": "https://store.steampowered.com/app/558990/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_e54f24ab7b2bebaee812be7e46e907ccc6323643.1920x1080.jpg?t=1774910584",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_e395f88a023ad623f64a622d343eee17e1e6ea9d.1920x1080.jpg?t=1774910584",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_0e35cab840c52b9d39b988d0b0c96b8fe9117264.1920x1080.jpg?t=1774910584",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_92c30b0f0d8737cfe8c0b70364bbb3712e2bdd43.1920x1080.jpg?t=1774910584",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/ss_b699747de6a3335040160f7fc4af3b5158981b43.1920x1080.jpg?t=1774910584",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/558990/6d8aa1ce08dd0c0e711e0eb068d9d9af6fdb3317/header.jpg?t=1774910584"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Opus Magnum est le dernier jeu de puzzle ouvert créé par Zachtronics, le créateur de SpaceChem, Infinifactory et SHENZHEN I/O. Grâce au moteur de transmutation, l'outil le plus sophistiqué en ingénierie alchimique, développez et assemblez des machines pour créer des potions, poisons et bien plus !",
+        "en": "Opus Magnum is the latest open-ended puzzle game from Zachtronics, the creators of SpaceChem, Infinifactory, and SHENZHEN I/O. Design and build machines that assemble potions, poisons, and more using the alchemical engineer’s most advanced tool: the transmutation engine!"
+      }
+    },
+    "addedAt": "2026-10-13"
+  },
+  {
+    "id": "ion-fury",
+    "title": "Ion Fury",
+    "releaseYear": 2019,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Voidpoint, LLC",
+    "steamUrl": "https://store.steampowered.com/app/562860/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_406b0b080e523ff37d843151449fcd7149c7ef72.1920x1080.jpg?t=1766678226",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_00450debad7dc1e3732169be08bbc803d5c0129f.1920x1080.jpg?t=1766678226",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_15a7842420b1b0bcaa2049ee23b4b57f3dbf4b0d.1920x1080.jpg?t=1766678226",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_33a162fb386f1afa245774195fa65021972d3658.1920x1080.jpg?t=1766678226",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_48d345e7468b03065de67b632baab31ae6791091.1920x1080.jpg?t=1766678226",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/562860/ss_838e34057a6393a041268e93f6c9f6f21f97218e.1920x1080.jpg?t=1766678226"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "3D Realms, creators of Duke Nukem 3D, Prey, and Max Payne, team up with Voidpoint to bring back the legendary Build Engine, famous for classic shooters like Duke Nukem 3D, Shadow Warrior, and Blood. Fast-paced FPS combat across huge, secret-packed levels. Ion Fury is the real deal!",
+        "en": "3D Realms, creators of Duke Nukem 3D, Prey, and Max Payne, team up with Voidpoint to bring back the legendary Build Engine, famous for classic shooters like Duke Nukem 3D, Shadow Warrior, and Blood. Fast-paced FPS combat across huge, secret-packed levels. Ion Fury is the real deal!"
+      }
+    },
+    "addedAt": "2026-10-13"
+  },
+  {
+    "id": "steamworld-dig-2",
+    "title": "SteamWorld Dig 2",
+    "releaseYear": 2017,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Metroidvania",
+      "Platformer"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Image & Form Games",
+    "steamUrl": "https://store.steampowered.com/app/571310/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_7072c34bfa84ab8894da321f9d991eab8f4dfef8.1920x1080.jpg?t=1726132098",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_26b9325c7e66c42ae586e499bd92da3de7995525.1920x1080.jpg?t=1726132098",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_e1b87e496208b2f111e57f178052492351849501.1920x1080.jpg?t=1726132098",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_91135f5607a8d361aa8b980c9c0345be3532c2ad.1920x1080.jpg?t=1726132098",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_55ba00ab6ff370fe68ce82fb5c213a68046101d2.1920x1080.jpg?t=1726132098",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/571310/ss_4ddbc40397860fa4c915841ff525117d38df08f3.1920x1080.jpg?t=1726132098"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "SteamWorld Dig est de retour ! Creuse dans les profondeurs pour obtenir des richesses et affronte les terreurs du monde souterrain dans ce jeu de plateformes et d’aventure minière inspiré par Metroidvania.",
+        "en": "SteamWorld Dig is back! Dig deep, gain riches and unearth the terrors of the underworld in this platform mining adventure influenced by classic Metroidvania style games."
+      }
+    },
+    "addedAt": "2026-10-13"
   }
 ];
 
@@ -11229,14 +11332,7 @@ export function getDailyProfilleGame(dateString: string, pool?: Game[]): Game {
   return getScheduledDailyGame(dateString, 'profille', gamesPool);
 }
 
-// Helper déterministe pour obtenir le jeu du jour pour le Blind Test (sans collision)
-export function getDailyBlindTestGame(dateString: string, pool?: Game[]): Game {
-  const gamesPool = pool && pool.length > 0 ? pool : INDIE_GAMES;
-  return getScheduledDailyGame(dateString, 'blindtest', gamesPool);
-}
-
 // Initialise le pool par défaut pour le planificateur mensuel
 setDefaultGamesPool(INDIE_GAMES);
 
 export { getScheduledDailyGame, getScheduledDay };
-

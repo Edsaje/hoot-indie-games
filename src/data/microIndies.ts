@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 70
+ * Total de pépites sélectionnées : 72
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -2991,5 +2991,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI1NjU1NDU1LnBuZw==/315x250%23c/TLJhD4.png"
     ],
     "dateAdded": "2026-10-12"
+  },
+  {
+    "id": "itch-mr-magpie-s-harmless-card-game",
+    "title": "Mr Magpie's Harmless Card Game",
+    "developer": "giantlight",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://giantlight.itch.io/mr-magpies-harmless-card-game",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Greed is Good.",
+      "en": "Greed is Good."
+    },
+    "description": {
+      "fr": "Greed is Good.",
+      "en": "Greed is Good."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIwMjcyNzYwLmdpZg==/original/LLxfXP.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIwMjcyNzYwLmdpZg==/original/LLxfXP.gif"
+    ],
+    "dateAdded": "2026-10-13"
+  },
+  {
+    "id": "itch-project-chromata",
+    "title": "Project Chromata",
+    "developer": "gamezeternal",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://gamezeternal.itch.io/project-chromata",
+    "playInBrowserUrl": "https://gamezeternal.itch.io/project-chromata",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Reignite a dead universe, one color at a time.",
+      "en": "Reignite a dead universe, one color at a time."
+    },
+    "description": {
+      "fr": "Reignite a dead universe, one color at a time.",
+      "en": "Reignite a dead universe, one color at a time."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIyNjg2ODI0LnBuZw==/315x250%23c/bI0xre.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIyNjg2ODI0LnBuZw==/315x250%23c/bI0xre.png"
+    ],
+    "dateAdded": "2026-10-13"
   }
 ];
