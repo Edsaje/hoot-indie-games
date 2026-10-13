@@ -104,16 +104,21 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
     return allSortedGenres.slice(6);
   }, [allSortedGenres]);
 
-  const [isMoreGenresOpen, setIsMoreGenresOpen] = useState(false);
-  const moreGenresRef = useRef<HTMLDivElement>(null);
+  const [genreSearchQuery, setGenreSearchQuery] = useState('');
+  const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
+  const genreSearchContainerRef = useRef<HTMLDivElement>(null);
+  const genreSearchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-      if (moreGenresRef.current && !moreGenresRef.current.contains(e.target as Node)) {
-        setIsMoreGenresOpen(false);
+      if (
+        genreSearchContainerRef.current &&
+        !genreSearchContainerRef.current.contains(e.target as Node)
+      ) {
+        setIsGenreDropdownOpen(false);
       }
     };
-    if (isMoreGenresOpen) {
+    if (isGenreDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('touchstart', handleClickOutside);
     }
@@ -121,9 +126,20 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [isMoreGenresOpen]);
+  }, [isGenreDropdownOpen]);
 
-  const isSecondaryGenreActive = selectedGenre !== 'all' && secondaryGenres.includes(selectedGenre);
+  // Genres filtrés par la recherche en temps réel
+  const filteredGenresForSearch = useMemo(() => {
+    const query = genreSearchQuery.toLowerCase().trim();
+    if (!query) {
+      return secondaryGenres;
+    }
+    return allSortedGenres.filter((genre) => {
+      const translated = getTranslatedGenre(genre, i18n.language).toLowerCase();
+      const raw = genre.toLowerCase();
+      return raw.includes(query) || translated.includes(query);
+    });
+  }, [genreSearchQuery, secondaryGenres, allSortedGenres, i18n.language]);
 
   const ownedCount = useMemo(() => {
     return allPlayableGames.filter((g) => isGameOwned(g.steamUrl)).length;
@@ -151,6 +167,8 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
     soundFx.playClick();
     setSearchQuery('');
     setSelectedGenre('all');
+    setGenreSearchQuery('');
+    setIsGenreDropdownOpen(false);
     setSelectedArtStyle('all');
     setSelectedCamera('all');
     setOwnershipFilter('all');
@@ -794,7 +812,7 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
           )}
         </div>
 
-        {/* Badges de genres principaux et menu déroulant "Voir plus" */}
+        {/* Badges de genres principaux et champ de recherche de genre */}
         <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
           <button
             type="button"
@@ -832,36 +850,86 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
             );
           })}
 
-          {/* Menu déroulant "Voir plus" pour les genres secondaires */}
-          {secondaryGenres.length > 0 && (
-            <div className="relative" ref={moreGenresRef}>
+          {/* Badge du genre actif sélectionné s'il n'est pas dans les 6 genres principaux */}
+          {selectedGenre !== 'all' && !primaryGenres.includes(selectedGenre) && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 border border-amber-400 animate-in fade-in zoom-in-95">
+              <span>{getTranslatedGenre(selectedGenre, i18n.language)} ({stats.genresCount[selectedGenre] || 0})</span>
               <button
                 type="button"
                 onClick={() => {
                   soundFx.playClick();
-                  setIsMoreGenresOpen((prev) => !prev);
+                  setSelectedGenre('all');
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap border cursor-pointer ${
-                  isSecondaryGenreActive
-                    ? 'bg-amber-500 text-slate-950 font-black border-amber-400 shadow-md shadow-amber-500/20'
-                    : 'bg-[#131a29] text-slate-400 hover:text-white border-[#1e293b]'
-                }`}
+                className="hover:bg-black/20 rounded p-0.5 transition cursor-pointer"
+                title={t('common.clear', 'Désactiver ce genre')}
               >
-                <span>
-                  {isSecondaryGenreActive
-                    ? `${getTranslatedGenre(selectedGenre, i18n.language)} (${stats.genresCount[selectedGenre] || 0})`
-                    : t('catalog.moreGenres', { defaultValue: 'Voir plus' })}
-                </span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isMoreGenresOpen ? 'rotate-180' : ''}`} />
+                <X className="w-3.5 h-3.5" />
               </button>
+            </div>
+          )}
 
-              {isMoreGenresOpen && (
-                <div className="absolute left-0 mt-1.5 w-60 max-h-72 overflow-y-auto bg-[#0b0f19] border border-[#1e293b] rounded-2xl shadow-2xl z-30 p-1.5 space-y-1 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
-                    <span>{t('catalog.otherGenres', { defaultValue: 'Autres genres' })}</span>
-                    <span className="font-mono text-slate-400">{secondaryGenres.length}</span>
+          {/* Champ de recherche rapide de genre et sélecteur déroulant */}
+          <div className="relative" ref={genreSearchContainerRef}>
+            <div className="relative flex items-center">
+              <Search className="w-3.5 h-3.5 text-amber-400 absolute left-2.5 pointer-events-none" />
+              <input
+                ref={genreSearchInputRef}
+                type="text"
+                value={genreSearchQuery}
+                onChange={(e) => {
+                  setGenreSearchQuery(e.target.value);
+                  setIsGenreDropdownOpen(true);
+                }}
+                onFocus={() => setIsGenreDropdownOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    setIsGenreDropdownOpen(false);
+                  } else if (e.key === 'Enter' && filteredGenresForSearch.length > 0) {
+                    soundFx.playClick();
+                    setSelectedGenre(filteredGenresForSearch[0]);
+                    setIsGenreDropdownOpen(false);
+                    setGenreSearchQuery('');
+                  }
+                }}
+                placeholder={t('catalog.searchGenrePlaceholder', 'Chercher un genre...')}
+                className="pl-8 pr-7 py-1.5 rounded-xl bg-[#131a29] border border-[#1e293b] focus:border-amber-400 text-xs text-white placeholder-slate-500 focus:outline-none transition w-44 sm:w-56 shadow-sm"
+              />
+              {genreSearchQuery ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setGenreSearchQuery('');
+                  }}
+                  className="absolute right-2 text-slate-400 hover:text-white cursor-pointer"
+                  title={t('common.clear', 'Effacer')}
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              ) : (
+                <ChevronDown className="w-3 h-3 text-slate-500 absolute right-2 pointer-events-none" />
+              )}
+            </div>
+
+            {/* Menu déroulant des genres filtrés */}
+            {isGenreDropdownOpen && (
+              <div className="absolute left-0 mt-1.5 w-64 sm:w-72 max-h-80 overflow-y-auto bg-[#0b0f19] border border-[#1e293b] rounded-2xl shadow-2xl z-30 p-1.5 space-y-1 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
+                  <span>
+                    {genreSearchQuery
+                      ? t('catalog.matchingGenres', 'Genres correspondants')
+                      : t('catalog.otherGenres', 'Autres genres')}
+                  </span>
+                  <span className="font-mono text-slate-400">
+                    {filteredGenresForSearch.length}
+                  </span>
+                </div>
+
+                {filteredGenresForSearch.length === 0 ? (
+                  <div className="py-4 text-center text-xs text-slate-400">
+                    {t('catalog.noGenreFound', 'Aucun genre trouvé')}
                   </div>
-                  {secondaryGenres.map((genre) => {
+                ) : (
+                  filteredGenresForSearch.map((genre) => {
                     const isSelected = selectedGenre === genre;
                     return (
                       <button
@@ -870,7 +938,8 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                         onClick={() => {
                           soundFx.playClick();
                           setSelectedGenre(isSelected ? 'all' : genre);
-                          setIsMoreGenresOpen(false);
+                          setIsGenreDropdownOpen(false);
+                          setGenreSearchQuery('');
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${
                           isSelected
@@ -884,11 +953,11 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
                         </span>
                       </button>
                     );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
+                  })
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

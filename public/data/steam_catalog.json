@@ -15643,57 +15643,6 @@
     }
   },
   {
-    "id": "every-day-we-fight-playtest",
-    "title": "Every Day We Fight Playtest",
-    "releaseYear": 2023,
-    "genre": [
-      "Aventure",
-      "Action"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Studio Indépendant",
-    "steamUrl": "https://store.steampowered.com/app/1911950/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/ss_b9cb7ad9e3383e546d09f7fe2b2bb5175f090b15.1920x1080.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Every Day We Fight Playtest est un jeu indépendant remarquable développé par Studio Indépendant.",
-        "en": "Every Day We Fight Playtest is a remarkable indie game developed by Studio Indépendant."
-      }
-    },
-    "steamAppId": 1911950,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1911950/header.jpg?t=1693185911",
-    "steamStoreData": {
-      "appId": 1911950,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "totalReviews": 3,
-      "totalPositive": 2,
-      "positivePercent": 67,
-      "reviewScoreDesc": {
-        "fr": "Positifs",
-        "en": "Positive"
-      }
-    }
-  },
-  {
     "id": "monument-valley",
     "title": "Monument Valley",
     "releaseYear": 2022,
@@ -19041,113 +18990,6 @@
     }
   },
   {
-    "id": "stickword",
-    "title": "StickWord",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure",
-      "Indépendant"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Xrootpi",
-    "steamUrl": "https://store.steampowered.com/app/5228570/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/cb6360bc6419fe0ddfaf9d18d1bd47e7b22459d4/ss_cb6360bc6419fe0ddfaf9d18d1bd47e7b22459d4.1920x1080.jpg?t=1790760795",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/5e23a3a068fb2542d7ca4de643c4c7eacfd862c3/ss_5e23a3a068fb2542d7ca4de643c4c7eacfd862c3.1920x1080.jpg?t=1790760795",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/f3e0405622e3de681d23d2a05ea3af09a690869c/ss_f3e0405622e3de681d23d2a05ea3af09a690869c.1920x1080.jpg?t=1790760795",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/d39d7bf8433eebcba0eefa1de0572055c9a77676/ss_d39d7bf8433eebcba0eefa1de0572055c9a77676.1920x1080.jpg?t=1790760795",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/5d2e8ba9ec5956c3e10f1b496334a2559cc66c84/ss_5d2e8ba9ec5956c3e10f1b496334a2559cc66c84.1920x1080.jpg?t=1790760795",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/9e8769b20a7ae8f01be33f9aa99092f65a88cf61/ss_9e8769b20a7ae8f01be33f9aa99092f65a88cf61.1920x1080.jpg?t=1790760795"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Letters fall out of the sky. You have a bow, a bridge, and one question to answer. Net the letters you need, let the rest drop, and spell your way across 84 levels of a hand-drawn exercise book — before the hangman finishes his sketch.",
-        "en": "Letters fall out of the sky. You have a bow, a bridge, and one question to answer. Net the letters you need, let the rest drop, and spell your way across 84 levels of a hand-drawn exercise book — before the hangman finishes his sketch."
-      }
-    },
-    "addedAt": "2026-10-01",
-    "steamAppId": 5228570,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228570/c8d36f851dd112a935ddc3baa5666f67bfedfc47/header.jpg?t=1790760795",
-    "steamStoreData": {
-      "appId": 5228570,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 415,
-      "finalPriceCents": 373,
-      "discountPercent": 10,
-      "formattedFinalPrice": "3,73€",
-      "formattedInitialPrice": "4,15€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "battle-simulator-counter-zombie-reborn",
-    "title": "Battle Simulator: Counter Zombie REBORN",
-    "releaseYear": 2026,
-    "genre": [
-      "Action",
-      "Simulation",
-      "Stratégie"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Yurii Nikshych",
-    "steamUrl": "https://store.steampowered.com/app/4831090/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/c48afa64d48a45a46ad2f1168721551e602f1a77/ss_c48afa64d48a45a46ad2f1168721551e602f1a77.1920x1080.jpg?t=1790883849",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/105d6092cdf5d1f1294877fb61ccb739f7d08081/ss_105d6092cdf5d1f1294877fb61ccb739f7d08081.1920x1080.jpg?t=1790883849",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/57315c1d1456f3dafe5cc27ded97238f738633a0/ss_57315c1d1456f3dafe5cc27ded97238f738633a0.1920x1080.jpg?t=1790883849",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/e1f4a8b28101b30e435725d1c986b376ae03eed6/ss_e1f4a8b28101b30e435725d1c986b376ae03eed6.1920x1080.jpg?t=1790883849",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/0ea330e829a5d2d8e437d7505a1c50f838a13c58/ss_0ea330e829a5d2d8e437d7505a1c50f838a13c58.1920x1080.jpg?t=1790883849",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/ffafc6ac00acf17db42044a38f1518fe656a3c2a/ss_ffafc6ac00acf17db42044a38f1518fe656a3c2a.1920x1080.jpg?t=1790883849"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Simulateur de combat contre les zombies post-apocalyptique avec des tactiques d’escouade réalistes et précises. Affrontez et éliminez la horde de zombies. Tirez pour tuer et utilisez des armes comme le lance-flammes, le M16 et les RPG pour éliminer les morts-vivants.",
-        "en": "Post-apocalyptic zombie battle simulator with accurate squad based tactics. Battle and kill the zombie horde. Shooting to kill, use weapons like flamethrower, m16 and RPGs to kill the undead. Accurate zombie AI and HDR graphics."
-      }
-    },
-    "addedAt": "2026-10-02",
-    "steamAppId": 4831090,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4831090/c78cd742272ca43444802b8da37448bc394e8f18/header.jpg?t=1790883849",
-    "steamStoreData": {
-      "appId": 4831090,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 415,
-      "finalPriceCents": 373,
-      "discountPercent": 10,
-      "formattedFinalPrice": "3,73€",
-      "formattedInitialPrice": "4,15€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "leadfall",
     "title": "LeadFall",
     "releaseYear": 2026,
@@ -20589,112 +20431,6 @@
     }
   },
   {
-    "id": "apocalypse-intern",
-    "title": "Apocalypse Intern",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure",
-      "Indépendant"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "WizardHistory",
-    "steamUrl": "https://store.steampowered.com/app/5275800/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/c89e802f0319b1f448b6e065d2d2ce013361bc92/ss_c89e802f0319b1f448b6e065d2d2ce013361bc92.1920x1080.jpg?t=1791547437",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/124a9e0e63a16277065289f88a911937d2c7e41f/ss_124a9e0e63a16277065289f88a911937d2c7e41f.1920x1080.jpg?t=1791547437",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/f80a716ad497d516444e0d009aa5fac5c584d57c/ss_f80a716ad497d516444e0d009aa5fac5c584d57c.1920x1080.jpg?t=1791547437",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/9a56fe9d288c0666c854a80a9ac119febc83cf0a/ss_9a56fe9d288c0666c854a80a9ac119febc83cf0a.1920x1080.jpg?t=1791547437",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/2492960595f23e0c64b076f4aa7259bfc835fcd7/ss_2492960595f23e0c64b076f4aa7259bfc835fcd7.1920x1080.jpg?t=1791547437",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/0c4a03cdcd1a5ef3b15169509ee8856afa42ef17/ss_0c4a03cdcd1a5ef3b15169509ee8856afa42ef17.1920x1080.jpg?t=1791547437"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee.",
-        "en": "Cancel the apocalypse before your first shift ends in this 20-minute workplace comedy about stamps, loopholes, and one terrible cup of coffee."
-      }
-    },
-    "addedAt": "2026-10-10",
-    "steamAppId": 5275800,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5275800/43398b3e982187378a1a5518a00d50d330a0858c/header.jpg?t=1791547437",
-    "steamStoreData": {
-      "appId": 5275800,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 9999,
-      "finalPriceCents": 5999,
-      "discountPercent": 40,
-      "formattedFinalPrice": "59,99€",
-      "formattedInitialPrice": "99,99€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "rock-core",
-    "title": "ROCK CORE",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure",
-      "Indépendant"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "DNA ARMY GAMING",
-    "steamUrl": "https://store.steampowered.com/app/5343270/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/6f188c9d91d94759e9cc02562c78748dc5629c69/ss_6f188c9d91d94759e9cc02562c78748dc5629c69.1920x1080.jpg?t=1791545185",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/5c4109971e36ee45f240b9deb09633b5f72102d9/ss_5c4109971e36ee45f240b9deb09633b5f72102d9.1920x1080.jpg?t=1791545185",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/921ee3c65667d3b13b2e39e230bd209fb81a5d53/ss_921ee3c65667d3b13b2e39e230bd209fb81a5d53.1920x1080.jpg?t=1791545185",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/f9959f02f7047b8baf0b44ff693307ea44d9451b/ss_f9959f02f7047b8baf0b44ff693307ea44d9451b.1920x1080.jpg?t=1791545185",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/74e54810ea2b439db3c4ae2f4276fcfce1e1b1fc/ss_74e54810ea2b439db3c4ae2f4276fcfce1e1b1fc.1920x1080.jpg?t=1791545185",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/00bf0f91c2d26df0150a553b713c6b560fae9382/ss_00bf0f91c2d26df0150a553b713c6b560fae9382.1920x1080.jpg?t=1791545185"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!",
-        "en": "Enjoy the peaceful forest in Rock Core, a relaxing incremental game. Smash rocks, sell ores, upgrade your character, and hire workers to build the an automated mining operation!"
-      }
-    },
-    "addedAt": "2026-10-10",
-    "steamAppId": 5343270,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5343270/bb5852b59c7500c3a30846db92ac32f789339f6b/header.jpg?t=1791545185",
-    "steamStoreData": {
-      "appId": 5343270,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 519,
-      "finalPriceCents": 430,
-      "discountPercent": 17,
-      "formattedFinalPrice": "4,30€",
-      "formattedInitialPrice": "5,19€",
-      "totalReviews": 1,
-      "totalPositive": 0,
-      "positivePercent": 0,
-      "reviewScoreDesc": {
-        "fr": "Moyens",
-        "en": "Mixed"
-      }
-    }
-  },
-  {
     "id": "the-szyk",
     "title": "The Szyk",
     "releaseYear": 2026,
@@ -20956,58 +20692,6 @@
       "reviewScoreDesc": {
         "fr": "Plutôt positifs",
         "en": "Mostly Positive"
-      }
-    }
-  },
-  {
-    "id": "bounty-hunter-horrors",
-    "title": "Bounty Hunter Horrors",
-    "releaseYear": 2026,
-    "genre": [
-      "Action",
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "RacerX_Games",
-    "steamUrl": "https://store.steampowered.com/app/3627560/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/138f117f60479eeb8a7438b01608564a7b52585e/ss_138f117f60479eeb8a7438b01608564a7b52585e.1920x1080.jpg?t=1791648048",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/790b42aad6310e8d4a2a944f7393e0e68b0832ac/ss_790b42aad6310e8d4a2a944f7393e0e68b0832ac.1920x1080.jpg?t=1791648048",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/f6e23aecd12ef336f709e799f433e0baf44a1076/ss_f6e23aecd12ef336f709e799f433e0baf44a1076.1920x1080.jpg?t=1791648048",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/fbacce058c39b0bfedddca10155de191c29487bd/ss_fbacce058c39b0bfedddca10155de191c29487bd.1920x1080.jpg?t=1791648048",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/bf95c618b0555e7268786280dfc7a8193f140ceb/ss_bf95c618b0555e7268786280dfc7a8193f140ceb.1920x1080.jpg?t=1791648048",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/3709e879d8d9e312f8d2db4b29e451f002b0e32b/ss_3709e879d8d9e312f8d2db4b29e451f002b0e32b.1920x1080.jpg?t=1791648048"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching.",
-        "en": "Hunt for monsters through creepy dungeons on your own or with a squad of up to four in this sci-fi horror-based shooter! Navigate treacherous traps and escape the planet once the job is done. Purchase various kinds of equipment to make sure you and your squad are ready! The Main HQ will be watching."
-      }
-    },
-    "addedAt": "2026-10-11",
-    "steamAppId": 3627560,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3627560/6e8a2da31174d37aa5bc545596553cfd7dd62183/header.jpg?t=1791648048",
-    "steamStoreData": {
-      "appId": 3627560,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 815,
-      "finalPriceCents": 815,
-      "discountPercent": 0,
-      "formattedFinalPrice": "8,15€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
       }
     }
   },
@@ -21375,58 +21059,6 @@
       "formattedInitialPrice": "4,15€",
       "totalReviews": 14,
       "totalPositive": 14,
-      "positivePercent": 100,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "don-t-give-up",
-    "title": "Don't Give Up",
-    "releaseYear": 2026,
-    "genre": [
-      "Free-to-play"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Dylan Rose",
-    "steamUrl": "https://store.steampowered.com/app/5138180/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/7f949390dc24fa235c5fec92e56e5daf2a3e368a/ss_7f949390dc24fa235c5fec92e56e5daf2a3e368a.1920x1080.jpg?t=1791746151",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/20c448e22c6ca6088025cf4882d83de545024293/ss_20c448e22c6ca6088025cf4882d83de545024293.1920x1080.jpg?t=1791746151",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/ba21f7903be5194cc3b8caebe7afa757bab58a0e/ss_ba21f7903be5194cc3b8caebe7afa757bab58a0e.1920x1080.jpg?t=1791746151",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/029a007d7afcf617f3419f83c62611b3877bf51f/ss_029a007d7afcf617f3419f83c62611b3877bf51f.1920x1080.jpg?t=1791746151",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/e093e79b39895d9a601bf0e56124083e68d9d54a/ss_e093e79b39895d9a601bf0e56124083e68d9d54a.1920x1080.jpg?t=1791746151",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/dbc3ec153a9787ee9ba07f83af909fcf5821c767/header.jpg?t=1791746151"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Don't Give Up is an incremental, minimalist and emotional game about loss. As you gain more passions, friends and dreams they become harder to manage. Each one ignoring your weakening cries as they slowly leave your circle and life. Is it possible to stop everything you love from leaving you?",
-        "en": "Don't Give Up is an incremental, minimalist and emotional game about loss. As you gain more passions, friends and dreams they become harder to manage. Each one ignoring your weakening cries as they slowly leave your circle and life. Is it possible to stop everything you love from leaving you?"
-      }
-    },
-    "addedAt": "2026-10-12",
-    "isFree": true,
-    "steamAppId": 5138180,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5138180/dbc3ec153a9787ee9ba07f83af909fcf5821c767/header.jpg?t=1791746151",
-    "steamStoreData": {
-      "appId": 5138180,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "totalReviews": 1,
-      "totalPositive": 1,
       "positivePercent": 100,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
@@ -22798,58 +22430,6 @@
     }
   },
   {
-    "id": "babel-invent-a-way",
-    "title": "BABEL: Invent a Way",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "NthAxs",
-    "steamUrl": "https://store.steampowered.com/app/5306000/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/510ae2c838a7aa5b2a8c2aa2f06d047e714c7233/ss_510ae2c838a7aa5b2a8c2aa2f06d047e714c7233.1920x1080.jpg?t=1791806534",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/d452bc11b9fc11ccf44ee0364cb7a96aafbf33fe/ss_d452bc11b9fc11ccf44ee0364cb7a96aafbf33fe.1920x1080.jpg?t=1791806534",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/89601843cbce243f9a451a77a13c040f316ab3cc/ss_89601843cbce243f9a451a77a13c040f316ab3cc.1920x1080.jpg?t=1791806534",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/83941054e2d176172514f6c823969b73fa418914/ss_83941054e2d176172514f6c823969b73fa418914.1920x1080.jpg?t=1791806534",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/975e9bfd108ee69dc4d48c7cb846247f9c300204/ss_975e9bfd108ee69dc4d48c7cb846247f9c300204.1920x1080.jpg?t=1791806534",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/b8e88ce9b363530c335a81d240e434871925e246/header.jpg?t=1791806534"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only.",
-        "en": "Existing languages are forbidden. Exchange only five symbols—↑ ↓ ← → •—to share what each of you knows, complete magical rituals, and break the seal. What begins as five simple symbols gradually grows into a one-of-a-kind language shared only by the two of you. Two players only."
-      }
-    },
-    "addedAt": "2026-10-13",
-    "steamAppId": 5306000,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5306000/b8e88ce9b363530c335a81d240e434871925e246/header.jpg?t=1791806534",
-    "steamStoreData": {
-      "appId": 5306000,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 719,
-      "finalPriceCents": 611,
-      "discountPercent": 15,
-      "formattedFinalPrice": "6,11€",
-      "formattedInitialPrice": "7,19€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "rhythm-animal-cafe",
     "title": "Rhythm Animal Café",
     "releaseYear": 2026,
@@ -22893,9 +22473,9 @@
       "discountPercent": 10,
       "formattedFinalPrice": "9,22€",
       "formattedInitialPrice": "10,25€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
+      "totalReviews": 23,
+      "totalPositive": 23,
+      "positivePercent": 100,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -22947,12 +22527,12 @@
       "discountPercent": 15,
       "formattedFinalPrice": "4,66€",
       "formattedInitialPrice": "5,49€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
+      "totalReviews": 11,
+      "totalPositive": 11,
+      "positivePercent": 100,
       "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
+        "fr": "Positifs",
+        "en": "Positive"
       }
     }
   },
@@ -22999,62 +22579,9 @@
       "discountPercent": 20,
       "formattedFinalPrice": "8,20€",
       "formattedInitialPrice": "10,25€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "colorbound",
-    "title": "Colorbound",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure",
-      "Puzzle"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Panpipe Studio",
-    "steamUrl": "https://store.steampowered.com/app/3778610/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/ee6e2e856ea840caddaeaf957381b0cadaff2482/ss_ee6e2e856ea840caddaeaf957381b0cadaff2482.1920x1080.jpg?t=1791824439",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/f2385a726af03d735121765600ef2555da401d77/ss_f2385a726af03d735121765600ef2555da401d77.1920x1080.jpg?t=1791824439",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/ecd89e50d267c1a81db24a1ef420d3c02d34607f/ss_ecd89e50d267c1a81db24a1ef420d3c02d34607f.1920x1080.jpg?t=1791824439",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/9b4ebd79c7e1fdc724d44272d7017d6738f77d1c/ss_9b4ebd79c7e1fdc724d44272d7017d6738f77d1c.1920x1080.jpg?t=1791824439",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/98b691ab9fb537af658d6038d2e2c65395fe10ae/ss_98b691ab9fb537af658d6038d2e2c65395fe10ae.1920x1080.jpg?t=1791824439",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/c77d1e9fe9f93b834aabc506e04edd4de8a4722c/ss_c77d1e9fe9f93b834aabc506e04edd4de8a4722c.1920x1080.jpg?t=1791824439"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Dans Colorbound, la couleur est bien plus qu'une simple teinte. Dans la peau d'Anku, un garçon aymara, vous exploiterez le pouvoir des couleurs pour modeler l'environnement lui-même, dévoilant ainsi des chemins cachés qui vous permettront de résoudre des énigmes complexes et difficiles.",
-        "en": "In Colorbound, color is more than just hue. As Anku, an Aymara boy with a unique gift, you’ll harness the power of color to shape the environment itself, uncovering hidden paths to navigate challenging and complex puzzles."
-      }
-    },
-    "addedAt": "2026-10-13",
-    "steamAppId": 3778610,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3778610/a0e2dcc62adad30cc2d930190dde4d82fd6b7fb0/header.jpg?t=1791824439",
-    "steamStoreData": {
-      "appId": 3778610,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1549,
-      "finalPriceCents": 1394,
-      "discountPercent": 10,
-      "formattedFinalPrice": "13,94€",
-      "formattedInitialPrice": "15,49€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
+      "totalReviews": 50,
+      "totalPositive": 49,
+      "positivePercent": 98,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -23105,62 +22632,9 @@
       "discountPercent": 20,
       "formattedFinalPrice": "11,83€",
       "formattedInitialPrice": "14,79€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "den-den-tokyo-horror",
-    "title": "Den-Den: Tokyo Horror",
-    "releaseYear": 2026,
-    "genre": [
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Frozen Lake Software",
-    "steamUrl": "https://store.steampowered.com/app/3301010/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/5571d519232e275df1eaf7d39243560cfba34893/ss_5571d519232e275df1eaf7d39243560cfba34893.1920x1080.jpg?t=1791818455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/c57bacb6f5e0302776ffd1dc5aabb756a3970d02/ss_c57bacb6f5e0302776ffd1dc5aabb756a3970d02.1920x1080.jpg?t=1791818455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/424d769c7fa7945a957e7f8b1688382f9efb7b8f/ss_424d769c7fa7945a957e7f8b1688382f9efb7b8f.1920x1080.jpg?t=1791818455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/8ea9cd03649b20278f926500be74010a58d4732d/ss_8ea9cd03649b20278f926500be74010a58d4732d.1920x1080.jpg?t=1791818455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/3c780443179065783ce0b3bf3ded0f7975049d76/ss_3c780443179065783ce0b3bf3ded0f7975049d76.1920x1080.jpg?t=1791818455",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/3b87a061d2774afd65e0c387e2d24c9225f9154f/ss_3b87a061d2774afd65e0c387e2d24c9225f9154f.1920x1080.jpg?t=1791818455"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Den-Den: Tokyo Horror est un RPG J-horror où les événements se déroulent en temps réel. Survivez à une nuit dans une ville où chacun de vos choix influence le monde qui vous entoure. Combien de morts aurez-vous sur la conscience ce soir ?",
-        "en": "Den-Den: Tokyo Horror is a J-horror RPG where events unfold in real-time. Survive one night in a city where every choice you make impacts the world around you. How many deaths will you be responsible for tonight?"
-      }
-    },
-    "addedAt": "2026-10-13",
-    "steamAppId": 3301010,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3301010/09815a8cd4f0d34dccaa431a0572312d54dde0ef/header.jpg?t=1791818455",
-    "steamStoreData": {
-      "appId": 3301010,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1549,
-      "finalPriceCents": 1316,
-      "discountPercent": 15,
-      "formattedFinalPrice": "13,16€",
-      "formattedInitialPrice": "15,49€",
-      "totalReviews": 0,
-      "totalPositive": 0,
-      "positivePercent": 90,
+      "totalReviews": 213,
+      "totalPositive": 210,
+      "positivePercent": 99,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -24588,59 +24062,6 @@
       "formattedInitialPrice": "",
       "totalReviews": 105,
       "totalPositive": 103,
-      "positivePercent": 98,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "lotion-samurai",
-    "title": "Lotion samurai",
-    "releaseYear": 2020,
-    "genre": [
-      "Course",
-      "Action",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Retsu Teikoku",
-    "steamUrl": "https://store.steampowered.com/app/1291370/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1291370/ss_35b2151975c8782cc06920a772927966e2d10699.1920x1080.jpg?t=1780147610",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1291370/ss_eca394963e768a4959e84c2f2ab4a763cf251bff.1920x1080.jpg?t=1780147610",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1291370/ss_fb6c3a89d36330c561d44fc193df3f3d262a2753.1920x1080.jpg?t=1780147610",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1291370/ss_d73f509303d453d455cdfa3b7945780221f0b371.1920x1080.jpg?t=1780147610",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1291370/ss_1fb1a58073b3bf55753ef0ca276744558fc990c4.1920x1080.jpg?t=1780147610",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1291370/ss_c38b00372199ed5e284df9919f3623b20b2faf22.1920x1080.jpg?t=1780147610"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Manipulate a lotion-covered samurai, defeat the ninjas who are blocking them, and aim for escape from the ninja castle! Further ranking function supported! Compete with rival samurai all over the world for clear time!",
-        "en": "Manipulate a lotion-covered samurai, defeat the ninjas who are blocking them, and aim for escape from the ninja castle! Further ranking function supported! Compete with rival samurai all over the world for clear time!"
-      }
-    },
-    "steamAppId": 1291370,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1291370/header.jpg?t=1780147610",
-    "steamStoreData": {
-      "appId": 1291370,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 199,
-      "finalPriceCents": 199,
-      "discountPercent": 0,
-      "formattedFinalPrice": "1,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 126,
-      "totalPositive": 124,
       "positivePercent": 98,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
@@ -26184,58 +25605,6 @@
     }
   },
   {
-    "id": "mount-your-friends",
-    "title": "Mount Your Friends",
-    "releaseYear": 2014,
-    "genre": [
-      "Sport",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Stegersaurus Software Inc.",
-    "steamUrl": "https://store.steampowered.com/app/296470/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/296470/ss_12a5884093e220996010af3b861639c0438879f2.1920x1080.jpg?t=1756939237",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/296470/ss_d763dd7edd0f2cbc5c3ebafeb3b45c092f572a51.1920x1080.jpg?t=1756939237",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/296470/ss_dc8cd1cd0f1b1429616ba21909f020cb1266d14e.1920x1080.jpg?t=1756939237",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/296470/ss_7838cc87c3a872ffc5a74b46aa407f8d3b55ddd3.1920x1080.jpg?t=1756939237",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/296470/ss_531ea3a690b811d3b1781361d69cb6e86411cd87.1920x1080.jpg?t=1756939237",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/296470/ss_bb66274486486e44ffdc372c99c9ef90b0aeeef1.1920x1080.jpg?t=1756939237"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Experience the extreme simulated sporting sensation that's sweeping our digital nation! Mount Your Friends is a fiercely competitive sporting event for you to play with your friends in the contextual security of your own home, assuming that your home is not composed of sexual innuendo.",
-        "en": "Experience the extreme simulated sporting sensation that's sweeping our digital nation! Mount Your Friends is a fiercely competitive sporting event for you to play with your friends in the contextual security of your own home, assuming that your home is not composed of sexual innuendo."
-      }
-    },
-    "steamAppId": 296470,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/296470/header.jpg?t=1756939237",
-    "steamStoreData": {
-      "appId": 296470,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 499,
-      "finalPriceCents": 499,
-      "discountPercent": 0,
-      "formattedFinalPrice": "4,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 7664,
-      "totalPositive": 7306,
-      "positivePercent": 95,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "scooterflow",
     "title": "ScooterFlow",
     "releaseYear": 2026,
@@ -27538,59 +26907,6 @@
       "formattedFinalPrice": "Gratuit",
       "totalReviews": 57,
       "totalPositive": 55,
-      "positivePercent": 96,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "morodashi-sumo",
-    "title": "MORODASHI SUMO",
-    "releaseYear": 2022,
-    "genre": [
-      "Sport",
-      "Action",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Bakumatsu Games",
-    "steamUrl": "https://store.steampowered.com/app/1964310/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1964310/ss_20bf2d35ca03ef4c17350827113a58344a88e44b.1920x1080.jpg?t=1660111454",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1964310/ss_c92ab85a97c7311f85bfe0b140ec540188c61cc9.1920x1080.jpg?t=1660111454",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1964310/ss_c761fbf51871b15023772dc9dffabb779112600e.1920x1080.jpg?t=1660111454",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1964310/ss_fa7d8a10ec5f8bd3188d3a6a788bed34a09f92aa.1920x1080.jpg?t=1660111454",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1964310/ss_218db857d0315fc5e3277107324caa682af33ec4.1920x1080.jpg?t=1660111454",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1964310/ss_631c936b4627db8762addb3ae82174f7e00df63c.1920x1080.jpg?t=1660111454"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Do you know the traditional Japanese national sport \"Morodashi Sumo\"? You can use any hand, so let's remove the opponent's \"Mawashi\". If you make the opponent \"Morodashi\", you win.",
-        "en": "Do you know the traditional Japanese national sport \"Morodashi Sumo\"? You can use any hand, so let's remove the opponent's \"Mawashi\". If you make the opponent \"Morodashi\", you win."
-      }
-    },
-    "steamAppId": 1964310,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1964310/header.jpg?t=1660111454",
-    "steamStoreData": {
-      "appId": 1964310,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 399,
-      "finalPriceCents": 399,
-      "discountPercent": 0,
-      "formattedFinalPrice": "3,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 70,
-      "totalPositive": 67,
       "positivePercent": 96,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
@@ -33554,57 +32870,6 @@
     }
   },
   {
-    "id": "skater-frog",
-    "title": "Skater Frog",
-    "releaseYear": 2020,
-    "genre": [
-      "Colony Sim",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Gnarvana Studios",
-    "steamUrl": "https://store.steampowered.com/app/1127470/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1127470/ss_cc05e621d5e8f82c1c6ebb818d4fea27550b49bc.1920x1080.jpg?t=1721532390",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1127470/ss_d57a5cfea018278f7c10ac792f778e514fe13df4.1920x1080.jpg?t=1721532390",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1127470/ss_46f14de7ff0527dfd2e07ba016beb1631daeb42c.1920x1080.jpg?t=1721532390",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1127470/ss_8600fdc7d78205a3db36a64e131ca72b1f46e108.1920x1080.jpg?t=1721532390",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1127470/ss_4ec04f1909c7c0a54a5fbed7bad1b6439484bc7c.1920x1080.jpg?t=1721532390",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1127470/header.jpg?t=1721532390"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "He was a skater frog, she said see ya later dog.",
-        "en": "He was a skater frog, she said see ya later dog."
-      }
-    },
-    "steamAppId": 1127470,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1127470/header.jpg?t=1721532390",
-    "steamStoreData": {
-      "appId": 1127470,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "totalReviews": 192,
-      "totalPositive": 175,
-      "positivePercent": 91,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "a-pig-game-a-pee-wee-premiere",
     "title": "a pig game: A Pee Wee Premiere",
     "releaseYear": 2025,
@@ -35053,61 +34318,6 @@
     }
   },
   {
-    "id": "enjoy-amoy-sisters",
-    "title": "厦日恋旅 Enjoy Amoy&Sisters",
-    "releaseYear": 2026,
-    "genre": [
-      "Automatisation",
-      "Aventure",
-      "Occasionnel",
-      "RPG",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Choice Studio",
-    "steamUrl": "https://store.steampowered.com/app/4258390/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4258390/5cf961fb3aa44fd0e35324c065e8cfe812dcf625/ss_5cf961fb3aa44fd0e35324c065e8cfe812dcf625.1920x1080.jpg?t=1775188205",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4258390/610ec29e0437be5d59e0c9865e83ab4ed01cbd27/ss_610ec29e0437be5d59e0c9865e83ab4ed01cbd27.1920x1080.jpg?t=1775188205",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4258390/320f7f5bbe8e8e20801f633d2c28ad65a5d80dd3/ss_320f7f5bbe8e8e20801f633d2c28ad65a5d80dd3.1920x1080.jpg?t=1775188205",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4258390/0e268a66988ccdf1d86bd82bedb1d0bdc21b293f/ss_0e268a66988ccdf1d86bd82bedb1d0bdc21b293f.1920x1080.jpg?t=1775188205",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4258390/5e80d354f445f814f5f662ee0be3fb5d975a6ac7/ss_5e80d354f445f814f5f662ee0be3fb5d975a6ac7.1920x1080.jpg?t=1775188205",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4258390/b925597266aaab2b5e5dea45fd55e869dfa34c21/ss_b925597266aaab2b5e5dea45fd55e869dfa34c21.1920x1080.jpg?t=1775188205"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "‌\"Enjoy Amoy & Sisters\"‌ is a live-action interactive romance game. You play as an overseas Chinese person who, in response to the invitation from the two female leads, Ah Yin and Xiao Xi, visits Xiamen, the ancestral hometown, for the first time.",
-        "en": "‌\"Enjoy Amoy & Sisters\"‌ is a live-action interactive romance game. You play as an overseas Chinese person who, in response to the invitation from the two female leads, Ah Yin and Xiao Xi, visits Xiamen, the ancestral hometown, for the first time."
-      }
-    },
-    "steamAppId": 4258390,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4258390/e45399f769a910eab7edd38ded7fa185d914041d/header.jpg?t=1775188205",
-    "steamStoreData": {
-      "appId": 4258390,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 499,
-      "finalPriceCents": 499,
-      "discountPercent": 0,
-      "formattedFinalPrice": "4,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 861,
-      "totalPositive": 829,
-      "positivePercent": 96,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "streets-of-fury-ex",
     "title": "Streets of Fury EX",
     "releaseYear": 2015,
@@ -35152,61 +34362,6 @@
       "formattedInitialPrice": "",
       "totalReviews": 870,
       "totalPositive": 836,
-      "positivePercent": 96,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "au-secours-le-maitre-a-ete-enleve-par-une-fee-demoniaque",
-    "title": "Au secours ! Le maître a été enlevé par une fée démoniaque !",
-    "releaseYear": 2026,
-    "genre": [
-      "Automatisation",
-      "Aventure",
-      "Occasionnel",
-      "RPG",
-      "Stratégie"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "次元边界",
-    "steamUrl": "https://store.steampowered.com/app/4225940/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4225940/8506e18565c1738bc4732ef833e1a81fb6562288/ss_8506e18565c1738bc4732ef833e1a81fb6562288.1920x1080.jpg?t=1773207976",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4225940/63484f8c7e329687d8eca46e63af332b8df25de2/ss_63484f8c7e329687d8eca46e63af332b8df25de2.1920x1080.jpg?t=1773207976",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4225940/dd632a2623874e1ae466b4899a6553d2256b00cf/ss_dd632a2623874e1ae466b4899a6553d2256b00cf.1920x1080.jpg?t=1773207976",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4225940/af1991b6dde75a11a17d38d14c3e40a60452c79b/ss_af1991b6dde75a11a17d38d14c3e40a60452c79b.1920x1080.jpg?t=1773207976",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4225940/08267502e9101cce53b4e2108a165fc163749169/ss_08267502e9101cce53b4e2108a165fc163749169.1920x1080.jpg?t=1773207976",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4225940/b05f0dbea51190cb96c23d5b9d850630f25ebcd8/ss_b05f0dbea51190cb96c23d5b9d850630f25ebcd8.1920x1080.jpg?t=1773207976"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Un employé moderne se réincarne en Cigale d'Or dans le Royaume des Femmes exclusivement féminin. Dénouez les secrets de la Rivière Mère-Fils, combattez le Roi des Démons Mara et nouez des liens avec sept déesses. Vos choix façonnent de nombreuses fins — équilibrez l'illumination et l'amour pour réécrire les Trois Mondes.",
-        "en": "Un employé moderne se réincarne en Cigale d'Or dans le Royaume des Femmes exclusivement féminin. Dénouez les secrets de la Rivière Mère-Fils, combattez le Roi des Démons Mara et nouez des liens avec sept déesses. Vos choix façonnent de nombreuses fins — équilibrez l'illumination et l'amour pour réécrire les Trois Mondes."
-      }
-    },
-    "steamAppId": 4225940,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4225940/fde20b2cc61ed7eca0bae3f82ad13013d151ada7/header_french.jpg?t=1773207976",
-    "steamStoreData": {
-      "appId": 4225940,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 975,
-      "finalPriceCents": 975,
-      "discountPercent": 0,
-      "formattedFinalPrice": "9,75€",
-      "formattedInitialPrice": "",
-      "totalReviews": 2617,
-      "totalPositive": 2500,
       "positivePercent": 96,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
@@ -36378,58 +35533,6 @@
     }
   },
   {
-    "id": "press-x-to-not-die",
-    "title": "Press X to Not Die",
-    "releaseYear": 2017,
-    "genre": [
-      "Automatisation",
-      "Action"
-    ],
-    "artStyle": {
-      "fr": "3D Réaliste",
-      "en": "Realistic 3D"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "All Seeing Eye Games",
-    "steamUrl": "https://store.steampowered.com/app/402330/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/402330/ss_e1bb59ebde546a2fd8ac882779e70cab991404a2.1920x1080.jpg?t=1783307428",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/402330/ss_daba2b204ef1aca6678ab2cafa96ed384824099e.1920x1080.jpg?t=1783307428",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/402330/ss_300176c523696f8054d8993d513e690bcd69e69b.1920x1080.jpg?t=1783307428",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/402330/ss_c0210f8c8e8358fcd9f847f07fd9c162c8ffda80.1920x1080.jpg?t=1783307428",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/402330/ss_93829ba35ea234a7c04a2ca4299d71f269d04c6b.1920x1080.jpg?t=1783307428",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/402330/ss_736d0758384f457a2a6a307d0006cf8fd5f5de5d.1920x1080.jpg?t=1783307428"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "A ridiculous live-action B-movie adventure you will never forget! You wake up to find your town in chaos. Everyone has gone crazy and is just attacking each other! A cryptic message is the secret to survival-- Press X to not die!",
-        "en": "A ridiculous live-action B-movie adventure you will never forget! You wake up to find your town in chaos. Everyone has gone crazy and is just attacking each other! A cryptic message is the secret to survival-- Press X to not die!"
-      }
-    },
-    "steamAppId": 402330,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/402330/header.jpg?t=1783307428",
-    "steamStoreData": {
-      "appId": 402330,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 299,
-      "finalPriceCents": 59,
-      "discountPercent": 80,
-      "formattedFinalPrice": "0,59€",
-      "formattedInitialPrice": "2,99€",
-      "totalReviews": 4108,
-      "totalPositive": 3696,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "tesla-effect-a-tex-murphy-adventure",
     "title": "Tesla Effect: A Tex Murphy Adventure",
     "releaseYear": 2014,
@@ -36475,58 +35578,6 @@
       "totalReviews": 1325,
       "totalPositive": 1153,
       "positivePercent": 87,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "what-if-your-girl-was-a-frog",
-    "title": "What if your girl was a frog?",
-    "releaseYear": 2022,
-    "genre": [
-      "Automatisation",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Hunny Bunny Studio",
-    "steamUrl": "https://store.steampowered.com/app/1986230/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1986230/ss_31bbfba8254897943a077d2b4c755284795b2222.1920x1080.jpg?t=1788001893",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1986230/ss_7fd90631cd7dafe42dc67159e96a3fd48dc56836.1920x1080.jpg?t=1788001893",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1986230/ss_301a938eb769c4189003e8747cd4b5784e700ede.1920x1080.jpg?t=1788001893",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1986230/ss_32848294d0e2f2653bf2757a9493d266bfaa03c4.1920x1080.jpg?t=1788001893",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1986230/ss_91648c291cc89a6c78654126fee8c7300b2b7b66.1920x1080.jpg?t=1788001893",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1986230/ss_5a9f16c6720cb0bc70d4f49c7f26067b89bb365e.1920x1080.jpg?t=1788001893"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Il y avait une grenouille. Elle coassait joyeusement sur son lac. Cependant, elle n'était pas une simple grenouille, mais magique. Et donc elle a eu un garçon solitaire. Elle a utilisé sa magie et a commencé ses aventures.",
-        "en": "Il y avait une grenouille. Elle coassait joyeusement sur son lac. Cependant, elle n'était pas une simple grenouille, mais magique. Et donc elle a eu un garçon solitaire. Elle a utilisé sa magie et a commencé ses aventures."
-      }
-    },
-    "steamAppId": 1986230,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1986230/header.jpg?t=1788001893",
-    "steamStoreData": {
-      "appId": 1986230,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 99,
-      "finalPriceCents": 99,
-      "discountPercent": 0,
-      "formattedFinalPrice": "0,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 285,
-      "totalPositive": 256,
-      "positivePercent": 90,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -38920,58 +37971,6 @@
     }
   },
   {
-    "id": "dong-jin-rice-hime",
-    "title": "Dong-Jin Rice-hime（東津萌米）",
-    "releaseYear": 2017,
-    "genre": [
-      "Farming",
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "STORIA",
-    "steamUrl": "https://store.steampowered.com/app/617660/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/617660/ss_9c218af531c6d634e17dba44dd10a3f65cdc442f.1920x1080.jpg?t=1724987102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/617660/ss_c2109e884f2e9a64c2048600202803b843a2c351.1920x1080.jpg?t=1724987102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/617660/ss_0d9e23dc2b2a01d6ebb950973cdff087572824a2.1920x1080.jpg?t=1724987102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/617660/ss_b58ee0cf71f5c3d334af352e98e289d9e13718dd.1920x1080.jpg?t=1724987102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/617660/ss_6d4b10c49773d4dd26b790c6ebff8aacef66e4a7.1920x1080.jpg?t=1724987102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/617660/ss_82a2c5bf97bfb7d4fc2c433e4901bdbdf388e55e.1920x1080.jpg?t=1724987102"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "It takes all sorts to make a world, also all sorts of rice!? From Simon Creative and Storia, one of our most popular games of 2016, here comes the rice growing simulation game!",
-        "en": "It takes all sorts to make a world, also all sorts of rice!? From Simon Creative and Storia, one of our most popular games of 2016, here comes the rice growing simulation game!"
-      }
-    },
-    "steamAppId": 617660,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/617660/header.jpg?t=1724987102",
-    "steamStoreData": {
-      "appId": 617660,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1999,
-      "finalPriceCents": 1999,
-      "discountPercent": 0,
-      "formattedFinalPrice": "19,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 482,
-      "totalPositive": 439,
-      "positivePercent": 91,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "travellin-cats-in-jingle-jam",
     "title": "Travellin Cats in Jingle Jam",
     "releaseYear": 2023,
@@ -41062,58 +40061,6 @@
     }
   },
   {
-    "id": "flowers-le-volume-sur-ete",
-    "title": "Flowers -Le volume sur ete-",
-    "releaseYear": 2018,
-    "genre": [
-      "Visual Novel",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Innocent Grey",
-    "steamUrl": "https://store.steampowered.com/app/858940/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858940/ss_020f193976365f0027162832227fea93079c942d.1920x1080.jpg?t=1759495880",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858940/ss_00839d8c34782eb18b111d41624855398d8da51c.1920x1080.jpg?t=1759495880",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858940/ss_0c3ac76dfef14b4f27bfad218abcd942fcf0bf9a.1920x1080.jpg?t=1759495880",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858940/ss_6de9ec2cd83d8f815b19a57e7b2573c5c79b44f7.1920x1080.jpg?t=1759495880",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858940/ss_1eca902a200267574cbea8928e0b6b1b1eeeb27e.1920x1080.jpg?t=1759495880",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858940/ss_27cfcb67facd21514988aedf0ad3f3d2c3fd35fa.1920x1080.jpg?t=1759495880"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Summer has arrived early to Saint Angraecum Academy, and with it comes change. Follow the story of Erika in the second game in the Flowers series.",
-        "en": "Summer has arrived early to Saint Angraecum Academy, and with it comes change. Follow the story of Erika in the second game in the Flowers series."
-      }
-    },
-    "steamAppId": 858940,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858940/header.jpg?t=1759495880",
-    "steamStoreData": {
-      "appId": 858940,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1679,
-      "finalPriceCents": 1679,
-      "discountPercent": 0,
-      "formattedFinalPrice": "16,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 1318,
-      "totalPositive": 1302,
-      "positivePercent": 99,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "z-a-t-o-i-love-the-world-and-everything-in-it",
     "title": "Z.A.T.O. // I Love the World and Everything In It",
     "releaseYear": 2025,
@@ -41323,59 +40270,6 @@
     }
   },
   {
-    "id": "epiphyllum-in-love",
-    "title": "Epiphyllum in Love",
-    "releaseYear": 2020,
-    "genre": [
-      "Visual Novel",
-      "Aventure",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "#workshop",
-    "steamUrl": "https://store.steampowered.com/app/1161870/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1161870/ss_c76a82071765c02f21a1f8f72f749574f84eb079.1920x1080.jpg?t=1740711251",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1161870/ss_bb9d6d54e7e11dd18d0fabf85c29e2fdbff421ba.1920x1080.jpg?t=1740711251",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1161870/ss_fc03c24ae64bb77503908375be8c00b59178a9a2.1920x1080.jpg?t=1740711251",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1161870/ss_3b6d8ce7532f80a274adc50f2e20d132b303f349.1920x1080.jpg?t=1740711251",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1161870/ss_d9dce069de8408f27ac8d4e824d47e60fbbdbd48.1920x1080.jpg?t=1740711251",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1161870/header.jpg?t=1740711251"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Final chapter of the trilogy. In a world where memory can be controlled, everyone is selling their souls. \"I\" have left everything behind, except the girl named Yin who still remains in my mind. At the end of my life, should I die with a beautiful fantasy, or go in search of sad memories of her?",
-        "en": "Final chapter of the trilogy. In a world where memory can be controlled, everyone is selling their souls. \"I\" have left everything behind, except the girl named Yin who still remains in my mind. At the end of my life, should I die with a beautiful fantasy, or go in search of sad memories of her?"
-      }
-    },
-    "steamAppId": 1161870,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1161870/header.jpg?t=1740711251",
-    "steamStoreData": {
-      "appId": 1161870,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 329,
-      "finalPriceCents": 329,
-      "discountPercent": 0,
-      "formattedFinalPrice": "3,29€",
-      "formattedInitialPrice": "",
-      "totalReviews": 2347,
-      "totalPositive": 2301,
-      "positivePercent": 98,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "black-box-lss",
     "title": "BLACK BOX LSS - 闪耀的永生者",
     "releaseYear": 2023,
@@ -41523,58 +40417,6 @@
       "formattedInitialPrice": "",
       "totalReviews": 1680,
       "totalPositive": 1658,
-      "positivePercent": 99,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "dreamlike-love-with-seira",
-    "title": "Dreamlike Love with Seira",
-    "releaseYear": 2024,
-    "genre": [
-      "Visual Novel",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "るび様崇める会",
-    "steamUrl": "https://store.steampowered.com/app/2986260/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2986260/ss_86f4f2c4b4db27a39e74b87ec3bca4a715f6c8fc.1920x1080.jpg?t=1730705557",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2986260/ss_ce6e59c50d9584e62217dcf07c28ebce6b9967a7.1920x1080.jpg?t=1730705557",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2986260/ss_7d4b47be06197eac76400d9d68eaac1dc0b840b3.1920x1080.jpg?t=1730705557",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2986260/ss_0a2de2d354c04a81ee9fb96665f21b7003ce1a5e.1920x1080.jpg?t=1730705557",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2986260/ss_04d42fd9b6f0c5a4333befef8cb488aab995891b.1920x1080.jpg?t=1730705557",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2986260/ss_4c189457248bdf33f7af7519861dff7b8ae94f94.1920x1080.jpg?t=1730705557"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Enjoy the memories with a beautiful maid in your dreams and heal your fatigue in reality.",
-        "en": "Enjoy the memories with a beautiful maid in your dreams and heal your fatigue in reality."
-      }
-    },
-    "steamAppId": 2986260,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2986260/header.jpg?t=1730705557",
-    "steamStoreData": {
-      "appId": 2986260,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 689,
-      "finalPriceCents": 689,
-      "discountPercent": 0,
-      "formattedFinalPrice": "6,89€",
-      "formattedInitialPrice": "",
-      "totalReviews": 1682,
-      "totalPositive": 1659,
       "positivePercent": 99,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
@@ -42103,58 +40945,6 @@
     }
   },
   {
-    "id": "nekopara-vol-2",
-    "title": "NEKOPARA Vol. 2",
-    "releaseYear": 2016,
-    "genre": [
-      "Visual Novel",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "NEKO WORKs",
-    "steamUrl": "https://store.steampowered.com/app/420110/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420110/ss_3cbe72744d1e5a6dd074ce8e79d6619d7cdb9919.1920x1080.jpg?t=1656892360",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420110/ss_8e1d133f4b1de3cd939d35775ea3cf363c041719.1920x1080.jpg?t=1656892360",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420110/ss_7ce6e1f15dddde22436857c92ac8b70b35b6b82c.1920x1080.jpg?t=1656892360",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420110/ss_fe2c18dab32509a20dd91f136153440fecde9f8c.1920x1080.jpg?t=1656892360",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420110/ss_fcb08f4b77a2da7d03e32f745bcd3ce1ddfde349.1920x1080.jpg?t=1656892360",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420110/ss_02984aa9238e6e4786772f01352752a26687a25c.1920x1080.jpg?t=1656892360"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Business is booming for La Soleil, the patisserie run by Kashou Minaduki with his two catgirls, Chocola and Vanilla, his sister Shigure, and the Minaduki family's four catgirl sisters.",
-        "en": "Business is booming for La Soleil, the patisserie run by Kashou Minaduki with his two catgirls, Chocola and Vanilla, his sister Shigure, and the Minaduki family's four catgirl sisters."
-      }
-    },
-    "steamAppId": 420110,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/420110/header.jpg?t=1656892360",
-    "steamStoreData": {
-      "appId": 420110,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 975,
-      "finalPriceCents": 975,
-      "discountPercent": 0,
-      "formattedFinalPrice": "9,75€",
-      "formattedInitialPrice": "",
-      "totalReviews": 12884,
-      "totalPositive": 12485,
-      "positivePercent": 97,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "aliya-timelink",
     "title": "Aliya: Timelink",
     "releaseYear": 2024,
@@ -42200,59 +40990,6 @@
       "totalReviews": 9726,
       "totalPositive": 9501,
       "positivePercent": 98,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "nekopara-vol-4",
-    "title": "NEKOPARA Vol. 4",
-    "releaseYear": 2020,
-    "genre": [
-      "Visual Novel",
-      "Aventure",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "NEKO WORKs",
-    "steamUrl": "https://store.steampowered.com/app/1406990/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1406990/ss_88aaf68fc835dd5eb028c556aea2de4ea561c10d.1920x1080.jpg?t=1750969102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1406990/ss_7a64b7a3906447eb5a76af7ba3eb718c9a5e3d30.1920x1080.jpg?t=1750969102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1406990/ss_6f0248119eec629bea143b1e8111d3aa1264860d.1920x1080.jpg?t=1750969102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1406990/ss_cda9030db2c78590778f86c95ad5c032d28ae458.1920x1080.jpg?t=1750969102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1406990/ss_68d755ea95cbaa4f8c176a4f63d4f02c3689148a.1920x1080.jpg?t=1750969102",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1406990/ss_5c8caeca31431b9b6a53314ce0b93ada975692be.1920x1080.jpg?t=1750969102"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Despite the popularity of, \"La Soleil\", Kashou's father continues to disapprove of it. Determined to get his father to approve of him, Kashou journeys to France to seek advice from the teacher who taught him his craft. A new chapter awaits in the next volume of the NEKOPARA series!",
-        "en": "Despite the popularity of, \"La Soleil\", Kashou's father continues to disapprove of it. Determined to get his father to approve of him, Kashou journeys to France to seek advice from the teacher who taught him his craft. A new chapter awaits in the next volume of the NEKOPARA series!"
-      }
-    },
-    "steamAppId": 1406990,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1406990/header.jpg?t=1750969102",
-    "steamStoreData": {
-      "appId": 1406990,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 975,
-      "finalPriceCents": 975,
-      "discountPercent": 0,
-      "formattedFinalPrice": "9,75€",
-      "formattedInitialPrice": "",
-      "totalReviews": 8843,
-      "totalPositive": 8592,
-      "positivePercent": 97,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
         "en": "Overwhelmingly Positive"
@@ -42357,60 +41094,6 @@
       "totalReviews": 7040,
       "totalPositive": 6878,
       "positivePercent": 98,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "fox-hime-zero",
-    "title": "Fox Hime Zero",
-    "releaseYear": 2018,
-    "genre": [
-      "Visual Novel",
-      "Aventure",
-      "Occasionnel",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "AsicxArt",
-    "steamUrl": "https://store.steampowered.com/app/844930/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/844930/ss_c507563e958ed3723b75a5c4a11b64c2b665212f.1920x1080.jpg?t=1777255618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/844930/ss_e947a40273a400e27754a5e9fd109d0895426cb7.1920x1080.jpg?t=1777255618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/844930/ss_b7e37213e3977ccf442e574924493ab185fbc8ba.1920x1080.jpg?t=1777255618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/844930/ss_cad7d5748274f4b263f790b5a6723147dfd5099a.1920x1080.jpg?t=1777255618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/844930/ss_0c0d34a4206e4c46c4192b5311e68f5983547e21.1920x1080.jpg?t=1777255618",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/844930/ss_85fb1804af438aa93b89931316eb22cf6d58ff02.1920x1080.jpg?t=1777255618"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Yan, a student of natural history, encounters a cute and mysterious girl with fox ears while conducting routine scientific research at a remote observation cabin. This might be a \"blessing\" for the intrepid in the golden age of geographical discovery...",
-        "en": "Yan, a student of natural history, encounters a cute and mysterious girl with fox ears while conducting routine scientific research at a remote observation cabin. This might be a \"blessing\" for the intrepid in the golden age of geographical discovery..."
-      }
-    },
-    "steamAppId": 844930,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/844930/header.jpg?t=1777255618",
-    "steamStoreData": {
-      "appId": 844930,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 199,
-      "finalPriceCents": 199,
-      "discountPercent": 0,
-      "formattedFinalPrice": "1,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 6024,
-      "totalPositive": 5857,
-      "positivePercent": 97,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
         "en": "Overwhelmingly Positive"
@@ -44581,59 +43264,6 @@
     }
   },
   {
-    "id": "gachi-revenge",
-    "title": "Gachi Revenge",
-    "releaseYear": 2020,
-    "genre": [
-      "Beat them all",
-      "Action",
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Take Toad",
-    "steamUrl": "https://store.steampowered.com/app/1202070/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1202070/ss_55d8f21b6acb945574b5ea66b534ec0695954d27.1920x1080.jpg?t=1670440805",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1202070/ss_4559fbf948f1a90d3fb4715f710165bad5d0bec3.1920x1080.jpg?t=1670440805",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1202070/ss_321adbcc0ec64f267f24be21b31957a02d0b74a4.1920x1080.jpg?t=1670440805",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1202070/ss_9ef0202e3fb71d0586231df71d1dae7551edde2d.1920x1080.jpg?t=1670440805",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1202070/ss_caca8a119d9b7198fe92ff8d5f2f77cbfb5fe548.1920x1080.jpg?t=1670440805",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1202070/ss_ab2750a7bcc0cca62ad761ad1100ae92674ed6ac.1920x1080.jpg?t=1670440805"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "The adventure of our beloved hero, in which he has to overcome all the obstacles prepared by the Gachi gang. They stole the most valuable and now pay for it.",
-        "en": "The adventure of our beloved hero, in which he has to overcome all the obstacles prepared by the Gachi gang. They stole the most valuable and now pay for it."
-      }
-    },
-    "steamAppId": 1202070,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1202070/header.jpg?t=1670440805",
-    "steamStoreData": {
-      "appId": 1202070,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 79,
-      "finalPriceCents": 79,
-      "discountPercent": 0,
-      "formattedFinalPrice": "0,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 290,
-      "totalPositive": 264,
-      "positivePercent": 91,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "maiden-and-spell",
     "title": "Maiden and Spell",
     "releaseYear": 2020,
@@ -45159,58 +43789,6 @@
     }
   },
   {
-    "id": "lords-of-the-lockerroom",
-    "title": "Lords Of The Lockerroom",
-    "releaseYear": 2019,
-    "genre": [
-      "Combat",
-      "Action",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "Nickireda",
-    "steamUrl": "https://store.steampowered.com/app/1068070/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1068070/ss_c622450ef3d6783f5784887437a8d2d448951434.1920x1080.jpg?t=1667693231",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1068070/ss_7e2e35f8786eccb74ee11f074299474a25368fba.1920x1080.jpg?t=1667693231",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1068070/ss_58337274cb1967c7bbb348b1f9e04b00bb99d4c2.1920x1080.jpg?t=1667693231",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1068070/ss_01dbb2892d4b289596545a4648585e7ad9ddb9a0.1920x1080.jpg?t=1667693231",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1068070/ss_75ae9cb560be39b5f565110809e2baf841ed865f.1920x1080.jpg?t=1667693231",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1068070/ss_5256440e30774192c6a771b22989cba2031201b5.1920x1080.jpg?t=1667693231"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "In this 3D physics based \"fighter\", take control of Aniki, Kazuya, Obama, and the rest of the cast as you duke it out in famous gachimuchi locations to see who's really the boss of the gym!",
-        "en": "In this 3D physics based \"fighter\", take control of Aniki, Kazuya, Obama, and the rest of the cast as you duke it out in famous gachimuchi locations to see who's really the boss of the gym!"
-      }
-    },
-    "steamAppId": 1068070,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1068070/header.jpg?t=1667693231",
-    "steamStoreData": {
-      "appId": 1068070,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "totalReviews": 314,
-      "totalPositive": 303,
-      "positivePercent": 96,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "buissons",
     "title": "Buissons",
     "releaseYear": 2021,
@@ -45567,58 +44145,6 @@
       "formattedInitialPrice": "",
       "totalReviews": 3320,
       "totalPositive": 3127,
-      "positivePercent": 94,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "brief-karate-foolish",
-    "title": "Brief Karate Foolish",
-    "releaseYear": 2016,
-    "genre": [
-      "Combat",
-      "Action",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "D.C.S",
-    "steamUrl": "https://store.steampowered.com/app/546390/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/546390/ss_e08cb50caacc8926e3c1c63419375328a878c206.1920x1080.jpg?t=1671088688",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/546390/ss_2b87345ba378138f5b9d7e58095b2666407f5e9b.1920x1080.jpg?t=1671088688",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/546390/ss_2c0154153f117ab376f0d8103741ced63f733fbd.1920x1080.jpg?t=1671088688",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/546390/ss_34d442ca2849e767f5590019852ca1c5bd9bfd53.1920x1080.jpg?t=1671088688",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/546390/ss_ee1f2c58d9665645bff23876361c04c64f836502.1920x1080.jpg?t=1671088688",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/546390/ss_39bce53f7861194a87eab8a45ea9d5cea5bc5a1a.1920x1080.jpg?t=1671088688"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Here comes a new epic of live action fighting game!! With 60fps smooth action, sexy and deadly guys fly into air and bounces their flab!",
-        "en": "Here comes a new epic of live action fighting game!! With 60fps smooth action, sexy and deadly guys fly into air and bounces their flab!"
-      }
-    },
-    "steamAppId": 546390,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/546390/header.jpg?t=1671088688",
-    "steamStoreData": {
-      "appId": 546390,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "totalReviews": 2754,
-      "totalPositive": 2600,
       "positivePercent": 94,
       "reviewScoreDesc": {
         "fr": "Très positifs",
@@ -47419,59 +45945,6 @@
     }
   },
   {
-    "id": "fall-in-labyrinth",
-    "title": "FALL IN LABYRINTH",
-    "releaseYear": 2021,
-    "genre": [
-      "Dungeon Crawler",
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "JUKKAKU GAMES",
-    "steamUrl": "https://store.steampowered.com/app/1441840/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1441840/ss_ebeafe3fc33ef27edd5eb7546b48a50223297f76.1920x1080.jpg?t=1788918590",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1441840/ss_151706ae8e38207032c42e2ade1a9eed566a85f6.1920x1080.jpg?t=1788918590",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1441840/ss_693860b7cf45082a4d4d7a9ac6441da1cd6798ca.1920x1080.jpg?t=1788918590",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1441840/ss_ac64f2c0934f1f1c4b5a47902bcc6fe02be52632.1920x1080.jpg?t=1788918590",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1441840/ss_2ec778b7bcb07b403b06f08a7757aedfcdde884a.1920x1080.jpg?t=1788918590",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1441840/ss_784c2e2ad052a39be58f6c861f537f50fbfc0692.1920x1080.jpg?t=1788918590"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Accidentally, you obtained a legendary sword and traveled to the \"Labyrinth City of Veria-pool\". What awaits you, is not only the wonderful dungeon \"Labyrinthos\", which can obtain unlimited treasure, but also the encounters with beautiful and mysterious heroines.",
-        "en": "Accidentally, you obtained a legendary sword and traveled to the \"Labyrinth City of Veria-pool\". What awaits you, is not only the wonderful dungeon \"Labyrinthos\", which can obtain unlimited treasure, but also the encounters with beautiful and mysterious heroines."
-      }
-    },
-    "steamAppId": 1441840,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1441840/header.jpg?t=1788918590",
-    "steamStoreData": {
-      "appId": 1441840,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1679,
-      "finalPriceCents": 1679,
-      "discountPercent": 0,
-      "formattedFinalPrice": "16,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 1113,
-      "totalPositive": 1060,
-      "positivePercent": 95,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "disillusion",
     "title": "Disillusion",
     "releaseYear": 2021,
@@ -47781,59 +46254,6 @@
       "formattedFinalPrice": "Gratuit",
       "totalReviews": 150,
       "totalPositive": 147,
-      "positivePercent": 98,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "gachi-finder-3000",
-    "title": "Gachi Finder 3000",
-    "releaseYear": 2019,
-    "genre": [
-      "Dungeon Crawler",
-      "Occasionnel",
-      "Stratégie"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "Chase Walters",
-    "steamUrl": "https://store.steampowered.com/app/1000830/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1000830/ss_9fc8907d7adc579b1b38c8355785592a14651862.1920x1080.jpg?t=1779917148",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1000830/ss_beae55f38ffcda791161df236c896e5aebaab7be.1920x1080.jpg?t=1779917148",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1000830/ss_51709b19c6fd9a4398f9eee8f6a4397faa20f610.1920x1080.jpg?t=1779917148",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1000830/ss_027011e1b6ba5fd4ed99cf06a8b4157a0e630dbb.1920x1080.jpg?t=1779917148",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1000830/ss_97cad0d3e7ebdfec1f4b0dc2715cf1e76494cf04.1920x1080.jpg?t=1779917148",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1000830/header.jpg?t=1779917148"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Gachi Finder 3000 is a game about deep dark fantasies, of finding characters from Gachimuchi. The amazing journey in which you find your favorite Gachimuchi characters will leave you in a state of euphoria. How deep can you make it?",
-        "en": "Gachi Finder 3000 is a game about deep dark fantasies, of finding characters from Gachimuchi. The amazing journey in which you find your favorite Gachimuchi characters will leave you in a state of euphoria. How deep can you make it?"
-      }
-    },
-    "steamAppId": 1000830,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1000830/header.jpg?t=1779917148",
-    "steamStoreData": {
-      "appId": 1000830,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 99,
-      "finalPriceCents": 99,
-      "discountPercent": 0,
-      "formattedFinalPrice": "0,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 167,
-      "totalPositive": 163,
       "positivePercent": 98,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
@@ -49363,58 +47783,6 @@
       "formattedInitialPrice": "",
       "totalReviews": 63,
       "totalPositive": 61,
-      "positivePercent": 97,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "soul-fantasy",
-    "title": "幻想枝魂 Soul Fantasy",
-    "releaseYear": 2021,
-    "genre": [
-      "Tactique",
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "枝江幻想社",
-    "steamUrl": "https://store.steampowered.com/app/1828630/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1828630/ss_857528cb997c16815250386642f8a9e5ce9f14e0.1920x1080.jpg?t=1649067192",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1828630/ss_4e77cb6daaa4595e748fa3cc0af64af10563beec.1920x1080.jpg?t=1649067192",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1828630/ss_2c833324e69f52da3ba6cefbdab93879204a6806.1920x1080.jpg?t=1649067192",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1828630/ss_2bbd3b39978ac8eab74d16801aaabfed3808946d.1920x1080.jpg?t=1649067192",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1828630/ss_2940e5df772967350b9500ed8e627e014d2e2e68.1920x1080.jpg?t=1649067192",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1828630/header.jpg?t=1649067192"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "The white colossus fell from the sky, and the Demon Led Countless Demons to destroy all good things. For the future of the planet, for the belief in their hearts, five girls from different places, with different identities gathered together, embarked on the road to the demon king.",
-        "en": "The white colossus fell from the sky, and the Demon Led Countless Demons to destroy all good things. For the future of the planet, for the belief in their hearts, five girls from different places, with different identities gathered together, embarked on the road to the demon king."
-      }
-    },
-    "steamAppId": 1828630,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1828630/header.jpg?t=1649067192",
-    "steamStoreData": {
-      "appId": 1828630,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "totalReviews": 404,
-      "totalPositive": 392,
       "positivePercent": 97,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
@@ -66076,60 +64444,6 @@
     }
   },
   {
-    "id": "dusk-pub",
-    "title": "Dusk Pub",
-    "releaseYear": 2024,
-    "genre": [
-      "Idle / Clicker",
-      "Occasionnel",
-      "RPG",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "3D Rétro Low-poly",
-      "en": "Retro Low-poly 3D"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "YellowDuckWorks",
-    "steamUrl": "https://store.steampowered.com/app/3220830/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3220830/ss_8ff0b074883a6a7262e9eb3ad304d032a92ca179.1920x1080.jpg?t=1771064545",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3220830/ss_ba1fb06e100f7fe299f2997f528df8e64b157416.1920x1080.jpg?t=1771064545",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3220830/ss_1666d12905922531693ca36bda9dbc6a6d6331ae.1920x1080.jpg?t=1771064545",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3220830/ss_28851cd9c7d70990ab096a30f66451fc278015bb.1920x1080.jpg?t=1771064545",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3220830/ss_e2466284e07e8f45427b8b047da21bfe2a5ab5ee.1920x1080.jpg?t=1771064545",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3220830/ss_e391951917975bc446aa6eba6d08004fb552e6d3.1920x1080.jpg?t=1771064545"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "As the manager of Dusk Pub, you have to put in a lot of efforts to run your own worn-down bar and expand your business to other parts of the land Brendt. Meet a variety of cute girls and recruit them as servers, helping them develop their business talent and know them inside out.",
-        "en": "As the manager of Dusk Pub, you have to put in a lot of efforts to run your own worn-down bar and expand your business to other parts of the land Brendt. Meet a variety of cute girls and recruit them as servers, helping them develop their business talent and know them inside out."
-      }
-    },
-    "steamAppId": 3220830,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3220830/header.jpg?t=1771064545",
-    "steamStoreData": {
-      "appId": 3220830,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1279,
-      "finalPriceCents": 1279,
-      "discountPercent": 0,
-      "formattedFinalPrice": "12,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 131,
-      "totalPositive": 122,
-      "positivePercent": 93,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "maboroshi-caravan",
     "title": "maboroshi caravan",
     "releaseYear": 2023,
@@ -68060,59 +66374,6 @@
     }
   },
   {
-    "id": "akash-path-of-the-five",
-    "title": "Akash: Path of the Five",
-    "releaseYear": 2019,
-    "genre": [
-      "Idle / Clicker",
-      "Aventure",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Truant Pixel, LLC",
-    "steamUrl": "https://store.steampowered.com/app/1098370/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1098370/ss_2005360e5d741d54d53a8854a8b0e4ca89291c48.1920x1080.jpg?t=1590706032",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1098370/ss_3b866e372e2e9a96d6cd45381409947707accc3a.1920x1080.jpg?t=1590706032",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1098370/ss_74844090b54ab0c815914db56d0bf357215a1cfa.1920x1080.jpg?t=1590706032",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1098370/ss_bd58c76f17e3f4fec9ccb065d5fd0eef857a157d.1920x1080.jpg?t=1590706032",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1098370/ss_2ea0df983125a4eb6b7257b5758441b8c5955ddb.1920x1080.jpg?t=1590706032",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1098370/ss_8ea1ab635d08ac0d476a07f89b896c1f8eb01dbc.1920x1080.jpg?t=1590706032"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Akash: Path of the Five is a professionally-produced, fully voiced visual novel in the otome style.",
-        "en": "Akash: Path of the Five is a professionally-produced, fully voiced visual novel in the otome style."
-      }
-    },
-    "steamAppId": 1098370,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1098370/header.jpg?t=1590706032",
-    "steamStoreData": {
-      "appId": 1098370,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 779,
-      "finalPriceCents": 779,
-      "discountPercent": 0,
-      "formattedFinalPrice": "7,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 144,
-      "totalPositive": 128,
-      "positivePercent": 89,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "poisson-de-bois-electronique",
     "title": "Poisson de bois électronique",
     "releaseYear": 2026,
@@ -68210,58 +66471,6 @@
       "totalReviews": 133,
       "totalPositive": 121,
       "positivePercent": 91,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "crush-crush",
-    "title": "Crush Crush",
-    "releaseYear": 2016,
-    "genre": [
-      "Idle / Clicker",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Sad Panda Studios",
-    "steamUrl": "https://store.steampowered.com/app/459820/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/459820/ss_3f72cc8f72646c3efc442ff09d8c59feea0d949d.1920x1080.jpg?t=1789498609",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/459820/ss_433fe1ea1d3d63842a5e169e478406da91dd8507.1920x1080.jpg?t=1789498609",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/459820/ss_38c2d299ebea9c292040d9ee5ca533ab26d348a9.1920x1080.jpg?t=1789498609",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/459820/25bd7b09b9d01343e67f74e6131b5581da4f738b/ss_25bd7b09b9d01343e67f74e6131b5581da4f738b.1920x1080.jpg?t=1789498609",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/459820/ss_d7ff0b7d27157f271d41dc93703485046a5fd851.1920x1080.jpg?t=1789498609",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/459820/acf73bdabb98540d711404dda1301ca8cf6bf2fc/ss_acf73bdabb98540d711404dda1301ca8cf6bf2fc.1920x1080.jpg?t=1789498609"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Bienvenue sur Crush Crush - le Sim de rencontre inactif ! Rencontrez, flirtez et tombez amoureux d'un casting hétéroclite de filles dans ce jeu sincère et hilarant.",
-        "en": "Bienvenue sur Crush Crush - le Sim de rencontre inactif ! Rencontrez, flirtez et tombez amoureux d'un casting hétéroclite de filles dans ce jeu sincère et hilarant."
-      }
-    },
-    "steamAppId": 459820,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/459820/7a4be8e671a0a155c01150d16e4f1b9dd515dd79/header.jpg?t=1789498609",
-    "steamStoreData": {
-      "appId": 459820,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "formattedInitialPrice": "",
-      "totalReviews": 28596,
-      "totalPositive": 25400,
-      "positivePercent": 89,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -68959,59 +67168,6 @@
       "totalReviews": 12640,
       "totalPositive": 10941,
       "positivePercent": 87,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "blush-blush",
-    "title": "Blush Blush",
-    "releaseYear": 2020,
-    "genre": [
-      "Idle / Clicker",
-      "Occasionnel",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Sad Panda Studios",
-    "steamUrl": "https://store.steampowered.com/app/777130/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/777130/ss_a9e614e0144dec1d42b3b5679e279ac468e4d226.1920x1080.jpg?t=1789498617",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/777130/171a61b7cf6b76f547999fb8f6d2b0f09c692497/ss_171a61b7cf6b76f547999fb8f6d2b0f09c692497.1920x1080.jpg?t=1789498617",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/777130/ss_f0acf7669f6baf6ad764e8b1fb88eee652388509.1920x1080.jpg?t=1789498617",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/777130/e87e8d1fbed4ea549fcca62f771c6db931408a2f/ss_e87e8d1fbed4ea549fcca62f771c6db931408a2f.1920x1080.jpg?t=1789498617",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/777130/ss_a71dc2eba056df33d3664c9cfec05c772a5c8480.1920x1080.jpg?t=1789498617",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/777130/9b61eb5758d1597444f30219f0b9f26f243bc4b8/ss_9b61eb5758d1597444f30219f0b9f26f243bc4b8.1920x1080.jpg?t=1789498617"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "You are responsible somehow for a curse that befalls 12 unfortunate hawt dudes. Now you have to find them and break the curse with your love!!",
-        "en": "You are responsible somehow for a curse that befalls 12 unfortunate hawt dudes. Now you have to find them and break the curse with your love!!"
-      }
-    },
-    "steamAppId": 777130,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/777130/e1526bc9d1dffd98d78f69097bf4e40634eda98a/header.jpg?t=1789498617",
-    "steamStoreData": {
-      "appId": 777130,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "formattedInitialPrice": "",
-      "totalReviews": 7623,
-      "totalPositive": 6573,
-      "positivePercent": 86,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -76985,58 +75141,6 @@
     }
   },
   {
-    "id": "sakura-clicker",
-    "title": "Sakura Clicker",
-    "releaseYear": 2015,
-    "genre": [
-      "Idle / Clicker",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Winged Cloud",
-    "steamUrl": "https://store.steampowered.com/app/383080/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383080/ss_126d714e2e8482f7a847cbdc07e490c6fe7f5333.1920x1080.jpg?t=1578342456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383080/ss_c7cc08bf06fe80fe114cc7d064eeba4df83c283f.1920x1080.jpg?t=1578342456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383080/ss_faea898905abddd7b90d253155312c7dcd66d31f.1920x1080.jpg?t=1578342456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383080/ss_07309975b732a5b17d3d61134e4878417bedfc46.1920x1080.jpg?t=1578342456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383080/ss_e93ce48d680c3096126475b7b88058bb1684663f.1920x1080.jpg?t=1578342456",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383080/ss_9635f9f03e96c3f5bd66e19942f82b8dc0defec3.1920x1080.jpg?t=1578342456"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "The latest entry in the Sakura series is more action-packed than ever before! Sakura Clickers is a fast-paced, exciting adventure, full of content, in which you defeat your foes with the power of your mouse!",
-        "en": "The latest entry in the Sakura series is more action-packed than ever before! Sakura Clickers is a fast-paced, exciting adventure, full of content, in which you defeat your foes with the power of your mouse!"
-      }
-    },
-    "steamAppId": 383080,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/383080/header.jpg?t=1578342456",
-    "steamStoreData": {
-      "appId": 383080,
-      "isFree": true,
-      "currency": "EUR",
-      "initialPriceCents": 0,
-      "finalPriceCents": 0,
-      "discountPercent": 0,
-      "formattedFinalPrice": "Gratuit",
-      "formattedInitialPrice": "",
-      "totalReviews": 14306,
-      "totalPositive": 11891,
-      "positivePercent": 83,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "achievement-clicker-2018",
     "title": "Achievement Clicker 2018",
     "releaseYear": 2018,
@@ -78204,60 +76308,6 @@
     }
   },
   {
-    "id": "sakura-hime-3",
-    "title": "Sakura Hime 3",
-    "releaseYear": 2022,
-    "genre": [
-      "Incrémental",
-      "Occasionnel",
-      "RPG",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "Vue à la première personne",
-      "en": "First-Person"
-    },
-    "developer": "GirlGames",
-    "steamUrl": "https://store.steampowered.com/app/1996210/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996210/ss_4ae836176f400e5e4455ebf1d9c89d996902bcb9.1920x1080.jpg?t=1747293036",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996210/ss_52cdc0adde83c016fdd8cd1e7a4e63fa47af80f2.1920x1080.jpg?t=1747293036",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996210/ss_ecc5803b1d1b737bf4660e4345bf6db1d681d148.1920x1080.jpg?t=1747293036",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996210/ss_62e9a5fd79d3e96eef23aebf7bf97f5f92a4bbe2.1920x1080.jpg?t=1747293036",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996210/ss_7b7328b9e4a525de4f2977f704b98ece22600934.1920x1080.jpg?t=1747293036",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996210/ss_7d9f47bc804759d66a1c7a38302b3150b5b6bb56.1920x1080.jpg?t=1747293036"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Arrivez au jardin des cerisiers, passez des jours doux avec de belles jeunes filles, face à leur séduction continue, combien de jours pouvez-vous tenir ?",
-        "en": "Arrivez au jardin des cerisiers, passez des jours doux avec de belles jeunes filles, face à leur séduction continue, combien de jours pouvez-vous tenir ?"
-      }
-    },
-    "steamAppId": 1996210,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1996210/header.jpg?t=1747293036",
-    "steamStoreData": {
-      "appId": 1996210,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 415,
-      "finalPriceCents": 415,
-      "discountPercent": 0,
-      "formattedFinalPrice": "4,15€",
-      "formattedInitialPrice": "",
-      "totalReviews": 559,
-      "totalPositive": 532,
-      "positivePercent": 95,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "final-profit-a-shop-rpg",
     "title": "Final Profit: A Shop RPG",
     "releaseYear": 2023,
@@ -79251,59 +77301,6 @@
       "totalReviews": 109,
       "totalPositive": 106,
       "positivePercent": 97,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "boykisser-is-coming",
-    "title": "BOYKISSER IS COMING",
-    "releaseYear": 2026,
-    "genre": [
-      "Incrémental",
-      "Stratégie",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "akhsotoen",
-    "steamUrl": "https://store.steampowered.com/app/5101080/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5101080/229c75c168669be6ce05c65f0fce77813c593da0/ss_229c75c168669be6ce05c65f0fce77813c593da0.1920x1080.jpg?t=1791547473",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5101080/6ee970bd49ad31b0c5a43ccce82f84ad3ea07eda/ss_6ee970bd49ad31b0c5a43ccce82f84ad3ea07eda.1920x1080.jpg?t=1791547473",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5101080/746fe2860d7ba80eacb75a5d6e1c2c21a0ce3e42/ss_746fe2860d7ba80eacb75a5d6e1c2c21a0ce3e42.1920x1080.jpg?t=1791547473",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5101080/8119c0b7a7e0869afa76874ee3630513276714e0/ss_8119c0b7a7e0869afa76874ee3630513276714e0.1920x1080.jpg?t=1791547473",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5101080/26068ae85778da56126f8196e9d221f51551dd84/ss_26068ae85778da56126f8196e9d221f51551dd84.1920x1080.jpg?t=1791547473",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5101080/3ec398bc5c83ceb144a37324306bccba03d0826a/header.jpg?t=1791547473"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "A simple tower defense game where you need to protect your house from Boykissers",
-        "en": "A simple tower defense game where you need to protect your house from Boykissers"
-      }
-    },
-    "steamAppId": 5101080,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5101080/3ec398bc5c83ceb144a37324306bccba03d0826a/header.jpg?t=1791547473",
-    "steamStoreData": {
-      "appId": 5101080,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 289,
-      "finalPriceCents": 289,
-      "discountPercent": 0,
-      "formattedFinalPrice": "2,89€",
-      "formattedInitialPrice": "",
-      "totalReviews": 105,
-      "totalPositive": 103,
-      "positivePercent": 98,
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
         "en": "Overwhelmingly Positive"
@@ -81788,58 +79785,6 @@
       "totalReviews": 2746,
       "totalPositive": 2563,
       "positivePercent": 93,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "gachi-heroes",
-    "title": "Gachi Heroes",
-    "releaseYear": 2018,
-    "genre": [
-      "Incrémental",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "GachiSoft",
-    "steamUrl": "https://store.steampowered.com/app/944220/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/944220/ss_bc41900a86b158804a4bed13830a78181d7305f5.1920x1080.jpg?t=1781239552",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/944220/ss_d14891eaa9e0d2a45f2734620299b3b19ff5919c.1920x1080.jpg?t=1781239552",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/944220/ss_ce491228c2075697fc747428dcd72e50b7cf7824.1920x1080.jpg?t=1781239552",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/944220/ss_b31b6afebb1912aae9644278b18b06fdabdf885c.1920x1080.jpg?t=1781239552",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/944220/ss_5008f502c3fca8f204ac72ddb839d67729cd8839.1920x1080.jpg?t=1781239552",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/944220/ss_795e592a93dc619c83012de1d1cdd19681f655cf.1920x1080.jpg?t=1781239552"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Gachi Heroes is a game about the dark fantasies. That's amazing an endlass journey in which you will know yourself with your favorite gachimuchi characters. How deep would you go?",
-        "en": "Gachi Heroes is a game about the dark fantasies. That's amazing an endlass journey in which you will know yourself with your favorite gachimuchi characters. How deep would you go?"
-      }
-    },
-    "steamAppId": 944220,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/944220/header.jpg?t=1781239552",
-    "steamStoreData": {
-      "appId": 944220,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 109,
-      "finalPriceCents": 109,
-      "discountPercent": 0,
-      "formattedFinalPrice": "1,09€",
-      "formattedInitialPrice": "",
-      "totalReviews": 2273,
-      "totalPositive": 2126,
-      "positivePercent": 94,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -89790,60 +87735,6 @@
       "formattedInitialPrice": "",
       "totalReviews": 393,
       "totalPositive": 369,
-      "positivePercent": 94,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "monmusu-gladiator",
-    "title": "Monmusu Gladiator",
-    "releaseYear": 2021,
-    "genre": [
-      "Deckbuilder",
-      "Roguelike",
-      "Occasionnel",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "ZephyrStudio",
-    "steamUrl": "https://store.steampowered.com/app/1660290/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1660290/ss_0ee71f20f1626fb04884011eeb26d216bbc3ea48.1920x1080.jpg?t=1747594161",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1660290/ss_489a434f158f88cd6841eb0f808abc846536d835.1920x1080.jpg?t=1747594161",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1660290/ss_b6798cc7b2a452cbccc64279e9a990036cce7fac.1920x1080.jpg?t=1747594161",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1660290/ss_39154b8ea1f9eff1e99cf2af8f54519e42d51afd.1920x1080.jpg?t=1747594161",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1660290/ss_74551e1f971a2a573ec5528e6793c077951ee83b.1920x1080.jpg?t=1747594161",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1660290/header.jpg?t=1747594161"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "A board game, card game, and monster girl-raiser all in one! Build the perfect deck in this cute & casual roguelite action RPG! Will you prioritize raising your monster girls? Making them fight? Or maybe you're more of a shopping fiend!",
-        "en": "A board game, card game, and monster girl-raiser all in one! Build the perfect deck in this cute & casual roguelite action RPG! Will you prioritize raising your monster girls? Making them fight? Or maybe you're more of a shopping fiend!"
-      }
-    },
-    "steamAppId": 1660290,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1660290/header.jpg?t=1747594161",
-    "steamStoreData": {
-      "appId": 1660290,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 499,
-      "finalPriceCents": 499,
-      "discountPercent": 0,
-      "formattedFinalPrice": "4,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 205,
-      "totalPositive": 192,
       "positivePercent": 94,
       "reviewScoreDesc": {
         "fr": "Très positifs",

@@ -9,18 +9,60 @@ export const BANNED_APP_IDS = new Set<number>([
   1888160, // ARMORED CORE VI (AAA FromSoftware / Bandai Namco)
   1325200, // Nioh 2 (AAA Team Ninja / Koei Tecmo)
   2072450, // Like a Dragon: Infinite Wealth (AAA SEGA)
+
+  // Contenu adulte, porno, hentai, sexuel, érotique proscrit
+  4225940, // Au secours ! Le maître a été enlevé par une fée démoniaque !
+  383080,  // Sakura Clicker
+  420110,  // NEKOPARA Vol. 2
+  1406990, // NEKOPARA Vol. 4
+  459820,  // Crush Crush
+  777130,  // Blush Blush
+  844930,  // Fox Hime Zero
+  1441840, // FALL IN LABYRINTH
+  1660290, // Monmusu Gladiator
+  2986260, // Dreamlike Love with Seira
+  1986230, // What if your girl was a frog?
+  1996210, // Sakura Hime 3
+  1964310, // MORODASHI SUMO
+  1127470, // Skater Frog
+  402330,  // Press X to Not Die
+  296470,  // Mount Your Friends
+  546390,  // Brief Karate Foolish
+  617660,  // Dong-Jin Rice-hime（東津萌米）
+  858940,  // Flowers -Le volume sur ete-
+  944220,  // Gachi Heroes
+  1000830, // Gachi Finder 3000
+  1068070, // Lords Of The Lockerroom
+  1098370, // Akash: Path of the Five
+  1161870, // Epiphyllum in Love
+  1202070, // Gachi Revenge
+  1291370, // Lotion samurai
+  1828630, // 幻想枝魂 Soul Fantasy
+  3220830, // Dusk Pub
+  4258390, // 厦日恋旅 Enjoy Amoy&Sisters
+  5101080, // BOYKISSER IS COMING
+
+  // Jeux factices, 0 avis Steam, playtests, shovelware
+  4831090, // Battle Simulator: Counter Zombie REBORN
+  5228570, // StickWord
+  5275800, // Apocalypse Intern
+  3627560, // Bounty Hunter Horrors
+  5306000, // BABEL: Invent a Way
+  5138180, // Don't Give Up
+  1911950, // Every Day We Fight Playtest
+  5343270, // ROCK CORE (0% positif)
+  3778610, // Colorbound (< 10 avis)
+  3301010, // Den-Den: Tokyo Horror (< 10 avis)
 ]);
 
 /**
  * Identifiants officiels Valve Steam pour les descripteurs de contenu adulte / sexuel explicite (NSFW / Porn)
- * ID 3: Adult Only Sexual Content (Gratuitous or explicit sexual content)
- * ID 4: Frequent Sexual Content or Frequent Nudity
- * Note : ID 1 = Some Nudity / Mild sexual references (Rust, Sunless Sea)
- *        ID 2 = Frequent Violence or Gore
- *        ID 5 = General Mature Content (TowerFall Ascension, Bodycam, The Ascent)
- * Seuls les descripteurs 3 et 4 qualifient un jeu d'inapproprié / NSFW au sens Valve.
+ * ID 5: Adult Only Sexual Content (Gratuitous or explicit sexual content)
+ * ID 4: Frequent Sexual Content
+ * ID 3: Adult Content / Erotic Themes
+ * ID 2: Frequent Nudity or Sexual Content
  */
-export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([3, 4]);
+export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([2, 3, 4, 5]);
 
 /**
  * AppIDs de pépites et jeux indépendants certifiés (protection absolue contre les faux positifs)
@@ -394,6 +436,15 @@ export function validateSingleGame(
       } else if (!existingNormalizedGenres.has(norm)) {
         existingNormalizedGenres.set(norm, g);
       }
+    }
+  }
+
+  // 11. Vérification Intégrité des avis Steam (Zéro Hallucination)
+  if (game.steamStoreData) {
+    if (game.steamStoreData.totalReviews === 0) {
+      errors.push(`[Erreur Avis Steam] ${game.title} : 0 avis Steam enregistré.`);
+    } else if (game.steamStoreData.positivePercent < 45) {
+      errors.push(`[Erreur Seuil Qualité] ${game.title} : score Steam (${game.steamStoreData.positivePercent}%) sous le seuil minimal de 45%.`);
     }
   }
 

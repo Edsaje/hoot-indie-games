@@ -9,7 +9,7 @@ interface SteamCatalogProviderProps {
 }
 
 const DEFAULT_STATS = {
-  totalGames: 1770,
+  totalGames: 1730,
   steamCatalogCount: 0,
   customCount: 0,
   genresCount: {},

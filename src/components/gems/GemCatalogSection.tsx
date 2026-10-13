@@ -16,6 +16,7 @@ import {
   Sliders,
   Tag,
   ArrowRight,
+  ChevronDown,
 } from 'lucide-react';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -99,6 +100,30 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
+  const [genreSearchQuery, setGenreSearchQuery] = useState('');
+  const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
+  const genreDropdownRef = useRef<HTMLDivElement>(null);
+  const genreSearchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (
+        genreDropdownRef.current &&
+        !genreDropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsGenreDropdownOpen(false);
+      }
+    };
+    if (isGenreDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isGenreDropdownOpen]);
+
   const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned' | 'unowned'>(() => (hideOwnedGames ? 'unowned' : 'all'));
 
   useEffect(() => {
@@ -128,6 +153,8 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
       setHighlightedGameId(externalHighlightedId);
       setSearchQuery('');
       setSelectedGenre('all');
+      setGenreSearchQuery('');
+      setIsGenreDropdownOpen(false);
       setOwnershipFilter('all');
       setPriceFilter('all');
       setRatingFilter('all');
@@ -164,6 +191,26 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
     return Array.from(set).sort();
   }, [curatedGems]);
 
+  const genreCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    curatedGems.forEach((g) => {
+      g.genre.forEach((genre) => {
+        counts[genre] = (counts[genre] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [curatedGems]);
+
+  const filteredGenresForSearch = useMemo(() => {
+    const query = genreSearchQuery.toLowerCase().trim();
+    if (!query) return allGenresList;
+    return allGenresList.filter((g) => {
+      const translated = getTranslatedGenre(g, i18n.language).toLowerCase();
+      const raw = g.toLowerCase();
+      return raw.includes(query) || translated.includes(query);
+    });
+  }, [genreSearchQuery, allGenresList, i18n.language]);
+
   const activeFiltersCount = useMemo(() => {
     let count = 0;
     if (searchQuery.trim()) count++;
@@ -180,6 +227,8 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
     soundFx.playClick();
     setSearchQuery('');
     setSelectedGenre('all');
+    setGenreSearchQuery('');
+    setIsGenreDropdownOpen(false);
     setOwnershipFilter('all');
     setHideOwnedGames(false);
     setPriceFilter('all');
@@ -512,22 +561,148 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
 
           {/* Row 2: Multi-criteria Select Controls */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-            {/* 1. Genre Select */}
-            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-slate-300">
-              <Filter className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <select
+            {/* 1. Genre Searchable Select */}
+            <div className="relative" ref={genreDropdownRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  setIsGenreDropdownOpen((prev) => {
+                    const next = !prev;
+                    if (next) {
+                      setTimeout(() => genreSearchInputRef.current?.focus(), 50);
+                    }
+                    return next;
+                  });
+                }}
+                className={`w-full flex items-center justify-between gap-1.5 bg-[#0b0f19] border ${
+                  isGenreDropdownOpen || selectedGenre !== 'all'
+                    ? 'border-amber-400 text-amber-300'
+                    : 'border-[#1e293b] text-slate-300'
+                } rounded-xl px-3 py-2 text-xs transition cursor-pointer hover:border-slate-500`}
                 aria-label={t('catalog.genre', 'Filtrer par genre')}
-                value={selectedGenre}
-                onChange={(e) => setSelectedGenre(e.target.value)}
-                className="bg-transparent text-white w-full focus:outline-none cursor-pointer"
               >
-                <option value="all" className="bg-slate-900">{t('catalog.allGenres', 'Tous les genres')}</option>
-                {allGenresList.map((g) => (
-                  <option key={g} value={g} className="bg-slate-900">
-                    {getTranslatedGenre(g, i18n.language)}
-                  </option>
-                ))}
-              </select>
+                <div className="flex items-center gap-1.5 truncate">
+                  <Filter className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span className="truncate font-medium">
+                    {selectedGenre === 'all'
+                      ? t('catalog.allGenres', 'Tous les genres')
+                      : getTranslatedGenre(selectedGenre, i18n.language)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  {selectedGenre !== 'all' && (
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        soundFx.playClick();
+                        setSelectedGenre('all');
+                      }}
+                      className="p-0.5 hover:bg-white/10 rounded text-slate-400 hover:text-white transition cursor-pointer"
+                      title={t('common.clear', 'Effacer')}
+                    >
+                      <X className="w-3 h-3" />
+                    </span>
+                  )}
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                      isGenreDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </div>
+              </button>
+
+              {isGenreDropdownOpen && (
+                <div className="absolute left-0 mt-1.5 w-full min-w-[260px] max-h-80 overflow-hidden bg-[#0b0f19] border border-[#1e293b] rounded-2xl shadow-2xl z-40 p-2 space-y-1.5 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
+                  {/* Champ de recherche */}
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 text-amber-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      ref={genreSearchInputRef}
+                      type="text"
+                      value={genreSearchQuery}
+                      onChange={(e) => setGenreSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') {
+                          setIsGenreDropdownOpen(false);
+                        } else if (e.key === 'Enter' && filteredGenresForSearch.length > 0) {
+                          soundFx.playClick();
+                          setSelectedGenre(filteredGenresForSearch[0]);
+                          setIsGenreDropdownOpen(false);
+                          setGenreSearchQuery('');
+                        }
+                      }}
+                      placeholder={t('catalog.searchGenrePlaceholder', 'Chercher un genre...')}
+                      className="w-full pl-8 pr-7 py-1.5 rounded-lg bg-[#131a29] border border-[#1e293b] focus:border-amber-400 text-xs text-white placeholder-slate-500 focus:outline-none transition shadow-sm"
+                    />
+                    {genreSearchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setGenreSearchQuery('')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer"
+                        title={t('common.clear', 'Effacer')}
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Liste des genres */}
+                  <div className="max-h-56 overflow-y-auto space-y-0.5 pt-1 pr-0.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFx.playClick();
+                        setSelectedGenre('all');
+                        setIsGenreDropdownOpen(false);
+                        setGenreSearchQuery('');
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition text-left cursor-pointer ${
+                        selectedGenre === 'all'
+                          ? 'bg-amber-500 text-slate-950 font-black'
+                          : 'text-slate-300 hover:bg-[#131a29] hover:text-white'
+                      }`}
+                    >
+                      <span>{t('catalog.allGenres', 'Tous les genres')}</span>
+                      <span className="font-mono text-[10px] opacity-75">{curatedGems.length}</span>
+                    </button>
+
+                    {filteredGenresForSearch.length === 0 ? (
+                      <div className="py-3 text-center text-xs text-slate-500">
+                        {t('catalog.noGenreFound', 'Aucun genre trouvé')}
+                      </div>
+                    ) : (
+                      filteredGenresForSearch.map((genre) => {
+                        const isSelected = selectedGenre === genre;
+                        return (
+                          <button
+                            key={genre}
+                            type="button"
+                            onClick={() => {
+                              soundFx.playClick();
+                              setSelectedGenre(genre);
+                              setIsGenreDropdownOpen(false);
+                              setGenreSearchQuery('');
+                            }}
+                            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition text-left cursor-pointer ${
+                              isSelected
+                                ? 'bg-amber-500 text-slate-950 font-black'
+                                : 'text-slate-300 hover:bg-[#131a29] hover:text-white'
+                            }`}
+                          >
+                            <span className="truncate">{getTranslatedGenre(genre, i18n.language)}</span>
+                            <span className="font-mono text-[10px] opacity-75 shrink-0 ml-1.5">
+                              {genreCounts[genre] || 0}
+                            </span>
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* 2. Ownership Select */}
