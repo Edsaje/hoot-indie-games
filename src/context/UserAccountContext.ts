@@ -5,6 +5,7 @@ import type { RenameCooldownInfo } from '../utils/featherEconomy';
 export interface UserAccountContextType {
   profile: UserProfile;
   isAuthenticated: boolean;
+  isEmailVerified: boolean;
   isAdmin: boolean;
   isModerator: boolean;
   isCreator: boolean;
@@ -28,6 +29,8 @@ export interface UserAccountContextType {
   loginWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUpWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  verifyEmail: (tokenOrCode: string) => Promise<{ success: boolean; error?: string; message?: string }>;
+  resendVerificationEmail: () => Promise<{ success: boolean; cooldownRemaining?: number; error?: string; message?: string }>;
   logout: () => Promise<void>;
   syncCloud: () => Promise<{ success: boolean; message: string }>;
 

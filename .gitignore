@@ -29,6 +29,8 @@ public/api/*.json
 public/api/.secret
 public/api/.admin_pass
 public/api/.steam_key
+public/api/.mail_config.php
+public/api/user_saves/
 public/api/*.log
 .env
 .env.*

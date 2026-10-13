@@ -4,12 +4,16 @@
  * 
  * Permet aux joueurs de :
  * 1. Créer un compte souverain Hoot (Email + Mot de passe chiffré bcrypt)
- * 2. Se connecter pour synchroniser automatiquement leur profil, plumes, cartes et séries de victoires multi-PC
- * 3. Associer leur compte Steam en 1 clic pour unifier leur compte
+ * 2. Valider leur adresse e-mail (Lien de confirmation sécurisé ou Code OTP 6 chiffres)
+ * 3. Se connecter pour synchroniser automatiquement leur profil, plumes, cartes et séries de victoires multi-PC
+ * 4. Associer leur compte Steam en 1 clic pour unifier leur compte
  * 
  * Sécurité :
  * - Mots de passe chiffrés avec password_hash() (Bcrypt)
- * - Rate limiting par empreinte IP (anti-bruteforce)
+ * - Tokens de confirmation cryptographiques aléatoires (CSPRNG random_bytes), hachés en SHA-256 en base
+ * - Durée de validité des tokens courte (30 minutes) et invalidation immédiate après première utilisation
+ * - Rate limiting anti-bruteforce d'authentification (max 15 tentatives par 10 minutes)
+ * - Rate limiting strict sur le renvoi d'emails (cooldown 60s par IP et par compte)
  * - Sessions PHP sécurisées HttpOnly / SameSite=Lax
  * - Stockage atomique sous LOCK_EX dans public/api/user_saves/.accounts.json
  */
@@ -21,6 +25,7 @@ error_reporting(0);
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 require_once __DIR__ . '/admin_auth.php';
+require_once __DIR__ . '/mailer.php';
 sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 
@@ -36,6 +41,7 @@ if (!is_dir($savesDir)) {
 
 $accountsFile = $savesDir . '/.accounts.json';
 $rateLimitFile = $savesDir . '/.auth_rate_limits.json';
+$mailRateLimitFile = $savesDir . '/.mail_rate_limits.json';
 
 // Helper : Lecture sécurisée des comptes
 function loadAccountsData($file) {
@@ -60,6 +66,29 @@ function loadAccountsData($file) {
 function saveAccountsData($file, $data) {
     $encoded = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     return @file_put_contents($file, $encoded, LOCK_EX) !== false;
+}
+
+// Helper : Rétrocompatibilité et normalisation du profil
+function normalizeAccount(&$user) {
+    if (!is_array($user)) return;
+    // Rétrocompatibilité : les comptes existants créés avant la mise en place de la vérification
+    // ou les comptes Steam certifiés sont considérés comme vérifiés par défaut.
+    if (!isset($user['emailVerified'])) {
+        $user['emailVerified'] = true;
+    } else {
+        $user['emailVerified'] = (bool)$user['emailVerified'];
+    }
+}
+
+// Helper : Assainissement du compte avant transmission au client (suppression stricte des secrets)
+function sanitizeAccountForClient($user) {
+    if (!is_array($user)) return null;
+    $copy = $user;
+    normalizeAccount($copy);
+    unset($copy['passwordHash']);
+    unset($copy['verificationTokenHash']);
+    unset($copy['verificationOtpHash']);
+    return $copy;
 }
 
 // Démarrer la session PHP de manière sécurisée
@@ -87,7 +116,7 @@ if (empty($payload) && !empty($_POST)) {
 $clientIp = getAuthClientIp();
 $ipHash = hash('sha256', $clientIp . '_hoot_auth');
 
-// Rate limiting anti-bruteforce (max 15 tentatives par 10 minutes)
+// Rate limiting anti-bruteforce général (max 15 tentatives par 10 minutes)
 function checkRateLimit($ipHash, $rateLimitFile) {
     $limits = [];
     if (file_exists($rateLimitFile)) {
@@ -103,9 +132,57 @@ function checkRateLimit($ipHash, $rateLimitFile) {
     return ($limits[$ipHash]['count'] <= 15);
 }
 
+// Rate limiting strict pour l'envoi d'e-mails (minimum 60 secondes entre deux envois par IP et par compte)
+function checkMailRateLimit($ipHash, $accountLastSentAt, $mailRateLimitFile) {
+    $now = time();
+
+    // 1. Contrôle compte (60s)
+    if (!empty($accountLastSentAt) && ($now - (int)$accountLastSentAt) < 60) {
+        $remaining = 60 - ($now - (int)$accountLastSentAt);
+        return [
+            'allowed' => false,
+            'cooldown' => $remaining,
+            'reason' => 'account',
+            'message' => "Un e-mail de confirmation a déjà été envoyé récemment. Veuillez patienter {$remaining}s.",
+        ];
+    }
+
+    // 2. Contrôle IP (60s)
+    $limits = [];
+    if (file_exists($mailRateLimitFile)) {
+        $limits = json_decode(@file_get_contents($mailRateLimitFile), true) ?: [];
+    }
+    if (isset($limits[$ipHash]) && ($now - (int)$limits[$ipHash]) < 60) {
+        $remaining = 60 - ($now - (int)$limits[$ipHash]);
+        return [
+            'allowed' => false,
+            'cooldown' => $remaining,
+            'reason' => 'ip',
+            'message' => "Trop de requêtes d'envoi d'emails depuis cette adresse IP. Veuillez patienter {$remaining}s.",
+        ];
+    }
+
+    return ['allowed' => true, 'cooldown' => 0];
+}
+
+// Enregistrement du timestamp d'envoi d'email par IP
+function recordMailSent($ipHash, $mailRateLimitFile) {
+    $limits = [];
+    if (file_exists($mailRateLimitFile)) {
+        $limits = json_decode(@file_get_contents($mailRateLimitFile), true) ?: [];
+    }
+    $limits[$ipHash] = time();
+    // Nettoyage périodique des anciennes entrées (> 2 heures)
+    $cutoff = time() - 7200;
+    foreach ($limits as $k => $ts) {
+        if ($ts < $cutoff) unset($limits[$k]);
+    }
+    @file_put_contents($mailRateLimitFile, json_encode($limits), LOCK_EX);
+}
+
 switch ($action) {
     // -------------------------------------------------------------
-    // ACTION : ÉTAT DE LA SESSION ACTUELLE (GET /me)
+    // ACTION : ÉTAT DE LA SESSION ACTUELLE (GET /me ou /status)
     // -------------------------------------------------------------
     case 'me':
     case 'status':
@@ -121,6 +198,7 @@ switch ($action) {
             echo json_encode([
                 'success' => true,
                 'authenticated' => false,
+                'emailVerified' => false,
                 'user' => null,
             ], JSON_UNESCAPED_UNICODE);
             exit;
@@ -139,24 +217,29 @@ switch ($action) {
         }
 
         if ($user) {
-            unset($user['passwordHash']);
+            $clientUser = sanitizeAccountForClient($user);
+            $_SESSION['hoot_email_verified'] = (bool)($clientUser['emailVerified'] ?? true);
             echo json_encode([
                 'success' => true,
                 'authenticated' => true,
-                'user' => $user,
+                'emailVerified' => (bool)($clientUser['emailVerified'] ?? true),
+                'user' => $clientUser,
             ], JSON_UNESCAPED_UNICODE);
         } else {
-            // Utilisateur connecté uniquement avec Steam sans compte email
+            // Utilisateur connecté uniquement avec Steam sans compte email (vérifié par défaut)
             $isHibouxe = ($steamId === ADMIN_STEAM_ID || $isAdminSession);
+            $_SESSION['hoot_email_verified'] = true;
             echo json_encode([
                 'success' => true,
                 'authenticated' => true,
+                'emailVerified' => true,
                 'user' => [
                     'id' => $isHibouxe ? 'admin_hibouxe' : 'steam_' . $steamId,
                     'steamId' => $steamId,
                     'username' => $isHibouxe ? 'Hibouxe' : 'Explorateur_' . substr($steamId, -4),
                     'role' => $isHibouxe ? 'admin' : 'user',
                     'isAdmin' => $isHibouxe,
+                    'emailVerified' => true,
                     'avatarId' => $isHibouxe ? 'hibouxe_creator' : 'owl',
                     'title' => $isHibouxe ? '👑 Créateur du Site' : 'Explorateur',
                 ],
@@ -213,12 +296,27 @@ switch ($action) {
         }
 
         $now = date('c');
+        $isSteam = !empty($incomingSteamId);
+        $emailVerified = $isSteam ? true : false;
+
+        // Génération du token cryptographique et du code OTP (expiration 30 min)
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
+        $otp = sprintf('%06d', random_int(100000, 999999));
+        $otpHash = hash('sha256', $otp);
+        $tokenExpiresAt = time() + (30 * 60);
+
         $newUser = [
             'id' => $userId,
             'email' => $email,
             'username' => $cleanUsername,
             'passwordHash' => password_hash($password, PASSWORD_BCRYPT),
             'steamId' => !empty($incomingSteamId) ? $incomingSteamId : null,
+            'emailVerified' => $emailVerified,
+            'verificationTokenHash' => $emailVerified ? null : $tokenHash,
+            'verificationOtpHash' => $emailVerified ? null : $otpHash,
+            'verificationTokenExpiresAt' => $emailVerified ? null : $tokenExpiresAt,
+            'lastVerificationEmailSentAt' => $emailVerified ? null : time(),
             'createdAt' => $now,
             'lastLoginAt' => $now,
         ];
@@ -231,19 +329,36 @@ switch ($action) {
 
         saveAccountsData($accountsFile, $accounts);
 
+        // Envoi de l'email de confirmation pour les inscriptions directes
+        $mailResult = null;
+        if (!$emailVerified) {
+            recordMailSent($ipHash, $mailRateLimitFile);
+            $mailResult = sendVerificationEmail($email, $cleanUsername, $token, $otp);
+        }
+
         // Initialisation de la session
         session_regenerate_id(true);
         $_SESSION['hoot_user_id'] = $userId;
         $_SESSION['hoot_user_email'] = $email;
+        $_SESSION['hoot_email_verified'] = $emailVerified;
         if (!empty($incomingSteamId)) {
             $_SESSION['steam_id'] = $incomingSteamId;
         }
 
-        unset($newUser['passwordHash']);
+        $clientUser = sanitizeAccountForClient($newUser);
         echo json_encode([
             'success' => true,
-            'message' => 'Compte Hoot créé avec succès ! Vos données sont désormais sauvegardées en ligne.',
-            'user' => $newUser,
+            'message' => $emailVerified
+                ? 'Compte Hoot créé avec succès ! Vos données sont désormais sauvegardées en ligne.'
+                : 'Compte Hoot créé avec succès ! Veuillez vérifier votre adresse e-mail pour activer le tchat.',
+            'emailVerified' => $emailVerified,
+            'user' => $clientUser,
+            'mailDev' => (($mailResult['provider'] ?? '') === 'dev') ? [
+                'devLogged' => true,
+                'otp' => $otp,
+                'token' => $token,
+                'verifyUrl' => $mailResult['verifyUrl'] ?? null,
+            ] : null,
         ], JSON_UNESCAPED_UNICODE);
         exit;
 
@@ -288,6 +403,9 @@ switch ($action) {
             exit;
         }
 
+        normalizeAccount($accounts['users'][$userId]);
+        $emailVerified = (bool)$accounts['users'][$userId]['emailVerified'];
+
         // Mettre à jour lastLoginAt
         $accounts['users'][$userId]['lastLoginAt'] = date('c');
         saveAccountsData($accountsFile, $accounts);
@@ -296,15 +414,194 @@ switch ($action) {
         session_regenerate_id(true);
         $_SESSION['hoot_user_id'] = $userId;
         $_SESSION['hoot_user_email'] = $email;
-        if (!empty($user['steamId'])) {
-            $_SESSION['steam_id'] = $user['steamId'];
+        $_SESSION['hoot_email_verified'] = $emailVerified;
+        if (!empty($accounts['users'][$userId]['steamId'])) {
+            $_SESSION['steam_id'] = $accounts['users'][$userId]['steamId'];
         }
 
-        unset($user['passwordHash']);
+        $clientUser = sanitizeAccountForClient($accounts['users'][$userId]);
         echo json_encode([
             'success' => true,
             'message' => 'Connexion réussie ! Vos données ont été chargées.',
-            'user' => $user,
+            'emailVerified' => $emailVerified,
+            'user' => $clientUser,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+
+    // -------------------------------------------------------------
+    // ACTION : VÉRIFICATION D'EMAIL (LIEN OU CODE OTP) (POST / GET)
+    // -------------------------------------------------------------
+    case 'verify_email':
+        $token = trim($payload['token'] ?? ($_REQUEST['token'] ?? ''));
+        $code  = trim($payload['code']  ?? ($_REQUEST['code']  ?? ''));
+        $input = !empty($token) ? $token : $code;
+
+        if (empty($input)) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'missing_token',
+                'message' => 'Lien ou code de confirmation manquant.',
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $inputHash = hash('sha256', $input);
+        $accounts = loadAccountsData($accountsFile);
+        $matchedUserId = null;
+
+        // 1. Chercher d'abord dans la session active si l'utilisateur est connecté
+        $currentUserId = $_SESSION['hoot_user_id'] ?? null;
+        if ($currentUserId && isset($accounts['users'][$currentUserId])) {
+            $curUser = $accounts['users'][$currentUserId];
+            $tHash = $curUser['verificationTokenHash'] ?? '';
+            $oHash = $curUser['verificationOtpHash'] ?? '';
+            if (($tHash && hash_equals($tHash, $inputHash)) || ($oHash && hash_equals($oHash, $inputHash))) {
+                $matchedUserId = $currentUserId;
+            }
+        }
+
+        // 2. Si non trouvé ou non connecté, chercher parmi l'ensemble des comptes
+        if (!$matchedUserId) {
+            foreach ($accounts['users'] as $uid => $u) {
+                $tHash = $u['verificationTokenHash'] ?? '';
+                $oHash = $u['verificationOtpHash'] ?? '';
+                if (($tHash && hash_equals($tHash, $inputHash)) || ($oHash && hash_equals($oHash, $inputHash))) {
+                    $matchedUserId = $uid;
+                    break;
+                }
+            }
+        }
+
+        if (!$matchedUserId) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'invalid_token',
+                'message' => 'Lien ou code de vérification invalide ou déjà utilisé.',
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $user = $accounts['users'][$matchedUserId];
+        $expiresAt = (int)($user['verificationTokenExpiresAt'] ?? 0);
+        if ($expiresAt > 0 && time() > $expiresAt) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'token_expired',
+                'message' => 'Ce lien ou code de vérification a expiré (validité de 30 minutes). Veuillez demander un nouvel envoi.',
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // Succès : Passage à vérifié et invalidation immédiate (usage unique strict)
+        $accounts['users'][$matchedUserId]['emailVerified'] = true;
+        $accounts['users'][$matchedUserId]['verificationTokenHash'] = null;
+        $accounts['users'][$matchedUserId]['verificationOtpHash'] = null;
+        $accounts['users'][$matchedUserId]['verificationTokenExpiresAt'] = null;
+        saveAccountsData($accountsFile, $accounts);
+
+        // Mettre à jour la session
+        if (empty($_SESSION['hoot_user_id'])) {
+            session_regenerate_id(true);
+            $_SESSION['hoot_user_id'] = $matchedUserId;
+            $_SESSION['hoot_user_email'] = $accounts['users'][$matchedUserId]['email'] ?? '';
+        }
+        $_SESSION['hoot_email_verified'] = true;
+
+        $clientUser = sanitizeAccountForClient($accounts['users'][$matchedUserId]);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Adresse e-mail vérifiée avec succès ! Le tchat et l\'ensemble des fonctionnalités sont débloqués.',
+            'emailVerified' => true,
+            'user' => $clientUser,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+
+    // -------------------------------------------------------------
+    // ACTION : RENVOYER L'EMAIL DE CONFIRMATION (POST)
+    // -------------------------------------------------------------
+    case 'resend_verification':
+        $accounts = loadAccountsData($accountsFile);
+        $targetUserId = $_SESSION['hoot_user_id'] ?? null;
+        $targetEmail = mb_strtolower(trim($payload['email'] ?? ($_REQUEST['email'] ?? '')), 'UTF-8');
+
+        if (!$targetUserId && !empty($targetEmail)) {
+            $targetUserId = $accounts['emailIndex'][$targetEmail] ?? null;
+        }
+
+        if (!$targetUserId || !isset($accounts['users'][$targetUserId])) {
+            http_response_code(404);
+            echo json_encode([
+                'success' => false,
+                'error' => 'user_not_found',
+                'message' => 'Compte introuvable.',
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $user = $accounts['users'][$targetUserId];
+        normalizeAccount($user);
+
+        // Si l'e-mail est déjà vérifié
+        if (!empty($user['emailVerified'])) {
+            echo json_encode([
+                'success' => true,
+                'alreadyVerified' => true,
+                'emailVerified' => true,
+                'message' => 'Votre adresse e-mail est déjà confirmée.',
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // Rate limiting strict de 60s par IP et par compte
+        $rateCheck = checkMailRateLimit($ipHash, $user['lastVerificationEmailSentAt'] ?? 0, $mailRateLimitFile);
+        if (!$rateCheck['allowed']) {
+            http_response_code(429);
+            echo json_encode([
+                'success' => false,
+                'error' => 'rate_limited',
+                'message' => $rateCheck['message'],
+                'cooldown' => $rateCheck['cooldown'],
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // Génération d'un nouveau token et d'un nouveau code OTP
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
+        $otp = sprintf('%06d', random_int(100000, 999999));
+        $otpHash = hash('sha256', $otp);
+        $tokenExpiresAt = time() + (30 * 60);
+
+        $accounts['users'][$targetUserId]['verificationTokenHash'] = $tokenHash;
+        $accounts['users'][$targetUserId]['verificationOtpHash'] = $otpHash;
+        $accounts['users'][$targetUserId]['verificationTokenExpiresAt'] = $tokenExpiresAt;
+        $accounts['users'][$targetUserId]['lastVerificationEmailSentAt'] = time();
+        saveAccountsData($accountsFile, $accounts);
+
+        // Enregistrement de l'empreinte IP
+        recordMailSent($ipHash, $mailRateLimitFile);
+
+        // Envoi de l'email
+        $mailResult = sendVerificationEmail(
+            $user['email'],
+            $user['username'],
+            $token,
+            $otp
+        );
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Un nouvel e-mail de confirmation a été envoyé avec succès !',
+            'cooldown' => 60,
+            'mailDev' => (($mailResult['provider'] ?? '') === 'dev') ? [
+                'devLogged' => true,
+                'otp' => $otp,
+                'token' => $token,
+                'verifyUrl' => $mailResult['verifyUrl'] ?? null,
+            ] : null,
         ], JSON_UNESCAPED_UNICODE);
         exit;
 

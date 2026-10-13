@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import type { ArcadeGameProps } from './types';
 import { soundFx } from '../../../utils/audio';
+import { startEngineLoop, setupRetinaCanvas } from '../../../utils/arcadeEngine';
 import {
   KEY_CODES_LEFT,
   KEY_CODES_RIGHT,
@@ -11,12 +12,10 @@ import {
 export const ArcadeBreakout: React.FC<ArcadeGameProps> = (props) => {
   const {
     difficulty,
-    isVectrexPhosphor,
     onScoreAdd,
     onGameOver,
     isKeyDown,
     touchPosRef,
-    soundMuted,
     onCanvasTouchStart,
     onCanvasTouchMove,
     onCanvasTouchEnd,
@@ -31,13 +30,7 @@ export const ArcadeBreakout: React.FC<ArcadeGameProps> = (props) => {
     
     const width = 400;
     const height = 400;
-    canvas.width = width;
-    canvas.height = height;
-
-    let animFrameId: number;
-    let intervalId: number | null = null;
-    let customCleanup: (() => void) | null = null;
-    
+    setupRetinaCanvas(canvas, ctx, width, height);
 
     const addScore = (pts: number) => {
       onScoreAdd(pts);
@@ -46,65 +39,6 @@ export const ArcadeBreakout: React.FC<ArcadeGameProps> = (props) => {
     const triggerGameOver = () => {
       gameActive = false;
       onGameOver();
-    };
-
-    const startFixedLoop = (isActive: () => boolean, updateAndRender: () => void) => {
-      let lastTime = performance.now();
-      const targetInterval = 1000 / 60;
-      let isPausedByVisibility = false;
-
-      const handleVisibilityChange = () => {
-        if (document.hidden) {
-          isPausedByVisibility = true;
-        } else {
-          isPausedByVisibility = false;
-          lastTime = performance.now();
-        }
-      };
-
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-
-      const runner = (now: number) => {
-        if (!isActive()) return;
-        if (isPausedByVisibility || document.hidden) {
-          lastTime = now;
-          animFrameId = requestAnimationFrame(runner);
-          return;
-        }
-
-        const elapsed = now - lastTime;
-        if (elapsed >= targetInterval - 3.0) {
-          if (elapsed > 100) {
-            lastTime = now;
-          } else {
-            lastTime += targetInterval;
-            if (now - lastTime > targetInterval) {
-              lastTime = now;
-            }
-          }
-          updateAndRender();
-        }
-
-        if (isActive()) {
-          animFrameId = requestAnimationFrame(runner);
-        }
-      };
-
-      animFrameId = requestAnimationFrame(runner);
-
-      const cleanupFn = () => {
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-      };
-
-      if (!customCleanup) {
-        customCleanup = cleanupFn;
-      } else {
-        const prevCleanup = customCleanup;
-        customCleanup = () => {
-          prevCleanup();
-          cleanupFn();
-        };
-      }
     };
 
     type PowerUpType = 'multiball' | 'wide' | 'laser' | 'slow' | 'life' | 'fireball';
@@ -350,8 +284,7 @@ export const ArcadeBreakout: React.FC<ArcadeGameProps> = (props) => {
               fireLaser();
             }
           };
-    
-          const loop = () => {
+          const update = (_dt: number) => {
             if (!gameActive) return;
     
             // Timers
@@ -610,11 +543,14 @@ export const ArcadeBreakout: React.FC<ArcadeGameProps> = (props) => {
               stageClearFrames = 90;
               loadStage(stageIndex);
             }
-    
-            // ==========================================
-            // RENDERING
-            // ==========================================
-    
+          };
+
+          // ==========================================
+          // RENDERING
+          // ==========================================
+          const render = () => {
+            const curPadW = wideTimer > 0 ? basePadW * 1.4 : basePadW;
+
             // Deep Night Forest Canvas Background
             ctx.fillStyle = '#04100c';
             ctx.fillRect(0, 0, width, height);
@@ -790,16 +726,14 @@ export const ArcadeBreakout: React.FC<ArcadeGameProps> = (props) => {
               ctx.fillText('ESPACE ou Clic pour lancer la bille', width / 2, height / 2 + 50);
             }
           };
-    
-          startFixedLoop(() => gameActive, loop);
+
+          const stopEngine = startEngineLoop(() => gameActive, update, render);
 
     return () => {
       gameActive = false;
-      if (animFrameId) cancelAnimationFrame(animFrameId);
-      if (intervalId !== null) clearInterval(intervalId);
-      if (customCleanup) customCleanup();
+      stopEngine();
     };
-  }, [difficulty, isVectrexPhosphor, onScoreAdd, onGameOver, isKeyDown, touchPosRef, soundMuted]);
+  }, [difficulty, onScoreAdd, onGameOver, isKeyDown, touchPosRef]);
 
   return (
     <canvas

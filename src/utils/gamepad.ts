@@ -192,17 +192,108 @@ export function getActiveGamepad(): Gamepad | null {
   return null;
 }
 
-// État précédent mémorisé pour la détection de front montant (justPressed)
-let prevButtonsState: Record<string, boolean> = {};
+// Structure statique pré-allouée pour zéro allocation à chaque trame
+const staticSnapshot: GamepadSnapshot = {
+  connected: false,
+  id: '',
+  name: '',
+  family: 'generic',
+  labels: {
+    actionA: '',
+    actionB: '',
+    actionX: '',
+    actionY: '',
+    lb: '',
+    rb: '',
+    start: '',
+    select: '',
+  },
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+  justUp: false,
+  justDown: false,
+  justLeft: false,
+  justRight: false,
+  actionA: false,
+  justActionA: false,
+  actionB: false,
+  justActionB: false,
+  actionX: false,
+  justActionX: false,
+  actionY: false,
+  justActionY: false,
+  lb: false,
+  justLb: false,
+  rb: false,
+  justRb: false,
+  lt: false,
+  rt: false,
+  justRt: false,
+  select: false,
+  justSelect: false,
+  start: false,
+  justStart: false,
+  axes: {
+    leftStickX: 0,
+    leftStickY: 0,
+    rightStickX: 0,
+    rightStickY: 0,
+  },
+};
+
+const dpadHatResult = { up: false, down: false, left: false, right: false };
+const CANDIDATE_HAT_AXES = [9, 4, 5, 6, 7, 8] as const;
+
+// État précédent mémorisé pour la détection de front montant (justPressed) sans allocation d'objet
+const prevButtons = {
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+  actionA: false,
+  actionB: false,
+  actionX: false,
+  actionY: false,
+  lb: false,
+  rb: false,
+  lt: false,
+  rt: false,
+  select: false,
+  start: false,
+};
+
+function resetPrevButtons() {
+  prevButtons.up = false;
+  prevButtons.down = false;
+  prevButtons.left = false;
+  prevButtons.right = false;
+  prevButtons.actionA = false;
+  prevButtons.actionB = false;
+  prevButtons.actionX = false;
+  prevButtons.actionY = false;
+  prevButtons.lb = false;
+  prevButtons.rb = false;
+  prevButtons.lt = false;
+  prevButtons.rt = false;
+  prevButtons.select = false;
+  prevButtons.start = false;
+}
 
 /**
  * Décodage universel du Hat Switch / POV D-Pad (DirectInput Windows Sony / Générique)
+ * Parcours sans allocation d'array ni de filtrage.
  */
 function readDpadHatSwitch(axes: readonly number[]): { up: boolean; down: boolean; left: boolean; right: boolean } {
-  // En DirectInput sur Windows, le Hat Switch est typiquement sur l'axe 9 ou 4
-  const candidates = [9, 4, 5, 6, 7, 8].filter((idx) => idx < axes.length);
+  dpadHatResult.up = false;
+  dpadHatResult.down = false;
+  dpadHatResult.left = false;
+  dpadHatResult.right = false;
 
-  for (const idx of candidates) {
+  for (let i = 0; i < CANDIDATE_HAT_AXES.length; i++) {
+    const idx = CANDIDATE_HAT_AXES[i];
+    if (idx >= axes.length) continue;
     const val = axes[idx];
     // Valeur neutre standard DirectInput : > 1.0 (ex: 1.2857 ou 3.2857)
     if (typeof val === 'number' && Math.abs(val) <= 1.05) {
@@ -212,21 +303,25 @@ function readDpadHatSwitch(axes: readonly number[]): { up: boolean; down: boolea
       const isRight = (val >= -0.55 && val <= -0.35) || (val >= -0.75 && val <= -0.65) || (val >= -0.25 && val <= -0.05);
 
       if (isUp || isDown || isLeft || isRight) {
-        return { up: isUp, down: isDown, left: isLeft, right: isRight };
+        dpadHatResult.up = isUp;
+        dpadHatResult.down = isDown;
+        dpadHatResult.left = isLeft;
+        dpadHatResult.right = isRight;
+        return dpadHatResult;
       }
     }
   }
 
-  return { up: false, down: false, left: false, right: false };
+  return dpadHatResult;
 }
 
 /**
- * Lit l'état actuel de la manette avec normalisation multi-driver
+ * Lit l'état actuel de la manette avec normalisation multi-driver (Zero-Allocation)
  */
 export function readGamepadSnapshot(deadzone: number = 0.35): GamepadSnapshot | null {
   const gp = getActiveGamepad();
   if (!gp) {
-    prevButtonsState = {};
+    resetPrevButtons();
     return null;
   }
 
@@ -326,72 +421,67 @@ export function readGamepadSnapshot(deadzone: number = 0.35): GamepadSnapshot | 
   const select = isBtnPressed(8); // Share / Create / Select
   const start = isBtnPressed(9);  // Options / Start
 
-  // Détection de front montant (justPressed)
-  const isJustPressed = (key: string, currentVal: boolean) => {
-    const wasPressed = Boolean(prevButtonsState[key]);
-    return currentVal && !wasPressed;
-  };
+  // Mutation directe du snapshot sans aucune allocation
+  staticSnapshot.connected = true;
+  staticSnapshot.id = gp.id;
+  staticSnapshot.name = getGamepadFriendlyName(gp.id);
+  staticSnapshot.family = family;
+  staticSnapshot.labels = labels;
 
-  const snapshot: GamepadSnapshot = {
-    connected: true,
-    id: gp.id,
-    name: getGamepadFriendlyName(gp.id),
-    family,
-    labels,
-    up,
-    down,
-    left,
-    right,
-    justUp: isJustPressed('up', up),
-    justDown: isJustPressed('down', down),
-    justLeft: isJustPressed('left', left),
-    justRight: isJustPressed('right', right),
-    actionA,
-    justActionA: isJustPressed('actionA', actionA),
-    actionB,
-    justActionB: isJustPressed('actionB', actionB),
-    actionX,
-    justActionX: isJustPressed('actionX', actionX),
-    actionY,
-    justActionY: isJustPressed('actionY', actionY),
-    lb,
-    justLb: isJustPressed('lb', lb),
-    rb,
-    justRb: isJustPressed('rb', rb),
-    lt,
-    rt,
-    justRt: isJustPressed('rt', rt),
-    select,
-    justSelect: isJustPressed('select', select),
-    start,
-    justStart: isJustPressed('start', start),
-    axes: {
-      leftStickX: stickLeftX,
-      leftStickY: stickLeftY,
-      rightStickX: stickRightX,
-      rightStickY: stickRightY,
-    },
-  };
+  staticSnapshot.up = up;
+  staticSnapshot.down = down;
+  staticSnapshot.left = left;
+  staticSnapshot.right = right;
 
-  // Mémorisation de l'état précédent
-  prevButtonsState = {
-    up,
-    down,
-    left,
-    right,
-    actionA,
-    actionB,
-    actionX,
-    actionY,
-    lb,
-    rb,
-    lt,
-    rt,
-    select,
-    start,
-  };
+  staticSnapshot.justUp = up && !prevButtons.up;
+  staticSnapshot.justDown = down && !prevButtons.down;
+  staticSnapshot.justLeft = left && !prevButtons.left;
+  staticSnapshot.justRight = right && !prevButtons.right;
 
-  return snapshot;
+  staticSnapshot.actionA = actionA;
+  staticSnapshot.justActionA = actionA && !prevButtons.actionA;
+  staticSnapshot.actionB = actionB;
+  staticSnapshot.justActionB = actionB && !prevButtons.actionB;
+  staticSnapshot.actionX = actionX;
+  staticSnapshot.justActionX = actionX && !prevButtons.actionX;
+  staticSnapshot.actionY = actionY;
+  staticSnapshot.justActionY = actionY && !prevButtons.actionY;
+
+  staticSnapshot.lb = lb;
+  staticSnapshot.justLb = lb && !prevButtons.lb;
+  staticSnapshot.rb = rb;
+  staticSnapshot.justRb = rb && !prevButtons.rb;
+  staticSnapshot.lt = lt;
+  staticSnapshot.rt = rt;
+  staticSnapshot.justRt = rt && !prevButtons.rt;
+
+  staticSnapshot.select = select;
+  staticSnapshot.justSelect = select && !prevButtons.select;
+  staticSnapshot.start = start;
+  staticSnapshot.justStart = start && !prevButtons.start;
+
+  staticSnapshot.axes.leftStickX = stickLeftX;
+  staticSnapshot.axes.leftStickY = stickLeftY;
+  staticSnapshot.axes.rightStickX = stickRightX;
+  staticSnapshot.axes.rightStickY = stickRightY;
+
+  // Mémorisation de l'état précédent par mutation directe
+  prevButtons.up = up;
+  prevButtons.down = down;
+  prevButtons.left = left;
+  prevButtons.right = right;
+  prevButtons.actionA = actionA;
+  prevButtons.actionB = actionB;
+  prevButtons.actionX = actionX;
+  prevButtons.actionY = actionY;
+  prevButtons.lb = lb;
+  prevButtons.rb = rb;
+  prevButtons.lt = lt;
+  prevButtons.rt = rt;
+  prevButtons.select = select;
+  prevButtons.start = start;
+
+  return staticSnapshot;
 }
 
 /**

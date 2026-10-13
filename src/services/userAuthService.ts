@@ -11,15 +11,26 @@ export interface UserAuthAccount {
   createdAt?: string;
   lastLoginAt?: string;
   isSteamOnly?: boolean;
+  emailVerified?: boolean;
 }
 
 export interface AuthApiResponse {
   success: boolean;
   authenticated?: boolean;
+  emailVerified?: boolean;
   user?: UserAuthAccount | null;
   message?: string;
   error?: string;
   steamId?: string;
+  cooldownRemaining?: number;
+  cooldown?: number;
+  alreadyVerified?: boolean;
+  mailDev?: {
+    devLogged: boolean;
+    otp?: string;
+    token?: string;
+    verifyUrl?: string;
+  } | null;
 }
 
 const AUTH_API_URL = '/api/user_auth.php';
@@ -155,6 +166,76 @@ export async function apiLogout(): Promise<AuthApiResponse> {
       success: false,
       error: 'network_error',
       message: err?.message || 'Erreur réseau lors de la déconnexion.',
+    };
+  }
+}
+
+/**
+ * Valide l'adresse e-mail avec un token cryptographique ou un code OTP à 6 chiffres
+ */
+export async function apiVerifyEmail(tokenOrCode: string): Promise<AuthApiResponse> {
+  const clean = tokenOrCode.trim();
+  try {
+    const res = await fetch(`${AUTH_API_URL}?action=verify_email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        token: clean,
+        code: clean,
+      }),
+    });
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    return {
+      success: false,
+      error: 'network_error',
+      message: err?.message || 'Erreur réseau lors de la vérification de l\'adresse e-mail.',
+    };
+  }
+}
+
+/**
+ * Renvoie un e-mail de confirmation avec gestion propre du statut HTTP 429 (rate-limiting)
+ */
+export async function apiResendVerificationEmail(email?: string): Promise<AuthApiResponse> {
+  try {
+    const res = await fetch(`${AUTH_API_URL}?action=resend_verification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email?.trim(),
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 429) {
+      return {
+        success: false,
+        error: 'rate_limited',
+        message: data.message || 'Veuillez patienter avant de renvoyer un e-mail.',
+        cooldownRemaining: data.cooldown ?? 60,
+      };
+    }
+
+    return {
+      ...data,
+      cooldownRemaining: data.cooldown ?? (data.success ? 60 : undefined),
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      error: 'network_error',
+      message: err?.message || 'Erreur réseau lors du renvoi de l\'e-mail de confirmation.',
     };
   }
 }

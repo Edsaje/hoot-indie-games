@@ -1,4 +1,4 @@
-import { getSupabaseClient } from './supabase';
+import { getSupabaseClient, isSupabaseConfigured } from './supabase';
 /**
  * 🦉 Hoot Indie Games — Service Frontend de Tchat Souverain
  * 
@@ -192,17 +192,23 @@ function getLocalFallbackMessages(): ChatMessage[] {
  */
 export async function fetchChatMessages(
   channel: ChatChannel | 'all' = 'all',
-  _since: number = 0
+  since: number = 0
 ): Promise<{ success: boolean; messages: ChatMessage[]; serverTime: number }> {
   try {
     const supabase = await getSupabaseClient();
     if (!supabase) throw new Error('Supabase not configured');
 
-    let query = supabase.from('chat_messages').select('*').order('created_at', { ascending: false }).limit(60);
+    let query = supabase.from('chat_messages').select('*').order('created_at', { ascending: false });
     if (channel !== 'all') {
-      query = query.eq('room_id', channel);
+      query = query.eq('room_id', channel).limit(60);
+    } else {
+      query = query.limit(150);
     }
-    
+
+    if (since > 0) {
+      query = query.gt('created_at', new Date(since * 1000).toISOString());
+    }
+
     const { data, error } = await query;
     if (error) throw error;
 
@@ -211,13 +217,23 @@ export async function fetchChatMessages(
       channel: row.room_id as ChatChannel,
       username: row.username || row.user_profiles?.username || 'Inconnu',
       avatarId: row.avatar_id || 'default',
+      title: row.title || undefined,
+      activeFrame: row.active_frame || undefined,
       text: row.content,
       timestamp: Math.floor(new Date(row.created_at).getTime() / 1000),
-      isDeleted: row.is_deleted
+      isDeleted: row.is_deleted,
+      category: (row.category as FeedbackCategory) || undefined,
+      scoreData: row.score_data || null,
+      userId: row.user_id || undefined,
     }));
 
     return { success: true, messages: messages.reverse(), serverTime: Math.floor(Date.now() / 1000) };
   } catch (err) {
+    if (!isSupabaseConfigured) {
+      const local = getLocalFallbackMessages();
+      const filtered = channel === 'all' ? local : local.filter((m) => m.channel === channel);
+      return { success: true, messages: filtered, serverTime: Math.floor(Date.now() / 1000) };
+    }
     return { success: false, messages: [], serverTime: 0 };
   }
 }
@@ -235,6 +251,7 @@ export async function sendChatMessage(payload: {
   steamId?: string;
   email?: string;
   userId?: string;
+  emailVerified?: boolean;
   category?: FeedbackCategory;
   scoreData?: {
     game: string;
@@ -248,41 +265,17 @@ export async function sendChatMessage(payload: {
   warning?: string;
   flaggedWords?: string[];
 }> {
+  // Garde-fou préliminaire : vérification d'adresse e-mail obligatoire
+  if (payload.emailVerified === false) {
+    throw new Error('email_not_verified');
+  }
+
   const cleanText = payload.text.trim();
   if (!cleanText) {
     return { success: false, error: 'Le message ne peut pas être vide.' };
   }
 
-
-  try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
-
-    const { data, error } = await supabase.from('chat_messages').insert({
-      room_id: payload.channel,
-      username: payload.username,
-      avatar_id: payload.avatarId,
-      content: cleanText
-    }).select().single();
-
-    if (error) throw error;
-
-    const newMessage: ChatMessage = {
-      id: data.id,
-      channel: data.room_id as ChatChannel,
-      username: payload.username,
-      avatarId: payload.avatarId,
-      text: data.content,
-      timestamp: Math.floor(new Date(data.created_at).getTime() / 1000),
-    };
-
-    return { success: true, message: newMessage };
-  } catch (err: any) {
-    console.error('Error sending chat message:', err);
-    return { success: false, error: err.message || 'Erreur réseau.' };
-  }
-
-  // Contrôle anti-hameçonnage en mode local/hors-ligne
+  // Contrôle anti-hameçonnage en amont
   const phishingCheck = checkTextForPhishing(cleanText);
   if (phishingCheck.isSuspicious) {
     return {
@@ -293,35 +286,80 @@ export async function sendChatMessage(payload: {
     };
   }
 
-  // Fallback local si backend injoignable
-  const now = Math.floor(Date.now() / 1000);
-  const isCreator =
-    payload.username.toLowerCase() === 'hibouxe' ||
-    payload.avatarId === 'hibouxe_creator';
-
-  const localMsg: ChatMessage = {
-    id: `local_msg_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-    channel: payload.channel,
-    username: payload.username,
-    avatarId: payload.avatarId,
-    title: payload.title || (isCreator ? 'Fondateur du Perchoir' : 'Oisillon du Perchoir'),
-    activeFrame: payload.activeFrame,
-    text: cleanText,
-    timestamp: now,
-    isCreator,
-    category: payload.category || 'general',
-    scoreData: payload.scoreData || null,
-  };
-
   try {
-    const all = getLocalFallbackMessages();
-    all.push(localMsg);
-    localStorage.setItem(LOCAL_STORAGE_CHAT_KEY, JSON.stringify(all.slice(-100)));
-  } catch {
-    // Ignore
-  }
+    const supabase = await getSupabaseClient();
+    if (!supabase) throw new Error('Supabase not configured');
 
-  return { success: true, message: localMsg };
+    const insertPayload: Record<string, any> = {
+      room_id: payload.channel,
+      username: payload.username,
+      avatar_id: payload.avatarId,
+      content: cleanText,
+      category: payload.category || null,
+      score_data: payload.scoreData || null,
+      title: payload.title || null,
+      active_frame: payload.activeFrame || null,
+    };
+    if (payload.userId) {
+      insertPayload.user_id = payload.userId;
+    }
+
+    const { data, error } = await supabase.from('chat_messages').insert(insertPayload).select().single();
+
+    if (error) throw error;
+
+    const newMessage: ChatMessage = {
+      id: data.id,
+      channel: data.room_id as ChatChannel,
+      username: data.username || payload.username,
+      avatarId: data.avatar_id || payload.avatarId,
+      title: data.title || payload.title,
+      activeFrame: data.active_frame || payload.activeFrame,
+      text: data.content,
+      timestamp: Math.floor(new Date(data.created_at).getTime() / 1000),
+      category: (data.category as FeedbackCategory) || payload.category,
+      scoreData: data.score_data || payload.scoreData || null,
+      userId: data.user_id || payload.userId,
+      steamId: payload.steamId,
+    };
+
+    return { success: true, message: newMessage };
+  } catch (err: any) {
+    console.warn('Envoi via Supabase échoué, repli sur le stockage local:', err);
+
+    // Fallback local si backend injoignable ou hors-ligne
+    const now = Math.floor(Date.now() / 1000);
+    const isCreator =
+      payload.username.toLowerCase() === 'hibouxe' ||
+      payload.avatarId === 'hibouxe_creator';
+
+    const localMsg: ChatMessage = {
+      id: `local_msg_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      channel: payload.channel,
+      username: payload.username,
+      avatarId: payload.avatarId,
+      title: payload.title || (isCreator ? 'Fondateur du Perchoir' : 'Oisillon du Perchoir'),
+      activeFrame: payload.activeFrame,
+      text: cleanText,
+      timestamp: now,
+      isCreator,
+      category: payload.category || 'general',
+      scoreData: payload.scoreData || null,
+      userId: payload.userId,
+      steamId: payload.steamId,
+    };
+
+    try {
+      const all = getLocalFallbackMessages();
+      all.push(localMsg);
+      localStorage.setItem(LOCAL_STORAGE_CHAT_KEY, JSON.stringify(all.slice(-100)));
+      return { success: true, message: localMsg };
+    } catch {
+      // Ignore
+    }
+
+    return { success: false, error: err?.message || 'Erreur réseau.' };
+  }
 }
 
 /**
@@ -387,8 +425,6 @@ export async function deleteChatMessage(
   },
   hardDelete: boolean = false
 ): Promise<{ success: boolean; message?: string; hardDeleted?: boolean }> {
-
-
   try {
     const supabase = await getSupabaseClient();
     if (!supabase) throw new Error('Supabase not configured');
@@ -399,7 +435,20 @@ export async function deleteChatMessage(
       deleteLocalFallbackMessage(messageId, auth, hardDelete);
       return { success: true, message: 'Message supprimé définitivement.', hardDeleted: true };
     } else {
-      const { error } = await supabase.from('chat_messages').update({ is_deleted: true }).eq('id', messageId);
+      const maskedContent = auth?.isAdmin
+        ? '[Message retiré par l\'administrateur]'
+        : auth?.isModerator
+        ? '[Message retiré par la modération]'
+        : '[Message retiré par l\'auteur]';
+
+      const { error } = await supabase
+        .from('chat_messages')
+        .update({
+          is_deleted: true,
+          content: maskedContent,
+        })
+        .eq('id', messageId);
+
       if (error) throw error;
       deleteLocalFallbackMessage(messageId, auth, hardDelete);
       return { success: true, message: 'Message retiré avec succès.', hardDeleted: false };
@@ -410,7 +459,7 @@ export async function deleteChatMessage(
       return { success: true, message: 'Message retiré du stockage local.', hardDeleted: hardDelete };
     }
     console.error('Error deleting chat message:', err);
-    return { success: false, message: err.message || 'Erreur lors de la modération du message.' };
+    return { success: false, message: err?.message || 'Erreur lors de la modération du message.' };
   }
 }
 
@@ -932,6 +981,7 @@ export async function sendPrivateMessage(payload: {
   activeFrame?: string;
   steamId?: string;
   userId?: string;
+  emailVerified?: boolean;
   recipientAvatarId?: string;
   recipientTitle?: string;
   recipientSteamId?: string;
@@ -943,6 +993,11 @@ export async function sendPrivateMessage(payload: {
   warning?: string;
   flaggedWords?: string[];
 }> {
+  // Garde-fou préliminaire : vérification d'adresse e-mail obligatoire
+  if (payload.emailVerified === false) {
+    throw new Error('email_not_verified');
+  }
+
   const cleanText = payload.text.trim();
   if (!cleanText) {
     return { success: false, error: 'Le message ne peut pas être vide.' };

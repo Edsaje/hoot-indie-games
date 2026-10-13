@@ -62,6 +62,7 @@ export interface UserProfile {
   isModerator?: boolean;
   role?: 'admin' | 'moderator' | 'user';
   email?: string;
+  emailVerified?: boolean;
   friendCode?: string;
   steam?: SteamAccountInfo;
   versusStats: {
@@ -86,4 +87,20 @@ export interface AccountSaveData {
   achievements: any;
   goldenFeathers: number;
   exportedAt: string;
+}
+
+export interface EmailVerificationResult {
+  success: boolean;
+  message?: string;
+  error?: string;
+  emailVerified?: boolean;
+  user?: UserProfile;
+}
+
+export interface EmailResendResult {
+  success: boolean;
+  message?: string;
+  error?: string;
+  cooldownRemaining?: number;
+  alreadyVerified?: boolean;
 }

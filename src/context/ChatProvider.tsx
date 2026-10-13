@@ -80,7 +80,7 @@ const INITIAL_MESSAGES_MAP: Record<ChatChannel, ChatMessage[]> = {
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { i18n } = useTranslation();
-  const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
+  const { profile, isAuthenticated, isAdmin, isCreator, isModerator, isEmailVerified } = useUserAccount();
 
   // Navigation par onglets (Salons publics ou Messages Privés)
   const [activeTab, setActiveTab] = useState<'public' | 'private'>('public');
@@ -149,7 +149,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const activePrivateConversationIdRef = useRef<string | null>(activePrivateConversationId);
   activePrivateConversationIdRef.current = activePrivateConversationId;
 
-  // Récupérer les messages (Delta polling intelligent avec 'since' pour éviter de surcharger le serveur)
+  const pollCountRef = useRef<number>(0);
+
+  // Récupérer les messages (Delta polling intelligent avec 'since' et réconciliation périodique complète)
   const refreshMessages = useCallback(
     async (forceFull = false) => {
       // Éviter les requêtes simultanées en vol
@@ -157,20 +159,24 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isFetchingRef.current = true;
 
       try {
-        const since = forceFull ? 0 : lastServerTimeRef.current;
+        pollCountRef.current += 1;
+        // Toutes les 4 itérations de polling (~28s), on force un rafraîchissement complet (since = 0)
+        // pour réconcilier les suppressions distantes (hard deletes) chez tous les clients connectés
+        const isPeriodicFullSync = pollCountRef.current % 4 === 0;
+        const since = (forceFull || isPeriodicFullSync) ? 0 : lastServerTimeRef.current;
         const res = await fetchChatMessages('all', since);
 
         if (res.success && Array.isArray(res.messages)) {
           // Si requête delta et aucun nouveau message reçu : rien à modifier, 0 re-render
-          if (!forceFull && since > 0 && res.messages.length === 0) {
+          if (!forceFull && !isPeriodicFullSync && since > 0 && res.messages.length === 0) {
             lastServerTimeRef.current = res.serverTime || Math.floor(Date.now() / 1000);
             return;
           }
 
           let newFromOthers = false;
 
-          if (forceFull || since === 0) {
-            // Chargement initial ou forcé : regrouper tous les messages
+          if (forceFull || isPeriodicFullSync || since === 0) {
+            // Chargement complet : regrouper et réconcilier les suppressions (hard & soft deletes)
             const grouped: Record<ChatChannel, ChatMessage[]> = {
               global: [],
               fr: [],
@@ -185,7 +191,15 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             for (const msg of res.messages) {
               const ch = msg.channel;
               if (grouped[ch]) {
-                grouped[ch].push(msg);
+                const sanitizedMsg: ChatMessage = msg.isDeleted
+                  ? {
+                      ...msg,
+                      text: msg.text && msg.text.startsWith('[Message retiré')
+                        ? msg.text
+                        : '[Message retiré]',
+                    }
+                  : msg;
+                grouped[ch].push(sanitizedMsg);
               }
               if (!knownMessageIdsRef.current.has(msg.id)) {
                 knownMessageIdsRef.current.add(msg.id);
@@ -195,9 +209,46 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               }
             }
 
-            setAllMessages(grouped);
+            const returnedIds = new Set(res.messages.map((m) => m.id));
+            const oldestReturnedTimestamp = res.messages.length > 0
+              ? Math.min(...res.messages.map((m) => m.timestamp))
+              : 0;
+
+            setAllMessages((prev) => {
+              const next = { ...prev };
+              for (const ch of Object.keys(next) as ChatChannel[]) {
+                const serverChannelMsgs = grouped[ch] || [];
+
+                if (serverChannelMsgs.length > 0) {
+                  // Conserver les messages plus anciens que la fenêtre serveur,
+                  // et dans la fenêtre serveur ne garder que ceux existants (élimine les hard deletes)
+                  const olderPreserved = (prev[ch] || []).filter(
+                    (m) => m.timestamp < oldestReturnedTimestamp && !returnedIds.has(m.id)
+                  );
+                  next[ch] = [...olderPreserved, ...serverChannelMsgs];
+                } else if (oldestReturnedTimestamp > 0) {
+                  // Si pas de message renvoyé pour ce canal dans les 150, éliminer ceux dans la fenêtre qui ont été supprimés
+                  next[ch] = (prev[ch] || []).filter(
+                    (m) => m.timestamp < oldestReturnedTimestamp || returnedIds.has(m.id)
+                  );
+                }
+
+                // S'assurer que le libellé masqué est appliqué aux messages isDeleted
+                next[ch] = next[ch].map((m) => {
+                  if (m.isDeleted && (!m.text || !m.text.startsWith('[Message retiré'))) {
+                    return { ...m, text: '[Message retiré]' };
+                  }
+                  return m;
+                });
+
+                if (next[ch].length > 60) {
+                  next[ch] = next[ch].slice(-60);
+                }
+              }
+              return next;
+            });
           } else {
-            // Requête incrémentale : fusionner uniquement les nouveaux messages reçus
+            // Requête incrémentale : fusionner uniquement les nouveaux messages reçus et propager les statuts
             setAllMessages((prev) => {
               const next = { ...prev };
               let hasChanges = false;
@@ -206,12 +257,28 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 const ch = msg.channel;
                 if (!next[ch]) next[ch] = [];
                 const idx = next[ch].findIndex((m) => m.id === msg.id);
+
+                const sanitizedText = msg.isDeleted
+                  ? (msg.text && msg.text.startsWith('[Message retiré') ? msg.text : '[Message retiré]')
+                  : msg.text;
+
+                const formattedMsg: ChatMessage = {
+                  ...msg,
+                  text: sanitizedText,
+                };
+
                 if (idx === -1) {
-                  next[ch] = [...next[ch], msg];
+                  next[ch] = [...next[ch], formattedMsg];
                   hasChanges = true;
-                } else if (next[ch][idx].isDeleted !== msg.isDeleted || next[ch][idx].text !== msg.text) {
+                } else if (
+                  next[ch][idx].isDeleted !== msg.isDeleted ||
+                  next[ch][idx].text !== sanitizedText
+                ) {
                   const updated = [...next[ch]];
-                  updated[idx] = msg;
+                  updated[idx] = {
+                    ...next[ch][idx],
+                    ...formattedMsg,
+                  };
                   next[ch] = updated;
                   hasChanges = true;
                 }
@@ -397,9 +464,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       pollTimer = setInterval(() => {
         if (typeof document !== 'undefined' && !document.hidden) {
-          if (activeTabRef.current === 'public') {
-            refreshMessages(false);
-          }
+          // Maintien du rafraîchissement public en arrière-plan même sur l'onglet privé pour conserver les unreadCounts
+          refreshMessages(false);
           refreshPrivateConversations();
           const curConv = activePrivateConversationIdRef.current;
           if (activeTabRef.current === 'private' && curConv) {
@@ -415,9 +481,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (document.hidden) {
         if (pollTimer) clearInterval(pollTimer);
       } else {
-        if (activeTabRef.current === 'public') {
-          refreshMessages(false);
-        }
+        // Maintien du rafraîchissement public en arrière-plan même sur l'onglet privé
+        refreshMessages(false);
         refreshPrivateConversations();
         const curConv = activePrivateConversationIdRef.current;
         if (activeTabRef.current === 'private' && curConv) {
@@ -448,6 +513,24 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (channel) {
       setActiveTab('public');
       setCurrentChannel(channel);
+      // Chargement dynamique si le salon est vide
+      setAllMessages((prev) => {
+        const channelMessages = prev[channel] || [];
+        if (channelMessages.length === 0) {
+          fetchChatMessages(channel, 0).then((res) => {
+            if (res.success && Array.isArray(res.messages) && res.messages.length > 0) {
+              setAllMessages((latest) => ({
+                ...latest,
+                [channel]: res.messages,
+              }));
+              res.messages.forEach((m) => {
+                knownMessageIdsRef.current.add(m.id);
+              });
+            }
+          });
+        }
+        return prev;
+      });
     }
     setIsOpen(true);
     setPublicUnreadCount(0);
@@ -477,6 +560,25 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     soundFx.playClick();
     setActiveTab('public');
     setCurrentChannel(channel);
+
+    // Chargement dynamique immédiat si le salon est vide pour éviter le Channel Starvation
+    setAllMessages((prev) => {
+      const channelMessages = prev[channel] || [];
+      if (channelMessages.length === 0) {
+        fetchChatMessages(channel, 0).then((res) => {
+          if (res.success && Array.isArray(res.messages) && res.messages.length > 0) {
+            setAllMessages((latest) => ({
+              ...latest,
+              [channel]: res.messages,
+            }));
+            res.messages.forEach((m) => {
+              knownMessageIdsRef.current.add(m.id);
+            });
+          }
+        });
+      }
+      return prev;
+    });
   }, []);
 
   // Ouvrir un tchat privé directement avec un interlocuteur
@@ -544,6 +646,13 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         };
       }
 
+      if (!isEmailVerified) {
+        return {
+          success: false,
+          error: 'Vous devez confirmer votre adresse e-mail pour participer au tchat.',
+        };
+      }
+
       if (cooldownSeconds > 0) {
         return { success: false, error: `Veuillez patienter ${cooldownSeconds}s.` };
       }
@@ -560,6 +669,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         steamId: profile.steam?.steamId,
         email: profile.email,
         userId: profile.id,
+        emailVerified: profile.emailVerified,
         category,
         scoreData,
       });
@@ -605,7 +715,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         warning: res.warning,
       };
     },
-    [isAuthenticated, cooldownSeconds, currentChannel, profile]
+    [isAuthenticated, isEmailVerified, cooldownSeconds, currentChannel, profile]
   );
 
   // Envoi de message privé direct
@@ -619,6 +729,13 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return {
           success: false,
           error: 'Vous devez être connecté pour envoyer un message privé.',
+        };
+      }
+
+      if (!isEmailVerified) {
+        return {
+          success: false,
+          error: 'Vous devez confirmer votre adresse e-mail pour envoyer un message privé.',
         };
       }
 
@@ -637,6 +754,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         activeFrame: profile.activeFrame,
         steamId: profile.steam?.steamId,
         userId: profile.id,
+        emailVerified: profile.emailVerified,
         recipientAvatarId: recipientMeta?.avatarId,
         recipientTitle: recipientMeta?.title,
         recipientSteamId: recipientMeta?.steamId,
@@ -676,7 +794,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         warning: res.warning,
       };
     },
-    [isAuthenticated, cooldownSeconds, profile, refreshPrivateConversations]
+    [isAuthenticated, isEmailVerified, cooldownSeconds, profile, refreshPrivateConversations]
   );
 
   // Suppression d'un message privé

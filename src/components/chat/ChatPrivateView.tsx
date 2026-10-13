@@ -16,6 +16,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   UserCheck,
+  Mail,
 } from 'lucide-react';
 import { useChat } from '../../context/useChat';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -53,7 +54,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
     setModerationWarning,
   } = useChat();
 
-  const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
+  const { profile, isAuthenticated, isAdmin, isCreator, isModerator, isEmailVerified } = useUserAccount();
   const { friends, pendingRequests, sentRequests, sendFriendRequest } = useFriends();
 
   const [inputText, setInputText] = useState('');
@@ -72,11 +73,19 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isAtBottomRef = useRef<boolean>(true);
+  const shouldForceScrollRef = useRef<boolean>(false);
 
-  // Auto-scroll en bas quand les messages changent
+  const handleMessagesScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    isAtBottomRef.current = scrollHeight - scrollTop - clientHeight < 120;
+  };
+
+  // Auto-scroll stabilisé en bas quand les messages changent
   useEffect(() => {
-    if (activePrivateConversationId) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (activePrivateConversationId && (isAtBottomRef.current || shouldForceScrollRef.current)) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+      shouldForceScrollRef.current = false;
     }
   }, [activePrivateMessages, activePrivateConversationId]);
 
@@ -174,6 +183,13 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
       return;
     }
 
+    if (!isEmailVerified) {
+      soundFx.playError();
+      setModerationWarning("Vérification d'e-mail requise pour envoyer un message privé.");
+      window.dispatchEvent(new CustomEvent('hoot_open_email_verification'));
+      return;
+    }
+
     const trimmed = inputText.trim();
     if (!trimmed || isSending || cooldownSeconds > 0 || !activePrivateParticipant) return;
 
@@ -196,6 +212,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
     );
 
     if (res.success) {
+      shouldForceScrollRef.current = true;
       setInputText('');
     } else {
       soundFx.playError();
@@ -209,6 +226,13 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
     e.preventDefault();
     const target = newConvUsername.trim();
     if (!target) return;
+
+    if (!isEmailVerified) {
+      soundFx.playError();
+      setNewConvError("Vérification d'e-mail requise pour ouvrir une nouvelle conversation.");
+      window.dispatchEvent(new CustomEvent('hoot_open_email_verification'));
+      return;
+    }
 
     if (profile.username && target.toLowerCase() === profile.username.toLowerCase()) {
       setNewConvError('Vous ne pouvez pas vous écrire à vous-même.');
@@ -442,7 +466,7 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
         </div>
 
         {/* Corps des messages du fil */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2.5 min-h-0">
+        <div onScroll={handleMessagesScroll} className="flex-1 overflow-y-auto p-3 space-y-2.5 min-h-0">
           {activePrivateMessages.length === 0 ? (
             <div className="py-12 text-center text-slate-400 flex flex-col items-center justify-center gap-2">
               <div className="w-10 h-10 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
@@ -491,7 +515,13 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                     } ${msg.isDeleted ? 'opacity-60 italic' : ''}`}
                   >
                     <div className="break-words leading-relaxed">
-                      {renderMessageContent(msg.text)}
+                      {msg.isDeleted ? (
+                        <span className="italic text-slate-400 select-none opacity-85">
+                          [Message retiré]
+                        </span>
+                      ) : (
+                        renderMessageContent(msg.text)
+                      )}
                     </div>
 
                     <div
@@ -579,6 +609,33 @@ export const ChatPrivateView: React.FC<ChatPrivateViewProps> = ({ onOpenAuth }) 
                   </div>
                 </div>
               </div>
+            </div>
+          ) : !isEmailVerified ? (
+            <div className="p-3 bg-gradient-to-r from-[#171206] via-[#221808] to-[#171206] border-t-2 border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0 text-center sm:text-left shadow-lg shadow-amber-950/30">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
+                  <Mail className="w-4 h-4 animate-pulse" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-amber-300">
+                    Vérification d'e-mail requise pour envoyer un message privé
+                  </p>
+                  <p className="text-[11px] text-amber-100/70 leading-tight mt-0.5">
+                    Confirmez votre boîte de réception pour échanger en direct avec vos compagnons.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  window.dispatchEvent(new CustomEvent('hoot_open_email_verification'));
+                }}
+                className="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-950/40 transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer touch-manipulation whitespace-nowrap active:scale-95"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Valider mon e-mail</span>
+              </button>
             </div>
           ) : (
             <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">

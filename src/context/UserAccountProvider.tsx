@@ -64,6 +64,8 @@ import {
   apiLogin,
   apiLogout,
   apiLinkSteam,
+  apiVerifyEmail,
+  apiResendVerificationEmail,
 } from '../services/userAuthService';
 
 const STORAGE_KEY = 'hoot_user_profile_v1';
@@ -405,11 +407,13 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
             (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
             (user.email && user.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr')
           );
+          const isVerified = user.emailVerified !== undefined ? Boolean(user.emailVerified) : (user.steamId ? true : undefined);
           setIsAuthenticated(true);
           setProfile((prev) => ({
             ...prev,
             id: user.id,
             email: user.email || prev.email,
+            emailVerified: isVerified !== undefined ? isVerified : prev.emailVerified,
             username: user.username && user.username !== 'Hibou Mystère' ? user.username : prev.username,
             steam: user.steamId ? {
               ...(prev.steam || {
@@ -552,6 +556,13 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     if (isAdmin || isCreator) return true;
     return profile.role === 'moderator' || profile.isModerator === true;
   }, [isAdmin, isCreator, profile.role, profile.isModerator]);
+
+  const isEmailVerified = useMemo(() => {
+    if (!isUserLoggedIn) return true;
+    if (isCreator || isAdmin) return true;
+    if (profile.steam?.steamId && !profile.email) return true;
+    return profile.emailVerified !== false;
+  }, [isUserLoggedIn, isCreator, isAdmin, profile.steam?.steamId, profile.email, profile.emailVerified]);
 
   // Synchronisation du statut admin & attribution exclusive de l'avatar fondateur
   useEffect(() => {
@@ -887,6 +898,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
             ...prev,
             id: user.id,
             email: user.email || email,
+            emailVerified: user.emailVerified !== undefined ? Boolean(user.emailVerified) : (user.steamId ? true : undefined),
             username: user.username || prev.username,
             steam: user.steamId
               ? {
@@ -1006,6 +1018,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
             ...prev,
             id: user.id,
             email: user.email || email,
+            emailVerified: user.emailVerified !== undefined ? Boolean(user.emailVerified) : Boolean(user.steamId),
             username: user.username || prev.username,
             isAdmin: isOfficialAdmin ? true : prev.isAdmin,
             role: isOfficialAdmin ? 'admin' : prev.role,
@@ -1095,6 +1108,55 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
     return { success: true };
   }, [profile.id, profile.username, profile.steam?.steamId]);
+
+  const verifyEmail = useCallback(
+    async (tokenOrCode: string): Promise<{ success: boolean; error?: string; message?: string }> => {
+      try {
+        const res = await apiVerifyEmail(tokenOrCode);
+        if (res.success) {
+          setProfile((prev) => ({
+            ...prev,
+            emailVerified: true,
+            ...(res.user
+              ? {
+                  id: res.user.id || prev.id,
+                  email: res.user.email || prev.email,
+                  username: res.user.username || prev.username,
+                }
+              : {}),
+          }));
+          return { success: true, message: res.message || 'Adresse e-mail vérifiée avec succès !' };
+        }
+        return { success: false, error: res.message || res.error || 'Code ou lien de confirmation invalide.' };
+      } catch (err: any) {
+        return { success: false, error: err?.message || 'Erreur lors de la vérification de l\'e-mail.' };
+      }
+    },
+    []
+  );
+
+  const resendVerificationEmail = useCallback(
+    async (): Promise<{ success: boolean; cooldownRemaining?: number; error?: string; message?: string }> => {
+      try {
+        const res = await apiResendVerificationEmail(profile.email);
+        if (res.success) {
+          return {
+            success: true,
+            cooldownRemaining: res.cooldownRemaining ?? 60,
+            message: res.message || 'Un nouvel e-mail de confirmation a été envoyé avec succès.',
+          };
+        }
+        return {
+          success: false,
+          cooldownRemaining: res.cooldownRemaining,
+          error: res.message || res.error || 'Impossible de renvoyer l\'e-mail de confirmation.',
+        };
+      } catch (err: any) {
+        return { success: false, error: err?.message || 'Erreur réseau lors du renvoi de l\'e-mail.' };
+      }
+    },
+    [profile.email]
+  );
 
   const logout = useCallback(async () => {
     try {
@@ -1459,6 +1521,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
         value={{
           profile,
           isAuthenticated: isUserLoggedIn,
+          isEmailVerified,
           isAdmin,
           isModerator,
           isCreator,
@@ -1477,6 +1540,8 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           loginWithEmail,
           signUpWithEmail,
           loginWithGoogle,
+          verifyEmail,
+          resendVerificationEmail,
           logout,
           syncCloud,
           steamAccount: profile.steam,

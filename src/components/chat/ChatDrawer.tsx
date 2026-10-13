@@ -20,6 +20,7 @@ import {
   Lock,
   Languages,
   Globe,
+  Mail,
 } from 'lucide-react';
 import { useChat } from '../../context/useChat';
 import { useUserAccount } from '../../context/useUserAccount';
@@ -72,7 +73,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     openPrivateChat,
   } = useChat();
 
-  const { profile, isAuthenticated, isAdmin, isCreator, isModerator } = useUserAccount();
+  const { profile, isAuthenticated, isAdmin, isCreator, isModerator, isEmailVerified } = useUserAccount();
   const isStrictAdmin = Boolean(
     isAdmin || isCreator || profile.role === 'admin' || profile.isAdmin
   );
@@ -251,11 +252,20 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isAtBottomRef = useRef<boolean>(true);
+  const shouldForceScrollRef = useRef<boolean>(false);
 
-  // Auto-scroll en bas à l'arrivée d'un message ou ouverture
+  const handleMessagesScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    // Détection de proximité du bas avec tolérance de 120px
+    isAtBottomRef.current = scrollHeight - scrollTop - clientHeight < 120;
+  };
+
+  // Auto-scroll stabilisé : uniquement si déjà en bas ou lors de notre propre envoi (sans animation bloquante)
   useEffect(() => {
-    if (isOpen) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isOpen && (isAtBottomRef.current || shouldForceScrollRef.current)) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+      shouldForceScrollRef.current = false;
     }
   }, [messages, isOpen, currentChannel]);
 
@@ -279,6 +289,13 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       }
       return;
     }
+
+    if (!isEmailVerified) {
+      soundFx.playError();
+      setErrorMessage("Vérification d'e-mail requise pour participer au tchat.");
+      window.dispatchEvent(new CustomEvent('hoot_open_email_verification'));
+      return;
+    }
     const trimmed = inputText.trim();
     if (!trimmed || isSending || cooldownSeconds > 0) return;
 
@@ -298,6 +315,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
 
     const res = await sendMessage(trimmed, categoryToSend);
     if (res.success) {
+      shouldForceScrollRef.current = true;
       setInputText('');
     } else if (res.warning) {
       soundFx.playError();
@@ -784,7 +802,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       ) : (
         <>
           {/* Fil des messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
+          <div onScroll={handleMessagesScroll} className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-gradient-to-b from-[#04120e] via-[#020d0a] to-[#04120e]">
           {isLoading && messages.length === 0 ? (
             <div className="flex items-center justify-center h-36 text-emerald-400 text-xs animate-pulse">
               Chargement de la discussion...
@@ -1004,7 +1022,17 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                           return (
                             <>
                               <p className="whitespace-pre-wrap break-words">
-                                {msg.isDeleted ? msg.text : renderMessageContent(textToRender)}
+                                {msg.isDeleted ? (
+                                  <span className="italic text-slate-400 select-none opacity-85">
+                                    {msg.text && msg.text.startsWith('[Message retiré')
+                                      ? msg.text
+                                      : isMe
+                                      ? '[Message retiré par l\'auteur]'
+                                      : '[Message retiré par la modération]'}
+                                  </span>
+                                ) : (
+                                  renderMessageContent(textToRender)
+                                )}
                               </p>
 
                               {/* Indicateur de traduction et bascule Original/Traduit */}
@@ -1121,8 +1149,66 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
         </div>
       )}
 
-      {/* Barre de saisie inférieure ou invite de connexion */}
-      {isAuthenticated ? (
+      {/* Barre de saisie inférieure, encart de vérification email ou invite de connexion */}
+      {!isAuthenticated ? (
+        <div className="p-3 bg-[#061e16] border-t border-[#059669]/30 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0 text-center sm:text-left">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+              <LogIn className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-200">
+                Mode lecture seule
+              </p>
+              <p className="text-[11px] text-slate-400 leading-tight">
+                Connectez-vous pour envoyer des messages et échanger avec la communauté.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              if (onOpenAuth) {
+                onOpenAuth();
+              } else {
+                window.dispatchEvent(new CustomEvent('hoot_open_auth'));
+              }
+            }}
+            className="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer touch-manipulation whitespace-nowrap active:scale-95"
+          >
+            <LogIn className="w-3.5 h-3.5" />
+            <span>{t('chat.signIn')}</span>
+          </button>
+        </div>
+      ) : !isEmailVerified ? (
+        <div className="p-3 bg-gradient-to-r from-[#171206] via-[#221808] to-[#171206] border-t-2 border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0 text-center sm:text-left shadow-lg shadow-amber-950/30">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
+              <Mail className="w-4 h-4 animate-pulse" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-amber-300 flex items-center gap-1.5 justify-center sm:justify-start">
+                <span>Vérification d'e-mail requise pour participer au tchat</span>
+              </p>
+              <p className="text-[11px] text-amber-100/70 leading-tight mt-0.5">
+                Confirmez votre boîte de réception pour déverrouiller l'envoi de messages.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick();
+              window.dispatchEvent(new CustomEvent('hoot_open_email_verification'));
+            }}
+            className="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-950/40 transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer touch-manipulation whitespace-nowrap active:scale-95"
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Valider mon e-mail</span>
+          </button>
+        </div>
+      ) : (
         <div className="p-2.5 bg-[#061e16] border-t border-[#059669]/30 flex flex-col gap-1.5 shrink-0">
           {/* Barre de réactions rapides / emojis */}
           <div className="flex flex-wrap items-center gap-1 pb-0.5">
@@ -1202,37 +1288,6 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
               {t('chat.security.vigilanceBtn')}
             </button>
           </div>
-        </div>
-      ) : (
-        <div className="p-3 bg-[#061e16] border-t border-[#059669]/30 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0 text-center sm:text-left">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
-              <LogIn className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-slate-200">
-                Mode lecture seule
-              </p>
-              <p className="text-[11px] text-slate-400 leading-tight">
-                Connectez-vous pour envoyer des messages et échanger avec la communauté.
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              soundFx.playClick();
-              if (onOpenAuth) {
-                onOpenAuth();
-              } else {
-                window.dispatchEvent(new CustomEvent('hoot_open_auth'));
-              }
-            }}
-            className="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer touch-manipulation whitespace-nowrap active:scale-95"
-          >
-            <LogIn className="w-3.5 h-3.5" />
-            <span>{t('chat.signIn')}</span>
-          </button>
         </div>
       )}
         </>

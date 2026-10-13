@@ -24,6 +24,8 @@ const FeatherShopModal = React.lazy(() => import('./components/shop/FeatherShopM
 const ChatDrawer = React.lazy(() => import('./components/chat/ChatDrawer').then(module => ({ default: module.ChatDrawer })));
 const AdminRewardCelebrationModal = React.lazy(() => import('./components/common/AdminRewardCelebrationModal').then(module => ({ default: module.AdminRewardCelebrationModal })));
 const TradeModal = React.lazy(() => import('./components/cards/TradeModal').then(module => ({ default: module.TradeModal })));
+const EmailVerificationModal = React.lazy(() => import('./components/auth/EmailVerificationModal').then(module => ({ default: module.EmailVerificationModal })));
+import { EmailVerificationBanner } from './components/auth/EmailVerificationBanner';
 
 import { GemExplorerHome } from './components/gems/GemExplorerHome';
 import { DiscoverySubNav } from './components/discovery/DiscoverySubNav';
@@ -67,14 +69,14 @@ import { ChatProvider } from './context/ChatProvider';
 import { getAppLanguage } from './utils/localization';
 import { useKonamiCode } from './utils/useKonamiCode';
 import { CrtRetroControl } from './components/common/CrtRetroControl';
-import { Calendar, RefreshCw, Archive, Flame } from 'lucide-react';
+import { Calendar, RefreshCw, Archive, Flame, CheckCircle, X, AlertCircle } from 'lucide-react';
 import { soundFx } from './utils/audio';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { getTodayDateString, getYesterdayDateString, isDatePlayable } from './utils/streakManager';
 
 export const AppContent: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { isAuthenticated, isAdmin } = useUserAccount();
+  const { isAuthenticated, isAdmin, verifyEmail } = useUserAccount();
   const { isTradeModalOpen, openTradeModal } = useTrades();
 
   // Defer non-critical floating gadgets (Chat & Odyssey Mini-HUD) until user interaction or quiet period
@@ -256,6 +258,93 @@ export const AppContent: React.FC = () => {
     window.addEventListener('hoot_open_auth', handleOpenAuthEvent);
     return () => window.removeEventListener('hoot_open_auth', handleOpenAuthEvent);
   }, []);
+
+  const [isEmailVerificationModalOpen, setIsEmailVerificationModalOpen] = useState<boolean>(false);
+  const [emailVerificationToast, setEmailVerificationToast] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const handleOpenEmailVerification = () => setIsEmailVerificationModalOpen(true);
+    window.addEventListener('hoot_open_email_verification', handleOpenEmailVerification);
+    return () => window.removeEventListener('hoot_open_email_verification', handleOpenEmailVerification);
+  }, []);
+
+  // Détection automatique du token de vérification dans l'URL (#verify-email?token=... ou ?token=...)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const checkUrlForVerificationToken = async () => {
+      let token: string | null = null;
+
+      // 1. Paramètre de requête URL standard (?token=... ou ?verify_token=...)
+      const searchParams = new URLSearchParams(window.location.search);
+      token = searchParams.get('token') || searchParams.get('verify_token');
+
+      // 2. Hash deep link (#verify-email?token=... ou #verify-email&token=... ou #verify-email=...)
+      const hash = window.location.hash;
+      if (!token && hash && hash.includes('verify-email')) {
+        const queryIndex = hash.indexOf('?');
+        const ampIndex = hash.indexOf('&');
+        const sepIndex = queryIndex !== -1 ? queryIndex : ampIndex;
+        if (sepIndex !== -1) {
+          const hashParams = new URLSearchParams(hash.substring(sepIndex + 1));
+          token = hashParams.get('token');
+        } else if (hash.includes('=')) {
+          token = hash.split('=')[1] || null;
+        }
+      }
+
+      if (token) {
+        try {
+          const res = await verifyEmail(token);
+          if (res.success) {
+            soundFx.playChime();
+            setEmailVerificationToast({
+              success: true,
+              message: res.message || 'Adresse e-mail vérifiée avec succès ! Accès complet au tchat déverrouillé.',
+            });
+
+            // Nettoyage de l'URL sans recharger la page
+            const cleanUrl = new URL(window.location.href);
+            cleanUrl.searchParams.delete('token');
+            cleanUrl.searchParams.delete('verify_token');
+            if (cleanUrl.hash.startsWith('#verify-email')) {
+              cleanUrl.hash = '';
+            }
+            window.history.replaceState(
+              {},
+              document.title,
+              cleanUrl.pathname + (cleanUrl.search ? cleanUrl.search : '') + cleanUrl.hash
+            );
+          } else {
+            soundFx.playError();
+            setEmailVerificationToast({
+              success: false,
+              message: res.error || 'Le lien de confirmation est invalide ou a expiré.',
+            });
+            setIsEmailVerificationModalOpen(true);
+          }
+        } catch {
+          soundFx.playError();
+          setEmailVerificationToast({
+            success: false,
+            message: 'Erreur réseau lors de la validation du lien.',
+          });
+        }
+      }
+    };
+
+    checkUrlForVerificationToken();
+  }, [verifyEmail]);
+
+  // Auto-dismiss du toast après 6s
+  useEffect(() => {
+    if (!emailVerificationToast) return;
+    const timer = setTimeout(() => setEmailVerificationToast(null), 6000);
+    return () => clearTimeout(timer);
+  }, [emailVerificationToast]);
 
   useKonamiCode({
     enabled: true,
@@ -516,7 +605,7 @@ export const AppContent: React.FC = () => {
   return (
     <div className="relative min-h-screen w-full max-w-full overflow-x-hidden flex flex-col bg-transparent bg-ambient-stars text-slate-100 selection:bg-amber-500 selection:text-slate-950 font-sans">
       {/* Ambient glowing fireflies canvas background */}
-      <FirefliesBackground />
+      <FirefliesBackground paused={isArcadeOpen} />
 
       {/* Top sticky Navbar (Consolidated 5 tabs, Mobile-First) */}
       <Navbar
@@ -541,6 +630,48 @@ export const AppContent: React.FC = () => {
         onEasterEggTrigger={() => setIsEasterEggOpen(true)}
         currentDate={currentDate}
       />
+
+      {/* Bandeau d'alerte de vérification d'e-mail */}
+      <EmailVerificationBanner onOpenModal={() => setIsEmailVerificationModalOpen(true)} />
+
+      {/* Toast flottant de confirmation de vérification d'e-mail */}
+      {emailVerificationToast && (
+        <aside
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-20 left-4 sm:bottom-24 sm:left-6 z-[130] max-w-sm w-full bg-[#03150f]/95 border-2 border-emerald-500/70 rounded-2xl p-4 shadow-2xl shadow-emerald-950/50 backdrop-blur-md flex items-start gap-3 animate-in fade-in slide-in-from-bottom duration-300"
+        >
+          <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shrink-0">
+            {emailVerificationToast.success ? (
+              <CheckCircle className="w-5 h-5 text-emerald-400" />
+            ) : (
+              <AlertCircle className="w-5 h-5 text-rose-400" />
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <span
+                className={`text-[10px] uppercase font-bold tracking-wider ${
+                  emailVerificationToast.success ? 'text-emerald-400' : 'text-rose-400'
+                }`}
+              >
+                {emailVerificationToast.success ? 'Confirmation Réussie' : 'Validation Échouée'}
+              </span>
+              <button
+                type="button"
+                onClick={() => setEmailVerificationToast(null)}
+                className="text-slate-400 hover:text-white transition p-0.5 cursor-pointer"
+                title="Fermer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs font-semibold text-white mt-1 leading-snug">
+              {emailVerificationToast.message}
+            </p>
+          </div>
+        </aside>
+      )}
 
       {/* Date Switcher & Practice Bar for Daily Games */}
       {isDailyPuzzleActive && (
@@ -823,6 +954,11 @@ export const AppContent: React.FC = () => {
           onClose={() => setIsAuthOpen(false)}
         />
 
+      <EmailVerificationModal
+          isOpen={isEmailVerificationModalOpen}
+          onClose={() => setIsEmailVerificationModalOpen(false)}
+        />
+
       <OwlEasterEggModal
           isOpen={isEasterEggOpen}
           onClose={() => setIsEasterEggOpen(false)}
@@ -872,6 +1008,7 @@ export const AppContent: React.FC = () => {
           isProfileOpen ||
           isFriendsOpen ||
           isAuthOpen ||
+          isEmailVerificationModalOpen ||
           isEasterEggOpen ||
           isArcadeOpen ||
           isLeaderboardOpen ||

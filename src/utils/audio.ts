@@ -224,6 +224,19 @@ class AudioManager {
     return this.musicGainNode || ctx.destination;
   }
 
+  private connectAndAutoDisconnect(osc: OscillatorNode, gain: GainNode, dest: AudioNode) {
+    osc.connect(gain);
+    gain.connect(dest);
+    osc.onended = () => {
+      try {
+        osc.disconnect();
+        gain.disconnect();
+      } catch {
+        // Ignore
+      }
+    };
+  }
+
   // Play a soft card click
   public playClick() {
     if (!this.soundEnabled || this.masterVolume <= 0 || this.sfxVolume <= 0) return;
@@ -241,8 +254,7 @@ class AudioManager {
       gain.gain.setValueAtTime(0.08, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
 
-      osc.connect(gain);
-      gain.connect(dest);
+      this.connectAndAutoDisconnect(osc, gain, dest);
 
       osc.start();
       osc.stop(ctx.currentTime + 0.05);
@@ -268,8 +280,7 @@ class AudioManager {
       gain.gain.setValueAtTime(0.12, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
 
-      osc.connect(gain);
-      gain.connect(dest);
+      this.connectAndAutoDisconnect(osc, gain, dest);
 
       osc.start();
       osc.stop(ctx.currentTime + 0.25);
@@ -296,8 +307,7 @@ class AudioManager {
         gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.08);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.35);
 
-        osc.connect(gain);
-        gain.connect(dest);
+        this.connectAndAutoDisconnect(osc, gain, dest);
 
         osc.start(ctx.currentTime + i * 0.08);
         osc.stop(ctx.currentTime + i * 0.08 + 0.35);
@@ -324,8 +334,7 @@ class AudioManager {
       gain.gain.setValueAtTime(0.1, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
 
-      osc.connect(gain);
-      gain.connect(dest);
+      this.connectAndAutoDisconnect(osc, gain, dest);
 
       osc.start();
       osc.stop(ctx.currentTime + 0.2);
@@ -356,8 +365,7 @@ class AudioManager {
         gain.gain.linearRampToValueAtTime(0.15, t + duration * 0.3);
         gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
 
-        osc.connect(gain);
-        gain.connect(dest);
+        this.connectAndAutoDisconnect(osc, gain, dest);
 
         osc.start(t);
         osc.stop(t + duration);
@@ -389,8 +397,7 @@ class AudioManager {
         gain.gain.setValueAtTime(0.08, t);
         gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
 
-        osc.connect(gain);
-        gain.connect(dest);
+        this.connectAndAutoDisconnect(osc, gain, dest);
 
         osc.start(t);
         osc.stop(t + 0.4);
@@ -417,8 +424,7 @@ class AudioManager {
       gain.gain.setValueAtTime(0.12, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
 
-      osc.connect(gain);
-      gain.connect(dest);
+      this.connectAndAutoDisconnect(osc, gain, dest);
 
       osc.start();
       osc.stop(ctx.currentTime + 0.2);
@@ -444,8 +450,7 @@ class AudioManager {
       gain.gain.setValueAtTime(0.09, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
 
-      osc.connect(gain);
-      gain.connect(dest);
+      this.connectAndAutoDisconnect(osc, gain, dest);
 
       osc.start();
       osc.stop(ctx.currentTime + 0.06);
@@ -476,8 +481,7 @@ class AudioManager {
         gain.gain.setValueAtTime(0.12, t);
         gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
 
-        osc.connect(gain);
-        gain.connect(dest);
+        this.connectAndAutoDisconnect(osc, gain, dest);
 
         osc.start(t);
         osc.stop(t + duration);
@@ -505,8 +509,7 @@ class AudioManager {
       gain1.gain.setValueAtTime(0.001, t);
       gain1.gain.linearRampToValueAtTime(0.15, t + 0.1);
       gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
-      osc1.connect(gain1);
-      gain1.connect(dest);
+      this.connectAndAutoDisconnect(osc1, gain1, dest);
       osc1.start(t);
       osc1.stop(t + 0.45);
 
@@ -520,8 +523,7 @@ class AudioManager {
         osc2.frequency.setValueAtTime(freq, pingTime);
         gain2.gain.setValueAtTime(0.12, pingTime);
         gain2.gain.exponentialRampToValueAtTime(0.001, pingTime + 0.3);
-        osc2.connect(gain2);
-        gain2.connect(dest);
+        this.connectAndAutoDisconnect(osc2, gain2, dest);
         osc2.start(pingTime);
         osc2.stop(pingTime + 0.3);
       });
@@ -549,8 +551,7 @@ class AudioManager {
       gain1.gain.linearRampToValueAtTime(0.18, t + 0.015);
       gain1.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
 
-      osc1.connect(gain1);
-      gain1.connect(dest);
+      this.connectAndAutoDisconnect(osc1, gain1, dest);
       osc1.start(t);
       osc1.stop(t + 0.55);
 
@@ -564,8 +565,7 @@ class AudioManager {
       gain2.gain.linearRampToValueAtTime(0.06, t + 0.01);
       gain2.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
 
-      osc2.connect(gain2);
-      gain2.connect(dest);
+      this.connectAndAutoDisconnect(osc2, gain2, dest);
       osc2.start(t);
       osc2.stop(t + 0.35);
     } catch {
@@ -608,8 +608,7 @@ class AudioManager {
         gain.gain.linearRampToValueAtTime(0.18, noteTime + 0.015);
         gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur);
 
-        osc.connect(gain);
-        gain.connect(dest);
+        this.connectAndAutoDisconnect(osc, gain, dest);
         osc.start(noteTime);
         osc.stop(noteTime + dur);
       });
@@ -652,6 +651,13 @@ class AudioManager {
       whiteNoise.connect(filter);
       filter.connect(gain);
       gain.connect(dest);
+      whiteNoise.onended = () => {
+        try {
+          whiteNoise.disconnect();
+          filter.disconnect();
+          gain.disconnect();
+        } catch {}
+      };
       whiteNoise.start(now);
 
       // Harmonique de déchirement aigu
@@ -665,8 +671,7 @@ class AudioManager {
       oscGain.gain.setValueAtTime(0.04, now);
       oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
 
-      osc.connect(oscGain);
-      oscGain.connect(dest);
+      this.connectAndAutoDisconnect(osc, oscGain, dest);
       osc.start(now);
       osc.stop(now + 0.35);
     } catch {
@@ -697,8 +702,7 @@ class AudioManager {
       gain.gain.setValueAtTime(initialGain, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + (isCrit ? 0.13 : 0.08));
 
-      osc.connect(gain);
-      gain.connect(dest);
+      this.connectAndAutoDisconnect(osc, gain, dest);
       osc.start(t);
       osc.stop(t + (isCrit ? 0.13 : 0.08));
 
@@ -711,8 +715,7 @@ class AudioManager {
         ping.frequency.exponentialRampToValueAtTime(1760, t + 0.14);
         pingGain.gain.setValueAtTime(0.07, t);
         pingGain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-        ping.connect(pingGain);
-        pingGain.connect(dest);
+        this.connectAndAutoDisconnect(ping, pingGain, dest);
         ping.start(t);
         ping.stop(t + 0.16);
       }
@@ -736,8 +739,7 @@ class AudioManager {
       osc.frequency.exponentialRampToValueAtTime(1040, t + 0.09);
       gain.gain.setValueAtTime(0.06, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-      osc.connect(gain);
-      gain.connect(dest);
+      this.connectAndAutoDisconnect(osc, gain, dest);
       osc.start(t);
       osc.stop(t + 0.1);
     } catch {

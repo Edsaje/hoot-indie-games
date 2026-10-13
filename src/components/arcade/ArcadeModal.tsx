@@ -231,7 +231,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   const { isConnected: isGamepadConnected, gamepadName, labels } = useGamepadStatus();
 
   useGamepadArcadeLoop({
-    enabled: isOpen,
+    enabled: isOpen && isGamepadConnected,
     gameId: selectedGame,
     keysDownRef,
     gamepadKeysRef,
@@ -261,6 +261,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
 
+    const handleBlur = () => {
+      keyboardKeysRef.current.clear();
+      gamepadKeysRef.current.clear();
+      keysDownRef.current.clear();
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignorer les événements synthétiques du gamepad pour éviter toute pollution
       if (!e.isTrusted) return;
@@ -279,10 +285,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', handleBlur);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur);
       keyboardKeysRef.current.clear();
       gamepadKeysRef.current.clear();
       keysDownRef.current.clear();
@@ -403,10 +411,10 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
   const currentGameMeta =
     ARCADE_GAMES.find((g) => g.id === selectedGame) || ARCADE_GAMES[0];
 
-  const getCanvasCoords = (clientX: number, clientY: number) => {
-    const canvas = document.querySelector('canvas');
+  const getCanvasCoords = (canvas: HTMLCanvasElement | null, clientX: number, clientY: number) => {
     if (!canvas) return { x: 200, y: 200 };
     const rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return { x: 200, y: 200 };
     const scaleX = 400 / rect.width;
     const scaleY = 400 / rect.height;
     return {
@@ -419,7 +427,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     e.preventDefault();
     if (e.touches.length === 0) return;
     const touch = e.touches[0];
-    const coords = getCanvasCoords(touch.clientX, touch.clientY);
+    const coords = getCanvasCoords(e.currentTarget, touch.clientX, touch.clientY);
     touchStartPosRef.current = coords;
     touchPosRef.current = { x: coords.x, y: coords.y, active: true };
 
@@ -441,7 +449,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     e.preventDefault();
     if (e.touches.length === 0) return;
     const touch = e.touches[0];
-    const coords = getCanvasCoords(touch.clientX, touch.clientY);
+    const coords = getCanvasCoords(e.currentTarget, touch.clientX, touch.clientY);
     touchPosRef.current = { x: coords.x, y: coords.y, active: true };
   };
 
@@ -450,7 +458,7 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
     touchPosRef.current.active = false;
     if (e.changedTouches.length === 0) return;
     const touch = e.changedTouches[0];
-    const endCoords = getCanvasCoords(touch.clientX, touch.clientY);
+    const endCoords = getCanvasCoords(e.currentTarget, touch.clientX, touch.clientY);
     const dx = endCoords.x - touchStartPosRef.current.x;
     const dy = endCoords.y - touchStartPosRef.current.y;
     const dist = Math.hypot(dx, dy);

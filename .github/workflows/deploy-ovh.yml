@@ -38,6 +38,12 @@ jobs:
       - name: 🏗️ Compilation de production (Vite / React)
         run: npm run build
 
+      - name: ✉️ Configuration sécurisée de messagerie (Resend)
+        run: |
+          echo "<?php define('RESEND_API_KEY', '${{ secrets.RESEND_API_KEY }}');" > public/api/.mail_config.php
+          mkdir -p dist/api
+          cp public/api/.mail_config.php dist/api/.mail_config.php
+
       - name: 📤 Déploiement FTP vers OVH
         id: ftp-deploy-1
         continue-on-error: true

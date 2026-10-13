@@ -22,8 +22,14 @@ interface NightSkyStar {
   isAmber: boolean;
 }
 
-export const FirefliesBackground: React.FC = () => {
+export interface FirefliesBackgroundProps {
+  paused?: boolean;
+}
+
+export const FirefliesBackground: React.FC<FirefliesBackgroundProps> = ({ paused = false }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -117,7 +123,7 @@ export const FirefliesBackground: React.FC = () => {
 
     const render = () => {
       if (!initialized) initCanvas();
-      if (!isVisible) {
+      if (!isVisible || pausedRef.current) {
         animationFrameId = requestAnimationFrame(render);
         return;
       }
