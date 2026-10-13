@@ -15,8 +15,8 @@ export const DiscoverySubNav: React.FC<DiscoverySubNavProps> = ({
 }) => {
   const { t } = useTranslation();
   const { curatedGems, stats } = useSteamCatalog();
-  const gemsCount = curatedGems.length > 0 ? curatedGems.length : 295;
-  const catalogCount = stats.steamCatalogCount > 0 ? stats.steamCatalogCount : 1120;
+  const gemsCount = curatedGems.length > 0 ? curatedGems.length : 298;
+  const catalogCount = stats.totalGames > 0 ? stats.totalGames : 1232;
 
   return (
     <div className="w-full max-w-xl mx-auto flex items-center justify-center p-1.5 rounded-2xl bg-[#06241b] border border-[#78350f] mb-6 shadow-xl">

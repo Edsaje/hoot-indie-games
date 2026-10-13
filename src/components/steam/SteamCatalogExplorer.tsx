@@ -556,9 +556,9 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
 
           <div className="flex items-center gap-3">
             <div className="px-5 py-3 bg-[#03140e] border border-[#0d543e] rounded-2xl text-center shadow-inner">
-              <div className="text-[10px] uppercase font-bold text-slate-400">Catalogue Steam</div>
+              <div className="text-[10px] uppercase font-bold text-slate-400">{t('catalog.totalGames', 'Catalogue Global')}</div>
               <div className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
-                {stats.steamCatalogCount}
+                {stats.totalGames}
               </div>
             </div>
           </div>
