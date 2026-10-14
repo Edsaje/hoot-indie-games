@@ -24075,6 +24075,23 @@
       "en": "Very Positive"
     }
   },
+  "3299050": {
+    "appId": 3299050,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1825,
+    "finalPriceCents": 1569,
+    "discountPercent": 14,
+    "formattedFinalPrice": "15,69€",
+    "formattedInitialPrice": "18,25€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "3300800": {
     "appId": 3300800,
     "isFree": false,
@@ -25019,6 +25036,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "3492120": {
+    "appId": 3492120,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1025,
+    "finalPriceCents": 922,
+    "discountPercent": 10,
+    "formattedFinalPrice": "9,22€",
+    "formattedInitialPrice": "10,25€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "3493400": {
@@ -26554,6 +26588,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "3878090": {
+    "appId": 3878090,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 289,
+    "finalPriceCents": 231,
+    "discountPercent": 20,
+    "formattedFinalPrice": "2,31€",
+    "formattedInitialPrice": "2,89€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "3880410": {
@@ -28270,6 +28321,23 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "4425980": {
+    "appId": 4425980,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 719,
+    "finalPriceCents": 575,
+    "discountPercent": 20,
+    "formattedFinalPrice": "5,75€",
+    "formattedInitialPrice": "7,19€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "4437370": {

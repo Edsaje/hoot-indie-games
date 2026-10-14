@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 72
+ * Total de pépites sélectionnées : 74
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3072,5 +3072,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzIyNjg2ODI0LnBuZw==/315x250%23c/bI0xre.png"
     ],
     "dateAdded": "2026-10-13"
+  },
+  {
+    "id": "itch-the-art-shop-day-2",
+    "title": "The Art Shop: DAY 2",
+    "developer": "surrtasm",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://surrtasm.itch.io/the-art-shop",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "\"Welcome to your new Job.\"",
+      "en": "\"Welcome to your new Job.\""
+    },
+    "description": {
+      "fr": "\"Welcome to your new Job.\"",
+      "en": "\"Welcome to your new Job.\""
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5Nzg1NDUzLnBuZw==/315x250%23c/wcZytH.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5Nzg1NDUzLnBuZw==/315x250%23c/wcZytH.png"
+    ],
+    "dateAdded": "2026-10-14"
+  },
+  {
+    "id": "itch-rotetra",
+    "title": "ROTETRA",
+    "developer": "sharkwithlasers",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://sharkwithlasers.itch.io/rotetra",
+    "playInBrowserUrl": "https://sharkwithlasers.itch.io/rotetra",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A twisted spin on a classic falling block puzzler",
+      "en": "A twisted spin on a classic falling block puzzler"
+    },
+    "description": {
+      "fr": "A twisted spin on a classic falling block puzzler",
+      "en": "A twisted spin on a classic falling block puzzler"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwNTEwMDE1LnBuZw==/315x250%23c/y0ziIo.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwNTEwMDE1LnBuZw==/315x250%23c/y0ziIo.png"
+    ],
+    "dateAdded": "2026-10-14"
   }
 ];

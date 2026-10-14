@@ -591,33 +591,37 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1791241193"
   },
   {
-    "id": "yume-tenshi",
-    "title": "Yume Tenshi",
-    "developer": "GoreFreak",
-    "publisher": "Cakesin",
+    "id": "escape-from-elohell",
+    "title": "Escape from EloHell",
+    "developer": "Richard Fulop",
+    "publisher": "Richard Fulop",
     "expectedDate": {
-      "fr": "13 oct. 2026",
-      "en": "Oct 13, 2026"
+      "fr": "14 oct. 2026",
+      "en": "Oct 14, 2026"
     },
     "genres": [
       {
-        "fr": "Aventure",
-        "en": "Aventure"
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      },
+      {
+        "fr": "Roguelike",
+        "en": "Roguelike"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5033710/",
+    "steamUrl": "https://store.steampowered.com/app/4547860/",
     "description": {
-      "fr": "Yume Tenshi—A Game Boy Yume Nikki fangame where you journey through Reisuki’s dreams. Explore the spirit world, and collect mystical transformations.",
-      "en": "Yume Tenshi—A Game Boy Yume Nikki fangame where you journey through Reisuki’s dreams. Explore the spirit world, and collect mystical transformations."
+      "fr": "A roguelike single-player game of luck and tactics, which distills competitive ladder climbing into its purest form with one-click matches, win-streak combos, chain-reaction effects. All the satisfaction of reaching Rank 1, none of the toxic teammates or 40-minute hostage games.",
+      "en": "A roguelike single-player game of luck and tactics, which distills competitive ladder climbing into its purest form with one-click matches, win-streak combos, chain-reaction effects. All the satisfaction of reaching Rank 1, none of the toxic teammates or 40-minute hostage games."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5033710/29c08ec21294da3f226401ebc135c37e0200ec49/header.jpg?t=1790747714"
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/32cf8f48c71af4776182ee7fe7388f7334ea44aa/header.jpg?t=1791297729"
   }
 ];

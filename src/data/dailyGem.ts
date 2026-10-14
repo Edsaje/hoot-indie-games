@@ -1,38 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-13";
+export const TODAY_DATE = "2026-10-14";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "ape-out",
-  "title": "APE OUT",
-  "releaseYear": 2019,
+  "id": "return-of-the-obra-dinn",
+  "title": "Return of the Obra Dinn",
+  "releaseYear": 2018,
   "genre": [
-    "Action",
-    "Survie"
+    "Enquête",
+    "Puzzle",
+    "Mystère",
+    "Historique"
   ],
   "artStyle": {
-    "fr": "3D Stylisée",
-    "en": "Stylized 3D"
+    "fr": "Monochrome / Minimaliste",
+    "en": "Monochrome"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Première personne",
+    "en": "First-Person"
   },
-  "developer": "Gabe Cuzzillo, Bennett Foddy, Maxi Boch",
-  "steamUrl": "https://store.steampowered.com/app/447150/",
+  "developer": "Lucas Pope",
+  "steamUrl": "https://store.steampowered.com/app/653530/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_c3829a1b40e0f3c88f33530d1e06d6888d85d211.1920x1080.jpg?t=1785434966",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_2bbf3b25845bab2b4d32d3cd5201be9e7cc745a1.1920x1080.jpg?t=1785434966",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aaa4a17ce60a909664f5e1eba7187c1d792e32e6.1920x1080.jpg?t=1785434966",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_9b4c28fd4b68bbade791effd9b32a849cf7827b2.1920x1080.jpg?t=1785434966",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_a8c90ab1ef884b1bee441b8e1b4292a6f9dde5ea.1920x1080.jpg?t=1785434966",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447150/ss_aec2303d9d65fdcebf8c046fbb6859de1633dc22.1920x1080.jpg?t=1785434966"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_7dd3476ace2170e134141e487f9491d4c9d094f3.1920x1080.jpg?t=1686697594",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_380dc35237fde7d3863a44270abafc37924d1db4.1920x1080.jpg?t=1686697594",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_69b3c98eda3c3476a4dee6a1a220169ac70dcb6d.1920x1080.jpg?t=1686697594",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_4f555f01fa82723c28fcce8f0909570caaee8e8f.1920x1080.jpg?t=1686697594",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_7a8824f581b399abc52f598966b339fada982349.1920x1080.jpg?t=1686697594",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/653530/ss_f3e24e7a7f86ad925076f63b4e6cd86258f63d2c.1920x1080.jpg?t=1686697594"
   ],
   "hints": {
     "tagline": {
-      "fr": "Jeu de destruction massive – ou « smash'em up » pour les intimes – aux couleurs criardes, à l'ambiance explosive et au style survitaminé, Ape Out mêle et entremêle instinct de survie primitif, violence rythmique et jazz frénétique.",
-      "en": "APE OUT is a wildly intense and colorfully stylized smash ‘em up about primal escape, rhythmic violence, and frenetic jazz."
-    }
-  },
-  "addedAt": "2026-10-10"
+      "fr": "Reconstituez les derniers instants des 60 marins disparus à l'aide d'une mystérieuse montre de poche temporelle.",
+      "en": "An insurance mystery with minimal color and maximum deduction aboard a ghost ship.",
+      "es": "Un misterio de seguros con deducción lógica implacable a bordo de un barco fantasma.",
+      "de": "Ein meisterhaftes Deduktionsrätsel auf einem Geisterschiff mit einer magischen Taschenuhr.",
+      "ja": "不思議な懐中時計で過去の最期の瞬間を再生し、幽霊船の乗員60名の運命を推理する傑作ミステリー。",
+      "pt-BR": "Reconstitua os momentos finais dos 60 tripulantes desaparecidos a bordo de um navio fantasma."
+    },
+    "composer": "Lucas Pope"
+  }
 };

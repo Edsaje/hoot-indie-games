@@ -4356,58 +4356,6 @@
     }
   },
   {
-    "id": "wargroove",
-    "title": "Wargroove",
-    "releaseYear": 2019,
-    "genre": [
-      "Stratégie",
-      "Deckbuilder"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Chucklefish",
-    "steamUrl": "https://store.steampowered.com/app/607050/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_cbe34af9eac1f3a24f62aee93218074c1eb5a348.1920x1080.jpg?t=1776764630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_3a598f1827c416969b456c9bb9e37b0faf446b85.1920x1080.jpg?t=1776764630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_2dbd8214c6b35ea0b106e373450368b9531a2da2.1920x1080.jpg?t=1776764630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_72ecf76d7c5b1d549a56185693d7f4e08e043591.1920x1080.jpg?t=1776764630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_077a801046848e2c7996fb5d9134165edb246f31.1920x1080.jpg?t=1776764630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_b2d80252133412636770f6601bace943706ac501.1920x1080.jpg?t=1776764630"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Entrez dans la bataille avec Wargroove, un jeu de stratégie jusqu'à 4 joueurs ! Choisissez votre Commandant et menez la guerre au tour par tour contre des factions. Concevez, partagez les cartes, cinématiques et campagnes.",
-        "en": "Take to the battlefield with Wargroove, a strategy game for up to 4 players! Choose your Commander and wage turn-based war on battling factions. Design and share maps, cut-scenes and campaigns with easy-to-use editors and in-depth customization tools!"
-      }
-    },
-    "steamAppId": 607050,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ff97fb341a6cbe0c5fe1e41d781b958a76d7393a/header.jpg?t=1776764630",
-    "steamStoreData": {
-      "appId": 607050,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1699,
-      "finalPriceCents": 1699,
-      "discountPercent": 0,
-      "formattedFinalPrice": "16,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 4012,
-      "totalPositive": 3349,
-      "positivePercent": 83,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "risk-of-rain-2",
     "title": "Risk of Rain 2",
     "releaseYear": 2020,
@@ -4662,60 +4610,6 @@
     }
   },
   {
-    "id": "my-time-at-portia",
-    "title": "My Time at Portia",
-    "releaseYear": 2019,
-    "genre": [
-      "Aventure",
-      "Occasionnel",
-      "RPG",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Pathea Games",
-    "steamUrl": "https://store.steampowered.com/app/666140/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_cb3e189d161602f5b133b8094a1488803254d945.1920x1080.jpg?t=1773299649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_22a3dc770222f5356b05b1c4ac838177540a9509.1920x1080.jpg?t=1773299649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_3d24ec11c7294f186adf9623303d51f01d23e8db.1920x1080.jpg?t=1773299649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_f24aacf56860c7ac2685927d5c7e9b0c808dff4a.1920x1080.jpg?t=1773299649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_112335fe9e3e5a7a96a25ca9391879bb56b7a5c8.1920x1080.jpg?t=1773299649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_5ee1484b330384accef551044fd6424ea7dbc509.1920x1080.jpg?t=1773299649"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Démarrez votre nouvelle vie dans la merveilleuse ville de Portia ! Remettez à neuf l'atelier délabré de votre père en remplissant des commandes, en cultivant des plantes, en élevant des animaux et en interagissant avec les drôles d'habitants de cette charmante terre post-apocalyptique !",
-        "en": "Start a new life in the enchanting town of Portia! Restore your Pa's neglected workshop to its former glory by fulfilling commissions, growing crops, raising animals, and befriending the quirky inhabitants of this charming post-apocalyptic land!"
-      }
-    },
-    "steamAppId": 666140,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/header.jpg?t=1773299649",
-    "steamStoreData": {
-      "appId": 666140,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 2999,
-      "finalPriceCents": 2999,
-      "discountPercent": 0,
-      "formattedFinalPrice": "29,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 34840,
-      "totalPositive": 31870,
-      "positivePercent": 91,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "amid-evil",
     "title": "AMID EVIL",
     "releaseYear": 2019,
@@ -4813,58 +4707,6 @@
       "totalReviews": 99941,
       "totalPositive": 93536,
       "positivePercent": 94,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "heroes-of-hammerwatch",
-    "title": "Heroes of Hammerwatch",
-    "releaseYear": 2018,
-    "genre": [
-      "Action",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Crackshell",
-    "steamUrl": "https://store.steampowered.com/app/677120/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_ba53ff94bbec4e842ad32deac5d144fb4aa1cd47.1920x1080.jpg?t=1754576797",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_fad2a73b962997f11d902948e236d4e229d7bbff.1920x1080.jpg?t=1754576797",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_cbd28717267a8680c7910a124361fb359e79b279.1920x1080.jpg?t=1754576797",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_6d401b3cef79fc670bc39873dbdfa9123a33ee3c.1920x1080.jpg?t=1754576797",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_f3918f2e22d93a129fe0170976518d0509421cf0.1920x1080.jpg?t=1754576797",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_ecde497d7aeabb68a8aee45de6484b44d3afa0b6.1920x1080.jpg?t=1754576797"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Heroes of Hammerwatch is a rogue-lite action-adventure. Explore and battle your way through procedurally generated levels on your own or with up to 3 friends.",
-        "en": "Heroes of Hammerwatch is a rogue-lite action-adventure. Explore and battle your way through procedurally generated levels on your own or with up to 3 friends."
-      }
-    },
-    "steamAppId": 677120,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/header.jpg?t=1754576797",
-    "steamStoreData": {
-      "appId": 677120,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1479,
-      "finalPriceCents": 1479,
-      "discountPercent": 0,
-      "formattedFinalPrice": "14,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 7510,
-      "totalPositive": 6560,
-      "positivePercent": 87,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -91327,5 +91169,150 @@
         "en": "Very Positive"
       }
     }
+  },
+  {
+    "id": "no-such-place",
+    "title": "No Such Place",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "ChillyRoom, CritTeam 暴击组",
+    "steamUrl": "https://store.steampowered.com/app/3299050/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3299050/2f1831f7c0c5276faef534884238ebd7fdec1f8a/ss_2f1831f7c0c5276faef534884238ebd7fdec1f8a.1920x1080.jpg?t=1791955003",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3299050/2f72f2e5cb816759f95ddd0071a80c8f75a89e22/ss_2f72f2e5cb816759f95ddd0071a80c8f75a89e22.1920x1080.jpg?t=1791955003",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3299050/348ca9188a9e6cb819c7efda8c8d7294d275e28b/ss_348ca9188a9e6cb819c7efda8c8d7294d275e28b.1920x1080.jpg?t=1791955003",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3299050/6b507d4cdf339214becbd546bb7171c4c7095f08/ss_6b507d4cdf339214becbd546bb7171c4c7095f08.1920x1080.jpg?t=1791955003",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3299050/5916180f4bc44d47a9fecf51dccc571bb0c818e4/ss_5916180f4bc44d47a9fecf51dccc571bb0c818e4.1920x1080.jpg?t=1791955003",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3299050/720002098b251b7822078023aa9f8cd4090510ba/ss_720002098b251b7822078023aa9f8cd4090510ba.1920x1080.jpg?t=1791955003"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Welcome to the Unknown Research Consortium (U.R.C.), where you’re tasked with conducting reconnaissance missions, terminating unknown threats, gathering crucial information, and reaching the evacuation point in this treacherous top-down extraction shooter.",
+        "en": "Welcome to the Unknown Research Consortium (U.R.C.), where you’re tasked with conducting reconnaissance missions, terminating unknown threats, gathering crucial information, and reaching the evacuation point in this treacherous top-down extraction shooter."
+      }
+    },
+    "addedAt": "2026-10-14",
+    "steamAppId": 3299050,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3299050/8f84cb5686fdaab8db3d7c3d338d04c9e08c947a/header.jpg?t=1791955003"
+  },
+  {
+    "id": "legion-breaker",
+    "title": "Legion Breaker",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Baffled Engineer",
+    "steamUrl": "https://store.steampowered.com/app/4425980/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4425980/1bc91e9dafc7e2b116efe04159909b6630270567/ss_1bc91e9dafc7e2b116efe04159909b6630270567.1920x1080.jpg?t=1791896276",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4425980/a31e5ab88fd45ae20086d84db3badf1cfb863a52/ss_a31e5ab88fd45ae20086d84db3badf1cfb863a52.1920x1080.jpg?t=1791896276",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4425980/7e82ea951abbe4be0f89f96ffa7ba62bbd5010f1/ss_7e82ea951abbe4be0f89f96ffa7ba62bbd5010f1.1920x1080.jpg?t=1791896276",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4425980/a0801365857819598e9dfad2351f2e1a15c9332e/ss_a0801365857819598e9dfad2351f2e1a15c9332e.1920x1080.jpg?t=1791896276",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4425980/446d920f3d92bbfefc04e9edcbb6ec160d06e6fc/ss_446d920f3d92bbfefc04e9edcbb6ec160d06e6fc.1920x1080.jpg?t=1791896276",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4425980/f4a0e789cc2351f4049c6c4b2b785258a3a0eda7/ss_f4a0e789cc2351f4049c6c4b2b785258a3a0eda7.1920x1080.jpg?t=1791896276"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Legion Breaker is an active incremental game about growing a novice wizard into an unstoppable battlemage. Unlock powerful spells, raise a holy army, and crush undead hordes across expanding battlefields on your way to the Necromancer King.",
+        "en": "Legion Breaker is an active incremental game about growing a novice wizard into an unstoppable battlemage. Unlock powerful spells, raise a holy army, and crush undead hordes across expanding battlefields on your way to the Necromancer King."
+      }
+    },
+    "addedAt": "2026-10-14",
+    "steamAppId": 4425980,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4425980/572123b7cb5884906dc50d3c1747cab4b1bb9751/header.jpg?t=1791896276"
+  },
+  {
+    "id": "legion-was-here",
+    "title": "Legion Was Here",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Geoffroy Monde",
+    "steamUrl": "https://store.steampowered.com/app/3492120/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3492120/14222a3dcf72cc668ac057efdf7b0a4598d5f716/ss_14222a3dcf72cc668ac057efdf7b0a4598d5f716.1920x1080.jpg?t=1791910836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3492120/f0d4b41274eb2a1293a69ba2fe39d514c9ce713d/ss_f0d4b41274eb2a1293a69ba2fe39d514c9ce713d.1920x1080.jpg?t=1791910836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3492120/add8bd2655cea9fd1c03aaaca04a38ae4d985e66/ss_add8bd2655cea9fd1c03aaaca04a38ae4d985e66.1920x1080.jpg?t=1791910836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3492120/aef4a68b333221580ca0c08baaa802449280bdf0/ss_aef4a68b333221580ca0c08baaa802449280bdf0.1920x1080.jpg?t=1791910836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3492120/9a38ff523c2e34ccc67c1e97eb410473e4a24f15/ss_9a38ff523c2e34ccc67c1e97eb410473e4a24f15.1920x1080.jpg?t=1791910836",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3492120/872bf21da732774b4a90d7d0f6ba522ffe05dd8f/ss_872bf21da732774b4a90d7d0f6ba522ffe05dd8f.1920x1080.jpg?t=1791910836"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Vous êtes Legion, un agent secret capable de changer d’apparence à volonté. Utilisez vos dons d’enquêteur et de caméléon pour infiltrer les rangs ennemis !",
+        "en": "Steal a face. Study a life. Survive the conversation."
+      }
+    },
+    "addedAt": "2026-10-14",
+    "steamAppId": 3492120,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3492120/2d1de35b4953a8fe26bbbe6d6f22b83f2e271549/header.jpg?t=1791910836"
+  },
+  {
+    "id": "pixel-survivors-defense",
+    "title": "Pixel Survivors: Defense",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Amrita",
+    "steamUrl": "https://store.steampowered.com/app/3878090/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/732bdecce36c24da906bd12e9b1ce2f322382e84/ss_732bdecce36c24da906bd12e9b1ce2f322382e84.1920x1080.jpg?t=1791910613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/c906a93fd8dec157267788d53f7aa4ce1cb18df2/ss_c906a93fd8dec157267788d53f7aa4ce1cb18df2.1920x1080.jpg?t=1791910613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/e466d8d620b40c21769ff4bfafcf59c344420b7c/ss_e466d8d620b40c21769ff4bfafcf59c344420b7c.1920x1080.jpg?t=1791910613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/69568e50b53981c384498b8c9ab7aab294cef4e0/ss_69568e50b53981c384498b8c9ab7aab294cef4e0.1920x1080.jpg?t=1791910613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/b39e8f6dc2769f28f3897cdb063b87b2aeb1c07b/ss_b39e8f6dc2769f28f3897cdb063b87b2aeb1c07b.1920x1080.jpg?t=1791910613",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/6388ef7c77c01e258156823a89213be39108256c/ss_6388ef7c77c01e258156823a89213be39108256c.1920x1080.jpg?t=1791910613"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Pixel Survivors: Defense est un tower defense roguelite. Tenez bon en héros solitaire face à des hordes de monstres, combinez des sorts automatiques avec plus de 200 objets et survivez jusqu'à 40 vagues d'élites et de boss pour protéger votre base.",
+        "en": "Pixel Survivors: Defense is a roguelite tower defense game. Stand your ground as a lone hero against hordes of monsters, combine auto-casting spells with 200+ items, and survive up to 40 waves of elites and bosses to protect your base."
+      }
+    },
+    "addedAt": "2026-10-14",
+    "steamAppId": 3878090,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/e56907625e4a46d20800fc8f14b2d73ebced2c89/header.jpg?t=1791910613"
   }
 ]

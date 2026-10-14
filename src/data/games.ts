@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 298
+ * Total de jeux : 301
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11286,6 +11286,110 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-13"
+  },
+  {
+    "id": "wargroove",
+    "title": "Wargroove",
+    "releaseYear": 2019,
+    "genre": [
+      "Stratégie",
+      "Deckbuilder"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "developer": "Chucklefish",
+    "steamUrl": "https://store.steampowered.com/app/607050/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_cbe34af9eac1f3a24f62aee93218074c1eb5a348.1920x1080.jpg?t=1776764630",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_3a598f1827c416969b456c9bb9e37b0faf446b85.1920x1080.jpg?t=1776764630",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_2dbd8214c6b35ea0b106e373450368b9531a2da2.1920x1080.jpg?t=1776764630",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_72ecf76d7c5b1d549a56185693d7f4e08e043591.1920x1080.jpg?t=1776764630",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_077a801046848e2c7996fb5d9134165edb246f31.1920x1080.jpg?t=1776764630",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/607050/ss_b2d80252133412636770f6601bace943706ac501.1920x1080.jpg?t=1776764630"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Entrez dans la bataille avec Wargroove, un jeu de stratégie jusqu'à 4 joueurs ! Choisissez votre Commandant et menez la guerre au tour par tour contre des factions. Concevez, partagez les cartes, cinématiques et campagnes.",
+        "en": "Take to the battlefield with Wargroove, a strategy game for up to 4 players! Choose your Commander and wage turn-based war on battling factions. Design and share maps, cut-scenes and campaigns with easy-to-use editors and in-depth customization tools!"
+      },
+      "composer": "Phonetic Hero"
+    },
+    "addedAt": "2026-10-14"
+  },
+  {
+    "id": "my-time-at-portia",
+    "title": "My Time at Portia",
+    "releaseYear": 2019,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Pathea Games",
+    "steamUrl": "https://store.steampowered.com/app/666140/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_cb3e189d161602f5b133b8094a1488803254d945.1920x1080.jpg?t=1790754894",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_22a3dc770222f5356b05b1c4ac838177540a9509.1920x1080.jpg?t=1790754894",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_3d24ec11c7294f186adf9623303d51f01d23e8db.1920x1080.jpg?t=1790754894",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_f24aacf56860c7ac2685927d5c7e9b0c808dff4a.1920x1080.jpg?t=1790754894",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_112335fe9e3e5a7a96a25ca9391879bb56b7a5c8.1920x1080.jpg?t=1790754894",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/666140/ss_5ee1484b330384accef551044fd6424ea7dbc509.1920x1080.jpg?t=1790754894"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Démarrez votre nouvelle vie dans la merveilleuse ville de Portia ! Remettez à neuf l'atelier délabré de votre père en remplissant des commandes, en cultivant des plantes, en élevant des animaux et en interagissant avec les drôles d'habitants de cette charmante terre post-apocalyptique !",
+        "en": "Start a new life in the enchanting town of Portia! Restore your Pa's neglected workshop to its former glory by fulfilling commissions, growing crops, raising animals, and befriending the quirky inhabitants of this charming post-apocalyptic land!"
+      }
+    },
+    "addedAt": "2026-10-14"
+  },
+  {
+    "id": "heroes-of-hammerwatch",
+    "title": "Heroes of Hammerwatch",
+    "releaseYear": 2018,
+    "genre": [
+      "Action",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Crackshell",
+    "steamUrl": "https://store.steampowered.com/app/677120/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_ba53ff94bbec4e842ad32deac5d144fb4aa1cd47.1920x1080.jpg?t=1754576797",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_fad2a73b962997f11d902948e236d4e229d7bbff.1920x1080.jpg?t=1754576797",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_cbd28717267a8680c7910a124361fb359e79b279.1920x1080.jpg?t=1754576797",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_6d401b3cef79fc670bc39873dbdfa9123a33ee3c.1920x1080.jpg?t=1754576797",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_f3918f2e22d93a129fe0170976518d0509421cf0.1920x1080.jpg?t=1754576797",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/677120/ss_ecde497d7aeabb68a8aee45de6484b44d3afa0b6.1920x1080.jpg?t=1754576797"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Heroes of Hammerwatch is a rogue-lite action-adventure. Explore and battle your way through procedurally generated levels on your own or with up to 3 friends.",
+        "en": "Heroes of Hammerwatch is a rogue-lite action-adventure. Explore and battle your way through procedurally generated levels on your own or with up to 3 friends."
+      }
+    },
+    "addedAt": "2026-10-14"
   }
 ];
 
