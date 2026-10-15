@@ -4817,58 +4817,6 @@
     }
   },
   {
-    "id": "foundation",
-    "title": "Foundation",
-    "releaseYear": 2025,
-    "genre": [
-      "Simulation",
-      "Stratégie"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Polymorph Games",
-    "steamUrl": "https://store.steampowered.com/app/690830/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_2a8289eaca31fa5b81f379b42c47010bb8070f15.1920x1080.jpg?t=1789416630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_942d0a44b1e5bb5caf601feb082f8b14124c8209.1920x1080.jpg?t=1789416630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_dbc1c23ffd249f0c8b07aae6312f33aa63a0e8eb.1920x1080.jpg?t=1789416630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_e9eb10e68eab982bbcfb36be9a3bc1799fb6e958.1920x1080.jpg?t=1789416630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_679df9d3d1d03a934afb3e36ba26b8b1fb90159c.1920x1080.jpg?t=1789416630",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_c16b9212e4494a6cc7bef79ad764d1b889f5bbd2.1920x1080.jpg?t=1789416630"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Foundation est un city-builder relaxant basé sur un système sans grille qui se focalise sur le développement authentique, la construction de monuments et la gestion des ressources.",
-        "en": "Foundation is a grid-less, laidback medieval city-building game with a focus on organic development, monument construction and resource management."
-      }
-    },
-    "steamAppId": 690830,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/d338fff195487271a85e4fbf791f1745aefcee40/header_alt_assets_6.jpg?t=1789416630",
-    "steamStoreData": {
-      "appId": 690830,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 3399,
-      "finalPriceCents": 3399,
-      "discountPercent": 0,
-      "formattedFinalPrice": "33,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 23046,
-      "totalPositive": 19942,
-      "positivePercent": 87,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "bloodstained-ritual-of-the-night",
     "title": "Bloodstained: Ritual of the Night",
     "releaseYear": 2019,
@@ -5019,109 +4967,6 @@
       "totalReviews": 31269,
       "totalPositive": 28333,
       "positivePercent": 91,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "donut-county",
-    "title": "Donut County",
-    "releaseYear": 2018,
-    "genre": [
-      "Aventure",
-      "Occasionnel",
-      "Puzzle"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "3D Vue à la troisième personne",
-      "en": "Third-Person"
-    },
-    "developer": "Ben Esposito",
-    "steamUrl": "https://store.steampowered.com/app/702670/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_c239e5c7c2d64002ac68b9646866d36ad96d3e14.1920x1080.jpg?t=1729099497",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_9cdb67986354f1e941cf17b3548ebf7a419c775b.1920x1080.jpg?t=1729099497",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_7405195faef4577455e514343a61116f45c919f4.1920x1080.jpg?t=1729099497",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_c47fb82dc7f0bc53a33f95295ffa4a18931ae69b.1920x1080.jpg?t=1729099497",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_e68be680fba205ff77f075732cdd0047c7420960.1920x1080.jpg?t=1729099497",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/header.jpg?t=1729099497"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Donut County est un jeu de réflexion narratif, dans lequel vous manipulez un trou qui ne cesse de grandir dans le sol. Rencontrez des personnages adorables, volez leurs détritus et lancez-les dans le trou.",
-        "en": "Donut County is a story-based physics puzzle game where you play as an ever-growing hole in the ground. Meet cute characters, steal their trash, and throw them in a hole."
-      }
-    },
-    "steamAppId": 702670,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/header.jpg?t=1729099497",
-    "steamStoreData": {
-      "appId": 702670,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1199,
-      "finalPriceCents": 1199,
-      "discountPercent": 0,
-      "formattedFinalPrice": "11,99€",
-      "totalReviews": 12161,
-      "totalPositive": 11206,
-      "positivePercent": 92,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "little-misfortune",
-    "title": "Little Misfortune",
-    "releaseYear": 2019,
-    "genre": [
-      "Aventure",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Killmonday Games AB",
-    "steamUrl": "https://store.steampowered.com/app/714120/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_acca2d568ca0761c2a95df5cedfb7cd901f3f576.1920x1080.jpg?t=1667210698",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_82bed1c5492c1cf64ed9e5f9c08d7199b063c644.1920x1080.jpg?t=1667210698",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_7e9c66476d1ea1f5a4109a512163cfcaedb80382.1920x1080.jpg?t=1667210698",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_7a10b57ff81c087afe368044de85f51600c3b43b.1920x1080.jpg?t=1667210698",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_3f845333f285d82ddeae08083497df3e2257832c.1920x1080.jpg?t=1667210698",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_65ba5d99914d7c602eee0b6b6df5525fed1464ef.1920x1080.jpg?t=1667210698"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Suivant les conseils de son nouvel ami Monsieur la Voix, Misfortune part à l’aventure dans la forêt, où des mystères s’apprêtent à être révélés et… où un peu de malchance l’attend.",
-        "en": "Led by her new friend, Mr. Voice, Misfortune ventures into the woods, where mysteries are unraveled and a little bad luck unfolds."
-      }
-    },
-    "steamAppId": 714120,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/header.jpg?t=1667210698",
-    "steamStoreData": {
-      "appId": 714120,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1679,
-      "finalPriceCents": 1679,
-      "discountPercent": 0,
-      "formattedFinalPrice": "16,79€",
-      "totalReviews": 14178,
-      "totalPositive": 13092,
-      "positivePercent": 92,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -91314,5 +91159,114 @@
     "addedAt": "2026-10-14",
     "steamAppId": 3878090,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3878090/e56907625e4a46d20800fc8f14b2d73ebced2c89/header.jpg?t=1791910613"
+  },
+  {
+    "id": "how-to-wait-for-the-bus",
+    "title": "How to Wait for the Bus",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Benevolent Anarchy",
+    "steamUrl": "https://store.steampowered.com/app/5313620/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/e075e8a73d67cee638ccec31d47a53de655094f6/ss_e075e8a73d67cee638ccec31d47a53de655094f6.1920x1080.jpg?t=1791969143",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/971d5f0d40e23c510d9e1eeaa9ec0e28936614ad/ss_971d5f0d40e23c510d9e1eeaa9ec0e28936614ad.1920x1080.jpg?t=1791969143",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/797f65c47e33d4d986645aa7880de8d12c4bf358/ss_797f65c47e33d4d986645aa7880de8d12c4bf358.1920x1080.jpg?t=1791969143",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/9430af7dc9a7db28c394287082e5767d4c13545a/ss_9430af7dc9a7db28c394287082e5767d4c13545a.1920x1080.jpg?t=1791969143",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/a1389bf87567d9622ea3a594ffe0f5137bf02e67/ss_a1389bf87567d9622ea3a594ffe0f5137bf02e67.1920x1080.jpg?t=1791969143",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/08debd30f6fc37d631179d0cff54dc75ba43ccb2/ss_08debd30f6fc37d631179d0cff54dc75ba43ccb2.1920x1080.jpg?t=1791969143"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le bus arrivera quand il arrivera. En attendant, faites exploser quelques tuiles. Lancez des tuiles colorées sur le plateau depuis n’importe quel bord. Alignez-en trois ou plus de la même couleur pour les faire exploser, déclencher des réactions en chaîne et vider progressivement le plateau.",
+        "en": "The bus will arrive when it arrives. In the meantime, make some tiles explode. Fire coloured tiles into the board from any edge. Line up three or more matching tiles to make them explode, trigger chain reactions, and gradually clear the board."
+      }
+    },
+    "addedAt": "2026-10-15",
+    "steamAppId": 5313620,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791969143"
+  },
+  {
+    "id": "legend-of-kendor",
+    "title": "Legend of Kendor",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "pickysource",
+    "steamUrl": "https://store.steampowered.com/app/1274230/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1274230/ef005dff797721db1d449f59d4868603736d1831/ss_ef005dff797721db1d449f59d4868603736d1831.1920x1080.jpg?t=1792003181",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1274230/0ea7b1c352aed0c22a33fbbb7f1e6532a5037e10/ss_0ea7b1c352aed0c22a33fbbb7f1e6532a5037e10.1920x1080.jpg?t=1792003181",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1274230/f6867ee7ee52c0cff6b700032e182228152bd401/ss_f6867ee7ee52c0cff6b700032e182228152bd401.1920x1080.jpg?t=1792003181",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1274230/33d80950631c92d19727370fd48b9813831e0c67/ss_33d80950631c92d19727370fd48b9813831e0c67.1920x1080.jpg?t=1792003181",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1274230/f67b25c0d5a4d548d61b369489307bd0b470080f/ss_f67b25c0d5a4d548d61b369489307bd0b470080f.1920x1080.jpg?t=1792003181",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1274230/b08c049e935b811a2d318c7e02f6bf137e6eced6/ss_b08c049e935b811a2d318c7e02f6bf137e6eced6.1920x1080.jpg?t=1792003181"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Legend of Kendor est un roguelike d'action fantastique en monde libre. Les habitants de Kendor tentent de sauver ceux qu'ils aiment. Tracez votre propre chemin dans une aventure où chaque choix compte. **Attention** Aucun écran de chargement, rythme très rapide.",
+        "en": "Legend of Kendor is a Fantasy Free-Roaming Action Roguelike game. This is about people in Kendor trying to save their loved ones. You make your own path and adventure with consequences. **Warning** No Loading Screen, and Very Fast Paced."
+      }
+    },
+    "addedAt": "2026-10-15",
+    "steamAppId": 1274230,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1274230/header.jpg?t=1792003181"
+  },
+  {
+    "id": "ball-maze",
+    "title": "Ball Maze",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "新鲜李四 (FreshLi4 Studio)",
+    "steamUrl": "https://store.steampowered.com/app/3678730/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/497940d8fed2e48fe9f4320f217ed78cb7ff943b/ss_497940d8fed2e48fe9f4320f217ed78cb7ff943b.1920x1080.jpg?t=1792036889",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/b3cda51f1804f4f36d59f991b49b00599cc3f41d/ss_b3cda51f1804f4f36d59f991b49b00599cc3f41d.1920x1080.jpg?t=1792036889",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/fd3fa5e2742a00f459bb4298828553bcc58b6306/ss_fd3fa5e2742a00f459bb4298828553bcc58b6306.1920x1080.jpg?t=1792036889",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/4df2ecc46ae6a658193af5a9a3d719b67136b473/ss_4df2ecc46ae6a658193af5a9a3d719b67136b473.1920x1080.jpg?t=1792036889",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/82c2cc6c49757e7fffda38f553fabbb481640a30/ss_82c2cc6c49757e7fffda38f553fabbb481640a30.1920x1080.jpg?t=1792036889",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/0421f9eb887fb9730d58416d74601c16ecfb2921/ss_0421f9eb887fb9730d58416d74601c16ecfb2921.1920x1080.jpg?t=1792036889"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Jeu de puzzle physique avec bille. Incline le labyrinthe 3D, utilise la gravité et l'inertie pour guider la bille à travers des structures complexes jusqu'au but. Plaisir de contrôle unique.",
+        "en": "A physics-based ball-rolling puzzle game. Tilt the 3D maze to guide the ball through complex structures using gravity and inertia, reaching the goal to experience unique physics-based control."
+      }
+    },
+    "addedAt": "2026-10-15",
+    "steamAppId": 3678730,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/2f27fadd909c907b7fb8dcf50a172c805b4c9964/header.jpg?t=1792036889"
   }
 ]

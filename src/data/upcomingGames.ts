@@ -519,40 +519,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1790194422"
   },
   {
-    "id": "how-to-wait-for-the-bus",
-    "title": "How to Wait for the Bus",
-    "developer": "Benevolent Anarchy",
-    "publisher": "Benevolent Anarchy",
-    "expectedDate": {
-      "fr": "14 oct. 2026",
-      "en": "14 oct. 2026"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5313620/",
-    "description": {
-      "fr": "Le bus arrivera quand il arrivera. En attendant, faites exploser quelques tuiles. Lancez des tuiles colorées sur le plateau depuis n’importe quel bord. Alignez-en trois ou plus de la même couleur pour les faire exploser, déclencher des réactions en chaîne et vider progressivement le plateau.",
-      "en": "The bus will arrive when it arrives. In the meantime, make some tiles explode. Fire coloured tiles into the board from any edge. Line up three or more matching tiles to make them explode, trigger chain reactions, and gradually clear the board."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5313620/90bfc0c1121612234585fe1fae79768b76835a0c/header.jpg?t=1791213606"
-  },
-  {
     "id": "flotte-fantome",
     "title": "Flotte Fantôme",
     "developer": "DevMakerMin",
@@ -596,8 +562,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Richard Fulop",
     "publisher": "Richard Fulop",
     "expectedDate": {
-      "fr": "14 oct. 2026",
-      "en": "Oct 14, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -623,5 +589,35 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 92,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/32cf8f48c71af4776182ee7fe7388f7334ea44aa/header.jpg?t=1791297729"
+  },
+  {
+    "id": "shelf-stacker-toy-store",
+    "title": "Shelf Stacker: Toy Store",
+    "developer": "QB Interactive",
+    "publisher": "QB Interactive",
+    "expectedDate": {
+      "fr": "15 oct. 2026",
+      "en": "Oct 15, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5232090/",
+    "description": {
+      "fr": "Shelf Stacker: Toy Store is a cozy organizing simulator where you sort over 4,200 fun products in a cluttered toy store. Enjoy stacking shelves to relaxing, lo-fi beats.",
+      "en": "Shelf Stacker: Toy Store is a cozy organizing simulator where you sort over 4,200 fun products in a cluttered toy store. Enjoy stacking shelves to relaxing, lo-fi beats."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/c2d28de560b27902e5ce30faee741788ef65dd80/header.jpg?t=1790408126"
   }
 ];

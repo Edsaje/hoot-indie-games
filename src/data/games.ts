@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 301
+ * Total de jeux : 304
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11390,6 +11390,107 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-14"
+  },
+  {
+    "id": "foundation",
+    "title": "Foundation",
+    "releaseYear": 2025,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Polymorph Games",
+    "steamUrl": "https://store.steampowered.com/app/690830/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_2a8289eaca31fa5b81f379b42c47010bb8070f15.1920x1080.jpg?t=1791855712",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_942d0a44b1e5bb5caf601feb082f8b14124c8209.1920x1080.jpg?t=1791855712",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_dbc1c23ffd249f0c8b07aae6312f33aa63a0e8eb.1920x1080.jpg?t=1791855712",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_e9eb10e68eab982bbcfb36be9a3bc1799fb6e958.1920x1080.jpg?t=1791855712",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_679df9d3d1d03a934afb3e36ba26b8b1fb90159c.1920x1080.jpg?t=1791855712",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/690830/ss_c16b9212e4494a6cc7bef79ad764d1b889f5bbd2.1920x1080.jpg?t=1791855712"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Foundation est un city-builder relaxant basé sur un système sans grille qui se focalise sur le développement authentique, la construction de monuments et la gestion des ressources.",
+        "en": "Foundation is a grid-less, laidback medieval city-building game with a focus on organic development, monument construction and resource management."
+      }
+    },
+    "addedAt": "2026-10-15"
+  },
+  {
+    "id": "donut-county",
+    "title": "Donut County",
+    "releaseYear": 2018,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Ben Esposito",
+    "steamUrl": "https://store.steampowered.com/app/702670/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_c239e5c7c2d64002ac68b9646866d36ad96d3e14.1920x1080.jpg?t=1729099497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_9cdb67986354f1e941cf17b3548ebf7a419c775b.1920x1080.jpg?t=1729099497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_7405195faef4577455e514343a61116f45c919f4.1920x1080.jpg?t=1729099497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_c47fb82dc7f0bc53a33f95295ffa4a18931ae69b.1920x1080.jpg?t=1729099497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/ss_e68be680fba205ff77f075732cdd0047c7420960.1920x1080.jpg?t=1729099497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/702670/header.jpg?t=1729099497"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Donut County est un jeu de réflexion narratif, dans lequel vous manipulez un trou qui ne cesse de grandir dans le sol. Rencontrez des personnages adorables, volez leurs détritus et lancez-les dans le trou.",
+        "en": "Donut County is a story-based physics puzzle game where you play as an ever-growing hole in the ground. Meet cute characters, steal their trash, and throw them in a hole."
+      }
+    },
+    "addedAt": "2026-10-15"
+  },
+  {
+    "id": "little-misfortune",
+    "title": "Little Misfortune",
+    "releaseYear": 2019,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Killmonday Games AB",
+    "steamUrl": "https://store.steampowered.com/app/714120/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_acca2d568ca0761c2a95df5cedfb7cd901f3f576.1920x1080.jpg?t=1667210698",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_82bed1c5492c1cf64ed9e5f9c08d7199b063c644.1920x1080.jpg?t=1667210698",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_7e9c66476d1ea1f5a4109a512163cfcaedb80382.1920x1080.jpg?t=1667210698",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_7a10b57ff81c087afe368044de85f51600c3b43b.1920x1080.jpg?t=1667210698",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_3f845333f285d82ddeae08083497df3e2257832c.1920x1080.jpg?t=1667210698",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/714120/ss_65ba5d99914d7c602eee0b6b6df5525fed1464ef.1920x1080.jpg?t=1667210698"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Suivant les conseils de son nouvel ami Monsieur la Voix, Misfortune part à l’aventure dans la forêt, où des mystères s’apprêtent à être révélés et… où un peu de malchance l’attend.",
+        "en": "Led by her new friend, Mr. Voice, Misfortune ventures into the woods, where mysteries are unraveled and a little bad luck unfolds."
+      },
+      "composer": "Isak Martinsson"
+    },
+    "addedAt": "2026-10-15"
   }
 ];
 

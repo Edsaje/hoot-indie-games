@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 1763 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 1766 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -11537,6 +11537,22 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "totalReviews": 10913,
     "totalPositive": 9358,
     "positivePercent": 86,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "1274230": {
+    "appId": 1274230,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 519,
+    "finalPriceCents": 519,
+    "discountPercent": 0,
+    "formattedFinalPrice": "5,19€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",
       "en": "Very Positive"
@@ -25651,6 +25667,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Overwhelmingly Positive"
     }
   },
+  "3678730": {
+    "appId": 3678730,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 679,
+    "finalPriceCents": 475,
+    "discountPercent": 30,
+    "formattedFinalPrice": "4,75€",
+    "formattedInitialPrice": "6,79€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "3678970": {
     "appId": 3678970,
     "isFree": true,
@@ -29634,6 +29667,22 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "5313620": {
+    "appId": 5313620,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 300,
+    "finalPriceCents": 300,
+    "discountPercent": 0,
+    "formattedFinalPrice": "3,--€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   }
 };
