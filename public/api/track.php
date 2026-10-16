@@ -385,6 +385,61 @@ function purgeUserFromFriendsData($targetUsername, $steamId = null, $userId = nu
     return true;
 }
 
+// Met à jour le statut banni/suspendu d'un joueur dans friends_data.json sans détruire ses données
+function setUserBanStatusInFriendsData($targetUsername, $steamId = null, $userId = null, $isBanned = true) {
+    if (empty($targetUsername) && empty($steamId) && empty($userId)) return false;
+    if (strtolower(trim((string)$targetUsername)) === 'hibouxe') return false;
+
+    $friendsFile = __DIR__ . '/friends_data.json';
+    if (!file_exists($friendsFile)) return false;
+
+    $fp = @fopen($friendsFile, 'c+');
+    if (!$fp || !@flock($fp, LOCK_EX)) {
+        if ($fp) @fclose($fp);
+        return false;
+    }
+
+    $raw = @stream_get_contents($fp);
+    $fDb = $raw ? json_decode($raw, true) : null;
+    if (!is_array($fDb) || !isset($fDb['players'])) {
+        @flock($fp, LOCK_UN);
+        @fclose($fp);
+        return false;
+    }
+
+    $normTarget = !empty($targetUsername) ? normalizeUsernameAdmin($targetUsername) : '';
+    $dirty = false;
+
+    foreach ($fDb['players'] as $c => &$p) {
+        $cleanC = strtoupper(trim((string)$c));
+        if ($cleanC === 'HOOT-HIBOU') continue;
+
+        $match = false;
+        $pNorm = normalizeUsernameAdmin($p['username'] ?? '');
+        if (!empty($normTarget) && $pNorm === $normTarget) $match = true;
+        if (!empty($steamId) && !empty($p['steamId']) && strval($p['steamId']) === strval($steamId)) $match = true;
+        if (!empty($userId) && !empty($p['userId']) && strval($p['userId']) === strval($userId)) $match = true;
+
+        if ($match) {
+            $p['isBanned'] = (bool)$isBanned;
+            $p['status'] = $isBanned ? 'banned' : 'active';
+            $dirty = true;
+        }
+    }
+    unset($p);
+
+    if ($dirty) {
+        @ftruncate($fp, 0);
+        @rewind($fp);
+        @fwrite($fp, json_encode($fDb, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        @fflush($fp);
+    }
+
+    @flock($fp, LOCK_UN);
+    @fclose($fp);
+    return true;
+}
+
 // Rate-limiting par IP : max 120 requêtes / min
 function checkTrackRateLimit($ip, $file) {
     $now = time();
@@ -922,9 +977,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                     $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$stId]));
                 }
             }
-            if ($newStatus === 'banned') {
-                purgeUserFromFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null);
-            }
+            setUserBanStatusInFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null, ($newStatus === 'banned'));
         }
         if ($newCustomTitle !== '') {
             $uData['usernames'][$target]['customTitle'] = $newCustomTitle;
@@ -985,9 +1038,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             }
         }
 
-        if ($isBanned) {
-            purgeUserFromFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null);
-        }
+        setUserBanStatusInFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null, $isBanned);
 
         @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         echo json_encode([

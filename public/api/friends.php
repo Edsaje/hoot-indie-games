@@ -290,7 +290,7 @@ function purgeBannedAndDeletedFriends(&$db, $dataFile) {
     $dirty = false;
     $purgedCodes = [];
 
-    foreach ($db['players'] as $code => $player) {
+    foreach ($db['players'] as $code => &$player) {
         $cleanCode = strtoupper(trim((string)$code));
         if ($cleanCode === 'HOOT-HIBOU') {
             continue;
@@ -304,14 +304,28 @@ function purgeBannedAndDeletedFriends(&$db, $dataFile) {
         $pSteam = !empty($player['steamId']) ? strval($player['steamId']) : null;
         $pUser = !empty($player['userId']) ? strval($player['userId']) : null;
 
-        $shouldPurge = false;
+        $isPlayerBanned = isset($bannedUsernames[$pName]) || ($pSteam && isset($bannedSteamIds[$pSteam])) || ($pUser && isset($bannedUserIds[$pUser]));
 
-        // 1. Est-il banni ?
-        if (isset($bannedUsernames[$pName]) || ($pSteam && isset($bannedSteamIds[$pSteam])) || ($pUser && isset($bannedUserIds[$pUser]))) {
-            $shouldPurge = true;
+        if ($isPlayerBanned) {
+            // Le joueur est suspendu/banni : on CONSERVE ses données pour un débannissement potentiel,
+            // mais on marque le profil comme suspendu/banni afin qu'il soit exclu de tous les cercles d'amis
+            if (empty($player['isBanned']) || ($player['status'] ?? '') !== 'banned') {
+                $player['isBanned'] = true;
+                $player['status'] = 'banned';
+                $dirty = true;
+            }
+            continue;
+        } else {
+            // Le joueur n'est plus banni : lever le statut suspendu
+            if (!empty($player['isBanned']) || ($player['status'] ?? '') === 'banned') {
+                $player['isBanned'] = false;
+                $player['status'] = 'active';
+                $dirty = true;
+            }
         }
 
-        // 2. Est-il supprimé / libéré de la base des comptes ?
+        // Est-il supprimé / libéré de la base des comptes ?
+        // (Ni actif ni banni dans registered_usernames.json -> réservation supprimée par l'admin)
         $hasValidIdentity = false;
         if (!empty($pName) && isset($validUsernames[$pName])) {
             $hasValidIdentity = true;
@@ -324,13 +338,10 @@ function purgeBannedAndDeletedFriends(&$db, $dataFile) {
         }
 
         if (!$hasValidIdentity) {
-            $shouldPurge = true;
-        }
-
-        if ($shouldPurge) {
             $purgedCodes[] = $cleanCode;
         }
     }
+    unset($player);
 
     if (!empty($purgedCodes)) {
         $purgedMap = array_flip($purgedCodes);
@@ -417,13 +428,18 @@ function areFriendsMutual($db, $codeA, $codeB) {
     $cB = strtoupper(trim((string)$codeB));
     if ($cA === $cB) return true;
 
+    $pA = $db['players'][$cA] ?? null;
+    $pB = $db['players'][$cB] ?? null;
+    if (!$pA || !$pB) return false;
+
+    // Un compte banni ne peut pas être ami mutuel tant qu'il est suspendu
+    if (!empty($pA['isBanned']) || ($pA['status'] ?? '') === 'banned') return false;
+    if (!empty($pB['isBanned']) || ($pB['status'] ?? '') === 'banned') return false;
+
     // Règle d'or souveraine : Le Fondateur Hibouxe est l'hôte d'accueil universel du Sanctuaire
     // À condition que l'autre joueur soit valide, existant dans players et mutuellement présent
     if ($cA === 'HOOT-HIBOU' || $cB === 'HOOT-HIBOU') {
         $otherCode = ($cA === 'HOOT-HIBOU') ? $cB : $cA;
-        if (!isset($db['players'][$otherCode])) {
-            return false;
-        }
         $hibouFriends = $db['friendships']['HOOT-HIBOU'] ?? [];
         return in_array($otherCode, $hibouFriends, true);
     }
@@ -654,9 +670,6 @@ if ($action === 'register') {
     exit;
 }
 
-// -------------------------------------------------------------
-// 2. ACTION: get_friends (Récupère la liste des profils d'amis et mutualités)
-// -------------------------------------------------------------
 if ($action === 'get_friends') {
     $myCode = sanitizeFriendCode($body['myCode'] ?? ($_GET['myCode'] ?? ''));
     $codes = $body['codes'] ?? ($_GET['codes'] ?? []);
@@ -665,6 +678,26 @@ if ($action === 'get_friends') {
     }
     if (!is_array($codes)) {
         $codes = [];
+    }
+
+    // Helper: vérifie si un joueur est actuellement suspendu/banni
+    $isBannedCode = function($c) use ($db) {
+        $p = $db['players'][$c] ?? null;
+        if (!$p) return false;
+        return (!empty($p['isBanned']) || ($p['status'] ?? '') === 'banned');
+    };
+
+    // Si le demandeur est lui-même suspendu/banni, refuser l'accès
+    if ($myCode && $isBannedCode($myCode)) {
+        http_response_code(403);
+        echo json_encode([
+            'success' => false,
+            'error' => 'banned',
+            'message' => 'Ce compte est suspendu par la modération.',
+            'friends' => [],
+            'mutualCodes' => []
+        ]);
+        exit;
     }
 
     // Si myCode est fourni, fusionner avec sa liste d'amis mutuels sur le serveur
@@ -678,23 +711,32 @@ if ($action === 'get_friends') {
             }
         }
         foreach ($mutualList as $mc) {
-            if ($mc && !in_array($mc, $codes, true)) {
+            if ($mc && !in_array($mc, $codes, true) && !$isBannedCode($mc)) {
                 $codes[] = $mc;
             }
         }
-        $mutualCodes = array_values(array_unique(array_filter($mutualList, function($c) use ($myCode) {
-            return $c !== $myCode;
+        $mutualCodes = array_values(array_unique(array_filter($mutualList, function($c) use ($myCode, $isBannedCode) {
+            return $c !== $myCode && !$isBannedCode($c);
         })));
     }
 
     $now = time();
     $foundFriends = [];
+    $deletedCodes = [];
 
     foreach ($codes as $rawCode) {
         $clean = sanitizeFriendCode($rawCode);
-        if (!$clean || !isset($db['players'][$clean])) continue;
+        if (!$clean || !isset($db['players'][$clean])) {
+            if ($clean) $deletedCodes[] = $clean;
+            continue;
+        }
 
         $p = $db['players'][$clean];
+        // Masquer impérativement tout compte banni ou suspendu
+        if (!empty($p['isBanned']) || ($p['status'] ?? '') === 'banned') {
+            continue;
+        }
+
         // Calcul statut en ligne (actif dans les 10 dernières minutes)
         $lastActiveTs = strtotime($p['lastActive'] ?? '');
         $p['isOnline'] = ($lastActiveTs && ($now - $lastActiveTs) < 600);
@@ -706,6 +748,7 @@ if ($action === 'get_friends') {
         'success' => true,
         'friends' => $foundFriends,
         'mutualCodes' => $mutualCodes,
+        'deletedCodes' => array_values(array_unique($deletedCodes)),
         'serverTime' => gmdate('Y-m-d\TH:i:s\Z')
     ]);
     exit;
@@ -726,9 +769,11 @@ if ($action === 'lookup') {
     $codeCandidate = sanitizeFriendCode($query);
     if ($codeCandidate && isset($db['players'][$codeCandidate])) {
         $player = $db['players'][$codeCandidate];
-        $player['isOnline'] = (time() - strtotime($player['lastActive'] ?? '')) < 600;
-        echo json_encode(['success' => true, 'player' => $player]);
-        exit;
+        if (empty($player['isBanned']) && ($player['status'] ?? '') !== 'banned') {
+            $player['isOnline'] = (time() - strtotime($player['lastActive'] ?? '')) < 600;
+            echo json_encode(['success' => true, 'player' => $player]);
+            exit;
+        }
     }
 
     // Tentative 2 : Par pseudo exact normalisé
@@ -737,14 +782,17 @@ if ($action === 'lookup') {
         $targetCode = $db['usernameToCode'][$norm];
         if (isset($db['players'][$targetCode])) {
             $player = $db['players'][$targetCode];
-            $player['isOnline'] = (time() - strtotime($player['lastActive'] ?? '')) < 600;
-            echo json_encode(['success' => true, 'player' => $player]);
-            exit;
+            if (empty($player['isBanned']) && ($player['status'] ?? '') !== 'banned') {
+                $player['isOnline'] = (time() - strtotime($player['lastActive'] ?? '')) < 600;
+                echo json_encode(['success' => true, 'player' => $player]);
+                exit;
+            }
         }
     }
 
     // Tentative 3 : Recherche floue parmi les pseudos des joueurs
     foreach ($db['players'] as $p) {
+        if (!empty($p['isBanned']) || ($p['status'] ?? '') === 'banned') continue;
         if (strcasecmp($p['username'], $query) === 0) {
             $p['isOnline'] = (time() - strtotime($p['lastActive'] ?? '')) < 600;
             echo json_encode(['success' => true, 'player' => $p]);
@@ -879,7 +927,20 @@ if ($action === 'send_request' || $action === 'send_friend_request') {
         exit;
     }
 
-    $targetPlayer = $db['players'][$toCode];
+    $fromPlayer = $db['players'][$fromCode] ?? null;
+    $targetPlayer = $db['players'][$toCode] ?? null;
+
+    if (!empty($fromPlayer['isBanned']) || ($fromPlayer['status'] ?? '') === 'banned') {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'banned', 'message' => 'Ce compte est suspendu par la modération.']);
+        exit;
+    }
+
+    if (!empty($targetPlayer['isBanned']) || ($targetPlayer['status'] ?? '') === 'banned') {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'target_banned', 'message' => 'Ce joueur ne peut pas recevoir d’invitation actuellement.']);
+        exit;
+    }
 
     // Règle d'or : Hibouxe est le compagnon d'accueil officiel universel
     if ($toCode === 'HOOT-HIBOU') {
@@ -1006,10 +1067,9 @@ if ($action === 'get_requests' || $action === 'get_friend_requests') {
         // Reçue
         if ($r['toCode'] === $myCode) {
             $fromP = $db['players'][$r['fromCode']] ?? null;
-            if ($fromP) {
-                $lastActiveTs = strtotime($fromP['lastActive'] ?? '');
-                $fromP['isOnline'] = ($lastActiveTs && ($now - $lastActiveTs) < 600);
-            }
+            if (!$fromP || !empty($fromP['isBanned']) || ($fromP['status'] ?? '') === 'banned') continue;
+            $lastActiveTs = strtotime($fromP['lastActive'] ?? '');
+            $fromP['isOnline'] = ($lastActiveTs && ($now - $lastActiveTs) < 600);
             $r['fromPlayer'] = $fromP;
             $incoming[] = $r;
         }
@@ -1017,10 +1077,9 @@ if ($action === 'get_requests' || $action === 'get_friend_requests') {
         // Envoyée
         if ($r['fromCode'] === $myCode) {
             $toP = $db['players'][$r['toCode']] ?? null;
-            if ($toP) {
-                $lastActiveTs = strtotime($toP['lastActive'] ?? '');
-                $toP['isOnline'] = ($lastActiveTs && ($now - $lastActiveTs) < 600);
-            }
+            if (!$toP || !empty($toP['isBanned']) || ($toP['status'] ?? '') === 'banned') continue;
+            $lastActiveTs = strtotime($toP['lastActive'] ?? '');
+            $toP['isOnline'] = ($lastActiveTs && ($now - $lastActiveTs) < 600);
             $r['toPlayer'] = $toP;
             $outgoing[] = $r;
         }
@@ -1100,9 +1159,19 @@ if ($action === 'respond_request' || $action === 'respond_friend_request') {
     $targetReq['updatedAt'] = gmdate('Y-m-d\TH:i:s\Z');
 
     if ($subAction === 'accept') {
-        $targetReq['status'] = 'accepted';
         $c1 = $targetReq['fromCode'];
         $c2 = $targetReq['toCode'];
+
+        $p1 = $db['players'][$c1] ?? null;
+        $p2 = $db['players'][$c2] ?? null;
+        if ((!empty($p1['isBanned']) || ($p1['status'] ?? '') === 'banned') ||
+            (!empty($p2['isBanned']) || ($p2['status'] ?? '') === 'banned')) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'banned', 'message' => 'Impossible d’accepter une invitation d’un compte suspendu.']);
+            exit;
+        }
+
+        $targetReq['status'] = 'accepted';
 
         if (!isset($db['friendships'][$c1])) $db['friendships'][$c1] = [];
         if (!in_array($c2, $db['friendships'][$c1], true)) $db['friendships'][$c1][] = $c2;

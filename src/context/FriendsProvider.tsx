@@ -222,30 +222,23 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsLoading(true);
     try {
       await syncSelf();
+      const handleDeletedCodes = (deleted: string[]) => {
+        if (!deleted || deleted.length === 0) return;
+        const delSet = new Set(deleted.map((c) => c.toUpperCase()));
+        const cleaned = friendCodesRef.current.filter((c) => !delSet.has(c.toUpperCase()));
+        if (cleaned.length !== friendCodesRef.current.length) {
+          setFriendCodes(cleaned);
+          saveStoredFriendCodes(cleaned);
+        }
+      };
+
       const activeCodes = friendCodesRef.current.filter((c) => !isSelfRef.current(c));
       const [list] = await Promise.all([
-        fetchFriendsData(activeCodes, myFriendCode, myFriendCode),
+        fetchFriendsData(activeCodes, myFriendCode, myFriendCode, handleDeletedCodes),
         refreshRequests(),
       ]);
       const validFriends = list.filter((f) => !isSelfRef.current(f));
       setFriends(validFriends);
-
-      // Réconciliation du stockage local : si des codes interrogés ont été supprimés/bannis côté serveur, les retirer de friendCodes
-      if (activeCodes.length > 0) {
-        const returnedCodes = new Set(validFriends.map((f) => f.friendCode.toUpperCase()));
-        const cleanedCodes = friendCodesRef.current.filter((c) => {
-          const up = c.toUpperCase();
-          if (isSelfRef.current(up)) return false;
-          if (activeCodes.includes(up)) {
-            return returnedCodes.has(up);
-          }
-          return true;
-        });
-        if (cleanedCodes.length !== friendCodesRef.current.length) {
-          setFriendCodes(cleanedCodes);
-          saveStoredFriendCodes(cleanedCodes);
-        }
-      }
     } catch (err) {
       console.warn('Erreur rafraîchissement amis :', err);
     } finally {
@@ -284,24 +277,17 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const timer = setInterval(() => {
       syncSelf();
       const activeCodes = friendCodesRef.current.filter((c) => !isSelfRef.current(c));
-      fetchFriendsData(activeCodes, myFriendCode, myFriendCode).then((list) => {
+      fetchFriendsData(activeCodes, myFriendCode, myFriendCode, (deleted) => {
+        if (!deleted || deleted.length === 0) return;
+        const delSet = new Set(deleted.map((c) => c.toUpperCase()));
+        const cleaned = friendCodesRef.current.filter((c) => !delSet.has(c.toUpperCase()));
+        if (cleaned.length !== friendCodesRef.current.length) {
+          setFriendCodes(cleaned);
+          saveStoredFriendCodes(cleaned);
+        }
+      }).then((list) => {
         const validFriends = list.filter((f) => !isSelfRef.current(f));
         setFriends(validFriends);
-        if (activeCodes.length > 0) {
-          const returnedCodes = new Set(validFriends.map((f) => f.friendCode.toUpperCase()));
-          const cleanedCodes = friendCodesRef.current.filter((c) => {
-            const up = c.toUpperCase();
-            if (isSelfRef.current(up)) return false;
-            if (activeCodes.includes(up)) {
-              return returnedCodes.has(up);
-            }
-            return true;
-          });
-          if (cleanedCodes.length !== friendCodesRef.current.length) {
-            setFriendCodes(cleanedCodes);
-            saveStoredFriendCodes(cleanedCodes);
-          }
-        }
       });
       refreshRequests();
     }, 120000);

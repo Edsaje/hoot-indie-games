@@ -193,7 +193,8 @@ export async function registerSelfOnServer(
 export async function fetchFriendsData(
   friendCodes: string[],
   excludeCode?: string,
-  myCode?: string
+  myCode?: string,
+  onDeletedCodes?: (deleted: string[]) => void
 ): Promise<FriendPlayer[]> {
   const normExclude = excludeCode?.trim().toUpperCase();
   const cleanedCodes = friendCodes
@@ -212,6 +213,10 @@ export async function fetchFriendsData(
     if (res.ok) {
       const data = await res.json();
       if (data.success && Array.isArray(data.friends)) {
+        if (Array.isArray(data.deletedCodes) && data.deletedCodes.length > 0 && onDeletedCodes) {
+          onDeletedCodes(data.deletedCodes);
+        }
+
         const mutualSet = new Set<string>(
           Array.isArray(data.mutualCodes)
             ? data.mutualCodes.map((c: string) => String(c).trim().toUpperCase())
