@@ -18,7 +18,6 @@ Allow: /audio/
 
 # Protection des données et endpoints d'API privées
 Disallow: /api/
-Disallow: /data/
 
 # Déclaration officielle du Sitemap XML
 Sitemap: https://hootindiegames.com/sitemap.xml

@@ -16,6 +16,7 @@ import {
 import type { Game } from '../../types/game';
 import { getDailyChronoPuzzle, getRandomChronoPuzzle, type ChronoPuzzle } from '../../data/chronoPuzzles';
 import { soundFx } from '../../utils/audio';
+import { saveSecureJson, loadSecureJson } from '../../utils/securityAntiCheat';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { ShareResultModal } from '../common/ShareResultModal';
@@ -80,9 +81,8 @@ export const ChronoGame: React.FC<ChronoGameProps> = ({ currentDate, onSelectDat
     }
 
     try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const saved: SavedChronoState = JSON.parse(raw);
+      const saved = loadSecureJson<SavedChronoState>(storageKey);
+      if (saved) {
         return saved;
       }
     } catch {
@@ -134,7 +134,7 @@ export const ChronoGame: React.FC<ChronoGameProps> = ({ currentDate, onSelectDat
         isCompleted: completed,
         isWon: won,
       };
-      localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+      saveSecureJson(storageKey, stateToSave);
     } catch {
       // Ignorer
     }

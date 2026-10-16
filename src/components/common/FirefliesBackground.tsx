@@ -32,6 +32,15 @@ export const FirefliesBackground: React.FC<FirefliesBackgroundProps> = ({ paused
   pausedRef.current = paused;
 
   useEffect(() => {
+    pausedRef.current = paused;
+    if (!paused) {
+      window.dispatchEvent(new CustomEvent('hoot_fireflies_resume'));
+    } else {
+      window.dispatchEvent(new CustomEvent('hoot_fireflies_pause'));
+    }
+  }, [paused]);
+
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -42,10 +51,38 @@ export const FirefliesBackground: React.FC<FirefliesBackgroundProps> = ({ paused
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
-    let animationFrameId: number;
+    // Pré-rendu des sprites hors-écran (32x32) pour éviter createRadialGradient en boucle
+    const createFireflySprite = (hue: number) => {
+      const c = document.createElement('canvas');
+      c.width = 32;
+      c.height = 32;
+      const sCtx = c.getContext('2d');
+      if (!sCtx) return c;
+      const grad = sCtx.createRadialGradient(16, 16, 0, 16, 16, 15);
+      grad.addColorStop(0, `hsla(${hue}, 95%, 68%, 0.9)`);
+      grad.addColorStop(0.5, `hsla(${hue}, 90%, 55%, 0.3)`);
+      grad.addColorStop(1, `hsla(${hue}, 90%, 50%, 0)`);
+      sCtx.fillStyle = grad;
+      sCtx.beginPath();
+      sCtx.arc(16, 16, 15, 0, Math.PI * 2);
+      sCtx.fill();
+
+      sCtx.fillStyle = `hsla(${hue}, 100%, 88%, 1)`;
+      sCtx.beginPath();
+      sCtx.arc(16, 16, 3, 0, Math.PI * 2);
+      sCtx.fill();
+      return c;
+    };
+
+    const amberSprite = createFireflySprite(42);
+    const emeraldSprite = createFireflySprite(152);
+
+    let animationFrameId: number = 0;
     let width = 0;
     let height = 0;
     let initialized = false;
+    let isVisible = typeof document !== 'undefined' ? !document.hidden : true;
+    let isRunning = false;
     const stars: NightSkyStar[] = [];
     const fireflies: Firefly[] = [];
 
@@ -111,20 +148,43 @@ export const FirefliesBackground: React.FC<FirefliesBackgroundProps> = ({ paused
       height = canvas.height = window.innerHeight;
     };
 
+    const startLoop = () => {
+      if (isRunning || !isVisible || pausedRef.current) return;
+      isRunning = true;
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    const stopLoop = () => {
+      isRunning = false;
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+      if (isVisible && !pausedRef.current) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
+    };
+
+    const handleResume = () => startLoop();
+    const handlePause = () => stopLoop();
+
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('resize', handleResize);
-
-    let isVisible = true;
-    const handleVisibilityChange = () => {
-      isVisible = !document.hidden;
-    };
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('hoot_fireflies_resume', handleResume);
+    window.addEventListener('hoot_fireflies_pause', handlePause);
 
     const render = () => {
       if (!initialized) initCanvas();
       if (!isVisible || pausedRef.current) {
-        animationFrameId = requestAnimationFrame(render);
+        isRunning = false;
         return;
       }
 
@@ -143,7 +203,7 @@ export const FirefliesBackground: React.FC<FirefliesBackgroundProps> = ({ paused
         ctx.fill();
       }
 
-      // 2. Draw drifting bioluminescent fireflies
+      // 2. Draw drifting bioluminescent fireflies via pre-rendered sprites
       for (let i = 0; i < fireflies.length; i++) {
         const f = fireflies[i];
 
@@ -178,56 +238,67 @@ export const FirefliesBackground: React.FC<FirefliesBackgroundProps> = ({ paused
         if (f.y < -20) f.y = height + 20;
         else if (f.y > height + 20) f.y = -20;
 
-        // Draw delicate glowing mote (crisp magical sparkle without diffuse stain)
-        const gradient = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 1.5);
-        gradient.addColorStop(0, `hsla(${f.hue}, 95%, 68%, ${f.alpha * 0.9})`);
-        gradient.addColorStop(0.5, `hsla(${f.hue}, 90%, 55%, ${f.alpha * 0.3})`);
-        gradient.addColorStop(1, `hsla(${f.hue}, 90%, 50%, 0)`);
-
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.size * 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
-
-        // Core bright spark
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, Math.max(0.6, f.size * 0.5), 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${f.hue}, 100%, 88%, ${f.alpha})`;
-        ctx.fill();
+        // Blit pre-rendered sprite with GPU drawImage
+        const sprite = f.hue > 100 ? emeraldSprite : amberSprite;
+        const spriteSize = Math.max(8, f.size * 6);
+        ctx.globalAlpha = Math.max(0, Math.min(1, f.alpha));
+        ctx.drawImage(sprite, f.x - spriteSize / 2, f.y - spriteSize / 2, spriteSize, spriteSize);
       }
+      ctx.globalAlpha = 1.0;
 
       animationFrameId = requestAnimationFrame(render);
     };
 
     let startTimer: any;
+    let startOnTouch: (() => void) | null = null;
     const win = window as any;
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     if (isMobile) {
-      const startOnTouch = () => {
-        window.removeEventListener('touchstart', startOnTouch);
-        window.removeEventListener('scroll', startOnTouch);
-        render();
+      startOnTouch = () => {
+        if (startOnTouch) {
+          window.removeEventListener('touchstart', startOnTouch);
+          window.removeEventListener('scroll', startOnTouch);
+          startOnTouch = null;
+        }
+        if (startTimer) {
+          clearTimeout(startTimer);
+          startTimer = null;
+        }
+        startLoop();
       };
       window.addEventListener('touchstart', startOnTouch, { passive: true, once: true });
       window.addEventListener('scroll', startOnTouch, { passive: true, once: true });
-      startTimer = setTimeout(render, 5500);
+      startTimer = setTimeout(() => {
+        if (startOnTouch) {
+          window.removeEventListener('touchstart', startOnTouch);
+          window.removeEventListener('scroll', startOnTouch);
+          startOnTouch = null;
+        }
+        startLoop();
+      }, 5500);
     } else if (typeof win !== 'undefined' && typeof win.requestIdleCallback === 'function') {
-      startTimer = win.requestIdleCallback(render, { timeout: 2500 });
+      startTimer = win.requestIdleCallback(startLoop, { timeout: 2500 });
     } else {
-      startTimer = setTimeout(render, 2000);
+      startTimer = setTimeout(startLoop, 2000);
     }
 
     return () => {
+      if (startOnTouch) {
+        window.removeEventListener('touchstart', startOnTouch);
+        window.removeEventListener('scroll', startOnTouch);
+      }
       if (typeof win !== 'undefined' && typeof win.cancelIdleCallback === 'function' && startTimer) {
         win.cancelIdleCallback(startTimer);
-      } else {
+      } else if (startTimer) {
         clearTimeout(startTimer);
       }
-      cancelAnimationFrame(animationFrameId);
+      stopLoop();
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('hoot_fireflies_resume', handleResume);
+      window.removeEventListener('hoot_fireflies_pause', handlePause);
     };
   }, []);
 

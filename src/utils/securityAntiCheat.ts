@@ -60,13 +60,15 @@ export function sha256Sync(input: string): string {
     return (value >>> amount) | (value << (32 - amount));
   }
 
+  // Support 100% Unicode : encodage préalable en octets UTF-8 pour éviter l'échec sur les caractères accentués
+  const utf8Input = unescape(encodeURIComponent(input));
   const mathPow = Math.pow;
   const maxWord = mathPow(2, 32);
   let i: number, j: number;
   let result = '';
 
   const words: number[] = [];
-  const asciiBitLength = input.length * 8;
+  const asciiBitLength = utf8Input.length * 8;
 
   let hash = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
@@ -84,7 +86,7 @@ export function sha256Sync(input: string): string {
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
   ];
 
-  let composite = input + '\x80';
+  let composite = utf8Input + '\x80';
   while ((composite.length % 64) - 56) composite += '\x00';
   for (i = 0; i < composite.length; i++) {
     j = composite.charCodeAt(i);
@@ -369,5 +371,157 @@ Amusez-vous, découvrez des chefs-d'œuvre et soutenez les studios indépendants
     });
   } catch {
     // Ignore si environnement verrouillé
+  }
+}
+
+/**
+ * Sel cryptographique interne pour le scellement des états locaux
+ */
+const VAULT_STORAGE_SALT = 'hoot_vault_seal_salt_2026';
+
+/**
+ * Sauvegarde sécurisée et obfusquée d'un état JSON dans localStorage
+ */
+export function saveSecureJson(key: string, data: any): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    const jsonStr = JSON.stringify(data);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+    const sig = sha256Sync(`${encoded}:${key}:${VAULT_STORAGE_SALT}`);
+    const payload = JSON.stringify({ v: 2, d: encoded, s: sig });
+    localStorage.setItem(key, payload);
+  } catch {
+    // Quota localStorage dépassé ou environnement restreint
+  }
+}
+
+/**
+ * Lecture sécurisée avec désanonymisation et rétrocompatibilité JSON classique
+ */
+export function loadSecureJson<T = any>(key: string): T | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+
+    // Détection du format sécurisé scellé v2
+    if (raw.startsWith('{"v":2')) {
+      const parsed = JSON.parse(raw);
+      if (parsed.d && parsed.s) {
+        const expectedSig = sha256Sync(`${parsed.d}:${key}:${VAULT_STORAGE_SALT}`);
+        if (parsed.s === expectedSig) {
+          const jsonStr = decodeURIComponent(escape(atob(parsed.d)));
+          return JSON.parse(jsonStr) as T;
+        }
+      }
+    }
+
+    // Fallback rétrocompatible pour les parties en cours enregistrées en JSON standard
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Options de rendu pour le canvas anti-triche
+ */
+export interface ProtectedImageOptions {
+  scale?: number;
+  originX?: number; // 0 à 100%
+  originY?: number; // 0 à 100%
+  blurPx?: number;
+}
+
+/**
+ * Rendu Canvas 2D isolé pour masquer l'URL Steam et neutraliser les inspections DOM (F12)
+ */
+export function drawProtectedImageToCanvas(
+  canvas: HTMLCanvasElement,
+  imageUrl: string,
+  options: ProtectedImageOptions = {}
+): Promise<void> {
+  return new Promise((resolve) => {
+    if (!canvas || !imageUrl) {
+      resolve();
+      return;
+    }
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = imageUrl;
+
+    img.onload = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve();
+        return;
+      }
+
+      const width = canvas.width || 640;
+      const height = canvas.height || 360;
+      ctx.clearRect(0, 0, width, height);
+
+      const scale = options.scale && options.scale > 1 ? options.scale : 1;
+      const blurPx = options.blurPx && options.blurPx > 0 ? options.blurPx : 0;
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      if (blurPx > 0) {
+        ctx.filter = `blur(${blurPx}px)`;
+      } else {
+        ctx.filter = 'none';
+      }
+
+      if (scale > 1) {
+        const normOx = (options.originX ?? 50) / 100;
+        const normOy = (options.originY ?? 50) / 100;
+
+        const cropW = img.naturalWidth / scale;
+        const cropH = img.naturalHeight / scale;
+
+        const maxSx = Math.max(0, img.naturalWidth - cropW);
+        const maxSy = Math.max(0, img.naturalHeight - cropH);
+
+        const sX = Math.max(0, Math.min(maxSx, normOx * img.naturalWidth - cropW / 2));
+        const sY = Math.max(0, Math.min(maxSy, normOy * img.naturalHeight - cropH / 2));
+
+        ctx.drawImage(img, sX, sY, cropW, cropH, 0, 0, width, height);
+      } else {
+        ctx.drawImage(img, 0, 0, width, height);
+      }
+
+      ctx.filter = 'none';
+      resolve();
+    };
+
+    img.onerror = () => {
+      resolve();
+    };
+  });
+}
+
+/**
+ * Obfuscation réseau d'un identifiant de jeu pour transmission P2P
+ */
+export function obfuscateGameId(gameId: string, seed: string): string {
+  const str = `${gameId}:${seed}:${VAULT_STORAGE_SALT}`;
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+/**
+ * Désanonymisation d'un identifiant de jeu reçu via P2P
+ */
+export function deobfuscateGameId(obfuscated: string, seed: string): string | null {
+  try {
+    const decoded = decodeURIComponent(escape(atob(obfuscated)));
+    const parts = decoded.split(':');
+    if (parts.length >= 3 && parts[1] === seed) {
+      return parts[0];
+    }
+    return null;
+  } catch {
+    return null;
   }
 }

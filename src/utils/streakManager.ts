@@ -4,27 +4,24 @@
  * in Hoot Indie Games.
  */
 
+const PARIS_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Paris',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
 export const getTodayDateString = (date = new Date()): string => {
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return PARIS_DATE_FORMATTER.format(date);
 };
 
 export const getYesterdayDateString = (referenceDateStr?: string): string => {
-  if (referenceDateStr) {
-    const [y, m, d] = referenceDateStr.split('-').map(Number);
-    const utc = new Date(Date.UTC(y, m - 1, d - 1));
-    const year = utc.getUTCFullYear();
-    const month = String(utc.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(utc.getUTCDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-  const now = new Date();
-  const utc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1));
-  const year = utc.getUTCFullYear();
-  const month = String(utc.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(utc.getUTCDate()).padStart(2, '0');
+  const baseDateStr = referenceDateStr || getTodayDateString();
+  const [y, m, d] = baseDateStr.split('-').map(Number);
+  const prevUtc = new Date(Date.UTC(y, m - 1, d - 1));
+  const year = prevUtc.getUTCFullYear();
+  const month = String(prevUtc.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(prevUtc.getUTCDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 

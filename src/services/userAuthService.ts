@@ -46,6 +46,7 @@ export async function apiGetSession(): Promise<AuthApiResponse> {
         Accept: 'application/json',
       },
       credentials: 'include',
+      signal: AbortSignal.timeout(10000),
     });
     return await res.json();
   } catch (err: any) {
@@ -75,6 +76,7 @@ export async function apiRegister(
         Accept: 'application/json',
       },
       credentials: 'include',
+      signal: AbortSignal.timeout(10000),
       body: JSON.stringify({
         email,
         password,
@@ -105,6 +107,7 @@ export async function apiLogin(email: string, password: string): Promise<AuthApi
         Accept: 'application/json',
       },
       credentials: 'include',
+      signal: AbortSignal.timeout(10000),
       body: JSON.stringify({
         email,
         password,
@@ -133,6 +136,7 @@ export async function apiLinkSteam(steamId: string): Promise<AuthApiResponse> {
         Accept: 'application/json',
       },
       credentials: 'include',
+      signal: AbortSignal.timeout(10000),
       body: JSON.stringify({
         steamId,
       }),
@@ -159,6 +163,7 @@ export async function apiLogout(): Promise<AuthApiResponse> {
         Accept: 'application/json',
       },
       credentials: 'include',
+      signal: AbortSignal.timeout(10000),
     });
     return await res.json();
   } catch (err: any) {
@@ -183,6 +188,7 @@ export async function apiVerifyEmail(tokenOrCode: string): Promise<AuthApiRespon
         Accept: 'application/json',
       },
       credentials: 'include',
+      signal: AbortSignal.timeout(10000),
       body: JSON.stringify({
         token: clean,
         code: clean,
@@ -211,6 +217,7 @@ export async function apiResendVerificationEmail(email?: string): Promise<AuthAp
         Accept: 'application/json',
       },
       credentials: 'include',
+      signal: AbortSignal.timeout(10000),
       body: JSON.stringify({
         email: email?.trim(),
       }),

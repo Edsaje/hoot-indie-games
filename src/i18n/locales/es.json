@@ -364,7 +364,8 @@
     "unlimitedPracticeTip": "Partida de práctica ilimitada",
     "restart": "Reiniciar",
     "wonDetails": "Pista identificada en {{count}} intento(s) ({{track}} por {{composer}}).",
-    "lostDetails": "Era « {{track}} » compuesto por {{composer}}."
+    "lostDetails": "Era « {{track}} » compuesto por {{composer}}.",
+    "audioLoadError": "No se pudo cargar el audio oficial. Siguiendo la regla de 0 Alucinación, no se reproduce ningún sonido inventado."
   },
   "versus": {
     "title": "Duelo 1v1",
@@ -722,7 +723,11 @@
     "topRated": "Mejor valorados (≥ 95%)",
     "gemsCountUnit": "{{filtered}} / {{total}} joya(s)",
     "noGemsFound": "No se encontraron joyas indies",
-    "noGemsFoundDesc": "Ningún juego coincide con los filtros seleccionados. Intenta ampliar tus criterios de precio, valoración o género."
+    "noGemsFoundDesc": "Ningún juego coincide con los filtros seleccionados. Intenta ampliar tus criterios de precio, valoración o género.",
+    "searchGenre": "Buscar género...",
+    "searchGenrePlaceholder": "Buscar género (ej. Metroidvania, Idle...)",
+    "matchingGenres": "Géneros coincidentes",
+    "noGenreFound": "No se encontraron géneros"
   },
   "toolbox": {
     "title": "Caja de Herramientas Indie",
@@ -897,7 +902,15 @@
     },
     "viewAllInHub": "Ver todos los minijuegos en el Hub",
     "backToHub": "← Hub de Minijuegos",
-    "dailySolved": "Desafío diario resuelto"
+    "dailySolved": "Desafío diario resuelto",
+    "dailyProgressTitle": "Progreso de los desafíos del día",
+    "dailyProgressSub": "¡Supera las 8 pruebas para mantener tu racha encendida!",
+    "archiveProgressSub": "Archivo del {{date}}",
+    "grandSlamTitle": "¡Gran Slam diario conseguido!",
+    "grandSlamPerfect": "¡Puntuación perfecta de 8/8! Eres un auténtico erudito de la escena independiente.",
+    "grandSlamCompleted": "Has completado los 8 desafíos de hoy. ¡Nos vemos mañana con nuevos enigmas!",
+    "nextChallengeLabel": "Siguiente desafío recomendado",
+    "playNext": "Jugar al siguiente desafío"
   },
   "streak": {
     "flamePreserved": "¡Racha de victorias preservada!",
@@ -1039,7 +1052,12 @@
       "errTitle": "Por favor, introduce el título del juego.",
       "errDev": "Por favor, indica el nombre del creador o estudio.",
       "errUrl": "Por favor, proporciona al menos un enlace oficial (Itch.io, Steam o Web)."
-    }
+    },
+    "authRequiredToLike": "Inicio de sesión requerido: ¡Inicia sesión en tu cuenta Hoot para votar y apoyar este juego (anti-trampas en modo incógnito)!",
+    "loginToVote": "Inicio de sesión requerido para votar (anti-trampas)",
+    "alreadyVoted": "Ya has votado por esta joya",
+    "removeVote": "Haz clic para retirar tu voto",
+    "voteForGame": "Votar por esta joya"
   },
   "pagination": {
     "showing": "Mostrando de {{start}} a {{end}} de {{total}} {{items}}",
@@ -1075,14 +1093,38 @@
     "channelsDropdownTitle": "Salas y Comentarios",
     "activeChannel": "Activo",
     "channels": {
-      "global": { "name": "Global", "desc": "Sala internacional abierta a todos los exploradores" },
-      "fr": { "name": "Français", "desc": "Sala francófona para compartir trucos y joyas" },
-      "en": { "name": "English", "desc": "Sala en inglés para debatir sobre juegos indie" },
-      "es": { "name": "Español", "desc": "Comunidad hispanohablante de exploradores indie" },
-      "de": { "name": "Deutsch", "desc": "Sala alemana para amantes de juegos indie" },
-      "ja": { "name": "日本語", "desc": "インディーゲーム探索者のための日本語ラウンジ" },
-      "pt-BR": { "name": "Português", "desc": "Espaço para os jogadores de língua portuguesa" },
-      "feedback": { "name": "Comentarios e Ideas", "desc": "Buzón de sugerencias, reporte de errores e ideas para mejorar" }
+      "global": {
+        "name": "Global",
+        "desc": "Sala internacional abierta a todos los exploradores"
+      },
+      "fr": {
+        "name": "Français",
+        "desc": "Sala francófona para compartir trucos y joyas"
+      },
+      "en": {
+        "name": "English",
+        "desc": "Sala en inglés para debatir sobre juegos indie"
+      },
+      "es": {
+        "name": "Español",
+        "desc": "Comunidad hispanohablante de exploradores indie"
+      },
+      "de": {
+        "name": "Deutsch",
+        "desc": "Sala alemana para amantes de juegos indie"
+      },
+      "ja": {
+        "name": "日本語",
+        "desc": "インディーゲーム探索者のための日本語ラウンジ"
+      },
+      "pt-BR": {
+        "name": "Português",
+        "desc": "Espaço para os jogadores de língua portuguesa"
+      },
+      "feedback": {
+        "name": "Comentarios e Ideas",
+        "desc": "Buzón de sugerencias, reporte de errores e ideas para mejorar"
+      }
     },
     "categories": {
       "suggestion": "Sugerencia",

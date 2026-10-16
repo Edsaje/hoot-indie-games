@@ -1,10 +1,9 @@
 <?php
 ini_set("display_errors", 0);
 error_reporting(0);
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Sync-Key");
-header("Access-Control-Allow-Credentials: true");
+
+require_once __DIR__ . "/admin_auth.php";
+sendCorsHeaders();
 header("Content-Type: application/json; charset=utf-8");
 
 if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
@@ -17,7 +16,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $action = $_REQUEST["action"] ?? "";
-define("ADMIN_STEAM_ID", "76561198035270542");
 
 if ($action === "verify_steam") {
     $validationParams = [
@@ -57,14 +55,17 @@ if ($action === "verify_steam") {
     }
 
     if (!$isValidAssertion) {
-        echo json_encode(["success" => false, "error" => "invalid_assertion", "message" => "Validation Steam OpenID rejetée."]);
+        http_response_code(400);
+        echo json_encode(["success" => false, "error" => "invalid_assertion", "message" => "Validation Steam OpenID rejetÃ©e."], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     $claimedId = $_REQUEST["openid_claimed_id"] ?? $_REQUEST["openid.claimed_id"] ?? "";
     if (preg_match("/^https?:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25})$/", $claimedId, $m)) {
+        session_regenerate_id(true);
         $verifiedSteamId = $m[1];
         $_SESSION["steam_id"] = $verifiedSteamId;
+        $_SESSION["verified_steam_id"] = $verifiedSteamId;
         $isCreator = ($verifiedSteamId === ADMIN_STEAM_ID);
         
         $resData = [
@@ -72,23 +73,23 @@ if ($action === "verify_steam") {
             "verified" => true,
             "steamId" => $verifiedSteamId,
             "isCreator" => $isCreator,
-            "message" => "Authentification Steam validée."
+            "csrfToken" => $isCreator ? getAdminCsrfToken() : null,
+            "message" => "Authentification Steam validÃ©e."
         ];
 
         if ($isCreator) {
             $_SESSION["admin_auth"] = true;
             $_SESSION["admin_steam_id"] = $verifiedSteamId;
             $_SESSION["admin_login_at"] = date("c");
-            $adminPassFile = __DIR__ . "/.admin_pass";
-            if (file_exists($adminPassFile)) {
-                $resData["adminKey"] = trim(@file_get_contents($adminPassFile) ?: "");
-            }
         }
-        echo json_encode($resData);
+        echo json_encode($resData, JSON_UNESCAPED_UNICODE);
         exit;
     } else {
-        echo json_encode(["success" => false, "error" => "missing_steam_id", "message" => "SteamID non trouvé."]);
+        http_response_code(400);
+        echo json_encode(["success" => false, "error" => "missing_steam_id", "message" => "SteamID non trouvÃ©."], JSON_UNESCAPED_UNICODE);
         exit;
     }
 }
 
+http_response_code(400);
+echo json_encode(["success" => false, "error" => "invalid_action", "message" => "Action invalide."], JSON_UNESCAPED_UNICODE);

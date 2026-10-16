@@ -20,6 +20,7 @@ import { recordTimeAttackResult, getTimeAttackStats } from '../../utils/timeAtta
 import { getLocalizedText } from '../../utils/localization';
 import { ShareResultModal } from '../common/ShareResultModal';
 import type { ShareCardData } from '../../utils/generateShareCard';
+import { drawProtectedImageToCanvas } from '../../utils/securityAntiCheat';
 
 interface ScreenleSprintProps {
   games: Game[];
@@ -57,6 +58,18 @@ export const ScreenleSprint: React.FC<ScreenleSprintProps> = ({ games, onBackToH
   const stats = getTimeAttackStats().screenle;
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const previousGameIdsRef = useRef<Set<string>>(new Set());
+  const sprintCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    if (!sprintCanvasRef.current || !currentQuestion?.screenshotUrl) return;
+    setImageLoading(true);
+    drawProtectedImageToCanvas(sprintCanvasRef.current, currentQuestion.screenshotUrl, {
+      scale: 1,
+      blurPx: 0,
+    }).finally(() => {
+      setImageLoading(false);
+    });
+  }, [currentQuestion?.screenshotUrl]);
 
   // Generate a new question
   const generateQuestion = useCallback((): Question | null => {
@@ -385,25 +398,10 @@ if (['1', '2', '3', '4'].includes(e.key)) {
               </div>
             )}
 
-            <img
-              key={currentQuestion.screenshotUrl}
-              src={currentQuestion.screenshotUrl}
-              alt="Capture Indie"
-              onLoad={() => setImageLoading(false)}
-              onError={(e) => {
-                setImageLoading(false);
-                const target = e.currentTarget;
-                const game = currentQuestion.correctGame;
-                const match = game.steamUrl?.match(/app\/(\d+)/);
-                const appId = match ? match[1] : '';
-                const fallbackHeader = appId
-                  ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
-                  : '';
-                const alt = game.screenshots.find((s: string) => s !== target.src) || fallbackHeader;
-                if (alt && target.src !== alt) {
-                  target.src = alt;
-                }
-              }}
+            <canvas
+              ref={sprintCanvasRef}
+              width={640}
+              height={360}
               className={`w-full h-full object-cover select-none pointer-events-none transition-opacity duration-200 ${
                 imageLoading ? 'opacity-0' : 'opacity-100'
               }`}

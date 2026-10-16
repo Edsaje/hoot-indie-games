@@ -80,7 +80,7 @@ export const AppContent: React.FC = () => {
   const { isTradeModalOpen, openTradeModal } = useTrades();
 
   // Defer non-critical floating gadgets (Chat & Odyssey Mini-HUD) until user interaction or quiet period
-  const [isIdleReady, setIsIdleReady] = useState(true);
+  const [isIdleReady, setIsIdleReady] = useState(false);
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const trigger = () => {
@@ -102,62 +102,81 @@ export const AppContent: React.FC = () => {
   }, []);
 
 
-  // Mini-game sub-tab state (Hub or one of the 7 disciplines)
-  const [activeMiniGame, setActiveMiniGame] = useState<MiniGameSubTab>(() => {
+function getRouteInfo(): { route: string; hash: string; pathname: string } {
+  if (typeof window === 'undefined') return { route: '', hash: '', pathname: '' };
+  const hash = window.location.hash.toLowerCase();
+  const pathname = window.location.pathname.toLowerCase();
+  const cleanPath = pathname.replace(/^\/+|\/+$/g, '');
+  const cleanHash = hash.replace(/^#+/, '');
+  const route = cleanHash || cleanPath;
+  return { route, hash, pathname };
+}
+
+  // Initial search query from URL (?q=...)
+  const [initialSearchQuery] = useState<string>(() => {
     if (typeof window !== 'undefined') {
-      const hash = window.location.hash.toLowerCase();
-      if (hash.startsWith('#screenle')) return 'screenle';
-      if (hash.startsWith('#indledle')) return 'indledle';
-      if (hash.startsWith('#linkle')) return 'linkle';
-      if (hash.startsWith('#profille')) return 'profille';
-      if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) return 'chrono';
-      if (hash.startsWith('#pixel') || hash.startsWith('#silhouette')) return 'pixel';
-      if (hash.startsWith('#review') || hash.startsWith('#critique')) return 'review';
-      if (hash.startsWith('#blindtest') || hash.startsWith('#audioldle') || hash.startsWith('#ost')) return 'blindtest';
-      if (hash.startsWith('#timeattack')) return 'timeattack';
-      if (hash.startsWith('#versus')) return 'versus';
+      const searchParams = new URLSearchParams(window.location.search);
+      return searchParams.get('q') || '';
     }
+    return '';
+  });
+
+  // Mini-game sub-tab state (Hub or one of the 8 disciplines)
+  const [activeMiniGame, setActiveMiniGame] = useState<MiniGameSubTab>(() => {
+    const { route } = getRouteInfo();
+    if (route.startsWith('screenle')) return 'screenle';
+    if (route.startsWith('indledle')) return 'indledle';
+    if (route.startsWith('linkle')) return 'linkle';
+    if (route.startsWith('profille')) return 'profille';
+    if (route.startsWith('chrono') || route.startsWith('timeline')) return 'chrono';
+    if (route.startsWith('pixel') || route.startsWith('silhouette')) return 'pixel';
+    if (route.startsWith('review') || route.startsWith('critique')) return 'review';
+    if (route.startsWith('blindtest') || route.startsWith('audioldle') || route.startsWith('ost')) return 'blindtest';
+    if (route.startsWith('quiz') || route.startsWith('quizz')) return 'quiz';
+    if (route.startsWith('timeattack')) return 'timeattack';
+    if (route.startsWith('versus')) return 'versus';
     return 'hub';
   });
 
-  // Top level navigation tab: gems | minigames | arcade | toolbox | roost
+  // Top level navigation tab: gems | minigames | arcade | toolbox | roost | catalog | cards | odyssey | microindies
   const [currentTab, setCurrentTab] = useState<NavTab>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.toLowerCase();
-      if (
-        hash.startsWith('#minigames') ||
-        hash.startsWith('#screenle') ||
-        hash.startsWith('#indledle') ||
-        hash.startsWith('#linkle') ||
-        hash.startsWith('#profille') ||
-        hash.startsWith('#chrono') ||
-        hash.startsWith('#timeline') ||
-        hash.startsWith('#pixel') ||
-        hash.startsWith('#silhouette') ||
-        hash.startsWith('#review') ||
-        hash.startsWith('#critique') ||
-        hash.startsWith('#blindtest') ||
-        hash.startsWith('#audioldle') ||
-        hash.startsWith('#ost') ||
-        hash.startsWith('#timeattack') ||
-        hash.startsWith('#versus')
-      ) {
-        return 'minigames';
-      }
-      if (hash.startsWith('#odyssey') || hash.startsWith('#idle') || hash.startsWith('#sanctuary')) return 'odyssey';
-      if (hash.startsWith('#micro') || hash.startsWith('#itch')) return 'microindies';
-      if (hash.startsWith('#catalog') || hash.startsWith('#steam')) return 'catalog';
-      if (hash.startsWith('#arcade')) return 'arcade';
-      if (hash.startsWith('#cards') || hash.startsWith('#album') || hash.startsWith('#binder')) return 'cards';
-      if (hash.startsWith('#toolbox')) return 'toolbox';
-      if (hash.startsWith('#roost')) return 'roost';
+    const { route } = getRouteInfo();
+    if (
+      route.startsWith('minigames') ||
+      route.startsWith('screenle') ||
+      route.startsWith('indledle') ||
+      route.startsWith('linkle') ||
+      route.startsWith('profille') ||
+      route.startsWith('chrono') ||
+      route.startsWith('timeline') ||
+      route.startsWith('pixel') ||
+      route.startsWith('silhouette') ||
+      route.startsWith('review') ||
+      route.startsWith('critique') ||
+      route.startsWith('blindtest') ||
+      route.startsWith('audioldle') ||
+      route.startsWith('ost') ||
+      route.startsWith('quiz') ||
+      route.startsWith('quizz') ||
+      route.startsWith('timeattack') ||
+      route.startsWith('versus')
+    ) {
+      return 'minigames';
     }
+    if (route.startsWith('odyssey') || route.startsWith('idle') || route.startsWith('sanctuary')) return 'odyssey';
+    if (route.startsWith('micro') || route.startsWith('itch')) return 'microindies';
+    if (route.startsWith('catalog') || route.startsWith('steam')) return 'catalog';
+    if (route.startsWith('arcade')) return 'arcade';
+    if (route.startsWith('cards') || route.startsWith('album') || route.startsWith('binder')) return 'cards';
+    if (route.startsWith('toolbox')) return 'toolbox';
+    if (route.startsWith('roost')) return 'roost';
     return 'gems';
   });
 
   const [timeAttackInitialMode, setTimeAttackInitialMode] = useState<TimeAttackMode | undefined>(() => {
-    if (typeof window !== 'undefined' && window.location.hash.startsWith('#timeattack')) {
-      const match = window.location.hash.match(/#timeattack=([a-z]+)/);
+    const { route } = getRouteInfo();
+    if (route.startsWith('timeattack')) {
+      const match = route.match(/timeattack[=/]([a-z]+)/);
       if (match && ['screenle', 'indledle', 'linkle', 'profille'].includes(match[1])) {
         return match[1] as TimeAttackMode;
       }
@@ -172,11 +191,8 @@ export const AppContent: React.FC = () => {
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [profileInitialTab, setProfileInitialTab] = useState<'profile' | 'steam' | 'cloud' | 'settings'>('profile');
   const [isFriendsOpen, setIsFriendsOpen] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.toLowerCase();
-      return hash.startsWith('#friends') || hash.startsWith('#friend=');
-    }
-    return false;
+    const { route } = getRouteInfo();
+    return route.startsWith('friends') || route.startsWith('friend=');
   });
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [isEasterEggOpen, setIsEasterEggOpen] = useState<boolean>(false);
@@ -186,18 +202,12 @@ export const AppContent: React.FC = () => {
   const [leaderboardCategory, setLeaderboardCategory] = useState<LeaderboardCategory>('arcade');
   const [leaderboardGame, setLeaderboardGame] = useState<string>('snake');
   const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.toLowerCase();
-      return hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard');
-    }
-    return false;
+    const { route } = getRouteInfo();
+    return route === 'admin' || route.startsWith('admin=') || route.startsWith('admindashboard');
   });
   const [isShopOpen, setIsShopOpen] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.toLowerCase();
-      return hash.startsWith('#shop') || hash.startsWith('#boutique');
-    }
-    return false;
+    const { route } = getRouteInfo();
+    return route.startsWith('shop') || route.startsWith('boutique');
   });
   const [isCardsModalOpen, setIsCardsModalOpen] = useState<boolean>(false);
   
@@ -216,11 +226,9 @@ export const AppContent: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.toLowerCase();
-      if (hash.startsWith('#trade') || hash.startsWith('#echange')) {
-        openTradeModal();
-      }
+    const { route } = getRouteInfo();
+    if (route.startsWith('trade') || route.startsWith('echange')) {
+      openTradeModal();
     }
   }, [openTradeModal]);
 
@@ -404,86 +412,90 @@ export const AppContent: React.FC = () => {
     }
   };
 
-  // Hash listener for direct deep linking (#minigames, #screenle, #indledle, #linkle, #profille, #chrono, #pixel, #review, #blindtest, #timeattack, #versus, #arcade, #toolbox, #roost, #gems)
+  // Route listener for deep linking via path (/screenle) or hash (#screenle)
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.toLowerCase();
-      if (hash.startsWith('#minigames')) {
+    const handleRouteChange = () => {
+      const { route, hash } = getRouteInfo();
+      if (route.startsWith('minigames')) {
         setCurrentTab('minigames');
         setActiveMiniGame('hub');
-      } else if (hash.startsWith('#screenle')) {
+      } else if (route.startsWith('screenle')) {
         setCurrentTab('minigames');
         setActiveMiniGame('screenle');
-      } else if (hash.startsWith('#indledle')) {
+      } else if (route.startsWith('indledle')) {
         setCurrentTab('minigames');
         setActiveMiniGame('indledle');
-      } else if (hash.startsWith('#linkle')) {
+      } else if (route.startsWith('linkle')) {
         setCurrentTab('minigames');
         setActiveMiniGame('linkle');
-      } else if (hash.startsWith('#profille')) {
+      } else if (route.startsWith('profille')) {
         setCurrentTab('minigames');
         setActiveMiniGame('profille');
-      } else if (hash.startsWith('#chrono') || hash.startsWith('#timeline')) {
+      } else if (route.startsWith('chrono') || route.startsWith('timeline')) {
         setCurrentTab('minigames');
         setActiveMiniGame('chrono');
-      } else if (hash.startsWith('#pixel') || hash.startsWith('#silhouette')) {
+      } else if (route.startsWith('pixel') || route.startsWith('silhouette')) {
         setCurrentTab('minigames');
         setActiveMiniGame('pixel');
-      } else if (hash.startsWith('#review') || hash.startsWith('#critique')) {
+      } else if (route.startsWith('review') || route.startsWith('critique')) {
         setCurrentTab('minigames');
         setActiveMiniGame('review');
-      } else if (hash.startsWith('#blindtest') || hash.startsWith('#audioldle') || hash.startsWith('#ost')) {
+      } else if (route.startsWith('blindtest') || route.startsWith('audioldle') || route.startsWith('ost')) {
         setCurrentTab('minigames');
         setActiveMiniGame('blindtest');
-      } else if (hash.startsWith('#timeattack')) {
+      } else if (route.startsWith('timeattack')) {
         setCurrentTab('minigames');
         setActiveMiniGame('timeattack');
-        const match = window.location.hash.match(/#timeattack=([a-z]+)/);
+        const match = route.match(/timeattack[=/]([a-z]+)/);
         if (match && ['screenle', 'indledle', 'linkle', 'profille'].includes(match[1])) {
           setTimeAttackInitialMode(match[1] as TimeAttackMode);
         }
-      } else if (hash.startsWith('#versus')) {
+      } else if (route.startsWith('versus')) {
         setCurrentTab('minigames');
         setActiveMiniGame('versus');
-      } else if (hash.startsWith('#quiz') || hash.startsWith('#quizz')) {
+      } else if (route.startsWith('quiz') || route.startsWith('quizz')) {
         setCurrentTab('minigames');
         setActiveMiniGame('quiz');
-      } else if (hash.startsWith('#odyssey') || hash.startsWith('#idle') || hash.startsWith('#sanctuary')) {
+      } else if (route.startsWith('odyssey') || route.startsWith('idle') || route.startsWith('sanctuary')) {
         setCurrentTab('odyssey');
-      } else if (hash.startsWith('#catalog') || hash.startsWith('#steam')) {
+      } else if (route.startsWith('catalog') || route.startsWith('steam')) {
         setCurrentTab('catalog');
-      } else if (hash.startsWith('#micro') || hash.startsWith('#itch')) {
+      } else if (route.startsWith('micro') || route.startsWith('itch')) {
         setCurrentTab('microindies');
-      } else if (hash.startsWith('#arcade')) {
+      } else if (route.startsWith('arcade')) {
         setCurrentTab('arcade');
-      } else if (hash.startsWith('#cards') || hash.startsWith('#album') || hash.startsWith('#binder')) {
+      } else if (route.startsWith('cards') || route.startsWith('album') || route.startsWith('binder')) {
         setCurrentTab('cards');
-      } else if (hash.startsWith('#toolbox')) {
+      } else if (route.startsWith('toolbox')) {
         setCurrentTab('toolbox');
-      } else if (hash.startsWith('#roost')) {
+      } else if (route.startsWith('roost')) {
         setCurrentTab('roost');
-      } else if (hash.startsWith('#leaderboard')) {
-        const match = window.location.hash.match(/#leaderboard=([a-z]+)/);
+      } else if (route.startsWith('leaderboard')) {
+        const match = (hash || route).match(/leaderboard[=/]([a-z]+)/);
         if (match && ['arcade', 'timeattack', 'quiz'].includes(match[1])) {
           handleOpenLeaderboard(match[1] as LeaderboardCategory);
         } else {
           handleOpenLeaderboard('arcade');
         }
-      } else if (hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard')) {
+      } else if (route === 'admin' || route.startsWith('admin=') || route.startsWith('admindashboard')) {
         setIsAdminDashboardOpen(true);
-      } else if (hash.startsWith('#friends') || hash.startsWith('#friend=')) {
+      } else if (route.startsWith('friends') || route.startsWith('friend=')) {
         setIsFriendsOpen(true);
-      } else if (hash.startsWith('#shop') || hash.startsWith('#boutique')) {
+      } else if (route.startsWith('shop') || route.startsWith('boutique')) {
         setIsShopOpen(true);
-      } else if (hash.startsWith('#trade') || hash.startsWith('#echange')) {
+      } else if (route.startsWith('trade') || route.startsWith('echange')) {
         openTradeModal();
-      } else if (hash.startsWith('#gems') || hash === '') {
+      } else if (route.startsWith('gems') || route === '') {
         setCurrentTab('gems');
       }
     };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, [handleOpenLeaderboard, openTradeModal]);
 
   // SEO dynamic document title and URL hash synchronization
   useEffect(() => {
@@ -566,7 +578,13 @@ export const AppContent: React.FC = () => {
 
     document.title = pageTitle;
 
-    if (window.location.hash !== targetHash && !(targetHash === '' && window.location.hash === '')) {
+    const currentCleanPath = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
+    const currentCleanHash = window.location.hash.toLowerCase().replace(/^#+/, '');
+    const targetClean = targetHash.replace(/^#+/, '');
+    const alreadyOnTarget = (targetClean === '' && currentCleanHash === '' && currentCleanPath === '') ||
+      (targetClean !== '' && (currentCleanHash === targetClean || currentCleanPath === targetClean));
+
+    if (!alreadyOnTarget) {
       if (targetHash === '') {
         history.replaceState(null, '', window.location.pathname + window.location.search);
       } else {
@@ -730,6 +748,7 @@ export const AppContent: React.FC = () => {
                 currentDate={currentDate}
                 onNavigateTab={handleTabChange}
                 onOpenArcade={handleOpenArcade}
+                initialSearchQuery={initialSearchQuery}
               />
             </div>
           )}
@@ -852,7 +871,7 @@ export const AppContent: React.FC = () => {
             <React.Suspense fallback={null}>
               <DiscoverySubNav currentTab="catalog" onSelectTab={handleTabChange} />
             </React.Suspense>
-            <SteamCatalogExplorer />
+            <SteamCatalogExplorer initialSearchQuery={initialSearchQuery} />
           </div>
         )}
         {currentTab === 'arcade' && (
@@ -883,122 +902,144 @@ export const AppContent: React.FC = () => {
       {/* Global Modals - Isolated Suspense & ErrorBoundary so they never unmount the page */}
       <ErrorBoundary isModal>
         <React.Suspense fallback={null}>
-          <StatsModal
-          isOpen={isStatsOpen}
-          onClose={() => setIsStatsOpen(false)}
-          initialTab={
-            currentTab === 'minigames' &&
-            ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'].includes(activeMiniGame)
-              ? (activeMiniGame as DailyGameMode)
-              : 'screenle'
-          }
-        />
-
-      <AchievementsModal
-          isOpen={isAchievementsOpen}
-          onClose={() => setIsAchievementsOpen(false)}
-          onNavigateGame={(gameMode) => {
-            setIsAchievementsOpen(false);
-            handleTabChange(gameMode as any);
-          }}
-        />
-
-      <CalendarArchiveModal
-          isOpen={isCalendarOpen}
-          onClose={() => setIsCalendarOpen(false)}
-          currentDate={currentDate}
-          onSelectDate={(newDate) => {
-            if (isDatePlayable(newDate, todayStr)) {
-              setCurrentDate(newDate);
-            }
-          }}
-        />
-
-      <ProfileModal
-          isOpen={isProfileOpen}
-          initialTab={profileInitialTab}
-          onClose={() => setIsProfileOpen(false)}
-          onOpenAdminDashboard={() => {
-            if (isAuthenticated && isAdmin) {
-              setIsAdminDashboardOpen(true);
-            }
-          }}
-          onOpenFriends={() => setIsFriendsOpen(true)}
-          onOpenShop={() => setIsShopOpen(true)}
-          onOpenAuth={() => setIsAuthOpen(true)}
-        />
-
-      <FeatherShopModal
-          isOpen={isShopOpen}
-          onClose={() => setIsShopOpen(false)}
-          onOpenProfile={() => {
-            setProfileInitialTab('profile');
-            setIsProfileOpen(true);
-          }}
-        />
-
-      <FriendsModal
-          isOpen={isFriendsOpen}
-          onClose={() => setIsFriendsOpen(false)}
-          onOpenAuth={() => setIsAuthOpen(true)}
-          onStartVersusDuel={(roomCode) => {
-            setIsFriendsOpen(false);
-            window.location.hash = `#versus=${roomCode}`;
-            setCurrentTab('minigames');
-            setActiveMiniGame('versus');
-          }}
-        />
-
-      <AuthModal
-          isOpen={isAuthOpen}
-          onClose={() => setIsAuthOpen(false)}
-        />
-
-      <EmailVerificationModal
-          isOpen={isEmailVerificationModalOpen}
-          onClose={() => setIsEmailVerificationModalOpen(false)}
-        />
-
-      <OwlEasterEggModal
-          isOpen={isEasterEggOpen}
-          onClose={() => setIsEasterEggOpen(false)}
-          onOpenArcade={() => handleOpenArcade('snake')}
-        />
-
-      <ArcadeModal
-          isOpen={isArcadeOpen}
-          initialGame={arcadeGame}
-          onClose={() => setIsArcadeOpen(false)}
-          onOpenLeaderboard={(gameId) => handleOpenLeaderboard('arcade', gameId)}
-        />
-
-      <LeaderboardModal
-          isOpen={isLeaderboardOpen}
-          onClose={() => setIsLeaderboardOpen(false)}
-          initialCategory={leaderboardCategory}
-          initialGame={leaderboardGame}
-        />
-
-      {isAdminDashboardOpen && isAuthenticated && isAdmin && (
-        <AdminDashboardModal
-          isOpen={isAdminDashboardOpen}
-          onClose={() => {
-            setIsAdminDashboardOpen(false);
-            if (typeof window !== 'undefined') {
-              const hash = window.location.hash.toLowerCase();
-              if (hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard')) {
-                history.replaceState(null, '', window.location.pathname + window.location.search);
+          {isStatsOpen && (
+            <StatsModal
+              isOpen={isStatsOpen}
+              onClose={() => setIsStatsOpen(false)}
+              initialTab={
+                currentTab === 'minigames' &&
+                ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'].includes(activeMiniGame)
+                  ? (activeMiniGame as DailyGameMode)
+                  : 'screenle'
               }
-            }
-          }}
-        />
-      )}
+            />
+          )}
 
-      {/* Célébration Décret Royal / Récompense Souveraine Hibouxe */}
-      <AdminRewardCelebrationModal />
+          {isAchievementsOpen && (
+            <AchievementsModal
+              isOpen={isAchievementsOpen}
+              onClose={() => setIsAchievementsOpen(false)}
+              onNavigateGame={(gameMode) => {
+                setIsAchievementsOpen(false);
+                handleTabChange(gameMode as any);
+              }}
+            />
+          )}
 
-      {/* Centre d'Échange Bilatéral de Cartes */}
-      <TradeModal />
+          {isCalendarOpen && (
+            <CalendarArchiveModal
+              isOpen={isCalendarOpen}
+              onClose={() => setIsCalendarOpen(false)}
+              currentDate={currentDate}
+              onSelectDate={(newDate) => {
+                if (isDatePlayable(newDate, todayStr)) {
+                  setCurrentDate(newDate);
+                }
+              }}
+            />
+          )}
+
+          {isProfileOpen && (
+            <ProfileModal
+              isOpen={isProfileOpen}
+              initialTab={profileInitialTab}
+              onClose={() => setIsProfileOpen(false)}
+              onOpenAdminDashboard={() => {
+                if (isAuthenticated && isAdmin) {
+                  setIsAdminDashboardOpen(true);
+                }
+              }}
+              onOpenFriends={() => setIsFriendsOpen(true)}
+              onOpenShop={() => setIsShopOpen(true)}
+              onOpenAuth={() => setIsAuthOpen(true)}
+            />
+          )}
+
+          {isShopOpen && (
+            <FeatherShopModal
+              isOpen={isShopOpen}
+              onClose={() => setIsShopOpen(false)}
+              onOpenProfile={() => {
+                setProfileInitialTab('profile');
+                setIsProfileOpen(true);
+              }}
+            />
+          )}
+
+          {isFriendsOpen && (
+            <FriendsModal
+              isOpen={isFriendsOpen}
+              onClose={() => setIsFriendsOpen(false)}
+              onOpenAuth={() => setIsAuthOpen(true)}
+              onStartVersusDuel={(roomCode) => {
+                setIsFriendsOpen(false);
+                window.location.hash = `#versus=${roomCode}`;
+                setCurrentTab('minigames');
+                setActiveMiniGame('versus');
+              }}
+            />
+          )}
+
+          {isAuthOpen && (
+            <AuthModal
+              isOpen={isAuthOpen}
+              onClose={() => setIsAuthOpen(false)}
+            />
+          )}
+
+          {isEmailVerificationModalOpen && (
+            <EmailVerificationModal
+              isOpen={isEmailVerificationModalOpen}
+              onClose={() => setIsEmailVerificationModalOpen(false)}
+            />
+          )}
+
+          {isEasterEggOpen && (
+            <OwlEasterEggModal
+              isOpen={isEasterEggOpen}
+              onClose={() => setIsEasterEggOpen(false)}
+              onOpenArcade={() => handleOpenArcade('snake')}
+            />
+          )}
+
+          {isArcadeOpen && (
+            <ArcadeModal
+              isOpen={isArcadeOpen}
+              initialGame={arcadeGame}
+              onClose={() => setIsArcadeOpen(false)}
+              onOpenLeaderboard={(gameId) => handleOpenLeaderboard('arcade', gameId)}
+            />
+          )}
+
+          {isLeaderboardOpen && (
+            <LeaderboardModal
+              isOpen={isLeaderboardOpen}
+              onClose={() => setIsLeaderboardOpen(false)}
+              initialCategory={leaderboardCategory}
+              initialGame={leaderboardGame}
+            />
+          )}
+
+          {isAdminDashboardOpen && isAuthenticated && isAdmin && (
+            <AdminDashboardModal
+              isOpen={isAdminDashboardOpen}
+              onClose={() => {
+                setIsAdminDashboardOpen(false);
+                if (typeof window !== 'undefined') {
+                  const hash = window.location.hash.toLowerCase();
+                  if (hash === '#admin' || hash.startsWith('#admin=') || hash.startsWith('#admindashboard')) {
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                  }
+                }
+              }}
+            />
+          )}
+
+          {/* Célébration Décret Royal / Récompense Souveraine Hibouxe */}
+          <AdminRewardCelebrationModal />
+
+          {/* Centre d'Échange Bilatéral de Cartes */}
+          {isTradeModalOpen && <TradeModal />}
 
       {(() => {
         const isAnyModalOpen = Boolean(

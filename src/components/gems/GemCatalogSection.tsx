@@ -36,11 +36,13 @@ import { RandomGemModal } from './RandomGemModal';
 interface GemCatalogSectionProps {
   onNavigateTab: (tab: NavTab) => void;
   highlightedGameId?: string | null;
+  initialSearchQuery?: string;
 }
 
 export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
   onNavigateTab,
   highlightedGameId: externalHighlightedId,
+  initialSearchQuery = '',
 }) => {
   const { t, i18n } = useTranslation();
   const { stats: steamStats, curatedGems: catalogGems } = useSteamCatalog();
@@ -98,7 +100,7 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
 
   const { isGameOwned, toggleGameOwned, hideOwnedGames, setHideOwnedGames } = useUserAccount();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [genreSearchQuery, setGenreSearchQuery] = useState('');
   const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);

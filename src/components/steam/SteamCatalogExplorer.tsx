@@ -35,16 +35,18 @@ import { inferEnrichedGenres } from '../../utils/gameInference';
 
 interface SteamCatalogExplorerProps {
   onSelectGameForIndledle?: (game: Game) => void;
+  initialSearchQuery?: string;
 }
 
 export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
   onSelectGameForIndledle,
+  initialSearchQuery = '',
 }) => {
   const { t, i18n } = useTranslation();
   const { allPlayableGames, stats, removeCustomGame } = useSteamCatalog();
   const { isGameOwned, isSteamConnected, hideOwnedGames, setHideOwnedGames, connectSteamWithOpenId } = useUserAccount();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [selectedArtStyle, setSelectedArtStyle] = useState<string>('all');
   const [selectedCamera, setSelectedCamera] = useState<string>('all');

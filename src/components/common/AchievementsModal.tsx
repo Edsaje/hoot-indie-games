@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAchievements } from '../../context/useAchievements';
 import { soundFx } from '../../utils/audio';
@@ -171,6 +171,19 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
     const validSet = new Set(allAchievements.map((a) => a.id));
     return Array.from(new Set(unlockedIds.filter((id) => validSet.has(id))));
   }, [unlockedIds, allAchievements]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const totalPossibleFeathers = allAchievements.reduce((acc, a) => acc + a.feathersReward, 0);

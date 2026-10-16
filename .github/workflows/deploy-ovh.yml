@@ -10,6 +10,10 @@ on:
       - '.gitignore'
   workflow_dispatch: # Déclenchement manuel en 1 clic depuis l'interface GitHub
 
+concurrency:
+  group: 'ovh-deploy'
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

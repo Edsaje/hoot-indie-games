@@ -25,6 +25,7 @@ import {
 import { INDIE_GAMES, getDailyProfilleGame } from '../../data/games';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
+import { saveSecureJson, loadSecureJson, sha256Sync } from '../../utils/securityAntiCheat';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { SteamIcon } from '../common/SteamIcon';
@@ -108,9 +109,8 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
 
   const savedState = useMemo<SavedProfilleState>(() => {
     try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const parsed = JSON.parse(raw);
+      const parsed = loadSecureJson<SavedProfilleState>(storageKey);
+      if (parsed) {
         return {
           secretGameId: parsed.secretGameId as string | undefined,
           activeCategories: Array.isArray(parsed.activeCategories) ? parsed.activeCategories : undefined,
@@ -316,8 +316,10 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
   const persistState = useCallback(
     (patch: Partial<SavedProfilleState>) => {
       try {
-        const stateToSave: SavedProfilleState = {
-          secretGameId: secretGame.id,
+        const nextCompleted = patch.isCompleted ?? isCompleted;
+        const stateToSave: SavedProfilleState & { secretGameHash?: string } = {
+          secretGameId: nextCompleted ? secretGame.id : undefined,
+          secretGameHash: !nextCompleted ? sha256Sync(`${secretGame.id}:${currentDate}`) : undefined,
           activeCategories,
           yearGuesses,
           devGuesses,
@@ -336,7 +338,7 @@ export const ProfilleGame: React.FC<ProfilleGameProps> = ({ currentDate, onSelec
           score,
           ...patch,
         };
-        localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+        saveSecureJson(storageKey, stateToSave);
       } catch {
         // Ignore
       }

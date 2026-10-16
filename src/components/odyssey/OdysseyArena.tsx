@@ -423,11 +423,16 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       }
   }, [addDamagePopup, handleDefeat, screenShakeEnabled]);
 
-  // Boucle DPS Passif (Tick toutes les 200ms via Web Worker pour ?viter le throttling CPU du navigateur en arri?re-plan)
+  const handleDefeatRef = useRef(handleDefeat);
+  useEffect(() => {
+    handleDefeatRef.current = handleDefeat;
+  }, [handleDefeat]);
+
+  // Boucle DPS Passif (Tick toutes les 200ms via Web Worker pour éviter le throttling CPU du navigateur en arrière-plan)
   useEffect(() => {
     const tickIntervalMs = 200;
     
-    // Initialiser le worker
+    // Initialiser le worker une seule fois
     const worker = new Worker(new URL('../../workers/idleTimerWorker.ts', import.meta.url), { type: 'module' });
     
     worker.onmessage = (e) => {
@@ -441,7 +446,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
         const nextHp = Math.max(0, mob.currentHp - damageThisTick);
         if (nextHp <= 0) {
           React.startTransition(() => {
-            handleDefeat();
+            handleDefeatRef.current();
           });
         } else {
           React.startTransition(() => {
@@ -457,7 +462,7 @@ export const OdysseyArena: React.FC<OdysseyArenaProps> = ({
       worker.postMessage({ action: 'stop' });
       worker.terminate();
     };
-  }, [handleDefeat]);
+  }, []);
 
   // Clic sur la Luciole Dorée
   const handleFireflyClick = (e: React.MouseEvent) => {

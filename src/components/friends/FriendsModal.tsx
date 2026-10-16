@@ -170,6 +170,18 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
     }
   }, [isOpen, refreshFriends]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || typeof document === 'undefined') return null;
 
   const handleCopyCode = () => {
@@ -288,7 +300,12 @@ export const FriendsModal: React.FC<FriendsModalProps> = ({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-200">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="friends-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-200"
+    >
       <div className="relative bg-[#072a20] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl w-full h-full sm:h-auto max-w-2xl shadow-2xl flex flex-col max-h-[100dvh] sm:max-h-[90vh] overflow-hidden">
         <div className="hidden sm:block pointer-events-none">
           <SylvestreIvyFrame density="delicate" />

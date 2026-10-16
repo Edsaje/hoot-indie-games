@@ -364,7 +364,8 @@
     "unlimitedPracticeTip": "無制限の練習モード",
     "restart": "やり直す",
     "wonDetails": "{{count}}回の試行で曲を特定（{{track}} 作曲: {{composer}}）。",
-    "lostDetails": "正解は「{{track}}」（作曲: {{composer}}）でした。"
+    "lostDetails": "正解は「{{track}}」（作曲: {{composer}}）でした。",
+    "audioLoadError": "公式オーディオの読み込みに失敗しました。0ハルシネーション方針に従い、合成音は再生されません。"
   },
   "versus": {
     "title": "1v1対戦",
@@ -722,7 +723,11 @@
     "topRated": "高評価 (≥ 95%)",
     "gemsCountUnit": "{{filtered}} / {{total}} 個のゲーム",
     "noGemsFound": "インディーゲームが見つかりません",
-    "noGemsFoundDesc": "選択したフィルターに一致するゲームがありません。価格、評価、ジャンルの条件を広げてみてください。"
+    "noGemsFoundDesc": "選択したフィルターに一致するゲームがありません。価格、評価、ジャンルの条件を広げてみてください。",
+    "searchGenre": "ジャンルを検索...",
+    "searchGenrePlaceholder": "ジャンルを検索 (例: メトロイドヴァニア、放置系...)",
+    "matchingGenres": "一致するジャンル",
+    "noGenreFound": "ジャンルが見つかりません"
   },
   "toolbox": {
     "title": "インディー探検ツールボックス",
@@ -897,7 +902,15 @@
     },
     "viewAllInHub": "ハブ内のすべてのミニゲームを見る",
     "backToHub": "← ミニゲームハブ",
-    "dailySolved": "本日のデイリークリア"
+    "dailySolved": "本日のデイリークリア",
+    "dailyProgressTitle": "本日のチャレンジ進行状況",
+    "dailyProgressSub": "全8つの試練をクリアして、連続記録を輝かせましょう！",
+    "archiveProgressSub": "{{date}}のアーカイブ",
+    "grandSlamTitle": "本日のグランドスラム達成！",
+    "grandSlamPerfect": "パーフェクトスコア 8/8！あなたは真のインディーゲーム達人です。",
+    "grandSlamCompleted": "本日の全8チャレンジをクリアしました。また明日新しいパズルでお会いしましょう！",
+    "nextChallengeLabel": "おすすめの次のチャレンジ",
+    "playNext": "次のチャレンジをプレイ"
   },
   "streak": {
     "flamePreserved": "連勝の炎を維持しました！",
@@ -1039,7 +1052,12 @@
       "errTitle": "ゲームタイトルを入力してください。",
       "errDev": "開発者またはスタジオ名を入力してください。",
       "errUrl": "公式リンク（Itch.io、Steam、またはWeb）を少なくとも1つ提供してください。"
-    }
+    },
+    "authRequiredToLike": "ログインが必要です：ゲームへの投票と応援にはHootアカウントへのログインが必要です（シークレットモード対策）！",
+    "loginToVote": "投票にはログインが必要です（不正防止）",
+    "alreadyVoted": "この名作に投票済みです",
+    "removeVote": "クリックして投票を取り消す",
+    "voteForGame": "この名作に投票する"
   },
   "pagination": {
     "showing": "{{total}}件中 {{start}}〜{{end}}件を表示",
@@ -1075,14 +1093,38 @@
     "channelsDropdownTitle": "チャンネル＆フィードバック",
     "activeChannel": "参加中",
     "channels": {
-      "global": { "name": "グローバル", "desc": "世界中の探検家が集う国際ラウンジ" },
-      "fr": { "name": "Français", "desc": "フランス語ラウンジ（攻略・名作情報）" },
-      "en": { "name": "English", "desc": "英語ラウンジ（インディーゲーム談義）" },
-      "es": { "name": "Español", "desc": "スペイン語圏インディーコミュニティ" },
-      "de": { "name": "Deutsch", "desc": "ドイツ語ラウンジ" },
-      "ja": { "name": "日本語", "desc": "インディーゲーム探索者のための日本語ラウンジ" },
-      "pt-BR": { "name": "Português", "desc": "ポルトガル語ラウンジ" },
-      "feedback": { "name": "ご意見・アイデア", "desc": "改善提案、不具合報告、インディーゲームのアイデア" }
+      "global": {
+        "name": "グローバル",
+        "desc": "世界中の探検家が集う国際ラウンジ"
+      },
+      "fr": {
+        "name": "Français",
+        "desc": "フランス語ラウンジ（攻略・名作情報）"
+      },
+      "en": {
+        "name": "English",
+        "desc": "英語ラウンジ（インディーゲーム談義）"
+      },
+      "es": {
+        "name": "Español",
+        "desc": "スペイン語圏インディーコミュニティ"
+      },
+      "de": {
+        "name": "Deutsch",
+        "desc": "ドイツ語ラウンジ"
+      },
+      "ja": {
+        "name": "日本語",
+        "desc": "インディーゲーム探索者のための日本語ラウンジ"
+      },
+      "pt-BR": {
+        "name": "Português",
+        "desc": "ポルトガル語ラウンジ"
+      },
+      "feedback": {
+        "name": "ご意見・アイデア",
+        "desc": "改善提案、不具合報告、インディーゲームのアイデア"
+      }
     },
     "categories": {
       "suggestion": "提案",

@@ -15,7 +15,9 @@ import { useTranslation } from 'react-i18next';
 import { soundFx } from '../../utils/audio';
 import { INITIAL_MICRO_INDIES } from '../../data/microIndies';
 import { ProposeMicroIndieModal } from './ProposeMicroIndieModal';
-import { AdminDashboardModal } from '../admin/AdminDashboardModal';
+const AdminDashboardModal = React.lazy(() =>
+  import('../admin/AdminDashboardModal').then((m) => ({ default: m.AdminDashboardModal }))
+);
 import { useUserAccount } from '../../context/useUserAccount';
 import type { MicroIndieGame } from '../../types/microIndie';
 import { formatMicroIndiePrice } from '../../utils/currencyFormatter';
@@ -682,12 +684,14 @@ export const MicroIndieHub: React.FC = () => {
       />
 
       {/* Modale d'administration Micro-Indés pour Hibouxe / Admin */}
-      {isAdmin && (
-        <AdminDashboardModal
-          isOpen={isAdminDashboardOpen}
-          onClose={() => setIsAdminDashboardOpen(false)}
-          initialTab="microIndies"
-        />
+      {isAdmin && isAdminDashboardOpen && (
+        <React.Suspense fallback={null}>
+          <AdminDashboardModal
+            isOpen={isAdminDashboardOpen}
+            onClose={() => setIsAdminDashboardOpen(false)}
+            initialTab="microIndies"
+          />
+        </React.Suspense>
       )}
 
       {/* Bannière Toast Connexion requise (Anti-triche) */}

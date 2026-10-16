@@ -12,6 +12,7 @@ export interface SteamCatalogGame extends Game {
 const STORAGE_KEY_CUSTOM_GAMES = 'hoot_custom_imported_steam_games_v1';
 const STORAGE_KEY_SERVER_OVERRIDES = 'hoot_server_overrides_cache_v2';
 const STORAGE_KEY_STEAM_CATALOG = 'hoot_steam_catalog_cache_v2';
+const CURRENT_CATALOG_VERSION = 'v2.0.2';
 
 class SteamCatalogService {
   private catalog: SteamCatalogGame[] = [];
@@ -30,6 +31,9 @@ class SteamCatalogService {
   private initFromCache() {
     if (typeof localStorage === 'undefined') return;
     try {
+      // Nettoyage immédiat des 4,51 Mo qui saturaient le localStorage chez les joueurs
+      localStorage.removeItem(STORAGE_KEY_STEAM_CATALOG);
+
       const overridesRaw = localStorage.getItem(STORAGE_KEY_SERVER_OVERRIDES);
       if (overridesRaw) {
         const data = JSON.parse(overridesRaw);
@@ -57,18 +61,6 @@ class SteamCatalogService {
         }
         if (data.excludedFromGems) this.serverExcludedGemIds = new Set(data.excludedFromGems);
         if (data.promotedToGems) this.serverPromotedGemIds = new Set(data.promotedToGems);
-      }
-      const catalogRaw = localStorage.getItem(STORAGE_KEY_STEAM_CATALOG);
-      if (catalogRaw) {
-        const items = JSON.parse(catalogRaw);
-        if (Array.isArray(items) && items.length > 0) {
-          this.catalog = items;
-          for (const item of items) {
-            if ((item as any).steamStoreData) {
-              registerSteamStoreData((item as any).steamStoreData);
-            }
-          }
-        }
       }
     } catch {
       // Ignorer les erreurs de parsing du cache local
@@ -257,7 +249,7 @@ class SteamCatalogService {
     this.loadPromise = (async () => {
       try {
         const [steamRes] = await Promise.all([
-          fetch(`/data/steam_catalog.json?v=${Date.now()}`).catch(() => null),
+          fetch(`/data/steam_catalog.json?v=${CURRENT_CATALOG_VERSION}`).catch(() => null),
           this.syncServerOverrides().catch(() => {}),
         ]);
         if (steamRes && steamRes.ok) {
@@ -267,11 +259,6 @@ class SteamCatalogService {
             if ((item as any).steamStoreData) {
               registerSteamStoreData((item as any).steamStoreData);
             }
-          }
-          if (typeof localStorage !== 'undefined') {
-            try {
-              localStorage.setItem(STORAGE_KEY_STEAM_CATALOG, JSON.stringify(items));
-            } catch {}
           }
         }
       } catch (err) {

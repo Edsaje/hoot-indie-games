@@ -19,6 +19,28 @@ sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
+if (session_status() === PHP_SESSION_NONE) {
+    @ini_set('session.cookie_httponly', 1);
+    @ini_set('session.cookie_samesite', 'Lax');
+    @session_start();
+}
+
+function isCallerAuthorizedForCode($db, $friendCode) {
+    if (isCreatorAdminAuthorized()) return true;
+    if (empty($friendCode) || !isset($db['players'][$friendCode])) return true;
+    $player = $db['players'][$friendCode];
+    $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
+    $sessionSteamId = $_SESSION['verified_steam_id'] ?? ($_SESSION['steam_id'] ?? null);
+
+    if (!empty($player['steamId'])) {
+        return (!empty($sessionSteamId) && strval($sessionSteamId) === strval($player['steamId']));
+    }
+    if (!empty($player['userId'])) {
+        return (!empty($sessionUserId) && $sessionUserId === $player['userId']);
+    }
+    return true;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -261,7 +283,23 @@ if ($action === 'register') {
     $cleanUsername = mb_substr(htmlspecialchars($rawUsername, ENT_QUOTES, 'UTF-8'), 0, 24);
     $avatarId = preg_replace('/[^a-z0-9_]/', '', (string)($body['avatarId'] ?? 'owl'));
     $title = mb_substr(htmlspecialchars((string)($body['title'] ?? 'Oisillon du Perchoir'), ENT_QUOTES, 'UTF-8'), 0, 40);
-    $steamId = preg_match('/^\d{17}$/', (string)($body['steamId'] ?? '')) ? (string)$body['steamId'] : null;
+    $rawSteamId = preg_match('/^\d{17}$/', (string)($body['steamId'] ?? '')) ? (string)$body['steamId'] : null;
+    $rawUserId = trim((string)($body['userId'] ?? ''));
+
+    $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
+    $sessionSteamId = $_SESSION['verified_steam_id'] ?? ($_SESSION['steam_id'] ?? null);
+    $isAdmin = isCreatorAdminAuthorized();
+
+    $steamId = null;
+    if (!empty($rawSteamId)) {
+        if ($isAdmin || (!empty($sessionSteamId) && strval($sessionSteamId) === strval($rawSteamId))) {
+            $steamId = $rawSteamId;
+        }
+    } elseif (!empty($sessionSteamId)) {
+        $steamId = strval($sessionSteamId);
+    }
+
+    $userId = !empty($sessionUserId) ? $sessionUserId : (!empty($rawUserId) ? $rawUserId : null);
     $elo = max(500, min(3000, (int)($body['elo'] ?? 1000)));
     $streak = max(0, min(9999, (int)($body['streak'] ?? 0)));
 
@@ -301,6 +339,7 @@ if ($action === 'register') {
     $nowIso = gmdate('Y-m-d\TH:i:s\Z');
     $playerEntry = [
         'friendCode' => $friendCode,
+        'userId' => $userId,
         'username' => $cleanUsername,
         'avatarId' => $avatarId,
         'title' => $title,
@@ -328,12 +367,23 @@ if ($action === 'register') {
         $existing = $db['players'][$friendCode];
         $isOwner = false;
 
-        if (isCreatorAdminAuthorized()) {
+        if ($isAdmin) {
             $isOwner = true;
-        } elseif (!empty($existing['steamId']) && !empty($steamId) && $existing['steamId'] === $steamId) {
+        } elseif (!empty($existing['steamId'])) {
+            // Un profil lié à Steam ne peut être modifié que si la session Valve OpenID vérifiée correspond
+            if (!empty($sessionSteamId) && strval($sessionSteamId) === strval($existing['steamId'])) {
+                $isOwner = true;
+            }
+        } elseif (!empty($existing['userId'])) {
+            // Un profil lié à un compte utilisateur ne peut être modifié que si la session correspond
+            if (!empty($sessionUserId) && $sessionUserId === $existing['userId']) {
+                $isOwner = true;
+            }
+        } elseif (!empty($sessionUserId) || !empty($sessionSteamId)) {
+            // Utilisateur connecté revendiquant son propre code
             $isOwner = true;
-        } elseif (empty($existing['steamId']) && empty($steamId)) {
-            // Pour les profils sans Steam, autoriser la mise à jour si le nom correspond
+        } else {
+            // Pour les profils sans Steam ni userId en DB, autoriser la mise à jour si le nom correspond
             $normExisting = normalizeUsername($existing['username'] ?? '');
             if (empty($normExisting) || $normExisting === normalizeUsername($cleanUsername)) {
                 $isOwner = true;
@@ -345,9 +395,16 @@ if ($action === 'register') {
             echo json_encode([
                 'success' => false,
                 'error' => 'code_already_claimed',
-                'message' => 'Ce code ami est déjà associé à un autre compte de joueur.'
+                'message' => 'Ce code ami est déjà associé à un autre compte de joueur vérifié.'
             ]);
             exit;
+        }
+
+        if (empty($playerEntry['userId']) && !empty($existing['userId'])) {
+            $playerEntry['userId'] = $existing['userId'];
+        }
+        if (empty($playerEntry['steamId']) && !empty($existing['steamId'])) {
+            $playerEntry['steamId'] = $existing['steamId'];
         }
     }
 
@@ -583,6 +640,12 @@ if ($action === 'send_request' || $action === 'send_friend_request') {
         exit;
     }
 
+    if (!isCallerAuthorizedForCode($db, $fromCode)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'unauthorized', 'message' => 'Action non autorisée pour ce compte joueur.']);
+        exit;
+    }
+
     $rawTarget = trim((string)($body['toCode'] ?? ($body['targetQuery'] ?? '')));
     if (empty($rawTarget)) {
         http_response_code(400);
@@ -714,6 +777,12 @@ if ($action === 'get_requests' || $action === 'get_friend_requests') {
         exit;
     }
 
+    if (!isCallerAuthorizedForCode($db, $myCode)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'unauthorized', 'message' => 'Action non autorisée pour ce compte joueur.']);
+        exit;
+    }
+
     $now = time();
     $incoming = [];
     $outgoing = [];
@@ -770,6 +839,12 @@ if ($action === 'respond_request' || $action === 'respond_friend_request') {
     if (empty($requestId) || !in_array($subAction, ['accept', 'decline', 'cancel'], true) || !$myCode) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Paramètres invalides (requestId, action, myCode requis).']);
+        exit;
+    }
+
+    if (!isCallerAuthorizedForCode($db, $myCode)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'unauthorized', 'message' => 'Action non autorisée pour ce compte joueur.']);
         exit;
     }
 
@@ -874,6 +949,12 @@ if ($action === 'remove_friend') {
     if (!$myCode || !$targetCode) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Codes joueurs invalides ou manquants.']);
+        exit;
+    }
+
+    if (!isCallerAuthorizedForCode($db, $myCode)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'unauthorized', 'message' => 'Action non autorisée pour ce compte joueur.']);
         exit;
     }
 

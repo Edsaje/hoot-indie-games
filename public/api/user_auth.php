@@ -265,7 +265,11 @@ switch ($action) {
         $email = mb_strtolower(trim($payload['email'] ?? ''), 'UTF-8');
         $password = (string)($payload['password'] ?? '');
         $username = trim($payload['username'] ?? '');
-        $incomingSteamId = trim($payload['steamId'] ?? ($_SESSION['steam_id'] ?? ''));
+        // Accepter uniquement un Steam ID vérifié cryptographiquement par Valve OpenID en session
+        $incomingSteamId = '';
+        if (!empty($_SESSION['verified_steam_id']) && preg_match('/^\d{17}$/', strval($_SESSION['verified_steam_id']))) {
+            $incomingSteamId = strval($_SESSION['verified_steam_id']);
+        }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             http_response_code(400);
@@ -345,6 +349,11 @@ switch ($action) {
             $_SESSION['steam_id'] = $incomingSteamId;
         }
 
+        $isLocalDev = (getenv('APP_ENV') === 'local') 
+            || in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true)
+            || (php_sapi_name() === 'cli-server')
+            || in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1'], true);
+
         $clientUser = sanitizeAccountForClient($newUser);
         echo json_encode([
             'success' => true,
@@ -353,7 +362,7 @@ switch ($action) {
                 : 'Compte Hoot créé avec succès ! Veuillez vérifier votre adresse e-mail pour activer le tchat.',
             'emailVerified' => $emailVerified,
             'user' => $clientUser,
-            'mailDev' => (($mailResult['provider'] ?? '') === 'dev') ? [
+            'mailDev' => ((($mailResult['provider'] ?? '') === 'dev') && $isLocalDev && !empty($mailResult['otp'])) ? [
                 'devLogged' => true,
                 'otp' => $otp,
                 'token' => $token,
@@ -450,25 +459,50 @@ switch ($action) {
         $accounts = loadAccountsData($accountsFile);
         $matchedUserId = null;
 
-        // 1. Chercher d'abord dans la session active si l'utilisateur est connecté
+        // 1. Si validation par code court à 6 chiffres (OTP), exiger impérativement une session active ou l'email cible
+        $targetEmail = mb_strtolower(trim($payload['email'] ?? ($_REQUEST['email'] ?? '')), 'UTF-8');
         $currentUserId = $_SESSION['hoot_user_id'] ?? null;
-        if ($currentUserId && isset($accounts['users'][$currentUserId])) {
-            $curUser = $accounts['users'][$currentUserId];
-            $tHash = $curUser['verificationTokenHash'] ?? '';
-            $oHash = $curUser['verificationOtpHash'] ?? '';
-            if (($tHash && hash_equals($tHash, $inputHash)) || ($oHash && hash_equals($oHash, $inputHash))) {
-                $matchedUserId = $currentUserId;
-            }
-        }
 
-        // 2. Si non trouvé ou non connecté, chercher parmi l'ensemble des comptes
-        if (!$matchedUserId) {
-            foreach ($accounts['users'] as $uid => $u) {
-                $tHash = $u['verificationTokenHash'] ?? '';
-                $oHash = $u['verificationOtpHash'] ?? '';
-                if (($tHash && hash_equals($tHash, $inputHash)) || ($oHash && hash_equals($oHash, $inputHash))) {
-                    $matchedUserId = $uid;
-                    break;
+        if (!empty($code) && empty($token)) {
+            $candidateUid = null;
+            if ($currentUserId && isset($accounts['users'][$currentUserId])) {
+                $candidateUid = $currentUserId;
+            } elseif (!empty($targetEmail) && isset($accounts['emailIndex'][$targetEmail])) {
+                $candidateUid = $accounts['emailIndex'][$targetEmail];
+            }
+
+            if (!$candidateUid) {
+                http_response_code(400);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'email_required_for_otp',
+                    'message' => 'Veuillez être connecté ou préciser votre adresse e-mail pour valider avec un code à 6 chiffres.',
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            $candidateUser = $accounts['users'][$candidateUid] ?? null;
+            $oHash = $candidateUser['verificationOtpHash'] ?? '';
+            if ($oHash && hash_equals($oHash, $inputHash)) {
+                $matchedUserId = $candidateUid;
+            }
+        } else {
+            // 2. Validation par token cryptographique long (64 caractères hexadécimaux)
+            if ($currentUserId && isset($accounts['users'][$currentUserId])) {
+                $curUser = $accounts['users'][$currentUserId];
+                $tHash = $curUser['verificationTokenHash'] ?? '';
+                if ($tHash && hash_equals($tHash, $inputHash)) {
+                    $matchedUserId = $currentUserId;
+                }
+            }
+
+            if (!$matchedUserId) {
+                foreach ($accounts['users'] as $uid => $u) {
+                    $tHash = $u['verificationTokenHash'] ?? '';
+                    if ($tHash && hash_equals($tHash, $inputHash)) {
+                        $matchedUserId = $uid;
+                        break;
+                    }
                 }
             }
         }
@@ -592,11 +626,16 @@ switch ($action) {
             $otp
         );
 
+        $isLocalDev = (getenv('APP_ENV') === 'local') 
+            || in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true)
+            || (php_sapi_name() === 'cli-server')
+            || in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1'], true);
+
         echo json_encode([
             'success' => true,
             'message' => 'Un nouvel e-mail de confirmation a été envoyé avec succès !',
             'cooldown' => 60,
-            'mailDev' => (($mailResult['provider'] ?? '') === 'dev') ? [
+            'mailDev' => ((($mailResult['provider'] ?? '') === 'dev') && $isLocalDev && !empty($mailResult['otp'])) ? [
                 'devLogged' => true,
                 'otp' => $otp,
                 'token' => $token,
@@ -610,7 +649,8 @@ switch ($action) {
     // -------------------------------------------------------------
     case 'link_steam':
         $userId = $_SESSION['hoot_user_id'] ?? null;
-        $steamId = trim($payload['steamId'] ?? ($_SESSION['steam_id'] ?? ''));
+        // Accepter uniquement un Steam ID vérifié cryptographiquement par Valve OpenID en session
+        $steamId = trim(strval($_SESSION['verified_steam_id'] ?? ''));
 
         if (!$userId) {
             http_response_code(401);
@@ -619,8 +659,8 @@ switch ($action) {
         }
 
         if (empty($steamId) || !preg_match('/^\d{17}$/', $steamId)) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'invalid_steam_id', 'message' => 'SteamID64 invalide.'], JSON_UNESCAPED_UNICODE);
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'unverified_steam', 'message' => 'Veuillez d\'abord vous connecter avec Steam OpenID officiel pour associer votre compte.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
 
@@ -628,6 +668,12 @@ switch ($action) {
         if (!isset($accounts['users'][$userId])) {
             http_response_code(404);
             echo json_encode(['success' => false, 'error' => 'user_not_found', 'message' => 'Compte introuvable.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if (isset($accounts['steamIndex'][$steamId]) && $accounts['steamIndex'][$steamId] !== $userId) {
+            http_response_code(409);
+            echo json_encode(['success' => false, 'error' => 'steam_already_linked', 'message' => 'Ce compte Steam est déjà associé à un autre utilisateur.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
 

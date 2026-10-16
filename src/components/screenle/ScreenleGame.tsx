@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
+import { saveSecureJson, loadSecureJson, sha256Sync, drawProtectedImageToCanvas } from '../../utils/securityAntiCheat';
 import {
   Music,
   Quote,
@@ -51,9 +52,13 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
 
   const savedState = (() => {
     try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) {
-        const parsed = JSON.parse(saved);
+      const parsed = loadSecureJson<{
+        guessIds?: string[];
+        isCompleted?: boolean;
+        isWon?: boolean;
+        secretGameId?: string;
+      }>(storageKey);
+      if (parsed) {
         const restoredGuesses = (parsed.guessIds || [])
           .map((id: string) => allPlayableGames.find((g) => g.id === id) || INDIE_GAMES.find((g) => g.id === id))
           .filter(Boolean) as Game[];
@@ -62,7 +67,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
           isCompleted: Boolean(parsed.isCompleted),
           isWon: Boolean(parsed.isWon),
           activeStageIndex: parsed.isCompleted ? 5 : Math.min(5, restoredGuesses.length),
-          savedSecretGameId: parsed.secretGameId as string | undefined,
+          savedSecretGameId: parsed.secretGameId,
         };
       }
     } catch {
@@ -89,6 +94,7 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
   }, [currentDate, allPlayableGames, savedState.savedSecretGameId]);
 
   const { unlockAchievement } = useAchievements();
+  const screenleCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const [guesses, setGuesses] = useState<Game[]>(savedState.guesses);
   const [isCompleted, setIsCompleted] = useState<boolean>(savedState.isCompleted);
   const [isWon, setIsWon] = useState<boolean>(savedState.isWon);
@@ -111,15 +117,16 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
     won: boolean
   ) => {
     try {
-      localStorage.setItem(
+      saveSecureJson(
         storageKey,
-        JSON.stringify({
+        {
           date: currentDate,
-          secretGameId: secretGame.id,
+          secretGameId: completed ? secretGame.id : undefined,
+          secretGameHash: !completed ? sha256Sync(`${secretGame.id}:${currentDate}`) : undefined,
           guessIds: newGuesses.map((g) => g.id),
           isCompleted: completed,
           isWon: won,
-        })
+        }
       );
     } catch {
       // Ignore
@@ -128,14 +135,10 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
 
   const checkDailyTrifecta = () => {
     try {
-      const s1 = localStorage.getItem(`indledle_state_${currentDate}`);
-      const s2 = localStorage.getItem(`linkle_state_${currentDate}`);
-      if (s1 && s2) {
-        const p1 = JSON.parse(s1);
-        const p2 = JSON.parse(s2);
-        if (p1.isWon && p2.isWon) {
-          unlockAchievement('daily_trifecta');
-        }
+      const p1 = loadSecureJson<{ isWon?: boolean }>(`indledle_state_${currentDate}`);
+      const p2 = loadSecureJson<{ isWon?: boolean }>(`linkle_state_${currentDate}`);
+      if (p1 && p2 && p1.isWon && p2.isWon) {
+        unlockAchievement('daily_trifecta');
       }
     } catch {
       // Ignore
@@ -307,6 +310,24 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
     secretGame.headerImage ||
     '';
 
+  const [originX, originY] = useMemo(() => {
+    const parts = currentOrigin.split(' ');
+    const ox = parseFloat(parts[0]) || 50;
+    const oy = parseFloat(parts[1]) || 50;
+    return [ox, oy];
+  }, [currentOrigin]);
+
+  useEffect(() => {
+    if (!screenleCanvasRef.current || !currentScreenshotUrl) return;
+    const scale = isZoomedIn ? currentScale * 1.5 : currentScale;
+    drawProtectedImageToCanvas(screenleCanvasRef.current, currentScreenshotUrl, {
+      scale,
+      originX,
+      originY,
+      blurPx: 0,
+    });
+  }, [currentScreenshotUrl, currentScale, isZoomedIn, originX, originY]);
+
   const isTaglineUnlocked =
     isCompleted ||
     difficulty === 'novice' ||
@@ -376,27 +397,14 @@ export const ScreenleGame: React.FC<ScreenleGameProps> = ({ currentDate, onSelec
       {/* Screenshot Frame Container */}
       <div className="relative w-full aspect-video bg-[#06241b] border-2 border-[#78350f] rounded-2xl overflow-visible shadow-2xl group mb-6">
         <SylvestreIvyFrame density="delicate" />
-        {/* The screenshot image with animated transform */}
+        {/* The screenshot canvas with animated transform */}
         <div className="w-full h-full overflow-hidden rounded-2xl flex items-center justify-center bg-slate-950">
-          <img
-            src={currentScreenshotUrl}
-            alt={`Screenle Indice ${activeStageIndex + 1}`}
-            onError={(e) => {
-              const target = e.currentTarget;
-              const match = secretGame.steamUrl?.match(/app\/(\d+)/);
-              const appId = match ? match[1] : '';
-              const fallbackHeader = appId
-                ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`
-                : '';
-              const alt = secretGame.screenshots.find((s: string) => s !== target.src) || fallbackHeader;
-              if (alt && target.src !== alt) {
-                target.src = alt;
-              }
-            }}
-            className="w-full h-full object-cover transition-all duration-700 ease-out select-none pointer-events-none"
+          <canvas
+            ref={screenleCanvasRef}
+            width={960}
+            height={540}
+            className="w-full h-full object-cover transition-all duration-700 ease-out select-none pointer-events-none rounded-2xl"
             style={{
-              transform: isZoomedIn ? `scale(${currentScale * 1.5})` : `scale(${currentScale})`,
-              transformOrigin: currentOrigin,
               filter: isCompleted ? 'none' : 'contrast(105%) brightness(95%)',
             }}
           />
