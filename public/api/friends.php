@@ -237,6 +237,179 @@ function resolveUserFriendCode($db, $query) {
     return null;
 }
 
+// Purge automatique et réconciliation des joueurs bannis ou dont le compte a été supprimé/libéré
+function purgeBannedAndDeletedFriends(&$db, $dataFile) {
+    $uFile = __DIR__ . '/registered_usernames.json';
+    if (!file_exists($uFile) || !isset($db['players']) || !is_array($db['players'])) {
+        return false;
+    }
+
+    $raw = @file_get_contents($uFile);
+    if (!$raw) return false;
+    $uData = json_decode($raw, true);
+    if (!is_array($uData) || !isset($uData['usernames']) || !is_array($uData['usernames'])) {
+        return false;
+    }
+
+    $bannedSteamIds = [];
+    if (!empty($uData['bannedUsers']) && is_array($uData['bannedUsers'])) {
+        foreach ($uData['bannedUsers'] as $b) {
+            if (!empty($b)) $bannedSteamIds[strval($b)] = true;
+        }
+    }
+
+    $bannedUsernames = [];
+    $bannedUserIds = [];
+    $validUsernames = [];
+    $validSteamIds = [];
+    $validUserIds = [];
+
+    foreach ($uData['usernames'] as $uKey => $info) {
+        $normKey = normalizeUsername($uKey);
+        $stId = !empty($info['steamId']) ? strval($info['steamId']) : null;
+        $uId = !empty($info['userId']) ? strval($info['userId']) : null;
+        $isBanned = (($info['status'] ?? '') === 'banned') || ($stId && isset($bannedSteamIds[$stId]));
+
+        if ($isBanned) {
+            $bannedUsernames[$normKey] = true;
+            if ($stId) $bannedSteamIds[$stId] = true;
+            if ($uId) $bannedUserIds[$uId] = true;
+        } else {
+            $validUsernames[$normKey] = true;
+            if ($stId) $validSteamIds[$stId] = true;
+            if ($uId) $validUserIds[$uId] = true;
+        }
+    }
+
+    // Protection absolue du créateur souverain
+    $validUsernames['hibouxe'] = true;
+    if (defined('ADMIN_STEAM_ID')) {
+        $validSteamIds[ADMIN_STEAM_ID] = true;
+    }
+
+    $dirty = false;
+    $purgedCodes = [];
+
+    foreach ($db['players'] as $code => $player) {
+        $cleanCode = strtoupper(trim((string)$code));
+        if ($cleanCode === 'HOOT-HIBOU') {
+            continue;
+        }
+
+        $pName = normalizeUsername($player['username'] ?? '');
+        if ($pName === 'hibouxe') {
+            continue;
+        }
+
+        $pSteam = !empty($player['steamId']) ? strval($player['steamId']) : null;
+        $pUser = !empty($player['userId']) ? strval($player['userId']) : null;
+
+        $shouldPurge = false;
+
+        // 1. Est-il banni ?
+        if (isset($bannedUsernames[$pName]) || ($pSteam && isset($bannedSteamIds[$pSteam])) || ($pUser && isset($bannedUserIds[$pUser]))) {
+            $shouldPurge = true;
+        }
+
+        // 2. Est-il supprimé / libéré de la base des comptes ?
+        $hasValidIdentity = false;
+        if (!empty($pName) && isset($validUsernames[$pName])) {
+            $hasValidIdentity = true;
+        }
+        if ($pSteam && isset($validSteamIds[$pSteam])) {
+            $hasValidIdentity = true;
+        }
+        if ($pUser && isset($validUserIds[$pUser])) {
+            $hasValidIdentity = true;
+        }
+
+        if (!$hasValidIdentity) {
+            $shouldPurge = true;
+        }
+
+        if ($shouldPurge) {
+            $purgedCodes[] = $cleanCode;
+        }
+    }
+
+    if (!empty($purgedCodes)) {
+        $purgedMap = array_flip($purgedCodes);
+
+        // 1. Supprimer de players
+        foreach ($purgedCodes as $c) {
+            unset($db['players'][$c]);
+        }
+
+        // 2. Supprimer de usernameToCode
+        if (isset($db['usernameToCode']) && is_array($db['usernameToCode'])) {
+            foreach ($db['usernameToCode'] as $uKey => $cVal) {
+                if (isset($purgedMap[strtoupper(trim((string)$cVal))])) {
+                    unset($db['usernameToCode'][$uKey]);
+                }
+            }
+        }
+
+        // 3. Supprimer de steamToCode
+        if (isset($db['steamToCode']) && is_array($db['steamToCode'])) {
+            foreach ($db['steamToCode'] as $sKey => $cVal) {
+                if (isset($purgedMap[strtoupper(trim((string)$cVal))])) {
+                    unset($db['steamToCode'][$sKey]);
+                }
+            }
+        }
+
+        // 4. Supprimer de friendships
+        if (isset($db['friendships']) && is_array($db['friendships'])) {
+            foreach ($purgedCodes as $c) {
+                unset($db['friendships'][$c]);
+            }
+            foreach ($db['friendships'] as $ownerCode => &$fList) {
+                if (is_array($fList)) {
+                    $fList = array_values(array_filter($fList, function($c) use ($purgedMap) {
+                        return !isset($purgedMap[strtoupper(trim((string)$c))]);
+                    }));
+                }
+            }
+            unset($fList);
+        }
+
+        // 5. Supprimer de requests
+        if (isset($db['requests']) && is_array($db['requests'])) {
+            $db['requests'] = array_values(array_filter($db['requests'], function($r) use ($purgedMap) {
+                $from = strtoupper(trim((string)($r['fromCode'] ?? '')));
+                $to = strtoupper(trim((string)($r['toCode'] ?? '')));
+                return !isset($purgedMap[$from]) && !isset($purgedMap[$to]);
+            }));
+        }
+
+        $dirty = true;
+    }
+
+    // Nettoyage additionnel des codes orphelins dans friendships
+    if (isset($db['friendships']) && is_array($db['friendships'])) {
+        foreach ($db['friendships'] as $ownerCode => &$fList) {
+            if (is_array($fList)) {
+                $beforeCount = count($fList);
+                $fList = array_values(array_filter($fList, function($c) use ($db) {
+                    $uc = strtoupper(trim((string)$c));
+                    return ($uc === 'HOOT-HIBOU' || isset($db['players'][$uc]));
+                }));
+                if (count($fList) !== $beforeCount) {
+                    $dirty = true;
+                }
+            }
+        }
+        unset($fList);
+    }
+
+    if ($dirty) {
+        saveFriendsDatabase($dataFile, $db);
+        return true;
+    }
+
+    return false;
+}
+
 // Vérifie si deux joueurs sont compagnons mutuels (consentement bilatéral)
 function areFriendsMutual($db, $codeA, $codeB) {
     if (empty($codeA) || empty($codeB)) return false;
@@ -245,8 +418,14 @@ function areFriendsMutual($db, $codeA, $codeB) {
     if ($cA === $cB) return true;
 
     // Règle d'or souveraine : Le Fondateur Hibouxe est l'hôte d'accueil universel du Sanctuaire
+    // À condition que l'autre joueur soit valide, existant dans players et mutuellement présent
     if ($cA === 'HOOT-HIBOU' || $cB === 'HOOT-HIBOU') {
-        return true;
+        $otherCode = ($cA === 'HOOT-HIBOU') ? $cB : $cA;
+        if (!isset($db['players'][$otherCode])) {
+            return false;
+        }
+        $hibouFriends = $db['friendships']['HOOT-HIBOU'] ?? [];
+        return in_array($otherCode, $hibouFriends, true);
     }
 
     $f = $db['friendships'] ?? [];
@@ -264,6 +443,7 @@ if (empty($action) && isset($body['action'])) {
 }
 
 $db = loadFriendsDatabase($dataFile);
+purgeBannedAndDeletedFriends($db, $dataFile);
 
 // -------------------------------------------------------------
 // 1. ACTION: register (Enregistre ou met à jour le profil public)
@@ -337,6 +517,33 @@ if ($action === 'register') {
     }
 
     $nowIso = gmdate('Y-m-d\TH:i:s\Z');
+    // Sécurité souveraine : vérifier que le joueur n'est pas banni par la modération
+    $uFile = __DIR__ . '/registered_usernames.json';
+    if (file_exists($uFile) && $friendCode !== 'HOOT-HIBOU') {
+        $rawU = @file_get_contents($uFile);
+        if ($rawU) {
+            $uDb = json_decode($rawU, true);
+            if (is_array($uDb) && isset($uDb['usernames'])) {
+                $normName = normalizeUsername($cleanUsername);
+                $bannedList = $uDb['bannedUsers'] ?? [];
+                if ((!empty($steamId) && in_array($steamId, $bannedList, true)) ||
+                    (!empty($userId) && in_array($userId, $bannedList, true))) {
+                    http_response_code(403);
+                    echo json_encode(['success' => false, 'error' => 'banned', 'message' => 'Ce compte est suspendu par la modération.']);
+                    exit;
+                }
+                if (isset($uDb['usernames'][$normName])) {
+                    $uEntry = $uDb['usernames'][$normName];
+                    if (($uEntry['status'] ?? '') === 'banned') {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'banned', 'message' => 'Ce compte est suspendu par la modération.']);
+                        exit;
+                    }
+                }
+            }
+        }
+    }
+
     $playerEntry = [
         'friendCode' => $friendCode,
         'userId' => $userId,
@@ -361,6 +568,8 @@ if ($action === 'register') {
         }
         $playerEntry['isCreator'] = true;
     }
+
+    $isNewPlayer = !isset($db['players'][$friendCode]);
 
     // [SÉCURITÉ CWE-639] Protection contre l'écrasement ou l'usurpation d'un code ami existant
     if (isset($db['players'][$friendCode])) {
@@ -430,7 +639,8 @@ if ($action === 'register') {
         if (!isset($db['friendships']['HOOT-HIBOU'])) {
             $db['friendships']['HOOT-HIBOU'] = [];
         }
-        if (!in_array($friendCode, $db['friendships']['HOOT-HIBOU'], true)) {
+        // N'ajouter à HOOT-HIBOU que lors de la première inscription (pour respecter les retraits ultérieurs)
+        if ($isNewPlayer && !in_array($friendCode, $db['friendships']['HOOT-HIBOU'], true)) {
             $db['friendships']['HOOT-HIBOU'][] = $friendCode;
         }
     }
@@ -462,7 +672,10 @@ if ($action === 'get_friends') {
     if ($myCode) {
         $mutualList = $db['friendships'][$myCode] ?? [];
         if ($myCode !== 'HOOT-HIBOU' && !in_array('HOOT-HIBOU', $mutualList, true)) {
-            $mutualList[] = 'HOOT-HIBOU';
+            // Uniquement si HOOT-HIBOU n'a pas retiré ce joueur
+            if (isset($db['friendships']['HOOT-HIBOU']) && in_array($myCode, $db['friendships']['HOOT-HIBOU'], true)) {
+                $mutualList[] = 'HOOT-HIBOU';
+            }
         }
         foreach ($mutualList as $mc) {
             if ($mc && !in_array($mc, $codes, true)) {

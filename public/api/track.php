@@ -284,6 +284,107 @@ function loadAndEnsureUsernamesDb($uFile) {
     return $data;
 }
 
+// Purge un utilisateur supprimé ou banni de la base souveraine friends_data.json
+function purgeUserFromFriendsData($targetUsername, $steamId = null, $userId = null) {
+    if (empty($targetUsername) && empty($steamId) && empty($userId)) return false;
+    if (strtolower(trim((string)$targetUsername)) === 'hibouxe') return false;
+
+    $friendsFile = __DIR__ . '/friends_data.json';
+    if (!file_exists($friendsFile)) return false;
+
+    $fp = @fopen($friendsFile, 'c+');
+    if (!$fp || !@flock($fp, LOCK_EX)) {
+        if ($fp) @fclose($fp);
+        return false;
+    }
+
+    $raw = @stream_get_contents($fp);
+    $fDb = $raw ? json_decode($raw, true) : null;
+    if (!is_array($fDb) || !isset($fDb['players'])) {
+        @flock($fp, LOCK_UN);
+        @fclose($fp);
+        return false;
+    }
+
+    $targetCodes = [];
+    $normTarget = !empty($targetUsername) ? normalizeUsernameAdmin($targetUsername) : '';
+
+    if (!empty($normTarget) && isset($fDb['usernameToCode'][$normTarget])) {
+        $targetCodes[] = $fDb['usernameToCode'][$normTarget];
+    }
+    if (!empty($steamId) && isset($fDb['steamToCode'][$steamId])) {
+        $targetCodes[] = $fDb['steamToCode'][$steamId];
+    }
+
+    foreach ($fDb['players'] as $c => $p) {
+        $cleanC = strtoupper(trim((string)$c));
+        if ($cleanC === 'HOOT-HIBOU') continue;
+
+        $pNorm = normalizeUsernameAdmin($p['username'] ?? '');
+        if (!empty($normTarget) && $pNorm === $normTarget) {
+            $targetCodes[] = $cleanC;
+        }
+        if (!empty($steamId) && !empty($p['steamId']) && strval($p['steamId']) === strval($steamId)) {
+            $targetCodes[] = $cleanC;
+        }
+        if (!empty($userId) && !empty($p['userId']) && strval($p['userId']) === strval($userId)) {
+            $targetCodes[] = $cleanC;
+        }
+    }
+
+    $targetCodes = array_values(array_unique(array_filter($targetCodes, function($c) {
+        return strtoupper(trim((string)$c)) !== 'HOOT-HIBOU';
+    })));
+
+    if (!empty($targetCodes)) {
+        $targetMap = array_flip($targetCodes);
+
+        foreach ($targetCodes as $tc) {
+            unset($fDb['players'][$tc]);
+            unset($fDb['friendships'][$tc]);
+        }
+
+        if (isset($fDb['usernameToCode']) && is_array($fDb['usernameToCode'])) {
+            foreach ($fDb['usernameToCode'] as $k => $v) {
+                if (isset($targetMap[strtoupper(trim((string)$v))])) unset($fDb['usernameToCode'][$k]);
+            }
+        }
+        if (isset($fDb['steamToCode']) && is_array($fDb['steamToCode'])) {
+            foreach ($fDb['steamToCode'] as $k => $v) {
+                if (isset($targetMap[strtoupper(trim((string)$v))])) unset($fDb['steamToCode'][$k]);
+            }
+        }
+
+        if (isset($fDb['friendships']) && is_array($fDb['friendships'])) {
+            foreach ($fDb['friendships'] as $owner => &$list) {
+                if (is_array($list)) {
+                    $list = array_values(array_filter($list, function($c) use ($targetMap) {
+                        return !isset($targetMap[strtoupper(trim((string)$c))]);
+                    }));
+                }
+            }
+            unset($list);
+        }
+
+        if (isset($fDb['requests']) && is_array($fDb['requests'])) {
+            $fDb['requests'] = array_values(array_filter($fDb['requests'], function($r) use ($targetMap) {
+                $from = strtoupper(trim((string)($r['fromCode'] ?? '')));
+                $to = strtoupper(trim((string)($r['toCode'] ?? '')));
+                return !isset($targetMap[$from]) && !isset($targetMap[$to]);
+            }));
+        }
+
+        @ftruncate($fp, 0);
+        @rewind($fp);
+        @fwrite($fp, json_encode($fDb, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        @fflush($fp);
+    }
+
+    @flock($fp, LOCK_UN);
+    @fclose($fp);
+    return true;
+}
+
 // Rate-limiting par IP : max 120 requêtes / min
 function checkTrackRateLimit($ip, $file) {
     $now = time();
@@ -694,6 +795,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         $uData = loadAndEnsureUsernamesDb($uFile);
         if (isset($uData['usernames'][$target])) {
             $steamIdAssociated = $uData['usernames'][$target]['steamId'] ?? null;
+            $userIdAssociated = $uData['usernames'][$target]['userId'] ?? null;
             unset($uData['usernames'][$target]);
             if ($steamIdAssociated && isset($uData['userToName'][$steamIdAssociated])) {
                 unset($uData['userToName'][$steamIdAssociated]);
@@ -701,8 +803,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             if ($steamIdAssociated && isset($uData['userToName']['steam_' . $steamIdAssociated])) {
                 unset($uData['userToName']['steam_' . $steamIdAssociated]);
             }
+            if ($userIdAssociated && isset($uData['userToName'][$userIdAssociated])) {
+                unset($uData['userToName'][$userIdAssociated]);
+            }
+            if ($userIdAssociated && isset($uData['userToName']['user_' . $userIdAssociated])) {
+                unset($uData['userToName']['user_' . $userIdAssociated]);
+            }
             @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-            echo json_encode(['success' => true, 'message' => "Le pseudonyme « {$target} » a été libéré avec succès."]);
+
+            // Cascade 1 : Purger les sauvegardes utilisateur dans user_saves/
+            $savesDir = __DIR__ . '/user_saves';
+            $candidateFiles = [
+                $savesDir . '/name_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json',
+                $savesDir . '/user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json'
+            ];
+            if (!empty($steamIdAssociated)) {
+                $cleanSt = preg_replace('/[^a-zA-Z0-9_\-]/', '', $steamIdAssociated);
+                $candidateFiles[] = $savesDir . '/steam_' . $cleanSt . '.json';
+            }
+            if (!empty($userIdAssociated)) {
+                $cleanUid = preg_replace('/[^a-zA-Z0-9_\-]/', '', $userIdAssociated);
+                $candidateFiles[] = $savesDir . '/user_' . $cleanUid . '.json';
+            }
+            foreach ($candidateFiles as $cFile) {
+                if (file_exists($cFile)) {
+                    @unlink($cFile);
+                }
+            }
+
+            // Cascade 2 : Purger définitivement le compte de friends_data.json
+            purgeUserFromFriendsData($target, $steamIdAssociated, $userIdAssociated);
+
+            echo json_encode(['success' => true, 'message' => "Le pseudonyme « {$target} » a été libéré et ses données purgées avec succès."]);
             exit;
         }
         echo json_encode(['success' => false, 'message' => 'Pseudonyme non trouvé.']);
@@ -790,6 +922,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                     $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$stId]));
                 }
             }
+            if ($newStatus === 'banned') {
+                purgeUserFromFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null);
+            }
         }
         if ($newCustomTitle !== '') {
             $uData['usernames'][$target]['customTitle'] = $newCustomTitle;
@@ -848,6 +983,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             } else {
                 $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$stId]));
             }
+        }
+
+        if ($isBanned) {
+            purgeUserFromFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null);
         }
 
         @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);

@@ -227,7 +227,25 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         fetchFriendsData(activeCodes, myFriendCode, myFriendCode),
         refreshRequests(),
       ]);
-      setFriends(list.filter((f) => !isSelfRef.current(f)));
+      const validFriends = list.filter((f) => !isSelfRef.current(f));
+      setFriends(validFriends);
+
+      // Réconciliation du stockage local : si des codes interrogés ont été supprimés/bannis côté serveur, les retirer de friendCodes
+      if (activeCodes.length > 0) {
+        const returnedCodes = new Set(validFriends.map((f) => f.friendCode.toUpperCase()));
+        const cleanedCodes = friendCodesRef.current.filter((c) => {
+          const up = c.toUpperCase();
+          if (isSelfRef.current(up)) return false;
+          if (activeCodes.includes(up)) {
+            return returnedCodes.has(up);
+          }
+          return true;
+        });
+        if (cleanedCodes.length !== friendCodesRef.current.length) {
+          setFriendCodes(cleanedCodes);
+          saveStoredFriendCodes(cleanedCodes);
+        }
+      }
     } catch (err) {
       console.warn('Erreur rafraîchissement amis :', err);
     } finally {
@@ -267,7 +285,23 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       syncSelf();
       const activeCodes = friendCodesRef.current.filter((c) => !isSelfRef.current(c));
       fetchFriendsData(activeCodes, myFriendCode, myFriendCode).then((list) => {
-        setFriends(list.filter((f) => !isSelfRef.current(f)));
+        const validFriends = list.filter((f) => !isSelfRef.current(f));
+        setFriends(validFriends);
+        if (activeCodes.length > 0) {
+          const returnedCodes = new Set(validFriends.map((f) => f.friendCode.toUpperCase()));
+          const cleanedCodes = friendCodesRef.current.filter((c) => {
+            const up = c.toUpperCase();
+            if (isSelfRef.current(up)) return false;
+            if (activeCodes.includes(up)) {
+              return returnedCodes.has(up);
+            }
+            return true;
+          });
+          if (cleanedCodes.length !== friendCodesRef.current.length) {
+            setFriendCodes(cleanedCodes);
+            saveStoredFriendCodes(cleanedCodes);
+          }
+        }
       });
       refreshRequests();
     }, 120000);
