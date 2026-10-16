@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 74
+ * Total de pépites sélectionnées : 76
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3153,5 +3153,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMwNTEwMDE1LnBuZw==/315x250%23c/y0ziIo.png"
     ],
     "dateAdded": "2026-10-14"
+  },
+  {
+    "id": "itch-kingdom-of-marionettes-demo",
+    "title": "Kingdom Of Marionettes (DEMO)",
+    "developer": "thepipiw",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://thepipiw.itch.io/kingdom-of-marionettes",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Would you be willing to wear this crown upon your head, Your Majesty?",
+      "en": "Would you be willing to wear this crown upon your head, Your Majesty?"
+    },
+    "description": {
+      "fr": "Would you be willing to wear this crown upon your head, Your Majesty?",
+      "en": "Would you be willing to wear this crown upon your head, Your Majesty?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI1NDA1NTM0LnBuZw==/315x250%23c/yuLYQI.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI1NDA1NTM0LnBuZw==/315x250%23c/yuLYQI.png"
+    ],
+    "dateAdded": "2026-10-16"
+  },
+  {
+    "id": "itch-ambermoon-net",
+    "title": "Ambermoon.net",
+    "developer": "pyrdacor",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pyrdacor.itch.io/ambermoon",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Remake of the Amiga RPG classic Ambermoon",
+      "en": "Remake of the Amiga RPG classic Ambermoon"
+    },
+    "description": {
+      "fr": "Remake of the Amiga RPG classic Ambermoon",
+      "en": "Remake of the Amiga RPG classic Ambermoon"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzcwMTcwMzEucG5n/315x250%23c/iNvtkI.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzcwMTcwMzEucG5n/315x250%23c/iNvtkI.png"
+    ],
+    "dateAdded": "2026-10-16"
   }
 ];

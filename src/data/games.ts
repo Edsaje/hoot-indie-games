@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 304
+ * Total de jeux : 307
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11491,6 +11491,110 @@ export const INDIE_GAMES: Game[] = [
       "composer": "Isak Martinsson"
     },
     "addedAt": "2026-10-15"
+  },
+  {
+    "id": "wytchwood",
+    "title": "Wytchwood",
+    "releaseYear": 2021,
+    "genre": [
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Alientrap",
+    "steamUrl": "https://store.steampowered.com/app/729000/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_b5c706abacf932c95851ab3c74ef5555f2151215.1920x1080.jpg?t=1705693631",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_c264e26cc985b733866691fd449b50e116c5d566.1920x1080.jpg?t=1705693631",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_f01cbdd526860019aa2c05b2a925113f8c3b85d3.1920x1080.jpg?t=1705693631",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_381ca89ab003973a39c9b25d693d27c7c8191ca0.1920x1080.jpg?t=1705693631",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_89563c3fb8e062ca8e06159ebe54948a9f15824b.1920x1080.jpg?t=1705693631",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/header.jpg?t=1705693631"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu d'aventure et de construction dans un monde gothique et fabuleux",
+        "en": "Wytchwood is a crafting adventure game set in a land of gothic fables and fairytales. As the old witch of the woods, explore a strange countryside, collect magic ingredients, brew sorcerous spells, and pass judgement upon a capricious cast of characters."
+      }
+    },
+    "addedAt": "2026-10-16"
+  },
+  {
+    "id": "heaven-s-vault",
+    "title": "Heaven's Vault",
+    "releaseYear": 2019,
+    "genre": [
+      "Aventure",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "inkle Ltd",
+    "steamUrl": "https://store.steampowered.com/app/774201/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_48675af862282e17122a978c938d45fcf0513f67.1920x1080.jpg?t=1736524066",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_09cf5bfbf83dd563fc24491eca9baade0da2a0c5.1920x1080.jpg?t=1736524066",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_2972cfcc72f53db9241773466f13d0601b3856d2.1920x1080.jpg?t=1736524066",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_6ff3c8f989b1e476eb11722d177490dca77c62c5.1920x1080.jpg?t=1736524066",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_3affea332f51a95c51cd521513b23df16ace67b1.1920x1080.jpg?t=1736524066",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_96ecad4989d073b8c5a92e91527baa71c85e5350.1920x1080.jpg?t=1736524066"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "An archaeologist uncovers a lost history in an ancient space Nebula. Award-winning narrative adventure game with hieroglyphic language puzzles, from the creators of 80 DAYS.",
+        "en": "An archaeologist uncovers a lost history in an ancient space Nebula. Award-winning narrative adventure game with hieroglyphic language puzzles, from the creators of 80 DAYS."
+      }
+    },
+    "addedAt": "2026-10-16"
+  },
+  {
+    "id": "monster-sanctuary",
+    "title": "Monster Sanctuary",
+    "releaseYear": 2020,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "moi rai games",
+    "steamUrl": "https://store.steampowered.com/app/814370/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_e3ab1f39569cd006a30b6b2d42167fbe82fe1366.1920x1080.jpg?t=1780480350",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_88390afe7108c67c2693c0cf11fd601d1e619c46.1920x1080.jpg?t=1780480350",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_4e67fbd67b2de4618855521d5e92a04abe3e5587.1920x1080.jpg?t=1780480350",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_d50027f09c2187eff9f8876b16b0a6a0c6d340eb.1920x1080.jpg?t=1780480350",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_88f4d38f5dac9a5cdb1cdeb9038932d68d7eb897.1920x1080.jpg?t=1780480350",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_f19282717bdaa4311989e361bf070b485a5f999b.1920x1080.jpg?t=1780480350"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Quand les jeux de dressage de monstres rencontrent les Metroidvania. Collectionnez, dressez et affrontez des monstres dans un monde pixelisé adorable à défilement horizontal.",
+        "en": "Monster taming meets metroidvania. Collect, train and battle monsters in a lovely side-scroller pixel world."
+      }
+    },
+    "addedAt": "2026-10-16"
   }
 ];
 

@@ -5078,59 +5078,6 @@
     }
   },
   {
-    "id": "wytchwood",
-    "title": "Wytchwood",
-    "releaseYear": 2021,
-    "genre": [
-      "Aventure",
-      "Occasionnel",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2.5D Isométrique",
-      "en": "Isometric / 2.5D"
-    },
-    "developer": "Alientrap",
-    "steamUrl": "https://store.steampowered.com/app/729000/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_b5c706abacf932c95851ab3c74ef5555f2151215.1920x1080.jpg?t=1705693631",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_c264e26cc985b733866691fd449b50e116c5d566.1920x1080.jpg?t=1705693631",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_f01cbdd526860019aa2c05b2a925113f8c3b85d3.1920x1080.jpg?t=1705693631",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_381ca89ab003973a39c9b25d693d27c7c8191ca0.1920x1080.jpg?t=1705693631",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/ss_89563c3fb8e062ca8e06159ebe54948a9f15824b.1920x1080.jpg?t=1705693631",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/header.jpg?t=1705693631"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Un jeu d'aventure et de construction dans un monde gothique et fabuleux",
-        "en": "Wytchwood is a crafting adventure game set in a land of gothic fables and fairytales. As the old witch of the woods, explore a strange countryside, collect magic ingredients, brew sorcerous spells, and pass judgement upon a capricious cast of characters."
-      }
-    },
-    "steamAppId": 729000,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/729000/header.jpg?t=1705693631",
-    "steamStoreData": {
-      "appId": 729000,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1679,
-      "finalPriceCents": 1679,
-      "discountPercent": 0,
-      "formattedFinalPrice": "16,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 4036,
-      "totalPositive": 3732,
-      "positivePercent": 92,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "baba-is-you",
     "title": "Baba Is You",
     "releaseYear": 2019,
@@ -5388,58 +5335,6 @@
     }
   },
   {
-    "id": "heaven-s-vault",
-    "title": "Heaven's Vault",
-    "releaseYear": 2019,
-    "genre": [
-      "Aventure",
-      "Puzzle"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "inkle Ltd",
-    "steamUrl": "https://store.steampowered.com/app/774201/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_48675af862282e17122a978c938d45fcf0513f67.1920x1080.jpg?t=1736524066",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_09cf5bfbf83dd563fc24491eca9baade0da2a0c5.1920x1080.jpg?t=1736524066",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_2972cfcc72f53db9241773466f13d0601b3856d2.1920x1080.jpg?t=1736524066",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_6ff3c8f989b1e476eb11722d177490dca77c62c5.1920x1080.jpg?t=1736524066",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_3affea332f51a95c51cd521513b23df16ace67b1.1920x1080.jpg?t=1736524066",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/ss_96ecad4989d073b8c5a92e91527baa71c85e5350.1920x1080.jpg?t=1736524066"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "An archaeologist uncovers a lost history in an ancient space Nebula. Award-winning narrative adventure game with hieroglyphic language puzzles, from the creators of 80 DAYS.",
-        "en": "An archaeologist uncovers a lost history in an ancient space Nebula. Award-winning narrative adventure game with hieroglyphic language puzzles, from the creators of 80 DAYS."
-      }
-    },
-    "steamAppId": 774201,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/774201/header.jpg?t=1736524066",
-    "steamStoreData": {
-      "appId": 774201,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 2199,
-      "finalPriceCents": 2199,
-      "discountPercent": 0,
-      "formattedFinalPrice": "21,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 1958,
-      "totalPositive": 1665,
-      "positivePercent": 85,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "crab-champions",
     "title": "Crab Champions",
     "releaseYear": 2023,
@@ -5592,61 +5487,6 @@
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
         "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "monster-sanctuary",
-    "title": "Monster Sanctuary",
-    "releaseYear": 2020,
-    "genre": [
-      "Action",
-      "Aventure",
-      "RPG",
-      "Stratégie",
-      "Metroidvania"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "moi rai games",
-    "steamUrl": "https://store.steampowered.com/app/814370/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_e3ab1f39569cd006a30b6b2d42167fbe82fe1366.1920x1080.jpg?t=1780480350",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_88390afe7108c67c2693c0cf11fd601d1e619c46.1920x1080.jpg?t=1780480350",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_4e67fbd67b2de4618855521d5e92a04abe3e5587.1920x1080.jpg?t=1780480350",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_d50027f09c2187eff9f8876b16b0a6a0c6d340eb.1920x1080.jpg?t=1780480350",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_88f4d38f5dac9a5cdb1cdeb9038932d68d7eb897.1920x1080.jpg?t=1780480350",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/ss_f19282717bdaa4311989e361bf070b485a5f999b.1920x1080.jpg?t=1780480350"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Quand les jeux de dressage de monstres rencontrent les Metroidvania. Collectionnez, dressez et affrontez des monstres dans un monde pixelisé adorable à défilement horizontal.",
-        "en": "Monster taming meets metroidvania. Collect, train and battle monsters in a lovely side-scroller pixel world."
-      }
-    },
-    "steamAppId": 814370,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814370/header.jpg?t=1780480350",
-    "steamStoreData": {
-      "appId": 814370,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1999,
-      "finalPriceCents": 1999,
-      "discountPercent": 0,
-      "formattedFinalPrice": "19,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 10424,
-      "totalPositive": 9535,
-      "positivePercent": 91,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
       }
     }
   },
@@ -91268,5 +91108,188 @@
     "addedAt": "2026-10-15",
     "steamAppId": 3678730,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678730/2f27fadd909c907b7fb8dcf50a172c805b4c9964/header.jpg?t=1792036889"
+  },
+  {
+    "id": "shelf-stacker-toy-store",
+    "title": "Shelf Stacker: Toy Store",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "QB Interactive",
+    "steamUrl": "https://store.steampowered.com/app/5232090/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/2b83636aedecf249b34e97a28623a0616b50e60d/ss_2b83636aedecf249b34e97a28623a0616b50e60d.1920x1080.jpg?t=1792050151",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/31120f23a1724a54300abb0987c53fee49fce59a/ss_31120f23a1724a54300abb0987c53fee49fce59a.1920x1080.jpg?t=1792050151",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/343fb6d823d6c0926f6b8beb353ce376f1af840b/ss_343fb6d823d6c0926f6b8beb353ce376f1af840b.1920x1080.jpg?t=1792050151",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/921f88e2da7f770b9c8366ce3506754a97e3f0fa/ss_921f88e2da7f770b9c8366ce3506754a97e3f0fa.1920x1080.jpg?t=1792050151",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/6bf9abbf6fb5b76e70f7017fbad7e6b1a66f4657/ss_6bf9abbf6fb5b76e70f7017fbad7e6b1a66f4657.1920x1080.jpg?t=1792050151",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/3383f8ff4ce5c97b3135503719d31479b0f4a8c1/ss_3383f8ff4ce5c97b3135503719d31479b0f4a8c1.1920x1080.jpg?t=1792050151"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Shelf Stacker: Toy Store is a cozy organizing simulator where you sort over 4,200 fun products in a cluttered toy store. Enjoy stacking shelves to relaxing, lo-fi beats.",
+        "en": "Shelf Stacker: Toy Store is a cozy organizing simulator where you sort over 4,200 fun products in a cluttered toy store. Enjoy stacking shelves to relaxing, lo-fi beats."
+      }
+    },
+    "addedAt": "2026-10-16",
+    "steamAppId": 5232090,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/c2d28de560b27902e5ce30faee741788ef65dd80/header.jpg?t=1792050151"
+  },
+  {
+    "id": "brick-by-brick-tidy-up-the-small-town",
+    "title": "Brick by Brick: Tidy Up the Small Town!",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Co-op"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "PaperPixel Games",
+    "steamUrl": "https://store.steampowered.com/app/5228920/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228920/647170e6eba8aa058034468d13a344736e4b262e/ss_647170e6eba8aa058034468d13a344736e4b262e.1920x1080.jpg?t=1792078556",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228920/671e01b19c508b66209bb892bea0d05701c786ec/ss_671e01b19c508b66209bb892bea0d05701c786ec.1920x1080.jpg?t=1792078556",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228920/10caf68824bb83de79b1283b260ea73a5fb6889f/ss_10caf68824bb83de79b1283b260ea73a5fb6889f.1920x1080.jpg?t=1792078556",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228920/223fa2f52a70e721f0d724025abd18e67366d90f/ss_223fa2f52a70e721f0d724025abd18e67366d90f.1920x1080.jpg?t=1792078556",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228920/20c4e69dc5218f510770a89b441a789e810eb431/ss_20c4e69dc5218f510770a89b441a789e810eb431.1920x1080.jpg?t=1792078556",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228920/5e4d0c73a9d6229dab0f3643f14e81348001b355/ss_5e4d0c73a9d6229dab0f3643f14e81348001b355.1920x1080.jpg?t=1792078556"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Brick By Brick est un jeu de rangement relaxant, en solo ou en coop jusqu’à 5 joueurs. Ramasse, trie et place 18 490 briques pour rebâtir une charmante ville. Débloque des capacités utiles et regarde les tas devenir des bâtiments. Une brique à la fois !",
+        "en": "Brick By Brick is a relaxing tidy-up game you can play solo or co-op with up to 5 players. Collect, sort, and place 18,490 bricks to rebuild a charming town. Unlock helpful abilities and watch scattered piles become finished buildings. One brick at a time!"
+      }
+    },
+    "addedAt": "2026-10-16",
+    "steamAppId": 5228920,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5228920/8c57f18ab6a1940b328584fe5556f4c87839e1a0/header.jpg?t=1792078556"
+  },
+  {
+    "id": "alice-nation",
+    "title": "Alice Nation",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Simulation",
+      "Stratégie",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Hanamiriro",
+    "steamUrl": "https://store.steampowered.com/app/3755350/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3755350/12fe1a3ca3af1d5aae96303d7ad253659ff2220d/ss_12fe1a3ca3af1d5aae96303d7ad253659ff2220d.1920x1080.jpg?t=1792123557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3755350/401d5c453857f26fb53589d5e2582cde6b122426/ss_401d5c453857f26fb53589d5e2582cde6b122426.1920x1080.jpg?t=1792123557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3755350/2ddd0f810824904c5ae5a69bf56945d23369c1fb/ss_2ddd0f810824904c5ae5a69bf56945d23369c1fb.1920x1080.jpg?t=1792123557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3755350/c72eba0c962214f2f463250915c6b7e2bddee808/ss_c72eba0c962214f2f463250915c6b7e2bddee808.1920x1080.jpg?t=1792123557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3755350/d45d34b8404d97019fca975a7464c8cb7e406c0c/ss_d45d34b8404d97019fca975a7464c8cb7e406c0c.1920x1080.jpg?t=1792123557",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3755350/5f736613f29b420c6f8cb2e17ae049f10a2d04f8/ss_5f736613f29b420c6f8cb2e17ae049f10a2d04f8.1920x1080.jpg?t=1792123557"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Explore, talk, and solve puzzles with cards in a solo tabletop adventure! Play as Alice, a girl trapped in the Beyond. Drag cards to craft items, meet curious companions, and find your way home. Stuck? Try a different card—and a different approach. This charming fairy-tale world has its secrets.",
+        "en": "Explore, talk, and solve puzzles with cards in a solo tabletop adventure! Play as Alice, a girl trapped in the Beyond. Drag cards to craft items, meet curious companions, and find your way home. Stuck? Try a different card—and a different approach. This charming fairy-tale world has its secrets."
+      }
+    },
+    "addedAt": "2026-10-16",
+    "steamAppId": 3755350,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3755350/972cb3191d5d15b31815d5ebd4e0a850fc02fc0f/header.jpg?t=1792123557"
+  },
+  {
+    "id": "after-the-crash-colony",
+    "title": "After the Crash : Colony",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Penche Software",
+    "steamUrl": "https://store.steampowered.com/app/4196740/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4196740/1905399c766cecdcf174ac28ad9be2a00a91b8e0/ss_1905399c766cecdcf174ac28ad9be2a00a91b8e0.1920x1080.jpg?t=1792103799",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4196740/eaec290110f9cad4684453214435c195cc13ffc2/ss_eaec290110f9cad4684453214435c195cc13ffc2.1920x1080.jpg?t=1792103799",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4196740/ad90d75786a57ffb79bd93f72aa7316bebb91c3b/ss_ad90d75786a57ffb79bd93f72aa7316bebb91c3b.1920x1080.jpg?t=1792103799",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4196740/62774c937bfa539216c1444f1bc3d50e43faf8c0/ss_62774c937bfa539216c1444f1bc3d50e43faf8c0.1920x1080.jpg?t=1792103799",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4196740/5dd56d2bcda57d7bed47dab2550f7d16146042d0/ss_5dd56d2bcda57d7bed47dab2550f7d16146042d0.1920x1080.jpg?t=1792103799",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4196740/44738dad9ed9ceea57d6f8c8a3d2bd420566d3c3/ss_44738dad9ed9ceea57d6f8c8a3d2bd420566d3c3.1920x1080.jpg?t=1792103799"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Build order on a strange planet, keep your crew alive, and gather the parts needed to repair the crashed main ship. Manage resources, explore new areas, face growing threats, and strengthen your colony a little more with each passing day.",
+        "en": "Build order on a strange planet, keep your crew alive, and gather the parts needed to repair the crashed main ship. Manage resources, explore new areas, face growing threats, and strengthen your colony a little more with each passing day."
+      }
+    },
+    "addedAt": "2026-10-16",
+    "steamAppId": 4196740,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4196740/36b28a2ecced49d639c15df26a3187bd88ce3dc2/header.jpg?t=1792103799"
+  },
+  {
+    "id": "hunt-me",
+    "title": "Hunt Me",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Survie",
+      "Co-op"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Nuci",
+    "steamUrl": "https://store.steampowered.com/app/3026770/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/ss_c24c730f40140ccf919f45d7a7dc95ac56cde0a5.1920x1080.jpg?t=1792083759",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/ss_94ca3153563dc97c1e93b305375d92791de75ec2.1920x1080.jpg?t=1792083759",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/ss_45e7f0b02cec2d72c7cac567ba42dfbc5f586eac.1920x1080.jpg?t=1792083759",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/ss_2ec765fee4914dae77c3f4e2fa06cceffb80ac58.1920x1080.jpg?t=1792083759",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/ss_0067198ce07acce8a368b3162e1a0ead3592d6c3.1920x1080.jpg?t=1792083759",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/ss_533d53b1a1026a08728d051278b679d82aab52d5.1920x1080.jpg?t=1792083759"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "HUNT ME est un jeu d'horreur et de survie en coop à 1-4 joueurs. Vivez une chasse coopérative intense : rassemblez des ingrédients de rituel, utilisez la vision infrarouge pour affaiblir les menaces démoniques et bannissez-les avant de devenir la proie !",
+        "en": "HUNT ME is a first-person co-op horror survival game for 1-4 players. Experience an atmospheric online co-op multiplayer hunt: gather ritual ingredients, use infrared vision to weaken demonic threats and banish them before becoming the prey!"
+      }
+    },
+    "addedAt": "2026-10-16",
+    "steamAppId": 3026770,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/header.jpg?t=1792083759"
   }
 ]

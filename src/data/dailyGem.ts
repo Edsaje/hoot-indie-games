@@ -1,45 +1,39 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-15";
+export const TODAY_DATE = "2026-10-16";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "baba-is-you",
-  "title": "Baba Is You",
-  "releaseYear": 2019,
+  "id": "overcooked-2",
+  "title": "Overcooked! 2",
+  "releaseYear": 2018,
   "genre": [
-    "Puzzle",
-    "Exploration",
-    "Stratégie",
-    "Rétro"
+    "Coopératif",
+    "Gestion",
+    "Action",
+    "Comédie"
   ],
   "artStyle": {
-    "fr": "Pixel Art",
-    "en": "Pixel Art"
+    "fr": "3D Stylisé",
+    "en": "Stylized 3D"
   },
   "camera": {
-    "fr": "Vue du dessus 2D",
-    "en": "2D Top-down"
+    "fr": "2.5D Isométrique",
+    "en": "Isometric / 2.5D"
   },
-  "developer": "Hempuli",
-  "steamUrl": "https://store.steampowered.com/app/736260/",
-  "itchUrl": "https://hempuli.itch.io/baba-is-you",
+  "developer": "Ghost Town Games Ltd.",
+  "steamUrl": "https://store.steampowered.com/app/728880/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/ss_908c8a4fd0ffec9f29341eb50eb7f074c105342f.1920x1080.jpg?t=1760102539",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/ss_9eadb1cdc09f574d49d32a722d7bda5813c96a64.1920x1080.jpg?t=1760102539",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/ss_c535fc337bdb15bfe35a164cc13db7ec92fd1f44.1920x1080.jpg?t=1760102539",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/ss_e421ba3fb93e902eb4af05564ebf3afcabaae951.1920x1080.jpg?t=1760102539",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/ss_4e489dcc482e3f094cd8caf0a10317fdc71345af.1920x1080.jpg?t=1760102539",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/736260/ss_ac1cc1552628933847698ea79ec65bd8531b4274.1920x1080.jpg?t=1760102539"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_2f84a12e1fe82cca37848bf29d4b8b16e83db03b.1920x1080.jpg?t=1789548883",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_7f290dccbdc3c0eb9ded951717bceba5d7455764.1920x1080.jpg?t=1789548883",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_652d62549a8a5fdf4f0061e20b16a3cd9a19dc45.1920x1080.jpg?t=1789548883",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_773917e64738bc879685cff49b8ac6eb4f15ab93.1920x1080.jpg?t=1789548883",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_3728a182f291231c4713860611dd9292b8b4fd05.1920x1080.jpg?t=1789548883",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_1ed2b6e65220555ab81f376b7a65424083c4cbb0.1920x1080.jpg?t=1789548883"
   ],
   "hints": {
     "tagline": {
-      "fr": "Réécrivez les lois de la physique et les règles du jeu en déplaçant des blocs de mots logiques.",
-      "en": "A puzzle game where the rules you have to follow are present as blocks you can interact with. Change the rules to win!",
-      "es": "Un juego de lógica donde las reglas existen como bloques físicos que puedes cambiar para alterar la realidad.",
-      "de": "Ein geniales Rätselspiel, in dem du die Spielregeln selbst als Wörter verschieben und die Welt neu definieren kannst.",
-      "ja": "ルールそのものが言葉のブロックとして置かれた世界で、法則を書き換えて勝利を掴む天才的ひらめきパズル。",
-      "pt-BR": "Reescreva as regras da física e a lógica do jogo empurrando blocos de palavras neste quebra-cabeça genial."
-    },
-    "composer": "Arvi Teikari"
+      "fr": "Cuisinez en coopération effrénée dans des cuisines chaotiques pour rassasier le royaume des oignons.",
+      "en": "Chop, fry and serve your way through chaotic and dynamic kitchens to save the Onion Kingdom."
+    }
   }
 };

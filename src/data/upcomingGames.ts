@@ -591,33 +591,37 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/32cf8f48c71af4776182ee7fe7388f7334ea44aa/header.jpg?t=1791297729"
   },
   {
-    "id": "shelf-stacker-toy-store",
-    "title": "Shelf Stacker: Toy Store",
-    "developer": "QB Interactive",
-    "publisher": "QB Interactive",
+    "id": "hay-one-billion",
+    "title": "Hay! One Billion!",
+    "developer": "Team 1B",
+    "publisher": "Team 1B",
     "expectedDate": {
-      "fr": "15 oct. 2026",
-      "en": "Oct 15, 2026"
+      "fr": "16 oct. 2026",
+      "en": "Oct 16, 2026"
     },
     "genres": [
       {
-        "fr": "Simulation",
-        "en": "Simulation"
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5232090/",
+    "steamUrl": "https://store.steampowered.com/app/2069070/",
     "description": {
-      "fr": "Shelf Stacker: Toy Store is a cozy organizing simulator where you sort over 4,200 fun products in a cluttered toy store. Enjoy stacking shelves to relaxing, lo-fi beats.",
-      "en": "Shelf Stacker: Toy Store is a cozy organizing simulator where you sort over 4,200 fun products in a cluttered toy store. Enjoy stacking shelves to relaxing, lo-fi beats."
+      "fr": "Vous avez fait tomber votre aiguille préférée… dans une grange qui contient exactement un milliard de brins de foin. Fouillez à mains nues et trouvez des pièces pour acheter des outils, accélérer vos recherches et retrouver votre aiguille !",
+      "en": "You dropped your favorite needle... in a barn with exactly One Billion pieces of hay. Guess you better go find the needle in a haystack. Search around with your hands, find coins to purchase tools and search faster, and eventually reclaim your lost needle."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5232090/c2d28de560b27902e5ce30faee741788ef65dd80/header.jpg?t=1790408126"
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/e75bf90c996a060791ced9f9a6abd9f0581bd6b1/header.jpg?t=1792081487"
   }
 ];
