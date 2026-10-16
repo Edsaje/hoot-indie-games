@@ -28,14 +28,14 @@ import { ARCADE_GAMES, type ArcadeGameId, type ArcadeGameMeta } from '../../data
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { useGamepadStatus, useGamepadArcadeLoop } from '../../utils/gamepad';
 import { useAchievements } from '../../context/useAchievements';
-import { ArcadeSnake } from './games/ArcadeSnake';
-import { ArcadePong } from './games/ArcadePong';
-import { ArcadeBreakout } from './games/ArcadeBreakout';
-import { ArcadeFlappy } from './games/ArcadeFlappy';
-import { ArcadeInvaders } from './games/ArcadeInvaders';
-import { ArcadeRun } from './games/ArcadeRun';
-import { ArcadeTetris } from './games/ArcadeTetris';
-import { ArcadeVectrex } from './games/ArcadeVectrex';
+const ArcadeSnake = React.lazy(() => import('./games/ArcadeSnake').then((m) => ({ default: m.ArcadeSnake })));
+const ArcadePong = React.lazy(() => import('./games/ArcadePong').then((m) => ({ default: m.ArcadePong })));
+const ArcadeBreakout = React.lazy(() => import('./games/ArcadeBreakout').then((m) => ({ default: m.ArcadeBreakout })));
+const ArcadeFlappy = React.lazy(() => import('./games/ArcadeFlappy').then((m) => ({ default: m.ArcadeFlappy })));
+const ArcadeInvaders = React.lazy(() => import('./games/ArcadeInvaders').then((m) => ({ default: m.ArcadeInvaders })));
+const ArcadeRun = React.lazy(() => import('./games/ArcadeRun').then((m) => ({ default: m.ArcadeRun })));
+const ArcadeTetris = React.lazy(() => import('./games/ArcadeTetris').then((m) => ({ default: m.ArcadeTetris })));
+const ArcadeVectrex = React.lazy(() => import('./games/ArcadeVectrex').then((m) => ({ default: m.ArcadeVectrex })));
 export type { ArcadeGameId, ArcadeGameMeta };
 export type ArcadeDifficulty = 'detente' | 'normal' | 'expert';
 
@@ -853,14 +853,16 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({
         {/* Canvas Game Area with Direct Touch / Swipe Support */}
         <div className="relative w-full max-w-[320px] sm:max-w-[380px] aspect-square rounded-2xl overflow-hidden border-2 border-[#1e293b] bg-[#060f09] shadow-2xl flex items-center justify-center">
           
-          {selectedGame === 'snake' && <ArcadeSnake key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
-          {selectedGame === 'pong' && <ArcadePong key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
-          {selectedGame === 'breakout' && <ArcadeBreakout key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
-          {selectedGame === 'flappy' && <ArcadeFlappy key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
-          {selectedGame === 'invaders' && <ArcadeInvaders key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
-          {selectedGame === 'run' && <ArcadeRun key={gameKey} clearKey={clearKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
-          {selectedGame === 'tetris' && <ArcadeTetris key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
-          {selectedGame === 'vectrex' && <ArcadeVectrex key={gameKey} difficulty={difficulty} isVectrexPhosphor={isVectrexPhosphor} isVectrexPhosphorRef={isVectrexPhosphorRef} setIsVectrexPhosphor={setIsVectrexPhosphor} setIsVectrexUnlocked={setIsVectrexUnlocked} unlockAchievement={unlockAchievement} highScore={highScoreRef.current} clearKey={clearKey} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+          <React.Suspense fallback={<div className="text-amber-400 text-xs font-bold animate-pulse">Chargement du jeu...</div>}>
+            {selectedGame === 'snake' && <ArcadeSnake key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+            {selectedGame === 'pong' && <ArcadePong key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+            {selectedGame === 'breakout' && <ArcadeBreakout key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+            {selectedGame === 'flappy' && <ArcadeFlappy key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+            {selectedGame === 'invaders' && <ArcadeInvaders key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+            {selectedGame === 'run' && <ArcadeRun key={gameKey} clearKey={clearKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+            {selectedGame === 'tetris' && <ArcadeTetris key={gameKey} difficulty={difficulty} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+            {selectedGame === 'vectrex' && <ArcadeVectrex key={gameKey} difficulty={difficulty} isVectrexPhosphor={isVectrexPhosphor} isVectrexPhosphorRef={isVectrexPhosphorRef} setIsVectrexPhosphor={setIsVectrexPhosphor} setIsVectrexUnlocked={setIsVectrexUnlocked} unlockAchievement={unlockAchievement} highScore={highScoreRef.current} clearKey={clearKey} onScoreAdd={handleScoreAdd} onGameOver={handleGameOver} isKeyDown={isKeyDown} touchPosRef={touchPosRef} soundMuted={soundMuted} onCanvasTouchStart={handleCanvasTouchStart} onCanvasTouchMove={handleCanvasTouchMove} onCanvasTouchEnd={handleCanvasTouchEnd} />}
+          </React.Suspense>
 
 
           {isGameOver && (

@@ -127,12 +127,20 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     }
   }, []);
 
+  const isGadgetEnabled = Boolean(
+    odysseyState.miniHudEnabled ??
+    odysseyState.miniHudMobileEnabled ??
+    (typeof window !== 'undefined' && localStorage.getItem('hoot_odyssey_hud_enabled') === 'true')
+  );
+
   // Boucle de combat passif de fond (Tick chaque seconde)
   useEffect(() => {
+    if (isModalActive || !isGadgetEnabled) return;
+
     const tickInterval = setInterval(() => {
       // Si la page est en arrière-plan, que la modale/page Odyssée est active ou passiveDps = 0, on économise
       if (typeof document !== 'undefined' && document.hidden) return;
-      if (isModalActive) return;
+      if (isModalActive || !isGadgetEnabled) return;
 
       const curState = stateRef.current;
       const curRoute = getCurrentRoute(curState.currentBiomeId, curState.currentRouteNumber);
@@ -169,7 +177,7 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     }, 1000);
 
     return () => clearInterval(tickInterval);
-  }, [handleDefeat, isModalActive]);
+  }, [handleDefeat, isModalActive, isGadgetEnabled]);
 
   // Attaque rapide au clic
   const handleQuickAttack = (e: React.MouseEvent) => {
@@ -209,12 +217,6 @@ export const OdysseyMiniHud: React.FC<OdysseyMiniHudProps> = ({
     } catch {}
     window.dispatchEvent(new CustomEvent('hoot_odyssey_hud_pref_updated', { detail: false }));
   };
-
-  const isGadgetEnabled = Boolean(
-    odysseyState.miniHudEnabled ??
-    odysseyState.miniHudMobileEnabled ??
-    (typeof window !== 'undefined' && localStorage.getItem('hoot_odyssey_hud_enabled') === 'true')
-  );
 
   // Masquer par défaut (desktop comme mobile) sauf si expressément activé par le joueur
   if (isModalActive || !isGadgetEnabled) return null;

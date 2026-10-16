@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Award, Flame, BarChart3, RotateCcw, Share2, Check } from 'lucide-react';
 import { useGameStats } from '../../context/useGameStats';
@@ -19,6 +19,18 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
   const { stats, resetStats } = useGameStats();
   const [activeTab, setActiveTab] = useState<DailyGameMode>(initialTab);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -50,7 +62,12 @@ export const StatsModal: React.FC<StatsModalProps> = ({ isOpen, onClose, initial
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="stats-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200"
+    >
       <div className="relative overflow-visible w-full h-full sm:h-auto max-w-md bg-[#06241b] sm:border-2 border-0 border-[#78350f] rounded-none sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-200 max-h-[100dvh] sm:max-h-[90dvh] overflow-y-auto">
         <SylvestreIvyFrame density="medium" rounded="3xl" />
         {/* Close Button */}

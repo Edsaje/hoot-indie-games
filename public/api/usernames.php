@@ -20,6 +20,12 @@ require_once __DIR__ . '/admin_auth.php';
 sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 
+if (session_status() === PHP_SESSION_NONE) {
+    @ini_set('session.cookie_httponly', 1);
+    @ini_set('session.cookie_samesite', 'Lax');
+    @session_start();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -369,6 +375,38 @@ if ($method === 'POST') {
     $userId = trim($payload['userId'] ?? '');
     $steamId = trim($payload['steamId'] ?? '');
 
+    $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
+    $sessionSteamId = $_SESSION['verified_steam_id'] ?? ($_SESSION['steam_id'] ?? null);
+    $isAdmin = isCreatorAdminAuthorized();
+
+    // Vérification de sécurité : si un steamId est fourni, il doit être vérifié via session Valve OpenID ou admin
+    if (!empty($steamId)) {
+        if (!$isAdmin && (empty($sessionSteamId) || strval($sessionSteamId) !== strval($steamId))) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => 'unauthorized_steam_id',
+                'message' => 'L\'identifiant Steam doit être authentifié via Valve OpenID.'
+            ]);
+            exit;
+        }
+    }
+
+    // Vérification de sécurité : si une session utilisateur existe, l'identifiant ne peut pas être usurpé
+    if (!empty($sessionUserId)) {
+        if (empty($userId)) {
+            $userId = $sessionUserId;
+        } elseif ($userId !== $sessionUserId && !$isAdmin) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => 'unauthorized_user_id',
+                'message' => 'L\'identifiant utilisateur ne correspond pas à la session active.'
+            ]);
+            exit;
+        }
+    }
+
     if (empty($rawName)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'missing_username', 'message' => 'Pseudonyme requis.']);
@@ -464,12 +502,25 @@ if ($method === 'POST') {
     $claimed = $db['usernames'][$normalized] ?? null;
 
     if ($claimed) {
-        $isSameUser = (!empty($userId) && ($claimed['userId'] ?? '') === $userId)
-                   || (!empty($steamId) && ($claimed['steamId'] ?? '') === $steamId);
+        $isSameUser = false;
 
-        // Seul l'administrateur créateur authentifié peut revendiquer un compte réservé
-        if ($isAttemptingAdminIdentity && isCreatorAdminAuthorized()) {
+        // Seul l'administrateur créateur authentifié peut revendiquer un compte réservé admin
+        if ($isAttemptingAdminIdentity && $isAdmin) {
             $isSameUser = true;
+        } elseif ($isAdmin) {
+            $isSameUser = true;
+        } elseif (!empty($claimed['isAdminReserved'])) {
+            $isSameUser = false;
+        } elseif (!empty($claimed['steamId'])) {
+            // Si le compte réservé a un steamId, exiger que la session Steam vérifiée corresponde
+            $isSameUser = (!empty($steamId) && !empty($sessionSteamId) && strval($claimed['steamId']) === strval($steamId) && strval($sessionSteamId) === strval($steamId));
+        } elseif (!empty($claimed['userId'])) {
+            // Si le compte réservé a un userId
+            if (!empty($sessionUserId)) {
+                $isSameUser = ($claimed['userId'] === $sessionUserId);
+            } else {
+                $isSameUser = (!empty($userId) && $claimed['userId'] === $userId);
+            }
         }
 
         if (!$isSameUser) {
@@ -489,8 +540,24 @@ if ($method === 'POST') {
     $identKey = !empty($steamId) ? "steam_{$steamId}" : "user_{$userId}";
     $oldNorm = $db['userToName'][$identKey] ?? null;
     if ($oldNorm && $oldNorm !== $normalized && isset($db['usernames'][$oldNorm])) {
-        // Ne pas supprimer les réservations admin préconfigurées
-        if (empty($db['usernames'][$oldNorm]['isAdminReserved'])) {
+        $oldEntry = $db['usernames'][$oldNorm];
+        $canRelease = false;
+
+        if ($isAdmin) {
+            $canRelease = true;
+        } elseif (!empty($oldEntry['isAdminReserved'])) {
+            $canRelease = false;
+        } elseif (!empty($steamId) && !empty($oldEntry['steamId']) && strval($oldEntry['steamId']) === strval($steamId) && !empty($sessionSteamId) && strval($sessionSteamId) === strval($steamId)) {
+            $canRelease = true;
+        } elseif (!empty($userId) && !empty($oldEntry['userId']) && $oldEntry['userId'] === $userId) {
+            if (!empty($sessionUserId)) {
+                $canRelease = ($sessionUserId === $userId);
+            } else {
+                $canRelease = empty($oldEntry['steamId']);
+            }
+        }
+
+        if ($canRelease) {
             unset($db['usernames'][$oldNorm]);
         }
     }

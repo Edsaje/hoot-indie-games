@@ -283,13 +283,18 @@ function sendVerificationEmail($recipientEmail, $username, $token, $otp = null) 
     $logString = json_encode($logEntry, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n---\n";
     @file_put_contents($devLogFile, $logString, FILE_APPEND | LOCK_EX);
 
+    $isLocalEnv = (getenv('APP_ENV') === 'local') 
+        || in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true)
+        || (php_sapi_name() === 'cli-server')
+        || in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1'], true);
+
     return [
         'success' => true,
         'provider' => 'dev',
         'message' => 'E-mail enregistré dans le journal de développement local (.mail_dev.log).',
         'devLogged' => true,
-        'token' => $token,
-        'otp' => $otp,
-        'verifyUrl' => $verifyUrl,
+        'token' => $isLocalEnv ? $token : null,
+        'otp' => $isLocalEnv ? $otp : null,
+        'verifyUrl' => $isLocalEnv ? $verifyUrl : null,
     ];
 }

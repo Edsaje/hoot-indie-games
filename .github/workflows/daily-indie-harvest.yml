@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: 'ovh-deploy'
+  cancel-in-progress: false
+
 jobs:
   harvest-and-update:
     runs-on: ubuntu-latest
@@ -40,6 +44,9 @@ jobs:
         run: npm run audit-db
 
       - name: 🏗️ Compilation de production du site (Vite / React)
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: 🚀 Commit et Push des nouveaux jeux vers GitHub
@@ -65,6 +72,13 @@ jobs:
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
             echo "☕ Aucun changement à pousser aujourd'hui."
           fi
+
+      - name: ✉️ Configuration sécurisée de messagerie (Resend)
+        if: steps.commit_step.outputs.has_changes == 'true'
+        run: |
+          echo "<?php define('RESEND_API_KEY', '${{ secrets.RESEND_API_KEY }}');" > public/api/.mail_config.php
+          mkdir -p dist/api
+          cp public/api/.mail_config.php dist/api/.mail_config.php
 
       - name: 📤 Déploiement automatique vers l'hébergement OVH
         if: steps.commit_step.outputs.has_changes == 'true'

@@ -6,6 +6,7 @@ import type {
   AggregatedStats,
   TelemetrySnapshot,
 } from '../types/telemetry';
+import { getTodayDateString } from '../utils/streakManager';
 
 const STORAGE_KEY_STATS = 'hoot_telemetry_stats_v1';
 const STORAGE_KEY_EVENTS = 'hoot_telemetry_events_v1';
@@ -277,9 +278,13 @@ class TelemetryEngine {
     // Mise à jour des compteurs agrégés
     this.stats.totalEvents += 1;
 
-    // Activité journalière et horaire
-    const today = new Date().toISOString().split('T')[0];
-    const hour = String(new Date().getHours()).padStart(2, '0');
+    // Activité journalière et horaire (ancrée sur Europe/Paris)
+    const today = getTodayDateString();
+    const hour = new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'Europe/Paris',
+      hour: '2-digit',
+      hour12: false,
+    }).format(new Date());
     this.stats.dailyActivity[today] = (this.stats.dailyActivity[today] || 0) + 1;
     this.stats.hourlyActivity[hour] = (this.stats.hourlyActivity[hour] || 0) + 1;
 

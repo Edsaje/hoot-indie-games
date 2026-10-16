@@ -24,6 +24,7 @@ import { INDIE_GAMES, getDailyGame } from '../../data/games';
 import { GameSearchBar, type ClueBadge } from '../common/GameSearchBar';
 import { DifficultySelector, type GameDifficulty } from '../common/DifficultySelector';
 import { soundFx } from '../../utils/audio';
+import { saveSecureJson, loadSecureJson, sha256Sync } from '../../utils/securityAntiCheat';
 import { useGameStats } from '../../context/useGameStats';
 import { useAchievements } from '../../context/useAchievements';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
@@ -54,9 +55,13 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
   // Récupération de l'état sauvegardé avec restauration complète du jeu secret et des essais
   const savedState = (() => {
     try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) {
-        const parsed = JSON.parse(saved);
+      const parsed = loadSecureJson<{
+        guessIds?: string[];
+        isCompleted?: boolean;
+        isWon?: boolean;
+        secretGameId?: string;
+      }>(storageKey);
+      if (parsed) {
         const restored = (parsed.guessIds || [])
           .map((id: string) => allPlayableGames.find((g) => g.id === id) || INDIE_GAMES.find((g) => g.id === id))
           .filter(Boolean) as Game[];
@@ -64,7 +69,7 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
           guesses: restored,
           isCompleted: Boolean(parsed.isCompleted),
           isWon: Boolean(parsed.isWon),
-          savedSecretGameId: parsed.secretGameId as string | undefined,
+          savedSecretGameId: parsed.secretGameId,
         };
       }
     } catch {
@@ -122,15 +127,16 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
 
   const saveGameState = (newGuesses: Game[], completed: boolean, won: boolean) => {
     try {
-      localStorage.setItem(
+      saveSecureJson(
         storageKey,
-        JSON.stringify({
+        {
           date: currentDate,
-          secretGameId: secretGame.id,
+          secretGameId: completed ? secretGame.id : undefined,
+          secretGameHash: !completed ? sha256Sync(`${secretGame.id}:${currentDate}`) : undefined,
           guessIds: newGuesses.map((g) => g.id),
           isCompleted: completed,
           isWon: won,
-        })
+        }
       );
     } catch {
       // Ignore
@@ -139,14 +145,10 @@ export const IndledleGame: React.FC<IndledleGameProps> = ({ currentDate, onSelec
 
   const checkDailyTrifecta = () => {
     try {
-      const s1 = localStorage.getItem(`screenle_state_${currentDate}`);
-      const s2 = localStorage.getItem(`linkle_state_${currentDate}`);
-      if (s1 && s2) {
-        const p1 = JSON.parse(s1);
-        const p2 = JSON.parse(s2);
-        if (p1.isWon && p2.isWon) {
-          unlockAchievement('daily_trifecta');
-        }
+      const p1 = loadSecureJson<{ isWon?: boolean }>(`screenle_state_${currentDate}`);
+      const p2 = loadSecureJson<{ isWon?: boolean }>(`linkle_state_${currentDate}`);
+      if (p1 && p2 && p1.isWon && p2.isWon) {
+        unlockAchievement('daily_trifecta');
       }
     } catch {
       // Ignore

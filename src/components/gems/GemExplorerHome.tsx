@@ -45,18 +45,20 @@ interface GemExplorerHomeProps {
   currentDate: string;
   onNavigateTab: (tab: NavTab) => void;
   onOpenArcade: (gameId?: ArcadeGameId) => void;
+  initialSearchQuery?: string;
 }
 
 export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   currentDate,
   onNavigateTab,
   onOpenArcade,
+  initialSearchQuery,
 }) => {
   const { t, i18n } = useTranslation();
   const { isGameOwned } = useUserAccount();
 
-  // Defer heavy catalog chunk mounting until user scrolls towards the bottom
-  const [isCatalogVisible, setIsCatalogVisible] = useState(false);
+  // Defer heavy catalog chunk mounting until user scrolls towards the bottom, unless search query is passed
+  const [isCatalogVisible, setIsCatalogVisible] = useState(() => Boolean(initialSearchQuery));
   const catalogAnchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -758,6 +760,7 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
             <GemCatalogSection
               onNavigateTab={onNavigateTab}
               highlightedGameId={highlightedGemId}
+              initialSearchQuery={initialSearchQuery}
             />
           </React.Suspense>
         ) : (

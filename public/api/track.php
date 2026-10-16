@@ -67,6 +67,12 @@ function securePasswordVerify($password, $storedHash) {
     return false;
 }
 
+if (!function_exists('sanitizeStr')) {
+    function sanitizeStr($val) {
+        return is_string($val) ? htmlspecialchars(strip_tags(trim($val)), ENT_QUOTES, 'UTF-8') : '';
+    }
+}
+
 // Clé secrète serveur pour le salage interne
 function getOrCreateSecret($file) {
     if (!empty($file) && file_exists($file)) {
@@ -893,6 +899,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
     // Super-Admin : Distribution de Récompenses Souveraines (Plumes d'or & Cartes du Sanctuaire)
     if ($action === 'give_reward') {
+        $isCreatorAdmin = isCreatorAdminAuthorized();
         if (!$isCreatorAdmin) {
             http_response_code(403);
             echo json_encode(['success' => false, 'message' => 'Action réservée exclusivement au super-administrateur Hibouxe.']);

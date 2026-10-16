@@ -127,18 +127,11 @@ export const ReviewSprint: React.FC<ReviewSprintProps> = ({ games, onBackToHub, 
     recordTimeAttackResult('review', score, correctCount, totalCount, maxCombo);
   }, [score, correctCount, totalCount, maxCombo]);
 
-  // Boucle de chronomètre
+  // Boucle de chronomètre 60s (intervalle pur dépendant uniquement de gameState)
   useEffect(() => {
     if (gameState === 'playing') {
       timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current!);
-            handleGameOver();
-            return 0;
-          }
-          return prev - 1;
-        });
+        setTimeLeft((prev) => Math.max(0, prev - 1));
       }, 1000);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -147,7 +140,15 @@ export const ReviewSprint: React.FC<ReviewSprintProps> = ({ games, onBackToHub, 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [gameState, handleGameOver]);
+  }, [gameState]);
+
+  // Détection de fin de temps
+  useEffect(() => {
+    if (gameState === 'playing' && timeLeft <= 0) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      handleGameOver();
+    }
+  }, [gameState, timeLeft, handleGameOver]);
 
   // Gestion d'un choix
   const handleSelectChoice = (chosenGame: Game) => {

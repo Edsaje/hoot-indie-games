@@ -16,7 +16,7 @@ export async function preloadBlindTestAudio(url?: string): Promise<void> {
 
   const promise = (async () => {
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
       if (!res.ok) return null;
       const ab = await res.arrayBuffer();
       rawBufferCache.set(url, ab);
@@ -50,7 +50,7 @@ export async function getOrDecodeAudioBuffer(
       ab = (await inFlightRequests.get(url)) || undefined;
     } else {
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
         if (!res.ok) return null;
         ab = await res.arrayBuffer();
         rawBufferCache.set(url, ab);
@@ -65,6 +65,16 @@ export async function getOrDecodeAudioBuffer(
   try {
     // decodeAudioData détache le ArrayBuffer, on lui passe donc une copie
     const decoded = await ctx.decodeAudioData(ab.slice(0));
+    // Libération immédiate du buffer brut pour économiser la RAM
+    rawBufferCache.delete(url);
+
+    // Limitation du cache décodé à 5 entrées max (FIFO)
+    if (decodedBufferCache.size >= 5) {
+      const oldestKey = decodedBufferCache.keys().next().value;
+      if (oldestKey) {
+        decodedBufferCache.delete(oldestKey);
+      }
+    }
     decodedBufferCache.set(url, decoded);
     return decoded;
   } catch (err) {

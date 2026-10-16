@@ -299,22 +299,26 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
     setIsOfficialClip(handle.isOfficialClip);
     setIsPlaying(true);
 
-    // Boucle d'animation synchronisée avec l'horloge matérielle AudioContext pour une précision absolue
-    const updateLoop = () => {
+    // Boucle d'animation synchronisée avec l'horloge matérielle AudioContext (Throttled à ~15 FPS pour éviter 60 re-renders/sec)
+    let lastRenderTime = 0;
+    const updateLoop = (timestamp: number) => {
       const elapsed = Math.max(0, ctx.currentTime - handle.startTime);
       if (elapsed >= playDuration) {
         stopAudio();
         return;
       }
 
-      setPlaybackSeconds(Number(Math.min(elapsed, playDuration).toFixed(1)));
-      setPlaybackProgress(Math.min(1, elapsed / TOTAL_MAX_DURATION));
+      if (timestamp - lastRenderTime >= 66) {
+        lastRenderTime = timestamp;
+        setPlaybackSeconds(Number(Math.min(elapsed, playDuration).toFixed(1)));
+        setPlaybackProgress(Math.min(1, elapsed / TOTAL_MAX_DURATION));
 
-      if (analyserRef.current) {
-        const data = new Uint8Array(analyserRef.current.frequencyBinCount);
-        analyserRef.current.getByteFrequencyData(data);
-        const sampled = Array.from(data.slice(0, 16)).map((v) => v / 255);
-        setFrequencies(sampled);
+        if (analyserRef.current) {
+          const data = new Uint8Array(analyserRef.current.frequencyBinCount);
+          analyserRef.current.getByteFrequencyData(data);
+          const sampled = Array.from(data.slice(0, 16)).map((v) => v / 255);
+          setFrequencies(sampled);
+        }
       }
 
       animFrameRef.current = requestAnimationFrame(updateLoop);

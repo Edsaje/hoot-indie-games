@@ -172,18 +172,22 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
 
     playbackHandleRef.current = handle;
 
-    // Boucle d'animation pour l'analyseur de fréquence
-    const updateFreqs = () => {
+    // Boucle d'animation pour l'analyseur de fréquence (Throttled à ~15 FPS pour éviter 60 re-renders/sec)
+    let lastUpdate = 0;
+    const updateFreqs = (timestamp: number) => {
       if (!analyserRef.current) return;
-      const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
-      analyserRef.current.getByteFrequencyData(dataArray);
+      if (timestamp - lastUpdate >= 66) {
+        lastUpdate = timestamp;
+        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+        analyserRef.current.getByteFrequencyData(dataArray);
 
-      const sampled: number[] = [];
-      const step = Math.max(1, Math.floor(dataArray.length / 16));
-      for (let i = 0; i < 16; i++) {
-        sampled.push(dataArray[i * step] || 0);
+        const sampled: number[] = [];
+        const step = Math.max(1, Math.floor(dataArray.length / 16));
+        for (let i = 0; i < 16; i++) {
+          sampled.push(dataArray[i * step] || 0);
+        }
+        setFrequencies(sampled);
       }
-      setFrequencies(sampled);
       animFrameRef.current = requestAnimationFrame(updateFreqs);
     };
     animFrameRef.current = requestAnimationFrame(updateFreqs);
@@ -263,18 +267,11 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
     recordTimeAttackResult('blindtest', score, correctCount, totalCount, maxCombo);
   }, [score, correctCount, totalCount, maxCombo, stopAudio]);
 
-  // Horloge 60s
+  // Horloge 60s (intervalle pur dépendant uniquement de gameState)
   useEffect(() => {
     if (gameState === 'playing') {
       timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current!);
-            handleGameOver();
-            return 0;
-          }
-          return prev - 1;
-        });
+        setTimeLeft((prev) => Math.max(0, prev - 1));
       }, 1000);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -283,7 +280,15 @@ export const BlindTestSprint: React.FC<BlindTestSprintProps> = ({ games, onBackT
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [gameState, handleGameOver]);
+  }, [gameState]);
+
+  // Détection de fin de temps
+  useEffect(() => {
+    if (gameState === 'playing' && timeLeft <= 0) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      handleGameOver();
+    }
+  }, [gameState, timeLeft, handleGameOver]);
 
   // Clic sur un choix
   const handleSelectChoice = (chosenGame: Game) => {

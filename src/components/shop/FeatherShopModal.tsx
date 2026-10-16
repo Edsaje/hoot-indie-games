@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -53,6 +53,17 @@ export const FeatherShopModal: React.FC<FeatherShopModalProps> = ({
 
   const [activeTab, setActiveTab] = useState<'all' | 'avatars' | 'titles' | 'frames' | 'services'>('all');
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -163,7 +174,12 @@ export const FeatherShopModal: React.FC<FeatherShopModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shop-modal-title"
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+      >
         {/* Backdrop sombre */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -203,7 +219,7 @@ export const FeatherShopModal: React.FC<FeatherShopModalProps> = ({
                       Boutique Officielle
                     </span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2 mt-0.5">
+                  <h2 id="shop-modal-title" className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2 mt-0.5">
                     <span>La Boutique du Sanctuaire</span>
                     <Sparkles className="w-5 h-5 text-amber-400 hidden sm:inline" />
                   </h2>

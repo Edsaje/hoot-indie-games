@@ -19,6 +19,15 @@ import type { FeatherToast } from './AchievementsContext';
 
 const STORAGE_KEY = 'hoot_unlocked_achievements_v1';
 
+function getParisHour(): number {
+  const str = new Intl.DateTimeFormat('fr-FR', {
+    timeZone: 'Europe/Paris',
+    hour: 'numeric',
+    hour12: false,
+  }).format(new Date());
+  return parseInt(str, 10);
+}
+
 export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { t, i18n } = useTranslation();
   const { isAdmin, isCreator } = useUserAccount();
@@ -38,7 +47,7 @@ export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ 
       const validSet = new Set(ACHIEVEMENTS_LIST.map((a) => a.id));
       const cleanList = Array.from(new Set(list.filter((id) => validSet.has(id))));
 
-      const hour = new Date().getHours();
+      const hour = getParisHour();
       if ((hour >= 23 || hour < 5) && !cleanList.includes('night_watch')) {
         cleanList.push('night_watch');
       }
@@ -106,7 +115,7 @@ export const AchievementsProvider: React.FC<{ children: React.ReactNode }> = ({ 
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) list = parsed;
         }
-        const hour = new Date().getHours();
+        const hour = getParisHour();
         if ((hour >= 23 || hour < 5) && !list.includes('night_watch')) {
           list.push('night_watch');
         }

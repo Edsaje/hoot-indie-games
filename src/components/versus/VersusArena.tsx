@@ -57,6 +57,7 @@ import { SteamIcon } from '../common/SteamIcon';
 import { getRandomReviewPuzzle, type ReviewPuzzle } from '../../data/reviewPuzzles';
 import { getBilingualText } from '../../utils/localization';
 import { getRandomBlindTestPuzzle, noteToFrequency, type BlindTestPuzzle } from '../../data/blindtestPuzzles';
+import { obfuscateGameId, deobfuscateGameId, drawProtectedImageToCanvas } from '../../utils/securityAntiCheat';
 
 type VersusPhase = 'lobby' | 'waiting_friend' | 'queueing' | 'countdown' | 'playing' | 'round_end' | 'match_end';
 
@@ -87,6 +88,7 @@ interface PeerMessage {
     elo: number;
   };
   gameId?: string;
+  secretToken?: string;
   roundNum?: number;
   guessTitle?: string;
   gameTitle?: string;
@@ -321,8 +323,9 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
   const [currentReviewPuzzle, setCurrentReviewPuzzle] = useState<ReviewPuzzle | null>(null);
   const [currentBlindTestPuzzle, setCurrentBlindTestPuzzle] = useState<BlindTestPuzzle | null>(null);
 
-  // Pixel Canvas Ref
+  // Pixel & Screenle Canvas Refs
   const pixelCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const versusScreenleCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Web Audio synth for Versus Blind Test
   const versusAudioCtxRef = useRef<AudioContext | null>(null);
@@ -486,17 +489,21 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     versusActiveNodesRef.current = nodes;
     setIsVersusAudioPlaying(true);
 
-    const updateFreqs = () => {
+    let lastUpdate = 0;
+    const updateFreqs = (timestamp: number) => {
       if (!versusAnalyserRef.current) return;
-      const dataArray = new Uint8Array(versusAnalyserRef.current.frequencyBinCount);
-      versusAnalyserRef.current.getByteFrequencyData(dataArray);
+      if (timestamp - lastUpdate >= 66) {
+        lastUpdate = timestamp;
+        const dataArray = new Uint8Array(versusAnalyserRef.current.frequencyBinCount);
+        versusAnalyserRef.current.getByteFrequencyData(dataArray);
 
-      const sampled: number[] = [];
-      const step = Math.max(1, Math.floor(dataArray.length / 12));
-      for (let i = 0; i < 12; i++) {
-        sampled.push(dataArray[i * step] || 0);
+        const sampled: number[] = [];
+        const step = Math.max(1, Math.floor(dataArray.length / 12));
+        for (let i = 0; i < 12; i++) {
+          sampled.push(dataArray[i * step] || 0);
+        }
+        setVersusFrequencies(sampled);
       }
-      setVersusFrequencies(sampled);
       versusAnimFrameRef.current = requestAnimationFrame(updateFreqs);
     };
     versusAnimFrameRef.current = requestAnimationFrame(updateFreqs);
@@ -569,6 +576,24 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
       ctx.drawImage(offCanvas, 0, 0, offCanvas.width, offCanvas.height, 0, 0, canvas.width, canvas.height);
     };
   }, [currentRoundDiscipline, currentRoundGame, pixelResolution, phase]);
+
+  // Dessin protégé Canvas pour le mode Screenle en Versus (Anti-F12 / Anti-DOM AppID leak)
+  useEffect(() => {
+    if (currentRoundDiscipline !== 'screenle' || !versusScreenleCanvasRef.current || !currentRoundGame) return;
+    const canvas = versusScreenleCanvasRef.current;
+    const isEnd = phase === 'round_end' || phase === 'match_end';
+    const scale = isEnd ? 1 : (timerSeconds > 15 ? 2.2 : (timerSeconds > 10 ? 1.6 : (timerSeconds > 5 ? 1.2 : 1)));
+    const blurPx = isEnd ? 0 : (timerSeconds > 15 ? 16 : (timerSeconds > 10 ? 9 : (timerSeconds > 5 ? 4 : 0)));
+    const imgUrl = currentRoundGame.screenshots[0] || currentRoundGame.screenshots[5];
+    if (imgUrl) {
+      drawProtectedImageToCanvas(canvas, imgUrl, {
+        scale,
+        originX: 50,
+        originY: 50,
+        blurPx,
+      });
+    }
+  }, [currentRoundDiscipline, currentRoundGame, phase, timerSeconds]);
 
   // Références Relais Souverain Multijoueur
   const relayPlayerIdRef = useRef<string>('');
@@ -659,6 +684,9 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     return () => {
       clearAllTimers();
       cleanupP2P();
+      try {
+        versusAudioCtxRef.current?.close();
+      } catch {}
     };
   }, []);
 
@@ -766,8 +794,12 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
 
       case 'round_start': {
         // L'invité reçoit le jeu exact du round, la discipline et les 4 choix
-        if (msg.gameId) {
-          const matched = gamePool.find((g) => g.id === msg.gameId) || gamePool[0];
+        const resolvedGameId =
+          (msg.secretToken && msg.puzzleSeed ? deobfuscateGameId(msg.secretToken, msg.puzzleSeed) : null) ||
+          msg.gameId;
+
+        if (resolvedGameId) {
+          const matched = gamePool.find((g) => g.id === resolvedGameId) || gamePool[0];
           setCurrentRoundGame(matched);
           const disc = msg.discipline || 'screenle';
           setCurrentRoundDiscipline(disc);
@@ -990,27 +1022,33 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
           if (isHostRef.current || isBot) {
             // L'hôte choisit le jeu initial, la discipline et les 4 choix
             const disc = pickRoundDiscipline(1);
-            const game = pickRandomGame(gamePool);
-            const choices = generateRoundChoices(game, gamePool);
             const seed = `${Date.now()}_${Math.random()}`;
-
-            setCurrentRoundGame(game);
-            setCurrentRoundDiscipline(disc);
-            setCurrentRoundChoices(choices);
+            let game = pickRandomGame(gamePool);
 
             if (disc === 'review') {
               const pz = getRandomReviewPuzzle(seed);
+              if (pz?.targetGame) {
+                game = gamePool.find((g) => g.id === pz.targetGame.id) || pz.targetGame;
+              }
               setCurrentReviewPuzzle(pz);
             } else if (disc === 'blindtest') {
               const btp = getRandomBlindTestPuzzle(seed);
+              if (btp?.targetGame) {
+                game = gamePool.find((g) => g.id === btp.targetGame.id) || btp.targetGame;
+              }
               setCurrentBlindTestPuzzle(btp);
               playVersusAudio(btp);
             }
 
+            const choices = generateRoundChoices(game, gamePool);
+            setCurrentRoundGame(game);
+            setCurrentRoundDiscipline(disc);
+            setCurrentRoundChoices(choices);
+
             if (!isBot) {
               sendP2P({
                 type: 'round_start',
-                gameId: game.id,
+                secretToken: obfuscateGameId(game.id, seed),
                 roundNum: 1,
                 discipline: disc,
                 choiceIds: choices.map((c) => c.id),
@@ -1170,27 +1208,33 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
       const isBotMatch = Boolean(opponentRef.current?.isBot || opponent?.isBot);
       if (isHostRef.current || isBotMatch) {
         const nextDisc = pickRoundDiscipline(roundNum + 1);
-        const nextGame = pickRandomGame(gamePool);
-        const choices = generateRoundChoices(nextGame, gamePool);
         const seed = `${Date.now()}_${Math.random()}`;
-
-        setCurrentRoundGame(nextGame);
-        setCurrentRoundDiscipline(nextDisc);
-        setCurrentRoundChoices(choices);
+        let nextGame = pickRandomGame(gamePool);
 
         if (nextDisc === 'review') {
           const pz = getRandomReviewPuzzle(seed);
+          if (pz?.targetGame) {
+            nextGame = gamePool.find((g) => g.id === pz.targetGame.id) || pz.targetGame;
+          }
           setCurrentReviewPuzzle(pz);
         } else if (nextDisc === 'blindtest') {
           const btp = getRandomBlindTestPuzzle(seed);
+          if (btp?.targetGame) {
+            nextGame = gamePool.find((g) => g.id === btp.targetGame.id) || btp.targetGame;
+          }
           setCurrentBlindTestPuzzle(btp);
           playVersusAudio(btp);
         }
 
+        const choices = generateRoundChoices(nextGame, gamePool);
+        setCurrentRoundGame(nextGame);
+        setCurrentRoundDiscipline(nextDisc);
+        setCurrentRoundChoices(choices);
+
         if (!isBotMatch) {
           sendP2P({
             type: 'round_start',
-            gameId: nextGame.id,
+            secretToken: obfuscateGameId(nextGame.id, seed),
             roundNum: roundNum + 1,
             discipline: nextDisc,
             choiceIds: choices.map((c) => c.id),
@@ -1232,23 +1276,6 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
         isBot: Boolean(opponent?.isBot),
       });
     }
-  };
-
-  // Calcul du flou progressif
-  const getVisualClueStyles = () => {
-    if (phase === 'round_end' || phase === 'match_end') {
-      return { filter: 'blur(0px)', transform: 'scale(1)' };
-    }
-    if (timerSeconds > 15) {
-      return { filter: 'blur(16px)', transform: 'scale(2.2)' };
-    }
-    if (timerSeconds > 10) {
-      return { filter: 'blur(9px)', transform: 'scale(1.6)' };
-    }
-    if (timerSeconds > 5) {
-      return { filter: 'blur(4px)', transform: 'scale(1.2)' };
-    }
-    return { filter: 'blur(0px)', transform: 'scale(1)' };
   };
 
   const VERSUS_DISCIPLINES: { id: VersusDiscipline; label: string; icon: any; color: string; desc: string }[] = [
@@ -1512,11 +1539,11 @@ if (phase !== 'playing' || isLockedOut || searchFocused) return;
       case 'screenle':
       default:
         return (
-          <img
-            src={currentRoundGame.screenshots[0] || currentRoundGame.screenshots[5]}
-            alt="Indie Guess Challenge"
-            style={getVisualClueStyles()}
-            className="w-full h-full object-cover transition-all duration-700 select-none pointer-events-none"
+          <canvas
+            ref={versusScreenleCanvasRef}
+            width={640}
+            height={360}
+            className="w-full h-full object-cover transition-all duration-700 select-none pointer-events-none rounded-xl"
           />
         );
     }

@@ -757,8 +757,11 @@ export async function pushUserCloudSave(
       if (existing?.id) targetId = existing.id;
     }
     if (!targetId && identifiers.username) {
+      // Sécurité Anti-IDOR (SEC-04) : Ne JAMAIS écraser une sauvegarde existante par simple correspondance de pseudo
       const { data: existing } = await supabase.from('user_profiles').select('id').eq('username', identifiers.username).maybeSingle();
-      if (existing?.id) targetId = existing.id;
+      if (existing?.id) {
+        throw new Error('Ce pseudonyme est déjà associé à une sauvegarde Cloud existante. Veuillez vous connecter pour la synchroniser.');
+      }
     }
 
     const payloadData: any = {

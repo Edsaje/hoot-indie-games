@@ -635,9 +635,14 @@ async function syncUpcomingRadar(
         existingNormalizedGenres
       );
 
-      const screenshots = (detailsFr.screenshots || []).slice(0, 6).map((s) => s.path_full);
-      while (screenshots.length < 6 && detailsFr.header_image) {
-        screenshots.push(detailsFr.header_image);
+      const screenshots = (detailsFr.screenshots || []).map((s) => s.path_full).slice(0, 6);
+      if (screenshots.length > 0) {
+        let idx = 0;
+        const initialCount = screenshots.length;
+        while (screenshots.length < 6) {
+          screenshots.push(screenshots[idx % initialCount]);
+          idx++;
+        }
       }
 
       const composer = extractComposer(detailsFr.detailed_description) ||
@@ -1437,9 +1442,14 @@ export async function runDailyHarvest() {
       existingNormalizedGenres
     );
 
-    const screenshots = detailsFr.screenshots.slice(0, 6).map((s) => s.path_full);
-    while (screenshots.length < 6 && detailsFr.header_image) {
-      screenshots.push(detailsFr.header_image);
+    const screenshots = (detailsFr.screenshots || []).map((s) => s.path_full).slice(0, 6);
+    if (screenshots.length > 0) {
+      let idx = 0;
+      const initialCount = screenshots.length;
+      while (screenshots.length < 6) {
+        screenshots.push(screenshots[idx % initialCount]);
+        idx++;
+      }
     }
 
     const composer = extractComposer(detailsFr.detailed_description) ||

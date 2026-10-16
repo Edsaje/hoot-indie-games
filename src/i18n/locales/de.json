@@ -364,7 +364,8 @@
     "unlimitedPracticeTip": "Unbegrenztes Übungsspiel",
     "restart": "Neu starten",
     "wonDetails": "Titel in {{count}} Versuch(en) identifiziert ({{track}} von {{composer}}).",
-    "lostDetails": "Es war „{{track}}“ komponiert von {{composer}}."
+    "lostDetails": "Es war „{{track}}“ komponiert von {{composer}}.",
+    "audioLoadError": "Offizieller Audiotrack konnte nicht geladen werden. Gemäß unserer 0-Halluzinations-Regel wird kein künstlicher Sound abgespielt."
   },
   "versus": {
     "title": "1v1-Duell",
@@ -722,7 +723,11 @@
     "topRated": "Top-Bewertungen (≥ 95%)",
     "gemsCountUnit": "{{filtered}} / {{total}} Perle(n)",
     "noGemsFound": "Keine Indie-Perlen gefunden",
-    "noGemsFoundDesc": "Keine Spiele entsprechen allen ausgewählten Filtern. Versuchen Sie, Ihre Preis-, Bewertungs- oder Genrekriterien anzupassen."
+    "noGemsFoundDesc": "Keine Spiele entsprechen allen ausgewählten Filtern. Versuchen Sie, Ihre Preis-, Bewertungs- oder Genrekriterien anzupassen.",
+    "searchGenre": "Genre suchen...",
+    "searchGenrePlaceholder": "Genre suchen (z. B. Metroidvania, Idle...)",
+    "matchingGenres": "Passende Genres",
+    "noGenreFound": "Keine Genres gefunden"
   },
   "toolbox": {
     "title": "Indie-Gamer Werkzeugkiste",
@@ -897,7 +902,15 @@
     },
     "viewAllInHub": "Alle Minispiele im Hub anzeigen",
     "backToHub": "← Minispiele-Hub",
-    "dailySolved": "Tagesrätsel gelöst"
+    "dailySolved": "Tagesrätsel gelöst",
+    "dailyProgressTitle": "Fortschritt der täglichen Herausforderungen",
+    "dailyProgressSub": "Meistere alle 8 Prüfungen, um deine Serie am Leuchten zu halten!",
+    "archiveProgressSub": "Archiv vom {{date}}",
+    "grandSlamTitle": "Täglicher Grand Slam vollbracht!",
+    "grandSlamPerfect": "Perfekte Punktzahl von 8/8! Du bist ein wahrer Kenner der Indie-Szene.",
+    "grandSlamCompleted": "Du hast alle 8 Herausforderungen von heute abgeschlossen. Bis morgen für neue Rätsel!",
+    "nextChallengeLabel": "Empfohlene nächste Herausforderung",
+    "playNext": "Nächste Herausforderung spielen"
   },
   "streak": {
     "flamePreserved": "Siegesserie bewahrt!",
@@ -1039,7 +1052,12 @@
       "errTitle": "Bitte geben Sie den Spieltitel ein.",
       "errDev": "Bitte geben Sie den Namen des Schöpfers oder Studios ein.",
       "errUrl": "Bitte geben Sie mindestens einen offiziellen Link an (Itch.io, Steam oder Web)."
-    }
+    },
+    "authRequiredToLike": "Anmeldung erforderlich: Bitte melde dich mit deinem Hoot-Konto an, um für dieses Spiel abzustimmen und es zu unterstützen (Inkognito-Anti-Cheat)!",
+    "loginToVote": "Anmeldung zum Abstimmen erforderlich (Anti-Cheat)",
+    "alreadyVoted": "Du hast bereits für diese Perle gestimmt",
+    "removeVote": "Klicken, um deine Stimme zurückzuziehen",
+    "voteForGame": "Für diese Perle stimmen"
   },
   "pagination": {
     "showing": "Zeige {{start}} bis {{end}} von {{total}} {{items}}",
@@ -1075,14 +1093,38 @@
     "channelsDropdownTitle": "Salons & Feedback",
     "activeChannel": "Aktiv",
     "channels": {
-      "global": { "name": "Global", "desc": "Internationaler Salon für alle Entdecker" },
-      "fr": { "name": "Français", "desc": "Französischer Salon für Tipps und Perlen" },
-      "en": { "name": "English", "desc": "Englischer Salon für Indie-Diskussionen" },
-      "es": { "name": "Español", "desc": "Spanischsprachige Indie-Gemeinschaft" },
-      "de": { "name": "Deutsch", "desc": "Deutscher Salon für Indie-Game-Liebhaber" },
-      "ja": { "name": "日本語", "desc": "インディーゲーム探索者のための日本語ラウンジ" },
-      "pt-BR": { "name": "Português", "desc": "Espaço para os jogadores de língua portuguesa" },
-      "feedback": { "name": "Feedback & Ideen", "desc": "Ideenbox, Fehlermeldungen und Vorschläge zur Verbesserung" }
+      "global": {
+        "name": "Global",
+        "desc": "Internationaler Salon für alle Entdecker"
+      },
+      "fr": {
+        "name": "Français",
+        "desc": "Französischer Salon für Tipps und Perlen"
+      },
+      "en": {
+        "name": "English",
+        "desc": "Englischer Salon für Indie-Diskussionen"
+      },
+      "es": {
+        "name": "Español",
+        "desc": "Spanischsprachige Indie-Gemeinschaft"
+      },
+      "de": {
+        "name": "Deutsch",
+        "desc": "Deutscher Salon für Indie-Game-Liebhaber"
+      },
+      "ja": {
+        "name": "日本語",
+        "desc": "インディーゲーム探索者のための日本語ラウンジ"
+      },
+      "pt-BR": {
+        "name": "Português",
+        "desc": "Espaço para os jogadores de língua portuguesa"
+      },
+      "feedback": {
+        "name": "Feedback & Ideen",
+        "desc": "Ideenbox, Fehlermeldungen und Vorschläge zur Verbesserung"
+      }
     },
     "categories": {
       "suggestion": "Vorschlag",

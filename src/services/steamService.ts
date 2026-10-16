@@ -35,7 +35,9 @@ export async function fetchSteamProxyStatus(): Promise<{
   maskedKey?: string;
 }> {
   try {
-    const res = await fetch('/api/steam_games.php?action=status');
+    const res = await fetch('/api/steam_games.php?action=status', {
+      signal: AbortSignal.timeout(10000),
+    });
     if (!res.ok) return { success: false, hasMasterKey: false };
     return await res.json();
   } catch {
@@ -59,6 +61,7 @@ export async function saveMasterSteamApiKey(
     const res = await fetch('/api/steam_games.php', {
       method: 'POST',
       body: formData,
+      signal: AbortSignal.timeout(10000),
     });
     const data = await res.json();
     return data;
@@ -194,6 +197,7 @@ export async function fetchSteamOwnedGames(
       headers: {
         Accept: 'application/json',
       },
+      signal: AbortSignal.timeout(10000),
     });
 
     if (!res.ok) {

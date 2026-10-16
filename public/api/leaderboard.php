@@ -261,9 +261,9 @@ if ($method === 'POST') {
                     $eAcc = trim($entry['accountId'] ?? '');
 
                     // Seul l'identifiant exact de compte permet de mettre à jour les scores (pas de correspondance arbitraire par pseudo)
-                    $matchAcc = !empty($accountId) && !empty($eAcc) && ($eAcc === $accountId);
+                    $matchAcc = !empty($accountId) && !empty($eAcc) && hash_equals($eAcc, $accountId);
 
-                    if ($matchAcc || isCreatorAdminAuthorized()) {
+                    if ($matchAcc) {
                         $entry['nickname'] = $cleanNick;
                         $entry['avatar'] = $newAvatar;
                         if (!empty($accountId)) {
@@ -416,10 +416,17 @@ if ($method === 'POST') {
         $entryAcc = trim($entry['accountId'] ?? '');
         $entryNick = mb_strtolower(trim($entry['nickname'] ?? ''), 'UTF-8');
 
-        $matchAccount = !empty($accountId) && !empty($entryAcc) && ($entryAcc === $accountId);
+        $matchAccount = !empty($accountId) && !empty($entryAcc) && hash_equals($entryAcc, $accountId);
         $matchNickname = !empty($entryNick) && ($entryNick === $normCleanNick);
 
-        if ($matchAccount || $matchNickname) {
+        // Correspondance de compte en priorité absolue
+        if ($matchAccount) {
+            $existingIndex = $idx;
+            break;
+        }
+
+        // Si correspondance de pseudo, n'accepter que si l'entrée existante n'a pas d'autre accountId assigné
+        if ($matchNickname && (empty($entryAcc) || (!empty($accountId) && hash_equals($entryAcc, $accountId)))) {
             $existingIndex = $idx;
             break;
         }
@@ -432,6 +439,8 @@ if ($method === 'POST') {
         $existing = $data[$category][$game][$existingIndex];
         $targetId = $existing['id'] ?? $entryId;
         $existingScore = (int)($existing['score'] ?? 0);
+        $existingAcc = trim($existing['accountId'] ?? '');
+        $isSameOwner = empty($existingAcc) || (!empty($accountId) && hash_equals($existingAcc, $accountId));
 
         if ($score > $existingScore) {
             // Nouveau record personnel !
@@ -440,15 +449,18 @@ if ($method === 'POST') {
             $data[$category][$game][$existingIndex]['avatar'] = $avatar;
             $data[$category][$game][$existingIndex]['date'] = $entryDate;
             $data[$category][$game][$existingIndex]['timestamp'] = time();
-            if (!empty($accountId)) {
+            if (!empty($accountId) && $isSameOwner) {
                 $data[$category][$game][$existingIndex]['accountId'] = $accountId;
             }
             $isNewRecord = true;
         } else {
             // Le score soumis est inférieur ou égal au record existant : on conserve le meilleur score !
-            $data[$category][$game][$existingIndex]['avatar'] = $avatar;
-            if (!empty($accountId)) {
-                $data[$category][$game][$existingIndex]['accountId'] = $accountId;
+            // Ne pas écraser l'avatar ou l'accountId si l'entrée existante possède déjà un accountId différent
+            if ($isSameOwner) {
+                $data[$category][$game][$existingIndex]['avatar'] = $avatar;
+                if (!empty($accountId)) {
+                    $data[$category][$game][$existingIndex]['accountId'] = $accountId;
+                }
             }
             $isNewRecord = false;
         }

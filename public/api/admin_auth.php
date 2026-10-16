@@ -172,10 +172,7 @@ function isCreatorAdminAuthorized($explicitKey = null) {
     if (session_status() === PHP_SESSION_NONE) {
         @session_start();
     }
-    if (!empty($_SESSION['admin_auth']) && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID) {
-        return true;
-    }
-    if (!empty($_SESSION['steam_id']) && strval($_SESSION['steam_id']) === ADMIN_STEAM_ID) {
+    if (!empty($_SESSION['admin_auth']) && $_SESSION['admin_auth'] === true && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID) {
         return true;
     }
 
