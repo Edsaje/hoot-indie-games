@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 76
+ * Total de pépites sélectionnées : 78
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3233,5 +3233,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzcwMTcwMzEucG5n/315x250%23c/iNvtkI.png"
     ],
     "dateAdded": "2026-10-16"
+  },
+  {
+    "id": "itch-turretgirls",
+    "title": "TurretGirls",
+    "developer": "dangen-entertainment",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://dangen-entertainment.itch.io/turretgirls",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$9.99",
+      "en": "$9.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Lock. Load. Look cute. Save Earth.",
+      "en": "Lock. Load. Look cute. Save Earth."
+    },
+    "description": {
+      "fr": "Lock. Load. Look cute. Save Earth.",
+      "en": "Lock. Load. Look cute. Save Earth."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI2ODM2Mjc5LnBuZw==/315x250%23c/o%2FnYMg.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI2ODM2Mjc5LnBuZw==/315x250%23c/o%2FnYMg.png"
+    ],
+    "dateAdded": "2026-10-17"
+  },
+  {
+    "id": "itch-error143",
+    "title": "ERROR143",
+    "developer": "jennyvipham",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://jennyvipham.itch.io/error143",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A fully voiced bickering-and-bantering rivals-to-lovers visual novel <3",
+      "en": "A fully voiced bickering-and-bantering rivals-to-lovers visual novel <3"
+    },
+    "description": {
+      "fr": "A fully voiced bickering-and-bantering rivals-to-lovers visual novel <3",
+      "en": "A fully voiced bickering-and-bantering rivals-to-lovers visual novel <3"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIyNDEzNzA3LnBuZw==/315x250%23c/su4fdE.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIyNDEzNzA3LnBuZw==/315x250%23c/su4fdE.png"
+    ],
+    "dateAdded": "2026-10-17"
   }
 ];

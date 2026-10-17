@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 307
+ * Total de jeux : 310
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11595,6 +11595,107 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-16"
+  },
+  {
+    "id": "la-mulana-2",
+    "title": "La-Mulana 2",
+    "releaseYear": 2018,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "NIGORO",
+    "steamUrl": "https://store.steampowered.com/app/835430/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_d1f2d2166a8175e564e7f6cb75b5abc18a337225.1920x1080.jpg?t=1710992311",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_746855dfa2aad4effbb0bb2ef08b3790733b7ddc.1920x1080.jpg?t=1710992311",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_471d58f3c4095fd4495d5b6480f0a6720a5b0ede.1920x1080.jpg?t=1710992311",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_0a3683d849e21e46404137c973cad4f2af69b883.1920x1080.jpg?t=1710992311",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_c83f9321500459a5e35f06cca06438c3a8f6aa9d.1920x1080.jpg?t=1710992311",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_472fe6b91111fc24e828ecfd7b1c7e15e245c0cb.1920x1080.jpg?t=1710992311"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "The long-awaited sequel to La-Mulana, La-Mulana 2 follows Lumisa Kosugi as she explores the ancient ruins of La-Mulana. Desperate to find the cause of the recent slew of monsters appearing from the ruins, Lumisa discovers the &quot;other&quot; La-Mulana: the ruins known as Eg-Lana.",
+        "en": "The long-awaited sequel to La-Mulana, La-Mulana 2 follows Lumisa Kosugi as she explores the ancient ruins of La-Mulana. Desperate to find the cause of the recent slew of monsters appearing from the ruins, Lumisa discovers the &quot;other&quot; La-Mulana: the ruins known as Eg-Lana."
+      }
+    },
+    "addedAt": "2026-10-17"
+  },
+  {
+    "id": "pummel-party",
+    "title": "Pummel Party",
+    "releaseYear": 2018,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Rebuilt Games",
+    "steamUrl": "https://store.steampowered.com/app/880940/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_83167567344d0bf0cdbb8005f1d87271f0bfa7b6.1920x1080.jpg?t=1725311353",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_b51e213e314bdbd953d190b18b119c679ba64922.1920x1080.jpg?t=1725311353",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_9d352c6fd1d3dec079127a5dd2108b31d57ee072.1920x1080.jpg?t=1725311353",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_790b659aa31131822d0eae36e5c446b31342fd69.1920x1080.jpg?t=1725311353",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_f317cd221846a98a62514910bfa4a11fe7a5318e.1920x1080.jpg?t=1725311353",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_c46dc1246a86337ecf4efcd5969cd7aa931bbee7.1920x1080.jpg?t=1725311353"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Pummel Party est un jeu de type party game pour 4 à 8 joueurs en multijoueur en ligne et local. Roue tes amis ou les IA de coups à l'aide d'une série d'objets absurdes dans le mode plateau et participe à la destruction d'amitiés dans une collection unique de mini-jeux.",
+        "en": "Pummel Party is a 4-8 player online and local-multiplayer party game. Pummel friends or AI using a wide array of absurd items in the board mode and compete to destroy friendships in the unique collection of minigames."
+      }
+    },
+    "addedAt": "2026-10-17"
+  },
+  {
+    "id": "heave-ho",
+    "title": "Heave Ho",
+    "releaseYear": 2019,
+    "genre": [
+      "Aventure",
+      "Co-op"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Le Cartel Studio",
+    "steamUrl": "https://store.steampowered.com/app/905340/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_4519c3bd6a12d7314a5997879e6370bdf6bfc6e7.1920x1080.jpg?t=1784605800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_89b298efd65d4ec95b26e3dbb3a1501c020bebab.1920x1080.jpg?t=1784605800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_1275d128ef2743bf542229cab1a696d8520ea4f6.1920x1080.jpg?t=1784605800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_98e9c8ce1ddd58b6c1d31ed0fb57c02b5806bc18.1920x1080.jpg?t=1784605800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_319f6d64d5ddecb4733019c1b9096cd944591424.1920x1080.jpg?t=1784605800",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_1044fa0aca514af9e0ba497fe2adbc34e69cfe91.1920x1080.jpg?t=1784605800"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Heave Ho est un party game multijoueur hilarant en mode versus ou coop qui réunit jusqu'à quatre joueurs chez vous ou en ligne grâce au Steam Remote Play. Tendez la main, accrochez-vous et propulsez-vous vers la victoire... ou vers une fin chaotique !",
+        "en": "Heave Ho is a riotous multiplayer party game for up to four players in couch co-op and versus play, or online with Steam Remote Play. Reach out, get a grip, and swing to victory — or meet your messy end!"
+      }
+    },
+    "addedAt": "2026-10-17"
   }
 ];
 

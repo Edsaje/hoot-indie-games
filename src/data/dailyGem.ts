@@ -1,39 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-16";
+export const TODAY_DATE = "2026-10-17";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "overcooked-2",
-  "title": "Overcooked! 2",
-  "releaseYear": 2018,
+  "id": "the-looker",
+  "title": "The Looker",
+  "releaseYear": 2022,
   "genre": [
-    "Coopératif",
-    "Gestion",
-    "Action",
-    "Comédie"
+    "Puzzle",
+    "Comédie",
+    "Aventure"
   ],
   "artStyle": {
-    "fr": "3D Stylisé",
+    "fr": "3D Stylisée",
     "en": "Stylized 3D"
   },
   "camera": {
-    "fr": "2.5D Isométrique",
-    "en": "Isometric / 2.5D"
+    "fr": "Première personne",
+    "en": "First-Person"
   },
-  "developer": "Ghost Town Games Ltd.",
-  "steamUrl": "https://store.steampowered.com/app/728880/",
+  "developer": "Subcreation Studio",
+  "steamUrl": "https://store.steampowered.com/app/1985690/",
+  "isFree": true,
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_2f84a12e1fe82cca37848bf29d4b8b16e83db03b.1920x1080.jpg?t=1789548883",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_7f290dccbdc3c0eb9ded951717bceba5d7455764.1920x1080.jpg?t=1789548883",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_652d62549a8a5fdf4f0061e20b16a3cd9a19dc45.1920x1080.jpg?t=1789548883",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_773917e64738bc879685cff49b8ac6eb4f15ab93.1920x1080.jpg?t=1789548883",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_3728a182f291231c4713860611dd9292b8b4fd05.1920x1080.jpg?t=1789548883",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/728880/ss_1ed2b6e65220555ab81f376b7a65424083c4cbb0.1920x1080.jpg?t=1789548883"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1985690/ss_e4373d3ead1db7e44fd72371c2f7e7fe12f222a4.1920x1080.jpg?t=1663378276",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1985690/ss_39161fddb28930c4ce77d9a1e8d14acff5611f41.1920x1080.jpg?t=1663378276",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1985690/ss_bd11c6f8cc55036c574bed6b5c65d356fe388a44.1920x1080.jpg?t=1663378276",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1985690/ss_05f09a551b2a4e0c61e209505e37b43609e8f991.1920x1080.jpg?t=1663378276",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1985690/ss_ba1906729d47e083007cf3b26ac76587f32b4435.1920x1080.jpg?t=1663378276",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1985690/ss_4b045ccb8d15c04437131118767a8d7f02d497ec.1920x1080.jpg?t=1663378276"
   ],
   "hints": {
     "tagline": {
-      "fr": "Cuisinez en coopération effrénée dans des cuisines chaotiques pour rassasier le royaume des oignons.",
-      "en": "Chop, fry and serve your way through chaotic and dynamic kitchens to save the Onion Kingdom."
-    }
+      "fr": "Explorez une île mystérieuse et résolvez des tracés absurdes dans cette parodie hilarante de The Witness.",
+      "en": "Explore a mysterious island and solve hilarious line puzzles in this sharp, affectionate parody of The Witness.",
+      "es": "Explora una isla misteriosa resolviendo disparatados acertijos de líneas en esta brillante parodia de The Witness.",
+      "de": "Löse aberwitzige Linienrätsel auf einer idyllischen Insel in dieser genialen Liebeserklärung und Parodie auf The Witness.",
+      "ja": "美しい孤島に散りばめられた線引きパズルを解き明かす、『The Witness』への愛と爆笑が詰まった痛快パロディ。",
+      "pt-BR": "Explore uma ilha misteriosa e resolva quebra-cabeças de linhas hilários nesta sátira afiada a The Witness."
+    },
+    "composer": "Matthew Gallant"
   }
 };

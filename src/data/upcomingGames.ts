@@ -485,40 +485,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "the-great-game-of-cards",
-    "title": "The Great Game of Cards",
-    "developer": "Acherlose Games",
-    "publisher": "Acherlose Games",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
-      },
-      {
-        "fr": "Free-to-play",
-        "en": "Free-to-play"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5250500/",
-    "description": {
-      "fr": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS",
-      "en": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS"
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1790194422"
-  },
-  {
     "id": "flotte-fantome",
     "title": "Flotte Fantôme",
     "developer": "DevMakerMin",
@@ -557,71 +523,101 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1791241193"
   },
   {
-    "id": "escape-from-elohell",
-    "title": "Escape from EloHell",
-    "developer": "Richard Fulop",
-    "publisher": "Richard Fulop",
+    "id": "gomokusoccer",
+    "title": "GomokuSoccer",
+    "developer": "Hero Parker",
+    "publisher": "Hero Parker",
     "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
+      "fr": "18 oct. 2026",
+      "en": "18 Oct, 2026"
     },
     "genres": [
       {
-        "fr": "Stratégie",
-        "en": "Stratégie"
+        "fr": "Action",
+        "en": "Action"
       },
       {
-        "fr": "Roguelike",
-        "en": "Roguelike"
+        "fr": "Sport",
+        "en": "Sport"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4547860/",
+    "steamUrl": "https://store.steampowered.com/app/5220910/",
     "description": {
-      "fr": "A roguelike single-player game of luck and tactics, which distills competitive ladder climbing into its purest form with one-click matches, win-streak combos, chain-reaction effects. All the satisfaction of reaching Rank 1, none of the toxic teammates or 40-minute hostage games.",
-      "en": "A roguelike single-player game of luck and tactics, which distills competitive ladder climbing into its purest form with one-click matches, win-streak combos, chain-reaction effects. All the satisfaction of reaching Rank 1, none of the toxic teammates or 40-minute hostage games."
+      "fr": "Place or Flick? In Gomoku Soccer, you can place your stones just to build a line of five, or flick them off the board and watch your opponent crashing out. Test your strategy and your aim!",
+      "en": "Place or Flick? In Gomoku Soccer, you can place your stones just to build a line of five, or flick them off the board and watch your opponent crashing out. Test your strategy and your aim!"
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/534c764792674d735f782b5d7049d490ddff5416/header.jpg?t=1791260537"
+  },
+  {
+    "id": "storebot-tidy-up-pc-parts",
+    "title": "STOREBOT: Tidy Up PC Parts",
+    "developer": "Studio Maechuragi",
+    "publisher": "Studio Maechuragi",
+    "expectedDate": {
+      "fr": "18 oct. 2026",
+      "en": "18 Oct, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      },
+      {
+        "fr": "Deckbuilder",
+        "en": "Deckbuilder"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5351640/",
+    "description": {
+      "fr": "Rangez des milliers de composants PC, remplissez les étagères et débloquez de puissantes améliorations. Seul ou entre amis, transportez, lancez et triez des cartons sur deux cartes pour transformer un magasin chaotique en boutique bien ordonnée.",
+      "en": "Organize thousands of PC parts, complete shelves, unlock powerful upgrades, and work together with friends to tidy up a chaotic computer store. Carry, throw, and sort boxes across two unique maps while building your perfect store."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/9e0a821dfc6ba8c36a93034508c415260c974cd4/header.jpg?t=1792025315"
+  },
+  {
+    "id": "slup",
+    "title": "SLUP",
+    "developer": "INECT",
+    "publisher": "INECT",
+    "expectedDate": {
+      "fr": "18 oct. 2026",
+      "en": "18 Oct, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5379560/",
+    "description": {
+      "fr": "Récupérez des Gems, maintenez votre combo et échappez à votre propre passé. Chaque trajet revient sous la forme d'un Past mobile, transformant vos anciennes décisions en nouveaux dangers.",
+      "en": "Collect Gems, keep your combo alive, and outrun your own past. Every path you take returns as a moving Past, turning your previous choices into deadly obstacles in this strategic arcade score-attack game."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/32cf8f48c71af4776182ee7fe7388f7334ea44aa/header.jpg?t=1791297729"
-  },
-  {
-    "id": "hay-one-billion",
-    "title": "Hay! One Billion!",
-    "developer": "Team 1B",
-    "publisher": "Team 1B",
-    "expectedDate": {
-      "fr": "16 oct. 2026",
-      "en": "Oct 16, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/2069070/",
-    "description": {
-      "fr": "Vous avez fait tomber votre aiguille préférée… dans une grange qui contient exactement un milliard de brins de foin. Fouillez à mains nues et trouvez des pièces pour acheter des outils, accélérer vos recherches et retrouver votre aiguille !",
-      "en": "You dropped your favorite needle... in a barn with exactly One Billion pieces of hay. Guess you better go find the needle in a haystack. Search around with your hands, find coins to purchase tools and search faster, and eventually reclaim your lost needle."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/e75bf90c996a060791ced9f9a6abd9f0581bd6b1/header.jpg?t=1792081487"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/139a7f2580808e88717d745ac43aee36f87edb4a/header.jpg?t=1792117863"
   }
 ];

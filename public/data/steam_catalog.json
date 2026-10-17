@@ -5596,58 +5596,6 @@
     }
   },
   {
-    "id": "la-mulana-2",
-    "title": "La-Mulana 2",
-    "releaseYear": 2018,
-    "genre": [
-      "Action",
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "NIGORO",
-    "steamUrl": "https://store.steampowered.com/app/835430/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_d1f2d2166a8175e564e7f6cb75b5abc18a337225.1920x1080.jpg?t=1710992311",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_746855dfa2aad4effbb0bb2ef08b3790733b7ddc.1920x1080.jpg?t=1710992311",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_471d58f3c4095fd4495d5b6480f0a6720a5b0ede.1920x1080.jpg?t=1710992311",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_0a3683d849e21e46404137c973cad4f2af69b883.1920x1080.jpg?t=1710992311",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_c83f9321500459a5e35f06cca06438c3a8f6aa9d.1920x1080.jpg?t=1710992311",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/ss_472fe6b91111fc24e828ecfd7b1c7e15e245c0cb.1920x1080.jpg?t=1710992311"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "The long-awaited sequel to La-Mulana, La-Mulana 2 follows Lumisa Kosugi as she explores the ancient ruins of La-Mulana. Desperate to find the cause of the recent slew of monsters appearing from the ruins, Lumisa discovers the \"other\" La-Mulana: the ruins known as Eg-Lana.",
-        "en": "The long-awaited sequel to La-Mulana, La-Mulana 2 follows Lumisa Kosugi as she explores the ancient ruins of La-Mulana. Desperate to find the cause of the recent slew of monsters appearing from the ruins, Lumisa discovers the \"other\" La-Mulana: the ruins known as Eg-Lana."
-      }
-    },
-    "steamAppId": 835430,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835430/header.jpg?t=1710992311",
-    "steamStoreData": {
-      "appId": 835430,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 2099,
-      "finalPriceCents": 2099,
-      "discountPercent": 0,
-      "formattedFinalPrice": "20,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 820,
-      "totalPositive": 687,
-      "positivePercent": 84,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "the-talos-principle-2",
     "title": "The Talos Principle 2",
     "releaseYear": 2023,
@@ -5956,58 +5904,6 @@
     }
   },
   {
-    "id": "pummel-party",
-    "title": "Pummel Party",
-    "releaseYear": 2018,
-    "genre": [
-      "Action",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Rebuilt Games",
-    "steamUrl": "https://store.steampowered.com/app/880940/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_83167567344d0bf0cdbb8005f1d87271f0bfa7b6.1920x1080.jpg?t=1725311353",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_b51e213e314bdbd953d190b18b119c679ba64922.1920x1080.jpg?t=1725311353",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_9d352c6fd1d3dec079127a5dd2108b31d57ee072.1920x1080.jpg?t=1725311353",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_790b659aa31131822d0eae36e5c446b31342fd69.1920x1080.jpg?t=1725311353",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_f317cd221846a98a62514910bfa4a11fe7a5318e.1920x1080.jpg?t=1725311353",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/ss_c46dc1246a86337ecf4efcd5969cd7aa931bbee7.1920x1080.jpg?t=1725311353"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Pummel Party est un jeu de type party game pour 4 à 8 joueurs en multijoueur en ligne et local. Roue tes amis ou les IA de coups à l'aide d'une série d'objets absurdes dans le mode plateau et participe à la destruction d'amitiés dans une collection unique de mini-jeux.",
-        "en": "Pummel Party is a 4-8 player online and local-multiplayer party game. Pummel friends or AI using a wide array of absurd items in the board mode and compete to destroy friendships in the unique collection of minigames."
-      }
-    },
-    "steamAppId": 880940,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/880940/header.jpg?t=1725311353",
-    "steamStoreData": {
-      "appId": 880940,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1479,
-      "finalPriceCents": 1479,
-      "discountPercent": 0,
-      "formattedFinalPrice": "14,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 46133,
-      "totalPositive": 41022,
-      "positivePercent": 89,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "noita",
     "title": "Noita",
     "releaseYear": 2020,
@@ -6160,57 +6056,6 @@
       "totalReviews": 22197,
       "totalPositive": 20673,
       "positivePercent": 93,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "heave-ho",
-    "title": "Heave Ho",
-    "releaseYear": 2019,
-    "genre": [
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Le Cartel Studio",
-    "steamUrl": "https://store.steampowered.com/app/905340/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_4519c3bd6a12d7314a5997879e6370bdf6bfc6e7.1920x1080.jpg?t=1784605800",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_89b298efd65d4ec95b26e3dbb3a1501c020bebab.1920x1080.jpg?t=1784605800",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_1275d128ef2743bf542229cab1a696d8520ea4f6.1920x1080.jpg?t=1784605800",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_98e9c8ce1ddd58b6c1d31ed0fb57c02b5806bc18.1920x1080.jpg?t=1784605800",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_319f6d64d5ddecb4733019c1b9096cd944591424.1920x1080.jpg?t=1784605800",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/ss_1044fa0aca514af9e0ba497fe2adbc34e69cfe91.1920x1080.jpg?t=1784605800"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Heave Ho est un party game multijoueur hilarant en mode versus ou coop qui réunit jusqu'à quatre joueurs chez vous ou en ligne grâce au Steam Remote Play. Tendez la main, accrochez-vous et propulsez-vous vers la victoire... ou vers une fin chaotique !",
-        "en": "Heave Ho is a riotous multiplayer party game for up to four players in couch co-op and versus play, or online with Steam Remote Play. Reach out, get a grip, and swing to victory — or meet your messy end!"
-      }
-    },
-    "steamAppId": 905340,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/905340/header.jpg?t=1784605800",
-    "steamStoreData": {
-      "appId": 905340,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 975,
-      "finalPriceCents": 975,
-      "discountPercent": 0,
-      "formattedFinalPrice": "9,75€",
-      "formattedInitialPrice": "",
-      "totalReviews": 2021,
-      "totalPositive": 1849,
-      "positivePercent": 91,
       "reviewScoreDesc": {
         "fr": "Très positifs",
         "en": "Very Positive"
@@ -91291,5 +91136,298 @@
     "addedAt": "2026-10-16",
     "steamAppId": 3026770,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026770/header.jpg?t=1792083759"
+  },
+  {
+    "id": "the-great-game-of-cards",
+    "title": "The Great Game of Cards",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Acherlose Games",
+    "steamUrl": "https://store.steampowered.com/app/5250500/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/87fa4ccee58eedbb904e79862fd7fa072bd939a6/ss_87fa4ccee58eedbb904e79862fd7fa072bd939a6.1920x1080.jpg?t=1792182030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/517e2b7555b17f33f1ac2691ebeb9f61fb9331ac/ss_517e2b7555b17f33f1ac2691ebeb9f61fb9331ac.1920x1080.jpg?t=1792182030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/d13b6c28e19da5f7ecbb39e2aaed487545309589/ss_d13b6c28e19da5f7ecbb39e2aaed487545309589.1920x1080.jpg?t=1792182030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/707f557c60915b4707f936caf6d4d403abd3e0b0/ss_707f557c60915b4707f936caf6d4d403abd3e0b0.1920x1080.jpg?t=1792182030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/82cff4faad3d0b18c58cfe11bdab62579cbc070e/ss_82cff4faad3d0b18c58cfe11bdab62579cbc070e.1920x1080.jpg?t=1792182030",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/b12ad97ba807a66f639a59310e11f0f5a4b3fa6c/ss_b12ad97ba807a66f639a59310e11f0f5a4b3fa6c.1920x1080.jpg?t=1792182030"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS",
+        "en": "A turn-based strategy card game where everyone can draft from the same card pool, but what you build and how you play them is up to you. Draft your deck, fight your friends, and... boom. CARDS"
+      }
+    },
+    "addedAt": "2026-10-17",
+    "isFree": true,
+    "steamAppId": 5250500,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5250500/451b69a5d65cde20d403676e91ea9314996b4f9b/header.jpg?t=1792182030"
+  },
+  {
+    "id": "escape-from-elohell",
+    "title": "Escape from EloHell",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Richard Fulop",
+    "steamUrl": "https://store.steampowered.com/app/4547860/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/3a292c7143b1acfd59febe56ae8188279a300645/ss_3a292c7143b1acfd59febe56ae8188279a300645.1920x1080.jpg?t=1792152683",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/366aa56a171f125e159ff7a591073105de2880c3/ss_366aa56a171f125e159ff7a591073105de2880c3.1920x1080.jpg?t=1792152683",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/58d0934befc439ee38c6bbac50ea5bc55912fb61/ss_58d0934befc439ee38c6bbac50ea5bc55912fb61.1920x1080.jpg?t=1792152683",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/ce01d489298bfecc38d297210629781f84b4f0e9/ss_ce01d489298bfecc38d297210629781f84b4f0e9.1920x1080.jpg?t=1792152683",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/b6df764dd2729658a818ba1edec4c2656f884013/ss_b6df764dd2729658a818ba1edec4c2656f884013.1920x1080.jpg?t=1792152683",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/2f2279da8e0ce62bf582925c867a40fe3e301a79/ss_2f2279da8e0ce62bf582925c867a40fe3e301a79.1920x1080.jpg?t=1792152683"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A roguelike single-player game of luck and tactics, which distills competitive ladder climbing into its purest form with one-click matches, win-streak combos, chain-reaction effects. All the satisfaction of reaching Rank 1, none of the toxic teammates or 40-minute hostage games.",
+        "en": "A roguelike single-player game of luck and tactics, which distills competitive ladder climbing into its purest form with one-click matches, win-streak combos, chain-reaction effects. All the satisfaction of reaching Rank 1, none of the toxic teammates or 40-minute hostage games."
+      }
+    },
+    "addedAt": "2026-10-17",
+    "steamAppId": 4547860,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4547860/32cf8f48c71af4776182ee7fe7388f7334ea44aa/header.jpg?t=1792152683"
+  },
+  {
+    "id": "hay-one-billion",
+    "title": "Hay! One Billion!",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Team 1B",
+    "steamUrl": "https://store.steampowered.com/app/2069070/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/06872e6574e25f88f046cca542752d67d4ee9443/ss_06872e6574e25f88f046cca542752d67d4ee9443.1920x1080.jpg?t=1792134282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/d3909c933fed75ff70499ea7bf84a9fae24c41c4/ss_d3909c933fed75ff70499ea7bf84a9fae24c41c4.1920x1080.jpg?t=1792134282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/292cd6a57711536af1a7346e37c24064f1736054/ss_292cd6a57711536af1a7346e37c24064f1736054.1920x1080.jpg?t=1792134282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/e7b0699d73f64bc7d161bf58a6fa7ebc3ac344a0/ss_e7b0699d73f64bc7d161bf58a6fa7ebc3ac344a0.1920x1080.jpg?t=1792134282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/679f1fb02859d82c7914134f7a91bad35470784b/ss_679f1fb02859d82c7914134f7a91bad35470784b.1920x1080.jpg?t=1792134282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/cb07ec92cdf5b757344fa307255d71f7b13c531f/ss_cb07ec92cdf5b757344fa307255d71f7b13c531f.1920x1080.jpg?t=1792134282"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Vous avez fait tomber votre aiguille préférée… dans une grange qui contient exactement un milliard de brins de foin. Fouillez à mains nues et trouvez des pièces pour acheter des outils, accélérer vos recherches et retrouver votre aiguille !",
+        "en": "You dropped your favorite needle... in a barn with exactly One Billion pieces of hay. Guess you better go find the needle in a haystack. Search around with your hands, find coins to purchase tools and search faster, and eventually reclaim your lost needle."
+      }
+    },
+    "addedAt": "2026-10-17",
+    "steamAppId": 2069070,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2069070/e75bf90c996a060791ced9f9a6abd9f0581bd6b1/header.jpg?t=1792134282"
+  },
+  {
+    "id": "ghillie-wars",
+    "title": "Ghillie Wars",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "J2LRG Games",
+    "steamUrl": "https://store.steampowered.com/app/5211690/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5211690/fbeaea845fcec41e30572a9c19896729b20708fe/ss_fbeaea845fcec41e30572a9c19896729b20708fe.1920x1080.jpg?t=1792187601",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5211690/f4c30179824c7c3e3825f5c7a36ae930374960fe/ss_f4c30179824c7c3e3825f5c7a36ae930374960fe.1920x1080.jpg?t=1792187601",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5211690/67ed8ccc51cbf24a6a99f27a7838a8a3dd4ee25b/ss_67ed8ccc51cbf24a6a99f27a7838a8a3dd4ee25b.1920x1080.jpg?t=1792187601",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5211690/af15ec7c131d1dc491ade8617db567cfa898c326/ss_af15ec7c131d1dc491ade8617db567cfa898c326.1920x1080.jpg?t=1792187601",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5211690/24e3384e88f1f43d422209d8063a6278d73eb699/ss_24e3384e88f1f43d422209d8063a6278d73eb699.1920x1080.jpg?t=1792187601",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5211690/fbeaea845fcec41e30572a9c19896729b20708fe/ss_fbeaea845fcec41e30572a9c19896729b20708fe.1920x1080.jpg?t=1792187601"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Ghillie Wars is a multiplayer sniper hunt built around camouflage, patience, and the tension of being watched. Match your camo to the terrain, find the other snipers, and choose when to fire. One life per round. Everyone has access to the same rifle and camouflage choices.",
+        "en": "Ghillie Wars is a multiplayer sniper hunt built around camouflage, patience, and the tension of being watched. Match your camo to the terrain, find the other snipers, and choose when to fire. One life per round. Everyone has access to the same rifle and camouflage choices."
+      }
+    },
+    "addedAt": "2026-10-17",
+    "steamAppId": 5211690,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5211690/961f3bc630036115777344cda9246c73fd5a4a4a/header.jpg?t=1792187601"
+  },
+  {
+    "id": "a-game-about-opening-a-chest",
+    "title": "A Game About Opening A Chest",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Odd Raccoon",
+    "steamUrl": "https://store.steampowered.com/app/4088850/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4088850/38394bbccd0a2e8b22c2ef22fe9f99439f4e3da1/ss_38394bbccd0a2e8b22c2ef22fe9f99439f4e3da1.1920x1080.jpg?t=1792191675",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4088850/da64a87fb1462eefaee74b71da1704bdbbadce5d/ss_da64a87fb1462eefaee74b71da1704bdbbadce5d.1920x1080.jpg?t=1792191675",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4088850/b72a58401574196b8a901721efcfda5427d324f9/ss_b72a58401574196b8a901721efcfda5427d324f9.1920x1080.jpg?t=1792191675",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4088850/b646ec7c4c2c98e57c7601d5750dbb9f9e174130/ss_b646ec7c4c2c98e57c7601d5750dbb9f9e174130.1920x1080.jpg?t=1792191675",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4088850/0e74881125fd421a15810fc2d2f94e5d8ba1c8be/ss_0e74881125fd421a15810fc2d2f94e5d8ba1c8be.1920x1080.jpg?t=1792191675",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4088850/a741434304b204364428bc001c537320634cd255/ss_a741434304b204364428bc001c537320634cd255.1920x1080.jpg?t=1792191675"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Ouvre un coffre au butin infini, récupère des objets légendaires et crée des synergies surpuissantes dans ce roguelike incrémental unique en son genre. Fais fructifier ta fortune, profite de l'aide des PNJ et survis aux dangers du donjon dans un jeu addictif mêlant chance, risques et récompenses.",
+        "en": "Open a Chest of infinite loot, collect legendary items, and create game-breaking synergies in this unique roguelike clicker. Grow your fortune, use NPCs to your advantage, and survive the perils of the dungeon in this addictive game of luck, risk, and rewards. When in doubt, open more Chests!"
+      }
+    },
+    "addedAt": "2026-10-17",
+    "steamAppId": 4088850,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4088850/365f57194d6391ab3efd5ce4050ae073beef6fc8/header.jpg?t=1792191675"
+  },
+  {
+    "id": "flipping-is-hard",
+    "title": "Flipping is Hard",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Elegant Horse Studios",
+    "steamUrl": "https://store.steampowered.com/app/3826670/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3826670/1333b3b11e46d241e172e03c604d40ac729d952d/ss_1333b3b11e46d241e172e03c604d40ac729d952d.1920x1080.jpg?t=1792219841",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3826670/e9787c97afde1157f63c9616d2ff1c4e0c180d11/ss_e9787c97afde1157f63c9616d2ff1c4e0c180d11.1920x1080.jpg?t=1792219841",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3826670/aba470f301250e4514990bf83976870ed77b40c0/ss_aba470f301250e4514990bf83976870ed77b40c0.1920x1080.jpg?t=1792219841",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3826670/205dc05c600eb7e80c7200c25dd43ee36c9d3dd1/ss_205dc05c600eb7e80c7200c25dd43ee36c9d3dd1.1920x1080.jpg?t=1792219841",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3826670/12aa668b165d521b02faa01762d7c037dd54a794/ss_12aa668b165d521b02faa01762d7c037dd54a794.1920x1080.jpg?t=1792219841",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3826670/65a1df8972e1cbcdbf69c11bdd1bdb2ac32c17f5/ss_65a1df8972e1cbcdbf69c11bdd1bdb2ac32c17f5.1920x1080.jpg?t=1792219841"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Pas de jambes. Que des pirouettes. Un jeu difficile et éprouvant où vous enchaînez les sauts, les chutes ,et grimpez en incarnant Flippy, utilisant uniquement à l'aide de rotations. Avez-vous ce qu'il faut pour retrouver Jeff?",
+        "en": "No Legs. Just Flips. A hard and punishing game where you flip, fall, and climb as Flippy, using only rotation. Do you have what it takes to get back to Jeff?"
+      }
+    },
+    "addedAt": "2026-10-17",
+    "steamAppId": 3826670,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3826670/e82a2c44caf29a67be6ad43c4256940eaef51111/header.jpg?t=1792219841"
+  },
+  {
+    "id": "blightstone",
+    "title": "Blightstone",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Unfinished Pixel",
+    "steamUrl": "https://store.steampowered.com/app/2832280/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2832280/1b99e305e5c019a6a708cc053706c99cb8e05078/ss_1b99e305e5c019a6a708cc053706c99cb8e05078.1920x1080.jpg?t=1792176208",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2832280/078858eeb3c81a81ea29f7b611b8e230b985a4e7/ss_078858eeb3c81a81ea29f7b611b8e230b985a4e7.1920x1080.jpg?t=1792176208",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2832280/aacb67f764d3525aad4dfe0c56abe271d4688ddf/ss_aacb67f764d3525aad4dfe0c56abe271d4688ddf.1920x1080.jpg?t=1792176208",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2832280/d30cf6c5b100960ecce5e4bb896c390fb0c68928/ss_d30cf6c5b100960ecce5e4bb896c390fb0c68928.1920x1080.jpg?t=1792176208",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2832280/49e2e41ac67911497387bb5716726883683c2811/ss_49e2e41ac67911497387bb5716726883683c2811.1920x1080.jpg?t=1792176208",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2832280/22ceff1096bd04a5fa69f7c38af1ebad47626bb4/ss_22ceff1096bd04a5fa69f7c38af1ebad47626bb4.1920x1080.jpg?t=1792176208"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A challenging, turn-based strategy with a roguelike edge. Lead a team of adventurers to destroy the Blightstone and free the world from corruption. Use free movement, dynamic environments and collectable skills to save the crystal, and save the world.",
+        "en": "A challenging, turn-based strategy with a roguelike edge. Lead a team of adventurers to destroy the Blightstone and free the world from corruption. Use free movement, dynamic environments and collectable skills to save the crystal, and save the world."
+      }
+    },
+    "addedAt": "2026-10-17",
+    "steamAppId": 2832280,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2832280/6090958c7386df7863a409d7d1f1a1f2d1a460fe/header.jpg?t=1792176208"
+  },
+  {
+    "id": "devices-tycoon",
+    "title": "Devices Tycoon",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Réaliste",
+      "en": "Realistic 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Roastery Games",
+    "steamUrl": "https://store.steampowered.com/app/2085660/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/07253b55a0866b5bb5c8846bd404cb76284d3929/ss_07253b55a0866b5bb5c8846bd404cb76284d3929.1920x1080.jpg?t=1792166456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/12f4b838ab1de419198e174fdd6107d1043a33c8/ss_12f4b838ab1de419198e174fdd6107d1043a33c8.1920x1080.jpg?t=1792166456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/fe2245292765a2f79d89129bf9e5771b1a75315c/ss_fe2245292765a2f79d89129bf9e5771b1a75315c.1920x1080.jpg?t=1792166456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/cc3254d7d82fc5997899a573bacb13aac1191d3b/ss_cc3254d7d82fc5997899a573bacb13aac1191d3b.1920x1080.jpg?t=1792166456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/1a53338ac4eca9f28cd7eb9342d11b577b6b2f91/ss_1a53338ac4eca9f28cd7eb9342d11b577b6b2f91.1920x1080.jpg?t=1792166456",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/8ce5919a7b657db0ac5c7e1a3988a43ada5c91e3/ss_8ce5919a7b657db0ac5c7e1a3988a43ada5c91e3.1920x1080.jpg?t=1792166456"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Devices Tycoon est un simulateur d'entreprise unique qui vous fera sentir comme le propriétaire d'une entreprise qui crée vos propres appareils ! Dans le jeu, vous pouvez créer vos propres smartphones, tablettes, ordinateurs portables, montres intelligentes, écouteurs et bien plus encore !",
+        "en": "Devices Tycoon is a unique business simulator that will make you feel like the owner of a company that creates your own devices! In the game you can create your own smartphones, tablets, laptops, smart watches, headphones, operating systems and even your own processors!"
+      }
+    },
+    "addedAt": "2026-10-17",
+    "steamAppId": 2085660,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/cfbec389b36849ce4a04b5f19e4a88ca68c73d16/header.jpg?t=1792166456"
   }
 ]
