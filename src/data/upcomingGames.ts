@@ -562,8 +562,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Studio Maechuragi",
     "publisher": "Studio Maechuragi",
     "expectedDate": {
-      "fr": "18 oct. 2026",
-      "en": "18 Oct, 2026"
+      "fr": "octobre 2026",
+      "en": "octobre 2026"
     },
     "genres": [
       {

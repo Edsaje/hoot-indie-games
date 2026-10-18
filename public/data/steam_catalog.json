@@ -6169,110 +6169,6 @@
     }
   },
   {
-    "id": "coffee-talk",
-    "title": "Coffee Talk",
-    "releaseYear": 2020,
-    "genre": [
-      "Aventure",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Toge Productions",
-    "steamUrl": "https://store.steampowered.com/app/914800/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_7df86693fd63aae5209cb3157e2b98f3e7074cdf.1920x1080.jpg?t=1789739649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_fb39356fdb31c360f81598801f6398fcf83a6324.1920x1080.jpg?t=1789739649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_c4253cfc283c92b932286b187ab342e4580bb055.1920x1080.jpg?t=1789739649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_ec29b075105ed4b4432c8f97fba8d695b4aa00a9.1920x1080.jpg?t=1789739649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_f0dd19b6d6ddd5649417d0cf4a367b3d39aabe0d.1920x1080.jpg?t=1789739649",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_3cb691732a8e456a28d73f1a9b1340fbc5ee5d5a.1920x1080.jpg?t=1789739649"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Coffee Talk est un simulateur de barista et de conversations intimes, propose d'écouter les soucis bien modernes de personnages fantasy, et de les aider en leur servant une ou deux boissons chaudes.",
-        "en": "Coffee Talk is a coffee brewing and heart-to-heart talking simulator about listening to fantasy-inspired modern peoples’ problems, and helping them by serving up a warm drink or two."
-      }
-    },
-    "steamAppId": 914800,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/header.jpg?t=1789739649",
-    "steamStoreData": {
-      "appId": 914800,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1279,
-      "finalPriceCents": 639,
-      "discountPercent": 50,
-      "formattedFinalPrice": "6,39€",
-      "formattedInitialPrice": "12,79€",
-      "totalReviews": 12596,
-      "totalPositive": 11927,
-      "positivePercent": 95,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "gato-roboto",
-    "title": "Gato Roboto",
-    "releaseYear": 2019,
-    "genre": [
-      "Action",
-      "Aventure"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "doinksoft",
-    "steamUrl": "https://store.steampowered.com/app/916730/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_1cb897609ae5e00229c40ba8aeadbe62ed5ac400.1920x1080.jpg?t=1728946977",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_543c7188ef0b4bb0e0c90873fa807db6733ef6bc.1920x1080.jpg?t=1728946977",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_bb08ca9d22a34a0641a3797aeb7095d3c66c9558.1920x1080.jpg?t=1728946977",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_1a84f4eca3305b7dbc3baa054bc4fa2ebf56d13e.1920x1080.jpg?t=1728946977",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_340dbe24eaca9b054c5d8eefb05f4d79f8d0a85c.1920x1080.jpg?t=1728946977",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_4aeb54d88a907a6bcbbaa67e1db6e390ff85c4d8.1920x1080.jpg?t=1728946977"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Sautez dans votre combinaison blindée et partez à l'aventure dans un monde extraterrestre souterrain rempli d'obstacles et de créatures plus agaçantes les unes que les autres pour sauver votre capitaine naufragé à bord de son vaisseau spatial",
-        "en": "Pounce inside of your cozy armored mech and set off on a dangerous trek through an alien underworld full of irritable creatures and treacherous obstacles in a valiant effort to save your stranded captain and his crashed spaceship."
-      }
-    },
-    "steamAppId": 916730,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/header.jpg?t=1728946977",
-    "steamStoreData": {
-      "appId": 916730,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 779,
-      "finalPriceCents": 779,
-      "discountPercent": 0,
-      "formattedFinalPrice": "7,79€",
-      "formattedInitialPrice": "",
-      "totalReviews": 4367,
-      "totalPositive": 4126,
-      "positivePercent": 94,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "minoria",
     "title": "Minoria",
     "releaseYear": 2019,
@@ -6424,59 +6320,6 @@
       "formattedInitialPrice": "",
       "totalReviews": 33316,
       "totalPositive": 31462,
-      "positivePercent": 94,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
-    "id": "one-step-from-eden",
-    "title": "One Step From Eden",
-    "releaseYear": 2020,
-    "genre": [
-      "Action",
-      "Aventure",
-      "Stratégie"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Thomas Moon Kang",
-    "steamUrl": "https://store.steampowered.com/app/960690/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_5a35707cf1ba929d4e00f9436a66e77cf02e71bb.1920x1080.jpg?t=1781020092",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_feed0dbf03168eed514634d53dcc357238ad2c3b.1920x1080.jpg?t=1781020092",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_6a1f20148ca9417b47bd6ae49b411b0ed06fb0b5.1920x1080.jpg?t=1781020092",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_159a41470dfb339f39fe79aac92f6ec032919395.1920x1080.jpg?t=1781020092",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_416e4f93590bccb05fe6692e70393cd68bd977c4.1920x1080.jpg?t=1781020092",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_27d099e997e072d6886fbc2bb307d8aca91ed60b.1920x1080.jpg?t=1781020092"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Construisez un deck puissant, lancez des sorts en un instant, battez-vous contre des ennemis qui évoluent, trouvez des artefacts pouvant changer le cours de la partie, faites-vous des amis ou des ennemis et parvenez jusqu'à Eden.",
-        "en": "Build a powerful deck, cast spells on the fly, battle evolving enemies, find game-changing artifacts, make friends or make enemies, just make it to Eden."
-      }
-    },
-    "steamAppId": 960690,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/header.jpg?t=1781020092",
-    "steamStoreData": {
-      "appId": 960690,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1999,
-      "finalPriceCents": 1999,
-      "discountPercent": 0,
-      "formattedFinalPrice": "19,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 6037,
-      "totalPositive": 5693,
       "positivePercent": 94,
       "reviewScoreDesc": {
         "fr": "Très positifs",
@@ -91429,5 +91272,151 @@
     "addedAt": "2026-10-17",
     "steamAppId": 2085660,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2085660/cfbec389b36849ce4a04b5f19e4a88ca68c73d16/header.jpg?t=1792166456"
+  },
+  {
+    "id": "silly-suspects",
+    "title": "Silly Suspects",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Classy Games",
+    "steamUrl": "https://store.steampowered.com/app/4117190/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4117190/2c898843eff6f53d3005e82639da213086823f63/ss_2c898843eff6f53d3005e82639da213086823f63.1920x1080.jpg?t=1792299218",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4117190/e0686a17f579a330d1282ae9831b8d2bcb4c921e/ss_e0686a17f579a330d1282ae9831b8d2bcb4c921e.1920x1080.jpg?t=1792299218",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4117190/50a60e6b32b9a3f7f839b60a57b8d383eb4eb285/ss_50a60e6b32b9a3f7f839b60a57b8d383eb4eb285.1920x1080.jpg?t=1792299218",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4117190/80b26d379f725099703a3ebfb3a8b206c63f1a92/ss_80b26d379f725099703a3ebfb3a8b206c63f1a92.1920x1080.jpg?t=1792299218",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4117190/f6b67e01364fe70e111c64a946cfc0ae8b544865/ss_f6b67e01364fe70e111c64a946cfc0ae8b544865.1920x1080.jpg?t=1792299218",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4117190/a48ad179f742fdac08209c2eb34c4026f8016862/ss_a48ad179f742fdac08209c2eb34c4026f8016862.1920x1080.jpg?t=1792299218"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Incarnez un détective dans ce jeu d'enquête comique façon « Qui est-ce ? ». Enquêtez sur des crimes absurdes dans un monde loufoque et déjanté. Interrogez les suspects, apprenez leurs habitudes et éliminez-les un par un jusqu'à découvrir la vérité cachée sous tout ce non-sens",
+        "en": "Play as a detective in this comical guess-who mystery. Investigate absurd crimes in a weird and wacky world. Question suspects, learn their habits, and rule them out one by one until you uncover the truth hiding beneath all the nonsense"
+      }
+    },
+    "addedAt": "2026-10-18",
+    "steamAppId": 4117190,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4117190/6ac3de7d73eac93b7d706a475c21878f58aa5e22/header.jpg?t=1792299218"
+  },
+  {
+    "id": "cook-with-card",
+    "title": "Cook with Card",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie",
+      "Deckbuilder"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Genco Interactive",
+    "steamUrl": "https://store.steampowered.com/app/4597500/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4597500/ec508c372831e86e7ede03d4e416a4330108a1f8/ss_ec508c372831e86e7ede03d4e416a4330108a1f8.1920x1080.jpg?t=1792254568",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4597500/6bd806a5b575bfdb318a98960867e46678220d55/ss_6bd806a5b575bfdb318a98960867e46678220d55.1920x1080.jpg?t=1792254568",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4597500/2a442b99697eb2b968b4576e8bdc7335ea1a1306/ss_2a442b99697eb2b968b4576e8bdc7335ea1a1306.1920x1080.jpg?t=1792254568",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4597500/b957a192d7ffc92b2bc9dee4623625aa6a25ce0d/ss_b957a192d7ffc92b2bc9dee4623625aa6a25ce0d.1920x1080.jpg?t=1792254568",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4597500/759549e9c922e962ccbc1a0210cc54630df4c132/ss_759549e9c922e962ccbc1a0210cc54630df4c132.1920x1080.jpg?t=1792254568",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4597500/ec508c372831e86e7ede03d4e416a4330108a1f8/ss_ec508c372831e86e7ede03d4e416a4330108a1f8.1920x1080.jpg?t=1792254568"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Cook with Card est un jeu de cuisine et de gestion de restaurant décontracté où vous préparez des recettes à l'aide de cartes, répondez aux commandes des clients et améliorez votre cuisine. Débloquez de nouvelles recettes, gérez vos ingrédients et créez une cuisine performante !",
+        "en": "Cook with Card is a casual cooking and restaurant management game where you prepare recipes using cards, fulfill customer orders, and upgrade your kitchen. Unlock new recipes, manage ingredients and build an efficient kitchen!"
+      }
+    },
+    "addedAt": "2026-10-18",
+    "steamAppId": 4597500,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4597500/cec01e53ce6d49a84a52f9669ddac9d7e84a8487/header.jpg?t=1792254568"
+  },
+  {
+    "id": "cat-life",
+    "title": "Cat Life",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG",
+      "Co-op"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "RedMoon Studio",
+    "steamUrl": "https://store.steampowered.com/app/2204760/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2204760/ee3db3034663177ff47acdcf6b53db4a299f1719/ss_ee3db3034663177ff47acdcf6b53db4a299f1719.1920x1080.jpg?t=1792254244",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2204760/b405f85156217ac65884cc96a64ac429410f5ab4/ss_b405f85156217ac65884cc96a64ac429410f5ab4.1920x1080.jpg?t=1792254244",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2204760/0523ccb1ac37141c0fff8c8fffb39a2b7a696fe9/ss_0523ccb1ac37141c0fff8c8fffb39a2b7a696fe9.1920x1080.jpg?t=1792254244",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2204760/c733869b477f0516c9ef5fe1fbb5e12f1ef017ec/ss_c733869b477f0516c9ef5fe1fbb5e12f1ef017ec.1920x1080.jpg?t=1792254244",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2204760/d9072b01f02748e3e5271519a8b35d815038788f/ss_d9072b01f02748e3e5271519a8b35d815038788f.1920x1080.jpg?t=1792254244",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2204760/7bea68d82e67747fd13f1e94ab37b1fcb397112c/ss_7bea68d82e67747fd13f1e94ab37b1fcb397112c.1920x1080.jpg?t=1792254244"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Explorez une vaste île sauvage dans la peau d’un chat. Grimpez partout, chassez, combattez et survivez aux éléments tout en perçant les mystères de l’île, en solo ou en coopération.",
+        "en": "Explore a vast wild island as a cat. Climb anywhere, hunt, fight, and survive the elements as you uncover the island’s mysteries, either solo or in co-op."
+      }
+    },
+    "addedAt": "2026-10-18",
+    "steamAppId": 2204760,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2204760/f0bb6053f7c9ab4a196d42390138952983f8e2b5/header.jpg?t=1792254244"
+  },
+  {
+    "id": "needle-hunt",
+    "title": "Needle Hunt",
+    "releaseYear": 2026,
+    "genre": [
+      "Co-op"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Rantey",
+    "steamUrl": "https://store.steampowered.com/app/5267570/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/971a15639d48a30e83f22861e19c225c4b455b4a/ss_971a15639d48a30e83f22861e19c225c4b455b4a.1920x1080.jpg?t=1792233206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/fe197e71ed3524ac6de62c3c221991d06e55991a/ss_fe197e71ed3524ac6de62c3c221991d06e55991a.1920x1080.jpg?t=1792233206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/2d95df123f581a7ba87cd6ac8e5ec6a6af06f8aa/ss_2d95df123f581a7ba87cd6ac8e5ec6a6af06f8aa.1920x1080.jpg?t=1792233206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/328f2be01a9d2f4a2bf698381a747e306010c624/ss_328f2be01a9d2f4a2bf698381a747e306010c624.1920x1080.jpg?t=1792233206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/f81aa2901822fb40898ff53a5572ac3b88f6435e/ss_f81aa2901822fb40898ff53a5572ac3b88f6435e.1920x1080.jpg?t=1792233206",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/c70b9fa4bf7019d79d302ea917a4dd19bf86cb53/ss_c70b9fa4bf7019d79d302ea917a4dd19bf86cb53.1920x1080.jpg?t=1792233206"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Fouillez une immense botte de foin en solo ou en coopération jusqu'à 4 joueurs, explorez une grange colorée au style cartoon et trouvez la minuscule aiguille cachée.",
+        "en": "Search a massive haystack alone or in co-op with up to 4 players, explore a colorful cartoon barn, and find the tiny hidden needle."
+      }
+    },
+    "addedAt": "2026-10-18",
+    "steamAppId": 5267570,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/9d72b8f28e2786f1546976727d1e47c13e2586e3/header.jpg?t=1792233206"
   }
 ]

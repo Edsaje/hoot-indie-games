@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 310
+ * Total de jeux : 313
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11696,6 +11696,108 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-17"
+  },
+  {
+    "id": "coffee-talk",
+    "title": "Coffee Talk",
+    "releaseYear": 2020,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Toge Productions",
+    "steamUrl": "https://store.steampowered.com/app/914800/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_7df86693fd63aae5209cb3157e2b98f3e7074cdf.1920x1080.jpg?t=1789739649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_fb39356fdb31c360f81598801f6398fcf83a6324.1920x1080.jpg?t=1789739649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_c4253cfc283c92b932286b187ab342e4580bb055.1920x1080.jpg?t=1789739649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_ec29b075105ed4b4432c8f97fba8d695b4aa00a9.1920x1080.jpg?t=1789739649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_f0dd19b6d6ddd5649417d0cf4a367b3d39aabe0d.1920x1080.jpg?t=1789739649",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/914800/ss_3cb691732a8e456a28d73f1a9b1340fbc5ee5d5a.1920x1080.jpg?t=1789739649"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Coffee Talk est un simulateur de barista et de conversations intimes, propose d'écouter les soucis bien modernes de personnages fantasy, et de les aider en leur servant une ou deux boissons chaudes.",
+        "en": "Coffee Talk is a coffee brewing and heart-to-heart talking simulator about listening to fantasy-inspired modern peoples’ problems, and helping them by serving up a warm drink or two."
+      }
+    },
+    "addedAt": "2026-10-18"
+  },
+  {
+    "id": "gato-roboto",
+    "title": "Gato Roboto",
+    "releaseYear": 2019,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "doinksoft",
+    "steamUrl": "https://store.steampowered.com/app/916730/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_1cb897609ae5e00229c40ba8aeadbe62ed5ac400.1920x1080.jpg?t=1728946977",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_543c7188ef0b4bb0e0c90873fa807db6733ef6bc.1920x1080.jpg?t=1728946977",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_bb08ca9d22a34a0641a3797aeb7095d3c66c9558.1920x1080.jpg?t=1728946977",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_1a84f4eca3305b7dbc3baa054bc4fa2ebf56d13e.1920x1080.jpg?t=1728946977",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_340dbe24eaca9b054c5d8eefb05f4d79f8d0a85c.1920x1080.jpg?t=1728946977",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/916730/ss_4aeb54d88a907a6bcbbaa67e1db6e390ff85c4d8.1920x1080.jpg?t=1728946977"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Sautez dans votre combinaison blindée et partez à l'aventure dans un monde extraterrestre souterrain rempli d'obstacles et de créatures plus agaçantes les unes que les autres pour sauver votre capitaine naufragé à bord de son vaisseau spatial",
+        "en": "Pounce inside of your cozy armored mech and set off on a dangerous trek through an alien underworld full of irritable creatures and treacherous obstacles in a valiant effort to save your stranded captain and his crashed spaceship."
+      }
+    },
+    "addedAt": "2026-10-18"
+  },
+  {
+    "id": "one-step-from-eden",
+    "title": "One Step From Eden",
+    "releaseYear": 2020,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Thomas Moon Kang",
+    "steamUrl": "https://store.steampowered.com/app/960690/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_5a35707cf1ba929d4e00f9436a66e77cf02e71bb.1920x1080.jpg?t=1781020092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_feed0dbf03168eed514634d53dcc357238ad2c3b.1920x1080.jpg?t=1781020092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_6a1f20148ca9417b47bd6ae49b411b0ed06fb0b5.1920x1080.jpg?t=1781020092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_159a41470dfb339f39fe79aac92f6ec032919395.1920x1080.jpg?t=1781020092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_416e4f93590bccb05fe6692e70393cd68bd977c4.1920x1080.jpg?t=1781020092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/960690/ss_27d099e997e072d6886fbc2bb307d8aca91ed60b.1920x1080.jpg?t=1781020092"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Construisez un deck puissant, lancez des sorts en un instant, battez-vous contre des ennemis qui évoluent, trouvez des artefacts pouvant changer le cours de la partie, faites-vous des amis ou des ennemis et parvenez jusqu'à Eden.",
+        "en": "Build a powerful deck, cast spells on the fly, battle evolving enemies, find game-changing artifacts, make friends or make enemies, just make it to Eden."
+      }
+    },
+    "addedAt": "2026-10-18"
   }
 ];
 

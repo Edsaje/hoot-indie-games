@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 78
+ * Total de pépites sélectionnées : 80
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3313,5 +3313,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzIyNDEzNzA3LnBuZw==/315x250%23c/su4fdE.png"
     ],
     "dateAdded": "2026-10-17"
+  },
+  {
+    "id": "itch-the-no-jumpscare-show",
+    "title": "The No Jumpscare Show",
+    "developer": "polypaw",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://polypaw.itch.io/the-no-jumpscare-show",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A 100% jumpscare-free experience :)",
+      "en": "A 100% jumpscare-free experience :)"
+    },
+    "description": {
+      "fr": "A 100% jumpscare-free experience :)",
+      "en": "A 100% jumpscare-free experience :)"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5NzExNDkxLnBuZw==/315x250%23c/NYnRQk.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5NzExNDkxLnBuZw==/315x250%23c/NYnRQk.png"
+    ],
+    "dateAdded": "2026-10-18"
+  },
+  {
+    "id": "itch-a-little-inconvenience",
+    "title": "A Little Inconvenience",
+    "developer": "husbandogoddess",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://husbandogoddess.itch.io/a-little-inconvenience",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Every roadblock to you is just a little inconvenience...",
+      "en": "Every roadblock to you is just a little inconvenience..."
+    },
+    "description": {
+      "fr": "Every roadblock to you is just a little inconvenience...",
+      "en": "Every roadblock to you is just a little inconvenience..."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMDEwODc3LnBuZw==/315x250%23c/2TS%2BYf.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMDEwODc3LnBuZw==/315x250%23c/2TS%2BYf.png"
+    ],
+    "dateAdded": "2026-10-18"
   }
 ];
