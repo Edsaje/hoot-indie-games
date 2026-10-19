@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusCircle, Download, CheckCircle2, X } from 'lucide-react';
+import { PlusCircle, Download, CheckCircle2, X, ArrowRight, Sparkles } from 'lucide-react';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { soundFx } from '../../utils/audio';
@@ -23,9 +23,35 @@ export const SteamSuggestionBanner: React.FC<SteamSuggestionBannerProps> = ({
   const [isImporting, setIsImporting] = useState(false);
   const [importMessage, setImportMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  const isItchUrl = /itch\.io/i.test(importInput);
+
+  const handleRedirectToMicroIndies = () => {
+    soundFx.playClick();
+    const urlToPrefill = importInput.trim();
+    try {
+      sessionStorage.setItem('hoot_prefill_itch_url', urlToPrefill);
+    } catch {
+      // Ignorer
+    }
+    setImportInput('');
+    setImportMessage(null);
+
+    // Déclencher l'événement d'ouverture et basculer sur l'onglet Micro-Indés
+    window.dispatchEvent(
+      new CustomEvent('hoot_open_micro_propose', { detail: { itchUrl: urlToPrefill } })
+    );
+    window.location.hash = '#micro-propose';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleDirectImport = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!importInput.trim()) return;
+
+    if (isItchUrl) {
+      handleRedirectToMicroIndies();
+      return;
+    }
 
     soundFx.playClick();
     setIsImporting(true);
@@ -234,6 +260,33 @@ export const SteamSuggestionBanner: React.FC<SteamSuggestionBannerProps> = ({
           className="w-full px-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:border-amber-500/50"
         />
       </form>
+
+      {isItchUrl && (
+        <div className="mt-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-rose-950/80 via-[#200e19]/90 to-amber-950/70 border-2 border-rose-500/60 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0 mt-0.5 sm:mt-0">
+              <Sparkles className="w-5 h-5 text-rose-400" />
+            </div>
+            <div>
+              <div className="text-xs sm:text-sm font-black text-rose-200 flex items-center gap-2">
+                <span>C'est un jeu Itch.io !</span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#fa5c5c] text-white">itch.io</span>
+              </div>
+              <p className="text-xs text-rose-200/80 mt-1 leading-relaxed">
+                Ce formulaire certifie les jeux Steam. Les pépites Itch.io, prototypes et créations solo ont leur sanctuaire dédié : <strong className="text-amber-300 font-semibold">La Clairière des Micro-Indés</strong> !
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleRedirectToMicroIndies}
+            className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-rose-600 via-rose-500 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-950/50 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer shrink-0"
+          >
+            <span>Proposer dans Micro-Indés</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {importMessage && (
         <div

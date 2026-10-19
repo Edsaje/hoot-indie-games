@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Send, CheckCircle2, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { soundFx } from '../../utils/audio';
@@ -9,12 +9,14 @@ interface ProposeMicroIndieModalProps {
   isOpen: boolean;
   onClose: () => void;
   onGameAdded: (newGame: MicroIndieGame) => void;
+  initialItchUrl?: string;
 }
 
 export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
   isOpen,
   onClose,
   onGameAdded,
+  initialItchUrl = '',
 }) => {
   const { t } = useTranslation();
   const { profile } = useUserAccount();
@@ -23,7 +25,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
   const [developer, setDeveloper] = useState('');
   const [pitch, setPitch] = useState('');
   const [platform, setPlatform] = useState<MicroIndiePlatform>('itch');
-  const [itchUrl, setItchUrl] = useState('');
+  const [itchUrl, setItchUrl] = useState(initialItchUrl);
   const [steamUrl, setSteamUrl] = useState('');
   const [playUrl, setPlayUrl] = useState('');
   const [coverImage, setCoverImage] = useState('');
@@ -38,6 +40,62 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Pré-remplissage automatique lors de l'ouverture avec une URL Itch
+  useEffect(() => {
+    if (isOpen && initialItchUrl) {
+      setItchUrl(initialItchUrl);
+      setPlatform('itch');
+      const itchMatch = initialItchUrl.match(/(?:https?:\/\/)?([a-zA-Z0-9_-]+)\.itch\.io\/([a-zA-Z0-9_-]+)/i);
+      if (itchMatch) {
+        const creatorSlug = itchMatch[1];
+        const gameSlug = itchMatch[2];
+        if (!developer.trim()) {
+          const formattedDev = creatorSlug
+            .split(/[-_]/)
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' ');
+          setDeveloper(formattedDev);
+        }
+        if (!title.trim()) {
+          const formattedTitle = gameSlug
+            .split(/[-_]/)
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' ');
+          setTitle(formattedTitle);
+        }
+      }
+    }
+  }, [isOpen, initialItchUrl]);
+
+  const handleItchUrlChange = (val: string) => {
+    setItchUrl(val);
+    const itchMatch = val.match(/(?:https?:\/\/)?([a-zA-Z0-9_-]+)\.itch\.io\/([a-zA-Z0-9_-]+)/i);
+    if (itchMatch) {
+      const creatorSlug = itchMatch[1];
+      const gameSlug = itchMatch[2];
+      if (!developer.trim()) {
+        const formattedDev = creatorSlug
+          .split(/[-_]/)
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+        setDeveloper(formattedDev);
+      }
+      if (!title.trim()) {
+        const formattedTitle = gameSlug
+          .split(/[-_]/)
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+        setTitle(formattedTitle);
+      }
+    }
+  };
+
+  const handleModalClose = () => {
+    setErrorMsg(null);
+    setIsSuccess(false);
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -153,7 +211,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
           <button
             onClick={() => {
               soundFx.playClick();
-              onClose();
+              handleModalClose();
             }}
             className="p-2 rounded-lg text-emerald-300 hover:text-white hover:bg-emerald-900/40 transition-colors"
           >
@@ -177,8 +235,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
               <button
                 onClick={() => {
                   soundFx.playClick();
-                  setIsSuccess(false);
-                  onClose();
+                  handleModalClose();
                 }}
                 className="mt-4 px-6 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-medium rounded-xl border border-emerald-500/40 transition-colors shadow-lg"
               >
@@ -321,7 +378,7 @@ export const ProposeMicroIndieModal: React.FC<ProposeMicroIndieModalProps> = ({
                   <input
                     type="url"
                     value={itchUrl}
-                    onChange={(e) => setItchUrl(e.target.value)}
+                    onChange={(e) => handleItchUrlChange(e.target.value)}
                     placeholder="https://createur.itch.io/nom-du-jeu"
                     className="w-full px-3.5 py-2 bg-[#02100b] border border-emerald-900 rounded-xl text-white placeholder:text-emerald-500 focus:outline-none focus:border-red-400 text-xs sm:text-sm"
                   />

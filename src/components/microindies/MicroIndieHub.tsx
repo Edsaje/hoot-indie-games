@@ -60,6 +60,47 @@ export const MicroIndieHub: React.FC = () => {
     }
   });
   const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set());
+  const [prefilledItchUrl, setPrefilledItchUrl] = useState<string>('');
+
+  // Détection des demandes de proposition (lien Itch.io pré-rempli ou hash #micro-propose)
+  useEffect(() => {
+    const handlePrefillCheck = () => {
+      let url = '';
+      try {
+        url = sessionStorage.getItem('hoot_prefill_itch_url') || '';
+        if (url) {
+          sessionStorage.removeItem('hoot_prefill_itch_url');
+        }
+      } catch {
+        // Ignorer
+      }
+
+      if (url) {
+        setPrefilledItchUrl(url);
+        setIsModalOpen(true);
+      } else if (typeof window !== 'undefined' && window.location.hash.includes('propose')) {
+        setIsModalOpen(true);
+      }
+    };
+
+    handlePrefillCheck();
+
+    const handleCustomOpen = (e: Event) => {
+      const detail = (e as CustomEvent<{ itchUrl?: string }>).detail;
+      if (detail?.itchUrl) {
+        setPrefilledItchUrl(detail.itchUrl);
+      }
+      setIsModalOpen(true);
+    };
+
+    window.addEventListener('hoot_open_micro_propose', handleCustomOpen);
+    window.addEventListener('hashchange', handlePrefillCheck);
+
+    return () => {
+      window.removeEventListener('hoot_open_micro_propose', handleCustomOpen);
+      window.removeEventListener('hashchange', handlePrefillCheck);
+    };
+  }, []);
 
   // Charger les propositions communautaires et les likes persistés depuis l'API PHP
   useEffect(() => {
@@ -679,8 +720,15 @@ export const MicroIndieHub: React.FC = () => {
       {/* Modale de soumission de jeu */}
       <ProposeMicroIndieModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setPrefilledItchUrl('');
+          if (typeof window !== 'undefined' && window.location.hash.includes('propose')) {
+            window.location.hash = '#micro';
+          }
+        }}
         onGameAdded={handleGameAdded}
+        initialItchUrl={prefilledItchUrl}
       />
 
       {/* Modale d'administration Micro-Indés pour Hibouxe / Admin */}
