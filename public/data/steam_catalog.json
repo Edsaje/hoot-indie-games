@@ -6432,58 +6432,6 @@
     }
   },
   {
-    "id": "boomerang-fu",
-    "title": "Boomerang Fu",
-    "releaseYear": 2020,
-    "genre": [
-      "Action",
-      "Occasionnel"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de dessus",
-      "en": "2D Top-down"
-    },
-    "developer": "Cranky Watermelon",
-    "steamUrl": "https://store.steampowered.com/app/965680/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_ff8629d683e8b5b584430f7cdae568bfebb74f84.1920x1080.jpg?t=1774862745",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_98df23bc221ec49594871d7ee3c02b8288e70508.1920x1080.jpg?t=1774862745",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_13efe9d3857f289c19f3530672b291c78a3fe5f2.1920x1080.jpg?t=1774862745",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_fb142724f81d0fd093c275776b12c2a89ac7ffbd.1920x1080.jpg?t=1774862745",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_b30f135956af843407c2142df4aaa563c708b97b.1920x1080.jpg?t=1774862745",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_8eafc76f2c6e5f676ee12e235b590a0ddd2530bc.1920x1080.jpg?t=1774862745"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Maîtrisez la voie du boomerang et découpez en rondelles vos amis dans ce jeu multijoueur frénétique. Incarnez vos aliments favoris tout en grillant, congelant ou tranchant tous ceux qui se dressent sur votre route. Devenez ceinture noire en Boomerang Fu !",
-        "en": "Slice and dice your friends with boomerangs in this frantic physics party game. Join a crew of your favorite foods as you grill, chill and spill your enemies. Discover ridiculous power-ups and stack them together in deadly combinations."
-      }
-    },
-    "steamAppId": 965680,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/header.jpg?t=1774862745",
-    "steamStoreData": {
-      "appId": 965680,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1499,
-      "finalPriceCents": 1499,
-      "discountPercent": 0,
-      "formattedFinalPrice": "14,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 1808,
-      "totalPositive": 1767,
-      "positivePercent": 98,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
     "id": "later-alligator",
     "title": "Later Alligator",
     "releaseYear": 2019,
@@ -7009,58 +6957,6 @@
     }
   },
   {
-    "id": "book-of-hours",
-    "title": "BOOK OF HOURS",
-    "releaseYear": 2023,
-    "genre": [
-      "RPG",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Weather Factory",
-    "steamUrl": "https://store.steampowered.com/app/1028310/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_bc1d3a08eb54377ae3e78bae6d64efb9ff91b166.1920x1080.jpg?t=1762944591",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_51ce803df9ef574f9983c522656ca1e03a157096.1920x1080.jpg?t=1762944591",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_1b87a866f69a0577b507b4ad9eee5f3e050f2254.1920x1080.jpg?t=1762944591",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_0178a24cf186fc78c2bf8917564118bbf3e8e49a.1920x1080.jpg?t=1762944591",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_0ef8b1a963ccd9916b982674a0488c17e44c1051.1920x1080.jpg?t=1762944591",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_ea64fc37e1a840d99d512121bb20924d6b19d181.1920x1080.jpg?t=1762944591"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Restaurez la ruine d’une bibliothèque occulte. Rassemblez la plus grande collection de grimoires et d'arcanes au monde. Maîtrisez les arts invisibles. BOOK OF HOURS est un jeu de rôle narratif qui se déroule dans un monde de dieux cachés et d'histoires secrètes dans les années 1930.",
-        "en": "Restore a crumbling occult library by a winter sea. Build the world’s foremost collection of grimoires and arcana. Master the invisible arts. BOOK OF HOURS is a narrative crafting RPG set in a 1930s world of hidden gods and secret histories. What sort of Librarian will you choose to be?"
-      }
-    },
-    "steamAppId": 1028310,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/header.jpg?t=1762944591",
-    "steamStoreData": {
-      "appId": 1028310,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 2450,
-      "finalPriceCents": 2450,
-      "discountPercent": 0,
-      "formattedFinalPrice": "24,50€",
-      "formattedInitialPrice": "",
-      "totalReviews": 4130,
-      "totalPositive": 3702,
-      "positivePercent": 90,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "superliminal",
     "title": "Superliminal",
     "releaseYear": 2020,
@@ -7318,59 +7214,6 @@
       "reviewScoreDesc": {
         "fr": "Extrêmement positifs",
         "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "unsighted",
-    "title": "UNSIGHTED",
-    "releaseYear": 2021,
-    "genre": [
-      "Action",
-      "Aventure",
-      "RPG"
-    ],
-    "artStyle": {
-      "fr": "Pixel Art",
-      "en": "Pixel Art"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Studio Pixel Punk",
-    "steamUrl": "https://store.steampowered.com/app/1062110/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_c31e4d724b4aab236bd41958f984c4168ff4e37e.1920x1080.jpg?t=1773699619",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_728ce035ac105229e57c7d290165660358c97553.1920x1080.jpg?t=1773699619",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_3250db35f933857d4bc137d7d67c49226aeceab4.1920x1080.jpg?t=1773699619",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_1ff166c581d8810f9e8c1e1f1ba81210248a700b.1920x1080.jpg?t=1773699619",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_a7a62f125250116e042895e32dd8a43a7e3d0bbb.1920x1080.jpg?t=1773699619",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/header.jpg?t=1773699619"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "EXPLOREZ ET DÉCOUVREZ. S'éveillant dans un monde détruit par la guerre, Alma doit explorer la grande ville d'Arcadia avant que sa force vitale et celle de ses amis ne s'épuisent. Le temps file et chaque seconde compte. Qui sauverez-vous, et qui laisserez-vous se transformer en UNSIGHTED ?",
-        "en": "EXPLORE YOUR WAY. Awoken to a world ruined by war, Alma must traverse the vast city of Arcadia before the life force of her friends and herself withers away. Time is ticking, and every moment matters. Who will you save, and who will you leave to turn UNSIGHTED?"
-      }
-    },
-    "steamAppId": 1062110,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/header.jpg?t=1773699619",
-    "steamStoreData": {
-      "appId": 1062110,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1999,
-      "finalPriceCents": 1999,
-      "discountPercent": 0,
-      "formattedFinalPrice": "19,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 1868,
-      "totalPositive": 1740,
-      "positivePercent": 93,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
       }
     }
   },
@@ -91418,5 +91261,149 @@
     "addedAt": "2026-10-18",
     "steamAppId": 5267570,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5267570/9d72b8f28e2786f1546976727d1e47c13e2586e3/header.jpg?t=1792233206"
+  },
+  {
+    "id": "flotte-fantome",
+    "title": "Flotte Fantôme",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Roguelike",
+      "Deckbuilder"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "DevMakerMin",
+    "steamUrl": "https://store.steampowered.com/app/5332620/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/3662d43b7e4780ad72c8f70e892744f626ae74a2/ss_3662d43b7e4780ad72c8f70e892744f626ae74a2.1920x1080.jpg?t=1792393995",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/f8ad6997eb17adebe50186cbe1582a803bb60655/ss_f8ad6997eb17adebe50186cbe1582a803bb60655.1920x1080.jpg?t=1792393995",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/1a425b3c34536fa9167fd6d4edb28d205f729b19/ss_1a425b3c34536fa9167fd6d4edb28d205f729b19.1920x1080.jpg?t=1792393995",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/0073b84eb71f9a688091724ee84737a4470920db/ss_0073b84eb71f9a688091724ee84737a4470920db.1920x1080.jpg?t=1792393995",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/0b9080b9ca127de88dcb27a81376d6a6e81f11f1/ss_0b9080b9ca127de88dcb27a81376d6a6e81f11f1.1920x1080.jpg?t=1792393995",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/3662d43b7e4780ad72c8f70e892744f626ae74a2/ss_3662d43b7e4780ad72c8f70e892744f626ae74a2.1920x1080.jpg?t=1792393995"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Menez le Hollow King dans un roguelite d'action navale. Coulez des navires, récoltez des âmes et recrutez votre flotte. Choisissez vos cartes et cinq compétences automatiques. Brisez les blocus de dix mers et repartez plus fort grâce aux améliorations permanentes du chantier naval.",
+        "en": "Command Hollow King in a naval action roguelite. Sink ships, harvest souls, and recruit a ghost fleet. Shape your build with upgrade cards and five automatic skill slots. Break blockades across ten seas, then rise stronger after sinking with permanent shipyard upgrades."
+      }
+    },
+    "addedAt": "2026-10-19",
+    "steamAppId": 5332620,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1792393995"
+  },
+  {
+    "id": "rangement-universel",
+    "title": "RANGEMENT UNIVERSEL",
+    "releaseYear": 2026,
+    "genre": [
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Monu",
+    "steamUrl": "https://store.steampowered.com/app/5119740/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5119740/47b025b1fc31b16595f0b7de9ea8bdbb17e13a06/ss_47b025b1fc31b16595f0b7de9ea8bdbb17e13a06.1920x1080.jpg?t=1792358771",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5119740/2230d24301e71a322febb88526eede096274e2d3/ss_2230d24301e71a322febb88526eede096274e2d3.1920x1080.jpg?t=1792358771",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5119740/84fab12019ee5424607ce5a1a626d11e3ea44e6a/ss_84fab12019ee5424607ce5a1a626d11e3ea44e6a.1920x1080.jpg?t=1792358771",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5119740/c1e029ace76e142f5b7cdb890fe275628ed6e5af/ss_c1e029ace76e142f5b7cdb890fe275628ed6e5af.1920x1080.jpg?t=1792358771",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5119740/24e1af2df4706f94ad590e1e5f11289e311afc30/ss_24e1af2df4706f94ad590e1e5f11289e311afc30.1920x1080.jpg?t=1792358771",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5119740/663865602679c065c197ffa8cf8dfc78fd8d580f/ss_663865602679c065c197ffa8cf8dfc78fd8d580f.1920x1080.jpg?t=1792358771"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu de réflexion à la première personne où ranger est l'énigme. Remettez chaque objet à sa place et résolvez des énigmes à travers plus de 20 niveaux. Le jeu mêle rangement tranquille et énigmes d'organisation.",
+        "en": "A first-person puzzle game where tidying is the puzzle. Sort items into their correct place and solve puzzles across 20+ stages. This game features a mix of calm tidying and organizing puzzles."
+      }
+    },
+    "addedAt": "2026-10-19",
+    "steamAppId": 5119740,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5119740/bce3b7a4ee174ec8b6b9de42505f8bc0a6d7905d/header_french.jpg?t=1792358771"
+  },
+  {
+    "id": "ai-olympius",
+    "title": "AI Olympius",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "Lion's Shade",
+    "steamUrl": "https://store.steampowered.com/app/1478970/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1478970/2ee105f648c95e4a4c0af9ff7e4f08e133136dbf/ss_2ee105f648c95e4a4c0af9ff7e4f08e133136dbf.1920x1080.jpg?t=1792341087",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1478970/e8d2ab9e29dc26e9c899647ce06e73f234637632/ss_e8d2ab9e29dc26e9c899647ce06e73f234637632.1920x1080.jpg?t=1792341087",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1478970/f4242928ec8891dd5b77abaa25d15d852375a255/ss_f4242928ec8891dd5b77abaa25d15d852375a255.1920x1080.jpg?t=1792341087",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1478970/9b1f32efeb803dfe5a04f3136419d429ae6ba68b/ss_9b1f32efeb803dfe5a04f3136419d429ae6ba68b.1920x1080.jpg?t=1792341087",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1478970/263c90098a955b6c6bdd884bb62a28b86d51c4f1/ss_263c90098a955b6c6bdd884bb62a28b86d51c4f1.1920x1080.jpg?t=1792341087",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1478970/08fe90d8a8926fc2d1788811d412818c4e503376/ss_08fe90d8a8926fc2d1788811d412818c4e503376.1920x1080.jpg?t=1792341087"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Rejoignez les rebelles dans un jeu de tir à la troisième personne avec des éléments de RPG et un mode de construction de base. Affrontez différents modèles de drones de combat sous le contrôle de l'IA suprême.",
+        "en": "Join the rebels in a third-person shooter with RPG elements and base-building mode. Fight against various combat drone models under the control of the supreme AI."
+      }
+    },
+    "addedAt": "2026-10-19",
+    "steamAppId": 1478970,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1478970/bbfb63b96c107202fd5338eef75c3a1a9a7d067e/header.jpg?t=1792341087"
+  },
+  {
+    "id": "the-loomsong-chronicle-idle",
+    "title": "The Loomsong Chronicle Idle",
+    "releaseYear": 2026,
+    "genre": [
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Nitrocodon Dynamics",
+    "steamUrl": "https://store.steampowered.com/app/4963690/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/5ec170577ed95e5a79ab55f8ec11a7e8fe4739c1/ss_5ec170577ed95e5a79ab55f8ec11a7e8fe4739c1.1920x1080.jpg?t=1792376828",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/4e90e3a377ab912243ff2d53ef70feceb1c81193/ss_4e90e3a377ab912243ff2d53ef70feceb1c81193.1920x1080.jpg?t=1792376828",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/06e4668d0c8ec92f4e5d4c9d5e29e2f5a3febb26/ss_06e4668d0c8ec92f4e5d4c9d5e29e2f5a3febb26.1920x1080.jpg?t=1792376828",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/dd137f3a036f1e848df49ecea71493b731a96a3e/ss_dd137f3a036f1e848df49ecea71493b731a96a3e.1920x1080.jpg?t=1792376828",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/5875db898bb651efda45a9570ca71e73375357fb/ss_5875db898bb651efda45a9570ca71e73375357fb.1920x1080.jpg?t=1792376828",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/300b23f2facfda400ecffce5851ee040f0869e67/ss_300b23f2facfda400ecffce5851ee040f0869e67.1920x1080.jpg?t=1792376828"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Build a six-character party and explore a science-fantasy galaxy in a 2D-HD idle action RPG. Shape autonomous heroes through deep equipment, crafting and ability systems, develop your town, and challenge Grand Expeditions, Pinnacle bosses and endless dungeons.",
+        "en": "Build a six-character party and explore a science-fantasy galaxy in a 2D-HD idle action RPG. Shape autonomous heroes through deep equipment, crafting and ability systems, develop your town, and challenge Grand Expeditions, Pinnacle bosses and endless dungeons."
+      }
+    },
+    "addedAt": "2026-10-19",
+    "steamAppId": 4963690,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/eca391dc518d7919060b63632a930d5ace530b5f/header.jpg?t=1792376828"
   }
 ]

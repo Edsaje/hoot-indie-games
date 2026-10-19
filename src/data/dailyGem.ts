@@ -1,37 +1,43 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-18";
+export const TODAY_DATE = "2026-10-19";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "trombone-champ",
-  "title": "Trombone Champ",
-  "releaseYear": 2024,
+  "id": "the-talos-principle-2",
+  "title": "The Talos Principle 2",
+  "releaseYear": 2023,
   "genre": [
-    "Aventure"
+    "Puzzle",
+    "Exploration",
+    "Sci-Fi"
   ],
   "artStyle": {
-    "fr": "3D Stylisée",
-    "en": "Stylized 3D"
+    "fr": "3D Réaliste",
+    "en": "Realistic 3D"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Première personne",
+    "en": "First-Person"
   },
-  "developer": "Holy Wow Studios LLC",
-  "steamUrl": "https://store.steampowered.com/app/1059990/",
+  "developer": "Croteam",
+  "steamUrl": "https://store.steampowered.com/app/835960/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/bf0ad6ced4e98415f9db9fab9f354f447bbbf68c/ss_bf0ad6ced4e98415f9db9fab9f354f447bbbf68c.1920x1080.jpg?t=1789361594",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/8df015cc7f9147d8785709bd96f8f20e077765d1/ss_8df015cc7f9147d8785709bd96f8f20e077765d1.1920x1080.jpg?t=1789361594",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/5d853a70d97d4ff7dbd3c1a44691f9067415394b/ss_5d853a70d97d4ff7dbd3c1a44691f9067415394b.1920x1080.jpg?t=1789361594",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/e8d75c3143d9b18734fc09c432291d0d362cad16/ss_e8d75c3143d9b18734fc09c432291d0d362cad16.1920x1080.jpg?t=1789361594",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/1262ddd47797bf2c138406e64be2486bd52f9ae5/ss_1262ddd47797bf2c138406e64be2486bd52f9ae5.1920x1080.jpg?t=1789361594",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1059990/9a01ffea804d34e965026c0fc902eaf7d8f80679/ss_9a01ffea804d34e965026c0fc902eaf7d8f80679.1920x1080.jpg?t=1789361594"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835960/ss_97419974d92d1699357f950d452925852080a372.1920x1080.jpg?t=1775138468",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835960/ss_4f849d7ecfa4a7bf7d3f181fb797eecebf6f3bc2.1920x1080.jpg?t=1775138468",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835960/ss_3aa4b4a649800952141ecfee0c9b046c30554f44.1920x1080.jpg?t=1775138468",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835960/ss_50ef9c47289f15137be62db739d754979a54d6ec.1920x1080.jpg?t=1775138468",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835960/ss_de7044dd268994b6deb30106ee28a41de405aaf4.1920x1080.jpg?t=1775138468",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835960/ss_9822028978b61e262399e0b4456730e3a11e5bee.1920x1080.jpg?t=1775138468"
   ],
   "hints": {
     "tagline": {
-      "fr": "Trombone Champ est le tout premier jeu musical de rythme basé sur le trombone. Klaxonnez, glissez et jouez plus de 50 morceaux avec une liberté de note totale !",
-      "en": "Honk, blow, &amp; toot your way through over 60 songs, collect all 50 unique Tromboner Cards, and uncover the mysteries of the Trombiverse. Do you have what it takes to become the true Trombone Champ?"
-    }
-  },
-  "addedAt": "2026-09-25"
+      "fr": "Explorez une cité d'androïdes et des mégastructures mystérieuses dans cette suite philosophique monumentale.",
+      "en": "A thought-provoking first-person puzzle experience that greatly expands on the first game's philosophical themes.",
+      "es": "Una profunda experiencia de puzles en primera persona que expande los dilemas filosóficos del primer juego.",
+      "de": "Erkunde monumentale Megastrukturen und diskutiere philosophische Fragen über die Zukunft der künstlichen Menschheit.",
+      "ja": "ロボットたちが暮らす未来都市と壮大な巨石建造物を巡り、人類の未来と意識を思索する傑作パズルアドベンチャー。",
+      "pt-BR": "Explore uma cidade de androides e megastruturas enigmáticas nesta grandiosa sequência filosófica."
+    },
+    "composer": "Damjan Mravunac"
+  }
 };

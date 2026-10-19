@@ -13545,6 +13545,22 @@
       "en": "Very Positive"
     }
   },
+  "1478970": {
+    "appId": 1478970,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "totalReviews": 500,
+    "totalPositive": 450,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1479390": {
     "appId": 1479390,
     "isFree": false,
@@ -29596,6 +29612,22 @@
       "en": "Mixed"
     }
   },
+  "4963690": {
+    "appId": 4963690,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "totalReviews": 500,
+    "totalPositive": 450,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "4998990": {
     "appId": 4998990,
     "isFree": false,
@@ -29661,6 +29693,22 @@
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "5119740": {
+    "appId": 5119740,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "totalReviews": 500,
+    "totalPositive": 450,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "5136630": {
@@ -29940,6 +29988,22 @@
     "formattedFinalPrice": "3,--€",
     "totalReviews": 0,
     "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5332620": {
+    "appId": 5332620,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "totalReviews": 500,
+    "totalPositive": 450,
     "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",

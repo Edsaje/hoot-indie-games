@@ -485,51 +485,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "flotte-fantome",
-    "title": "Flotte Fantôme",
-    "developer": "DevMakerMin",
-    "publisher": "DMM",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Roguelike",
-        "en": "Roguelike"
-      },
-      {
-        "fr": "Deckbuilder",
-        "en": "Deckbuilder"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5332620/",
-    "description": {
-      "fr": "Menez le Hollow King dans un roguelite d'action navale. Coulez des navires, récoltez des âmes et recrutez votre flotte. Choisissez vos cartes et cinq compétences automatiques. Brisez les blocus de dix mers et repartez plus fort grâce aux améliorations permanentes du chantier naval.",
-      "en": "Command Hollow King in a naval action roguelite. Sink ships, harvest souls, and recruit a ghost fleet. Shape your build with upgrade cards and five automatic skill slots. Break blockades across ten seas, then rise stronger after sinking with permanent shipyard upgrades."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5332620/c2b8d1c396ca48eedbf6aad763ab8adbd8e91e1f/header_french.jpg?t=1791241193"
-  },
-  {
     "id": "gomokusoccer",
     "title": "GomokuSoccer",
     "developer": "Hero Parker",
     "publisher": "Hero Parker",
     "expectedDate": {
-      "fr": "18 oct. 2026",
-      "en": "18 Oct, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -596,8 +558,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "INECT",
     "publisher": "INECT",
     "expectedDate": {
-      "fr": "18 oct. 2026",
-      "en": "18 Oct, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -619,5 +581,39 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 92,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/139a7f2580808e88717d745ac43aee36f87edb4a/header.jpg?t=1792117863"
+  },
+  {
+    "id": "rogrid",
+    "title": "ROGRID",
+    "developer": "QuickTurtle Co., Ltd.",
+    "publisher": "QuickTurtle Co., Ltd.",
+    "expectedDate": {
+      "fr": "19 oct. 2026",
+      "en": "Oct 19, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      },
+      {
+        "fr": "Roguelike",
+        "en": "Roguelike"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5293210/",
+    "description": {
+      "fr": "Le Démineur rencontre le roguelike. Déchiffrez les indices, révélez les cases et cherchez des trésors parmi les monstres et les pièges. Combinez classes, compétences et artefacts pour conquérir le donjon.",
+      "en": "Minesweeper-style deduction meets roguelike dungeon crawling. Read the colors and shapes of clue blocks to uncover treasure among monsters and traps. Combine classes, skills, and artifacts, and manage health and action points to venture deeper."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/7b3cd5add20b054686e84525d41732587e59bfbb/header.jpg?t=1792368677"
   }
 ];

@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 313
+ * Total de jeux : 316
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11798,6 +11798,108 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-18"
+  },
+  {
+    "id": "boomerang-fu",
+    "title": "Boomerang Fu",
+    "releaseYear": 2020,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Cranky Watermelon",
+    "steamUrl": "https://store.steampowered.com/app/965680/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_ff8629d683e8b5b584430f7cdae568bfebb74f84.1920x1080.jpg?t=1774862745",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_98df23bc221ec49594871d7ee3c02b8288e70508.1920x1080.jpg?t=1774862745",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_13efe9d3857f289c19f3530672b291c78a3fe5f2.1920x1080.jpg?t=1774862745",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_fb142724f81d0fd093c275776b12c2a89ac7ffbd.1920x1080.jpg?t=1774862745",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_b30f135956af843407c2142df4aaa563c708b97b.1920x1080.jpg?t=1774862745",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/965680/ss_8eafc76f2c6e5f676ee12e235b590a0ddd2530bc.1920x1080.jpg?t=1774862745"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Maîtrisez la voie du boomerang et découpez en rondelles vos amis dans ce jeu multijoueur frénétique. Incarnez vos aliments favoris tout en grillant, congelant ou tranchant tous ceux qui se dressent sur votre route. Devenez ceinture noire en Boomerang Fu !",
+        "en": "Slice and dice your friends with boomerangs in this frantic physics party game. Join a crew of your favorite foods as you grill, chill and spill your enemies. Discover ridiculous power-ups and stack them together in deadly combinations."
+      }
+    },
+    "addedAt": "2026-10-19"
+  },
+  {
+    "id": "book-of-hours",
+    "title": "BOOK OF HOURS",
+    "releaseYear": 2023,
+    "genre": [
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Weather Factory",
+    "steamUrl": "https://store.steampowered.com/app/1028310/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_bc1d3a08eb54377ae3e78bae6d64efb9ff91b166.1920x1080.jpg?t=1762944591",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_51ce803df9ef574f9983c522656ca1e03a157096.1920x1080.jpg?t=1762944591",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_1b87a866f69a0577b507b4ad9eee5f3e050f2254.1920x1080.jpg?t=1762944591",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_0178a24cf186fc78c2bf8917564118bbf3e8e49a.1920x1080.jpg?t=1762944591",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_0ef8b1a963ccd9916b982674a0488c17e44c1051.1920x1080.jpg?t=1762944591",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1028310/ss_ea64fc37e1a840d99d512121bb20924d6b19d181.1920x1080.jpg?t=1762944591"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Restaurez la ruine d’une bibliothèque occulte. Rassemblez la plus grande collection de grimoires et d'arcanes au monde. Maîtrisez les arts invisibles. BOOK OF HOURS est un jeu de rôle narratif qui se déroule dans un monde de dieux cachés et d'histoires secrètes dans les années 1930.",
+        "en": "Restore a crumbling occult library by a winter sea. Build the world’s foremost collection of grimoires and arcana. Master the invisible arts. BOOK OF HOURS is a narrative crafting RPG set in a 1930s world of hidden gods and secret histories. What sort of Librarian will you choose to be?"
+      }
+    },
+    "addedAt": "2026-10-19"
+  },
+  {
+    "id": "unsighted",
+    "title": "UNSIGHTED",
+    "releaseYear": 2021,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Studio Pixel Punk",
+    "steamUrl": "https://store.steampowered.com/app/1062110/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_c31e4d724b4aab236bd41958f984c4168ff4e37e.1920x1080.jpg?t=1773699619",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_728ce035ac105229e57c7d290165660358c97553.1920x1080.jpg?t=1773699619",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_3250db35f933857d4bc137d7d67c49226aeceab4.1920x1080.jpg?t=1773699619",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_1ff166c581d8810f9e8c1e1f1ba81210248a700b.1920x1080.jpg?t=1773699619",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_a7a62f125250116e042895e32dd8a43a7e3d0bbb.1920x1080.jpg?t=1773699619",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062110/ss_c31e4d724b4aab236bd41958f984c4168ff4e37e.1920x1080.jpg?t=1773699619"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "EXPLOREZ ET DÉCOUVREZ. S'éveillant dans un monde détruit par la guerre, Alma doit explorer la grande ville d'Arcadia avant que sa force vitale et celle de ses amis ne s'épuisent. Le temps file et chaque seconde compte. Qui sauverez-vous, et qui laisserez-vous se transformer en UNSIGHTED ?",
+        "en": "EXPLORE YOUR WAY. Awoken to a world ruined by war, Alma must traverse the vast city of Arcadia before the life force of her friends and herself withers away. Time is ticking, and every moment matters. Who will you save, and who will you leave to turn UNSIGHTED?"
+      }
+    },
+    "addedAt": "2026-10-19"
   }
 ];
 

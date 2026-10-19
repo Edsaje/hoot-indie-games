@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 80
+ * Total de pépites sélectionnées : 82
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3393,5 +3393,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxMDEwODc3LnBuZw==/315x250%23c/2TS%2BYf.png"
     ],
     "dateAdded": "2026-10-18"
+  },
+  {
+    "id": "itch-average-routine",
+    "title": "Average Routine",
+    "developer": "colorlesswing-studio",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://colorlesswing-studio.itch.io/average-routine",
+    "playInBrowserUrl": "https://colorlesswing-studio.itch.io/average-routine",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Turn Based RPG",
+      "en": "Turn Based RPG"
+    },
+    "description": {
+      "fr": "Turn Based RPG",
+      "en": "Turn Based RPG"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE2ODY1OTUyLnBuZw==/315x250%23c/IJLRor.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE2ODY1OTUyLnBuZw==/315x250%23c/IJLRor.png"
+    ],
+    "dateAdded": "2026-10-19"
+  },
+  {
+    "id": "itch-imposter-3d-online-horror",
+    "title": "Imposter 3D: online horror",
+    "developer": "snowbat",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://snowbat.itch.io/krisper-the-impostor",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "There is an traitor among us, save astronauts and complete tasks solo or online",
+      "en": "There is an traitor among us, save astronauts and complete tasks solo or online"
+    },
+    "description": {
+      "fr": "There is an traitor among us, save astronauts and complete tasks solo or online",
+      "en": "There is an traitor among us, save astronauts and complete tasks solo or online"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzEzMTA0OTAyLnBuZw==/315x250%23c/qtlJXC.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzEzMTA0OTAyLnBuZw==/315x250%23c/qtlJXC.png"
+    ],
+    "dateAdded": "2026-10-19"
   }
 ];
