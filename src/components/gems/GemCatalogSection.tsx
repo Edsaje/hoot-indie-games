@@ -32,6 +32,7 @@ import { getLocalizedText, getTranslatedGenre } from '../../utils/localization';
 import type { Game } from '../../types/game';
 import type { NavTab } from '../common/Navbar';
 import { RandomGemModal } from './RandomGemModal';
+import { SteamSuggestionBanner } from '../steam/SteamSuggestionBanner';
 
 interface GemCatalogSectionProps {
   onNavigateTab: (tab: NavTab) => void;
@@ -1204,6 +1205,11 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
           scrollToId="gems-grid-top"
           className="mt-8"
         />
+
+        {/* Formulaire de Suggestion de Pépite Indé Steam */}
+        <div className="mt-10">
+          <SteamSuggestionBanner />
+        </div>
       </div>
 
       {/* Modale Pépite Découverte au Hasard */}
