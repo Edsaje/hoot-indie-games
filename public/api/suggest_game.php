@@ -109,12 +109,14 @@ function checkAdultOrInappropriateGame($appData) {
     }
 
     // 2. Content Descriptors officiels de Valve (Steam)
-    // 1: Nudity/Sexual, 3: Mature, 4: Sexual Content, 5: Explicit Sexual Content
+    // Conformément aux règles d'audit (auditRules.ts) :
+    // ID 3 : Adult Only Sexual Content | ID 4 : Frequent Sexual Content / Nudity
+    // (Note : ID 1 = Some Nudity, ID 2 = Violence/Gore, ID 5 = General Mature Content comme l'horreur ou ambiance sombre)
     $cd = $appData['content_descriptors'] ?? null;
     if ($cd && is_array($cd)) {
         $ids = $cd['ids'] ?? [];
         if (is_array($ids)) {
-            foreach ([1, 3, 4, 5] as $badId) {
+            foreach ([3, 4] as $badId) {
                 if (in_array($badId, $ids, true)) {
                     return 'Ce jeu est étiqueté comme contenu à caractère sexuel ou adulte par Steam.';
                 }
