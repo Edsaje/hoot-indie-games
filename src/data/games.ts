@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 316
+ * Total de jeux : 319
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -11900,6 +11900,113 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-19"
+  },
+  {
+    "id": "inkbound",
+    "title": "Inkbound",
+    "releaseYear": 2024,
+    "genre": [
+      "Action",
+      "Massivement multijoueur",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Shiny Shoe",
+    "steamUrl": "https://store.steampowered.com/app/1062810/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_5618a28d677751ed975ad5767d6fa449f5d96cd8.1920x1080.jpg?t=1780422654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_523a73c664222d9fcb65887f44b1e0ae6fbbad82.1920x1080.jpg?t=1780422654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_4ac918a25e5b6b4c70bacc85da00e5040b48fe4a.1920x1080.jpg?t=1780422654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_446a8e540ff8cb714d67752bd2fdb3e2d303b85f.1920x1080.jpg?t=1780422654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_9b236855b91d3d39dada77a4273e242e71c2dd77.1920x1080.jpg?t=1780422654",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_1a4926bb5d31ac10e7d4eba7a8e536cba4013604.1920x1080.jpg?t=1780422654"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un roguelike tactique au tour par tour, par les créateurs de Monster Train. Jouez en solo ou en coopération, créez de puissants builds et sauvez l'Athénée.",
+        "en": "A turn-based tactical roguelike from the creators of Monster Train. Play solo or co-op, create powerful builds, and save the Atheneum."
+      }
+    },
+    "addedAt": "2026-10-20"
+  },
+  {
+    "id": "bug-fables-the-everlasting-sapling",
+    "title": "Bug Fables: The Everlasting Sapling",
+    "releaseYear": 2019,
+    "genre": [
+      "Action",
+      "Aventure",
+      "RPG",
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Moonsprout Games",
+    "steamUrl": "https://store.steampowered.com/app/1082710/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_18070b8482e104807816492af62c306f6abcb193.1920x1080.jpg?t=1772596493",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_ae349225eaf9dda16cfa8fb94f2591b23bba3ef1.1920x1080.jpg?t=1772596493",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_b7c5f851f6824c639f256e7dac5ad7340c4bb06b.1920x1080.jpg?t=1772596493",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_4ea54c3b9a2b2e524fcca354b5b982e1c1a8b977.1920x1080.jpg?t=1772596493",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_471c15a5b84810e15ae396dbc469d76437e2661c.1920x1080.jpg?t=1772596493",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_df45db6740f47b58031fe10b0675d71673fe0f54.1920x1080.jpg?t=1772596493"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Follow Vi, Kabbu, and Leif as they uncover the secrets of the Land of Bugaria! Explore and combine your team's abilities to solve puzzles, defeat powerful enemies and find ancient treasures!",
+        "en": "Follow Vi, Kabbu, and Leif as they uncover the secrets of the Land of Bugaria! Explore and combine your team's abilities to solve puzzles, defeat powerful enemies and find ancient treasures!"
+      }
+    },
+    "addedAt": "2026-10-20"
+  },
+  {
+    "id": "my-time-at-sandrock",
+    "title": "My Time at Sandrock",
+    "releaseYear": 2023,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "Pathea Games",
+    "steamUrl": "https://store.steampowered.com/app/1084600/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_33a5396147ff4921f8fd2eeeb74c5b17a6bf6a09.1920x1080.jpg?t=1792297629",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_9f8c7034285882bf9cfb8928215e8b8959e2f04b.1920x1080.jpg?t=1792297629",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_070e8400c4de493b6e98bd081958e882c69c4dc1.1920x1080.jpg?t=1792297629",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_7cf0ec2cb855b1cf29280e9c5ba9009561e6ec58.1920x1080.jpg?t=1792297629",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_bd7ee0f57c3dad5e8759b92b0ed33ab8a6dd3e46.1920x1080.jpg?t=1792297629",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_995acc0e2bcee1f67348a7bfeb9c4f366a8a8126.1920x1080.jpg?t=1792297629"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Voyagez dans la communauté désertique de Sandrock et jouez le rôle d'un.e jeune artisan.e. Utilisez vos outils pour rassembler des ressources, construire des machines et transformer votre atelier délabré en une installation de production bien huilée pour sauver la ville de la ruine économique!",
+        "en": "Travel to the desert community of Sandrock and take on the role of a fledgling Builder. Use your trusty toolset to gather resources, construct machines, and turn your run-down workshop into a well-oiled production facility to save the town from the jaws of economic ruin!"
+      }
+    },
+    "addedAt": "2026-10-20"
   }
 ];
 

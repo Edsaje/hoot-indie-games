@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 82
+ * Total de pépites sélectionnées : 84
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3474,5 +3474,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzEzMTA0OTAyLnBuZw==/315x250%23c/qtlJXC.png"
     ],
     "dateAdded": "2026-10-19"
+  },
+  {
+    "id": "itch-project-sever",
+    "title": "Project SEVER",
+    "developer": "mehozavr",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://mehozavr.itch.io/sever",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Submarine simulator, horror, exploration and maintenance",
+      "en": "Submarine simulator, horror, exploration and maintenance"
+    },
+    "description": {
+      "fr": "Submarine simulator, horror, exploration and maintenance",
+      "en": "Submarine simulator, horror, exploration and maintenance"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwNzkwNjg2LnBuZw==/315x250%23c/r7j2qZ.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwNzkwNjg2LnBuZw==/315x250%23c/r7j2qZ.png"
+    ],
+    "dateAdded": "2026-10-20"
+  },
+  {
+    "id": "itch-lurkers-io",
+    "title": "lurkers.io",
+    "developer": "bergice",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://bergice.itch.io/lurkers",
+    "playInBrowserUrl": "https://bergice.itch.io/lurkers",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Online zombie survival and other games such as open world survival!",
+      "en": "Online zombie survival and other games such as open world survival!"
+    },
+    "description": {
+      "fr": "Online zombie survival and other games such as open world survival!",
+      "en": "Online zombie survival and other games such as open world survival!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE0NzQ4NDU1LmdpZg==/original/PJUomq.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE0NzQ4NDU1LmdpZg==/original/PJUomq.gif"
+    ],
+    "dateAdded": "2026-10-20"
   }
 ];

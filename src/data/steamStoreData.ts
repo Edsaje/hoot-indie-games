@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 1787 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 1790 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -14814,6 +14814,22 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Overwhelmingly Positive"
     }
   },
+  "1624430": {
+    "appId": 1624430,
+    "isFree": true,
+    "currency": "EUR",
+    "initialPriceCents": 0,
+    "finalPriceCents": 0,
+    "discountPercent": 0,
+    "formattedFinalPrice": "Gratuit",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "1624540": {
     "appId": 1624540,
     "isFree": false,
@@ -28330,6 +28346,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Very Positive"
     }
   },
+  "4304900": {
+    "appId": 4304900,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 799,
+    "finalPriceCents": 599,
+    "discountPercent": 25,
+    "formattedFinalPrice": "5,99€",
+    "formattedInitialPrice": "7,99€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "4304930": {
     "appId": 4304930,
     "isFree": false,
@@ -29994,6 +30027,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 20,
     "formattedFinalPrice": "0,87€",
     "formattedInitialPrice": "1,09€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5293210": {
+    "appId": 5293210,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1025,
+    "finalPriceCents": 922,
+    "discountPercent": 10,
+    "formattedFinalPrice": "9,22€",
+    "formattedInitialPrice": "10,25€",
     "totalReviews": 0,
     "totalPositive": 0,
     "positivePercent": 90,

@@ -7218,62 +7218,6 @@
     }
   },
   {
-    "id": "inkbound",
-    "title": "Inkbound",
-    "releaseYear": 2024,
-    "genre": [
-      "Action",
-      "Massivement multijoueur",
-      "RPG",
-      "Simulation",
-      "Stratégie",
-      "Roguelike"
-    ],
-    "artStyle": {
-      "fr": "3D Stylisé",
-      "en": "Stylized 3D"
-    },
-    "camera": {
-      "fr": "3D Vue à la troisième personne",
-      "en": "Third-Person"
-    },
-    "developer": "Shiny Shoe",
-    "steamUrl": "https://store.steampowered.com/app/1062810/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_5618a28d677751ed975ad5767d6fa449f5d96cd8.1920x1080.jpg?t=1780422654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_523a73c664222d9fcb65887f44b1e0ae6fbbad82.1920x1080.jpg?t=1780422654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_4ac918a25e5b6b4c70bacc85da00e5040b48fe4a.1920x1080.jpg?t=1780422654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_446a8e540ff8cb714d67752bd2fdb3e2d303b85f.1920x1080.jpg?t=1780422654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_9b236855b91d3d39dada77a4273e242e71c2dd77.1920x1080.jpg?t=1780422654",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_1a4926bb5d31ac10e7d4eba7a8e536cba4013604.1920x1080.jpg?t=1780422654"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Un roguelike tactique au tour par tour, par les créateurs de Monster Train. Jouez en solo ou en coopération, créez de puissants builds et sauvez l'Athénée.",
-        "en": "A turn-based tactical roguelike from the creators of Monster Train. Play solo or co-op, create powerful builds, and save the Atheneum."
-      }
-    },
-    "steamAppId": 1062810,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/header.jpg?t=1780422654",
-    "steamStoreData": {
-      "appId": 1062810,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 2499,
-      "finalPriceCents": 2499,
-      "discountPercent": 0,
-      "formattedFinalPrice": "24,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 3591,
-      "totalPositive": 3106,
-      "positivePercent": 86,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
-      }
-    }
-  },
-  {
     "id": "cris-tales",
     "title": "Cris Tales",
     "releaseYear": 2021,
@@ -7323,114 +7267,6 @@
       "reviewScoreDesc": {
         "fr": "Variables",
         "en": "Mixed"
-      }
-    }
-  },
-  {
-    "id": "bug-fables-the-everlasting-sapling",
-    "title": "Bug Fables: The Everlasting Sapling",
-    "releaseYear": 2019,
-    "genre": [
-      "Action",
-      "Aventure",
-      "RPG",
-      "Puzzle"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2.5D Isométrique",
-      "en": "Isometric / 2.5D"
-    },
-    "developer": "Moonsprout Games",
-    "steamUrl": "https://store.steampowered.com/app/1082710/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_18070b8482e104807816492af62c306f6abcb193.1920x1080.jpg?t=1772596493",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_ae349225eaf9dda16cfa8fb94f2591b23bba3ef1.1920x1080.jpg?t=1772596493",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_b7c5f851f6824c639f256e7dac5ad7340c4bb06b.1920x1080.jpg?t=1772596493",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_4ea54c3b9a2b2e524fcca354b5b982e1c1a8b977.1920x1080.jpg?t=1772596493",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_471c15a5b84810e15ae396dbc469d76437e2661c.1920x1080.jpg?t=1772596493",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/ss_df45db6740f47b58031fe10b0675d71673fe0f54.1920x1080.jpg?t=1772596493"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Follow Vi, Kabbu, and Leif as they uncover the secrets of the Land of Bugaria! Explore and combine your team's abilities to solve puzzles, defeat powerful enemies and find ancient treasures!",
-        "en": "Follow Vi, Kabbu, and Leif as they uncover the secrets of the Land of Bugaria! Explore and combine your team's abilities to solve puzzles, defeat powerful enemies and find ancient treasures!"
-      }
-    },
-    "steamAppId": 1082710,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1082710/header.jpg?t=1772596493",
-    "steamStoreData": {
-      "appId": 1082710,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 1950,
-      "finalPriceCents": 1950,
-      "discountPercent": 0,
-      "formattedFinalPrice": "19,50€",
-      "formattedInitialPrice": "",
-      "totalReviews": 5203,
-      "totalPositive": 5059,
-      "positivePercent": 97,
-      "reviewScoreDesc": {
-        "fr": "Extrêmement positifs",
-        "en": "Overwhelmingly Positive"
-      }
-    }
-  },
-  {
-    "id": "my-time-at-sandrock",
-    "title": "My Time at Sandrock",
-    "releaseYear": 2023,
-    "genre": [
-      "Aventure",
-      "Occasionnel",
-      "RPG",
-      "Simulation"
-    ],
-    "artStyle": {
-      "fr": "2D Dessiné à la main",
-      "en": "2D Hand-drawn"
-    },
-    "camera": {
-      "fr": "2D Vue de côté",
-      "en": "2D Side-scroller"
-    },
-    "developer": "Pathea Games",
-    "steamUrl": "https://store.steampowered.com/app/1084600/",
-    "screenshots": [
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_33a5396147ff4921f8fd2eeeb74c5b17a6bf6a09.1920x1080.jpg?t=1788516378",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_9f8c7034285882bf9cfb8928215e8b8959e2f04b.1920x1080.jpg?t=1788516378",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_070e8400c4de493b6e98bd081958e882c69c4dc1.1920x1080.jpg?t=1788516378",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_7cf0ec2cb855b1cf29280e9c5ba9009561e6ec58.1920x1080.jpg?t=1788516378",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_bd7ee0f57c3dad5e8759b92b0ed33ab8a6dd3e46.1920x1080.jpg?t=1788516378",
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/ss_995acc0e2bcee1f67348a7bfeb9c4f366a8a8126.1920x1080.jpg?t=1788516378"
-    ],
-    "hints": {
-      "tagline": {
-        "fr": "Voyagez dans la communauté désertique de Sandrock et jouez le rôle d'un.e jeune artisan.e. Utilisez vos outils pour rassembler des ressources, construire des machines et transformer votre atelier délabré en une installation de production bien huilée pour sauver la ville de la ruine économique!",
-        "en": "Travel to the desert community of Sandrock and take on the role of a fledgling Builder. Use your trusty toolset to gather resources, construct machines, and turn your run-down workshop into a well-oiled production facility to save the town from the jaws of economic ruin!"
-      }
-    },
-    "steamAppId": 1084600,
-    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1084600/header.jpg?t=1788516378",
-    "steamStoreData": {
-      "appId": 1084600,
-      "isFree": false,
-      "currency": "EUR",
-      "initialPriceCents": 3499,
-      "finalPriceCents": 3499,
-      "discountPercent": 0,
-      "formattedFinalPrice": "34,99€",
-      "formattedInitialPrice": "",
-      "totalReviews": 24118,
-      "totalPositive": 21247,
-      "positivePercent": 88,
-      "reviewScoreDesc": {
-        "fr": "Très positifs",
-        "en": "Very Positive"
       }
     }
   },
@@ -91405,5 +91241,115 @@
     "addedAt": "2026-10-19",
     "steamAppId": 4963690,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4963690/eca391dc518d7919060b63632a930d5ace530b5f/header.jpg?t=1792376828"
+  },
+  {
+    "id": "rogrid",
+    "title": "ROGRID",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "QuickTurtle Co., Ltd.",
+    "steamUrl": "https://store.steampowered.com/app/5293210/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/19eb1aaf984be4c96061e66542b7423091b77382/ss_19eb1aaf984be4c96061e66542b7423091b77382.1920x1080.jpg?t=1792399517",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/b4a6506d065d703574319b7a3231dfab7fdba725/ss_b4a6506d065d703574319b7a3231dfab7fdba725.1920x1080.jpg?t=1792399517",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/69d1072e4ca99b2de263e18998f6ef40b2663b4f/ss_69d1072e4ca99b2de263e18998f6ef40b2663b4f.1920x1080.jpg?t=1792399517",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/ddf0fdfdf9aff6935bb183f81eee535b4d85a17c/ss_ddf0fdfdf9aff6935bb183f81eee535b4d85a17c.1920x1080.jpg?t=1792399517",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/2303a42beecc74af7c8e104d1b62d09436644505/ss_2303a42beecc74af7c8e104d1b62d09436644505.1920x1080.jpg?t=1792399517",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/b5c286c984ac6deaee97a612cc5790260f1116bc/ss_b5c286c984ac6deaee97a612cc5790260f1116bc.1920x1080.jpg?t=1792399517"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le Démineur rencontre le roguelike. Déchiffrez les indices, révélez les cases et cherchez des trésors parmi les monstres et les pièges. Combinez classes, compétences et artefacts pour conquérir le donjon.",
+        "en": "Minesweeper-style deduction meets roguelike dungeon crawling. Read the colors and shapes of clue blocks to uncover treasure among monsters and traps. Combine classes, skills, and artifacts, and manage health and action points to venture deeper."
+      }
+    },
+    "addedAt": "2026-10-20",
+    "steamAppId": 5293210,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/7b3cd5add20b054686e84525d41732587e59bfbb/header.jpg?t=1792399517"
+  },
+  {
+    "id": "vahnora",
+    "title": "Vahnora",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure",
+      "Massivement multijoueur",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "Vahnora Studios",
+    "steamUrl": "https://store.steampowered.com/app/1624430/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1624430/745ba6832f2ac2285683a155632d676ff24d3f91/ss_745ba6832f2ac2285683a155632d676ff24d3f91.1920x1080.jpg?t=1792441668",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1624430/bcda001e4a35f0eaa8638220a0f5e11d1e47ef32/ss_bcda001e4a35f0eaa8638220a0f5e11d1e47ef32.1920x1080.jpg?t=1792441668",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1624430/7405c1e5036edd52ae06a8654042eec8700f5652/ss_7405c1e5036edd52ae06a8654042eec8700f5652.1920x1080.jpg?t=1792441668",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1624430/cabf30ef12a180d38489058d438ca4a21771ee05/ss_cabf30ef12a180d38489058d438ca4a21771ee05.1920x1080.jpg?t=1792441668",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1624430/41365728fcf89547eff9d62bb0ce3b06cea7dd9c/ss_41365728fcf89547eff9d62bb0ce3b06cea7dd9c.1920x1080.jpg?t=1792441668",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1624430/3b634b973dc16e2de953c96f5ea1175a65c62434/ss_3b634b973dc16e2de953c96f5ea1175a65c62434.1920x1080.jpg?t=1792441668"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Vahnora est un MMORPG 3D gratuit de guerre de factions. Rejoignez le Sanctuaire ou les Réprouvés, maîtrisez l’une des huit classes, traquez les boss mondiaux et leur butin, portez des reliques à travers les lignes ennemies du Col de Mortis et assiégez le château de votre faction en guilde.",
+        "en": "Vahnora is a free-to-play 3D MMORPG of faction war. Choose Sanctum or Forsaken, master one of eight classes, hunt world bosses for gear, carry relics through enemy lines in Mortis Pass and storm your faction's castle with your guild."
+      }
+    },
+    "addedAt": "2026-10-20",
+    "isFree": true,
+    "steamAppId": 1624430,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1624430/435dcb5f3237d23b8b1394f18c7254ed1fa33b96/header.jpg?t=1792441668"
+  },
+  {
+    "id": "big-dig",
+    "title": "Big Dig",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Dan Schumacher, Hjalte Tagmose",
+    "steamUrl": "https://store.steampowered.com/app/4304900/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4304900/7cc9e4aca9d5b96c8c41c55d3282aefafa133344/ss_7cc9e4aca9d5b96c8c41c55d3282aefafa133344.1920x1080.jpg?t=1792418287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4304900/0d66ccd7993b12690bbf88e6bce56c47d552c5c4/ss_0d66ccd7993b12690bbf88e6bce56c47d552c5c4.1920x1080.jpg?t=1792418287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4304900/07fd900ae4825e684ef01bd509063232f382b421/ss_07fd900ae4825e684ef01bd509063232f382b421.1920x1080.jpg?t=1792418287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4304900/6616845e4913ee4bc3166537790a5b52199fe149/ss_6616845e4913ee4bc3166537790a5b52199fe149.1920x1080.jpg?t=1792418287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4304900/c51dac6fdb39a170a3b1fa5ffc5baeb9ccd20bc5/ss_c51dac6fdb39a170a3b1fa5ffc5baeb9ccd20bc5.1920x1080.jpg?t=1792418287",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4304900/e743ae43e7b82bcbdb9dd66bb0f904417e1b0c5c/ss_e743ae43e7b82bcbdb9dd66bb0f904417e1b0c5c.1920x1080.jpg?t=1792418287"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Big Dig is a short incremental narrative game about digging up artifacts to help Mayor Dog win the election! Recover artifacts, grow your museum, and upgrade your tools while building a highway across the Animal Republic!",
+        "en": "Big Dig is a short incremental narrative game about digging up artifacts to help Mayor Dog win the election! Recover artifacts, grow your museum, and upgrade your tools while building a highway across the Animal Republic!"
+      }
+    },
+    "addedAt": "2026-10-20",
+    "steamAppId": 4304900,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4304900/f70f4692753e297cd45617fed789c15ce5b1c4c6/header.jpg?t=1792418287"
   }
 ]

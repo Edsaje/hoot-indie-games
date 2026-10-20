@@ -583,37 +583,37 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/139a7f2580808e88717d745ac43aee36f87edb4a/header.jpg?t=1792117863"
   },
   {
-    "id": "rogrid",
-    "title": "ROGRID",
-    "developer": "QuickTurtle Co., Ltd.",
-    "publisher": "QuickTurtle Co., Ltd.",
+    "id": "reactance",
+    "title": "Reactance",
+    "developer": "Studio of Eldingar",
+    "publisher": "Studio of Eldingar",
     "expectedDate": {
-      "fr": "19 oct. 2026",
-      "en": "Oct 19, 2026"
+      "fr": "20 oct. 2026",
+      "en": "Oct 20, 2026"
     },
     "genres": [
       {
-        "fr": "Stratégie",
-        "en": "Stratégie"
+        "fr": "Action",
+        "en": "Action"
       },
       {
-        "fr": "Roguelike",
-        "en": "Roguelike"
+        "fr": "Free-to-play",
+        "en": "Free-to-play"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5293210/",
+    "steamUrl": "https://store.steampowered.com/app/5357500/",
     "description": {
-      "fr": "Le Démineur rencontre le roguelike. Déchiffrez les indices, révélez les cases et cherchez des trésors parmi les monstres et les pièges. Combinez classes, compétences et artefacts pour conquérir le donjon.",
-      "en": "Minesweeper-style deduction meets roguelike dungeon crawling. Read the colors and shapes of clue blocks to uncover treasure among monsters and traps. Combine classes, skills, and artifacts, and manage health and action points to venture deeper."
+      "fr": "A first-person duelling game where every fighter is a scientist. Read your opponent's guard, then block, parry and strike back across ten arenas, from a station under a black hole to the inside of a living cell. Free to play, with rollback netcode, 2v2, Ranked and a Laboratory to meet in.",
+      "en": "A first-person duelling game where every fighter is a scientist. Read your opponent's guard, then block, parry and strike back across ten arenas, from a station under a black hole to the inside of a living cell. Free to play, with rollback netcode, 2v2, Ranked and a Laboratory to meet in."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5293210/7b3cd5add20b054686e84525d41732587e59bfbb/header.jpg?t=1792368677"
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1792142165"
   }
 ];
