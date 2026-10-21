@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 319
+ * Total de jeux : 322
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -12007,6 +12007,111 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-20"
+  },
+  {
+    "id": "bonfire-peaks",
+    "title": "Bonfire Peaks",
+    "releaseYear": 2021,
+    "genre": [
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Corey Martin, Alan Hazelden, Mari Zand, Zach Soares",
+    "steamUrl": "https://store.steampowered.com/app/1147890/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147890/ss_30a07e1471f9f446d0503231fe7dfcf32f7ba1e5.1920x1080.jpg?t=1781709722",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147890/ss_cb43d009ab5118c4353aac49b31cbf1371507876.1920x1080.jpg?t=1781709722",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147890/ss_550565a7e5ecf2320279c7fa54b98c1a622331b0.1920x1080.jpg?t=1781709722",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147890/ss_5d00fcb5f4d1ddc5c8a8e8e44a6e9d2f2d363abf.1920x1080.jpg?t=1781709722",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147890/ss_42b511f2e4e24bd363312e651d62d889fcf8fc06.1920x1080.jpg?t=1781709722",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1147890/ss_d16747ca6eb3a075a4c211003f5a4b0f5145ac13.1920x1080.jpg?t=1781709722"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Mettez le feu à vos affaires dans les puzzles d'une superbe île en voxel art.",
+        "en": "Set your belongings on fire on a beautiful voxel art puzzle island."
+      }
+    },
+    "addedAt": "2026-10-21"
+  },
+  {
+    "id": "i-was-a-teenage-exocolonist",
+    "title": "I Was a Teenage Exocolonist",
+    "releaseYear": 2022,
+    "genre": [
+      "RPG",
+      "Simulation",
+      "Deckbuilder",
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Northway Games",
+    "steamUrl": "https://store.steampowered.com/app/1148760/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1148760/ss_51bb6fd911e47a1ce0d9de11c73352f16f00ccfb.1920x1080.jpg?t=1783360165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1148760/ss_8702ee7c7fd83fab2001b82f4006d7421a84bef2.1920x1080.jpg?t=1783360165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1148760/ss_df294e979013f49656ef1bbe420c69d391eff149.1920x1080.jpg?t=1783360165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1148760/ss_0536752e14d6835fd33f08efcb4384378dd3fd8b.1920x1080.jpg?t=1783360165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1148760/ss_e8e4faf197f63627371c737b8ab9f1ce47c1ad32.1920x1080.jpg?t=1783360165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1148760/ss_8a2f71739bc866259c1c08c55cc9fa610a50f2b3.1920x1080.jpg?t=1783360165"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Passez votre adolescence sur une planète extraterrestre dans ce RPG narratif avec des batailles de cartes. Explorez, grandissez et tombez amoureux. Les choix que vous faites et les compétences que vous maîtrisez pendant dix ans détermineront le cours de votre vie et la survie de votre colonie.",
+        "en": "Spend your teenage years on an alien planet in this narrative RPG with card-based battles. Explore, grow up, and fall in love. The choices you make and skills you master over ten years will determine the course of your life and the survival of your colony."
+      }
+    },
+    "addedAt": "2026-10-21"
+  },
+  {
+    "id": "coral-island",
+    "title": "Coral Island",
+    "releaseYear": 2023,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Stairway Games",
+    "steamUrl": "https://store.steampowered.com/app/1158160/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1158160/05227142ef1e3ed7cc4074b23680de1d7764f19f/ss_05227142ef1e3ed7cc4074b23680de1d7764f19f.1920x1080.jpg?t=1781768008",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1158160/a70179f83228e3e05896f74416a316ad2325062b/ss_a70179f83228e3e05896f74416a316ad2325062b.1920x1080.jpg?t=1781768008",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1158160/bd7687968d68a443554b8ddd275ed8655a5150f4/ss_bd7687968d68a443554b8ddd275ed8655a5150f4.1920x1080.jpg?t=1781768008",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1158160/ba87da8f617edfa051f59b4a3cae051cc16b22db/ss_ba87da8f617edfa051f59b4a3cae051cc16b22db.1920x1080.jpg?t=1781768008",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1158160/ss_260172855d8ee6918d4d0ff347f875678b4835b2.1920x1080.jpg?t=1781768008",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1158160/290d93bb33378731e14f8ab8d11094bd024d6194/ss_290d93bb33378731e14f8ab8d11094bd024d6194.1920x1080.jpg?t=1781768008"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Coral Island est un jeu de simulation agricole fun et relaxant, repensé en mode multijoueur ! Découvre la vie insulaire à ton rythme : jardine avec tes amis, élève des animaux, noue des relations, passe du temps avec des personnages hauts en couleur et plonge dans le royaume magique des Ondins.",
+        "en": "Coral Island is a vibrant, laid-back farm sim reimagined with multiplayer! Experience enchanting island life at your own pace: farm with friends, nurture animals, build relationships, hang out with a diverse cast of characters, and dive into the magical Merfolk Kingdom."
+      }
+    },
+    "addedAt": "2026-10-21"
   }
 ];
 

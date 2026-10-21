@@ -588,8 +588,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Studio of Eldingar",
     "publisher": "Studio of Eldingar",
     "expectedDate": {
-      "fr": "20 oct. 2026",
-      "en": "Oct 20, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {

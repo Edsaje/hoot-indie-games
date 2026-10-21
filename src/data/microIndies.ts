@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 84
+ * Total de pépites sélectionnées : 86
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3555,5 +3555,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE0NzQ4NDU1LmdpZg==/original/PJUomq.gif"
     ],
     "dateAdded": "2026-10-20"
+  },
+  {
+    "id": "itch-i-rule",
+    "title": "I.RULE",
+    "developer": "doctorhummer",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://doctorhummer.itch.io/irule",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "The Binding of Isaac fangame, heavily inspired by Plants vs. Zombies",
+      "en": "The Binding of Isaac fangame, heavily inspired by Plants vs. Zombies"
+    },
+    "description": {
+      "fr": "The Binding of Isaac fangame, heavily inspired by Plants vs. Zombies",
+      "en": "The Binding of Isaac fangame, heavily inspired by Plants vs. Zombies"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzgwNDQwODUucG5n/315x250%23c/u8%2FyA%2F.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzgwNDQwODUucG5n/315x250%23c/u8%2FyA%2F.png"
+    ],
+    "dateAdded": "2026-10-21"
+  },
+  {
+    "id": "itch-tamaweb-virtual-pet-game",
+    "title": "Tamaweb: Virtual Pet Game",
+    "developer": "samandev",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://samandev.itch.io/tamaweb",
+    "playInBrowserUrl": "https://samandev.itch.io/tamaweb",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Tamagotchi-like Virtual Pet Game",
+      "en": "A Tamagotchi-like Virtual Pet Game"
+    },
+    "description": {
+      "fr": "A Tamagotchi-like Virtual Pet Game",
+      "en": "A Tamagotchi-like Virtual Pet Game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE3Nzk3NDg4LnBuZw==/315x250%23c/ZJr4Ym.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE3Nzk3NDg4LnBuZw==/315x250%23c/ZJr4Ym.png"
+    ],
+    "dateAdded": "2026-10-21"
   }
 ];
