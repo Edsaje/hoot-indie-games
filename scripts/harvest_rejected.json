@@ -209,13 +209,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
-  "240720": {
-    "title": "Getting Over It with Bennett Foddy",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "244210": {
     "reason": "low_reviews",
     "permanent": false,
@@ -356,13 +349,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
-  "322190": {
-    "title": "SteamWorld Heist",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "332800": {
     "reason": "low_reviews",
     "permanent": false,
@@ -411,13 +397,6 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
-  },
-  "365360": {
-    "title": "Battle Brothers",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
   },
   "371970": {
     "reason": "low_reviews",
@@ -587,13 +566,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
-  "481510": {
-    "title": "Night in the Woods",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "499170": {
     "reason": "low_reviews",
     "permanent": false,
@@ -642,48 +614,6 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
-  },
-  "589780": {
-    "title": "The Red Strings Club",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
-  "593280": {
-    "title": "Cat Quest",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte EN"
-  },
-  "594330": {
-    "title": "Visage",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
-  "596970": {
-    "title": "Sunless Skies: Sovereign Edition",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
-  "597760": {
-    "title": "Yuppie Psycho: Executive Edition",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
-  "601840": {
-    "title": "Griftlands",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
   },
   "621060": {
     "reason": "low_reviews",
@@ -755,13 +685,6 @@
     "rejectedAt": "2026-10-15",
     "notes": "Absence de genre indé"
   },
-  "673130": {
-    "title": "AMID EVIL",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
   "673880": {
     "reason": "low_reviews",
     "permanent": false,
@@ -775,13 +698,6 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
-  },
-  "688420": {
-    "title": "Bad North: Jotunn Edition",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
   },
   "698640": {
     "reason": "low_reviews",
@@ -874,13 +790,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
   },
-  "784150": {
-    "title": "Workers & Resources: Soviet Republic",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "784950": {
     "reason": "low_reviews",
     "permanent": false,
@@ -902,13 +811,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-01"
   },
-  "815370": {
-    "title": "Green Hell",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
   "816340": {
     "reason": "low_reviews",
     "permanent": false,
@@ -923,26 +825,12 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
-  "824600": {
-    "title": "HROT",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
   "843380": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
-  },
-  "844590": {
-    "title": "Hypnospace Outlaw",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
   },
   "846470": {
     "reason": "low_reviews",
@@ -958,13 +846,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
   },
-  "857980": {
-    "title": "Void Bastards",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "860510": {
     "reason": "low_reviews",
     "permanent": false,
@@ -978,13 +859,6 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
-  },
-  "867210": {
-    "title": "Songs of Conquest",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
   },
   "868360": {
     "reason": "low_reviews",
@@ -1006,20 +880,6 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
-  },
-  "913740": {
-    "title": "WORLD OF HORROR",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
-  "914710": {
-    "title": "Cat Quest II",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte EN"
   },
   "916840": {
     "reason": "low_reviews",
@@ -1056,20 +916,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
-  "963710": {
-    "title": "Lost in Vivo",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
-  "964800": {
-    "title": "Prodeus",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
   "965580": {
     "reason": "low_reviews",
     "permanent": false,
@@ -1097,13 +943,6 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
-  },
-  "979690": {
-    "reason": "low_reviews",
-    "permanent": false,
-    "rejectedAt": "2026-10-22",
-    "notes": "Seulement 0 avis (< 5)",
-    "retryAfter": "2026-11-05"
   },
   "981430": {
     "reason": "low_reviews",
@@ -1203,13 +1042,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
   },
-  "1061910": {
-    "title": "Metal: Hellsinger",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "1063580": {
     "reason": "low_reviews",
     "permanent": false,
@@ -1259,13 +1091,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
-  "1102190": {
-    "title": "Monster Train",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "1108370": {
     "reason": "low_reviews",
     "permanent": false,
@@ -1308,33 +1133,12 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
-  "1122720": {
-    "title": "Sayonara Wild Hearts",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
-  "1127400": {
-    "title": "Mindustry",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "1133870": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
-  },
-  "1136370": {
-    "title": "Bear and Breakfast",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
   },
   "1138850": {
     "reason": "low_reviews",
@@ -1378,26 +1182,12 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
-  "1161580": {
-    "title": "Hardspace: Shipbreaker",
-    "reason": "not_indie",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Absence de genre indé"
-  },
   "1161870": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
-  },
-  "1164940": {
-    "title": "Trepang2",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
   },
   "1169040": {
     "reason": "low_reviews",
@@ -1427,26 +1217,12 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
-  "1179080": {
-    "title": "FAITH: The Unholy Trinity",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
-  },
   "1186640": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-20",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
-  },
-  "1188930": {
-    "title": "Chrono Ark",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
   },
   "1191830": {
     "reason": "low_positive_ratio",

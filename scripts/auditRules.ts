@@ -57,12 +57,14 @@ export const BANNED_APP_IDS = new Set<number>([
 
 /**
  * Identifiants officiels Valve Steam pour les descripteurs de contenu adulte / sexuel explicite (NSFW / Porn)
- * ID 5: Adult Only Sexual Content (Gratuitous or explicit sexual content)
- * ID 4: Frequent Sexual Content
- * ID 3: Adult Content / Erotic Themes
- * ID 2: Frequent Nudity or Sexual Content
+ * ID 3: Adult Only Sexual Content (Gratuitous or explicit sexual content)
+ * ID 4: Frequent Sexual Content or Frequent Nudity
+ * Note : ID 1 = Some Nudity / Mild sexual references
+ *        ID 2 = Frequent Violence or Gore (Visage, Prodeus, Doom)
+ *        ID 5 = General Mature Content (TowerFall Ascension, Bodycam, Bad North, Darkest Dungeon)
+ * Seuls les descripteurs 3 et 4 qualifient un jeu d'inapproprié / NSFW au sens Valve.
  */
-export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([2, 3, 4, 5]);
+export const ADULT_CONTENT_DESCRIPTOR_IDS = new Set<number>([3, 4]);
 
 /**
  * AppIDs de pépites et jeux indépendants certifiés (protection absolue contre les faux positifs)
@@ -79,6 +81,40 @@ export const KNOWN_INDIE_APP_IDS = new Set<number>([
   979690,  // The Ascent (Neon Giant)
   2406770, // Bodycam (Reissad Studio)
   4762810, // SpyCat: Codename Wu
+  240720,  // Getting Over It with Bennett Foddy (Bennett Foddy)
+  322190,  // SteamWorld Heist (Image & Form Games / Thunderful)
+  2396240, // SteamWorld Heist II (Image & Form Games / Thunderful)
+  252410,  // SteamWorld Dig (Image & Form Games)
+  571310,  // SteamWorld Dig 2 (Image & Form Games)
+  593280,  // Cat Quest (The Gentlebros / Kepler Interactive)
+  914710,  // Cat Quest II (The Gentlebros)
+  594330,  // Visage (SadSquare Studio)
+  481510,  // Night in the Woods (Infinite Fall / Finji)
+  365360,  // Battle Brothers (Overhype Studios)
+  589780,  // The Red Strings Club (Deconstructeam / Devolver Digital)
+  596970,  // Sunless Skies: Sovereign Edition (Failbetter Games)
+  597760,  // Yuppie Psycho: Executive Edition (Baroque Decay)
+  601840,  // Griftlands (Klei Entertainment)
+  673130,  // AMID EVIL (Indefatigable / New Blood Interactive)
+  688420,  // Bad North: Jotunn Edition (Plausible Concept / Raw Fury)
+  784150,  // Workers & Resources: Soviet Republic (3Division)
+  815370,  // Green Hell (Creepy Jar)
+  824600,  // HROT (Spytihněv)
+  844590,  // Hypnospace Outlaw (Tendershoot / No More Robots)
+  857980,  // Void Bastards (Blue Manchu)
+  867210,  // Songs of Conquest (Lavapotion / Coffee Stain Publishing)
+  913740,  // WORLD OF HORROR (panstasz / Ysbryd Games)
+  963710,  // Lost in Vivo (KIRA)
+  964800,  // Prodeus (Bounding Box Software / Humble Games)
+  1061910, // Metal: Hellsinger (The Outsiders / Funcom)
+  1102190, // Monster Train (Shiny Shoe)
+  1122720, // Sayonara Wild Hearts (Simogo / Annapurna Interactive)
+  1127400, // Mindustry (AnukenDev)
+  1136370, // Bear and Breakfast (Gummy Cat / Armor Games)
+  1161580, // Hardspace: Shipbreaker (Blackbird Interactive)
+  1164940, // Trepang2 (Trepang Studios)
+  1179080, // FAITH: The Unholy Trinity (Airdorf Games / New Blood Interactive)
+  1188930, // Chrono Ark (Alblassoft)
 ]);
 
 /**
@@ -124,6 +160,30 @@ export const KNOWN_INDIE_STUDIOS = new Set<string>([
   'the game bakers',
   'coldwood interactive',
   'concernedape',
+  'the gentlebros',
+  'sadsquare studio',
+  'bennett foddy',
+  'image & form',
+  'image & form games',
+  'finji',
+  'infinite fall',
+  'deconstructeam',
+  'baroque decay',
+  'overhype studios',
+  'plausible concept',
+  'bounding box software',
+  'creepy jar',
+  '3division',
+  'panstasz',
+  'new blood interactive',
+  'shiny shoe',
+  'simogo',
+  'anukendev',
+  'gummy cat',
+  'blackbird interactive',
+  'tendershoot',
+  'blue manchu',
+  'lavapotion',
 ]);
 
 /**
@@ -230,9 +290,13 @@ export const ADULT_BANNED_KEYWORDS = [
   'ecchi',
   'sensual',
   'sensuelle',
-  'furry',
+  'furry hentai',
+  'furry nsfw',
+  'furry porn',
+  'furry 18+',
   'harem',
-  'lust',
+  'carnal lust',
+  'lustful',
   'ntr',
   'unrated',
   'co-eds',

@@ -4,8 +4,25 @@ import type { Game } from '../src/types/game';
 import { INDIE_GAMES } from '../src/data/games';
 import { UPCOMING_INDIE_GAMES, type UpcomingGame } from '../src/data/upcomingGames';
 import { INITIAL_MICRO_INDIES } from '../src/data/microIndies';
-import { BANNED_APP_IDS, KNOWN_INDIE_APP_IDS, ADULT_CONTENT_DESCRIPTOR_IDS, checkAdultContent, validateSingleGame, isNonIndieOrAAA } from './auditRules';
+import {
+  BANNED_APP_IDS,
+  KNOWN_INDIE_APP_IDS,
+  KNOWN_INDIE_STUDIOS,
+  ADULT_CONTENT_DESCRIPTOR_IDS,
+  checkAdultContent,
+  validateSingleGame,
+  isNonIndieOrAAA,
+} from './auditRules';
 import { runSyncOdysseyRoutes } from './syncOdysseyRoutes';
+
+const TARGET_APPIDS_PATH = path.join(process.cwd(), 'scripts/target_appids.json');
+let TARGET_INDIE_APP_IDS = new Set<number>();
+if (fs.existsSync(TARGET_APPIDS_PATH)) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(TARGET_APPIDS_PATH, 'utf8'));
+    TARGET_INDIE_APP_IDS = new Set(Object.keys(raw).map((k) => parseInt(k, 10)).filter(Boolean));
+  } catch {}
+}
 
 /**
  * 🦉 Hoot Indie Games — Script d'Alimentation & Synchronisation Quotidienne Automatique
@@ -223,6 +240,61 @@ function isAdultOrInappropriate(details: SteamDetails): boolean {
     console.warn(`   ⛔ [Filtré Mots-clés Adultes] "${details.name}" (${check.keywords.join(', ')}).`);
     return true;
   }
+
+  return false;
+}
+
+// Vérifie si un jeu est certifié indépendant selon les critères canoniques
+async function isCertifiedIndieGame(
+  appId: number,
+  detailsFr: SteamDetails,
+  detailsEn?: SteamDetails | null
+): Promise<boolean> {
+  // 1. Protection absolue : AppIDs certifiés et pépites cibles
+  if (KNOWN_INDIE_APP_IDS.has(appId)) return true;
+  if (TARGET_INDIE_APP_IDS.has(appId)) return true;
+
+  // 2. Genres officiels déclarés sur Steam (FR ou EN)
+  const hasIndieGenre = (details: SteamDetails | null | undefined): boolean => {
+    if (!details?.genres || !Array.isArray(details.genres)) return false;
+    return details.genres.some((g) =>
+      ['indépendant', 'indie'].includes((g.description || '').toLowerCase().trim())
+    );
+  };
+  if (hasIndieGenre(detailsFr) || (detailsEn && hasIndieGenre(detailsEn))) {
+    return true;
+  }
+
+  // 3. Développeur ou éditeur faisant partie des studios indépendants certifiés
+  const devAndPubText = [
+    ...(detailsFr.developers || []),
+    ...(detailsFr.publishers || []),
+    ...(detailsEn?.developers || []),
+    ...(detailsEn?.publishers || []),
+  ]
+    .join(' ')
+    .toLowerCase();
+
+  for (const studio of KNOWN_INDIE_STUDIOS) {
+    if (devAndPubText.includes(studio)) {
+      return true;
+    }
+  }
+
+  // 4. Tags publics réels de la communauté Steam (récupérés via le endpoint public apphoverpublic)
+  try {
+    const res = await fetchWithTimeout(
+      `https://store.steampowered.com/apphoverpublic/${appId}?l=french`,
+      {},
+      4000
+    );
+    if (res.ok) {
+      const html = await res.text();
+      if (html.includes('>Indépendant<') || html.includes('>Indie<')) {
+        return true;
+      }
+    }
+  } catch {}
 
   return false;
 }
@@ -766,9 +838,7 @@ async function refillUpcomingRadar(
       if (!detailsFr.header_image) continue;
       if (!hasLatinLetters(detailsFr.name)) continue;
 
-      const isIndie = detailsFr.genres?.some((g) =>
-        ['indépendant', 'indie'].includes(g.description.toLowerCase())
-      );
+      const isIndie = await isCertifiedIndieGame(appId, detailsFr);
       if (!isIndie) continue;
 
       const devText = (detailsFr.developers || []).join(', ');
@@ -1364,9 +1434,7 @@ export async function runDailyHarvest() {
     }
 
     // 2. Vérifier que c'est bien un jeu indépendant
-    const isIndie = KNOWN_INDIE_APP_IDS.has(appId) || detailsFr.genres?.some((g) =>
-      ['indépendant', 'indie'].includes(g.description.toLowerCase())
-    );
+    const isIndie = await isCertifiedIndieGame(appId, detailsFr);
     if (!isIndie) {
       console.log(`   ⛔ [Filtré Genre Non-Indé] "${detailsFr.name}" ne possède pas le tag Indépendant.`);
       recordRejection(rejectedCache, appId, detailsFr.name, 'not_indie', true, undefined, 'Absence de genre indé');
