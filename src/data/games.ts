@@ -5,7 +5,7 @@ import { getScheduledDailyGame, getScheduledDay, setDefaultGamesPool } from '../
  * Base de données officielle de jeux indépendants certifiés "Hoot Indie Games"
  * Enrichie quotidiennement par le robot Hoot Harvest via l'API Steam Store officielle.
  * 0 Hallucination : métadonnées et captures certifiées.
- * Total de jeux : 322
+ * Total de jeux : 325
  */
 export const INDIE_GAMES: Game[] = [
   {
@@ -12112,6 +12112,111 @@ export const INDIE_GAMES: Game[] = [
       }
     },
     "addedAt": "2026-10-21"
+  },
+  {
+    "id": "impostor-factory",
+    "title": "Impostor Factory",
+    "releaseYear": 2021,
+    "genre": [
+      "Aventure",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Freebird Games",
+    "steamUrl": "https://store.steampowered.com/app/1182620/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1182620/ss_74f8c25d19eab5d5081c0a544fc3aac2fb568b93.1920x1080.jpg?t=1726196467",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1182620/ss_c1835a7236fcbbf1fc074d98ee4e7e000a4c8354.1920x1080.jpg?t=1726196467",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1182620/ss_1f8250a9e2ab2668b3e45a96700e1667641ef2bd.1920x1080.jpg?t=1726196467",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1182620/ss_f3de185d3bf1844f6dab1ca9036e3fdbef0a0785.1920x1080.jpg?t=1726196467",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1182620/ss_e51fe6a2622d759c8d6c0fe32897be01a7441f31.1920x1080.jpg?t=1726196467",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1182620/ss_107c2b2071a524fb14540b8761643fedbea8dba8.1920x1080.jpg?t=1726196467"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un thriller policier givré plein de boucles temporelles et de victimes avec, en plus, un chat plus que louche sorti de l’esprit du créateur de To the Moon &amp; Finding Paradise.",
+        "en": "A bonkers time-loop tragicomedy murder mystery thriller featuring multiple casualties and a suspicious cat, from the creator of To the Moon &amp; Finding Paradise."
+      }
+    },
+    "addedAt": "2026-10-22"
+  },
+  {
+    "id": "tainted-grail-conquest",
+    "title": "Tainted Grail: Conquest",
+    "releaseYear": 2021,
+    "genre": [
+      "Action",
+      "RPG",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Questline",
+    "steamUrl": "https://store.steampowered.com/app/1199030/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1199030/ss_338a18da2f82060ab2e22adf11cfd0395209fb2a.1920x1080.jpg?t=1748103885",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1199030/ss_91b71f32034edac8913efddbc0b5728f213caf23.1920x1080.jpg?t=1748103885",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1199030/ss_c41122cf08b832301a904a0655e087f812b8e47b.1920x1080.jpg?t=1748103885",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1199030/ss_85393833dcb09e4fb9fa11562bc660b7be394c27.1920x1080.jpg?t=1748103885",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1199030/ss_f86e8905668e911a5bc1312cc2864c4031acd30f.1920x1080.jpg?t=1748103885",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1199030/ss_42d1a5c68c5764c1492f55a3c3ccc025661b6fc2.1920x1080.jpg?t=1748103885"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A unique, infinitely replayable, story-driven hybrid between a deck-building Roguelike and an RPG game. Explore the ever-changing maps, fight with deadly enemies, and learn what happened to the cursed island of Avalon.",
+        "en": "A unique, infinitely replayable, story-driven hybrid between a deck-building Roguelike and an RPG game. Explore the ever-changing maps, fight with deadly enemies, and learn what happened to the cursed island of Avalon."
+      }
+    },
+    "addedAt": "2026-10-22"
+  },
+  {
+    "id": "hellcard",
+    "title": "HELLCARD",
+    "releaseYear": 2024,
+    "genre": [
+      "Aventure",
+      "RPG",
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Thing Trunk",
+    "steamUrl": "https://store.steampowered.com/app/1201540/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1201540/ss_75003244128ad67814c1e92715ee3177759d250e.1920x1080.jpg?t=1792626224",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1201540/ss_b8eb3fa4e1958a7089b61a5dbe03876fc800e9d6.1920x1080.jpg?t=1792626224",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1201540/ss_73e70cc830fca6ac4ff360b03547b9cf07de509d.1920x1080.jpg?t=1792626224",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1201540/ss_a68406edd66684efd2b4b7cc9a1e7bb4bd5d9ca6.1920x1080.jpg?t=1792626224",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1201540/ss_185aec2a7e015fff6e35c2d032202ce955e16f51.1920x1080.jpg?t=1792626224",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1201540/ss_f22e881499ecb6f34bac527a6e4fe06a0289a56f.1920x1080.jpg?t=1792626224"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Hellcard est un deckbuilder coopératif de type roguelike. Aventurez-vous seul dans les donjons, recrutez des compagnons contrôlés par l'IA ou rejoignez les salons d'autres joueurs et participez à d'intenses combats de cartes tactiques contre les armées des ténèbres et l'archidémon !",
+        "en": "Hellcard is a unique cooperative deck builder rogue-like game. Descend into the paper dungeons on your own, recruit computer-controlled companions or join other players' lobbies in fast-paced tactical card battles against the armies of darkness and the Archdemon himself!"
+      }
+    },
+    "addedAt": "2026-10-22"
   }
 ];
 

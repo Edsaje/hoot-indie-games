@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 86
+ * Total de pépites sélectionnées : 88
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3636,5 +3636,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE3Nzk3NDg4LnBuZw==/315x250%23c/ZJr4Ym.png"
     ],
     "dateAdded": "2026-10-21"
+  },
+  {
+    "id": "itch-kirby-soft-wet",
+    "title": "Kirby ~ Soft & Wet",
+    "developer": "strimps-kitchen",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://strimps-kitchen.itch.io/kirby-soft-and-wet",
+    "playInBrowserUrl": "https://strimps-kitchen.itch.io/kirby-soft-and-wet",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A fishing experience",
+      "en": "A fishing experience"
+    },
+    "description": {
+      "fr": "A fishing experience",
+      "en": "A fishing experience"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIyOTk0MTA2LnBuZw==/315x250%23c/vgviLq.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIyOTk0MTA2LnBuZw==/315x250%23c/vgviLq.png"
+    ],
+    "dateAdded": "2026-10-22"
+  },
+  {
+    "id": "itch-z-a-t-o-i-love-the-world-and-everything-in-it",
+    "title": "Z. A. T. O. // I Love the World and Everything In It",
+    "developer": "nopanamaman",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://nopanamaman.itch.io/z-a-t-o-i-love-the-world-and-everything-in-it",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "USSR, 1986. A girl goes missing in the closed city of Vorkuta-5, yet not a soul seems to be concerned.",
+      "en": "USSR, 1986. A girl goes missing in the closed city of Vorkuta-5, yet not a soul seems to be concerned."
+    },
+    "description": {
+      "fr": "USSR, 1986. A girl goes missing in the closed city of Vorkuta-5, yet not a soul seems to be concerned.",
+      "en": "USSR, 1986. A girl goes missing in the closed city of Vorkuta-5, yet not a soul seems to be concerned."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIzODQxNzMyLnBuZw==/315x250%23c/1dBIos.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIzODQxNzMyLnBuZw==/315x250%23c/1dBIos.png"
+    ],
+    "dateAdded": "2026-10-22"
   }
 ];

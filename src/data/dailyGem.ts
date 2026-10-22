@@ -1,39 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-21";
+export const TODAY_DATE = "2026-10-22";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "garrys-mod",
-  "title": "Garry's Mod",
-  "releaseYear": 2006,
+  "id": "planet-of-lana",
+  "title": "Planet of Lana",
+  "releaseYear": 2023,
   "genre": [
-    "Bac à sable",
-    "Simulation",
-    "Multijoueur",
-    "Physique"
+    "Platformer",
+    "Aventure",
+    "Puzzle",
+    "Sci-Fi"
   ],
   "artStyle": {
-    "fr": "3D Stylisé",
-    "en": "Stylized 3D"
+    "fr": "2D Dessiné à la main",
+    "en": "2D Hand-drawn"
   },
   "camera": {
-    "fr": "Vue à la première personne",
-    "en": "First-Person"
+    "fr": "Vue de côté 2D",
+    "en": "2D Side-scroller"
   },
-  "developer": "Facepunch Studios",
-  "steamUrl": "https://store.steampowered.com/app/4000/",
+  "developer": "Wishfully",
+  "steamUrl": "https://store.steampowered.com/app/1608230/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4000/ss_af060d0a9aeb6598e154c9704ce250b0e63b2266.1920x1080.jpg?t=1776868682",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4000/ss_d314d7dba0987b3e7f49154964bda0ae74ee5161.1920x1080.jpg?t=1776868682",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4000/ss_3d320f333fb74413911cbc2bffae9bdda683e2ec.1920x1080.jpg?t=1776868682",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4000/ss_12741a4344b5cfee33726ae219476c8634517f7d.1920x1080.jpg?t=1776868682",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4000/ss_74a181b4584a04c88ee316df31a850ab2810fb79.1920x1080.jpg?t=1776868682",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4000/ss_a6133770663ff34d535adf050f2af64ab47a6974.1920x1080.jpg?t=1776868682"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_73b0b2da6ced61844f4ad07e97613ebbb2c7bd65.1920x1080.jpg?t=1772728759",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_6f4a2ba6f5946be25ef2cd5cc9b8bf932b9178ff.1920x1080.jpg?t=1772728759",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_393d5e36d6c9d3e920e9f8066bf420ca61215709.1920x1080.jpg?t=1772728759",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_d62aa7852b06c638a777235bf93b642fb5e7e2e3.1920x1080.jpg?t=1772728759",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_ea3f85b0a5aa9379eed8c3e935e37962d2b5329c.1920x1080.jpg?t=1772728759",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_6dfcaacba7308d7988ff2a7ecbd5ed1827683413.1920x1080.jpg?t=1772728759"
   ],
   "hints": {
     "tagline": {
-      "fr": "Le bac à sable physique ultime où la créativité et le chaos multijoueur n'ont aucune limite.",
-      "en": "The ultimate physics sandbox where community creativity and multiplayer chaos know no bounds."
-    }
+      "fr": "Parcourez une planète idyllique menacée par une armée de robots aux côtés d'une adorable créature noire.",
+      "en": "A young girl and her loyal friend embark on a rescue mission through a colorful world full of cold machines.",
+      "es": "Una joven y su fiel compañero se embarcan en una misión de rescate a través de un mundo lleno de máquinas frías.",
+      "de": "Begib dich mit einem treuen Gefährten auf eine Rettungsmission durch eine atemberaubende, bedrohte Welt.",
+      "ja": "ロボット軍団の侵略を受けた美しい惑星で、不思議な小動物ムイとともに家族を救い出す映画的パズルアドベンチャー。",
+      "pt-BR": "Aventure-se por um planeta deslumbrante ameaçado por máquinas sem alma com seu pequeno amigo felino."
+    },
+    "composer": "Takeshi Furukawa"
   }
 };
