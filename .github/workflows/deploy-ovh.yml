@@ -51,7 +51,7 @@ jobs:
       - name: 📤 Déploiement FTP vers OVH
         id: ftp-deploy-1
         continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ftp.cluster129.hosting.ovh.net
           username: hootinu
@@ -68,7 +68,7 @@ jobs:
 
       - name: 📤 Réessai Déploiement FTP vers OVH (Tentative 2)
         if: steps.ftp-deploy-1.outcome == 'failure'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ftp.cluster129.hosting.ovh.net
           username: hootinu
