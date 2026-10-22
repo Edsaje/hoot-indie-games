@@ -23,6 +23,7 @@ const FriendsModal = React.lazy(() => import('./components/friends/FriendsModal'
 const FeatherShopModal = React.lazy(() => import('./components/shop/FeatherShopModal').then(module => ({ default: module.FeatherShopModal })));
 const ChatDrawer = React.lazy(() => import('./components/chat/ChatDrawer').then(module => ({ default: module.ChatDrawer })));
 const AdminRewardCelebrationModal = React.lazy(() => import('./components/common/AdminRewardCelebrationModal').then(module => ({ default: module.AdminRewardCelebrationModal })));
+const LegalModal = React.lazy(() => import('./components/common/LegalModal').then(module => ({ default: module.LegalModal })));
 const TradeModal = React.lazy(() => import('./components/cards/TradeModal').then(module => ({ default: module.TradeModal })));
 const EmailVerificationModal = React.lazy(() => import('./components/auth/EmailVerificationModal').then(module => ({ default: module.EmailVerificationModal })));
 import { EmailVerificationBanner } from './components/auth/EmailVerificationBanner';
@@ -210,6 +211,7 @@ function getRouteInfo(): { route: string; hash: string; pathname: string } {
     return route.startsWith('shop') || route.startsWith('boutique');
   });
   const [isCardsModalOpen, setIsCardsModalOpen] = useState<boolean>(false);
+  const [isLegalOpen, setIsLegalOpen] = useState<boolean>(false);
   
 
   useEffect(() => {
@@ -1041,6 +1043,14 @@ function getRouteInfo(): { route: string; hash: string; pathname: string } {
           {/* Centre d'Échange Bilatéral de Cartes */}
           {isTradeModalOpen && <TradeModal />}
 
+          {/* Mentions Légales & Confidentialité RGPD */}
+          {isLegalOpen && (
+            <LegalModal
+              isOpen={isLegalOpen}
+              onClose={() => setIsLegalOpen(false)}
+            />
+          )}
+
       {(() => {
         const isAnyModalOpen = Boolean(
           isStatsOpen ||
@@ -1056,7 +1066,8 @@ function getRouteInfo(): { route: string; hash: string; pathname: string } {
           isAdminDashboardOpen ||
           isShopOpen ||
           isCardsModalOpen ||
-          isTradeModalOpen
+          isTradeModalOpen ||
+          isLegalOpen
         );
         return (
           <>
@@ -1107,6 +1118,7 @@ function getRouteInfo(): { route: string; hash: string; pathname: string } {
           <Footer
             onSelectTab={handleTabChange}
             onEasterEggTrigger={() => setIsEasterEggOpen(true)}
+            onOpenLegal={() => setIsLegalOpen(true)}
           />
         </React.Suspense>
       </div>

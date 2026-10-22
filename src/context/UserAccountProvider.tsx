@@ -63,6 +63,7 @@ import {
   apiRegister,
   apiLogin,
   apiLogout,
+  apiDeleteAccount,
   apiLinkSteam,
   apiVerifyEmail,
   apiResendVerificationEmail,
@@ -1178,6 +1179,32 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     } catch {}
   }, []);
 
+  const deleteAccount = useCallback(async (password?: string): Promise<{ success: boolean; error?: string; message?: string }> => {
+    try {
+      const res = await apiDeleteAccount(password);
+      if (res.success) {
+        if (isSupabaseConfigured) {
+          try {
+            const client = await getSupabaseClient();
+            if (client) await client.auth.signOut();
+          } catch {}
+        }
+        hasInitialSyncedRef.current = false;
+        clearAllUserConnectedData();
+        const cleanDefault = getDefaultProfile();
+        setIsAuthenticated(false);
+        setProfile(cleanDefault);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanDefault));
+        } catch {}
+        return { success: true, message: res.message || 'Compte supprimé avec succès.' };
+      }
+      return { success: false, error: res.message || res.error || 'Échec de la suppression du compte.' };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Erreur réseau lors de la suppression.' };
+    }
+  }, []);
+
   const syncCloud = useCallback(async (): Promise<{ success: boolean; message: string }> => {
     try {
       const res = await syncUserCloudSave(
@@ -1543,6 +1570,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           verifyEmail,
           resendVerificationEmail,
           logout,
+          deleteAccount,
           syncCloud,
           steamAccount: profile.steam,
           isSteamConnected,

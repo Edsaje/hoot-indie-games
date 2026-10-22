@@ -328,6 +328,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     </>
                   )}
                 </button>
+
+                {mode === 'signup' && (
+                  <p className="text-[10.5px] text-slate-400 text-center leading-relaxed pt-1">
+                    En créant un compte, vous acceptez l'utilisation de votre adresse e-mail pour l'authentification et la sauvegarde de votre profil. Hébergement souverain en France (OVHcloud), sans aucun profilage publicitaire ni revente de données.
+                  </p>
+                )}
               </form>
 
               {/* Free play reassurance */}

@@ -32,6 +32,7 @@ import {
   Zap,
   LogIn,
   Volume2,
+  Trash2,
 } from 'lucide-react';
 import { FriendsContext } from '../../context/FriendsContext';
 import { SteamIcon } from './SteamIcon';
@@ -86,6 +87,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     loginWithEmail,
     signUpWithEmail,
     logout,
+    deleteAccount,
     syncCloud,
     steamAccount,
     isSteamConnected,
@@ -127,6 +129,31 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [showAdvancedKey, setShowAdvancedKey] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // RGPD : État de suppression définitive de compte
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      const res = await deleteAccount(deletePassword);
+      if (res.success) {
+        setShowDeleteConfirm(false);
+        setSyncFeedback({ type: 'success', message: res.message || 'Votre compte a été supprimé avec succès.' });
+        onClose();
+      } else {
+        setDeleteError(res.error || 'Impossible de supprimer le compte.');
+      }
+    } catch (err: any) {
+      setDeleteError(err?.message || 'Erreur réseau.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Friend code state - Uniquement disponible pour les utilisateurs connectés
   const friendsCtx = useContext(FriendsContext);
@@ -1679,6 +1706,79 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     />
                   </div>
                 </div>
+
+                {/* Confidentialité & Droit à l'effacement (RGPD - Art. 17) */}
+                {isAuthenticated && (
+                  <div className="p-4 bg-rose-950/20 border border-rose-900/30 rounded-2xl space-y-3">
+                    <h4 className="text-sm font-bold text-rose-300 flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-rose-400" />
+                      Confidentialité &amp; Droit à l'effacement (RGPD)
+                    </h4>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      Conformément à l'article 17 du RGPD, vous pouvez supprimer définitivement votre compte et l'intégralité de vos données serveur associées (profil, sauvegardes cloud, collections).
+                    </p>
+
+                    {!showDeleteConfirm ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundFx.playClick();
+                          setShowDeleteConfirm(true);
+                        }}
+                        className="py-2 px-3.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold inline-flex items-center gap-2 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+                        <span>Supprimer définitivement mon compte</span>
+                      </button>
+                    ) : (
+                      <div className="p-3.5 bg-slate-950/80 border border-rose-500/40 rounded-xl space-y-3">
+                        <p className="text-xs text-rose-300 font-semibold">
+                          Êtes-vous certain de vouloir supprimer votre compte ? Cette action est immédiate et irréversible.
+                        </p>
+                        {profile.email && (
+                          <div className="space-y-1">
+                            <label className="text-[11px] text-slate-400 block font-medium">
+                              Mot de passe de confirmation :
+                            </label>
+                            <input
+                              type="password"
+                              value={deletePassword}
+                              onChange={(e) => setDeletePassword(e.target.value)}
+                              placeholder="Votre mot de passe actuel"
+                              className="w-full px-3 py-1.5 bg-[#0b0f19] border border-[#1e293b] rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                            />
+                          </div>
+                        )}
+                        {deleteError && (
+                          <div className="text-xs text-rose-400 font-medium">
+                            {deleteError}
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2 pt-1">
+                          <button
+                            type="button"
+                            onClick={handleDeleteAccount}
+                            disabled={isDeleting}
+                            className="py-1.5 px-3 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+                          >
+                            {isDeleting ? 'Suppression...' : 'Confirmer la suppression'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowDeleteConfirm(false);
+                              setDeletePassword('');
+                              setDeleteError(null);
+                            }}
+                            className="py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors cursor-pointer"
+                          >
+                            Annuler
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </>
             )}
           </div>

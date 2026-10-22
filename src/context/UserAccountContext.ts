@@ -32,6 +32,7 @@ export interface UserAccountContextType {
   verifyEmail: (tokenOrCode: string) => Promise<{ success: boolean; error?: string; message?: string }>;
   resendVerificationEmail: () => Promise<{ success: boolean; cooldownRemaining?: number; error?: string; message?: string }>;
   logout: () => Promise<void>;
+  deleteAccount: (password?: string) => Promise<{ success: boolean; error?: string; message?: string }>;
   syncCloud: () => Promise<{ success: boolean; message: string }>;
 
   // Intégration Steam & Bibliothèque

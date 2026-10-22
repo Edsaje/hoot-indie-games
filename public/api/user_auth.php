@@ -698,6 +698,122 @@ switch ($action) {
         exit;
 
     // -------------------------------------------------------------
+    // ACTION : SUPPRESSION DÉFINITIVE DU COMPTE (DROIT À L'EFFACEMENT - ART. 17 RGPD)
+    // -------------------------------------------------------------
+    case 'delete_account':
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'error' => 'method_not_allowed'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $userId = $_SESSION['hoot_user_id'] ?? null;
+        $steamIdSession = $_SESSION['steam_id'] ?? null;
+
+        if (!$userId && !$steamIdSession) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'error' => 'unauthorized', 'message' => 'Vous devez être connecté pour supprimer votre compte.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $accounts = loadAccountsData($accountsFile);
+        $user = null;
+        $targetUserId = $userId;
+
+        if ($userId && isset($accounts['users'][$userId])) {
+            $user = $accounts['users'][$userId];
+        } elseif ($steamIdSession && isset($accounts['steamIndex'][$steamIdSession])) {
+            $targetUserId = $accounts['steamIndex'][$steamIdSession];
+            if (isset($accounts['users'][$targetUserId])) {
+                $user = $accounts['users'][$targetUserId];
+            }
+        }
+
+        if ($user) {
+            $email = $user['email'] ?? null;
+            $steamId = $user['steamId'] ?? null;
+
+            $input = json_decode(file_get_contents('php://input'), true) ?: [];
+            $password = trim($input['password'] ?? '');
+            if (!empty($user['passwordHash']) && !empty($password)) {
+                if (!password_verify($password, $user['passwordHash'])) {
+                    http_response_code(403);
+                    echo json_encode(['success' => false, 'error' => 'invalid_password', 'message' => 'Mot de passe incorrect.'], JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
+            }
+
+            // 1. Suppression des fichiers de sauvegarde liés
+            $candidateFiles = [
+                $savesDir . '/saves_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', strval($targetUserId)) . '.json',
+                $savesDir . '/user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', strval($targetUserId)) . '.json',
+            ];
+            if ($steamId) {
+                $candidateFiles[] = $savesDir . '/steam_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', strval($steamId)) . '.json';
+            }
+            foreach ($candidateFiles as $f) {
+                if (file_exists($f)) {
+                    @unlink($f);
+                }
+            }
+
+            // 2. Nettoyage dans usernames.json si le joueur avait un pseudo réservé
+            $usernamesFile = __DIR__ . '/registered_usernames.json';
+            if (file_exists($usernamesFile)) {
+                $uData = json_decode(@file_get_contents($usernamesFile), true);
+                if (is_array($uData)) {
+                    $uChanged = false;
+                    if (isset($uData['userToName']['user_' . $targetUserId])) {
+                        $normName = $uData['userToName']['user_' . $targetUserId];
+                        unset($uData['userToName']['user_' . $targetUserId]);
+                        if (isset($uData['usernames'][$normName])) {
+                            unset($uData['usernames'][$normName]);
+                        }
+                        $uChanged = true;
+                    }
+                    if ($steamId && isset($uData['userToName']['steam_' . $steamId])) {
+                        $normName = $uData['userToName']['steam_' . $steamId];
+                        unset($uData['userToName']['steam_' . $steamId]);
+                        if (isset($uData['usernames'][$normName])) {
+                            unset($uData['usernames'][$normName]);
+                        }
+                        $uChanged = true;
+                    }
+                    if ($uChanged) {
+                        @file_put_contents($usernamesFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                    }
+                }
+            }
+
+            // 3. Suppression dans la base des comptes
+            if ($email && isset($accounts['emailIndex'][$email])) {
+                unset($accounts['emailIndex'][$email]);
+            }
+            if ($steamId && isset($accounts['steamIndex'][$steamId])) {
+                unset($accounts['steamIndex'][$steamId]);
+            }
+            unset($accounts['users'][$targetUserId]);
+            saveAccountsData($accountsFile, $accounts);
+        }
+
+        // 4. Destruction de session et cookie
+        $_SESSION = [];
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        @session_destroy();
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Votre compte et l\'ensemble de vos données associées ont été définitivement supprimés conformément au RGPD.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+
+    // -------------------------------------------------------------
     // ACTION : DÉCONNEXION (POST / GET)
     // -------------------------------------------------------------
     case 'logout':

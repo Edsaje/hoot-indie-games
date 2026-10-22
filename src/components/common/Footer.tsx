@@ -11,9 +11,10 @@ import type { NavTab } from './Navbar';
 interface FooterProps {
   onSelectTab: (tab: NavTab) => void;
   onEasterEggTrigger: () => void;
+  onOpenLegal?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger }) => {
+export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger, onOpenLegal }) => {
   const { t } = useTranslation();
   const [clickCount, setClickCount] = useState(0);
 
@@ -302,8 +303,20 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger 
         </div>
 
         <div className="pt-8 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-          <div>
-            © {new Date().getFullYear()} Hoot Indie Games — Développé par Quentin Beaud (Hibouxe / Edsaje).
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>© {new Date().getFullYear()} Hoot Indie Games — Quentin Beaud (Hibouxe / Edsaje)</span>
+            {onOpenLegal && (
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  onOpenLegal();
+                }}
+                className="text-slate-400 hover:text-amber-400 underline transition cursor-pointer"
+              >
+                Mentions Légales &amp; Confidentialité
+              </button>
+            )}
           </div>
           <div className="flex items-center gap-1">
             <span>Fait pour les passionnés du jeu vidéo indépendant</span>

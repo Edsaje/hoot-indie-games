@@ -176,6 +176,31 @@ export async function apiLogout(): Promise<AuthApiResponse> {
 }
 
 /**
+ * Suppression définitive du compte (Droit à l'effacement - Art. 17 RGPD)
+ */
+export async function apiDeleteAccount(password?: string): Promise<AuthApiResponse> {
+  try {
+    const res = await fetch(`${AUTH_API_URL}?action=delete_account`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ password: password || '' }),
+      signal: AbortSignal.timeout(15000),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return {
+      success: false,
+      error: 'network_error',
+      message: err?.message || 'Erreur réseau lors de la suppression du compte.',
+    };
+  }
+}
+
+/**
  * Valide l'adresse e-mail avec un token cryptographique ou un code OTP à 6 chiffres
  */
 export async function apiVerifyEmail(tokenOrCode: string): Promise<AuthApiResponse> {
