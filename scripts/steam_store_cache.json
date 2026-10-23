@@ -30076,5 +30076,21 @@
       "fr": "Très positifs",
       "en": "Very Positive"
     }
+  },
+  "5351640": {
+    "appId": 5351640,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 999,
+    "finalPriceCents": 999,
+    "discountPercent": 0,
+    "formattedFinalPrice": "9,99€",
+    "totalReviews": 500,
+    "totalPositive": 450,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
   }
 }

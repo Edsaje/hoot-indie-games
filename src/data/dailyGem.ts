@@ -1,16 +1,16 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-22";
+export const TODAY_DATE = "2026-10-23";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "planet-of-lana",
-  "title": "Planet of Lana",
-  "releaseYear": 2023,
+  "id": "steamworld-dig",
+  "title": "SteamWorld Dig",
+  "releaseYear": 2013,
   "genre": [
-    "Platformer",
+    "Action",
     "Aventure",
-    "Puzzle",
-    "Sci-Fi"
+    "Metroidvania",
+    "Puzzle"
   ],
   "artStyle": {
     "fr": "2D Dessiné à la main",
@@ -20,25 +20,21 @@ export const TODAY_DAILY_GEM: Game = {
     "fr": "Vue de côté 2D",
     "en": "2D Side-scroller"
   },
-  "developer": "Wishfully",
-  "steamUrl": "https://store.steampowered.com/app/1608230/",
+  "developer": "Image & Form Games",
+  "steamUrl": "https://store.steampowered.com/app/252410/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_73b0b2da6ced61844f4ad07e97613ebbb2c7bd65.1920x1080.jpg?t=1772728759",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_6f4a2ba6f5946be25ef2cd5cc9b8bf932b9178ff.1920x1080.jpg?t=1772728759",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_393d5e36d6c9d3e920e9f8066bf420ca61215709.1920x1080.jpg?t=1772728759",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_d62aa7852b06c638a777235bf93b642fb5e7e2e3.1920x1080.jpg?t=1772728759",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_ea3f85b0a5aa9379eed8c3e935e37962d2b5329c.1920x1080.jpg?t=1772728759",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1608230/ss_6dfcaacba7308d7988ff2a7ecbd5ed1827683413.1920x1080.jpg?t=1772728759"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_d68bda43fabeb368a4b27d0e98beb9195ccbe360.1920x1080.jpg?t=1750855239",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_b03e0452ea16e460ea4cc18fd8ccd6647de1ba98.1920x1080.jpg?t=1750855239",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_20913ce72c771b92779adac2024847251c7e37b7.1920x1080.jpg?t=1750855239",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_a443439ccd5c33103eda22fd2ae50a5104951677.1920x1080.jpg?t=1750855239",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_c0aab5de5b639e115a3acee96740eaac83af22f3.1920x1080.jpg?t=1750855239",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_45b1664274405aacf12fd4d03a67c402ad45e931.1920x1080.jpg?t=1750855239"
   ],
   "hints": {
     "tagline": {
-      "fr": "Parcourez une planète idyllique menacée par une armée de robots aux côtés d'une adorable créature noire.",
-      "en": "A young girl and her loyal friend embark on a rescue mission through a colorful world full of cold machines.",
-      "es": "Una joven y su fiel compañero se embarcan en una misión de rescate a través de un mundo lleno de máquinas frías.",
-      "de": "Begib dich mit einem treuen Gefährten auf eine Rettungsmission durch eine atemberaubende, bedrohte Welt.",
-      "ja": "ロボット軍団の侵略を受けた美しい惑星で、不思議な小動物ムイとともに家族を救い出す映画的パズルアドベンチャー。",
-      "pt-BR": "Aventure-se por um planeta deslumbrante ameaçado por máquinas sem alma com seu pequeno amigo felino."
-    },
-    "composer": "Takeshi Furukawa"
-  }
+      "fr": "SteamWorld Dig is an action-adventure puzzler with strong Metroidvanian influences set in the SteamWorld Universe. You’ll need to dig deep into the earth, gather resources to upgrade your tools and abilities, take on enemies, solve challenging puzzles and uncover the secrets to save a dying town.",
+      "en": "SteamWorld Dig is an action-adventure puzzler with strong Metroidvanian influences set in the SteamWorld Universe. You’ll need to dig deep into the earth, gather resources to upgrade your tools and abilities, take on enemies, solve challenging puzzles and uncover the secrets to save a dying town."
+    }
+  },
+  "addedAt": "2026-10-01"
 };

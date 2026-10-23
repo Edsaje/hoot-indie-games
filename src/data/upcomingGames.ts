@@ -519,40 +519,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/534c764792674d735f782b5d7049d490ddff5416/header.jpg?t=1791260537"
   },
   {
-    "id": "storebot-tidy-up-pc-parts",
-    "title": "STOREBOT: Tidy Up PC Parts",
-    "developer": "Studio Maechuragi",
-    "publisher": "Studio Maechuragi",
-    "expectedDate": {
-      "fr": "octobre 2026",
-      "en": "octobre 2026"
-    },
-    "genres": [
-      {
-        "fr": "Simulation",
-        "en": "Simulation"
-      },
-      {
-        "fr": "Deckbuilder",
-        "en": "Deckbuilder"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5351640/",
-    "description": {
-      "fr": "Rangez des milliers de composants PC, remplissez les étagères et débloquez de puissantes améliorations. Seul ou entre amis, transportez, lancez et triez des cartons sur deux cartes pour transformer un magasin chaotique en boutique bien ordonnée.",
-      "en": "Organize thousands of PC parts, complete shelves, unlock powerful upgrades, and work together with friends to tidy up a chaotic computer store. Carry, throw, and sort boxes across two unique maps while building your perfect store."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/9e0a821dfc6ba8c36a93034508c415260c974cd4/header.jpg?t=1792025315"
-  },
-  {
     "id": "slup",
     "title": "SLUP",
     "developer": "INECT",
@@ -615,5 +581,39 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 95,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1792142165"
+  },
+  {
+    "id": "the-reflection",
+    "title": "The Reflection",
+    "developer": "Pinwheels Studio",
+    "publisher": "Pinwheels Studio",
+    "expectedDate": {
+      "fr": "23 oct. 2026",
+      "en": "Oct 23, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      },
+      {
+        "fr": "Survie",
+        "en": "Survie"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/4314340/",
+    "description": {
+      "fr": "The Reflection is a ritual-based co-op horror game focused on tension, teamwork, and survival. Trapped inside a cursed mansion, players must a investigate supernatural event, perform the correct rituals, and exorcise a dangerous entity before it consumes them.",
+      "en": "The Reflection is a ritual-based co-op horror game focused on tension, teamwork, and survival. Trapped inside a cursed mansion, players must a investigate supernatural event, perform the correct rituals, and exorcise a dangerous entity before it consumes them."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/15ab72b1be0e4313d2f804446ce0ec5936da22a9/header.jpg?t=1792690774"
   }
 ];

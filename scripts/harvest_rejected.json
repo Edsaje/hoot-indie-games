@@ -41,6 +41,13 @@
     "rejectedAt": "2026-10-14",
     "notes": "Absence de genre indé"
   },
+  "32470": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "36586": {
     "reason": "low_reviews",
     "permanent": false,
@@ -89,6 +96,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "80447": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "84740": {
     "reason": "low_reviews",
@@ -173,6 +187,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "214560": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "220200": {
     "reason": "low_reviews",
@@ -384,13 +405,6 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
-  "353540": {
-    "title": "Stephen's Sausage Roll",
-    "reason": "non_latin",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Description non latine"
-  },
   "354140": {
     "reason": "low_reviews",
     "permanent": false,
@@ -566,6 +580,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "463530": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "499170": {
     "reason": "low_reviews",
     "permanent": false,
@@ -712,6 +733,13 @@
     "rejectedAt": "2026-10-17",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
+  },
+  "719890": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "732690": {
     "reason": "low_reviews",
@@ -867,12 +895,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "881020": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "899770": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "903950": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "908070": {
     "reason": "low_reviews",
@@ -944,19 +986,19 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "979690": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "981430": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
-  },
-  "1002300": {
-    "title": "Fear & Hunger",
-    "reason": "adult",
-    "permanent": true,
-    "rejectedAt": "2026-10-22",
-    "notes": "Contenu adulte FR"
   },
   "1003460": {
     "reason": "low_reviews",
@@ -1013,6 +1055,13 @@
     "rejectedAt": "2026-10-20",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
+  },
+  "1035990": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "1040200": {
     "reason": "low_reviews",
@@ -1091,6 +1140,20 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "1086940": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "1091500": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "1108370": {
     "reason": "low_reviews",
     "permanent": false,
@@ -1153,6 +1216,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "1140270": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "1142710": {
     "title": "Total War: WARHAMMER III",
@@ -1237,6 +1307,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Ratio positif 40% (< 50%)",
     "retryAfter": "2026-11-12"
+  },
+  "1205520": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "1206560": {
     "reason": "low_reviews",
@@ -1462,6 +1539,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "1449690": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "1462570": {
     "reason": "low_reviews",
     "permanent": false,
@@ -1531,6 +1615,20 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "1530140": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "1546080": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "1552350": {
     "reason": "low_reviews",
@@ -1756,6 +1854,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "1747050": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "1757300": {
     "reason": "low_reviews",
     "permanent": false,
@@ -1832,6 +1937,13 @@
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "1826140": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "1827680": {
     "reason": "low_reviews",
@@ -1959,6 +2071,13 @@
     "notes": "Seulement 2 avis (< 5)",
     "retryAfter": "2026-11-01"
   },
+  "1984270": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "1988540": {
     "reason": "low_reviews",
     "permanent": false,
@@ -1986,6 +2105,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "2050650": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "2071280": {
     "reason": "low_reviews",
@@ -2071,6 +2197,20 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "2124380": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "2138330": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "2148120": {
     "reason": "low_reviews",
     "permanent": false,
@@ -2084,6 +2224,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "2183900": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "2191190": {
     "reason": "low_reviews",
@@ -2197,6 +2344,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "2291760": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "2295060": {
     "title": "Beyond These Stars",
     "reason": "not_indie",
@@ -2309,6 +2463,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "2420580": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "2421250": {
     "reason": "low_reviews",
     "permanent": false,
@@ -2400,6 +2561,20 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "2479810": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "2488560": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "2493670": {
     "reason": "low_reviews",
     "permanent": false,
@@ -2448,6 +2623,13 @@
     "rejectedAt": "2026-10-14",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
+  },
+  "2552310": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "2570630": {
     "reason": "low_reviews",
@@ -2568,6 +2750,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "2702170": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "2712460": {
     "reason": "low_reviews",
     "permanent": false,
@@ -2658,6 +2847,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "2795000": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "2824490": {
     "reason": "low_reviews",
@@ -2750,6 +2946,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "2882840": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "2902780": {
     "reason": "low_reviews",
     "permanent": false,
@@ -2799,6 +3002,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
   },
+  "2929250": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "2934220": {
     "reason": "low_reviews",
     "permanent": false,
@@ -2812,6 +3022,20 @@
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "2939510": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "2948130": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "2949320": {
     "reason": "low_reviews",
@@ -2967,6 +3191,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "3097300": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3110760": {
     "reason": "low_reviews",
     "permanent": false,
@@ -2981,12 +3212,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "3121930": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3123060": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "3124540": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3135200": {
     "reason": "low_reviews",
@@ -3029,6 +3274,13 @@
     "rejectedAt": "2026-10-15",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
+  },
+  "3154800": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3164500": {
     "reason": "low_reviews",
@@ -3163,12 +3415,26 @@
     "notes": "Ratio positif 33% (< 50%)",
     "retryAfter": "2026-11-11"
   },
+  "3240220": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3247500": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "3247750": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3250140": {
     "reason": "low_reviews",
@@ -3205,12 +3471,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "3269960": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3278290": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "3280980": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3295810": {
     "title": "Remote Reaper: FPV Combat Drone Simulator",
@@ -3288,6 +3568,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "3357650": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3358360": {
     "reason": "low_reviews",
@@ -3562,12 +3849,33 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
   },
+  "3547020": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3552140": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "3558100": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "3558150": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3560360": {
     "reason": "low_reviews",
@@ -3625,6 +3933,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-01"
   },
+  "3590820": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3591180": {
     "reason": "low_reviews",
     "permanent": false,
@@ -3659,6 +3974,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "3599690": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3601090": {
     "reason": "low_reviews",
@@ -3709,6 +4031,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "3624140": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3636060": {
     "reason": "low_reviews",
     "permanent": false,
@@ -3722,6 +4051,13 @@
     "rejectedAt": "2026-10-22",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
+  },
+  "3645890": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3646570": {
     "reason": "low_reviews",
@@ -3743,6 +4079,13 @@
     "rejectedAt": "2026-10-21",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
+  },
+  "3667660": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3669570": {
     "reason": "low_reviews",
@@ -3877,6 +4220,13 @@
     "rejectedAt": "2026-10-22",
     "notes": "Steam type: dlc"
   },
+  "3764200": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3764940": {
     "reason": "low_reviews",
     "permanent": false,
@@ -3919,6 +4269,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "3809190": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3816000": {
     "reason": "low_reviews",
     "permanent": false,
@@ -3954,6 +4311,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
   },
+  "3827330": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3833160": {
     "reason": "low_reviews",
     "permanent": false,
@@ -3975,6 +4339,20 @@
     "rejectedAt": "2026-10-20",
     "notes": "Contenu adulte FR"
   },
+  "3841050": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "3844890": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3845070": {
     "title": "Dupery: A Game of Solo Deduction",
     "reason": "adult",
@@ -3995,6 +4373,13 @@
     "rejectedAt": "2026-10-14",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
+  },
+  "3855160": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3863740": {
     "reason": "low_reviews",
@@ -4045,6 +4430,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
   },
+  "3892270": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3894540": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4080,6 +4472,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
   },
+  "3911820": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3911840": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4107,6 +4506,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "3923150": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3928030": {
     "title": "Cult of the Yellow King",
@@ -4150,6 +4556,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "3954920": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3955960": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4170,6 +4583,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "3960600": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "3966890": {
     "title": "Dawncaster | The RPG Cardventure",
@@ -4206,6 +4626,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "3983810": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "3990020": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4233,6 +4660,13 @@
     "rejectedAt": "2026-10-21",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
+  },
+  "4006760": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4012780": {
     "reason": "low_reviews",
@@ -4304,6 +4738,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "4036370": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4038320": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4366,6 +4807,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "4078430": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4079960": {
     "reason": "low_reviews",
@@ -4780,6 +5228,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
   },
+  "4258480": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4259190": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4899,6 +5354,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
   },
+  "4314340": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4315830": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4927,6 +5389,20 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
   },
+  "4336360": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "4336790": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4338180": {
     "reason": "low_reviews",
     "permanent": false,
@@ -4947,6 +5423,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "4347910": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4349560": {
     "reason": "low_reviews",
@@ -5087,6 +5570,13 @@
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "4387730": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4388860": {
     "reason": "low_reviews",
@@ -5283,6 +5773,13 @@
     "rejectedAt": "2026-10-20",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
+  },
+  "4467800": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4469060": {
     "reason": "low_reviews",
@@ -5613,6 +6110,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
   },
+  "4607890": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4609000": {
     "reason": "low_reviews",
     "permanent": false,
@@ -5689,6 +6193,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "4629050": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4631470": {
     "reason": "low_reviews",
@@ -6026,6 +6537,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "4748140": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4751790": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6068,6 +6586,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "4761550": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4769150": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6082,12 +6607,26 @@
     "rejectedAt": "2026-10-17",
     "notes": "Absence de genre indé"
   },
+  "4771880": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4772880": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-14",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
+  },
+  "4773930": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4773970": {
     "reason": "low_reviews",
@@ -6109,6 +6648,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "4785640": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4786520": {
     "reason": "low_reviews",
@@ -6222,12 +6768,26 @@
     "rejectedAt": "2026-10-20",
     "notes": "Absence de genre indé"
   },
+  "4815730": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4815840": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "4817620": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4823850": {
     "reason": "low_reviews",
@@ -6320,6 +6880,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "4850930": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4853590": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6404,6 +6971,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
   },
+  "4878820": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4886080": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6424,6 +6998,13 @@
     "permanent": true,
     "rejectedAt": "2026-10-14",
     "notes": "Steam type: dlc"
+  },
+  "4888530": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4889610": {
     "reason": "low_reviews",
@@ -6579,6 +7160,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "4935600": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4935810": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6592,6 +7180,13 @@
     "rejectedAt": "2026-10-21",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
+  },
+  "4936170": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4936870": {
     "reason": "low_reviews",
@@ -6726,6 +7321,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
   },
+  "4956380": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4956940": {
     "title": "Thicc Magic. Perky Prelude",
     "reason": "not_indie",
@@ -6782,6 +7384,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "4972430": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4974510": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6802,6 +7411,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "4977840": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "4979430": {
     "reason": "low_reviews",
@@ -6859,6 +7475,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
   },
+  "4989930": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "4991240": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6893,6 +7516,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "5000960": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5001040": {
     "reason": "low_reviews",
@@ -6950,6 +7580,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
   },
+  "5013160": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5015450": {
     "reason": "low_reviews",
     "permanent": false,
@@ -6963,6 +7600,20 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "5018720": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5020970": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5022330": {
     "reason": "low_reviews",
@@ -7040,6 +7691,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "5028320": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5032820": {
     "reason": "low_reviews",
@@ -7342,6 +8000,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
   },
+  "5069390": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5070190": {
     "reason": "low_reviews",
     "permanent": false,
@@ -7517,12 +8182,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "5094150": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5094650": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-17",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
+  },
+  "5096240": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5098480": {
     "reason": "low_reviews",
@@ -7565,6 +8244,27 @@
     "rejectedAt": "2026-10-15",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
+  },
+  "5100710": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5101180": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5101280": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5101820": {
     "reason": "low_reviews",
@@ -7657,6 +8357,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-02"
   },
+  "5114970": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5115590": {
     "reason": "low_reviews",
     "permanent": false,
@@ -7691,6 +8398,13 @@
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "5120560": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5120650": {
     "reason": "low_reviews",
@@ -7733,6 +8447,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "5124790": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5126160": {
     "reason": "low_reviews",
@@ -7825,6 +8546,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "5134280": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5134360": {
     "reason": "low_reviews",
     "permanent": false,
@@ -7881,6 +8609,20 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "5140670": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5144200": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5144250": {
     "reason": "low_reviews",
     "permanent": false,
@@ -7929,6 +8671,13 @@
     "rejectedAt": "2026-10-14",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
+  },
+  "5154570": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5155360": {
     "title": "Hood Warfare 2",
@@ -8063,6 +8812,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "5169220": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5169690": {
     "reason": "low_reviews",
     "permanent": false,
@@ -8160,6 +8916,13 @@
     "rejectedAt": "2026-10-18",
     "notes": "Seulement 1 avis (< 5)",
     "retryAfter": "2026-11-01"
+  },
+  "5179420": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5179800": {
     "reason": "low_reviews",
@@ -8321,6 +9084,13 @@
     "rejectedAt": "2026-10-22",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
+  },
+  "5194040": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5194410": {
     "reason": "low_reviews",
@@ -8714,12 +9484,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
   },
+  "5226500": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5226970": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-14",
     "notes": "Seulement 1 avis (< 5)",
     "retryAfter": "2026-10-28"
+  },
+  "5226980": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5227860": {
     "reason": "low_reviews",
@@ -8777,6 +9561,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
   },
+  "5231450": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5231500": {
     "reason": "low_reviews",
     "permanent": false,
@@ -8818,6 +9609,13 @@
     "rejectedAt": "2026-10-17",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
+  },
+  "5232660": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5232860": {
     "reason": "low_reviews",
@@ -8881,6 +9679,13 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "5236110": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5236690": {
     "reason": "low_reviews",
@@ -9113,6 +9918,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "5251070": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5251080": {
     "reason": "low_reviews",
     "permanent": false,
@@ -9126,6 +9938,13 @@
     "rejectedAt": "2026-10-18",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-01"
+  },
+  "5251660": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5252050": {
     "reason": "low_reviews",
@@ -9337,6 +10156,20 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "5263600": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5263610": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5264040": {
     "reason": "low_reviews",
     "permanent": false,
@@ -9428,6 +10261,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "5269280": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5269420": {
     "reason": "low_reviews",
     "permanent": false,
@@ -9504,6 +10344,13 @@
     "rejectedAt": "2026-10-14",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
+  },
+  "5273460": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5274400": {
     "reason": "low_reviews",
@@ -9799,6 +10646,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
   },
+  "5287750": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5287760": {
     "reason": "low_reviews",
     "permanent": false,
@@ -9875,6 +10729,13 @@
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "5290320": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5290600": {
     "reason": "low_reviews",
@@ -10008,6 +10869,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "5295940": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5295950": {
     "reason": "low_reviews",
@@ -10183,6 +11051,13 @@
     "rejectedAt": "2026-10-17",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
+  },
+  "5303370": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5303740": {
     "reason": "low_reviews",
@@ -10394,6 +11269,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "5315360": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5315480": {
     "reason": "low_reviews",
     "permanent": false,
@@ -10526,6 +11408,13 @@
     "rejectedAt": "2026-10-14",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
+  },
+  "5320980": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5321030": {
     "reason": "low_reviews",
@@ -10737,6 +11626,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "5327800": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5327970": {
     "reason": "low_reviews",
     "permanent": false,
@@ -10772,6 +11668,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
   },
+  "5328810": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5328990": {
     "reason": "low_reviews",
     "permanent": false,
@@ -10786,12 +11689,33 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
   },
+  "5329550": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5329870": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5330240": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-22",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
+  },
+  "5330340": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5330530": {
     "reason": "low_reviews",
@@ -10884,6 +11808,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "5335510": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5335610": {
     "reason": "low_reviews",
     "permanent": false,
@@ -10975,6 +11906,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-29"
   },
+  "5339480": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5339750": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11002,6 +11940,13 @@
     "rejectedAt": "2026-10-21",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
+  },
+  "5341050": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5341070": {
     "reason": "low_reviews",
@@ -11037,6 +11982,13 @@
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "5342270": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5342930": {
     "title": "Dementium II",
@@ -11094,12 +12046,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "5345960": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5346530": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-21",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
+  },
+  "5347940": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5347970": {
     "reason": "low_reviews",
@@ -11150,6 +12116,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "5349240": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5349560": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11177,6 +12150,13 @@
     "rejectedAt": "2026-10-22",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
+  },
+  "5352000": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5352170": {
     "reason": "low_reviews",
@@ -11220,6 +12200,13 @@
     "rejectedAt": "2026-10-14",
     "notes": "Steam type: dlc"
   },
+  "5353860": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5354400": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11233,6 +12220,20 @@
     "rejectedAt": "2026-10-21",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
+  },
+  "5354880": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5355660": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5355820": {
     "reason": "low_reviews",
@@ -11325,12 +12326,33 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
   },
+  "5359750": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5359760": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-19",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-02"
+  },
+  "5359780": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5359840": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5360210": {
     "reason": "low_reviews",
@@ -11395,6 +12417,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-03"
   },
+  "5364150": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5364370": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11437,12 +12466,33 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
   },
+  "5365780": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5366690": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-22",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
+  },
+  "5367270": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5367680": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5367850": {
     "reason": "low_reviews",
@@ -11478,6 +12528,13 @@
     "rejectedAt": "2026-10-22",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
+  },
+  "5371940": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5371990": {
     "reason": "low_reviews",
@@ -11521,6 +12578,20 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
   },
+  "5377090": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5377190": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5377200": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11542,6 +12613,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-02"
   },
+  "5380860": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5381120": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11562,6 +12640,20 @@
     "rejectedAt": "2026-10-12",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-26"
+  },
+  "5382570": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5384900": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5385630": {
     "reason": "low_reviews",
@@ -11591,12 +12683,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-28"
   },
+  "5387000": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5388730": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-13",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
+  },
+  "5389350": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5390590": {
     "reason": "low_reviews",
@@ -11647,6 +12753,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
   },
+  "5398190": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5399990": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11660,6 +12773,13 @@
     "rejectedAt": "2026-10-22",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
+  },
+  "5403390": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5403680": {
     "reason": "low_reviews",
@@ -11675,6 +12795,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-04"
   },
+  "5406050": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5409120": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11688,6 +12815,13 @@
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "5412210": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5413220": {
     "reason": "low_reviews",
@@ -11780,6 +12914,13 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-27"
   },
+  "5435570": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5436430": {
     "reason": "low_reviews",
     "permanent": false,
@@ -11794,12 +12935,26 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-31"
   },
+  "5438600": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5439360": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-16",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-10-30"
+  },
+  "5439640": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   },
   "5439950": {
     "reason": "low_reviews",
@@ -11864,11 +13019,32 @@
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-05"
   },
+  "5462510": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
+  "5462650": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
+  },
   "5465560": {
     "reason": "low_reviews",
     "permanent": false,
     "rejectedAt": "2026-10-19",
     "notes": "Seulement 0 avis (< 5)",
     "retryAfter": "2026-11-02"
+  },
+  "5478870": {
+    "reason": "low_reviews",
+    "permanent": false,
+    "rejectedAt": "2026-10-23",
+    "notes": "Seulement 0 avis (< 5)",
+    "retryAfter": "2026-11-06"
   }
 }

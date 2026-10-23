@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 88
+ * Total de pépites sélectionnées : 90
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3717,5 +3717,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzIzODQxNzMyLnBuZw==/315x250%23c/1dBIos.png"
     ],
     "dateAdded": "2026-10-22"
+  },
+  {
+    "id": "itch-legendum",
+    "title": "Legendum",
+    "developer": "vadeum",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://vadeum.itch.io/legendum",
+    "playInBrowserUrl": "https://vadeum.itch.io/legendum",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Incremental / Idle RPG. Rise into legend.",
+      "en": "Incremental / Idle RPG. Rise into legend."
+    },
+    "description": {
+      "fr": "Incremental / Idle RPG. Rise into legend.",
+      "en": "Incremental / Idle RPG. Rise into legend."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI3NDgwNzU4LnBuZw==/315x250%23c/11Sd5o.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI3NDgwNzU4LnBuZw==/315x250%23c/11Sd5o.png"
+    ],
+    "dateAdded": "2026-10-23"
+  },
+  {
+    "id": "itch-king-in-the-mountain",
+    "title": "King in the Mountain",
+    "developer": "milopanta",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://milopanta.itch.io/king-in-the-mountain",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Dig deep, fill the treasury, and bring a fallen kingdom back to life, a mining incremental.",
+      "en": "Dig deep, fill the treasury, and bring a fallen kingdom back to life, a mining incremental."
+    },
+    "description": {
+      "fr": "Dig deep, fill the treasury, and bring a fallen kingdom back to life, a mining incremental.",
+      "en": "Dig deep, fill the treasury, and bring a fallen kingdom back to life, a mining incremental."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4MTc4OTgwLnBuZw==/315x250%23c/wCaNfq.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4MTc4OTgwLnBuZw==/315x250%23c/wCaNfq.png"
+    ],
+    "dateAdded": "2026-10-23"
   }
 ];

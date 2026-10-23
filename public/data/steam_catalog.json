@@ -91067,5 +91067,41 @@
     "addedAt": "2026-10-21",
     "steamAppId": 4015730,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4015730/f33718d2ec2ccc0624838ebb14f275c0adc9b3a9/header.jpg?t=1792524320"
+  },
+  {
+    "id": "storebot-tidy-up-pc-parts",
+    "title": "STOREBOT: Tidy Up PC Parts",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Deckbuilder"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Studio Maechuragi",
+    "steamUrl": "https://store.steampowered.com/app/5351640/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/82590115810cf811c626fe2ed69e62d953e32378/ss_82590115810cf811c626fe2ed69e62d953e32378.1920x1080.jpg?t=1792679839",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/dbb60fc71f0482b2eddaa97880e6b6985694427d/ss_dbb60fc71f0482b2eddaa97880e6b6985694427d.1920x1080.jpg?t=1792679839",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/adb038940a343b63e841845c5ca7d99310d509bf/ss_adb038940a343b63e841845c5ca7d99310d509bf.1920x1080.jpg?t=1792679839",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/bb84b67b32b4d0c071560cb2fbcd7ce897f247c7/ss_bb84b67b32b4d0c071560cb2fbcd7ce897f247c7.1920x1080.jpg?t=1792679839",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/bbe1735bf7703771350765193c700f860c6e5923/ss_bbe1735bf7703771350765193c700f860c6e5923.1920x1080.jpg?t=1792679839",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/82590115810cf811c626fe2ed69e62d953e32378/ss_82590115810cf811c626fe2ed69e62d953e32378.1920x1080.jpg?t=1792679839"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Rangez des milliers de composants PC, remplissez les étagères et débloquez de puissantes améliorations. Seul ou entre amis, transportez, lancez et triez des cartons sur deux cartes pour transformer un magasin chaotique en boutique bien ordonnée.",
+        "en": "Organize thousands of PC parts, complete shelves, unlock powerful upgrades, and work together with friends to tidy up a chaotic computer store. Carry, throw, and sort boxes across two unique maps while building your perfect store."
+      }
+    },
+    "addedAt": "2026-10-23",
+    "steamAppId": 5351640,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/9e0a821dfc6ba8c36a93034508c415260c974cd4/header.jpg?t=1792679839"
   }
 ]
