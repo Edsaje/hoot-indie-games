@@ -485,40 +485,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "gomokusoccer",
-    "title": "GomokuSoccer",
-    "developer": "Hero Parker",
-    "publisher": "Hero Parker",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Sport",
-        "en": "Sport"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5220910/",
-    "description": {
-      "fr": "Place or Flick? In Gomoku Soccer, you can place your stones just to build a line of five, or flick them off the board and watch your opponent crashing out. Test your strategy and your aim!",
-      "en": "Place or Flick? In Gomoku Soccer, you can place your stones just to build a line of five, or flick them off the board and watch your opponent crashing out. Test your strategy and your aim!"
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/534c764792674d735f782b5d7049d490ddff5416/header.jpg?t=1791260537"
-  },
-  {
     "id": "slup",
     "title": "SLUP",
     "developer": "INECT",
@@ -583,37 +549,67 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1792142165"
   },
   {
-    "id": "the-reflection",
-    "title": "The Reflection",
-    "developer": "Pinwheels Studio",
-    "publisher": "Pinwheels Studio",
+    "id": "lily-or-horse",
+    "title": "Lily or Horse",
+    "developer": "MetallJellyfish",
+    "publisher": "MetallJellyfish",
     "expectedDate": {
-      "fr": "23 oct. 2026",
-      "en": "Oct 23, 2026"
+      "fr": "24 oct. 2026",
+      "en": "24 Oct, 2026"
     },
     "genres": [
       {
-        "fr": "Action",
-        "en": "Action"
+        "fr": "Aventure",
+        "en": "Aventure"
       },
       {
-        "fr": "Survie",
-        "en": "Survie"
+        "fr": "Indépendant",
+        "en": "Indépendant"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4314340/",
+    "steamUrl": "https://store.steampowered.com/app/5385830/",
     "description": {
-      "fr": "The Reflection is a ritual-based co-op horror game focused on tension, teamwork, and survival. Trapped inside a cursed mansion, players must a investigate supernatural event, perform the correct rituals, and exorcise a dangerous entity before it consumes them.",
-      "en": "The Reflection is a ritual-based co-op horror game focused on tension, teamwork, and survival. Trapped inside a cursed mansion, players must a investigate supernatural event, perform the correct rituals, and exorcise a dangerous entity before it consumes them."
+      "fr": "Le jeu le plus facile du monde. Lancez une pièce et devinez : lys ou cheval ? Devinez juste 10 fois de suite pour gagner. Une erreur, et vous perdez toutes les pièces d’or misées. Avec un peu de chance, 10 lancers suffisent.",
+      "en": "The easiest game in the world. Flip a coin and call it: lily or horse? Call it right 10 times in a row to win. Miss, and the coins you bet are thrown away. With a little luck, it only takes 10 flips."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/15ab72b1be0e4313d2f804446ce0ec5936da22a9/header.jpg?t=1792690774"
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/920ed26d1fef714a3dbad95210df9e36bdfa4ff3/header.jpg?t=1792122537"
+  },
+  {
+    "id": "behind-the-corner",
+    "title": "Behind the Corner",
+    "developer": "MetaProx Studio",
+    "publisher": "MetaProx Studio",
+    "expectedDate": {
+      "fr": "24 oct. 2026",
+      "en": "Oct 24, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/4709550/",
+    "description": {
+      "fr": "Explore dark vintage environments and survive encounters with a relentless entity in this first-person psychological horror game. Listen closely, watch the shadows, and face the unsettling feeling that something is waiting just around the corner.",
+      "en": "Explore dark vintage environments and survive encounters with a relentless entity in this first-person psychological horror game. Listen closely, watch the shadows, and face the unsettling feeling that something is waiting just around the corner."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/ff067adc322fe8522b8775b0a55f8f5a8dd01fcb/header.jpg?t=1792764634"
   }
 ];

@@ -1,40 +1,43 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-23";
+export const TODAY_DATE = "2026-10-24";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "steamworld-dig",
-  "title": "SteamWorld Dig",
-  "releaseYear": 2013,
+  "id": "sea-of-stars",
+  "title": "Sea of Stars",
+  "releaseYear": 2023,
   "genre": [
-    "Action",
+    "RPG",
     "Aventure",
-    "Metroidvania",
-    "Puzzle"
+    "Tour par tour"
   ],
   "artStyle": {
-    "fr": "2D Dessiné à la main",
-    "en": "2D Hand-drawn"
+    "fr": "Pixel Art",
+    "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Isométrique / 2.5D",
+    "en": "Isometric / 2.5D"
   },
-  "developer": "Image & Form Games",
-  "steamUrl": "https://store.steampowered.com/app/252410/",
+  "developer": "Sabotage Studio",
+  "steamUrl": "https://store.steampowered.com/app/1244090/Sea_of_Stars/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_d68bda43fabeb368a4b27d0e98beb9195ccbe360.1920x1080.jpg?t=1750855239",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_b03e0452ea16e460ea4cc18fd8ccd6647de1ba98.1920x1080.jpg?t=1750855239",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_20913ce72c771b92779adac2024847251c7e37b7.1920x1080.jpg?t=1750855239",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_a443439ccd5c33103eda22fd2ae50a5104951677.1920x1080.jpg?t=1750855239",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_c0aab5de5b639e115a3acee96740eaac83af22f3.1920x1080.jpg?t=1750855239",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252410/ss_45b1664274405aacf12fd4d03a67c402ad45e931.1920x1080.jpg?t=1750855239"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_f756ff477590284c7192ffcef99237de056e4aeb.1920x1080.jpg?t=1780931183",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_c250a7fd789b3cbab5ca8e99e3530cf933656ad1.1920x1080.jpg?t=1780931183",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_889d4ddea7d0884d9d370dd280878570824e68fe.1920x1080.jpg?t=1780931183",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_cb9259d083c9d42db9b1f1197e030f8f85d42198.1920x1080.jpg?t=1780931183",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_e7ac3a6e5ebe5f4561fc46d116c33678cf4ba811.1920x1080.jpg?t=1780931183",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1244090/ss_3fe41c00a7122c63aa05b4ea331c6f995e356788.1920x1080.jpg?t=1780931183"
   ],
   "hints": {
     "tagline": {
-      "fr": "SteamWorld Dig is an action-adventure puzzler with strong Metroidvanian influences set in the SteamWorld Universe. You’ll need to dig deep into the earth, gather resources to upgrade your tools and abilities, take on enemies, solve challenging puzzles and uncover the secrets to save a dying town.",
-      "en": "SteamWorld Dig is an action-adventure puzzler with strong Metroidvanian influences set in the SteamWorld Universe. You’ll need to dig deep into the earth, gather resources to upgrade your tools and abilities, take on enemies, solve challenging puzzles and uncover the secrets to save a dying town."
-    }
-  },
-  "addedAt": "2026-10-01"
+      "fr": "Un RPG au tour par tour inspiré des classiques des années 90, contant l'histoire de deux Enfants du Solstice.",
+      "en": "A turn-based RPG inspired by the 90s classics, telling the story of two Children of the Solstice.",
+      "es": "Un RPG por turnos inspirado en los clásicos de los 90 que narra la historia de dos Hijos del Solsticio.",
+      "de": "Ein rundenbasiertes RPG im Geiste der 90er-Klassiker über das Schicksal zweier Kinder der Sonnenwende.",
+      "ja": "90年代の名作JRPGに敬意を表した、至日の戦士たちが織り成す壮大なターン制RPG。",
+      "pt-BR": "Um RPG em turnos inspirado nos clássicos dos anos 90, narrando a história de dois Filhos do Solstício."
+    },
+    "composer": "Eric W. Brown & Yasunori Mitsuda"
+  }
 };

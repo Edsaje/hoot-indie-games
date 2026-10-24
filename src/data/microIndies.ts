@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 90
+ * Total de pépites sélectionnées : 92
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3798,5 +3798,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI4MTc4OTgwLnBuZw==/315x250%23c/wCaNfq.png"
     ],
     "dateAdded": "2026-10-23"
+  },
+  {
+    "id": "itch-lsd-revamped",
+    "title": "LSD: Revamped",
+    "developer": "figglewatts",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://figglewatts.itch.io/lsd-revamped",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A fan made remake of the cult-classic game LSD: Dream Emulator.",
+      "en": "A fan made remake of the cult-classic game LSD: Dream Emulator."
+    },
+    "description": {
+      "fr": "A fan made remake of the cult-classic game LSD: Dream Emulator.",
+      "en": "A fan made remake of the cult-classic game LSD: Dream Emulator."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMzNzE1MjMucG5n/315x250%23c/YFrXof.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMzNzE1MjMucG5n/315x250%23c/YFrXof.png"
+    ],
+    "dateAdded": "2026-10-24"
+  },
+  {
+    "id": "itch-all-hell-unleashed-ultimate-edition-nes",
+    "title": "All Hell Unleashed: Ultimate Edition (NES)",
+    "developer": "8bitslasher",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://8bitslasher.itch.io/ahu",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "The most feared horror icons have been unleashed by a twisted cult. Now, it's up to YOU to fight back!",
+      "en": "The most feared horror icons have been unleashed by a twisted cult. Now, it's up to YOU to fight back!"
+    },
+    "description": {
+      "fr": "The most feared horror icons have been unleashed by a twisted cult. Now, it's up to YOU to fight back!",
+      "en": "The most feared horror icons have been unleashed by a twisted cult. Now, it's up to YOU to fight back!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMjUxMzY1LnBuZw==/315x250%23c/29f18R.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMjUxMzY1LnBuZw==/315x250%23c/29f18R.png"
+    ],
+    "dateAdded": "2026-10-24"
   }
 ];

@@ -91103,5 +91103,77 @@
     "addedAt": "2026-10-23",
     "steamAppId": 5351640,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5351640/9e0a821dfc6ba8c36a93034508c415260c974cd4/header.jpg?t=1792679839"
+  },
+  {
+    "id": "gomokusoccer",
+    "title": "GomokuSoccer",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Sport"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Hero Parker",
+    "steamUrl": "https://store.steampowered.com/app/5220910/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/60e1e21e6512b4b2198f2835033fac52a95e6bcf/ss_60e1e21e6512b4b2198f2835033fac52a95e6bcf.1920x1080.jpg?t=1792784446",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/e4c234a2d61641e07082c1e27f7e30aaa814de6b/ss_e4c234a2d61641e07082c1e27f7e30aaa814de6b.1920x1080.jpg?t=1792784446",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/878fa99f15c0a6da73f3ecdddbad3ca1285c9fca/ss_878fa99f15c0a6da73f3ecdddbad3ca1285c9fca.1920x1080.jpg?t=1792784446",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/47daa3fcd1819e08ea76a455d8a4a9cbf5ba35eb/ss_47daa3fcd1819e08ea76a455d8a4a9cbf5ba35eb.1920x1080.jpg?t=1792784446",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/82b440b7820f12decc12667fdca9137b77c516a5/ss_82b440b7820f12decc12667fdca9137b77c516a5.1920x1080.jpg?t=1792784446",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/b53d6e3e7992565962c587cfd7e9126cc4d6b912/ss_b53d6e3e7992565962c587cfd7e9126cc4d6b912.1920x1080.jpg?t=1792784446"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Place or Flick? In Gomoku Soccer, you can place your stones just to build a line of five, or flick them off the board and watch your opponent crashing out. Test your strategy and your aim!",
+        "en": "Place or Flick? In Gomoku Soccer, you can place your stones just to build a line of five, or flick them off the board and watch your opponent crashing out. Test your strategy and your aim!"
+      }
+    },
+    "addedAt": "2026-10-24",
+    "steamAppId": 5220910,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5220910/534c764792674d735f782b5d7049d490ddff5416/header.jpg?t=1792784446"
+  },
+  {
+    "id": "the-reflection",
+    "title": "The Reflection",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Pinwheels Studio",
+    "steamUrl": "https://store.steampowered.com/app/4314340/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/16d7de022200a2cee2a85782052807d15a7b8f72/ss_16d7de022200a2cee2a85782052807d15a7b8f72.1920x1080.jpg?t=1792766497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/31d09b6b5978c7cdd39b88900a5d0e45100fe102/ss_31d09b6b5978c7cdd39b88900a5d0e45100fe102.1920x1080.jpg?t=1792766497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/a67c7357684fb6cdfaea22a55c37715be40aca7c/ss_a67c7357684fb6cdfaea22a55c37715be40aca7c.1920x1080.jpg?t=1792766497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/673b84a20e27a108226cca2cb15f290e36734bb3/ss_673b84a20e27a108226cca2cb15f290e36734bb3.1920x1080.jpg?t=1792766497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/9bfc61fd0a413e5f2dbd5b559025d3ceea98fe52/ss_9bfc61fd0a413e5f2dbd5b559025d3ceea98fe52.1920x1080.jpg?t=1792766497",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/0903c2743980103ef5b7288a6779136ae50e0802/ss_0903c2743980103ef5b7288a6779136ae50e0802.1920x1080.jpg?t=1792766497"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "The Reflection is a ritual-based co-op horror game focused on tension, teamwork, and survival. Trapped inside a cursed mansion, players must a investigate supernatural event, perform the correct rituals, and exorcise a dangerous entity before it consumes them.",
+        "en": "The Reflection is a ritual-based co-op horror game focused on tension, teamwork, and survival. Trapped inside a cursed mansion, players must a investigate supernatural event, perform the correct rituals, and exorcise a dangerous entity before it consumes them."
+      }
+    },
+    "addedAt": "2026-10-24",
+    "steamAppId": 4314340,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/15ab72b1be0e4313d2f804446ce0ec5936da22a9/header.jpg?t=1792766497"
   }
 ]
