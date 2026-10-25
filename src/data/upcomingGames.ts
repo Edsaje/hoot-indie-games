@@ -485,36 +485,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "slup",
-    "title": "SLUP",
-    "developer": "INECT",
-    "publisher": "INECT",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5379560/",
-    "description": {
-      "fr": "Récupérez des Gems, maintenez votre combo et échappez à votre propre passé. Chaque trajet revient sous la forme d'un Past mobile, transformant vos anciennes décisions en nouveaux dangers.",
-      "en": "Collect Gems, keep your combo alive, and outrun your own past. Every path you take returns as a moving Past, turning your previous choices into deadly obstacles in this strategic arcade score-attack game."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/139a7f2580808e88717d745ac43aee36f87edb4a/header.jpg?t=1792117863"
-  },
-  {
     "id": "reactance",
     "title": "Reactance",
     "developer": "Studio of Eldingar",
@@ -549,67 +519,97 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1792142165"
   },
   {
-    "id": "lily-or-horse",
-    "title": "Lily or Horse",
-    "developer": "MetallJellyfish",
-    "publisher": "MetallJellyfish",
+    "id": "give-us-back-gravity",
+    "title": "Give Us Back Gravity",
+    "developer": "Frotrue",
+    "publisher": "Frotrue",
     "expectedDate": {
-      "fr": "24 oct. 2026",
-      "en": "24 Oct, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
-      },
-      {
-        "fr": "Indépendant",
-        "en": "Indépendant"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5385830/",
-    "description": {
-      "fr": "Le jeu le plus facile du monde. Lancez une pièce et devinez : lys ou cheval ? Devinez juste 10 fois de suite pour gagner. Une erreur, et vous perdez toutes les pièces d’or misées. Avec un peu de chance, 10 lancers suffisent.",
-      "en": "The easiest game in the world. Flip a coin and call it: lily or horse? Call it right 10 times in a row to win. Miss, and the coins you bet are thrown away. With a little luck, it only takes 10 flips."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/920ed26d1fef714a3dbad95210df9e36bdfa4ff3/header.jpg?t=1792122537"
-  },
-  {
-    "id": "behind-the-corner",
-    "title": "Behind the Corner",
-    "developer": "MetaProx Studio",
-    "publisher": "MetaProx Studio",
-    "expectedDate": {
-      "fr": "24 oct. 2026",
-      "en": "Oct 24, 2026"
+      "fr": "25 oct. 2026",
+      "en": "Oct 25, 2026"
     },
     "genres": [
       {
         "fr": "Action",
         "en": "Action"
+      },
+      {
+        "fr": "Roguelike",
+        "en": "Roguelike"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4709550/",
+    "steamUrl": "https://store.steampowered.com/app/5358580/",
     "description": {
-      "fr": "Explore dark vintage environments and survive encounters with a relentless entity in this first-person psychological horror game. Listen closely, watch the shadows, and face the unsettling feeling that something is waiting just around the corner.",
-      "en": "Explore dark vintage environments and survive encounters with a relentless entity in this first-person psychological horror game. Listen closely, watch the shadows, and face the unsettling feeling that something is waiting just around the corner."
+      "fr": "A zero-gravity push-your-luck roguelite about salvaging a derelict space station. There are no brakes: thrusters burn oxygen, so you stop by kicking off walls or throwing cargo the other way. Take all you can carry, but it only pays if you get it back to the airlock. Online co-op for up to 4.",
+      "en": "A zero-gravity push-your-luck roguelite about salvaging a derelict space station. There are no brakes: thrusters burn oxygen, so you stop by kicking off walls or throwing cargo the other way. Take all you can carry, but it only pays if you get it back to the airlock. Online co-op for up to 4."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/7579384b6ab4f0c146214cb6f4b732d7213eff6e/header.jpg?t=1792505554"
+  },
+  {
+    "id": "prism-core",
+    "title": "Prism Core",
+    "developer": "Studio Sieun",
+    "publisher": "Studio Sieun",
+    "expectedDate": {
+      "fr": "25 oct. 2026",
+      "en": "Oct 25, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Survie",
+        "en": "Survie"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5366400/",
+    "description": {
+      "fr": "A neon cyberpunk color-matching survival arcade game. Sync your color with incoming blocks to survive across 3 unique modes. Features active color system, shields, and 15 achievements. Fast-paced score attack gameplay with infinite replayability.",
+      "en": "A neon cyberpunk color-matching survival arcade game. Sync your color with incoming blocks to survive across 3 unique modes. Features active color system, shields, and 15 achievements. Fast-paced score attack gameplay with infinite replayability."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/ff067adc322fe8522b8775b0a55f8f5a8dd01fcb/header.jpg?t=1792764634"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/7025f3cce15a39288e535820fd1f19453fe1f066/header.jpg?t=1792826461"
+  },
+  {
+    "id": "protectus",
+    "title": "+PROTECTUS-",
+    "developer": "TANGER",
+    "publisher": "TANGER",
+    "expectedDate": {
+      "fr": "25 oct. 2026",
+      "en": "Oct 25, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Puzzle",
+        "en": "Puzzle"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/4764890/",
+    "description": {
+      "fr": "🧲 Un jeu de puzzle minimaliste à la première personne où vous devez sortir d'un complexe lunaire en ruine, en utilisant un pistolet magnétique expérimental et en révélant les secrets du projet ECHO avec le drone Kruitney.",
+      "en": "🧲 A minimalist first‑person puzzle game where you have to escape from a ruined lunar complex using an experimental magnetic cannon and uncover the secrets of the ECHO project together with the drone Kruitni."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/c72c18f08e07487656a8297124218a736b906a67/header.jpg?t=1792909160"
   }
 ];

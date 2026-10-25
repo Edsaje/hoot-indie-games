@@ -91175,5 +91175,111 @@
     "addedAt": "2026-10-24",
     "steamAppId": 4314340,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4314340/15ab72b1be0e4313d2f804446ce0ec5936da22a9/header.jpg?t=1792766497"
+  },
+  {
+    "id": "slup",
+    "title": "SLUP",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "INECT",
+    "steamUrl": "https://store.steampowered.com/app/5379560/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/58e456fd62e6f090a167ea97f2af700ad2c22c75/ss_58e456fd62e6f090a167ea97f2af700ad2c22c75.1920x1080.jpg?t=1792908453",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/4378cd849422bb915ec6e983946941c0bc71d6bb/ss_4378cd849422bb915ec6e983946941c0bc71d6bb.1920x1080.jpg?t=1792908453",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/36bbdb39c7a5693566bb9ae09dbbd738928e00e1/ss_36bbdb39c7a5693566bb9ae09dbbd738928e00e1.1920x1080.jpg?t=1792908453",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/b03a6d7b3502647e85f88b9f22c18c9f6bd07513/ss_b03a6d7b3502647e85f88b9f22c18c9f6bd07513.1920x1080.jpg?t=1792908453",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/362df5d55927c49c199b85b3a1c1f1a246d8d6de/ss_362df5d55927c49c199b85b3a1c1f1a246d8d6de.1920x1080.jpg?t=1792908453",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/063be6de5697839e72796efa0381bc3530d00da6/ss_063be6de5697839e72796efa0381bc3530d00da6.1920x1080.jpg?t=1792908453"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Récupérez des Gems, maintenez votre combo et échappez à votre propre passé. Chaque trajet revient sous la forme d'un Past mobile, transformant vos anciennes décisions en nouveaux dangers.",
+        "en": "Collect Gems, keep your combo alive, and outrun your own past. Every path you take returns as a moving Past, turning your previous choices into deadly obstacles in this strategic arcade score-attack game."
+      }
+    },
+    "addedAt": "2026-10-25",
+    "steamAppId": 5379560,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5379560/139a7f2580808e88717d745ac43aee36f87edb4a/header.jpg?t=1792908453"
+  },
+  {
+    "id": "lily-or-horse",
+    "title": "Lily or Horse",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure",
+      "Indépendant"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "MetallJellyfish",
+    "steamUrl": "https://store.steampowered.com/app/5385830/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/84ee72781c0a2b1cdfde8d0c258d0b2d1a9020f5/ss_84ee72781c0a2b1cdfde8d0c258d0b2d1a9020f5.1920x1080.jpg?t=1792853547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/186b5808de6c61dfe751718cec3adf49ad314dac/ss_186b5808de6c61dfe751718cec3adf49ad314dac.1920x1080.jpg?t=1792853547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/37a72ba04b11416a79766fb6f5f74d74cb297b8d/ss_37a72ba04b11416a79766fb6f5f74d74cb297b8d.1920x1080.jpg?t=1792853547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/bee20ae9c06f5d79902433118410bdd690744b2c/ss_bee20ae9c06f5d79902433118410bdd690744b2c.1920x1080.jpg?t=1792853547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/9e591704fa987b5c4db75ebe55df0e79e66558ba/ss_9e591704fa987b5c4db75ebe55df0e79e66558ba.1920x1080.jpg?t=1792853547",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/84ee72781c0a2b1cdfde8d0c258d0b2d1a9020f5/ss_84ee72781c0a2b1cdfde8d0c258d0b2d1a9020f5.1920x1080.jpg?t=1792853547"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Le jeu le plus facile du monde. Lancez une pièce et devinez : lys ou cheval ? Devinez juste 10 fois de suite pour gagner. Une erreur, et vous perdez toutes les pièces d’or misées. Avec un peu de chance, 10 lancers suffisent.",
+        "en": "The easiest game in the world. Flip a coin and call it: lily or horse? Call it right 10 times in a row to win. Miss, and the coins you bet are thrown away. With a little luck, it only takes 10 flips."
+      }
+    },
+    "addedAt": "2026-10-25",
+    "steamAppId": 5385830,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5385830/920ed26d1fef714a3dbad95210df9e36bdfa4ff3/header.jpg?t=1792853547"
+  },
+  {
+    "id": "behind-the-corner",
+    "title": "Behind the Corner",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "MetaProx Studio",
+    "steamUrl": "https://store.steampowered.com/app/4709550/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/3adf5962df635168fba8599cf24724f37eb3bbe9/ss_3adf5962df635168fba8599cf24724f37eb3bbe9.1920x1080.jpg?t=1792861209",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/6f6c429915368da421ede56b097e7a73cf87b52a/ss_6f6c429915368da421ede56b097e7a73cf87b52a.1920x1080.jpg?t=1792861209",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/26c713a6aa5a369231e100e5ed0dbab0bdfb4b64/ss_26c713a6aa5a369231e100e5ed0dbab0bdfb4b64.1920x1080.jpg?t=1792861209",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/d61fdc551aced4849fabd298d72c42e6a3228273/ss_d61fdc551aced4849fabd298d72c42e6a3228273.1920x1080.jpg?t=1792861209",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/a3388660f5e1b5babfc97c2e7743c178cee5d42f/ss_a3388660f5e1b5babfc97c2e7743c178cee5d42f.1920x1080.jpg?t=1792861209",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/85c75c0fef18bfc0c1cfe95b0553f94d09dd2bd1/ss_85c75c0fef18bfc0c1cfe95b0553f94d09dd2bd1.1920x1080.jpg?t=1792861209"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Explore dark vintage environments and survive encounters with a relentless entity in this first-person psychological horror game. Listen closely, watch the shadows, and face the unsettling feeling that something is waiting just around the corner.",
+        "en": "Explore dark vintage environments and survive encounters with a relentless entity in this first-person psychological horror game. Listen closely, watch the shadows, and face the unsettling feeling that something is waiting just around the corner."
+      }
+    },
+    "addedAt": "2026-10-25",
+    "steamAppId": 4709550,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/ff067adc322fe8522b8775b0a55f8f5a8dd01fcb/header.jpg?t=1792861209"
   }
 ]

@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 92
+ * Total de pépites sélectionnées : 94
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3878,5 +3878,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxMjUxMzY1LnBuZw==/315x250%23c/29f18R.png"
     ],
     "dateAdded": "2026-10-24"
+  },
+  {
+    "id": "itch-abattlacus",
+    "title": "Abattlacus",
+    "developer": "funbanan",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://funbanan.itch.io/abattlacus",
+    "playInBrowserUrl": "https://funbanan.itch.io/abattlacus",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Abacus autobattler roguelike",
+      "en": "Abacus autobattler roguelike"
+    },
+    "description": {
+      "fr": "Abacus autobattler roguelike",
+      "en": "Abacus autobattler roguelike"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMTE1MjMzLnBuZw==/315x250%23c/yf4ym5.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMTE1MjMzLnBuZw==/315x250%23c/yf4ym5.png"
+    ],
+    "dateAdded": "2026-10-25"
+  },
+  {
+    "id": "itch-chained-path",
+    "title": "Chained Path",
+    "developer": "levion",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://levion.itch.io/chainedpath",
+    "playInBrowserUrl": "https://levion.itch.io/chainedpath",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Choose your path. Chain your skills. A turn based roguelite.",
+      "en": "Choose your path. Chain your skills. A turn based roguelite."
+    },
+    "description": {
+      "fr": "Choose your path. Chain your skills. A turn based roguelite.",
+      "en": "Choose your path. Chain your skills. A turn based roguelite."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMjY5OTYwLnBuZw==/315x250%23c/CN5q8S.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMjY5OTYwLnBuZw==/315x250%23c/CN5q8S.png"
+    ],
+    "dateAdded": "2026-10-25"
   }
 ];

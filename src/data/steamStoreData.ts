@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 1794 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 1797 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -29304,6 +29304,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Overwhelmingly Positive"
     }
   },
+  "4709550": {
+    "appId": 4709550,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 849,
+    "finalPriceCents": 721,
+    "discountPercent": 15,
+    "formattedFinalPrice": "7,21€",
+    "formattedInitialPrice": "8,49€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "4711830": {
     "appId": 4711830,
     "isFree": true,
@@ -30144,6 +30161,39 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "formattedFinalPrice": "9,99€",
     "totalReviews": 500,
     "totalPositive": 450,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5379560": {
+    "appId": 5379560,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 415,
+    "finalPriceCents": 415,
+    "discountPercent": 0,
+    "formattedFinalPrice": "4,15€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5385830": {
+    "appId": 5385830,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 519,
+    "finalPriceCents": 363,
+    "discountPercent": 30,
+    "formattedFinalPrice": "3,63€",
+    "formattedInitialPrice": "5,19€",
+    "totalReviews": 0,
+    "totalPositive": 0,
     "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",
