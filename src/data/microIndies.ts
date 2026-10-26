@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 94
+ * Total de pépites sélectionnées : 96
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -3960,5 +3960,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxMjY5OTYwLnBuZw==/315x250%23c/CN5q8S.png"
     ],
     "dateAdded": "2026-10-25"
+  },
+  {
+    "id": "itch-battle-of-dots-the-last-stand",
+    "title": "Battle Of Dots : The Last Stand",
+    "developer": "warnodeinteractve",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://warnodeinteractve.itch.io/battle-of-dots-the-last-stand",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Strategic Game about Battle Of Dots",
+      "en": "Strategic Game about Battle Of Dots"
+    },
+    "description": {
+      "fr": "Strategic Game about Battle Of Dots",
+      "en": "Strategic Game about Battle Of Dots"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI2MjU0OTI0LnBuZw==/315x250%23c/K4zQhh.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI2MjU0OTI0LnBuZw==/315x250%23c/K4zQhh.png"
+    ],
+    "dateAdded": "2026-10-26"
+  },
+  {
+    "id": "itch-apex-sweeper",
+    "title": "Apex Sweeper",
+    "developer": "jpde",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://jpde.itch.io/apex-sweeper",
+    "playInBrowserUrl": "https://jpde.itch.io/apex-sweeper",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Sonic Mystery Game based on the IDW Comics!",
+      "en": "A Sonic Mystery Game based on the IDW Comics!"
+    },
+    "description": {
+      "fr": "A Sonic Mystery Game based on the IDW Comics!",
+      "en": "A Sonic Mystery Game based on the IDW Comics!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4NTk0MTQ3LmpwZw==/315x250%23c/HTB5ba.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4NTk0MTQ3LmpwZw==/315x250%23c/HTB5ba.jpg"
+    ],
+    "dateAdded": "2026-10-26"
   }
 ];

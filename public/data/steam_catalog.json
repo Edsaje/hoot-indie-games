@@ -91281,5 +91281,76 @@
     "addedAt": "2026-10-25",
     "steamAppId": 4709550,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4709550/ff067adc322fe8522b8775b0a55f8f5a8dd01fcb/header.jpg?t=1792861209"
+  },
+  {
+    "id": "give-us-back-gravity",
+    "title": "Give Us Back Gravity",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Frotrue",
+    "steamUrl": "https://store.steampowered.com/app/5358580/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/2669d6b97c93c057ab374f8ef08c06daa7419d28/ss_2669d6b97c93c057ab374f8ef08c06daa7419d28.1920x1080.jpg?t=1792940727",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/b4207c88480c4174cb10308f66f18e124b992d83/ss_b4207c88480c4174cb10308f66f18e124b992d83.1920x1080.jpg?t=1792940727",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/2ed23f9612d9d907f27a15852f6d97d696c6a592/ss_2ed23f9612d9d907f27a15852f6d97d696c6a592.1920x1080.jpg?t=1792940727",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/ac162ea28b158f91cb6f8aed11693fb5ce7a1b9f/ss_ac162ea28b158f91cb6f8aed11693fb5ce7a1b9f.1920x1080.jpg?t=1792940727",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/c8e0ce53ef407aa9913548a1d5f1987a5e1a71de/ss_c8e0ce53ef407aa9913548a1d5f1987a5e1a71de.1920x1080.jpg?t=1792940727",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/d424f8799a2ca3ab44c6fbcb38b753c320ae25d5/ss_d424f8799a2ca3ab44c6fbcb38b753c320ae25d5.1920x1080.jpg?t=1792940727"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A zero-gravity push-your-luck roguelite about salvaging a derelict space station. There are no brakes: thrusters burn oxygen, so you stop by kicking off walls or throwing cargo the other way. Take all you can carry, but it only pays if you get it back to the airlock. Online co-op for up to 4.",
+        "en": "A zero-gravity push-your-luck roguelite about salvaging a derelict space station. There are no brakes: thrusters burn oxygen, so you stop by kicking off walls or throwing cargo the other way. Take all you can carry, but it only pays if you get it back to the airlock. Online co-op for up to 4."
+      }
+    },
+    "addedAt": "2026-10-26",
+    "steamAppId": 5358580,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/7579384b6ab4f0c146214cb6f4b732d7213eff6e/header.jpg?t=1792940727"
+  },
+  {
+    "id": "protectus",
+    "title": "+PROTECTUS-",
+    "releaseYear": 2026,
+    "genre": [
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "TANGER",
+    "steamUrl": "https://store.steampowered.com/app/4764890/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/bbd85d711d51b97779c54c81651e16b52414de8d/ss_bbd85d711d51b97779c54c81651e16b52414de8d.1920x1080.jpg?t=1792915136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/5f82adf51ff440b37bf791412b9b88f885b8a563/ss_5f82adf51ff440b37bf791412b9b88f885b8a563.1920x1080.jpg?t=1792915136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/6e1bac0149714e6680785b25f4c7cc32ad285ed1/ss_6e1bac0149714e6680785b25f4c7cc32ad285ed1.1920x1080.jpg?t=1792915136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/adf6be86df4b95699de561468defe4cd22cdc2bf/ss_adf6be86df4b95699de561468defe4cd22cdc2bf.1920x1080.jpg?t=1792915136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/e324e4830ae7df7a33a15a123f5fc7fb58dbaa36/ss_e324e4830ae7df7a33a15a123f5fc7fb58dbaa36.1920x1080.jpg?t=1792915136",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/a29e605c7ce98959db1747a625a7ad998a235073/ss_a29e605c7ce98959db1747a625a7ad998a235073.1920x1080.jpg?t=1792915136"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "🧲 Un jeu de puzzle minimaliste à la première personne où vous devez sortir d'un complexe lunaire en ruine, en utilisant un pistolet magnétique expérimental et en révélant les secrets du projet ECHO avec le drone Kruitney.",
+        "en": "🧲 A minimalist first‑person puzzle game where you have to escape from a ruined lunar complex using an experimental magnetic cannon and uncover the secrets of the ECHO project together with the drone Kruitni."
+      }
+    },
+    "addedAt": "2026-10-26",
+    "steamAppId": 4764890,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/c72c18f08e07487656a8297124218a736b906a67/header.jpg?t=1792915136"
   }
 ]

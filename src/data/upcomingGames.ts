@@ -519,47 +519,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1792142165"
   },
   {
-    "id": "give-us-back-gravity",
-    "title": "Give Us Back Gravity",
-    "developer": "Frotrue",
-    "publisher": "Frotrue",
-    "expectedDate": {
-      "fr": "25 oct. 2026",
-      "en": "Oct 25, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Roguelike",
-        "en": "Roguelike"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5358580/",
-    "description": {
-      "fr": "A zero-gravity push-your-luck roguelite about salvaging a derelict space station. There are no brakes: thrusters burn oxygen, so you stop by kicking off walls or throwing cargo the other way. Take all you can carry, but it only pays if you get it back to the airlock. Online co-op for up to 4.",
-      "en": "A zero-gravity push-your-luck roguelite about salvaging a derelict space station. There are no brakes: thrusters burn oxygen, so you stop by kicking off walls or throwing cargo the other way. Take all you can carry, but it only pays if you get it back to the airlock. Online co-op for up to 4."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5358580/7579384b6ab4f0c146214cb6f4b732d7213eff6e/header.jpg?t=1792505554"
-  },
-  {
     "id": "prism-core",
     "title": "Prism Core",
     "developer": "Studio Sieun",
     "publisher": "Studio Sieun",
     "expectedDate": {
-      "fr": "25 oct. 2026",
-      "en": "Oct 25, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -583,33 +549,71 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/7025f3cce15a39288e535820fd1f19453fe1f066/header.jpg?t=1792826461"
   },
   {
-    "id": "protectus",
-    "title": "+PROTECTUS-",
-    "developer": "TANGER",
-    "publisher": "TANGER",
+    "id": "checkmate",
+    "title": "王之将死/Checkmate",
+    "developer": "白砚_Vesper",
+    "publisher": "白砚_Vesper",
     "expectedDate": {
-      "fr": "25 oct. 2026",
-      "en": "Oct 25, 2026"
+      "fr": "26 oct. 2026",
+      "en": "Oct 26, 2026"
     },
     "genres": [
       {
-        "fr": "Puzzle",
-        "en": "Puzzle"
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      },
+      {
+        "fr": "Roguelike",
+        "en": "Roguelike"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4764890/",
+    "steamUrl": "https://store.steampowered.com/app/5005180/",
     "description": {
-      "fr": "🧲 Un jeu de puzzle minimaliste à la première personne où vous devez sortir d'un complexe lunaire en ruine, en utilisant un pistolet magnétique expérimental et en révélant les secrets du projet ECHO avec le drone Kruitney.",
-      "en": "🧲 A minimalist first‑person puzzle game where you have to escape from a ruined lunar complex using an experimental magnetic cannon and uncover the secrets of the ECHO project together with the drone Kruitni."
+      "fr": "Checkmate is a turn-based Xiangqi roguelite where a lone red general carries a cannon into a 9×10 battlefield. Move to reload, fire risky snap shots, aim for precision, and use enemy pieces as firing screens. Each upgrade also strengthens the opposing army.",
+      "en": "Checkmate is a turn-based Xiangqi roguelite where a lone red general carries a cannon into a 9×10 battlefield. Move to reload, fire risky snap shots, aim for precision, and use enemy pieces as firing screens. Each upgrade also strengthens the opposing army."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/d9b6edeafec4db93b9cdd7dc6f9b31a3eaa0a32c/header.jpg?t=1790231105"
+  },
+  {
+    "id": "grim-guild",
+    "title": "Grim Guild",
+    "developer": "PocketStudio",
+    "publisher": "PocketStudio",
+    "expectedDate": {
+      "fr": "26 oct. 2026",
+      "en": "Oct 26, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      },
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5381250/",
+    "description": {
+      "fr": "You never go on the adventure. You only decide who does. Run the adventurers' guild your grandfather left you: find out what is out there, from dire wolves to a dragon in the old workings, write the contract, and wait at the door to count who comes back. Streaming? Name newcomers after your viewers.",
+      "en": "You never go on the adventure. You only decide who does. Run the adventurers' guild your grandfather left you: find out what is out there, from dire wolves to a dragon in the old workings, write the contract, and wait at the door to count who comes back. Streaming? Name newcomers after your viewers."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/c72c18f08e07487656a8297124218a736b906a67/header.jpg?t=1792909160"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1792594666"
   }
 ];
