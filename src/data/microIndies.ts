@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 96
+ * Total de pépites sélectionnées : 98
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4041,5 +4041,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI4NTk0MTQ3LmpwZw==/315x250%23c/HTB5ba.jpg"
     ],
     "dateAdded": "2026-10-26"
+  },
+  {
+    "id": "itch-trauma-lab",
+    "title": "Trauma lab",
+    "developer": "traumalab",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://traumalab.itch.io/trauma-lab",
+    "playInBrowserUrl": "https://traumalab.itch.io/trauma-lab",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "An anatomy and physics sandbox. Every bullet is tracked through skin, muscle, bone and organ.",
+      "en": "An anatomy and physics sandbox. Every bullet is tracked through skin, muscle, bone and organ."
+    },
+    "description": {
+      "fr": "An anatomy and physics sandbox. Every bullet is tracked through skin, muscle, bone and organ.",
+      "en": "An anatomy and physics sandbox. Every bullet is tracked through skin, muscle, bone and organ."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMTI5MDA2LnBuZw==/315x250%23c/tCwu6l.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMTI5MDA2LnBuZw==/315x250%23c/tCwu6l.png"
+    ],
+    "dateAdded": "2026-10-27"
+  },
+  {
+    "id": "itch-optimal-conditions-for-a-sacrifice",
+    "title": "optimal conditions for a sacrifice",
+    "developer": "amordochka",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://amordochka.itch.io/sacrifice",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$5.00",
+      "en": "$5.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "mild temperature, dim sunlight, good sleeping schedule, regular fluid intake",
+      "en": "mild temperature, dim sunlight, good sleeping schedule, regular fluid intake"
+    },
+    "description": {
+      "fr": "mild temperature, dim sunlight, good sleeping schedule, regular fluid intake",
+      "en": "mild temperature, dim sunlight, good sleeping schedule, regular fluid intake"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzk0NjczMjYucG5n/315x250%23c/qSF%2BCa.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzk0NjczMjYucG5n/315x250%23c/qSF%2BCa.png"
+    ],
+    "dateAdded": "2026-10-27"
   }
 ];

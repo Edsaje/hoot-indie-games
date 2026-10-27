@@ -554,8 +554,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "白砚_Vesper",
     "publisher": "白砚_Vesper",
     "expectedDate": {
-      "fr": "26 oct. 2026",
-      "en": "Oct 26, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -588,8 +588,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "PocketStudio",
     "publisher": "PocketStudio",
     "expectedDate": {
-      "fr": "26 oct. 2026",
-      "en": "Oct 26, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
