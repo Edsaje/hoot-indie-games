@@ -91352,5 +91352,76 @@
     "addedAt": "2026-10-26",
     "steamAppId": 4764890,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4764890/c72c18f08e07487656a8297124218a736b906a67/header.jpg?t=1792915136"
+  },
+  {
+    "id": "prism-core",
+    "title": "Prism Core",
+    "releaseYear": 2026,
+    "genre": [
+      "Survie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Studio Sieun",
+    "steamUrl": "https://store.steampowered.com/app/5366400/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/0bd53f4aaaa1187251d8e5481d89c7889d240cc0/ss_0bd53f4aaaa1187251d8e5481d89c7889d240cc0.1920x1080.jpg?t=1793171092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/7081cf4a709e6558fe32f66f40bae42c0f62f859/ss_7081cf4a709e6558fe32f66f40bae42c0f62f859.1920x1080.jpg?t=1793171092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/47b2abd8bd9fa8b47a266110a8506d576c550714/ss_47b2abd8bd9fa8b47a266110a8506d576c550714.1920x1080.jpg?t=1793171092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/7ba672cb74cf8049f6cea3717701ca238420b540/ss_7ba672cb74cf8049f6cea3717701ca238420b540.1920x1080.jpg?t=1793171092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/a5b2e1a01b724f38156f1fb9c220cfdb98a2de3f/ss_a5b2e1a01b724f38156f1fb9c220cfdb98a2de3f.1920x1080.jpg?t=1793171092",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/0bd53f4aaaa1187251d8e5481d89c7889d240cc0/ss_0bd53f4aaaa1187251d8e5481d89c7889d240cc0.1920x1080.jpg?t=1793171092"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A neon cyberpunk color-matching survival arcade game. Sync your color with incoming blocks to survive across 3 unique modes. Features active color system, shields, and 15 achievements. Fast-paced score attack gameplay with infinite replayability.",
+        "en": "A neon cyberpunk color-matching survival arcade game. Sync your color with incoming blocks to survive across 3 unique modes. Features active color system, shields, and 15 achievements. Fast-paced score attack gameplay with infinite replayability."
+      }
+    },
+    "addedAt": "2026-10-28",
+    "steamAppId": 5366400,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/7025f3cce15a39288e535820fd1f19453fe1f066/header.jpg?t=1793171092"
+  },
+  {
+    "id": "checkmate",
+    "title": "王之将死/Checkmate",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie",
+      "Roguelike"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "白砚_Vesper",
+    "steamUrl": "https://store.steampowered.com/app/5005180/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/81e3dd72ec92739efc12d9166adf07f13566c80f/ss_81e3dd72ec92739efc12d9166adf07f13566c80f.1920x1080.jpg?t=1793172250",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/3dcbbbfa1db46b0926e079d6c017388eb638cddf/ss_3dcbbbfa1db46b0926e079d6c017388eb638cddf.1920x1080.jpg?t=1793172250",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/b72df8d5630c7a1e6e70817e042f1e2dfde0f75b/ss_b72df8d5630c7a1e6e70817e042f1e2dfde0f75b.1920x1080.jpg?t=1793172250",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/f85cee0224b164c1ffcc3c3d87607ba1cc9bbb48/ss_f85cee0224b164c1ffcc3c3d87607ba1cc9bbb48.1920x1080.jpg?t=1793172250",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/52ee6175bf905efb06b68b864cd0b8b2ff6b40fc/ss_52ee6175bf905efb06b68b864cd0b8b2ff6b40fc.1920x1080.jpg?t=1793172250",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/ea246ce0e3f3c6ba5a609f1a81c1cf7dcdb68466/ss_ea246ce0e3f3c6ba5a609f1a81c1cf7dcdb68466.1920x1080.jpg?t=1793172250"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Checkmate is a turn-based Xiangqi roguelite where a lone red general carries a cannon into a 9×10 battlefield. Move to reload, fire risky snap shots, aim for precision, and use enemy pieces as firing screens. Each upgrade also strengthens the opposing army.",
+        "en": "Checkmate is a turn-based Xiangqi roguelite where a lone red general carries a cannon into a 9×10 battlefield. Move to reload, fire risky snap shots, aim for precision, and use enemy pieces as firing screens. Each upgrade also strengthens the opposing army."
+      }
+    },
+    "addedAt": "2026-10-28",
+    "steamAppId": 5005180,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/d9b6edeafec4db93b9cdd7dc6f9b31a3eaa0a32c/header.jpg?t=1793172250"
   }
 ]

@@ -519,70 +519,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1792142165"
   },
   {
-    "id": "prism-core",
-    "title": "Prism Core",
-    "developer": "Studio Sieun",
-    "publisher": "Studio Sieun",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Survie",
-        "en": "Survie"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5366400/",
-    "description": {
-      "fr": "A neon cyberpunk color-matching survival arcade game. Sync your color with incoming blocks to survive across 3 unique modes. Features active color system, shields, and 15 achievements. Fast-paced score attack gameplay with infinite replayability.",
-      "en": "A neon cyberpunk color-matching survival arcade game. Sync your color with incoming blocks to survive across 3 unique modes. Features active color system, shields, and 15 achievements. Fast-paced score attack gameplay with infinite replayability."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5366400/7025f3cce15a39288e535820fd1f19453fe1f066/header.jpg?t=1792826461"
-  },
-  {
-    "id": "checkmate",
-    "title": "王之将死/Checkmate",
-    "developer": "白砚_Vesper",
-    "publisher": "白砚_Vesper",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
-      },
-      {
-        "fr": "Roguelike",
-        "en": "Roguelike"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5005180/",
-    "description": {
-      "fr": "Checkmate is a turn-based Xiangqi roguelite where a lone red general carries a cannon into a 9×10 battlefield. Move to reload, fire risky snap shots, aim for precision, and use enemy pieces as firing screens. Each upgrade also strengthens the opposing army.",
-      "en": "Checkmate is a turn-based Xiangqi roguelite where a lone red general carries a cannon into a 9×10 battlefield. Move to reload, fire risky snap shots, aim for precision, and use enemy pieces as firing screens. Each upgrade also strengthens the opposing army."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/d9b6edeafec4db93b9cdd7dc6f9b31a3eaa0a32c/header.jpg?t=1790231105"
-  },
-  {
     "id": "grim-guild",
     "title": "Grim Guild",
     "developer": "PocketStudio",
@@ -615,5 +551,69 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 96,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1792594666"
+  },
+  {
+    "id": "tomorrow-never-comes",
+    "title": "Tomorrow Never Comes",
+    "developer": "Xamo Games",
+    "publisher": "Xamo Games",
+    "expectedDate": {
+      "fr": "28 oct. 2026",
+      "en": "Oct 28, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/4945770/",
+    "description": {
+      "fr": "Tomorrow Never Comes est un thriller narratif à choix multiples en vue subjective. Noah est piégé dans une boucle temporelle : revivez la même journée, gérez vos blessures, utilisez différents objets, ouvrez de nouvelles routes et découvrez plusieurs fins pour tenter d’atteindre enfin demain.",
+      "en": "Tomorrow Never Comes is a choice-driven first-person narrative thriller. Trapped in a time loop, Noah must relive the same day, manage his injuries, use items, unlock new paths, and discover multiple endings in his attempt to finally reach tomorrow."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/65a14dc55c5b215dbf6416a614ddb52097242e70/header.jpg?t=1792716315"
+  },
+  {
+    "id": "synapse-grid",
+    "title": "Synapse Grid",
+    "developer": "AlluringCoffee",
+    "publisher": "AlluringCoffee",
+    "expectedDate": {
+      "fr": "28 oct. 2026",
+      "en": "Oct 28, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      },
+      {
+        "fr": "Course automobile",
+        "en": "Course automobile"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5179670/",
+    "description": {
+      "fr": "A neon light-cycle combat racer where the wall you leave behind becomes the arena. Amber kills. 90-mission campaign, 2–4 player split-screen, online beta (unproven). Free demo out now (beta). Next Fest 19–26 Oct. Release 28 Oct 2026.",
+      "en": "A neon light-cycle combat racer where the wall you leave behind becomes the arena. Amber kills. 90-mission campaign, 2–4 player split-screen, online beta (unproven). Free demo out now (beta). Next Fest 19–26 Oct. Release 28 Oct 2026."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/d85ce36a826b9fbf49052291d97e3e5016564dd4/header.jpg?t=1792888125"
   }
 ];

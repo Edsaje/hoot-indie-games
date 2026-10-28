@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 98
+ * Total de pépites sélectionnées : 100
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4122,5 +4122,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzk0NjczMjYucG5n/315x250%23c/qSF%2BCa.png"
     ],
     "dateAdded": "2026-10-27"
+  },
+  {
+    "id": "itch-dungeonbound-in-development",
+    "title": "Dungeonbound (In Development)",
+    "developer": "louidev",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://louidev.itch.io/dungeonbound",
+    "playInBrowserUrl": "https://louidev.itch.io/dungeonbound",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$10.20",
+      "en": "$10.20"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "An incremental roguelite dungeon crawler, where you craft items, defeat various enemies and dungeons",
+      "en": "An incremental roguelite dungeon crawler, where you craft items, defeat various enemies and dungeons"
+    },
+    "description": {
+      "fr": "An incremental roguelite dungeon crawler, where you craft items, defeat various enemies and dungeons",
+      "en": "An incremental roguelite dungeon crawler, where you craft items, defeat various enemies and dungeons"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5NzkzNzM5LnBuZw==/315x250%23c/Y%2F%2BaiT.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5NzkzNzM5LnBuZw==/315x250%23c/Y%2F%2BaiT.png"
+    ],
+    "dateAdded": "2026-10-28"
+  },
+  {
+    "id": "itch-nosfer-a-tooth",
+    "title": "NOSFER-A-TOOTH",
+    "developer": "gregs-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://gregs-games.itch.io/nosferatooth",
+    "playInBrowserUrl": "https://gregs-games.itch.io/nosferatooth",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Vampire Teethbuilding Autobiter Game",
+      "en": "Vampire Teethbuilding Autobiter Game"
+    },
+    "description": {
+      "fr": "Vampire Teethbuilding Autobiter Game",
+      "en": "Vampire Teethbuilding Autobiter Game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwOTA1MjMzLmdpZg==/original/vgxOnv.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwOTA1MjMzLmdpZg==/original/vgxOnv.gif"
+    ],
+    "dateAdded": "2026-10-28"
   }
 ];
