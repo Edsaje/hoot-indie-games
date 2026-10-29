@@ -91423,5 +91423,76 @@
     "addedAt": "2026-10-28",
     "steamAppId": 5005180,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5005180/d9b6edeafec4db93b9cdd7dc6f9b31a3eaa0a32c/header.jpg?t=1793172250"
+  },
+  {
+    "id": "tomorrow-never-comes",
+    "title": "Tomorrow Never Comes",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Xamo Games",
+    "steamUrl": "https://store.steampowered.com/app/4945770/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/1658e6b11b4bb8aa42d62b4f1c84bb568fd486e9/ss_1658e6b11b4bb8aa42d62b4f1c84bb568fd486e9.1920x1080.jpg?t=1793177333",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/ce6c6cbccd24efb6bed500585d629e70fe8a5cfb/ss_ce6c6cbccd24efb6bed500585d629e70fe8a5cfb.1920x1080.jpg?t=1793177333",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/f5df473d18325cfa68947cd6ed5f9a73cefd617f/ss_f5df473d18325cfa68947cd6ed5f9a73cefd617f.1920x1080.jpg?t=1793177333",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/1406a3e7ca3a7a3913938e47449d66958d74678c/ss_1406a3e7ca3a7a3913938e47449d66958d74678c.1920x1080.jpg?t=1793177333",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/4474692c3eb3827cb6a9256a58e38d053844a45a/ss_4474692c3eb3827cb6a9256a58e38d053844a45a.1920x1080.jpg?t=1793177333",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/c8cee00c473dce9deaf138d90320e30d4926fa2f/ss_c8cee00c473dce9deaf138d90320e30d4926fa2f.1920x1080.jpg?t=1793177333"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Tomorrow Never Comes est un thriller narratif à choix multiples en vue subjective. Noah est piégé dans une boucle temporelle : revivez la même journée, gérez vos blessures, utilisez différents objets, ouvrez de nouvelles routes et découvrez plusieurs fins pour tenter d’atteindre enfin demain.",
+        "en": "Tomorrow Never Comes is a choice-driven first-person narrative thriller. Trapped in a time loop, Noah must relive the same day, manage his injuries, use items, unlock new paths, and discover multiple endings in his attempt to finally reach tomorrow."
+      }
+    },
+    "addedAt": "2026-10-29",
+    "steamAppId": 4945770,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/65a14dc55c5b215dbf6416a614ddb52097242e70/header.jpg?t=1793177333"
+  },
+  {
+    "id": "synapse-grid",
+    "title": "Synapse Grid",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Course automobile"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "AlluringCoffee",
+    "steamUrl": "https://store.steampowered.com/app/5179670/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/372ee090d78f2946636c05b0c6493f34173ea60b/ss_372ee090d78f2946636c05b0c6493f34173ea60b.1920x1080.jpg?t=1793197526",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/bf736476893c51f9a611fff4c7977be75414e961/ss_bf736476893c51f9a611fff4c7977be75414e961.1920x1080.jpg?t=1793197526",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/95f99c0cf4254c202713c9175a5fdc86406160ce/ss_95f99c0cf4254c202713c9175a5fdc86406160ce.1920x1080.jpg?t=1793197526",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/34336f60449869b88588d0cb2a4b80bdb4b2d22e/ss_34336f60449869b88588d0cb2a4b80bdb4b2d22e.1920x1080.jpg?t=1793197526",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/e259fc25c97301a3740bcc5e0325d2f647fac2cf/ss_e259fc25c97301a3740bcc5e0325d2f647fac2cf.1920x1080.jpg?t=1793197526",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/274789eb681dd2643b9e5e7a3e634b731f448719/ss_274789eb681dd2643b9e5e7a3e634b731f448719.1920x1080.jpg?t=1793197526"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A neon light-cycle combat racer where the wall you leave behind becomes the arena. Amber kills. 90-mission campaign, 2–4 player split-screen, online beta (unproven). Free demo out now (beta). Next Fest 19–26 Oct. Release 28 Oct 2026.",
+        "en": "A neon light-cycle combat racer where the wall you leave behind becomes the arena. Amber kills. 90-mission campaign, 2–4 player split-screen, online beta (unproven). Free demo out now (beta). Next Fest 19–26 Oct. Release 28 Oct 2026."
+      }
+    },
+    "addedAt": "2026-10-29",
+    "steamAppId": 5179670,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/d85ce36a826b9fbf49052291d97e3e5016564dd4/header.jpg?t=1793197526"
   }
 ]

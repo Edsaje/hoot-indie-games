@@ -1,39 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-28";
+export const TODAY_DATE = "2026-10-29";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "ender-lilies-quietus-of-the-knights",
-  "title": "ENDER LILIES: Quietus of the Knights",
-  "releaseYear": 2021,
+  "id": "undertale",
+  "title": "Undertale",
+  "releaseYear": 2015,
   "genre": [
-    "Action",
-    "RPG"
+    "RPG",
+    "Bullet Hell",
+    "Narratif",
+    "Comédie"
   ],
   "artStyle": {
-    "fr": "2D Dessiné à la main",
-    "en": "2D Hand-drawn"
+    "fr": "Pixel Art",
+    "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Vue du dessus 2D",
+    "en": "2D Top-down"
   },
-  "developer": "Live Wire",
-  "steamUrl": "https://store.steampowered.com/app/1369630/",
+  "developer": "tobyfox",
+  "steamUrl": "https://store.steampowered.com/app/391540/Undertale/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_1c2bf22139c82d0c46ccee075e1e71e08b88ab44.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_a3d8c04253e525da1907fd8028ab66a318c1f0c1.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_0076f81d06eb547dbec80d06a3148c1c614f540b.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_c1180c9d99d525508066f4d919e280d1a4f8bb8e.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_ae62391706e55f64eac21d81c9862e8f635662a8.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_9b18286c32d4851f07ef2c17b4774962147b87cb.1920x1080.jpg?t=1788931074"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_6ded97a2c98473ac1e8a2b3c1419d93fb31b1186.1920x1080.jpg?t=1757349115",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_b9018c41cea2bdfb150609bedfca99b16a5af02a.1920x1080.jpg?t=1757349115",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_b9ec4c53a8ed37f764649c970757c0a1f4948ec1.1920x1080.jpg?t=1757349115",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_edab41f7c9fa287b0d90ebfa3b9219fec6e1b3ed.1920x1080.jpg?t=1757349115",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_a11393d4b437ca75c10521f6baf53fbba9006f0f.1920x1080.jpg?t=1757349115",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_85d6f0db4b5d6207534120c4b51e37dfd2f8dd83.1920x1080.jpg?t=1757349115"
   ],
   "hints": {
     "tagline": {
-      "fr": "Découvrez l'histoire de Lily et des chevaliers immortels au royaume de Lointerre, touché par une pluie de mort. Dans cet action-RPG à défilement horizontal où les ennemis ne vous laisseront pas le moindre répit, percez les mystères d'un monde beau et tragique aux côtés de vos camarades.",
-      "en": "ENDER LILIES is a dark fantasy 2D action RPG about unraveling the mysteries of a destroyed kingdom. On this sorrowful journey, encounter horrific enemies against whom a moment of inattention could be fatal. Overcome these hardships and seek the truth with the help of fallen knights."
+      "fr": "Un RPG émouvant et hilarant où vous n'êtes obligé d'éliminer aucun ennemi.",
+      "en": "The friendly RPG where nobody has to die.",
+      "es": "El entrañable RPG donde nadie tiene que morir.",
+      "de": "Das herzliche Rollenspiel, in dem niemand sterben muss.",
+      "ja": "誰も倒さなくていい、心温まる優しい名作RPG。",
+      "pt-BR": "O RPG acolhedor onde ninguém precisa morrer."
     },
-    "composer": "Mili"
-  },
-  "addedAt": "2026-09-25"
+    "composer": "Toby Fox"
+  }
 };

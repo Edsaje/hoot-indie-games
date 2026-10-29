@@ -262,8 +262,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Chucklefish",
     "publisher": "Chucklefish",
     "expectedDate": {
-      "fr": "2026",
-      "en": "2026"
+      "fr": "28 janv. 2027",
+      "en": "28 janv. 2027"
     },
     "genres": [
       {
@@ -553,13 +553,47 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1792594666"
   },
   {
-    "id": "tomorrow-never-comes",
-    "title": "Tomorrow Never Comes",
-    "developer": "Xamo Games",
-    "publisher": "Xamo Games",
+    "id": "nari-threads-of-dawn",
+    "title": "NARI: Threads of Dawn",
+    "developer": "HYEONSEOK KANG",
+    "publisher": "HYEONSEOK KANG",
     "expectedDate": {
-      "fr": "28 oct. 2026",
-      "en": "Oct 28, 2026"
+      "fr": "29 oct. 2026",
+      "en": "Oct 29, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      },
+      {
+        "fr": "RPG",
+        "en": "RPG"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5411100/",
+    "description": {
+      "fr": "Fight with flowing sleeves and turn a last-moment dodge into a counterattack. Journey through six stages of Korean folklore, face restless spirits and bosses, and shape your dance through three progression paths and equipment combinations.",
+      "en": "Fight with flowing sleeves and turn a last-moment dodge into a counterattack. Journey through six stages of Korean folklore, face restless spirits and bosses, and shape your dance through three progression paths and equipment combinations."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/ab70b0e446494a6ec960a481d28b21383356de9c/header.jpg?t=1792838980"
+  },
+  {
+    "id": "podyezd-8",
+    "title": "PODYEZD 8",
+    "developer": "RavenS Software",
+    "publisher": "RavenS Software",
+    "expectedDate": {
+      "fr": "29 oct. 2026",
+      "en": "Oct 29, 2026"
     },
     "genres": [
       {
@@ -570,50 +604,16 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4945770/",
+    "steamUrl": "https://store.steampowered.com/app/5170830/",
     "description": {
-      "fr": "Tomorrow Never Comes est un thriller narratif à choix multiples en vue subjective. Noah est piégé dans une boucle temporelle : revivez la même journée, gérez vos blessures, utilisez différents objets, ouvrez de nouvelles routes et découvrez plusieurs fins pour tenter d’atteindre enfin demain.",
-      "en": "Tomorrow Never Comes is a choice-driven first-person narrative thriller. Trapped in a time loop, Noah must relive the same day, manage his injuries, use items, unlock new paths, and discover multiple endings in his attempt to finally reach tomorrow."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4945770/65a14dc55c5b215dbf6416a614ddb52097242e70/header.jpg?t=1792716315"
-  },
-  {
-    "id": "synapse-grid",
-    "title": "Synapse Grid",
-    "developer": "AlluringCoffee",
-    "publisher": "AlluringCoffee",
-    "expectedDate": {
-      "fr": "28 oct. 2026",
-      "en": "Oct 28, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Course automobile",
-        "en": "Course automobile"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5179670/",
-    "description": {
-      "fr": "A neon light-cycle combat racer where the wall you leave behind becomes the arena. Amber kills. 90-mission campaign, 2–4 player split-screen, online beta (unproven). Free demo out now (beta). Next Fest 19–26 Oct. Release 28 Oct 2026.",
-      "en": "A neon light-cycle combat racer where the wall you leave behind becomes the arena. Amber kills. 90-mission campaign, 2–4 player split-screen, online beta (unproven). Free demo out now (beta). Next Fest 19–26 Oct. Release 28 Oct 2026."
+      "fr": "Étage après étage, vous descendez pour fuir un immeuble qui refuse de vous laisser partir. Observez les détails : ce qui a changé — une porte, une affiche, un voisin qui n'était pas là. Manquez l'anomalie, et la descente recommence.",
+      "en": "Psychological horror in an endless Soviet stairwell. Floor after floor you head down, but the building won’t let you go: a neighbour watches you pass, a doormat says GO AWAY, the light dies — and when it returns, someone is standing there. Spot an anomaly — turn back. Miss one — start over."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/d85ce36a826b9fbf49052291d97e3e5016564dd4/header.jpg?t=1792888125"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/9d1aa89df8c3d477de3a939ecb7a9ce26a03cbdc/header.jpg?t=1793115310"
   }
 ];

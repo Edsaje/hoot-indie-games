@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 100
+ * Total de pépites sélectionnées : 102
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4204,5 +4204,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMwOTA1MjMzLmdpZg==/original/vgxOnv.gif"
     ],
     "dateAdded": "2026-10-28"
+  },
+  {
+    "id": "itch-tavern-talk",
+    "title": "Tavern Talk",
+    "developer": "gentle-troll",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://gentle-troll.itch.io/tavern-talk",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$8.99",
+      "en": "$8.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Cozy Visual Novel Game",
+      "en": "A Cozy Visual Novel Game"
+    },
+    "description": {
+      "fr": "A Cozy Visual Novel Game",
+      "en": "A Cozy Visual Novel Game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI3NTMwODQ5LnBuZw==/315x250%23c/oikqdn.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI3NTMwODQ5LnBuZw==/315x250%23c/oikqdn.png"
+    ],
+    "dateAdded": "2026-10-29"
+  },
+  {
+    "id": "itch-granny-5-time-to-wake-up",
+    "title": "Granny 5: Time To Wake Up",
+    "developer": "atwelve",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://atwelve.itch.io/granny5",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Granny 5 fangame",
+      "en": "Granny 5 fangame"
+    },
+    "description": {
+      "fr": "Granny 5 fangame",
+      "en": "Granny 5 fangame"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzExNzA2MzEzLnBuZw==/315x250%23c/nLm0%2FX.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzExNzA2MzEzLnBuZw==/315x250%23c/nLm0%2FX.png"
+    ],
+    "dateAdded": "2026-10-29"
   }
 ];
