@@ -91494,5 +91494,76 @@
     "addedAt": "2026-10-29",
     "steamAppId": 5179670,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5179670/d85ce36a826b9fbf49052291d97e3e5016564dd4/header.jpg?t=1793197526"
+  },
+  {
+    "id": "nari-threads-of-dawn",
+    "title": "NARI: Threads of Dawn",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "RPG"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "HYEONSEOK KANG",
+    "steamUrl": "https://store.steampowered.com/app/5411100/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/5994e59f249798bc4150010ef6f006197ba18774/ss_5994e59f249798bc4150010ef6f006197ba18774.1920x1080.jpg?t=1793276070",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/287e7da0e38f62bfea6ee27135706369dca843f1/ss_287e7da0e38f62bfea6ee27135706369dca843f1.1920x1080.jpg?t=1793276070",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/e87221368ef499976d2604769712a7f4ef1dac3e/ss_e87221368ef499976d2604769712a7f4ef1dac3e.1920x1080.jpg?t=1793276070",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/e42c5494da3a1a148dbc3bf0dd771df38372c72f/ss_e42c5494da3a1a148dbc3bf0dd771df38372c72f.1920x1080.jpg?t=1793276070",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/67325d94d048d9c9ee3a77090f9c9a6a15e51d07/ss_67325d94d048d9c9ee3a77090f9c9a6a15e51d07.1920x1080.jpg?t=1793276070",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/ef089bb726ed4bd9b41621218bd481037d946b21/ss_ef089bb726ed4bd9b41621218bd481037d946b21.1920x1080.jpg?t=1793276070"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Fight with flowing sleeves and turn a last-moment dodge into a counterattack. Journey through six stages of Korean folklore, face restless spirits and bosses, and shape your dance through three progression paths and equipment combinations.",
+        "en": "Fight with flowing sleeves and turn a last-moment dodge into a counterattack. Journey through six stages of Korean folklore, face restless spirits and bosses, and shape your dance through three progression paths and equipment combinations."
+      }
+    },
+    "addedAt": "2026-10-30",
+    "steamAppId": 5411100,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/ab70b0e446494a6ec960a481d28b21383356de9c/header.jpg?t=1793276070"
+  },
+  {
+    "id": "podyezd-8",
+    "title": "PODYEZD 8",
+    "releaseYear": 2026,
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "RavenS Software",
+    "steamUrl": "https://store.steampowered.com/app/5170830/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/6c466a330105a2c0bb6c570d85fe08bbdb829f54/ss_6c466a330105a2c0bb6c570d85fe08bbdb829f54.1920x1080.jpg?t=1793295372",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/705993b5ff4e55dfb19eb66ecc6e6e8085f4b92b/ss_705993b5ff4e55dfb19eb66ecc6e6e8085f4b92b.1920x1080.jpg?t=1793295372",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/16adfb5e01b20a770091a895ab44f6a22a0395a8/ss_16adfb5e01b20a770091a895ab44f6a22a0395a8.1920x1080.jpg?t=1793295372",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/27679b2faad9f6e301268ad2571ffa0af1bc7cd9/ss_27679b2faad9f6e301268ad2571ffa0af1bc7cd9.1920x1080.jpg?t=1793295372",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/527a3821924cc2454e442c85d89a920dc895cf89/ss_527a3821924cc2454e442c85d89a920dc895cf89.1920x1080.jpg?t=1793295372",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/6c466a330105a2c0bb6c570d85fe08bbdb829f54/ss_6c466a330105a2c0bb6c570d85fe08bbdb829f54.1920x1080.jpg?t=1793295372"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Étage après étage, vous descendez pour fuir un immeuble qui refuse de vous laisser partir. Observez les détails : ce qui a changé — une porte, une affiche, un voisin qui n'était pas là. Manquez l'anomalie, et la descente recommence.",
+        "en": "Psychological horror in an endless Soviet stairwell. Floor after floor you head down, but the building won’t let you go: a neighbour watches you pass, a doormat says GO AWAY, the light dies — and when it returns, someone is standing there. Spot an anomaly — turn back. Miss one — start over."
+      }
+    },
+    "addedAt": "2026-10-30",
+    "steamAppId": 5170830,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/9d1aa89df8c3d477de3a939ecb7a9ce26a03cbdc/header.jpg?t=1793295372"
   }
 ]

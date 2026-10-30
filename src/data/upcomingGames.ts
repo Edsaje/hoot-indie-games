@@ -553,13 +553,43 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1792594666"
   },
   {
-    "id": "nari-threads-of-dawn",
-    "title": "NARI: Threads of Dawn",
-    "developer": "HYEONSEOK KANG",
-    "publisher": "HYEONSEOK KANG",
+    "id": "a-game-about-cutting-grass",
+    "title": "A Game About Cutting Grass",
+    "developer": "ZimonG",
+    "publisher": "ZimonG",
     "expectedDate": {
-      "fr": "29 oct. 2026",
-      "en": "Oct 29, 2026"
+      "fr": "Prochainement",
+      "en": "Coming soon"
+    },
+    "genres": [
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5105850/",
+    "description": {
+      "fr": "Prends tes outils et commence à tondre ! A Game About Cutting Grass est un simulateur de tonte relaxant : tonds pelouse après pelouse, améliore tes outils, débloque de nouvelles zones et joue à ton rythme. Détends-toi ou bats tes records pour devenir le plus rapide !",
+      "en": "Grab your tools and start mowing! A Game About Cutting Grass is a cozy, relaxing mowing sim where you cut lawn after lawn, upgrade your tools, unlock new zones, and play at your own pace. Relax, or chase your best times and become the fastest grass cutter!"
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/d665c02f97b92d22202bed2ff35e6802af282c96/header.jpg?t=1793266905"
+  },
+  {
+    "id": "pinballoid-crush",
+    "title": "Pinballoid Crush",
+    "developer": "Pixel Bones",
+    "publisher": "Super PowerUp Games",
+    "expectedDate": {
+      "fr": "Prochainement",
+      "en": "Coming soon"
     },
     "genres": [
       {
@@ -569,51 +599,25 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
       {
         "fr": "RPG",
         "en": "RPG"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5411100/",
-    "description": {
-      "fr": "Fight with flowing sleeves and turn a last-moment dodge into a counterattack. Journey through six stages of Korean folklore, face restless spirits and bosses, and shape your dance through three progression paths and equipment combinations.",
-      "en": "Fight with flowing sleeves and turn a last-moment dodge into a counterattack. Journey through six stages of Korean folklore, face restless spirits and bosses, and shape your dance through three progression paths and equipment combinations."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5411100/ab70b0e446494a6ec960a481d28b21383356de9c/header.jpg?t=1792838980"
-  },
-  {
-    "id": "podyezd-8",
-    "title": "PODYEZD 8",
-    "developer": "RavenS Software",
-    "publisher": "RavenS Software",
-    "expectedDate": {
-      "fr": "29 oct. 2026",
-      "en": "Oct 29, 2026"
-    },
-    "genres": [
+      },
       {
-        "fr": "Aventure",
-        "en": "Aventure"
+        "fr": "Simulation",
+        "en": "Simulation"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5170830/",
+    "steamUrl": "https://store.steampowered.com/app/4911950/",
     "description": {
-      "fr": "Étage après étage, vous descendez pour fuir un immeuble qui refuse de vous laisser partir. Observez les détails : ce qui a changé — une porte, une affiche, un voisin qui n'était pas là. Manquez l'anomalie, et la descente recommence.",
-      "en": "Psychological horror in an endless Soviet stairwell. Floor after floor you head down, but the building won’t let you go: a neighbour watches you pass, a doormat says GO AWAY, the light dies — and when it returns, someone is standing there. Spot an anomaly — turn back. Miss one — start over."
+      "fr": "Dans Pinballoid Crush, le flipper classique se transforme en une expérience d’arcade mêlant aventure et stratégie.",
+      "en": "In Pinballoid Crush, classic pinball evolves into an arcade experience with adventure and strategy elements."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/9d1aa89df8c3d477de3a939ecb7a9ce26a03cbdc/header.jpg?t=1793115310"
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/f05e101c9d2e9d38fb3bc3f888f97739d475a34a/header.jpg?t=1792504942"
   }
 ];

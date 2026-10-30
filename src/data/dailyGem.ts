@@ -1,44 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-10-29";
+export const TODAY_DATE = "2026-10-30";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "undertale",
-  "title": "Undertale",
-  "releaseYear": 2015,
+  "id": "dead-cells",
+  "title": "Dead Cells",
+  "releaseYear": 2018,
   "genre": [
-    "RPG",
-    "Bullet Hell",
-    "Narratif",
-    "Comédie"
+    "Roguelite",
+    "Metroidvania",
+    "Action",
+    "Souls-like"
   ],
   "artStyle": {
     "fr": "Pixel Art",
     "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Vue du dessus 2D",
-    "en": "2D Top-down"
+    "fr": "Vue de côté 2D",
+    "en": "2D Side-scroller"
   },
-  "developer": "tobyfox",
-  "steamUrl": "https://store.steampowered.com/app/391540/Undertale/",
+  "developer": "Motion Twin",
+  "steamUrl": "https://store.steampowered.com/app/588650/Dead_Cells/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_6ded97a2c98473ac1e8a2b3c1419d93fb31b1186.1920x1080.jpg?t=1757349115",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_b9018c41cea2bdfb150609bedfca99b16a5af02a.1920x1080.jpg?t=1757349115",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_b9ec4c53a8ed37f764649c970757c0a1f4948ec1.1920x1080.jpg?t=1757349115",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_edab41f7c9fa287b0d90ebfa3b9219fec6e1b3ed.1920x1080.jpg?t=1757349115",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_a11393d4b437ca75c10521f6baf53fbba9006f0f.1920x1080.jpg?t=1757349115",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/391540/ss_85d6f0db4b5d6207534120c4b51e37dfd2f8dd83.1920x1080.jpg?t=1757349115"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_ac28000ade40cc2fe5c128f32ac98ba33c008a7a.1920x1080.jpg?t=1779086887",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_7bde51ea6c8f6289e85ea1d8c1c941e1f8bfee91.1920x1080.jpg?t=1779086887",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_e87e72a247918d8493892e035d5e1b4b84470d2f.1920x1080.jpg?t=1779086887",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_a099416b9f3e09d47c42f87667e6ad6f394ba652.1920x1080.jpg?t=1779086887",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_a8b0439ad7750cab1bdec86ecef0daa280e9f93f.1920x1080.jpg?t=1779086887",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_21c61aca6a66745a2abb3f72b93553398fc7fe32.1920x1080.jpg?t=1779086887"
   ],
   "hints": {
     "tagline": {
-      "fr": "Un RPG émouvant et hilarant où vous n'êtes obligé d'éliminer aucun ennemi.",
-      "en": "The friendly RPG where nobody has to die.",
-      "es": "El entrañable RPG donde nadie tiene que morir.",
-      "de": "Das herzliche Rollenspiel, in dem niemand sterben muss.",
-      "ja": "誰も倒さなくていい、心温まる優しい名作RPG。",
-      "pt-BR": "O RPG acolhedor onde ninguém precisa morrer."
+      "fr": "Combattez dans un château labyrinthique en perpétuelle mutation dans ce Roguevania nerveux.",
+      "en": "Fight through an ever-changing labyrinthine island castle in this fast-paced Roguevania.",
+      "es": "Lucha a través de un castillo laberíntico en constante mutación en este frenético Roguevania.",
+      "de": "Kämpfe dich in diesem rasanten Roguevania durch eine sich ständig wandelnde Insellabyrinth-Burg.",
+      "ja": "変化し続ける巨大な城塞迷宮を戦い抜く、ハイテンポなローグヴァニア。",
+      "pt-BR": "Lute por um castelo labiríntico em constante mutação neste frenético Roguevania."
     },
-    "composer": "Toby Fox"
+    "composer": "Yoann Laulan"
   }
 };
