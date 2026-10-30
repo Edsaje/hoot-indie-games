@@ -88,6 +88,11 @@ if (!checkFriendsRateLimit($rateLimitFile, getClientIp())) {
 
 // Helper: Lecture de la clé API Steam Maîtresse
 function getMasterSteamKey($filePath) {
+    $persistentFile = __DIR__ . '/user_saves/.steam_key';
+    if (file_exists($persistentFile)) {
+        $c = @file_get_contents($persistentFile);
+        if ($c && trim($c) !== '') return trim($c);
+    }
     if (file_exists($filePath)) {
         $c = @file_get_contents($filePath);
         if ($c && trim($c) !== '') return trim($c);

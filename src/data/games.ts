@@ -10340,16 +10340,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Finding Paradise",
     "releaseYear": 2017,
     "genre": [
+      "Narratif",
       "Aventure",
       "RPG"
     ],
     "artStyle": {
-      "fr": "3D Stylisée",
-      "en": "Stylized 3D"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "Freebird Games",
     "steamUrl": "https://store.steampowered.com/app/337340/",
@@ -12118,16 +12119,17 @@ export const INDIE_GAMES: Game[] = [
     "title": "Impostor Factory",
     "releaseYear": 2021,
     "genre": [
+      "Narratif",
       "Aventure",
       "RPG"
     ],
     "artStyle": {
-      "fr": "3D Stylisée",
-      "en": "Stylized 3D"
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
     },
     "camera": {
-      "fr": "Vue de côté 2D",
-      "en": "2D Side-scroller"
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
     },
     "developer": "Freebird Games",
     "steamUrl": "https://store.steampowered.com/app/1182620/",

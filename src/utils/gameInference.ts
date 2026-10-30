@@ -64,8 +64,8 @@ export function inferCanonicalArtStyle(
 
   // 4. Détection Pixel Art (priorité sur la 2D si explicite)
   if (
-    /\bpixel(\s*art|ated)?\b/.test(lower) ||
-    /\b(16-bit|8-bit|retro 2d|pixel art|pixel-art|sprites 2d|bit graphics|pixel-based|pixels)\b/.test(lower)
+    /\bpixel(\s*art|ated|s)?\b/.test(lower) ||
+    /\b(16-bit|8-bit|retro 2d|pixel art|pixel-art|pixel graphics|sprites 2d|bit graphics|pixel-based|pixels|pixel|rpgmaker|rpg maker|to the moon|finding paradise|impostor factory)\b/.test(lower)
   ) {
     return { fr: 'Pixel Art', en: 'Pixel Art' };
   }
@@ -94,7 +94,7 @@ export function inferCanonicalArtStyle(
   }
 
   // 7. Détection contexte 2D vs 3D
-  const has2D = /\b(2d|side-scroller|sidescroller|top-down|topdown|sprites|metroidvania|plateforme 2d|platformer 2d)\b/.test(lower);
+  const has2D = /\b(2d|side-scroller|sidescroller|top-down|topdown|sprites|metroidvania|plateforme 2d|platformer 2d|rpgmaker|rpg maker)\b/.test(lower);
   const has3D = /\b(3d|fps|tps|first-person|third-person|vr|open world 3d)\b/.test(lower);
 
   if (has2D && !has3D) {
@@ -103,6 +103,11 @@ export function inferCanonicalArtStyle(
 
   if (has3D) {
     return { fr: '3D Stylisée', en: 'Stylized 3D' };
+  }
+
+  // En l'absence totale de signaux 3D, privilégier un style 2D pour les jeux narratifs/aventure
+  if (/\b(rpg|narratif|aventure|puzzle|point & click)\b/.test(lower) && !has3D) {
+    return { fr: '2D Dessiné à la main', en: '2D Hand-drawn' };
   }
 
   return { fr: '3D Stylisée', en: 'Stylized 3D' };
@@ -143,10 +148,11 @@ export function inferCanonicalCamera(
     return { fr: 'Isométrique / 2.5D', en: 'Isometric / 2.5D' };
   }
 
-  // 3. Vue du dessus 2D (Top-down, twin-stick, bullet heaven, roguelites vue aérienne, Stardew/Graveyard-like)
+  // 3. Vue du dessus 2D (Top-down, twin-stick, bullet heaven, roguelites vue aérienne, Stardew/Graveyard-like, RPG Maker)
   if (
     /\b(top-down|topdown|top down|vue du dessus|vue de dessus|vue plongeante|overhead view|bird's-eye view|vue aérienne)\b/.test(lower) ||
     /\b(twin-stick|twin stick|dual-stick|vertical shooter|bullet heaven|reverse bullet hell|survivors-like|survivor-like)\b/.test(lower) ||
+    /\b(rpgmaker|rpg maker|finding paradise|to the moon|impostor factory)\b/.test(lower) ||
     genres.includes('Twin-stick') ||
     genres.includes('Auto-Shooter') ||
     /\b(graveyard keeper|vampire survivors|brotato|hotline miami|binding of isaac|enter the gungeon|undertale|baba is you)\b/.test(lower)

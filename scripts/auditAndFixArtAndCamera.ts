@@ -85,6 +85,11 @@ const KNOWN_OVERRIDES: Record<string, { art: string; cam: string }> = {
   'songs of syx': { art: 'Pixel Art', cam: 'Isometric / 2.5D' },
 
   // 2D Top-down
+  'finding paradise': { art: 'Pixel Art', cam: '2D Top-down' },
+  'to the moon': { art: 'Pixel Art', cam: '2D Top-down' },
+  'impostor factory': { art: 'Pixel Art', cam: '2D Top-down' },
+  'heroes of hammerwatch': { art: 'Pixel Art', cam: '2D Top-down' },
+  'wizard of legend': { art: 'Pixel Art', cam: '2D Top-down' },
   'vampire survivors': { art: 'Pixel Art', cam: '2D Top-down' },
   'brotato': { art: '2D Hand-drawn', cam: '2D Top-down' },
   'hotline miami': { art: 'Pixel Art', cam: '2D Top-down' },
@@ -123,6 +128,8 @@ const KNOWN_OVERRIDES: Record<string, { art: string; cam: string }> = {
   'overcooked! 2': { art: 'Stylized 3D', cam: '2D Top-down' },
 
   // 2D Side-scroller
+  'gato roboto': { art: 'Pixel Art', cam: '2D Side-scroller' },
+  'downwell': { art: 'Pixel Art', cam: '2D Side-scroller' },
   'hollow knight': { art: '2D Hand-drawn', cam: '2D Side-scroller' },
   'cuphead': { art: '2D Hand-drawn', cam: '2D Side-scroller' },
   'celeste': { art: 'Pixel Art', cam: '2D Side-scroller' },

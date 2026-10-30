@@ -31,6 +31,14 @@ $cacheDir = __DIR__;
 
 // Helper: Récupération de la clé API Maîtresse
 function getMasterSteamApiKey($filePath) {
+    $persistentFile = __DIR__ . '/user_saves/.steam_key';
+    if (file_exists($persistentFile)) {
+        $content = @file_get_contents($persistentFile);
+        if ($content) {
+            $key = trim($content);
+            if (!empty($key)) return $key;
+        }
+    }
     if (file_exists($filePath)) {
         $content = @file_get_contents($filePath);
         if ($content) {
@@ -149,8 +157,11 @@ if ($action === 'set_master_key') {
         exit;
     }
 
-    // Sauvegarde atomique de la clé
+    // Sauvegarde atomique de la clé (sur fichier éphémère et dans le volume persistant user_saves)
     $saved = @file_put_contents($steamKeyFile, $inputKey, LOCK_EX);
+    $persistentFile = __DIR__ . '/user_saves/.steam_key';
+    @file_put_contents($persistentFile, $inputKey, LOCK_EX);
+    @chmod($persistentFile, 0600);
     if ($saved !== false) {
         @chmod($steamKeyFile, 0600);
         echo json_encode([

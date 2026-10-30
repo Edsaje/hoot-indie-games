@@ -1,0 +1,31 @@
+services:
+  hootindiegames:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
+    container_name: app_hootindiegames
+    restart: unless-stopped
+    environment:
+      - RESEND_API_KEY=${RESEND_API_KEY:-}
+      - BREVO_API_KEY=${BREVO_API_KEY:-}
+      - STEAM_API_KEY=${STEAM_API_KEY:-}
+    volumes:
+      # Persistance souveraine des comptes, tokens OTP et sauvegardes utilisateurs
+      - hoot_user_saves:/var/www/html/api/user_saves
+    networks:
+      - web_gateway
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.8'
+
+volumes:
+  hoot_user_saves:
+
+networks:
+  web_gateway:
+    external: true
