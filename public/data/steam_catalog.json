@@ -91566,5 +91566,114 @@
     "addedAt": "2026-10-30",
     "steamAppId": 5170830,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5170830/9d1aa89df8c3d477de3a939ecb7a9ce26a03cbdc/header.jpg?t=1793295372"
+  },
+  {
+    "id": "reactance",
+    "title": "Reactance",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "developer": "Studio of Eldingar",
+    "steamUrl": "https://store.steampowered.com/app/5357500/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/9fadaf4bf5bc15450dc02bfe6e32a66201fa2ec4/ss_9fadaf4bf5bc15450dc02bfe6e32a66201fa2ec4.1920x1080.jpg?t=1793352059",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/52540d152fc2303cccc191046b9267e9c688952d/ss_52540d152fc2303cccc191046b9267e9c688952d.1920x1080.jpg?t=1793352059",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/98a59ccd9fbc0de98e535da4a71fd6641ba2dcaf/ss_98a59ccd9fbc0de98e535da4a71fd6641ba2dcaf.1920x1080.jpg?t=1793352059",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/4dee7bc24d6310d92a6bcbd2f0410661bb0c68ed/ss_4dee7bc24d6310d92a6bcbd2f0410661bb0c68ed.1920x1080.jpg?t=1793352059",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/f9cfa7e5bd935f9b95f5e4b0ca178817ed6b73a5/ss_f9cfa7e5bd935f9b95f5e4b0ca178817ed6b73a5.1920x1080.jpg?t=1793352059",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/9fadaf4bf5bc15450dc02bfe6e32a66201fa2ec4/ss_9fadaf4bf5bc15450dc02bfe6e32a66201fa2ec4.1920x1080.jpg?t=1793352059"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "A first-person duelling game where every fighter is a scientist. Read your opponent's guard, then block, parry and strike back across ten arenas, from a station under a black hole to the inside of a living cell. Free to play, with rollback netcode, 2v2, Ranked and a Laboratory to meet in.",
+        "en": "A first-person duelling game where every fighter is a scientist. Read your opponent's guard, then block, parry and strike back across ten arenas, from a station under a black hole to the inside of a living cell. Free to play, with rollback netcode, 2v2, Ranked and a Laboratory to meet in."
+      }
+    },
+    "addedAt": "2026-10-31",
+    "isFree": true,
+    "steamAppId": 5357500,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1793352059"
+  },
+  {
+    "id": "a-game-about-cutting-grass",
+    "title": "A Game About Cutting Grass",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "ZimonG",
+    "steamUrl": "https://store.steampowered.com/app/5105850/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/882f52be24fa122764d94e439ab312cb96d40656/ss_882f52be24fa122764d94e439ab312cb96d40656.1920x1080.jpg?t=1793377553",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/9c844ca5b94ec0cb6f80632b5d7abf245048cd97/ss_9c844ca5b94ec0cb6f80632b5d7abf245048cd97.1920x1080.jpg?t=1793377553",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/c17e195d5bdf6d85ce3c4dfe7766a6fe0ff72c61/ss_c17e195d5bdf6d85ce3c4dfe7766a6fe0ff72c61.1920x1080.jpg?t=1793377553",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/9e79dcdf1e305a5f8c560e1b2c7c62cf2e3258b8/ss_9e79dcdf1e305a5f8c560e1b2c7c62cf2e3258b8.1920x1080.jpg?t=1793377553",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/8f47f605c20316e54845d29d76de35f8578395ea/ss_8f47f605c20316e54845d29d76de35f8578395ea.1920x1080.jpg?t=1793377553",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/056eb0f221656bd9514af12c4d66186940cf0494/ss_056eb0f221656bd9514af12c4d66186940cf0494.1920x1080.jpg?t=1793377553"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Prends tes outils et commence à tondre ! A Game About Cutting Grass est un simulateur de tonte relaxant : tonds pelouse après pelouse, améliore tes outils, débloque de nouvelles zones et joue à ton rythme. Détends-toi ou bats tes records pour devenir le plus rapide !",
+        "en": "Grab your tools and start mowing! A Game About Cutting Grass is a cozy, relaxing mowing sim where you cut lawn after lawn, upgrade your tools, unlock new zones, and play at your own pace. Relax, or chase your best times and become the fastest grass cutter!"
+      }
+    },
+    "addedAt": "2026-10-31",
+    "steamAppId": 5105850,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/d665c02f97b92d22202bed2ff35e6802af282c96/header.jpg?t=1793377553"
+  },
+  {
+    "id": "pinballoid-crush",
+    "title": "Pinballoid Crush",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "RPG",
+      "Simulation"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Pixel Bones",
+    "steamUrl": "https://store.steampowered.com/app/4911950/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/de74dfb8b5bf64d73905177008ce0192b5c926a5/ss_de74dfb8b5bf64d73905177008ce0192b5c926a5.1920x1080.jpg?t=1793365733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/06d25fe46a0f48c018241893df6668e330598fb2/ss_06d25fe46a0f48c018241893df6668e330598fb2.1920x1080.jpg?t=1793365733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/94702071efa60ca3ad4a93280a3e380cebfb2e36/ss_94702071efa60ca3ad4a93280a3e380cebfb2e36.1920x1080.jpg?t=1793365733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/d1a654a8d4135cef7cdd14b4d95bd66fc76a3c6e/ss_d1a654a8d4135cef7cdd14b4d95bd66fc76a3c6e.1920x1080.jpg?t=1793365733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/0a8f658690541e8995ba5837ebf50bf3c9e80887/ss_0a8f658690541e8995ba5837ebf50bf3c9e80887.1920x1080.jpg?t=1793365733",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/0290f05cd89c655e607661dc9c893ac3c4933f5c/ss_0290f05cd89c655e607661dc9c893ac3c4933f5c.1920x1080.jpg?t=1793365733"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Dans Pinballoid Crush, le flipper classique se transforme en une expérience d’arcade mêlant aventure et stratégie.",
+        "en": "In Pinballoid Crush, classic pinball evolves into an arcade experience with adventure and strategy elements."
+      }
+    },
+    "addedAt": "2026-10-31",
+    "steamAppId": 4911950,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/f05e101c9d2e9d38fb3bc3f888f97739d475a34a/header.jpg?t=1793365733"
   }
 ]

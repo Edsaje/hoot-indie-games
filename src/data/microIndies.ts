@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 104
+ * Total de pépites sélectionnées : 106
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4365,5 +4365,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE3NzQwNzQ0LnBuZw==/315x250%23c/Bnp095.png"
     ],
     "dateAdded": "2026-10-30"
+  },
+  {
+    "id": "itch-3dsen-vr-3d-nes-emulator-for-virtual-reality",
+    "title": "3dSen VR - 3D NES Emulator For Virtual Reality",
+    "developer": "geod",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://geod.itch.io/3dnes",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$24.99",
+      "en": "$24.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "tagline": {
+      "fr": "Breathing new life into classic NES games by magically converting it into 3D and letting you play in VR",
+      "en": "Breathing new life into classic NES games by magically converting it into 3D and letting you play in VR"
+    },
+    "description": {
+      "fr": "Breathing new life into classic NES games by magically converting it into 3D and letting you play in VR",
+      "en": "Breathing new life into classic NES games by magically converting it into 3D and letting you play in VR"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIzODM1MDAwLmpwZw==/315x250%23c/yxMsOv.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIzODM1MDAwLmpwZw==/315x250%23c/yxMsOv.jpg"
+    ],
+    "dateAdded": "2026-10-31"
+  },
+  {
+    "id": "itch-soulash-2",
+    "title": "Soulash 2",
+    "developer": "wizardsofthecode",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://wizardsofthecode.itch.io/soulash-2",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$18.99",
+      "en": "$18.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Sandbox RPG roguelike about world conquest.",
+      "en": "Sandbox RPG roguelike about world conquest."
+    },
+    "description": {
+      "fr": "Sandbox RPG roguelike about world conquest.",
+      "en": "Sandbox RPG roguelike about world conquest."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzExOTg4OTAxLnBuZw==/315x250%23c/lQbyuB.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzExOTg4OTAxLnBuZw==/315x250%23c/lQbyuB.png"
+    ],
+    "dateAdded": "2026-10-31"
   }
 ];

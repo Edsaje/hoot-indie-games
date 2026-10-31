@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 1805 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 1808 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -29620,6 +29620,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
       "en": "Overwhelmingly Positive"
     }
   },
+  "4911950": {
+    "appId": 4911950,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 1199,
+    "finalPriceCents": 959,
+    "discountPercent": 20,
+    "formattedFinalPrice": "9,59€",
+    "formattedInitialPrice": "11,99€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "4914570": {
     "appId": 4914570,
     "isFree": true,
@@ -29851,6 +29868,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "reviewScoreDesc": {
       "fr": "Extrêmement positifs",
       "en": "Overwhelmingly Positive"
+    }
+  },
+  "5105850": {
+    "appId": 5105850,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 679,
+    "finalPriceCents": 577,
+    "discountPercent": 15,
+    "formattedFinalPrice": "5,77€",
+    "formattedInitialPrice": "6,79€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
     }
   },
   "5119740": {
@@ -30244,6 +30278,22 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "formattedFinalPrice": "9,99€",
     "totalReviews": 500,
     "totalPositive": 450,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5357500": {
+    "appId": 5357500,
+    "isFree": true,
+    "currency": "EUR",
+    "initialPriceCents": 0,
+    "finalPriceCents": 0,
+    "discountPercent": 0,
+    "formattedFinalPrice": "Gratuit",
+    "totalReviews": 0,
+    "totalPositive": 0,
     "positivePercent": 90,
     "reviewScoreDesc": {
       "fr": "Très positifs",

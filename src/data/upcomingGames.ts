@@ -485,47 +485,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "reactance",
-    "title": "Reactance",
-    "developer": "Studio of Eldingar",
-    "publisher": "Studio of Eldingar",
-    "expectedDate": {
-      "fr": "octobre 2026",
-      "en": "octobre 2026"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Free-to-play",
-        "en": "Free-to-play"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5357500/",
-    "description": {
-      "fr": "A first-person duelling game where every fighter is a scientist. Read your opponent's guard, then block, parry and strike back across ten arenas, from a station under a black hole to the inside of a living cell. Free to play, with rollback netcode, 2v2, Ranked and a Laboratory to meet in.",
-      "en": "A first-person duelling game where every fighter is a scientist. Read your opponent's guard, then block, parry and strike back across ten arenas, from a station under a black hole to the inside of a living cell. Free to play, with rollback netcode, 2v2, Ranked and a Laboratory to meet in."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5357500/d953602568e2f5c0e431356b78abb4c6a6998110/header.jpg?t=1792142165"
-  },
-  {
     "id": "grim-guild",
     "title": "Grim Guild",
     "developer": "PocketStudio",
     "publisher": "PocketStudio",
     "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
+      "fr": "5 nov. 2026",
+      "en": "5 nov. 2026"
     },
     "genres": [
       {
@@ -553,71 +519,97 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1792594666"
   },
   {
-    "id": "a-game-about-cutting-grass",
-    "title": "A Game About Cutting Grass",
-    "developer": "ZimonG",
-    "publisher": "ZimonG",
+    "id": "ballerspiel",
+    "title": "Ballerspiel",
+    "developer": "Luckywood Studios UG",
+    "publisher": "Luckywood Studios UG",
     "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Coming soon"
-    },
-    "genres": [
-      {
-        "fr": "Simulation",
-        "en": "Simulation"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5105850/",
-    "description": {
-      "fr": "Prends tes outils et commence à tondre ! A Game About Cutting Grass est un simulateur de tonte relaxant : tonds pelouse après pelouse, améliore tes outils, débloque de nouvelles zones et joue à ton rythme. Détends-toi ou bats tes records pour devenir le plus rapide !",
-      "en": "Grab your tools and start mowing! A Game About Cutting Grass is a cozy, relaxing mowing sim where you cut lawn after lawn, upgrade your tools, unlock new zones, and play at your own pace. Relax, or chase your best times and become the fastest grass cutter!"
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5105850/d665c02f97b92d22202bed2ff35e6802af282c96/header.jpg?t=1793266905"
-  },
-  {
-    "id": "pinballoid-crush",
-    "title": "Pinballoid Crush",
-    "developer": "Pixel Bones",
-    "publisher": "Super PowerUp Games",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Coming soon"
+      "fr": "31 oct. 2026",
+      "en": "Oct 31, 2026"
     },
     "genres": [
       {
         "fr": "Action",
         "en": "Action"
-      },
-      {
-        "fr": "RPG",
-        "en": "RPG"
-      },
-      {
-        "fr": "Simulation",
-        "en": "Simulation"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4911950/",
+    "steamUrl": "https://store.steampowered.com/app/3235390/",
     "description": {
-      "fr": "Dans Pinballoid Crush, le flipper classique se transforme en une expérience d’arcade mêlant aventure et stratégie.",
-      "en": "In Pinballoid Crush, classic pinball evolves into an arcade experience with adventure and strategy elements."
+      "fr": "Un jeu de tir à la première et à la troisième personne au style BD, chaotique et rempli de clowns. Battle Royale, Ballerball et Clown-Off, 13 armes dont une bombe atomique, des véhicules, des bonus et un monde où tout se casse. Joue en ligne, en LAN sans internet ou hors ligne contre des bots.",
+      "en": "A chaotic comic-style first- and third-person shooter full of clowns. Battle Royale, Ballerball and Clown-Off, 13 weapons including an atomic bomb, vehicles, power-ups and a world where everything breaks. Play online, on LAN without internet, or offline against bots."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/f05e101c9d2e9d38fb3bc3f888f97739d475a34a/header.jpg?t=1792504942"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/14529dd75694d740be29b6c8b3485e680e8a0d90/header.jpg?t=1793182020"
+  },
+  {
+    "id": "shadows-of-gloaming",
+    "title": "Shadows of Gloaming",
+    "developer": "Pilsen Games",
+    "publisher": "Pilsen Games",
+    "expectedDate": {
+      "fr": "31 oct. 2026",
+      "en": "Oct 31, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/4618460/",
+    "description": {
+      "fr": "Shadows of Gloaming est un jeu de soirée de déduction sociale où 19 rôles uniques et 3 factions rivales s'affrontent lors de votes tendus le jour et d'actions nocturnes cachées. En Mode Party, un joueur héberge la GameArena tandis que tous les autres rejoignent gratuitement via l'application web.",
+      "en": "Shadows of Gloaming is a social deduction party game where 19 unique roles and 3 rival factions clash across tense day votes and hidden night actions. In Party Mode, one player hosts the GameArena while everyone else joins for free through the web app."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/e95ff8fd12913c4cd006cc403733c6589dc292a5/header.jpg?t=1792342070"
+  },
+  {
+    "id": "s-il-vous-plait-ne-dites-pas-que-c-est-un-jeu-poubelle-streamer-happy-nanaru",
+    "title": "S'il vous plait ne dites pas que c'est un jeu poubelle streamer: HAPPY NANARU",
+    "developer": "TENTACLE SOFT",
+    "publisher": "TENTACLE SOFT",
+    "expectedDate": {
+      "fr": "31 oct. 2026",
+      "en": "Oct 31, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      },
+      {
+        "fr": "Platformer",
+        "en": "Platformer"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/1651240/",
+    "description": {
+      "fr": "[S'il vous plaît, ne l'appelez pas un jeu poubelle, Monsieur le Streamer] est un jeu de plateforme 2D à progression inversée. Guidez l'adorable Nanaru. Vous perdrez vos capacités en avançant : un piège de quelqu'un souhaitant une aventure sans fin.",
+      "en": "[Please Do Not Call It a Trash Game Streamer] is a reverse-progression 2D platformer. Guide the cute bakery girl Nanaru through devil Yako's trials. As you advance, you lose abilities and controls deteriorate—a trap set by someone wishing the adventure never ends."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1651240/f01d4f9f78ff0bb04110998667516e94cf84c17b/header_french.jpg?t=1793256048"
   }
 ];
