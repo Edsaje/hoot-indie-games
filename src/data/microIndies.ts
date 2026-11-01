@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 106
+ * Total de pépites sélectionnées : 108
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4445,5 +4445,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzExOTg4OTAxLnBuZw==/315x250%23c/lQbyuB.png"
     ],
     "dateAdded": "2026-10-31"
+  },
+  {
+    "id": "itch-terraformental",
+    "title": "Terraformental",
+    "developer": "sh4dowsand",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://sh4dowsand.itch.io/terraformental",
+    "playInBrowserUrl": "https://sh4dowsand.itch.io/terraformental",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$5.99",
+      "en": "$5.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Try to survive and perhaps eventually even tame an unknown planet in this incremental semi-idle game.",
+      "en": "Try to survive and perhaps eventually even tame an unknown planet in this incremental semi-idle game."
+    },
+    "description": {
+      "fr": "Try to survive and perhaps eventually even tame an unknown planet in this incremental semi-idle game.",
+      "en": "Try to survive and perhaps eventually even tame an unknown planet in this incremental semi-idle game."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI1MjQ1MTQyLnBuZw==/315x250%23c/TPZEVJ.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI1MjQ1MTQyLnBuZw==/315x250%23c/TPZEVJ.png"
+    ],
+    "dateAdded": "2026-11-01"
+  },
+  {
+    "id": "itch-ichorous",
+    "title": "Ichorous",
+    "developer": "mattstov",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://mattstov.itch.io/ichorous",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Paint the walls with the blood of your enemies!",
+      "en": "Paint the walls with the blood of your enemies!"
+    },
+    "description": {
+      "fr": "Paint the walls with the blood of your enemies!",
+      "en": "Paint the walls with the blood of your enemies!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxNTUxODQ4LmdpZg==/original/Ic1tES.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxNTUxODQ4LmdpZg==/original/Ic1tES.gif"
+    ],
+    "dateAdded": "2026-11-01"
   }
 ];

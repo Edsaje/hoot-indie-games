@@ -91675,5 +91675,40 @@
     "addedAt": "2026-10-31",
     "steamAppId": 4911950,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4911950/f05e101c9d2e9d38fb3bc3f888f97739d475a34a/header.jpg?t=1793365733"
+  },
+  {
+    "id": "ballerspiel",
+    "title": "Ballerspiel",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Troisième personne",
+      "en": "Third-Person"
+    },
+    "developer": "Luckywood Studios UG",
+    "steamUrl": "https://store.steampowered.com/app/3235390/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/7fa089be85706a9461be425be22a2e290234fabf/ss_7fa089be85706a9461be425be22a2e290234fabf.1920x1080.jpg?t=1793448047",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/499c9fc50cf56c6e35b541b7bcb44a966f88ce92/ss_499c9fc50cf56c6e35b541b7bcb44a966f88ce92.1920x1080.jpg?t=1793448047",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/5a3b7b65037995f15d74d24520c097f2029ea09b/ss_5a3b7b65037995f15d74d24520c097f2029ea09b.1920x1080.jpg?t=1793448047",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/ae589b789d0685c7f2b7a4c9f0f4016c631ed634/ss_ae589b789d0685c7f2b7a4c9f0f4016c631ed634.1920x1080.jpg?t=1793448047",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/9edcd9505563f9beab34cec062857f797c12d41d/ss_9edcd9505563f9beab34cec062857f797c12d41d.1920x1080.jpg?t=1793448047",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/cd2c48f5c74cfbf9d7da69fb9654468e817dff8d/ss_cd2c48f5c74cfbf9d7da69fb9654468e817dff8d.1920x1080.jpg?t=1793448047"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un jeu de tir à la première et à la troisième personne au style BD, chaotique et rempli de clowns. Battle Royale, Ballerball et Clown-Off, 13 armes dont une bombe atomique, des véhicules, des bonus et un monde où tout se casse. Joue en ligne, en LAN sans internet ou hors ligne contre des bots.",
+        "en": "A chaotic comic-style first- and third-person shooter full of clowns. Battle Royale, Ballerball and Clown-Off, 13 weapons including an atomic bomb, vehicles, power-ups and a world where everything breaks. Play online, on LAN without internet, or offline against bots."
+      }
+    },
+    "addedAt": "2026-11-01",
+    "steamAppId": 3235390,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/14529dd75694d740be29b6c8b3485e680e8a0d90/header.jpg?t=1793448047"
   }
 ]

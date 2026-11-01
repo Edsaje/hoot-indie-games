@@ -519,43 +519,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1792594666"
   },
   {
-    "id": "ballerspiel",
-    "title": "Ballerspiel",
-    "developer": "Luckywood Studios UG",
-    "publisher": "Luckywood Studios UG",
-    "expectedDate": {
-      "fr": "31 oct. 2026",
-      "en": "Oct 31, 2026"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/3235390/",
-    "description": {
-      "fr": "Un jeu de tir à la première et à la troisième personne au style BD, chaotique et rempli de clowns. Battle Royale, Ballerball et Clown-Off, 13 armes dont une bombe atomique, des véhicules, des bonus et un monde où tout se casse. Joue en ligne, en LAN sans internet ou hors ligne contre des bots.",
-      "en": "A chaotic comic-style first- and third-person shooter full of clowns. Battle Royale, Ballerball and Clown-Off, 13 weapons including an atomic bomb, vehicles, power-ups and a world where everything breaks. Play online, on LAN without internet, or offline against bots."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/14529dd75694d740be29b6c8b3485e680e8a0d90/header.jpg?t=1793182020"
-  },
-  {
     "id": "shadows-of-gloaming",
     "title": "Shadows of Gloaming",
     "developer": "Pilsen Games",
     "publisher": "Pilsen Games",
     "expectedDate": {
-      "fr": "31 oct. 2026",
-      "en": "Oct 31, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -584,8 +554,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "TENTACLE SOFT",
     "publisher": "TENTACLE SOFT",
     "expectedDate": {
-      "fr": "31 oct. 2026",
-      "en": "Oct 31, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -611,5 +581,35 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 94,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1651240/f01d4f9f78ff0bb04110998667516e94cf84c17b/header_french.jpg?t=1793256048"
+  },
+  {
+    "id": "find-the-clover",
+    "title": "Find The Clover",
+    "developer": "MGDB Studio",
+    "publisher": "MGDB Studio",
+    "expectedDate": {
+      "fr": "1 nov. 2026",
+      "en": "Nov 1, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5373980/",
+    "description": {
+      "fr": "Search a vast clover meadow for 50 rare specimens. Harvest by hand, upgrade to tools and garden machines, carry your crop to the buyer, and pour it out yourself. Bring special finds to your display cabinet.",
+      "en": "Search a vast clover meadow for 50 rare specimens. Harvest by hand, upgrade to tools and garden machines, carry your crop to the buyer, and pour it out yourself. Bring special finds to your display cabinet."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5373980/37a96b3e5ef52e540d69568c568e9cf74364a6eb/header.jpg?t=1792486527"
   }
 ];
