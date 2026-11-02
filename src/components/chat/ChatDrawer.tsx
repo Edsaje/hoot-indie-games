@@ -135,11 +135,13 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     soundFx.playClick();
     const res = await translateChatMessage(msg.text, currentLangCode);
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: false }));
-    processedMsgIdsRef.current.add(`${currentLangCode}:${msg.id}`);
-    if (res.success && res.translatedText !== msg.text) {
-      setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
-      setShowOriginalMsgIds((prev) => ({ ...prev, [msg.id]: false }));
-      setManualTranslatedMsgIds((prev) => ({ ...prev, [msg.id]: true }));
+    if (res.success) {
+      processedMsgIdsRef.current.add(`${currentLangCode}:${msg.id}`);
+      if (res.translatedText !== msg.text) {
+        setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
+        setShowOriginalMsgIds((prev) => ({ ...prev, [msg.id]: false }));
+        setManualTranslatedMsgIds((prev) => ({ ...prev, [msg.id]: true }));
+      }
     }
   };
 
@@ -159,7 +161,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
 
     if (queue.length === 0) return;
 
-    // Enregistrer immédiatement dans le Set pour bloquer les requêtes concurrentes
+    // Enregistrer temporairement dans le Set pour bloquer les requêtes concurrentes en vol
     queue.forEach((msg) => {
       processedMsgIdsRef.current.add(`${targetLang}:${msg.id}`);
     });
@@ -182,8 +184,14 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
 
         const batchUpdates: Record<string, string> = {};
         for (const item of results) {
-          if (item.res.success && item.res.translatedText !== item.original) {
-            batchUpdates[item.id] = item.res.translatedText;
+          const key = `${targetLang}:${item.id}`;
+          if (item.res.success) {
+            if (item.res.translatedText !== item.original) {
+              batchUpdates[item.id] = item.res.translatedText;
+            }
+          } else {
+            // En cas d'échec réseau, libérer l'id pour permettre une nouvelle tentative
+            processedMsgIdsRef.current.delete(key);
           }
         }
 

@@ -93,7 +93,43 @@ export async function translateChatMessage(
     return { ...cached, success: true, isCached: true };
   }
 
-  // Moteur 1 : Google Translate (rapide, sans clé, détection auto fiable)
+  // Moteur 1 : Passerelle interne souveraine /api/translate.php (même-origine 'self', immunisée CSP et ad-blockers)
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4500);
+
+    const sl = explicitSource || 'autodetect';
+    const proxyUrl = `/api/translate.php?q=${encodeURIComponent(trimmed)}&tl=${normTarget}&sl=${sl}`;
+
+    const response = await fetch(proxyUrl, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.success && typeof data.translatedText === 'string') {
+        const isSame = Boolean(data.isSameLanguage) || data.translatedText === trimmed;
+        const result: TranslationResult = {
+          translatedText: isSame ? text : data.translatedText,
+          success: true,
+          isSameLanguage: isSame,
+          detectedLang: data.detectedLang,
+        };
+        translationCache.set(cacheKey, result);
+        return result;
+      }
+    }
+  } catch {
+    // Si la passerelle locale n'est pas joignable (ex: dev local Vite sans serveur PHP), basculer sur les moteurs directs
+  }
+
+  // Moteur 2 : Google Translate (direct navigateur, rapide, sans clé, détection auto fiable)
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 4000);
@@ -137,10 +173,10 @@ export async function translateChatMessage(
       }
     }
   } catch {
-    // Si Google Translate échoue ou timeout, basculer sur le moteur secondaire MyMemory
+    // Si Google Translate échoue ou timeout, basculer sur le moteur de secours MyMemory
   }
 
-  // Moteur 2 (Secours) : MyMemory Translated API avec e-mail officiel
+  // Moteur 3 (Secours) : MyMemory Translated API avec e-mail officiel
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 4500);
