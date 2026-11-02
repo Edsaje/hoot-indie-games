@@ -375,8 +375,18 @@ export const ToolboxHub: React.FC = () => {
 
       if (sortOption === 'title-asc') return a.title.localeCompare(b.title);
       if (sortOption === 'title-desc') return b.title.localeCompare(a.title);
-      if (sortOption === 'year-desc') return b.releaseYear - a.releaseYear;
-      if (sortOption === 'year-asc') return a.releaseYear - b.releaseYear;
+      if (sortOption === 'year-desc') {
+        const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+        const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+        if (dateB !== dateA) return dateB.localeCompare(dateA);
+        return a.title.localeCompare(b.title);
+      }
+      if (sortOption === 'year-asc') {
+        const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+        const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+        if (dateA !== dateB) return dateA.localeCompare(dateB);
+        return a.title.localeCompare(b.title);
+      }
       if (sortOption === 'rating-desc') return storeB.score - storeA.score;
       if (sortOption === 'price-asc') return storeA.finalPrice - storeB.finalPrice;
       if (sortOption === 'price-desc') return storeB.finalPrice - storeA.finalPrice;

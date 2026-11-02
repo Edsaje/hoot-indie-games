@@ -15,6 +15,7 @@ export interface Game {
   id: string;
   title: string;
   releaseYear: number;
+  releaseDate?: string; // Format ISO "YYYY-MM-DD" pour un tri chronologique précis au jour près
   genre: string[];
   artStyle: LocalizedText;
   camera: LocalizedText;

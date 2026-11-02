@@ -256,15 +256,19 @@ export const SteamCatalogExplorer: React.FC<SteamCatalogExplorerProps> = ({
       const storeB = getSteamStoreData(getAppIdFromSteamUrl(b.steamUrl) || (b as SteamCatalogGame).steamAppId) || b.steamStoreData;
 
       switch (sortBy) {
-        case 'yearDesc':
-          return b.releaseYear !== a.releaseYear
-            ? b.releaseYear - a.releaseYear
-            : a.title.localeCompare(b.title);
+        case 'yearDesc': {
+          const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+          const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+          if (dateB !== dateA) return dateB.localeCompare(dateA);
+          return a.title.localeCompare(b.title);
+        }
 
-        case 'yearAsc':
-          return a.releaseYear !== b.releaseYear
-            ? a.releaseYear - b.releaseYear
-            : a.title.localeCompare(b.title);
+        case 'yearAsc': {
+          const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+          const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+          if (dateA !== dateB) return dateA.localeCompare(dateB);
+          return a.title.localeCompare(b.title);
+        }
 
         case 'priceAsc': {
           const priceA = storeA?.isFree ? 0 : (storeA?.finalPriceCents ?? 99999);

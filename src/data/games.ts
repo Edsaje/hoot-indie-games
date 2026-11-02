@@ -12,6 +12,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hollow-knight",
     "title": "Hollow Knight",
     "releaseYear": 2017,
+    "releaseDate": "2017-02-24",
     "genre": [
       "Metroidvania",
       "Action",
@@ -52,6 +53,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "celeste",
     "title": "Celeste",
     "releaseYear": 2018,
+    "releaseDate": "2018-01-25",
     "genre": [
       "Platformer",
       "Aventure",
@@ -92,6 +94,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "outer-wilds",
     "title": "Outer Wilds",
     "releaseYear": 2019,
+    "releaseDate": "2020-06-18",
     "genre": [
       "Exploration",
       "Aventure",
@@ -131,6 +134,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hades",
     "title": "Hades",
     "releaseYear": 2020,
+    "releaseDate": "2020-09-17",
     "genre": [
       "Roguelike",
       "Action",
@@ -171,6 +175,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dead-cells",
     "title": "Dead Cells",
     "releaseYear": 2018,
+    "releaseDate": "2018-08-06",
     "genre": [
       "Roguelite",
       "Metroidvania",
@@ -211,6 +216,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "undertale",
     "title": "Undertale",
     "releaseYear": 2015,
+    "releaseDate": "2015-09-15",
     "genre": [
       "RPG",
       "Bullet Hell",
@@ -251,6 +257,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "slay-the-spire",
     "title": "Slay the Spire",
     "releaseYear": 2019,
+    "releaseDate": "2019-01-23",
     "genre": [
       "Deckbuilder",
       "Roguelike",
@@ -290,6 +297,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "tunic",
     "title": "Tunic",
     "releaseYear": 2022,
+    "releaseDate": "2022-03-16",
     "genre": [
       "Action",
       "Aventure",
@@ -330,6 +338,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "cuphead",
     "title": "Cuphead",
     "releaseYear": 2017,
+    "releaseDate": "2017-09-29",
     "genre": [
       "Action",
       "Platformer",
@@ -369,6 +378,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "disco-elysium",
     "title": "Disco Elysium",
     "releaseYear": 2019,
+    "releaseDate": "2019-10-15",
     "genre": [
       "RPG",
       "Narratif",
@@ -408,6 +418,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "inscryption",
     "title": "Inscryption",
     "releaseYear": 2021,
+    "releaseDate": "2021-10-19",
     "genre": [
       "Deckbuilder",
       "Horreur",
@@ -449,6 +460,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "stardew-valley",
     "title": "Stardew Valley",
     "releaseYear": 2016,
+    "releaseDate": "2016-02-26",
     "genre": [
       "Simulation",
       "Gestion",
@@ -489,6 +501,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "subnautica",
     "title": "Subnautica",
     "releaseYear": 2018,
+    "releaseDate": "2018-01-23",
     "genre": [
       "Survie",
       "Aventure",
@@ -529,6 +542,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "balatro",
     "title": "Balatro",
     "releaseYear": 2024,
+    "releaseDate": "2024-02-20",
     "genre": [
       "Deckbuilder",
       "Roguelike",
@@ -569,6 +583,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "animal-well",
     "title": "Animal Well",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-09",
     "genre": [
       "Metroidvania",
       "Puzzle",
@@ -608,6 +623,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "sea-of-stars",
     "title": "Sea of Stars",
     "releaseYear": 2023,
+    "releaseDate": "2023-08-28",
     "genre": [
       "RPG",
       "Aventure",
@@ -647,6 +663,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "blasphemous",
     "title": "Blasphemous",
     "releaseYear": 2019,
+    "releaseDate": "2019-09-10",
     "genre": [
       "Metroidvania",
       "Action",
@@ -687,6 +704,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ori-and-the-blind-forest",
     "title": "Ori and the Blind Forest",
     "releaseYear": 2015,
+    "releaseDate": "2016-04-27",
     "genre": [
       "Metroidvania",
       "Platformer",
@@ -726,6 +744,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "signalis",
     "title": "Signalis",
     "releaseYear": 2022,
+    "releaseDate": "2022-10-27",
     "genre": [
       "Horreur",
       "Survie",
@@ -766,6 +785,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dave-the-diver",
     "title": "Dave the Diver",
     "releaseYear": 2023,
+    "releaseDate": "2023-06-28",
     "genre": [
       "Aventure",
       "Gestion",
@@ -806,6 +826,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "nine-sols",
     "title": "Nine Sols",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-28",
     "genre": [
       "Metroidvania",
       "Action",
@@ -846,6 +867,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "crow-country",
     "title": "Crow Country",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-09",
     "genre": [
       "Horreur",
       "Survie",
@@ -886,6 +908,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "pizza-tower",
     "title": "Pizza Tower",
     "releaseYear": 2023,
+    "releaseDate": "2023-01-26",
     "genre": [
       "Platformer",
       "Action",
@@ -925,6 +948,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "pacific-drive",
     "title": "Pacific Drive",
     "releaseYear": 2024,
+    "releaseDate": "2024-02-21",
     "genre": [
       "Survie",
       "Conduite",
@@ -965,6 +989,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "katana-zero",
     "title": "Katana Zero",
     "releaseYear": 2019,
+    "releaseDate": "2019-04-18",
     "genre": [
       "Action",
       "Platformer",
@@ -1005,6 +1030,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hotline-miami",
     "title": "Hotline Miami",
     "releaseYear": 2012,
+    "releaseDate": "2012-10-23",
     "genre": [
       "Action",
       "Rétro",
@@ -1044,6 +1070,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dredge",
     "title": "Dredge",
     "releaseYear": 2023,
+    "releaseDate": "2023-03-30",
     "genre": [
       "Pêche",
       "Horreur",
@@ -1084,6 +1111,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "chants-of-sennaar",
     "title": "Chants of Sennaar",
     "releaseYear": 2023,
+    "releaseDate": "2023-09-05",
     "genre": [
       "Point & Click",
       "Puzzle",
@@ -1124,6 +1152,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "a-short-hike",
     "title": "A Short Hike",
     "releaseYear": 2019,
+    "releaseDate": "2019-07-30",
     "genre": [
       "Aventure",
       "Exploration",
@@ -1164,6 +1193,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "fez",
     "title": "Fez",
     "releaseYear": 2012,
+    "releaseDate": "2013-05-01",
     "genre": [
       "Puzzle",
       "Platformer",
@@ -1203,6 +1233,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "gris",
     "title": "Gris",
     "releaseYear": 2018,
+    "releaseDate": "2018-12-13",
     "genre": [
       "Platformer",
       "Aventure",
@@ -1242,6 +1273,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "darkest-dungeon",
     "title": "Darkest Dungeon",
     "releaseYear": 2016,
+    "releaseDate": "2016-01-19",
     "genre": [
       "Roguelike",
       "RPG",
@@ -1282,6 +1314,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "bramble",
     "title": "Bramble: The Mountain King",
     "releaseYear": 2023,
+    "releaseDate": "2023-04-27",
     "genre": [
       "Aventure",
       "Horreur",
@@ -1321,6 +1354,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "axiom-verge",
     "title": "Axiom Verge",
     "releaseYear": 2015,
+    "releaseDate": "2015-05-14",
     "genre": [
       "Metroidvania",
       "Action",
@@ -1360,6 +1394,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-binding-of-isaac-rebirth",
     "title": "The Binding of Isaac: Rebirth",
     "releaseYear": 2014,
+    "releaseDate": "2014-11-04",
     "genre": [
       "Roguelike",
       "Action",
@@ -1400,6 +1435,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "terraria",
     "title": "Terraria",
     "releaseYear": 2011,
+    "releaseDate": "2011-05-16",
     "genre": [
       "Survie",
       "Aventure",
@@ -1440,6 +1476,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "vampire-survivors",
     "title": "Vampire Survivors",
     "releaseYear": 2022,
+    "releaseDate": "2022-10-20",
     "genre": [
       "Auto-Shooter",
       "Roguelite",
@@ -1481,6 +1518,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "cult-of-the-lamb",
     "title": "Cult of the Lamb",
     "releaseYear": 2022,
+    "releaseDate": "2022-08-11",
     "genre": [
       "Roguelite",
       "Gestion",
@@ -1521,6 +1559,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "shovel-knight",
     "title": "Shovel Knight: Treasure Trove",
     "releaseYear": 2014,
+    "releaseDate": "2014-06-26",
     "genre": [
       "Platformer",
       "Action",
@@ -1561,6 +1600,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "inside",
     "title": "INSIDE",
     "releaseYear": 2016,
+    "releaseDate": "2016-07-07",
     "genre": [
       "Puzzle",
       "Platformer",
@@ -1601,6 +1641,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "limbo",
     "title": "LIMBO",
     "releaseYear": 2011,
+    "releaseDate": "2011-08-02",
     "genre": [
       "Puzzle",
       "Platformer",
@@ -1641,6 +1682,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "cocoon",
     "title": "COCOON",
     "releaseYear": 2023,
+    "releaseDate": "2023-09-29",
     "genre": [
       "Puzzle",
       "Aventure",
@@ -1680,6 +1722,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "return-of-the-obra-dinn",
     "title": "Return of the Obra Dinn",
     "releaseYear": 2018,
+    "releaseDate": "2018-10-18",
     "genre": [
       "Enquête",
       "Puzzle",
@@ -1720,6 +1763,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ultrakill",
     "title": "ULTRAKILL",
     "releaseYear": 2020,
+    "releaseDate": "2020-09-03",
     "genre": [
       "Fast-FPS",
       "Action",
@@ -1759,6 +1803,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "enter-the-gungeon",
     "title": "Enter the Gungeon",
     "releaseYear": 2016,
+    "releaseDate": "2016-04-05",
     "genre": [
       "Roguelike",
       "Bullet Hell",
@@ -1798,6 +1843,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "risk-of-rain-2",
     "title": "Risk of Rain 2",
     "releaseYear": 2020,
+    "releaseDate": "2020-08-11",
     "genre": [
       "Roguelike",
       "Action",
@@ -1838,6 +1884,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hyper-light-drifter",
     "title": "Hyper Light Drifter",
     "releaseYear": 2016,
+    "releaseDate": "2016-03-31",
     "genre": [
       "Action",
       "Aventure",
@@ -1877,6 +1924,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "spelunky-2",
     "title": "Spelunky 2",
     "releaseYear": 2020,
+    "releaseDate": "2020-09-29",
     "genre": [
       "Roguelike",
       "Platformer",
@@ -1916,6 +1964,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rain-world",
     "title": "Rain World",
     "releaseYear": 2017,
+    "releaseDate": "2017-03-28",
     "genre": [
       "Survie",
       "Platformer",
@@ -1955,6 +2004,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "firewatch",
     "title": "Firewatch",
     "releaseYear": 2016,
+    "releaseDate": "2016-02-09",
     "genre": [
       "Narratif",
       "Aventure",
@@ -1994,6 +2044,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "what-remains-of-edith-finch",
     "title": "What Remains of Edith Finch",
     "releaseYear": 2017,
+    "releaseDate": "2017-04-24",
     "genre": [
       "Narratif",
       "Aventure",
@@ -2032,6 +2083,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "super-meat-boy",
     "title": "Super Meat Boy",
     "releaseYear": 2010,
+    "releaseDate": "2010-11-30",
     "genre": [
       "Platformer",
       "Action",
@@ -2071,6 +2123,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "bastion",
     "title": "Bastion",
     "releaseYear": 2011,
+    "releaseDate": "2011-08-16",
     "genre": [
       "Action",
       "RPG",
@@ -2110,6 +2163,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "transistor",
     "title": "Transistor",
     "releaseYear": 2014,
+    "releaseDate": "2014-05-20",
     "genre": [
       "Action",
       "RPG",
@@ -2150,6 +2204,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ftl-faster-than-light",
     "title": "FTL: Faster Than Light",
     "releaseYear": 2012,
+    "releaseDate": "2012-09-14",
     "genre": [
       "Roguelike",
       "Stratégie",
@@ -2190,6 +2245,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "into-the-breach",
     "title": "Into the Breach",
     "releaseYear": 2018,
+    "releaseDate": "2018-02-27",
     "genre": [
       "Stratégie",
       "Tour par tour",
@@ -2230,6 +2286,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "omori",
     "title": "OMORI",
     "releaseYear": 2020,
+    "releaseDate": "2020-12-25",
     "genre": [
       "RPG",
       "Horreur",
@@ -2270,6 +2327,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ufo-50",
     "title": "UFO 50",
     "releaseYear": 2024,
+    "releaseDate": "2024-09-18",
     "genre": [
       "Anthologie",
       "Rétro",
@@ -2310,6 +2368,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "lorelei-and-the-laser-eyes",
     "title": "Lorelei and the Laser Eyes",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-16",
     "genre": [
       "Puzzle",
       "Mystère",
@@ -2350,6 +2409,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "sanabi",
     "title": "SANABI",
     "releaseYear": 2023,
+    "releaseDate": "2023-11-08",
     "genre": [
       "Platformer",
       "Action",
@@ -2390,6 +2450,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "lethal-company",
     "title": "Lethal Company",
     "releaseYear": 2023,
+    "releaseDate": "2023-10-23",
     "genre": [
       "Horreur",
       "Co-op",
@@ -2430,6 +2491,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "citizen-sleeper",
     "title": "Citizen Sleeper",
     "releaseYear": 2022,
+    "releaseDate": "2022-05-05",
     "genre": [
       "RPG",
       "Narratif",
@@ -2470,6 +2532,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "crypt-of-the-necrodancer",
     "title": "Crypt of the NecroDancer",
     "releaseYear": 2015,
+    "releaseDate": "2015-04-23",
     "genre": [
       "Rythme",
       "Roguelike",
@@ -2510,6 +2573,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dont-starve",
     "title": "Don't Starve",
     "releaseYear": 2013,
+    "releaseDate": "2013-04-23",
     "genre": [
       "Survie",
       "Artisanat",
@@ -2550,6 +2614,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "stray",
     "title": "Stray",
     "releaseYear": 2022,
+    "releaseDate": "2022-07-19",
     "genre": [
       "Aventure",
       "Exploration",
@@ -2589,6 +2654,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "chicory-a-colorful-tale",
     "title": "Chicory: A Colorful Tale",
     "releaseYear": 2021,
+    "releaseDate": "2021-06-10",
     "genre": [
       "Aventure",
       "Puzzle",
@@ -2628,6 +2694,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "sifu",
     "title": "Sifu",
     "releaseYear": 2023,
+    "releaseDate": "2023-03-28",
     "genre": [
       "Action",
       "Arts martiaux",
@@ -2667,6 +2734,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "jusant",
     "title": "Jusant",
     "releaseYear": 2023,
+    "releaseDate": "2023-10-31",
     "genre": [
       "Aventure",
       "Escalade",
@@ -2707,6 +2775,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "thank-goodness-youre-here",
     "title": "Thank Goodness You're Here!",
     "releaseYear": 2024,
+    "releaseDate": "2024-08-01",
     "genre": [
       "Comédie",
       "Aventure",
@@ -2746,6 +2815,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "minishoot-adventures",
     "title": "Minishoot' Adventures",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-02",
     "genre": [
       "Metroidvania",
       "Action",
@@ -2786,6 +2856,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hades-ii",
     "title": "Hades II",
     "releaseYear": 2024,
+    "releaseDate": "2025-09-25",
     "genre": [
       "Roguelike",
       "Action",
@@ -2826,6 +2897,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "neva",
     "title": "Neva",
     "releaseYear": 2024,
+    "releaseDate": "2024-10-15",
     "genre": [
       "Aventure",
       "Action",
@@ -2866,6 +2938,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "mouthwashing",
     "title": "Mouthwashing",
     "releaseYear": 2024,
+    "releaseDate": "2024-09-26",
     "genre": [
       "Horreur",
       "Narratif",
@@ -2906,6 +2979,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "tactical-breach-wizards",
     "title": "Tactical Breach Wizards",
     "releaseYear": 2024,
+    "releaseDate": "2024-08-22",
     "genre": [
       "Stratégie",
       "Tour par tour",
@@ -2946,6 +3020,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "1000xresist",
     "title": "1000xRESIST",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-09",
     "genre": [
       "Narratif",
       "Sci-Fi",
@@ -2985,6 +3060,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "arco",
     "title": "Arco",
     "releaseYear": 2024,
+    "releaseDate": "2024-08-15",
     "genre": [
       "Stratégie",
       "Action",
@@ -3025,6 +3101,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "core-keeper",
     "title": "Core Keeper",
     "releaseYear": 2024,
+    "releaseDate": "2024-08-27",
     "genre": [
       "Survie",
       "Sandbox",
@@ -3065,6 +3142,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "manor-lords",
     "title": "Manor Lords",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-26",
     "genre": [
       "City Builder",
       "Gestion",
@@ -3105,6 +3183,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "fields-of-mistria",
     "title": "Fields of Mistria",
     "releaseYear": 2024,
+    "releaseDate": "2026-08-05",
     "genre": [
       "Simulation",
       "RPG",
@@ -3145,6 +3224,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "cryptmaster",
     "title": "Cryptmaster",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-09",
     "genre": [
       "Dungeon Crawler",
       "RPG",
@@ -3185,6 +3265,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "mullet-madjack",
     "title": "MULLET MADJACK",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-15",
     "genre": [
       "Fast-FPS",
       "Action",
@@ -3225,6 +3306,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "anger-foot",
     "title": "Anger Foot",
     "releaseYear": 2024,
+    "releaseDate": "2024-07-11",
     "genre": [
       "Fast-FPS",
       "Action",
@@ -3264,6 +3346,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "antonblast",
     "title": "ANTONBLAST",
     "releaseYear": 2024,
+    "releaseDate": "2024-12-03",
     "genre": [
       "Platformer",
       "Action",
@@ -3304,6 +3387,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "emberward",
     "title": "Emberward",
     "releaseYear": 2024,
+    "releaseDate": "2026-09-17",
     "genre": [
       "Stratégie",
       "Roguelike",
@@ -3343,6 +3427,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "how-to-fish",
     "title": "How to Fish",
     "releaseYear": 2026,
+    "releaseDate": "2026-08-20",
     "genre": [
       "Simulation",
       "Pêche",
@@ -3384,6 +3469,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hollow-knight-silksong",
     "title": "Hollow Knight: Silksong",
     "releaseYear": 2025,
+    "releaseDate": "2025-09-04",
     "genre": [
       "Metroidvania",
       "Action",
@@ -3424,6 +3510,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "kernel-hearts",
     "title": "Kernel Hearts",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-17",
     "genre": [
       "Action",
       "RPG",
@@ -3464,6 +3551,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "openfront",
     "title": "OpenFront",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-17",
     "genre": [
       "Massivement multijoueur",
       "Stratégie",
@@ -3505,6 +3593,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "bombanana",
     "title": "BOMBANANA!",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-02",
     "genre": [
       "Puzzle",
       "Party Game",
@@ -3547,6 +3636,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "no-rest-for-the-wicked",
     "title": "No Rest for the Wicked",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-18",
     "genre": [
       "Action",
       "RPG",
@@ -3588,6 +3678,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rv-there-yet",
     "title": "RV There Yet?",
     "releaseYear": 2025,
+    "releaseDate": "2025-10-21",
     "genre": [
       "Action",
       "Aventure",
@@ -3628,6 +3719,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "palworld",
     "title": "Palworld",
     "releaseYear": 2024,
+    "releaseDate": "2026-07-09",
     "genre": [
       "Action",
       "Aventure",
@@ -3668,6 +3760,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "megabonk",
     "title": "Megabonk",
     "releaseYear": 2025,
+    "releaseDate": "2025-09-18",
     "genre": [
       "Auto-Shooter",
       "Action",
@@ -3708,6 +3801,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "soma",
     "title": "SOMA",
     "releaseYear": 2015,
+    "releaseDate": "2015-09-21",
     "genre": [
       "Aventure",
       "Survie",
@@ -3749,6 +3843,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-witness",
     "title": "The Witness",
     "releaseYear": 2016,
+    "releaseDate": "2016-01-26",
     "genre": [
       "Puzzle",
       "Exploration",
@@ -3788,6 +3883,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "braid",
     "title": "Braid, Anniversary Edition",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-14",
     "genre": [
       "Platformer",
       "Puzzle",
@@ -3827,6 +3923,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "loop-hero",
     "title": "Loop Hero",
     "releaseYear": 2021,
+    "releaseDate": "2021-03-04",
     "genre": [
       "Roguelike",
       "Deckbuilder",
@@ -3867,6 +3964,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "slay-the-princess",
     "title": "Slay the Princess",
     "releaseYear": 2023,
+    "releaseDate": "2023-10-23",
     "genre": [
       "Visual Novel",
       "Narratif",
@@ -3907,6 +4005,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "chained-echoes",
     "title": "Chained Echoes",
     "releaseYear": 2022,
+    "releaseDate": "2022-12-08",
     "genre": [
       "RPG",
       "Tour par tour",
@@ -3946,6 +4045,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "cassette-beasts",
     "title": "Cassette Beasts",
     "releaseYear": 2023,
+    "releaseDate": "2023-04-26",
     "genre": [
       "RPG",
       "Tour par tour",
@@ -3985,6 +4085,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "crosscode",
     "title": "CrossCode",
     "releaseYear": 2018,
+    "releaseDate": "2018-09-20",
     "genre": [
       "Action",
       "RPG",
@@ -4025,6 +4126,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "subnautica-below-zero",
     "title": "Subnautica: Below Zero",
     "releaseYear": 2021,
+    "releaseDate": "2021-05-13",
     "genre": [
       "Survie",
       "Exploration",
@@ -4065,6 +4167,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ori-and-the-will-of-the-wisps",
     "title": "Ori and the Will of the Wisps",
     "releaseYear": 2020,
+    "releaseDate": "2020-03-10",
     "genre": [
       "Metroidvania",
       "Platformer",
@@ -4104,6 +4207,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-messenger",
     "title": "The Messenger",
     "releaseYear": 2018,
+    "releaseDate": "2018-08-30",
     "genre": [
       "Platformer",
       "Metroidvania",
@@ -4144,6 +4248,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "spiritfarer",
     "title": "Spiritfarer: Farewell Edition",
     "releaseYear": 2020,
+    "releaseDate": "2020-08-18",
     "genre": [
       "Gestion",
       "Aventure",
@@ -4184,6 +4289,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "oxygen-not-included",
     "title": "Oxygen Not Included",
     "releaseYear": 2019,
+    "releaseDate": "2019-07-30",
     "genre": [
       "Colony Sim",
       "Gestion",
@@ -4224,6 +4330,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "to-the-moon",
     "title": "To the Moon",
     "releaseYear": 2011,
+    "releaseDate": "2012-09-07",
     "genre": [
       "Narratif",
       "Aventure",
@@ -4263,6 +4370,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "gorogoa",
     "title": "Gorogoa",
     "releaseYear": 2017,
+    "releaseDate": "2017-12-14",
     "genre": [
       "Puzzle",
       "Aventure",
@@ -4301,6 +4409,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "baba-is-you",
     "title": "Baba Is You",
     "releaseYear": 2019,
+    "releaseDate": "2019-03-13",
     "genre": [
       "Puzzle",
       "Exploration",
@@ -4342,6 +4451,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dusk",
     "title": "Dusk",
     "releaseYear": 2018,
+    "releaseDate": "2018-12-10",
     "genre": [
       "Fast-FPS",
       "Action",
@@ -4382,6 +4492,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "valheim",
     "title": "Valheim",
     "releaseYear": 2021,
+    "releaseDate": "2026-09-09",
     "genre": [
       "Survie",
       "Co-op",
@@ -4422,6 +4533,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "superhot",
     "title": "SUPERHOT",
     "releaseYear": 2016,
+    "releaseDate": "2016-02-25",
     "genre": [
       "Fast-FPS",
       "Action",
@@ -4461,6 +4573,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "slime-rancher",
     "title": "Slime Rancher",
     "releaseYear": 2017,
+    "releaseDate": "2017-08-01",
     "genre": [
       "Simulation",
       "Aventure",
@@ -4501,6 +4614,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "kingdom-two-crowns",
     "title": "Kingdom Two Crowns",
     "releaseYear": 2018,
+    "releaseDate": "2018-12-11",
     "genre": [
       "Stratégie",
       "Gestion",
@@ -4540,6 +4654,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "neon-white",
     "title": "Neon White",
     "releaseYear": 2022,
+    "releaseDate": "2022-06-16",
     "genre": [
       "Fast-FPS",
       "Platformer",
@@ -4578,6 +4693,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ghostrunner",
     "title": "Ghostrunner",
     "releaseYear": 2020,
+    "releaseDate": "2020-10-27",
     "genre": [
       "Action",
       "Cyberpunk",
@@ -4617,6 +4733,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "darkest-dungeon-2",
     "title": "Darkest Dungeon II",
     "releaseYear": 2023,
+    "releaseDate": "2023-05-08",
     "genre": [
       "Roguelike",
       "Tour par tour",
@@ -4657,6 +4774,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "tinykin",
     "title": "Tinykin",
     "releaseYear": 2022,
+    "releaseDate": "2022-08-30",
     "genre": [
       "Platformer",
       "Aventure",
@@ -4696,6 +4814,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dorfromantik",
     "title": "Dorfromantik",
     "releaseYear": 2022,
+    "releaseDate": "2022-04-28",
     "genre": [
       "City Builder",
       "Puzzle",
@@ -4737,6 +4856,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "unpacking",
     "title": "Unpacking",
     "releaseYear": 2021,
+    "releaseDate": "2021-11-01",
     "genre": [
       "Cozy",
       "Puzzle",
@@ -4776,6 +4896,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "a-little-to-the-left",
     "title": "A Little to the Left",
     "releaseYear": 2022,
+    "releaseDate": "2022-11-08",
     "genre": [
       "Cozy",
       "Puzzle",
@@ -4815,6 +4936,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-talos-principle",
     "title": "The Talos Principle",
     "releaseYear": 2014,
+    "releaseDate": "2014-12-11",
     "genre": [
       "Puzzle",
       "Exploration",
@@ -4854,6 +4976,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-talos-principle-2",
     "title": "The Talos Principle 2",
     "releaseYear": 2023,
+    "releaseDate": "2023-11-02",
     "genre": [
       "Puzzle",
       "Exploration",
@@ -4893,6 +5016,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "pony-island",
     "title": "Pony Island",
     "releaseYear": 2016,
+    "releaseDate": "2016-01-04",
     "genre": [
       "Puzzle",
       "Horreur",
@@ -4933,6 +5057,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "world-of-goo",
     "title": "World of Goo",
     "releaseYear": 2008,
+    "releaseDate": "2008-10-13",
     "genre": [
       "Physique",
       "Puzzle",
@@ -4972,6 +5097,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "furi",
     "title": "Furi",
     "releaseYear": 2016,
+    "releaseDate": "2016-07-05",
     "genre": [
       "Action",
       "Bullet Hell",
@@ -5011,6 +5137,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "haven",
     "title": "Haven",
     "releaseYear": 2020,
+    "releaseDate": "2020-12-03",
     "genre": [
       "RPG",
       "Aventure",
@@ -5051,6 +5178,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "wartales",
     "title": "Wartales",
     "releaseYear": 2023,
+    "releaseDate": "2023-04-12",
     "genre": [
       "RPG",
       "Stratégie",
@@ -5092,6 +5220,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "northgard",
     "title": "Northgard",
     "releaseYear": 2018,
+    "releaseDate": "2018-03-07",
     "genre": [
       "Stratégie",
       "Gestion",
@@ -5131,6 +5260,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "broforce",
     "title": "Broforce",
     "releaseYear": 2015,
+    "releaseDate": "2015-10-15",
     "genre": [
       "Action",
       "Platformer",
@@ -5171,6 +5301,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rhythm-doctor",
     "title": "Rhythm Doctor",
     "releaseYear": 2021,
+    "releaseDate": "2025-12-06",
     "genre": [
       "Rythme",
       "Action",
@@ -5211,6 +5342,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "20-minutes-till-dawn",
     "title": "20 Minutes Till Dawn",
     "releaseYear": 2023,
+    "releaseDate": "2023-06-08",
     "genre": [
       "Auto-Shooter",
       "Roguelite",
@@ -5252,6 +5384,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "brotato",
     "title": "Brotato",
     "releaseYear": 2023,
+    "releaseDate": "2023-06-23",
     "genre": [
       "Auto-Shooter",
       "Roguelite",
@@ -5292,6 +5425,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "peglin",
     "title": "Peglin",
     "releaseYear": 2024,
+    "releaseDate": "2024-08-27",
     "genre": [
       "Roguelike",
       "Puzzle",
@@ -5331,6 +5465,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "backpack-hero",
     "title": "Backpack Hero",
     "releaseYear": 2023,
+    "releaseDate": "2023-11-14",
     "genre": [
       "Roguelike",
       "Deckbuilder",
@@ -5370,6 +5505,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "deaths-door",
     "title": "Death's Door",
     "releaseYear": 2021,
+    "releaseDate": "2021-07-20",
     "genre": [
       "Action",
       "Aventure",
@@ -5409,6 +5545,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "moonlighter",
     "title": "Moonlighter",
     "releaseYear": 2018,
+    "releaseDate": "2018-05-29",
     "genre": [
       "Action",
       "Roguelite",
@@ -5449,6 +5586,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "starbound",
     "title": "Starbound",
     "releaseYear": 2016,
+    "releaseDate": "2016-07-22",
     "genre": [
       "Sandbox",
       "Survie",
@@ -5490,6 +5628,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "eastward",
     "title": "Eastward",
     "releaseYear": 2021,
+    "releaseDate": "2021-09-16",
     "genre": [
       "Action",
       "Aventure",
@@ -5530,6 +5669,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "iron-lung",
     "title": "Iron Lung",
     "releaseYear": 2022,
+    "releaseDate": "2022-03-09",
     "genre": [
       "Horreur",
       "Simulation",
@@ -5569,6 +5709,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "buckshot-roulette",
     "title": "Buckshot Roulette",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-04",
     "genre": [
       "Horreur",
       "Stratégie",
@@ -5611,6 +5752,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "oxenfree",
     "title": "Oxenfree",
     "releaseYear": 2016,
+    "releaseDate": "2016-01-14",
     "genre": [
       "Aventure",
       "Mystère",
@@ -5651,6 +5793,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "night-in-the-woods",
     "title": "Night in the Woods",
     "releaseYear": 2017,
+    "releaseDate": "2017-05-04",
     "genre": [
       "Aventure",
       "Narratif",
@@ -5691,6 +5834,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "far-lone-sails",
     "title": "FAR: Lone Sails",
     "releaseYear": 2018,
+    "releaseDate": "2018-05-17",
     "genre": [
       "Atmosphérique",
       "Aventure",
@@ -5730,6 +5874,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "planet-of-lana",
     "title": "Planet of Lana",
     "releaseYear": 2023,
+    "releaseDate": "2023-05-23",
     "genre": [
       "Platformer",
       "Aventure",
@@ -5770,6 +5915,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-stanley-parable-ultra-deluxe",
     "title": "The Stanley Parable: Ultra Deluxe",
     "releaseYear": 2022,
+    "releaseDate": "2022-04-27",
     "genre": [
       "Narratif",
       "Comédie",
@@ -5809,6 +5955,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "teardown",
     "title": "Teardown",
     "releaseYear": 2022,
+    "releaseDate": "2022-04-21",
     "genre": [
       "Physique",
       "Destruction",
@@ -5849,6 +5996,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "slay-the-spire-2",
     "title": "Slay the Spire 2",
     "releaseYear": 2026,
+    "releaseDate": "2026-03-05",
     "genre": [
       "Stratégie",
       "Roguelike",
@@ -5888,6 +6036,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "iron-nest-heavy-turret-simulator",
     "title": "IRON NEST: Heavy Turret Simulator",
     "releaseYear": 2026,
+    "releaseDate": "2026-08-06",
     "genre": [
       "Action",
       "Simulation",
@@ -5929,6 +6078,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "project-zomboid",
     "title": "Project Zomboid",
     "releaseYear": 2013,
+    "releaseDate": "2013-11-08",
     "genre": [
       "Survie",
       "RPG",
@@ -5970,6 +6120,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "igtap-an-incremental-game-that-s-also-a-platformer",
     "title": "IGTAP: an Incremental Game That's Also a Platformer",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-21",
     "genre": [
       "Incrémental",
       "Platformer",
@@ -6010,6 +6161,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "holocure",
     "title": "HoloCure - Save the Fans!",
     "releaseYear": 2023,
+    "releaseDate": "2023-08-16",
     "genre": [
       "Auto-Shooter",
       "Roguelike",
@@ -6052,6 +6204,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "doki-doki-literature-club",
     "title": "Doki Doki Literature Club!",
     "releaseYear": 2017,
+    "releaseDate": "2017-10-06",
     "genre": [
       "Visual Novel",
       "Psychologique",
@@ -6093,6 +6246,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "grimms-hollow",
     "title": "Grimm's Hollow",
     "releaseYear": 2019,
+    "releaseDate": "2019-10-30",
     "genre": [
       "RPG",
       "Aventure",
@@ -6134,6 +6288,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-looker",
     "title": "The Looker",
     "releaseYear": 2022,
+    "releaseDate": "2022-06-17",
     "genre": [
       "Puzzle",
       "Comédie",
@@ -6174,6 +6329,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "cry-of-fear",
     "title": "Cry of Fear",
     "releaseYear": 2013,
+    "releaseDate": "2013-04-25",
     "genre": [
       "Horreur",
       "Survie",
@@ -6214,6 +6370,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "muck",
     "title": "Muck",
     "releaseYear": 2021,
+    "releaseDate": "2021-06-05",
     "genre": [
       "Survie",
       "Roguelike",
@@ -6256,6 +6413,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "factorio",
     "title": "Factorio",
     "releaseYear": 2020,
+    "releaseDate": "2020-08-14",
     "genre": [
       "Automatisation",
       "Gestion",
@@ -6296,6 +6454,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rimworld",
     "title": "RimWorld",
     "releaseYear": 2018,
+    "releaseDate": "2018-10-17",
     "genre": [
       "Colony Sim",
       "Gestion",
@@ -6336,6 +6495,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "cookie-clicker",
     "title": "Cookie Clicker",
     "releaseYear": 2021,
+    "releaseDate": "2021-09-01",
     "genre": [
       "Idle / Clicker",
       "Incrémental",
@@ -6375,6 +6535,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "townscaper",
     "title": "Townscaper",
     "releaseYear": 2021,
+    "releaseDate": "2021-08-26",
     "genre": [
       "City Builder",
       "Méditatif",
@@ -6415,6 +6576,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "shapez",
     "title": "shapez",
     "releaseYear": 2020,
+    "releaseDate": "2020-06-07",
     "genre": [
       "Automatisation",
       "Puzzle",
@@ -6455,6 +6617,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rusty-s-retirement",
     "title": "Rusty's Retirement",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-26",
     "genre": [
       "Idle / Clicker",
       "Farming",
@@ -6495,6 +6658,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "frostpunk",
     "title": "Frostpunk",
     "releaseYear": 2018,
+    "releaseDate": "2018-04-24",
     "genre": [
       "City Builder",
       "Survie",
@@ -6535,6 +6699,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "shadows-of-doubt",
     "title": "Shadows of Doubt",
     "releaseYear": 2024,
+    "releaseDate": "2024-09-26",
     "genre": [
       "Immersive Sim",
       "Enquête",
@@ -6575,6 +6740,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "duck-game",
     "title": "Duck Game",
     "releaseYear": 2015,
+    "releaseDate": "2015-06-04",
     "genre": [
       "Party Game",
       "Action",
@@ -6614,6 +6780,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "return-to-monkey-island",
     "title": "Return to Monkey Island",
     "releaseYear": 2022,
+    "releaseDate": "2022-09-19",
     "genre": [
       "Point & Click",
       "Aventure",
@@ -6654,6 +6821,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "minit",
     "title": "Minit",
     "releaseYear": 2018,
+    "releaseDate": "2018-04-03",
     "genre": [
       "Aventure",
       "Puzzle",
@@ -6696,6 +6864,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "anodyne",
     "title": "Anodyne",
     "releaseYear": 2013,
+    "releaseDate": "2013-03-22",
     "genre": [
       "Aventure",
       "Rétro",
@@ -6738,6 +6907,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "frog-detective-the-haunted-island",
     "title": "Frog Detective 1: The Haunted Island",
     "releaseYear": 2018,
+    "releaseDate": "2018-11-22",
     "genre": [
       "Enquête",
       "Comédie",
@@ -6780,6 +6950,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "canabalt",
     "title": "Canabalt",
     "releaseYear": 2015,
+    "releaseDate": "2015-04-30",
     "genre": [
       "Runner",
       "Action",
@@ -6822,6 +6993,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "a-monsters-expedition",
     "title": "A Monster's Expedition",
     "releaseYear": 2020,
+    "releaseDate": "2020-09-10",
     "genre": [
       "Puzzle",
       "Cozy",
@@ -6864,6 +7036,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "later-alligator",
     "title": "Later Alligator",
     "releaseYear": 2019,
+    "releaseDate": "2019-09-18",
     "genre": [
       "Point & Click",
       "Comédie",
@@ -6906,6 +7079,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "bugarden",
     "title": "BuGarden",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-21",
     "genre": [
       "Simulation",
       "Cozy",
@@ -6947,6 +7121,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "celeste-classic-pico8",
     "title": "Celeste Classic (PICO-8)",
     "releaseYear": 2015,
+    "releaseDate": "2015-08-21",
     "genre": [
       "Platformer",
       "Action",
@@ -6989,6 +7164,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "adventures-with-anxiety",
     "title": "Adventures With Anxiety!",
     "releaseYear": 2019,
+    "releaseDate": "2019-10-21",
     "genre": [
       "Narratif",
       "Psychologique",
@@ -7031,6 +7207,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "our-life-beginnings-and-always",
     "title": "Our Life: Beginnings & Always",
     "releaseYear": 2020,
+    "releaseDate": "2020-11-16",
     "genre": [
       "Narratif",
       "Visual Novel",
@@ -7073,6 +7250,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "a-date-with-death",
     "title": "A Date with Death",
     "releaseYear": 2023,
+    "releaseDate": "2023-12-07",
     "genre": [
       "Narratif",
       "Visual Novel",
@@ -7115,6 +7293,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "blooming-panic",
     "title": "Blooming Panic",
     "releaseYear": 2021,
+    "releaseDate": "2021-09-19",
     "genre": [
       "Narratif",
       "Simulation",
@@ -7156,6 +7335,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "owlboy",
     "title": "Owlboy",
     "releaseYear": 2016,
+    "releaseDate": "2016-11-01",
     "genre": [
       "Aventure",
       "Platformer",
@@ -7195,6 +7375,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "happy-wheels",
     "title": "Happy Wheels",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-21",
     "genre": [
       "Physique",
       "Platformer",
@@ -7235,6 +7416,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "beat-saber",
     "title": "Beat Saber",
     "releaseYear": 2019,
+    "releaseDate": "2019-05-21",
     "genre": [
       "Rythme",
       "Action",
@@ -7275,6 +7457,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "graveyard-keeper",
     "title": "Graveyard Keeper",
     "releaseYear": 2018,
+    "releaseDate": "2018-08-15",
     "genre": [
       "Gestion",
       "RPG",
@@ -7316,6 +7499,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "drapline",
     "title": "DRAPLINE",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-23",
     "genre": [
       "Aventure",
       "RPG",
@@ -7352,6 +7536,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "stick-it-to-the-stickman",
     "title": "Stick It to the Stickman",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-23",
     "genre": [
       "Beat them all",
       "Roguelite",
@@ -7389,6 +7574,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "phasmophobia",
     "title": "Phasmophobia",
     "releaseYear": 2020,
+    "releaseDate": "2020-09-18",
     "genre": [
       "Action"
     ],
@@ -7422,6 +7608,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "v-rising",
     "title": "V Rising",
     "releaseYear": 2024,
+    "releaseDate": "2024-05-08",
     "genre": [
       "Action",
       "Aventure",
@@ -7457,6 +7644,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "restory-chill-electronics-repairs",
     "title": "ReStory: Chill Electronics Repairs",
     "releaseYear": 2024,
+    "releaseDate": "2026-08-06",
     "genre": [
       "Simulation"
     ],
@@ -7490,6 +7678,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dungeon-bodega-simulator",
     "title": "Dungeon Bodega Simulator",
     "releaseYear": 2024,
+    "releaseDate": "2026-03-23",
     "genre": [
       "Simulation"
     ],
@@ -7523,6 +7712,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dont-sleep-with-the-fishes",
     "title": "Don't Sleep With The Fishes",
     "releaseYear": 2026,
+    "releaseDate": "2026-06-26",
     "genre": [
       "Aventure"
     ],
@@ -7556,6 +7746,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "papers-please",
     "title": "Papers, Please",
     "releaseYear": 2013,
+    "releaseDate": "2013-08-08",
     "genre": [
       "Aventure"
     ],
@@ -7590,6 +7781,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "content-warning",
     "title": "Content Warning",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-01",
     "genre": [
       "Action",
       "Aventure"
@@ -7624,6 +7816,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "tcg-card-shop-simulator",
     "title": "TCG Card Shop Simulator",
     "releaseYear": 2026,
+    "releaseDate": "2026-09-14",
     "genre": [
       "Simulation"
     ],
@@ -7657,6 +7850,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "liars-bar",
     "title": "Liar's Bar",
     "releaseYear": 2024,
+    "releaseDate": "2024-10-02",
     "genre": [
       "Simulation",
       "Stratégie"
@@ -7691,6 +7885,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "webfishing",
     "title": "WEBFISHING",
     "releaseYear": 2024,
+    "releaseDate": "2024-10-11",
     "genre": [
       "Massivement multijoueur"
     ],
@@ -7724,6 +7919,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "tiny-glade",
     "title": "Tiny Glade",
     "releaseYear": 2024,
+    "releaseDate": "2024-09-23",
     "genre": [
       "Occasionnel",
       "Simulation"
@@ -7758,6 +7954,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "deep-rock-galactic",
     "title": "Deep Rock Galactic",
     "releaseYear": 2024,
+    "releaseDate": "2020-05-13",
     "genre": [
       "Action"
     ],
@@ -7792,6 +7989,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "raft",
     "title": "Raft",
     "releaseYear": 2022,
+    "releaseDate": "2022-06-20",
     "genre": [
       "Aventure",
       "Simulation"
@@ -7826,6 +8024,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dont-starve-together",
     "title": "Don't Starve Together",
     "releaseYear": 2016,
+    "releaseDate": "2016-04-21",
     "genre": [
       "Action",
       "Aventure",
@@ -7864,6 +8063,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "noita",
     "title": "Noita",
     "releaseYear": 2020,
+    "releaseDate": "2020-10-15",
     "genre": [
       "Action",
       "Aventure",
@@ -7901,6 +8101,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "satisfactory",
     "title": "Satisfactory",
     "releaseYear": 2024,
+    "releaseDate": "2024-09-10",
     "genre": [
       "Aventure",
       "Simulation",
@@ -7936,6 +8137,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "blasphemous-2",
     "title": "Blasphemous 2",
     "releaseYear": 2023,
+    "releaseDate": "2023-08-24",
     "genre": [
       "Action",
       "Aventure"
@@ -7971,6 +8173,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rogue-legacy-2",
     "title": "Rogue Legacy 2",
     "releaseYear": 2022,
+    "releaseDate": "2022-04-28",
     "genre": [
       "Action",
       "Aventure",
@@ -8007,6 +8210,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-planet-crafter",
     "title": "The Planet Crafter",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-10",
     "genre": [
       "Aventure",
       "Survie"
@@ -8041,6 +8245,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "halls-of-torment",
     "title": "Halls of Torment",
     "releaseYear": 2024,
+    "releaseDate": "2024-09-24",
     "genre": [
       "Action",
       "RPG",
@@ -8078,6 +8283,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "backpack-battles",
     "title": "Backpack Battles",
     "releaseYear": 2025,
+    "releaseDate": "2025-06-13",
     "genre": [
       "Stratégie"
     ],
@@ -8111,6 +8317,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "untitled-goose-game",
     "title": "Untitled Goose Game",
     "releaseYear": 2020,
+    "releaseDate": "2020-09-23",
     "genre": [
       "Action"
     ],
@@ -8145,6 +8352,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "trombone-champ",
     "title": "Trombone Champ",
     "releaseYear": 2024,
+    "releaseDate": "2022-09-15",
     "genre": [
       "Aventure"
     ],
@@ -8178,6 +8386,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "patricks-parabox",
     "title": "Patrick's Parabox",
     "releaseYear": 2022,
+    "releaseDate": "2022-03-29",
     "genre": [
       "Occasionnel",
       "Stratégie",
@@ -8213,6 +8422,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "risk-of-rain-returns",
     "title": "Risk of Rain Returns",
     "releaseYear": 2023,
+    "releaseDate": "2023-11-08",
     "genre": [
       "Action",
       "Roguelike"
@@ -8248,6 +8458,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-cosmic-wheel-sisterhood",
     "title": "The Cosmic Wheel Sisterhood",
     "releaseYear": 2023,
+    "releaseDate": "2023-08-16",
     "genre": [
       "Aventure"
     ],
@@ -8282,6 +8493,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ender-lilies-quietus-of-the-knights",
     "title": "ENDER LILIES: Quietus of the Knights",
     "releaseYear": 2021,
+    "releaseDate": "2021-06-21",
     "genre": [
       "Action",
       "RPG"
@@ -8317,6 +8529,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "viewfinder",
     "title": "Viewfinder",
     "releaseYear": 2023,
+    "releaseDate": "2023-07-18",
     "genre": [
       "Aventure"
     ],
@@ -8350,6 +8563,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "doki-doki-literature-club-plus",
     "title": "Doki Doki Literature Club Plus!",
     "releaseYear": 2021,
+    "releaseDate": "2021-06-30",
     "genre": [
       "Occasionnel",
       "Horreur"
@@ -8385,6 +8599,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-forest",
     "title": "The Forest",
     "releaseYear": 2018,
+    "releaseDate": "2018-04-30",
     "genre": [
       "Survie",
       "Horreur",
@@ -8420,6 +8635,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "garrys-mod",
     "title": "Garry's Mod",
     "releaseYear": 2006,
+    "releaseDate": "2006-11-29",
     "genre": [
       "Bac à sable",
       "Simulation",
@@ -8455,6 +8671,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "human-fall-flat",
     "title": "Human Fall Flat",
     "releaseYear": 2016,
+    "releaseDate": "2016-07-22",
     "genre": [
       "Plateforme",
       "Physique",
@@ -8490,6 +8707,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "totally-accurate-battle-simulator",
     "title": "Totally Accurate Battle Simulator",
     "releaseYear": 2021,
+    "releaseDate": "2021-04-01",
     "genre": [
       "Stratégie",
       "Simulation",
@@ -8525,6 +8743,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "outlast",
     "title": "Outlast",
     "releaseYear": 2013,
+    "releaseDate": "2013-09-04",
     "genre": [
       "Horreur",
       "Survie",
@@ -8560,6 +8779,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "astroneer",
     "title": "ASTRONEER",
     "releaseYear": 2019,
+    "releaseDate": "2019-02-05",
     "genre": [
       "Exploration",
       "Survie",
@@ -8595,6 +8815,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "gunfire-reborn",
     "title": "Gunfire Reborn",
     "releaseYear": 2021,
+    "releaseDate": "2021-11-17",
     "genre": [
       "Action",
       "Roguelite",
@@ -8630,6 +8851,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "stick-fight-the-game",
     "title": "Stick Fight: The Game",
     "releaseYear": 2017,
+    "releaseDate": "2017-09-28",
     "genre": [
       "Action",
       "Physique",
@@ -8665,6 +8887,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dyson-sphere-program",
     "title": "Dyson Sphere Program",
     "releaseYear": 2021,
+    "releaseDate": "2021-01-20",
     "genre": [
       "Gestion",
       "Automatisation",
@@ -8700,6 +8923,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "this-war-of-mine",
     "title": "This War of Mine",
     "releaseYear": 2014,
+    "releaseDate": "2014-11-14",
     "genre": [
       "Survie",
       "Gestion",
@@ -8735,6 +8959,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hotline-miami-2-wrong-number",
     "title": "Hotline Miami 2: Wrong Number",
     "releaseYear": 2015,
+    "releaseDate": "2015-03-10",
     "genre": [
       "Action",
       "Rétro",
@@ -8770,6 +8995,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "a-dance-of-fire-and-ice",
     "title": "A Dance of Fire and Ice",
     "releaseYear": 2019,
+    "releaseDate": "2019-01-24",
     "genre": [
       "Rythme",
       "Musique",
@@ -8805,6 +9031,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "oneshot",
     "title": "OneShot",
     "releaseYear": 2016,
+    "releaseDate": "2016-12-08",
     "genre": [
       "Aventure",
       "Puzzle",
@@ -8840,6 +9067,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "overcooked-2",
     "title": "Overcooked! 2",
     "releaseYear": 2018,
+    "releaseDate": "2018-08-07",
     "genre": [
       "Coopératif",
       "Gestion",
@@ -8875,6 +9103,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "needy-girl-overdose",
     "title": "NEEDY GIRL OVERDOSE",
     "releaseYear": 2022,
+    "releaseDate": "2022-01-21",
     "genre": [
       "Simulation",
       "Psychologique",
@@ -8910,6 +9139,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "skul-the-hero-slayer",
     "title": "Skul: The Hero Slayer",
     "releaseYear": 2021,
+    "releaseDate": "2021-01-20",
     "genre": [
       "Roguelike",
       "Action",
@@ -8945,6 +9175,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "chained-together",
     "title": "Chained Together",
     "releaseYear": 2024,
+    "releaseDate": "2024-06-19",
     "genre": [
       "Plateforme",
       "Coopératif",
@@ -8980,6 +9211,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "slime-rancher-2",
     "title": "Slime Rancher 2",
     "releaseYear": 2025,
+    "releaseDate": "2025-09-23",
     "genre": [
       "Cozy",
       "Exploration",
@@ -9015,6 +9247,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "medieval-dynasty",
     "title": "Medieval Dynasty",
     "releaseYear": 2021,
+    "releaseDate": "2021-09-23",
     "genre": [
       "Survie",
       "Gestion",
@@ -9050,6 +9283,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "abiotic-factor",
     "title": "Abiotic Factor",
     "releaseYear": 2025,
+    "releaseDate": "2025-07-22",
     "genre": [
       "Survie",
       "Science-fiction",
@@ -9085,6 +9319,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ultimate-chicken-horse",
     "title": "Ultimate Chicken Horse",
     "releaseYear": 2016,
+    "releaseDate": "2016-03-04",
     "genre": [
       "Plateforme",
       "Fête",
@@ -9120,6 +9355,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "va-11-hall-a",
     "title": "VA-11 Hall-A: Cyberpunk Bartender Action",
     "releaseYear": 2016,
+    "releaseDate": "2016-06-21",
     "genre": [
       "Narratif",
       "Visual Novel",
@@ -9155,6 +9391,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "timberborn",
     "title": "Timberborn",
     "releaseYear": 2026,
+    "releaseDate": "2026-03-12",
     "genre": [
       "Gestion",
       "Colonie",
@@ -9190,6 +9427,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "banished",
     "title": "Banished",
     "releaseYear": 2014,
+    "releaseDate": "2014-02-18",
     "genre": [
       "Gestion",
       "Survie",
@@ -9225,6 +9463,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rounds",
     "title": "ROUNDS",
     "releaseYear": 2021,
+    "releaseDate": "2021-04-01",
     "genre": [
       "Action",
       "Multijoueur",
@@ -9260,6 +9499,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "against-the-storm",
     "title": "Against the Storm",
     "releaseYear": 2023,
+    "releaseDate": "2023-12-08",
     "genre": [
       "Gestion",
       "Roguelite",
@@ -9295,6 +9535,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "carrion",
     "title": "CARRION",
     "releaseYear": 2020,
+    "releaseDate": "2020-07-23",
     "genre": [
       "Horreur",
       "Metroidvania",
@@ -9330,6 +9571,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "crab-champions",
     "title": "Crab Champions",
     "releaseYear": 2023,
+    "releaseDate": "2023-04-01",
     "genre": [
       "Roguelike",
       "Action",
@@ -9365,6 +9607,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "bloodstained-ritual-of-the-night",
     "title": "Bloodstained: Ritual of the Night",
     "releaseYear": 2019,
+    "releaseDate": "2019-06-18",
     "genre": [
       "Metroidvania",
       "Action",
@@ -9400,6 +9643,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dwarf-fortress",
     "title": "Dwarf Fortress",
     "releaseYear": 2022,
+    "releaseDate": "2022-12-06",
     "genre": [
       "Simulation",
       "Colonie",
@@ -9435,6 +9679,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "my-friend-pedro",
     "title": "My Friend Pedro",
     "releaseYear": 2019,
+    "releaseDate": "2019-06-20",
     "genre": [
       "Action",
       "Plateforme",
@@ -9470,6 +9715,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "superliminal",
     "title": "Superliminal",
     "releaseYear": 2020,
+    "releaseDate": "2020-11-05",
     "genre": [
       "Puzzle",
       "Aventure",
@@ -9505,6 +9751,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "roboquest",
     "title": "Roboquest",
     "releaseYear": 2023,
+    "releaseDate": "2023-11-07",
     "genre": [
       "FPS",
       "Roguelite",
@@ -9540,6 +9787,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "fran-bow",
     "title": "Fran Bow",
     "releaseYear": 2015,
+    "releaseDate": "2015-08-27",
     "genre": [
       "Point & Click",
       "Horreur",
@@ -9575,6 +9823,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "darkwood",
     "title": "Darkwood",
     "releaseYear": 2017,
+    "releaseDate": "2017-08-17",
     "genre": [
       "Horreur",
       "Survie",
@@ -9610,6 +9859,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "speedrunners",
     "title": "SpeedRunners",
     "releaseYear": 2016,
+    "releaseDate": "2016-04-19",
     "genre": [
       "Plateforme",
       "Course",
@@ -9645,6 +9895,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "amnesia-the-dark-descent",
     "title": "Amnesia: The Dark Descent",
     "releaseYear": 2010,
+    "releaseDate": "2010-09-08",
     "genre": [
       "Action",
       "Aventure",
@@ -9680,6 +9931,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-blackwell-legacy",
     "title": "The Blackwell Legacy",
     "releaseYear": 2012,
+    "releaseDate": "2012-01-13",
     "genre": [
       "Aventure"
     ],
@@ -9713,6 +9965,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "nidhogg",
     "title": "Nidhogg",
     "releaseYear": 2014,
+    "releaseDate": "2014-01-13",
     "genre": [
       "Action",
       "Sport"
@@ -9747,6 +10000,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "guacamelee-gold-edition",
     "title": "Guacamelee! Gold Edition",
     "releaseYear": 2013,
+    "releaseDate": "2013-08-08",
     "genre": [
       "Action",
       "Aventure",
@@ -9783,6 +10037,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "antichamber",
     "title": "Antichamber",
     "releaseYear": 2013,
+    "releaseDate": "2013-01-31",
     "genre": [
       "Aventure"
     ],
@@ -9817,6 +10072,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "nuclear-throne",
     "title": "Nuclear Throne",
     "releaseYear": 2015,
+    "releaseDate": "2015-12-05",
     "genre": [
       "Action",
       "RPG",
@@ -9852,6 +10108,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "lovers-in-a-dangerous-spacetime",
     "title": "Lovers in a Dangerous Spacetime",
     "releaseYear": 2015,
+    "releaseDate": "2015-09-09",
     "genre": [
       "Action",
       "Simulation",
@@ -9887,6 +10144,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "steamworld-dig",
     "title": "SteamWorld Dig",
     "releaseYear": 2013,
+    "releaseDate": "2013-12-05",
     "genre": [
       "Action",
       "Aventure",
@@ -9923,6 +10181,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "death-road-to-canada",
     "title": "Death Road to Canada",
     "releaseYear": 2016,
+    "releaseDate": "2016-07-21",
     "genre": [
       "Action",
       "RPG"
@@ -9957,6 +10216,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "salt-and-sanctuary",
     "title": "Salt and Sanctuary",
     "releaseYear": 2016,
+    "releaseDate": "2016-05-17",
     "genre": [
       "Action",
       "RPG"
@@ -9991,6 +10251,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "gang-beasts",
     "title": "Gang Beasts",
     "releaseYear": 2017,
+    "releaseDate": "2017-12-12",
     "genre": [
       "Action",
       "Aventure",
@@ -10026,6 +10287,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "children-of-morta",
     "title": "Children of Morta",
     "releaseYear": 2019,
+    "releaseDate": "2019-09-03",
     "genre": [
       "Action",
       "Aventure",
@@ -10061,6 +10323,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "mark-of-the-ninja",
     "title": "Mark of the Ninja: Remastered",
     "releaseYear": 2018,
+    "releaseDate": "2018-10-09",
     "genre": [
       "Action",
       "Aventure"
@@ -10095,6 +10358,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "dust-an-elysian-tail",
     "title": "Dust: An Elysian Tail",
     "releaseYear": 2013,
+    "releaseDate": "2013-05-24",
     "genre": [
       "Action",
       "Aventure",
@@ -10130,6 +10394,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "risk-of-rain-2013",
     "title": "Risk of Rain (2013)",
     "releaseYear": 2013,
+    "releaseDate": "2013-11-08",
     "genre": [
       "Action",
       "RPG",
@@ -10166,6 +10431,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "towerfall-ascension",
     "title": "TowerFall Ascension",
     "releaseYear": 2014,
+    "releaseDate": "2014-03-11",
     "genre": [
       "Action"
     ],
@@ -10199,6 +10465,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rust",
     "title": "Rust",
     "releaseYear": 2018,
+    "releaseDate": "2018-02-08",
     "genre": [
       "Action",
       "Aventure",
@@ -10235,6 +10502,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "sunless-sea",
     "title": "SUNLESS SEA",
     "releaseYear": 2015,
+    "releaseDate": "2015-02-06",
     "genre": [
       "Aventure",
       "RPG"
@@ -10269,6 +10537,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "caves-of-qud",
     "title": "Caves of Qud",
     "releaseYear": 2024,
+    "releaseDate": "2024-12-05",
     "genre": [
       "Aventure",
       "RPG",
@@ -10305,6 +10574,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "unavowed",
     "title": "Unavowed",
     "releaseYear": 2018,
+    "releaseDate": "2018-08-08",
     "genre": [
       "Aventure",
       "RPG"
@@ -10339,6 +10609,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "finding-paradise",
     "title": "Finding Paradise",
     "releaseYear": 2017,
+    "releaseDate": "2017-12-14",
     "genre": [
       "Narratif",
       "Aventure",
@@ -10374,6 +10645,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "keep-talking-and-nobody-explodes",
     "title": "Keep Talking and Nobody Explodes",
     "releaseYear": 2015,
+    "releaseDate": "2015-10-08",
     "genre": [
       "Co-op"
     ],
@@ -10407,6 +10679,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ghost-song",
     "title": "Ghost Song",
     "releaseYear": 2022,
+    "releaseDate": "2022-11-03",
     "genre": [
       "Action",
       "Aventure",
@@ -10442,6 +10715,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "thumper",
     "title": "Thumper",
     "releaseYear": 2016,
+    "releaseDate": "2016-10-10",
     "genre": [
       "Action"
     ],
@@ -10475,6 +10749,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "downwell",
     "title": "Downwell",
     "releaseYear": 2015,
+    "releaseDate": "2015-10-15",
     "genre": [
       "Action",
       "Aventure"
@@ -10509,6 +10784,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "timespinner",
     "title": "Timespinner",
     "releaseYear": 2018,
+    "releaseDate": "2018-09-25",
     "genre": [
       "Action",
       "Aventure",
@@ -10546,6 +10822,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "80-days",
     "title": "80 Days",
     "releaseYear": 2015,
+    "releaseDate": "2015-09-28",
     "genre": [
       "Aventure",
       "Stratégie"
@@ -10580,6 +10857,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "aviary-attorney",
     "title": "Aviary Attorney",
     "releaseYear": 2015,
+    "releaseDate": "2015-12-21",
     "genre": [
       "Aventure"
     ],
@@ -10613,6 +10891,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "rabi-ribi",
     "title": "Rabi-Ribi",
     "releaseYear": 2016,
+    "releaseDate": "2016-01-28",
     "genre": [
       "Action",
       "Aventure"
@@ -10647,6 +10926,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "devil-daggers",
     "title": "Devil Daggers",
     "releaseYear": 2016,
+    "releaseDate": "2016-02-18",
     "genre": [
       "Action"
     ],
@@ -10680,6 +10960,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "lisa-the-painful",
     "title": "LISA: The Painful",
     "releaseYear": 2014,
+    "releaseDate": "2014-12-15",
     "genre": [
       "Aventure",
       "RPG"
@@ -10714,6 +10995,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "momodora-reverie-under-the-moonlight",
     "title": "Momodora: Reverie Under The Moonlight",
     "releaseYear": 2016,
+    "releaseDate": "2016-03-04",
     "genre": [
       "Action",
       "Aventure"
@@ -10748,6 +11030,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-count-lucanor",
     "title": "The Count Lucanor",
     "releaseYear": 2016,
+    "releaseDate": "2016-03-03",
     "genre": [
       "Aventure",
       "RPG"
@@ -10782,6 +11065,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "wizard-of-legend",
     "title": "Wizard of Legend",
     "releaseYear": 2018,
+    "releaseDate": "2018-05-15",
     "genre": [
       "Action",
       "Aventure"
@@ -10816,6 +11100,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ape-out",
     "title": "APE OUT",
     "releaseYear": 2019,
+    "releaseDate": "2019-02-28",
     "genre": [
       "Action",
       "Survie"
@@ -10850,6 +11135,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "overcooked",
     "title": "Overcooked",
     "releaseYear": 2016,
+    "releaseDate": "2016-08-03",
     "genre": [
       "Action",
       "Simulation",
@@ -10885,6 +11171,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "manifold-garden",
     "title": "Manifold Garden",
     "releaseYear": 2020,
+    "releaseDate": "2020-10-20",
     "genre": [
       "Aventure",
       "Puzzle"
@@ -10919,6 +11206,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "kingdom-new-lands",
     "title": "Kingdom: New Lands",
     "releaseYear": 2016,
+    "releaseDate": "2016-08-09",
     "genre": [
       "Simulation",
       "Stratégie"
@@ -10953,6 +11241,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "the-hex",
     "title": "The Hex",
     "releaseYear": 2018,
+    "releaseDate": "2018-10-16",
     "genre": [
       "Aventure",
       "Indépendant"
@@ -10987,6 +11276,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "streets-of-rogue",
     "title": "Streets of Rogue",
     "releaseYear": 2019,
+    "releaseDate": "2019-07-12",
     "genre": [
       "Action",
       "Aventure",
@@ -11022,6 +11312,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "synthetik-legion-rising",
     "title": "SYNTHETIK: Legion Rising",
     "releaseYear": 2018,
+    "releaseDate": "2018-03-15",
     "genre": [
       "Action"
     ],
@@ -11055,6 +11346,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "wandersong",
     "title": "Wandersong",
     "releaseYear": 2018,
+    "releaseDate": "2018-09-27",
     "genre": [
       "Aventure",
       "Puzzle"
@@ -11089,6 +11381,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "guacamelee-2",
     "title": "Guacamelee! 2",
     "releaseYear": 2018,
+    "releaseDate": "2018-08-21",
     "genre": [
       "Action",
       "Aventure"
@@ -11123,6 +11416,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "sally-face-episode-one",
     "title": "Sally Face - Episode One",
     "releaseYear": 2016,
+    "releaseDate": "2016-12-14",
     "genre": [
       "Aventure"
     ],
@@ -11156,6 +11450,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "detention",
     "title": "Detention",
     "releaseYear": 2017,
+    "releaseDate": "2017-01-12",
     "genre": [
       "Aventure"
     ],
@@ -11189,6 +11484,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "opus-magnum",
     "title": "Opus Magnum",
     "releaseYear": 2017,
+    "releaseDate": "2017-12-07",
     "genre": [
       "Simulation",
       "Puzzle"
@@ -11223,6 +11519,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "ion-fury",
     "title": "Ion Fury",
     "releaseYear": 2019,
+    "releaseDate": "2019-08-15",
     "genre": [
       "Action"
     ],
@@ -11256,6 +11553,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "steamworld-dig-2",
     "title": "SteamWorld Dig 2",
     "releaseYear": 2017,
+    "releaseDate": "2017-09-22",
     "genre": [
       "Action",
       "Aventure",
@@ -11292,6 +11590,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "wargroove",
     "title": "Wargroove",
     "releaseYear": 2019,
+    "releaseDate": "2019-02-01",
     "genre": [
       "Stratégie",
       "Deckbuilder"
@@ -11327,6 +11626,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "my-time-at-portia",
     "title": "My Time at Portia",
     "releaseYear": 2019,
+    "releaseDate": "2019-01-15",
     "genre": [
       "Aventure",
       "RPG",
@@ -11362,6 +11662,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "heroes-of-hammerwatch",
     "title": "Heroes of Hammerwatch",
     "releaseYear": 2018,
+    "releaseDate": "2018-03-01",
     "genre": [
       "Action",
       "RPG"
@@ -11396,6 +11697,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "foundation",
     "title": "Foundation",
     "releaseYear": 2025,
+    "releaseDate": "2025-01-31",
     "genre": [
       "Simulation",
       "Stratégie"
@@ -11430,6 +11732,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "donut-county",
     "title": "Donut County",
     "releaseYear": 2018,
+    "releaseDate": "2018-08-28",
     "genre": [
       "Aventure"
     ],
@@ -11463,6 +11766,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "little-misfortune",
     "title": "Little Misfortune",
     "releaseYear": 2019,
+    "releaseDate": "2019-09-18",
     "genre": [
       "Aventure"
     ],
@@ -11497,6 +11801,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "wytchwood",
     "title": "Wytchwood",
     "releaseYear": 2021,
+    "releaseDate": "2021-12-09",
     "genre": [
       "Aventure",
       "RPG"
@@ -11531,6 +11836,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "heaven-s-vault",
     "title": "Heaven's Vault",
     "releaseYear": 2019,
+    "releaseDate": "2019-04-16",
     "genre": [
       "Aventure",
       "Puzzle"
@@ -11565,6 +11871,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "monster-sanctuary",
     "title": "Monster Sanctuary",
     "releaseYear": 2020,
+    "releaseDate": "2020-12-08",
     "genre": [
       "Action",
       "Aventure",
@@ -11601,6 +11908,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "la-mulana-2",
     "title": "La-Mulana 2",
     "releaseYear": 2018,
+    "releaseDate": "2018-07-30",
     "genre": [
       "Action",
       "Aventure"
@@ -11635,6 +11943,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "pummel-party",
     "title": "Pummel Party",
     "releaseYear": 2018,
+    "releaseDate": "2018-09-20",
     "genre": [
       "Action"
     ],
@@ -11668,6 +11977,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "heave-ho",
     "title": "Heave Ho",
     "releaseYear": 2019,
+    "releaseDate": "2019-08-29",
     "genre": [
       "Aventure",
       "Co-op"
@@ -11702,6 +12012,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "coffee-talk",
     "title": "Coffee Talk",
     "releaseYear": 2020,
+    "releaseDate": "2020-01-29",
     "genre": [
       "Aventure"
     ],
@@ -11735,6 +12046,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "gato-roboto",
     "title": "Gato Roboto",
     "releaseYear": 2019,
+    "releaseDate": "2019-05-30",
     "genre": [
       "Action",
       "Aventure"
@@ -11769,6 +12081,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "one-step-from-eden",
     "title": "One Step From Eden",
     "releaseYear": 2020,
+    "releaseDate": "2020-03-26",
     "genre": [
       "Action",
       "Aventure",
@@ -11804,6 +12117,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "boomerang-fu",
     "title": "Boomerang Fu",
     "releaseYear": 2020,
+    "releaseDate": "2020-08-13",
     "genre": [
       "Action"
     ],
@@ -11837,6 +12151,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "book-of-hours",
     "title": "BOOK OF HOURS",
     "releaseYear": 2023,
+    "releaseDate": "2023-08-17",
     "genre": [
       "RPG",
       "Simulation"
@@ -11871,6 +12186,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "unsighted",
     "title": "UNSIGHTED",
     "releaseYear": 2021,
+    "releaseDate": "2021-09-30",
     "genre": [
       "Action",
       "Aventure",
@@ -11906,6 +12222,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "inkbound",
     "title": "Inkbound",
     "releaseYear": 2024,
+    "releaseDate": "2024-04-09",
     "genre": [
       "Action",
       "Massivement multijoueur",
@@ -11942,6 +12259,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "bug-fables-the-everlasting-sapling",
     "title": "Bug Fables: The Everlasting Sapling",
     "releaseYear": 2019,
+    "releaseDate": "2019-11-21",
     "genre": [
       "Action",
       "Aventure",
@@ -11978,6 +12296,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "my-time-at-sandrock",
     "title": "My Time at Sandrock",
     "releaseYear": 2023,
+    "releaseDate": "2023-11-02",
     "genre": [
       "Aventure",
       "RPG",
@@ -12013,6 +12332,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "bonfire-peaks",
     "title": "Bonfire Peaks",
     "releaseYear": 2021,
+    "releaseDate": "2021-09-30",
     "genre": [
       "Puzzle"
     ],
@@ -12046,6 +12366,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "i-was-a-teenage-exocolonist",
     "title": "I Was a Teenage Exocolonist",
     "releaseYear": 2022,
+    "releaseDate": "2022-08-25",
     "genre": [
       "RPG",
       "Simulation",
@@ -12082,6 +12403,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "coral-island",
     "title": "Coral Island",
     "releaseYear": 2023,
+    "releaseDate": "2023-11-14",
     "genre": [
       "Aventure",
       "RPG",
@@ -12118,6 +12440,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "impostor-factory",
     "title": "Impostor Factory",
     "releaseYear": 2021,
+    "releaseDate": "2021-09-30",
     "genre": [
       "Narratif",
       "Aventure",
@@ -12153,6 +12476,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "tainted-grail-conquest",
     "title": "Tainted Grail: Conquest",
     "releaseYear": 2021,
+    "releaseDate": "2021-05-27",
     "genre": [
       "Action",
       "RPG",
@@ -12188,6 +12512,7 @@ export const INDIE_GAMES: Game[] = [
     "id": "hellcard",
     "title": "HELLCARD",
     "releaseYear": 2024,
+    "releaseDate": "2024-02-01",
     "genre": [
       "Aventure",
       "RPG",

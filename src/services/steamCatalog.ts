@@ -12,7 +12,7 @@ export interface SteamCatalogGame extends Game {
 const STORAGE_KEY_CUSTOM_GAMES = 'hoot_custom_imported_steam_games_v1';
 const STORAGE_KEY_SERVER_OVERRIDES = 'hoot_server_overrides_cache_v2';
 const STORAGE_KEY_STEAM_CATALOG = 'hoot_steam_catalog_cache_v2';
-const CURRENT_CATALOG_VERSION = 'v2.0.2';
+const CURRENT_CATALOG_VERSION = 'v2.0.3';
 
 class SteamCatalogService {
   private catalog: SteamCatalogGame[] = [];

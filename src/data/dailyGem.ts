@@ -6,6 +6,7 @@ export const TODAY_DAILY_GEM: Game = {
   "id": "neon-white",
   "title": "Neon White",
   "releaseYear": 2022,
+  "releaseDate": "2022-06-16",
   "genre": [
     "Fast-FPS",
     "Platformer",

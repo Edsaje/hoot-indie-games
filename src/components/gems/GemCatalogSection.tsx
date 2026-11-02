@@ -314,10 +314,18 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
 
     list.sort((a, b) => {
       switch (sortBy) {
-        case 'yearDesc':
-          return b.releaseYear - a.releaseYear;
-        case 'yearAsc':
-          return a.releaseYear - b.releaseYear;
+        case 'yearDesc': {
+          const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+          const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+          if (dateB !== dateA) return dateB.localeCompare(dateA);
+          return a.title.localeCompare(b.title);
+        }
+        case 'yearAsc': {
+          const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+          const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+          if (dateA !== dateB) return dateA.localeCompare(dateB);
+          return a.title.localeCompare(b.title);
+        }
         case 'titleDesc':
           return b.title.localeCompare(a.title);
         case 'titleAsc':
@@ -342,7 +350,10 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
           const discA = storeA ? storeA.discountPercent : 0;
           const discB = storeB ? storeB.discountPercent : 0;
           if (discB !== discA) return discB - discA;
-          return b.releaseYear - a.releaseYear;
+          const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+          const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+          if (dateB !== dateA) return dateB.localeCompare(dateA);
+          return a.title.localeCompare(b.title);
         }
         case 'ratingDesc': {
           const storeA = getStoreData(getAppIdFromSteamUrl(a.steamUrl) || a.steamAppId) || a.steamStoreData;
@@ -443,7 +454,9 @@ export const GemCatalogSection: React.FC<GemCatalogSectionProps> = ({
     setHighlightedGameId(game.id);
 
     const sorted = [...curatedGems].sort((a, b) => {
-      if (b.releaseYear !== a.releaseYear) return b.releaseYear - a.releaseYear;
+      const dateA = a.releaseDate || (a.releaseYear ? `${a.releaseYear}-01-01` : '1970-01-01');
+      const dateB = b.releaseDate || (b.releaseYear ? `${b.releaseYear}-01-01` : '1970-01-01');
+      if (dateB !== dateA) return dateB.localeCompare(dateA);
       return a.title.localeCompare(b.title);
     });
 
