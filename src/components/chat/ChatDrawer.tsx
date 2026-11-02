@@ -115,6 +115,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   const [translatingMsgIds, setTranslatingMsgIds] = useState<Record<string, boolean>>({});
   const [showOriginalMsgIds, setShowOriginalMsgIds] = useState<Record<string, boolean>>({});
   const [manualTranslatedMsgIds, setManualTranslatedMsgIds] = useState<Record<string, boolean>>({});
+  const processedMsgIdsRef = useRef<Set<string>>(new Set());
 
   // Réinitialiser les traductions quand la langue du site change pour adapter immédiatement
   const prevLangRef = useRef(currentLangCode);
@@ -124,6 +125,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
       setTranslations({});
       setShowOriginalMsgIds({});
       setManualTranslatedMsgIds({});
+      processedMsgIdsRef.current.clear();
     }
   }, [currentLangCode]);
 
@@ -131,8 +133,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     if (translatingMsgIds[msg.id] || !msg.text) return;
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: true }));
     soundFx.playClick();
-    const res = await translateChatMessage(msg.text, currentLangCode, msg.channel);
+    const res = await translateChatMessage(msg.text, currentLangCode);
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: false }));
+    processedMsgIdsRef.current.add(`${currentLangCode}:${msg.id}`);
     if (res.success && res.translatedText !== msg.text) {
       setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
       setShowOriginalMsgIds((prev) => ({ ...prev, [msg.id]: false }));
@@ -145,15 +148,57 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     if (!isAutoTranslate || !isOpen || messages.length === 0) return;
     const targetLang = currentLangCode;
 
-    messages.forEach((msg) => {
-      if (msg.isDeleted || !msg.text || translations[msg.id] || translatingMsgIds[msg.id]) return;
-      translateChatMessage(msg.text, targetLang, msg.channel).then((res) => {
-        if (res.success && res.translatedText !== msg.text) {
-          setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
-        }
-      });
+    // Sélectionner les messages non encore traités pour cette langue cible
+    const queue = messages.filter((msg) => {
+      if (msg.isDeleted || !msg.text || !msg.text.trim()) return false;
+      const key = `${targetLang}:${msg.id}`;
+      if (processedMsgIdsRef.current.has(key)) return false;
+      if (translations[msg.id]) return false;
+      return true;
     });
-  }, [isAutoTranslate, isOpen, messages, currentLangCode, translations, translatingMsgIds]);
+
+    if (queue.length === 0) return;
+
+    // Enregistrer immédiatement dans le Set pour bloquer les requêtes concurrentes
+    queue.forEach((msg) => {
+      processedMsgIdsRef.current.add(`${targetLang}:${msg.id}`);
+    });
+
+    let isCancelled = false;
+
+    const processQueue = async () => {
+      const BATCH_SIZE = 4;
+      for (let i = 0; i < queue.length; i += BATCH_SIZE) {
+        if (isCancelled) break;
+        const chunk = queue.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(
+          chunk.map(async (msg) => {
+            const res = await translateChatMessage(msg.text, targetLang);
+            return { id: msg.id, original: msg.text, res };
+          })
+        );
+
+        if (isCancelled) break;
+
+        const batchUpdates: Record<string, string> = {};
+        for (const item of results) {
+          if (item.res.success && item.res.translatedText !== item.original) {
+            batchUpdates[item.id] = item.res.translatedText;
+          }
+        }
+
+        if (Object.keys(batchUpdates).length > 0) {
+          setTranslations((prev) => ({ ...prev, ...batchUpdates }));
+        }
+      }
+    };
+
+    processQueue();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isAutoTranslate, isOpen, messages, currentLangCode]);
 
   // Guide de prévention & anti-hameçonnage
   const [showSecurityGuide, setShowSecurityGuide] = useState(false);
@@ -454,6 +499,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                     localStorage.setItem('hoot_chat_auto_translate', String(next));
                   } catch {
                     // Ignore
+                  }
+                  if (next) {
+                    setShowOriginalMsgIds({});
                   }
                   return next;
                 });
