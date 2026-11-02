@@ -588,8 +588,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "MGDB Studio",
     "publisher": "MGDB Studio",
     "expectedDate": {
-      "fr": "1 nov. 2026",
-      "en": "Nov 1, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {

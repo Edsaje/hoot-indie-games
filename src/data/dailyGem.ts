@@ -1,44 +1,42 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-01";
+export const TODAY_DATE = "2026-11-02";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "dead-cells",
-  "title": "Dead Cells",
-  "releaseYear": 2018,
+  "id": "neon-white",
+  "title": "Neon White",
+  "releaseYear": 2022,
   "genre": [
-    "Roguelite",
-    "Metroidvania",
-    "Action",
-    "Souls-like"
+    "Fast-FPS",
+    "Platformer",
+    "Action"
   ],
   "artStyle": {
-    "fr": "Pixel Art",
-    "en": "Pixel Art"
+    "fr": "3D Stylisée",
+    "en": "Stylized 3D"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Première personne",
+    "en": "First-Person"
   },
-  "developer": "Motion Twin",
-  "steamUrl": "https://store.steampowered.com/app/588650/Dead_Cells/",
+  "developer": "Angel Matrix",
+  "steamUrl": "https://store.steampowered.com/app/1533420/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_ac28000ade40cc2fe5c128f32ac98ba33c008a7a.1920x1080.jpg?t=1779086887",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_7bde51ea6c8f6289e85ea1d8c1c941e1f8bfee91.1920x1080.jpg?t=1779086887",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_e87e72a247918d8493892e035d5e1b4b84470d2f.1920x1080.jpg?t=1779086887",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_a099416b9f3e09d47c42f87667e6ad6f394ba652.1920x1080.jpg?t=1779086887",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_a8b0439ad7750cab1bdec86ecef0daa280e9f93f.1920x1080.jpg?t=1779086887",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/588650/ss_21c61aca6a66745a2abb3f72b93553398fc7fe32.1920x1080.jpg?t=1779086887"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1533420/ss_d8c2c0eb97bc25344f24da92e55b6420ca94c607.1920x1080.jpg?t=1785424399",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1533420/ss_27ea65326988eeeaa504bb8c0d2c892aae894b57.1920x1080.jpg?t=1785424399",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1533420/ss_38fc87620e7706535193143404488e5c10863813.1920x1080.jpg?t=1785424399",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1533420/ss_7ebe34f5d96739a0901619b31b8f5a2a1c43bc50.1920x1080.jpg?t=1785424399",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1533420/ss_ca814762dba95590d9dc0aca6bd1add9de5fe0f6.1920x1080.jpg?t=1785424399"
   ],
   "hints": {
     "tagline": {
-      "fr": "Combattez dans un château labyrinthique en perpétuelle mutation dans ce Roguevania nerveux.",
-      "en": "Fight through an ever-changing labyrinthine island castle in this fast-paced Roguevania.",
-      "es": "Lucha a través de un castillo laberíntico en constante mutación en este frenético Roguevania.",
-      "de": "Kämpfe dich in diesem rasanten Roguevania durch eine sich ständig wandelnde Insellabyrinth-Burg.",
-      "ja": "変化し続ける巨大な城塞迷宮を戦い抜く、ハイテンポなローグヴァニア。",
-      "pt-BR": "Lute por um castelo labiríntico em constante mutação neste frenético Roguevania."
+      "fr": "Exterminez les démons du Paradis à la vitesse de l'éclair à l'aide de cartes d'âmes dans ce speedrunner culte.",
+      "en": "Neon White is a lightning-fast first-person action game about exterminating demons in Heaven.",
+      "es": "Un juego de acción en primera persona frenético donde aniquilas demonios en el Cielo usando cartas de velocidad.",
+      "de": "Jage blitzschnell Dämonen im Paradies mit kartenbasierten Waffen in diesem gefeierten Speedrunner-FPS.",
+      "ja": "天国の悪魔たちを魂のカードで神速のごとく殲滅し、最短ルートを極めるハイスピード・スピードランFPS。",
+      "pt-BR": "Extermine demônios no Paraíso na velocidade da luz usando cartas de almas neste speedrunner frenético."
     },
-    "composer": "Yoann Laulan"
+    "composer": "Machine Girl"
   }
 };

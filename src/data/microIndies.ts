@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 108
+ * Total de pépites sélectionnées : 110
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4526,5 +4526,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxNTUxODQ4LmdpZg==/original/Ic1tES.gif"
     ],
     "dateAdded": "2026-11-01"
+  },
+  {
+    "id": "itch-slice-dice",
+    "title": "Slice & Dice",
+    "developer": "tann",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://tann.itch.io/slice-dice",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$18.00",
+      "en": "$18.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Roguelike dice tactics game",
+      "en": "Roguelike dice tactics game"
+    },
+    "description": {
+      "fr": "Roguelike dice tactics game",
+      "en": "Roguelike dice tactics game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzYyNzEzNTQucG5n/315x250%23c/njndyW.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzYyNzEzNTQucG5n/315x250%23c/njndyW.png"
+    ],
+    "dateAdded": "2026-11-02"
+  },
+  {
+    "id": "itch-hot-wax",
+    "title": "Hot Wax 🔥",
+    "developer": "punkcake",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://punkcake.itch.io/hotwax",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$6.00",
+      "en": "$6.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Arcade puzzler with falling candles 🕯️",
+      "en": "Arcade puzzler with falling candles 🕯️"
+    },
+    "description": {
+      "fr": "Arcade puzzler with falling candles 🕯️",
+      "en": "Arcade puzzler with falling candles 🕯️"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE5MDQ0MDc0LmdpZg==/original/Ihg59z.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE5MDQ0MDc0LmdpZg==/original/Ihg59z.gif"
+    ],
+    "dateAdded": "2026-11-02"
   }
 ];
