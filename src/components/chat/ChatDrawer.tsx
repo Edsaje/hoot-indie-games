@@ -19,6 +19,7 @@ import {
   ExternalLink,
   Lock,
   Languages,
+  Loader2,
   Globe,
   Mail,
 } from 'lucide-react';
@@ -111,102 +112,160 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     }
     return false;
   });
+  const [isAutoTranslating, setIsAutoTranslating] = useState<boolean>(false);
   const [translations, setTranslations] = useState<Record<string, string>>({});
   const [translatingMsgIds, setTranslatingMsgIds] = useState<Record<string, boolean>>({});
   const [showOriginalMsgIds, setShowOriginalMsgIds] = useState<Record<string, boolean>>({});
   const [manualTranslatedMsgIds, setManualTranslatedMsgIds] = useState<Record<string, boolean>>({});
-  const processedMsgIdsRef = useRef<Set<string>>(new Set());
+  const [sameLanguageMsgIds, setSameLanguageMsgIds] = useState<Record<string, boolean>>({});
+
+  // Synchronisation des états en refs pour les boucles asynchrones
+  const translationsRef = useRef<Record<string, string>>({});
+  translationsRef.current = translations;
+  const isAutoTranslateRef = useRef<boolean>(isAutoTranslate);
+  isAutoTranslateRef.current = isAutoTranslate;
+  const currentLangCodeRef = useRef<string>(currentLangCode);
+  currentLangCodeRef.current = currentLangCode;
+  const messagesRef = useRef<ChatMessage[]>(messages);
+  messagesRef.current = messages;
+
+  // Ensembles pour le suivi : requêtes en cours de vol et messages déjà évalués pour la langue
+  const inFlightIdsRef = useRef<Set<string>>(new Set());
+  const evaluatedKeysRef = useRef<Set<string>>(new Set());
+  const isWorkerRunningRef = useRef<boolean>(false);
+
+  // Moteur d'auto-traduction continue (non bloquant, résilient au polling et sans fuite)
+  const runAutoTranslation = useCallback(async () => {
+    if (!isAutoTranslateRef.current || !isOpen || isWorkerRunningRef.current) return;
+    isWorkerRunningRef.current = true;
+
+    try {
+      while (isAutoTranslateRef.current && isOpen) {
+        const targetLang = currentLangCodeRef.current;
+        const currentMsgs = messagesRef.current;
+
+        // Trouver les messages non supprimés avec du texte qui n'ont pas encore été traités pour targetLang
+        const candidates = currentMsgs.filter((msg) => {
+          if (msg.isDeleted || !msg.text || !msg.text.trim()) return false;
+          const key = `${targetLang}:${msg.id}`;
+          if (evaluatedKeysRef.current.has(key)) return false;
+          if (inFlightIdsRef.current.has(msg.id)) return false;
+          if (translationsRef.current[msg.id]) {
+            evaluatedKeysRef.current.add(key);
+            return false;
+          }
+          return true;
+        });
+
+        if (candidates.length === 0) {
+          break;
+        }
+
+        setIsAutoTranslating(true);
+
+        // Traiter en petits lots de 4.
+        // On prend les messages les PLUS RÉCENTS en priorité (slice(-4).reverse())
+        // pour que l'utilisateur voie la conversation active se traduire immédiatement !
+        const batch = candidates.slice(-4).reverse();
+        batch.forEach((m) => inFlightIdsRef.current.add(m.id));
+
+        const results = await Promise.all(
+          batch.map(async (msg) => {
+            const res = await translateChatMessage(msg.text, targetLang, msg.channel);
+            return { msg, res, batchTargetLang: targetLang };
+          })
+        );
+
+        // Si l'utilisateur a désactivé l'auto-traduction pendant le fetch, on s'arrête
+        if (!isAutoTranslateRef.current) {
+          batch.forEach((m) => inFlightIdsRef.current.delete(m.id));
+          break;
+        }
+
+        const batchUpdates: Record<string, string> = {};
+        const sameLangUpdates: Record<string, boolean> = {};
+
+        for (const { msg, res, batchTargetLang } of results) {
+          inFlightIdsRef.current.delete(msg.id);
+          const key = `${batchTargetLang}:${msg.id}`;
+          if (res.success) {
+            evaluatedKeysRef.current.add(key);
+            if (res.isSameLanguage || res.translatedText === msg.text) {
+              sameLangUpdates[msg.id] = true;
+            } else if (res.translatedText) {
+              batchUpdates[msg.id] = res.translatedText;
+            }
+          }
+        }
+
+        if (Object.keys(sameLangUpdates).length > 0) {
+          setSameLanguageMsgIds((prev) => ({ ...prev, ...sameLangUpdates }));
+        }
+
+        if (Object.keys(batchUpdates).length > 0) {
+          setTranslations((prev) => {
+            const next = { ...prev, ...batchUpdates };
+            translationsRef.current = next;
+            return next;
+          });
+        }
+      }
+    } finally {
+      isWorkerRunningRef.current = false;
+      setIsAutoTranslating(false);
+    }
+  }, [isOpen]);
 
   // Réinitialiser les traductions quand la langue du site change pour adapter immédiatement
   const prevLangRef = useRef(currentLangCode);
   useEffect(() => {
     if (prevLangRef.current !== currentLangCode) {
       prevLangRef.current = currentLangCode;
+      currentLangCodeRef.current = currentLangCode;
       setTranslations({});
+      translationsRef.current = {};
       setShowOriginalMsgIds({});
       setManualTranslatedMsgIds({});
-      processedMsgIdsRef.current.clear();
+      setSameLanguageMsgIds({});
+      evaluatedKeysRef.current.clear();
+      inFlightIdsRef.current.clear();
+      if (isAutoTranslate && isOpen) {
+        const timer = setTimeout(() => {
+          runAutoTranslation();
+        }, 30);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [currentLangCode]);
+  }, [currentLangCode, isAutoTranslate, isOpen, runAutoTranslation]);
+
+  // Déclencher l'auto-traduction quand le mode est actif lors de l'arrivée de nouveaux messages ou changement de canal
+  useEffect(() => {
+    if (isAutoTranslate && isOpen && messages.length > 0) {
+      runAutoTranslation();
+    }
+  }, [isAutoTranslate, isOpen, messages, currentChannel, runAutoTranslation]);
 
   const handleTranslateSingleMessage = async (msg: { id: string; text: string; channel: string }) => {
     if (translatingMsgIds[msg.id] || !msg.text) return;
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: true }));
     soundFx.playClick();
-    const res = await translateChatMessage(msg.text, currentLangCode);
+    const res = await translateChatMessage(msg.text, currentLangCode, msg.channel);
     setTranslatingMsgIds((prev) => ({ ...prev, [msg.id]: false }));
     if (res.success) {
-      processedMsgIdsRef.current.add(`${currentLangCode}:${msg.id}`);
-      if (res.translatedText !== msg.text) {
-        setTranslations((prev) => ({ ...prev, [msg.id]: res.translatedText }));
+      evaluatedKeysRef.current.add(`${currentLangCode}:${msg.id}`);
+      if (res.isSameLanguage || res.translatedText === msg.text) {
+        setSameLanguageMsgIds((prev) => ({ ...prev, [msg.id]: true }));
+      } else {
+        setTranslations((prev) => {
+          const next = { ...prev, [msg.id]: res.translatedText };
+          translationsRef.current = next;
+          return next;
+        });
         setShowOriginalMsgIds((prev) => ({ ...prev, [msg.id]: false }));
         setManualTranslatedMsgIds((prev) => ({ ...prev, [msg.id]: true }));
       }
     }
   };
-
-  // Auto-traduction des messages si le mode est activé, vers la langue active du site
-  useEffect(() => {
-    if (!isAutoTranslate || !isOpen || messages.length === 0) return;
-    const targetLang = currentLangCode;
-
-    // Sélectionner les messages non encore traités pour cette langue cible
-    const queue = messages.filter((msg) => {
-      if (msg.isDeleted || !msg.text || !msg.text.trim()) return false;
-      const key = `${targetLang}:${msg.id}`;
-      if (processedMsgIdsRef.current.has(key)) return false;
-      if (translations[msg.id]) return false;
-      return true;
-    });
-
-    if (queue.length === 0) return;
-
-    // Enregistrer temporairement dans le Set pour bloquer les requêtes concurrentes en vol
-    queue.forEach((msg) => {
-      processedMsgIdsRef.current.add(`${targetLang}:${msg.id}`);
-    });
-
-    let isCancelled = false;
-
-    const processQueue = async () => {
-      const BATCH_SIZE = 4;
-      for (let i = 0; i < queue.length; i += BATCH_SIZE) {
-        if (isCancelled) break;
-        const chunk = queue.slice(i, i + BATCH_SIZE);
-        const results = await Promise.all(
-          chunk.map(async (msg) => {
-            const res = await translateChatMessage(msg.text, targetLang);
-            return { id: msg.id, original: msg.text, res };
-          })
-        );
-
-        if (isCancelled) break;
-
-        const batchUpdates: Record<string, string> = {};
-        for (const item of results) {
-          const key = `${targetLang}:${item.id}`;
-          if (item.res.success) {
-            if (item.res.translatedText !== item.original) {
-              batchUpdates[item.id] = item.res.translatedText;
-            }
-          } else {
-            // En cas d'échec réseau, libérer l'id pour permettre une nouvelle tentative
-            processedMsgIdsRef.current.delete(key);
-          }
-        }
-
-        if (Object.keys(batchUpdates).length > 0) {
-          setTranslations((prev) => ({ ...prev, ...batchUpdates }));
-        }
-      }
-    };
-
-    processQueue();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [isAutoTranslate, isOpen, messages, currentLangCode]);
 
   // Guide de prévention & anti-hameçonnage
   const [showSecurityGuide, setShowSecurityGuide] = useState(false);
@@ -503,6 +562,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                 soundFx.playClick();
                 setIsAutoTranslate((prev) => {
                   const next = !prev;
+                  isAutoTranslateRef.current = next;
                   try {
                     localStorage.setItem('hoot_chat_auto_translate', String(next));
                   } catch {
@@ -510,6 +570,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                   }
                   if (next) {
                     setShowOriginalMsgIds({});
+                    setTimeout(() => {
+                      runAutoTranslation();
+                    }, 10);
                   }
                   return next;
                 });
@@ -526,7 +589,11 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
               }
               aria-label={`${t('chat.autoTranslate')} (${currentLangMeta.shortCode})`}
             >
-              <Languages className={`w-3.5 h-3.5 ${isAutoTranslate ? 'text-amber-400' : 'text-slate-400'}`} />
+              {isAutoTranslating ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+              ) : (
+                <Languages className={`w-3.5 h-3.5 ${isAutoTranslate ? 'text-amber-400' : 'text-slate-400'}`} />
+              )}
               <span className="text-[10px] hidden sm:inline">{t('chat.autoTranslate')}</span>
               <span
                 className={`text-[9px] px-1 py-0.2 rounded font-mono font-bold flex items-center gap-0.5 ${
@@ -538,6 +605,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
               >
                 <span>{currentLangMeta.flag}</span>
                 <span>{currentLangMeta.shortCode}</span>
+                {isAutoTranslating && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping inline-block ml-0.5" />}
               </span>
             </button>
 
@@ -1128,7 +1196,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
                       </div>
 
                       {/* Bouton de traduction manuelle par message */}
-                      {!msg.isDeleted && (!translations[msg.id] || (!isAutoTranslate && !manualTranslatedMsgIds[msg.id])) && (
+                      {!msg.isDeleted && !sameLanguageMsgIds[msg.id] && (!translations[msg.id] || (!isAutoTranslate && !manualTranslatedMsgIds[msg.id])) && (
                         <button
                           type="button"
                           onClick={() => handleTranslateSingleMessage(msg)}

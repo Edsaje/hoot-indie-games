@@ -91,7 +91,46 @@ if ($response !== false && $httpCode >= 200 && $httpCode < 500) {
     }
 }
 
-// 2. Si échec MyMemory, renvoie le texte d'origine
+// 2. Moteur de secours Google Translate si MyMemory est indisponible, limité ou renvoie un warning
+$gtxSource = ($normSource === 'autodetect') ? 'auto' : $normSource;
+$gtxUrl = "https://translate.googleapis.com/translate_a/single?client=gtx&sl={$gtxSource}&tl={$normTarget}&dt=t&q=" . urlencode($text);
+
+$ch2 = curl_init($gtxUrl);
+curl_setopt_array($ch2, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 5,
+    CURLOPT_CONNECTTIMEOUT => 2,
+    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+]);
+
+$gtxRes = curl_exec($ch2);
+$gtxCode = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+curl_close($ch2);
+
+if ($gtxRes !== false && $gtxCode === 200) {
+    $gtxData = json_decode($gtxRes, true);
+    if (is_array($gtxData) && isset($gtxData[0]) && is_array($gtxData[0])) {
+        $translatedParts = '';
+        foreach ($gtxData[0] as $part) {
+            if (isset($part[0]) && is_string($part[0])) {
+                $translatedParts .= $part[0];
+            }
+        }
+        if ($translatedParts !== '') {
+            $detected = isset($gtxData[2]) && is_string($gtxData[2]) ? normLang($gtxData[2]) : null;
+            $isSame = ($detected === $normTarget) || (trim($translatedParts) === $text);
+            echo json_encode([
+                'success' => true,
+                'translatedText' => $isSame ? $text : $translatedParts,
+                'isSameLanguage' => $isSame,
+                'detectedLang' => $detected
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+    }
+}
+
+// 3. Si échec de tous les moteurs, renvoie le texte d'origine
 echo json_encode([
     'success' => false,
     'translatedText' => $text
