@@ -113,7 +113,7 @@ jobs:
           cp public/api/.mail_config.php dist/api/.mail_config.php
 
       - name: 📤 Déploiement automatique vers l'hébergement OVH
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ftp.cluster129.hosting.ovh.net
           username: hootinu
