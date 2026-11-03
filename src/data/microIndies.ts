@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 110
+ * Total de pépites sélectionnées : 112
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4606,5 +4606,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE5MDQ0MDc0LmdpZg==/original/Ihg59z.gif"
     ],
     "dateAdded": "2026-11-02"
+  },
+  {
+    "id": "itch-the-machinegg",
+    "title": "The MachinEGG",
+    "developer": "quantumgames-studio",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://quantumgames-studio.itch.io/the-machinegg",
+    "playInBrowserUrl": "https://quantumgames-studio.itch.io/the-machinegg",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "From a single chicken to a massive underground egg factory!",
+      "en": "From a single chicken to a massive underground egg factory!"
+    },
+    "description": {
+      "fr": "From a single chicken to a massive underground egg factory!",
+      "en": "From a single chicken to a massive underground egg factory!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxNzE4MjU1LnBuZw==/315x250%23c/qACbgN.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxNzE4MjU1LnBuZw==/315x250%23c/qACbgN.png"
+    ],
+    "dateAdded": "2026-11-03"
+  },
+  {
+    "id": "itch-lavoice",
+    "title": "LAVOICE",
+    "developer": "tsomyst",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://tsomyst.itch.io/lavoice",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "tagline": {
+      "fr": "A voxel FPS where everything you say appears right in front of you... EVERYTHING!",
+      "en": "A voxel FPS where everything you say appears right in front of you... EVERYTHING!"
+    },
+    "description": {
+      "fr": "A voxel FPS where everything you say appears right in front of you... EVERYTHING!",
+      "en": "A voxel FPS where everything you say appears right in front of you... EVERYTHING!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMTA3MDMwLnBuZw==/315x250%23c/evNjHw.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMTA3MDMwLnBuZw==/315x250%23c/evNjHw.png"
+    ],
+    "dateAdded": "2026-11-03"
   }
 ];
