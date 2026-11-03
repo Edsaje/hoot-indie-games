@@ -43,6 +43,27 @@ jobs:
       - name: 🛡️ Audit de conformité & Règle Zéro Hallucination
         run: npm run audit-db
 
+      - name: 🦉 Supabase Keep-Alive Ping (Anti-Mise en pause)
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
+            echo "📡 Envoi de la requête Keep-Alive vers Supabase pour réinitialiser le compteur d'inactivité..."
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -m 15 \
+              -H "apikey: $SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+              "$SUPABASE_URL/rest/v1/chat_messages?select=id&limit=1" || true)
+            echo "📊 Code de réponse Supabase : $HTTP_CODE"
+            if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 400 ]; then
+              echo "✅ Supabase pingé avec succès ! Compteur d'inactivité réinitialisé à zéro."
+            else
+              echo "⚠️ Avertissement : Le ping Supabase a retourné le code $HTTP_CODE (ou le service est momentanément indisponible)."
+            fi
+          else
+            echo "ℹ️ Variables SUPABASE_URL ou SUPABASE_ANON_KEY absentes, étape ignorée."
+          fi
+
       - name: 🏗️ Compilation de production du site (Vite / React)
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
