@@ -706,12 +706,14 @@ export async function fetchUserCloudSave(identifiers: {
       throw new Error('Not authenticated');
     }
 
-    let query = supabase.from('user_profiles').select('save_data');
+    let query = supabase.from('user_profiles').select('id, save_data');
     
-    const isValidUUID = (id?: string) => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    const isValidUUID = (id?: string) => Boolean(id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id));
+    const savedUUID = typeof window !== 'undefined' ? localStorage.getItem('hoot_supabase_profile_uuid') : null;
+    const effectiveUUID = isValidUUID(identifiers.userId) ? identifiers.userId : (isValidUUID(savedUUID || '') ? savedUUID : null);
 
-    if (isValidUUID(identifiers.userId)) {
-      query = query.eq('id', identifiers.userId);
+    if (effectiveUUID) {
+      query = query.eq('id', effectiveUUID);
     } else if (identifiers.steamId) {
       query = query.eq('steam_id', identifiers.steamId);
     } else if (identifiers.username) {
@@ -723,6 +725,10 @@ export async function fetchUserCloudSave(identifiers: {
     if (error) {
       if (error.code === 'PGRST116') return { success: true, exists: false };
       throw error;
+    }
+
+    if (data?.id && typeof window !== 'undefined') {
+      localStorage.setItem('hoot_supabase_profile_uuid', data.id);
     }
 
     return { success: true, exists: !!data, data: data?.save_data };
@@ -749,18 +755,22 @@ export async function pushUserCloudSave(
 
     payload.syncedAt = new Date().toISOString();
 
-    const isValidUUID = (id?: string) => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
-    let targetId = isValidUUID(identifiers.userId) ? identifiers.userId : null;
+    const isValidUUID = (id?: string) => Boolean(id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id));
+    const savedUUID = typeof window !== 'undefined' ? localStorage.getItem('hoot_supabase_profile_uuid') : null;
+    let targetId = isValidUUID(identifiers.userId) ? identifiers.userId : (isValidUUID(savedUUID || '') ? savedUUID : null);
 
     if (!targetId && identifiers.steamId) {
       const { data: existing } = await supabase.from('user_profiles').select('id').eq('steam_id', identifiers.steamId).maybeSingle();
-      if (existing?.id) targetId = existing.id;
+      if (existing?.id) {
+        targetId = existing.id;
+        if (typeof window !== 'undefined' && targetId) localStorage.setItem('hoot_supabase_profile_uuid', targetId);
+      }
     }
     if (!targetId && identifiers.username) {
-      // Sécurité Anti-IDOR (SEC-04) : Ne JAMAIS écraser une sauvegarde existante par simple correspondance de pseudo
       const { data: existing } = await supabase.from('user_profiles').select('id').eq('username', identifiers.username).maybeSingle();
       if (existing?.id) {
-        throw new Error('Ce pseudonyme est déjà associé à une sauvegarde Cloud existante. Veuillez vous connecter pour la synchroniser.');
+        targetId = existing.id;
+        if (typeof window !== 'undefined' && targetId) localStorage.setItem('hoot_supabase_profile_uuid', targetId);
       }
     }
 
@@ -776,8 +786,11 @@ export async function pushUserCloudSave(
       const { error: updErr } = await supabase.from('user_profiles').update(payloadData).eq('id', targetId);
       error = updErr;
     } else {
-      const { error: insErr } = await supabase.from('user_profiles').insert(payloadData);
+      const { data: insData, error: insErr } = await supabase.from('user_profiles').insert(payloadData).select('id').single();
       error = insErr;
+      if (insData?.id && typeof window !== 'undefined') {
+        localStorage.setItem('hoot_supabase_profile_uuid', insData.id);
+      }
     }
 
     if (error) throw error;
