@@ -7,5 +7,6 @@ dist
 *.log
 npm-debug.log*
 lighthouse-report.json
-AUDIT_*.md
-TODOLIST.md
+docs/
+*.md
+!README.md

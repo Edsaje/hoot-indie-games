@@ -7,7 +7,7 @@
 [![React](https://img.shields.io/badge/React-18+-61dafb?logo=react)](https://react.dev/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
 [![Oxlint](https://img.shields.io/badge/Oxlint-0_warnings-emerald)](https://oxc.rs/)
-[![Sécurité](https://img.shields.io/badge/Sécurité-Priorité_Absolue-red)](./GEMINI.md)
+[![Sécurité](https://img.shields.io/badge/Sécurité-Priorité_Absolue-red)](./docs/GEMINI.md)
 [![Licence](https://img.shields.io/badge/Auteur-Quentin_Beaud_(Hibouxe)-amber)](https://quentinbeaud.com/)
 
 > 🛡️ **Règle Primordiale : La sécurité est notre priorité sur ce site.** Intégrité anti-triche, zéro fuite de données, protection contre les injections et respect absolu de la vie privée.
@@ -157,7 +157,8 @@ npm run update-db
 
 ## 📜 Règles pour Agents & Contributeurs
 
-Tout agent AI (Gemini, Claude, GPT, etc.) ou développeur reprenant ce projet **DOIT respecter rigoureusement les règles consignées dans [`GEMINI.md`](./GEMINI.md)** :
+Tout agent AI (Gemini, Claude, GPT, etc.) ou développeur reprenant ce projet **DOIT respecter rigoureusement les règles consignées dans [`docs/GEMINI.md`](./docs/GEMINI.md)**.
+Pour l'ensemble de la documentation du projet (Game Design, Audits, Roadmap), consulter le dossier [`docs/`](./docs/README.md) :
 
 1. **Règle Primordiale : La sécurité est notre priorité sur ce site** :
    - Subordonner la commodité et les fonctionnalités à la sécurité absolue.
