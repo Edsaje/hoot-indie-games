@@ -107,14 +107,12 @@ jobs:
           fi
 
       - name: ✉️ Configuration sécurisée de messagerie (Resend)
-        if: steps.commit_step.outputs.has_changes == 'true'
         run: |
           echo "<?php define('RESEND_API_KEY', '${{ secrets.RESEND_API_KEY }}');" > public/api/.mail_config.php
           mkdir -p dist/api
           cp public/api/.mail_config.php dist/api/.mail_config.php
 
       - name: 📤 Déploiement automatique vers l'hébergement OVH
-        if: steps.commit_step.outputs.has_changes == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ftp.cluster129.hosting.ovh.net
