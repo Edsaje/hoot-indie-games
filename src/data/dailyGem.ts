@@ -1,38 +1,40 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-03";
+export const TODAY_DATE = "2026-11-04";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "thumper",
-  "title": "Thumper",
+  "id": "va-11-hall-a",
+  "title": "VA-11 Hall-A: Cyberpunk Bartender Action",
   "releaseYear": 2016,
-  "releaseDate": "2016-10-10",
+  "releaseDate": "2016-06-21",
   "genre": [
-    "Action"
+    "Narratif",
+    "Visual Novel",
+    "Cyberpunk",
+    "Ambiance"
   ],
   "artStyle": {
-    "fr": "3D Stylisée",
-    "en": "Stylized 3D"
+    "fr": "Pixel Art",
+    "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Première personne",
+    "fr": "Vue à la première personne",
     "en": "First-Person"
   },
-  "developer": "Drool",
-  "steamUrl": "https://store.steampowered.com/app/356400/",
+  "developer": "Sukeban Games",
+  "steamUrl": "https://store.steampowered.com/app/447530/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/356400/ss_26cfa006225969a9fde35b60687d588eea40948b.1920x1080.jpg?t=1677622045",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/356400/ss_7a756585fc622452e686b46ee27709702a48274a.1920x1080.jpg?t=1677622045",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/356400/ss_1913cc1bf6abe7c757343362cecbd27f36a27e7b.1920x1080.jpg?t=1677622045",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/356400/ss_5ebfb95c6c457c3aa5ef6187679f0ace2d47f7ee.1920x1080.jpg?t=1677622045",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/356400/ss_47584f60fbb08b48ed6a8e79797392cba23a1e33.1920x1080.jpg?t=1677622045",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/356400/ss_7fa9d22b355a9bf18e1e3d7c96469069250d2e40.1920x1080.jpg?t=1677622045"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_2e423af338f78a728112aefc4dbada0050715ae2.1920x1080.jpg?t=1730740610",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_200b468aaa011d8bf606e41831447013595927c3.1920x1080.jpg?t=1730740610",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_1b98a18f6cd15773c8da098aad48917f5b5d22e1.1920x1080.jpg?t=1730740610",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_b9171d76f5972a2bfb940fc16d956b129f568977.1920x1080.jpg?t=1730740610",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_5f44068376b372f481ac99e51628652d903dda27.1920x1080.jpg?t=1730740610",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_a3f984bc2b75fa5d464a507bece239a9de70036c.1920x1080.jpg?t=1730740610"
   ],
   "hints": {
     "tagline": {
-      "fr": "À la fois rythmé et violent, Thumper réunit toute l'action des jeux de rythme classiques, des vitesses foudroyantes et une réalité physique impitoyable. Vous êtes un scarabée de l'espace. Bravez le vide infernal et confrontez une gigantesque tête déchaînée venue du futur.",
-      "en": "Thumper is rhythm violence: classic rhythm-action, blistering speed, and brutal physicality. You are a space beetle. Brave the hellish void and confront a maniacal giant head from the future."
+      "fr": "Préparez des cocktails dans une mégalopole cyberpunk tout en écoutant les confidences de clients fascinants.",
+      "en": "Mix drinks and change lives in a dystopian cyberpunk bar while listening to the stories of quirky patrons."
     }
-  },
-  "addedAt": "2026-10-06"
+  }
 };

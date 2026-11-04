@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 112
+ * Total de pépites sélectionnées : 114
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4687,5 +4687,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxMTA3MDMwLnBuZw==/315x250%23c/evNjHw.png"
     ],
     "dateAdded": "2026-11-03"
+  },
+  {
+    "id": "itch-broken-horror-anthology-demo",
+    "title": "Broken Horror Anthology Demo",
+    "developer": "shikami-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://shikami-games.itch.io/broken-horror-anthology",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Four atmospheric horror games about brokenness and madness. Inspect toys, cheat on an exam, and explore the darkness.",
+      "en": "Four atmospheric horror games about brokenness and madness. Inspect toys, cheat on an exam, and explore the darkness."
+    },
+    "description": {
+      "fr": "Four atmospheric horror games about brokenness and madness. Inspect toys, cheat on an exam, and explore the darkness.",
+      "en": "Four atmospheric horror games about brokenness and madness. Inspect toys, cheat on an exam, and explore the darkness."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMjk5NzkzLmpwZw==/315x250%23c/%2F7K3kk.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMjk5NzkzLmpwZw==/315x250%23c/%2F7K3kk.jpg"
+    ],
+    "dateAdded": "2026-11-04"
+  },
+  {
+    "id": "itch-ragdoll-sandbox",
+    "title": "Ragdoll sandbox",
+    "developer": "themilitarysimularper",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://themilitarysimularper.itch.io/ragdoll-sandbox",
+    "playInBrowserUrl": "https://themilitarysimularper.itch.io/ragdoll-sandbox",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A game where you can watch dummies suffer.",
+      "en": "A game where you can watch dummies suffer."
+    },
+    "description": {
+      "fr": "A game where you can watch dummies suffer.",
+      "en": "A game where you can watch dummies suffer."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMzQxOTUyLnBuZw==/315x250%23c/0LcIDR.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMzQxOTUyLnBuZw==/315x250%23c/0LcIDR.png"
+    ],
+    "dateAdded": "2026-11-04"
   }
 ];
