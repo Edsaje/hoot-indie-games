@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 114
+ * Total de pépites sélectionnées : 116
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4768,5 +4768,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxMzQxOTUyLnBuZw==/315x250%23c/0LcIDR.png"
     ],
     "dateAdded": "2026-11-04"
+  },
+  {
+    "id": "itch-chat-is-cooked",
+    "title": "Chat is Cooked",
+    "developer": "stelladevt",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://stelladevt.itch.io/chat-is-cooked",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$14.99",
+      "en": "$14.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "For the bullied streamer!",
+      "en": "For the bullied streamer!"
+    },
+    "description": {
+      "fr": "For the bullied streamer!",
+      "en": "For the bullied streamer!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwMzI3MTczLnBuZw==/315x250%23c/wHCbYS.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwMzI3MTczLnBuZw==/315x250%23c/wHCbYS.png"
+    ],
+    "dateAdded": "2026-11-05"
+  },
+  {
+    "id": "itch-box-out",
+    "title": "Box Out!",
+    "developer": "zegley",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://zegley.itch.io/box-out",
+    "playInBrowserUrl": "https://zegley.itch.io/box-out",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Logic-Based, Puzzle-Platformer Adventure",
+      "en": "A Logic-Based, Puzzle-Platformer Adventure"
+    },
+    "description": {
+      "fr": "A Logic-Based, Puzzle-Platformer Adventure",
+      "en": "A Logic-Based, Puzzle-Platformer Adventure"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzk2ODM3ODYuZ2lm/original/Pdq6VB.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzk2ODM3ODYuZ2lm/original/Pdq6VB.gif"
+    ],
+    "dateAdded": "2026-11-05"
   }
 ];

@@ -1,17 +1,17 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-04";
+export const TODAY_DATE = "2026-11-05";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "va-11-hall-a",
-  "title": "VA-11 Hall-A: Cyberpunk Bartender Action",
-  "releaseYear": 2016,
-  "releaseDate": "2016-06-21",
+  "id": "needy-girl-overdose",
+  "title": "NEEDY GIRL OVERDOSE",
+  "releaseYear": 2022,
+  "releaseDate": "2022-01-21",
   "genre": [
+    "Simulation",
+    "Psychologique",
     "Narratif",
-    "Visual Novel",
-    "Cyberpunk",
-    "Ambiance"
+    "Anime"
   ],
   "artStyle": {
     "fr": "Pixel Art",
@@ -21,20 +21,20 @@ export const TODAY_DAILY_GEM: Game = {
     "fr": "Vue à la première personne",
     "en": "First-Person"
   },
-  "developer": "Sukeban Games",
-  "steamUrl": "https://store.steampowered.com/app/447530/",
+  "developer": "WSS playground",
+  "steamUrl": "https://store.steampowered.com/app/1451940/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_2e423af338f78a728112aefc4dbada0050715ae2.1920x1080.jpg?t=1730740610",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_200b468aaa011d8bf606e41831447013595927c3.1920x1080.jpg?t=1730740610",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_1b98a18f6cd15773c8da098aad48917f5b5d22e1.1920x1080.jpg?t=1730740610",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_b9171d76f5972a2bfb940fc16d956b129f568977.1920x1080.jpg?t=1730740610",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_5f44068376b372f481ac99e51628652d903dda27.1920x1080.jpg?t=1730740610",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/447530/ss_a3f984bc2b75fa5d464a507bece239a9de70036c.1920x1080.jpg?t=1730740610"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_079abcf18d00cb4990c5eac37ee6508f9377c08f.1920x1080.jpg?t=1762834234",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_cc7d0cc3fa98b44e9d8a790260872357c8b6c416.1920x1080.jpg?t=1762834234",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_c60613e817ed66dd645cc0c22b037ceb148f16d6.1920x1080.jpg?t=1762834234",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_df267af2a46cd572216b0782037d85210a206f54.1920x1080.jpg?t=1762834234",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_5046b50b55b80e2f98156486fb87ad33930e7ceb.1920x1080.jpg?t=1762834234",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_c307ea74f79577d6ad54dbb3affff34141a8642d.1920x1080.jpg?t=1762834234"
   ],
   "hints": {
     "tagline": {
-      "fr": "Préparez des cocktails dans une mégalopole cyberpunk tout en écoutant les confidences de clients fascinants.",
-      "en": "Mix drinks and change lives in a dystopian cyberpunk bar while listening to the stories of quirky patrons."
+      "fr": "Gérez le quotidien d'une jeune créatrice en quête de reconnaissance et de célébrité sur Internet.",
+      "en": "Manage the daily schedule and emotional state of a young streamer striving to become the ultimate internet angel."
     }
   }
 };
