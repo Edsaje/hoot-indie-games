@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 116
+ * Total de pépites sélectionnées : 118
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4849,5 +4849,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzk2ODM3ODYuZ2lm/original/Pdq6VB.gif"
     ],
     "dateAdded": "2026-11-05"
+  },
+  {
+    "id": "itch-scritchy-scratchy",
+    "title": "Scritchy Scratchy",
+    "developer": "funday-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://funday-games.itch.io/scritchy-scratchy",
+    "playInBrowserUrl": "https://funday-games.itch.io/scritchy-scratchy",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$6.99",
+      "en": "$6.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A super-satisfying scratch card incremental game",
+      "en": "A super-satisfying scratch card incremental game"
+    },
+    "description": {
+      "fr": "A super-satisfying scratch card incremental game",
+      "en": "A super-satisfying scratch card incremental game"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI1Mjc2NDY1LnBuZw==/315x250%23c/Uy2Zkh.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI1Mjc2NDY1LnBuZw==/315x250%23c/Uy2Zkh.png"
+    ],
+    "dateAdded": "2026-11-06"
+  },
+  {
+    "id": "itch-goodboy-galaxy-for-gba",
+    "title": "Goodboy Galaxy (for GBA)",
+    "developer": "goodboygalaxy",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://goodboygalaxy.itch.io/goodboy-galaxy-gba",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$20.00",
+      "en": "$20.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Help Maxwell explore unfamiliar worlds, make strange new friends and contend with mysterious forces.",
+      "en": "Help Maxwell explore unfamiliar worlds, make strange new friends and contend with mysterious forces."
+    },
+    "description": {
+      "fr": "Help Maxwell explore unfamiliar worlds, make strange new friends and contend with mysterious forces.",
+      "en": "Help Maxwell explore unfamiliar worlds, make strange new friends and contend with mysterious forces."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzE0MDk0NTQ2LnBuZw==/315x250%23c/hEq6DN.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzE0MDk0NTQ2LnBuZw==/315x250%23c/hEq6DN.png"
+    ],
+    "dateAdded": "2026-11-06"
   }
 ];

@@ -93460,5 +93460,76 @@
     "steamAppId": 3235390,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3235390/14529dd75694d740be29b6c8b3485e680e8a0d90/header.jpg?t=1793448047",
     "releaseDate": "2026-10-31"
+  },
+  {
+    "id": "grim-guild",
+    "title": "Grim Guild",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "PocketStudio",
+    "steamUrl": "https://store.steampowered.com/app/5381250/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/3275975a6ec3b5ae607e9d1b27d029c4b5323b5b/ss_3275975a6ec3b5ae607e9d1b27d029c4b5323b5b.1920x1080.jpg?t=1793869236",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/f97a5b687c7bdb124c739637855357d66f648559/ss_f97a5b687c7bdb124c739637855357d66f648559.1920x1080.jpg?t=1793869236",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/5aa12c25cf6f5e4c96277530715becf6f2ba9537/ss_5aa12c25cf6f5e4c96277530715becf6f2ba9537.1920x1080.jpg?t=1793869236",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/0bc78c32decc03b67926070b40d8c44c47be9457/ss_0bc78c32decc03b67926070b40d8c44c47be9457.1920x1080.jpg?t=1793869236",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/395efa4fe76ec0d9e40e71f9fe29435d0243eef5/ss_395efa4fe76ec0d9e40e71f9fe29435d0243eef5.1920x1080.jpg?t=1793869236",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/86fb37ec12280e3ccfdbb25e911d94b729991446/ss_86fb37ec12280e3ccfdbb25e911d94b729991446.1920x1080.jpg?t=1793869236"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "You never go on the adventure. You only decide who does. Run the adventurers' guild your grandfather left you: find out what is out there, from dire wolves to a dragon in the old workings, write the contract, and wait at the door to count who comes back. Streaming? Name newcomers after your viewers.",
+        "en": "You never go on the adventure. You only decide who does. Run the adventurers' guild your grandfather left you: find out what is out there, from dire wolves to a dragon in the old workings, write the contract, and wait at the door to count who comes back. Streaming? Name newcomers after your viewers."
+      }
+    },
+    "addedAt": "2026-11-06",
+    "steamAppId": 5381250,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1793869236"
+  },
+  {
+    "id": "shadows-of-gloaming",
+    "title": "Shadows of Gloaming",
+    "releaseYear": 2026,
+    "genre": [
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Pilsen Games",
+    "steamUrl": "https://store.steampowered.com/app/4618460/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/cab0dfff8906f3551d77d6e33dcc64c575066063/ss_cab0dfff8906f3551d77d6e33dcc64c575066063.1920x1080.jpg?t=1793914288",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/dddcf1610342d0bd25a5c24e70da9c83ee53c974/ss_dddcf1610342d0bd25a5c24e70da9c83ee53c974.1920x1080.jpg?t=1793914288",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/52f56fec52cc5f9aedd52277fbb73a72af933505/ss_52f56fec52cc5f9aedd52277fbb73a72af933505.1920x1080.jpg?t=1793914288",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/f5757be8048fc376cf3844bac7568a1888547a19/ss_f5757be8048fc376cf3844bac7568a1888547a19.1920x1080.jpg?t=1793914288",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/fa27efe9e60ec9e53b88d6ee25453e10563dd8b1/ss_fa27efe9e60ec9e53b88d6ee25453e10563dd8b1.1920x1080.jpg?t=1793914288",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/cab0dfff8906f3551d77d6e33dcc64c575066063/ss_cab0dfff8906f3551d77d6e33dcc64c575066063.1920x1080.jpg?t=1793914288"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Shadows of Gloaming est un jeu de soirée de déduction sociale où 19 rôles uniques et 3 factions rivales s'affrontent lors de votes tendus le jour et d'actions nocturnes cachées. En Mode Party, un joueur héberge la GameArena tandis que tous les autres rejoignent gratuitement via l'application web.",
+        "en": "Shadows of Gloaming is a social deduction party game where 19 unique roles and 3 rival factions clash across tense day votes and hidden night actions. In Party Mode, one player hosts the GameArena while everyone else joins for free through the web app."
+      }
+    },
+    "addedAt": "2026-11-06",
+    "steamAppId": 4618460,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/e95ff8fd12913c4cd006cc403733c6589dc292a5/header.jpg?t=1793914288"
   }
 ]

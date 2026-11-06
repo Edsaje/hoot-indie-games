@@ -1,40 +1,45 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-05";
+export const TODAY_DATE = "2026-11-06";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "needy-girl-overdose",
-  "title": "NEEDY GIRL OVERDOSE",
-  "releaseYear": 2022,
-  "releaseDate": "2022-01-21",
+  "id": "ftl-faster-than-light",
+  "title": "FTL: Faster Than Light",
+  "releaseYear": 2012,
+  "releaseDate": "2012-09-14",
   "genre": [
+    "Roguelike",
+    "Stratégie",
     "Simulation",
-    "Psychologique",
-    "Narratif",
-    "Anime"
+    "Sci-Fi"
   ],
   "artStyle": {
     "fr": "Pixel Art",
     "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Vue à la première personne",
-    "en": "First-Person"
+    "fr": "Vue du dessus 2D",
+    "en": "2D Top-down"
   },
-  "developer": "WSS playground",
-  "steamUrl": "https://store.steampowered.com/app/1451940/",
+  "developer": "Subset Games",
+  "steamUrl": "https://store.steampowered.com/app/212680/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_079abcf18d00cb4990c5eac37ee6508f9377c08f.1920x1080.jpg?t=1762834234",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_cc7d0cc3fa98b44e9d8a790260872357c8b6c416.1920x1080.jpg?t=1762834234",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_c60613e817ed66dd645cc0c22b037ceb148f16d6.1920x1080.jpg?t=1762834234",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_df267af2a46cd572216b0782037d85210a206f54.1920x1080.jpg?t=1762834234",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_5046b50b55b80e2f98156486fb87ad33930e7ceb.1920x1080.jpg?t=1762834234",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1451940/ss_c307ea74f79577d6ad54dbb3affff34141a8642d.1920x1080.jpg?t=1762834234"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_e650b133cc1d3d6320b34d131566fd28ab92b010.1920x1080.jpg?t=1748969356",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_ff45cfec186ec14e97cfdb01054d9cc0bb4034ff.1920x1080.jpg?t=1748969356",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_f60e708609b4cfaa712fdc6c12546aaf7a5b9ebc.1920x1080.jpg?t=1748969356",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_7cf0e1d8a6142f7f18c56e9a5a84b0b588ba655e.1920x1080.jpg?t=1748969356",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_f5a5c31e92cb9151dceb9d2bcc800554cccc5ff3.1920x1080.jpg?t=1748969356",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/212680/ss_9e317b3a735d7ea04cae0cc8fa246413a8d5322e.1920x1080.jpg?t=1748969356"
   ],
   "hints": {
     "tagline": {
-      "fr": "Gérez le quotidien d'une jeune créatrice en quête de reconnaissance et de célébrité sur Internet.",
-      "en": "Manage the daily schedule and emotional state of a young streamer striving to become the ultimate internet angel."
-    }
+      "fr": "Pilotez votre vaisseau à travers une galaxie hostile pour livrer un message crucial à la Fédération.",
+      "en": "A spaceship simulation roguelike-like where you manage your crew and ship across a dangerous galaxy.",
+      "es": "Un simulador espacial roguelike donde gestionas tripulación y naves en una galaxia peligrosa.",
+      "de": "Steuere dein Raumschiff durch eine gnadenlose Galaxie, um eine lebenswichtige Botschaft zu überbringen.",
+      "ja": "クルーと船のシステムを管理しながら、銀河の脅威を突破して連邦へ向かう宇宙戦略ローグライク。",
+      "pt-BR": "Comande sua nave e tripulação através de uma galáxia perigosa para salvar a Federação."
+    },
+    "composer": "Ben Prunty"
   }
 };

@@ -485,70 +485,6 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/388860/header.jpg"
   },
   {
-    "id": "grim-guild",
-    "title": "Grim Guild",
-    "developer": "PocketStudio",
-    "publisher": "PocketStudio",
-    "expectedDate": {
-      "fr": "5 nov. 2026",
-      "en": "5 nov. 2026"
-    },
-    "genres": [
-      {
-        "fr": "Simulation",
-        "en": "Simulation"
-      },
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/5381250/",
-    "description": {
-      "fr": "You never go on the adventure. You only decide who does. Run the adventurers' guild your grandfather left you: find out what is out there, from dire wolves to a dragon in the old workings, write the contract, and wait at the door to count who comes back. Streaming? Name newcomers after your viewers.",
-      "en": "You never go on the adventure. You only decide who does. Run the adventurers' guild your grandfather left you: find out what is out there, from dire wolves to a dragon in the old workings, write the contract, and wait at the door to count who comes back. Streaming? Name newcomers after your viewers."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5381250/b4c250a245cabea6ec4357b08349e9bc71bdaf54/header.jpg?t=1792594666"
-  },
-  {
-    "id": "shadows-of-gloaming",
-    "title": "Shadows of Gloaming",
-    "developer": "Pilsen Games",
-    "publisher": "Pilsen Games",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/4618460/",
-    "description": {
-      "fr": "Shadows of Gloaming est un jeu de soirée de déduction sociale où 19 rôles uniques et 3 factions rivales s'affrontent lors de votes tendus le jour et d'actions nocturnes cachées. En Mode Party, un joueur héberge la GameArena tandis que tous les autres rejoignent gratuitement via l'application web.",
-      "en": "Shadows of Gloaming is a social deduction party game where 19 unique roles and 3 rival factions clash across tense day votes and hidden night actions. In Party Mode, one player hosts the GameArena while everyone else joins for free through the web app."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/e95ff8fd12913c4cd006cc403733c6589dc292a5/header.jpg?t=1792342070"
-  },
-  {
     "id": "s-il-vous-plait-ne-dites-pas-que-c-est-un-jeu-poubelle-streamer-happy-nanaru",
     "title": "S'il vous plait ne dites pas que c'est un jeu poubelle streamer: HAPPY NANARU",
     "developer": "TENTACLE SOFT",
@@ -611,5 +547,73 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     },
     "hypeScore": 95,
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5373980/37a96b3e5ef52e540d69568c568e9cf74364a6eb/header.jpg?t=1792486527"
+  },
+  {
+    "id": "where-are-the-brakes",
+    "title": "Where Are the Brakes?",
+    "developer": "JG Studio",
+    "publisher": "JG Studio",
+    "expectedDate": {
+      "fr": "6 nov. 2026",
+      "en": "Nov 6, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Action",
+        "en": "Action"
+      },
+      {
+        "fr": "Aventure",
+        "en": "Aventure"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5485240/",
+    "description": {
+      "fr": "One shopping cart. Up to four players sharing the controls. Steer, jump and shoot through 10 hazardous stages and two boss battles in this co-op action game. Handle everything solo, or invite friends and find out whether your teamwork can survive without brakes.",
+      "en": "One shopping cart. Up to four players sharing the controls. Steer, jump and shoot through 10 hazardous stages and two boss battles in this co-op action game. Handle everything solo, or invite friends and find out whether your teamwork can survive without brakes."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/99ef3614f4a4c5cd7f746c8fff28c74664ddea44/header.jpg?t=1793420062"
+  },
+  {
+    "id": "deadlight-a-zombie-chronicle",
+    "title": "Deadlight: A Zombie Chronicle",
+    "developer": "ZiBa Entertainment",
+    "publisher": "ZiBa Entertainment",
+    "expectedDate": {
+      "fr": "6 nov. 2026",
+      "en": "Nov 6, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Simulation",
+        "en": "Simulation"
+      },
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5345750/",
+    "description": {
+      "fr": "Garde en vie une poignée d'inconnus dans une maison barricadée au bout du monde. Répartis le travail de la journée, envoie des gens chercher de la nourriture et du carburant, et tiens la porte quand la nuit tombe. Chaque choix coûte quelque chose à quelqu'un, et la voiture n'a que trois places.",
+      "en": "Keep a handful of strangers alive in a boarded-up house at the end of the world. Hand out the day's work, send people out for food and fuel, and hold the door when night falls. Every choice costs someone something, and the car only has three seats."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/a94053a69a01fdb12bd2e0194d1a686173dbd00a/header.jpg?t=1793225680"
   }
 ];
