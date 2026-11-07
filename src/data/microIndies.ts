@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 118
+ * Total de pépites sélectionnées : 120
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -4930,5 +4930,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzE0MDk0NTQ2LnBuZw==/315x250%23c/hEq6DN.png"
     ],
     "dateAdded": "2026-11-06"
+  },
+  {
+    "id": "itch-kritsana",
+    "title": "Kritsana",
+    "developer": "debuz",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://debuz.itch.io/kritsana",
+    "playInBrowserUrl": "https://debuz.itch.io/kritsana",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Mental Illness... or Something Worse?",
+      "en": "Mental Illness... or Something Worse?"
+    },
+    "description": {
+      "fr": "Mental Illness... or Something Worse?",
+      "en": "Mental Illness... or Something Worse?"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI4NjM5NTI1LnBuZw==/315x250%23c/DCPjV7.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI4NjM5NTI1LnBuZw==/315x250%23c/DCPjV7.png"
+    ],
+    "dateAdded": "2026-11-07"
+  },
+  {
+    "id": "itch-dominion-of-darkness",
+    "title": "Dominion of Darkness",
+    "developer": "adeptus7",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://adeptus7.itch.io/dominion",
+    "playInBrowserUrl": "https://adeptus7.itch.io/dominion",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Story-driven simulator of the Dark Lord/Lady. Use your armies, cunning and magic to conquer Free Peoples.",
+      "en": "Story-driven simulator of the Dark Lord/Lady. Use your armies, cunning and magic to conquer Free Peoples."
+    },
+    "description": {
+      "fr": "Story-driven simulator of the Dark Lord/Lady. Use your armies, cunning and magic to conquer Free Peoples.",
+      "en": "Story-driven simulator of the Dark Lord/Lady. Use your armies, cunning and magic to conquer Free Peoples."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5ODEwMjcxLmpwZw==/315x250%23c/1PegtD.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5ODEwMjcxLmpwZw==/315x250%23c/1PegtD.jpg"
+    ],
+    "dateAdded": "2026-11-07"
   }
 ];

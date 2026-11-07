@@ -554,8 +554,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "JG Studio",
     "publisher": "JG Studio",
     "expectedDate": {
-      "fr": "6 nov. 2026",
-      "en": "Nov 6, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
@@ -583,37 +583,33 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/99ef3614f4a4c5cd7f746c8fff28c74664ddea44/header.jpg?t=1793420062"
   },
   {
-    "id": "deadlight-a-zombie-chronicle",
-    "title": "Deadlight: A Zombie Chronicle",
-    "developer": "ZiBa Entertainment",
-    "publisher": "ZiBa Entertainment",
+    "id": "battle-runes-of-metalaria",
+    "title": "Battle Runes of Metalaria",
+    "developer": "Voliware Inc",
+    "publisher": "Voliware Inc",
     "expectedDate": {
-      "fr": "6 nov. 2026",
-      "en": "Nov 6, 2026"
+      "fr": "7 nov. 2026",
+      "en": "Nov 7, 2026"
     },
     "genres": [
       {
-        "fr": "Simulation",
-        "en": "Simulation"
-      },
-      {
-        "fr": "Stratégie",
-        "en": "Stratégie"
+        "fr": "Action",
+        "en": "Action"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5345750/",
+    "steamUrl": "https://store.steampowered.com/app/3997770/",
     "description": {
-      "fr": "Garde en vie une poignée d'inconnus dans une maison barricadée au bout du monde. Répartis le travail de la journée, envoie des gens chercher de la nourriture et du carburant, et tiens la porte quand la nuit tombe. Chaque choix coûte quelque chose à quelqu'un, et la voiture n'a que trois places.",
-      "en": "Keep a handful of strangers alive in a boarded-up house at the end of the world. Hand out the day's work, send people out for food and fuel, and hold the door when night falls. Every choice costs someone something, and the car only has three seats."
+      "fr": "Battle Runes of Metalaria is an action packed, chaos infused board game for up to four players. Stack your runes on the board to make vertical and horizontal combos or smash your opponents pieces to smithereens",
+      "en": "Battle Runes of Metalaria is an action packed, chaos infused board game for up to four players. Stack your runes on the board to make vertical and horizontal combos or smash your opponents pieces to smithereens"
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/a94053a69a01fdb12bd2e0194d1a686173dbd00a/header.jpg?t=1793225680"
+    "hypeScore": 93,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/3e9e86f3d5b4a22a12371442071650118dee0362/header.jpg?t=1788998835"
   }
 ];

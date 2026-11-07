@@ -93531,5 +93531,41 @@
     "addedAt": "2026-11-06",
     "steamAppId": 4618460,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4618460/e95ff8fd12913c4cd006cc403733c6589dc292a5/header.jpg?t=1793914288"
+  },
+  {
+    "id": "deadlight-a-zombie-chronicle",
+    "title": "Deadlight: A Zombie Chronicle",
+    "releaseYear": 2026,
+    "genre": [
+      "Simulation",
+      "Stratégie"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "ZiBa Entertainment",
+    "steamUrl": "https://store.steampowered.com/app/5345750/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/fb1b526347bee68f0def63cf1a02b41ed89201c8/ss_fb1b526347bee68f0def63cf1a02b41ed89201c8.1920x1080.jpg?t=1793959282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/c587c9dea08d64ccdceae7c81a0fdea0f7ce14cc/ss_c587c9dea08d64ccdceae7c81a0fdea0f7ce14cc.1920x1080.jpg?t=1793959282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/0b4af12d437c6b8bc3510bb4fd6474c2bd23b87e/ss_0b4af12d437c6b8bc3510bb4fd6474c2bd23b87e.1920x1080.jpg?t=1793959282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/8b6de62df89f8e0a20a17bb7908f9ab5b43e902b/ss_8b6de62df89f8e0a20a17bb7908f9ab5b43e902b.1920x1080.jpg?t=1793959282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/265ca464035a319472ac230cacc3ed8c11853357/ss_265ca464035a319472ac230cacc3ed8c11853357.1920x1080.jpg?t=1793959282",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/189dbf35573af18ed9b9fc0996e4a7a78aea5a58/ss_189dbf35573af18ed9b9fc0996e4a7a78aea5a58.1920x1080.jpg?t=1793959282"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Garde en vie une poignée d'inconnus dans une maison barricadée au bout du monde. Répartis le travail de la journée, envoie des gens chercher de la nourriture et du carburant, et tiens la porte quand la nuit tombe. Chaque choix coûte quelque chose à quelqu'un, et la voiture n'a que trois places.",
+        "en": "Keep a handful of strangers alive in a boarded-up house at the end of the world. Hand out the day's work, send people out for food and fuel, and hold the door when night falls. Every choice costs someone something, and the car only has three seats."
+      }
+    },
+    "addedAt": "2026-11-07",
+    "steamAppId": 5345750,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/a94053a69a01fdb12bd2e0194d1a686173dbd00a/header.jpg?t=1793959282"
   }
 ]
