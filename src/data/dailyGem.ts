@@ -1,40 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-07";
+export const TODAY_DATE = "2026-11-08";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "children-of-morta",
-  "title": "Children of Morta",
-  "releaseYear": 2019,
-  "releaseDate": "2019-09-03",
+  "id": "cuphead",
+  "title": "Cuphead",
+  "releaseYear": 2017,
+  "releaseDate": "2017-09-29",
   "genre": [
     "Action",
-    "Aventure",
-    "RPG"
+    "Platformer",
+    "Co-op"
   ],
   "artStyle": {
-    "fr": "Pixel Art",
-    "en": "Pixel Art"
+    "fr": "2D Dessiné à la main",
+    "en": "2D Hand-drawn"
   },
   "camera": {
     "fr": "Vue de côté 2D",
     "en": "2D Side-scroller"
   },
-  "developer": "Dead Mage",
-  "steamUrl": "https://store.steampowered.com/app/330020/",
+  "developer": "Studio MDHR",
+  "steamUrl": "https://store.steampowered.com/app/268910/Cuphead/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_83a775e3ef93bde16a08d009a0ad1fb1b2a43b76.1920x1080.jpg?t=1765218667",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_e7bbfd5607b247a6931f521c397bcd50328d45fc.1920x1080.jpg?t=1765218667",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_7e1a090f480f8392e1e1ae019624425a8ded8484.1920x1080.jpg?t=1765218667",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_35184bb42eaf327d0926a8f437ad37d8b1f30652.1920x1080.jpg?t=1765218667",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_0845547cac4c10933666ea052efb7b9da217cffd.1920x1080.jpg?t=1765218667",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/330020/ss_074324b619a1db674fd935bdeef4e0ab165c55ba.1920x1080.jpg?t=1765218667"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_e3096a5555cb77d88db165c83d5ef3a24af1354a.1920x1080.jpg?t=1709068852",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_615455299355eaf552c638c7ea5b24a8b46e02dd.1920x1080.jpg?t=1709068852",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_483fb089be0093beeef03525276803a9ca4f66a1.1920x1080.jpg?t=1709068852",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_48477e4a865827aa0be6a44f00944d8d2a3e5eb9.1920x1080.jpg?t=1709068852",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_380296effbf1073bbedfd480e50cf246eb542b66.1920x1080.jpg?t=1709068852",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_aefad3850c3bc04000cbe0d620bea6807e0a0331.1920x1080.jpg?t=1709068852"
   ],
   "hints": {
     "tagline": {
-      "fr": "Children of Morta est un jeu de RPG d'action basé sur une histoire et mettant en scène une famille extraordinaire de héros. Conduisez les Bergson, avec tous leurs défauts et leurs vertus, contre la corruption à venir. Serez-vous capable de tout sacrifier pour sauver ceux que vous aimez?",
-      "en": "Children of Morta is a story-driven action RPG game about an extraordinary family of heroes. Lead the Bergsons, with all their flaws and virtues, against the forthcoming Corruption. Will you be able to sacrifice everything to save the ones you care for?"
-    }
-  },
-  "addedAt": "2026-10-02"
+      "fr": "Affrontez des boss gigantesques dans un style cartoon inspiré des années 1930 animé à la main.",
+      "en": "A classic run and gun action game heavily focused on boss battles, inspired by 1930s cartoons.",
+      "es": "Un juego de acción clásico centrado en combates contra jefes, inspirado en los dibujos animados de los años 30.",
+      "de": "Ein klassisches Run-and-Gun-Actionspiel mit epischen Bosskämpfen im handgezeichneten Stil der 1930er.",
+      "ja": "1930年代のカートゥーンアニメにインスパイアされた、手描きセル画のボスバトルアクション。",
+      "pt-BR": "Enfrente chefes gigantescos em um estilo de desenho animado dos anos 1930 feito à mão."
+    },
+    "composer": "Kristofer Maddigan"
+  }
 };

@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 120
+ * Total de pépites sélectionnées : 122
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5012,5 +5012,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI5ODEwMjcxLmpwZw==/315x250%23c/1PegtD.jpg"
     ],
     "dateAdded": "2026-11-07"
+  },
+  {
+    "id": "itch-sternly-worded-adventures",
+    "title": "Sternly Worded Adventures",
+    "developer": "the-balthazar",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://the-balthazar.itch.io/sternly-worded-adventures",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$10.00",
+      "en": "$10.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A rogue-like word-puzzle RPG.",
+      "en": "A rogue-like word-puzzle RPG."
+    },
+    "description": {
+      "fr": "A rogue-like word-puzzle RPG.",
+      "en": "A rogue-like word-puzzle RPG."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxOTYwOTk3LmpwZw==/315x250%23c/f%2BgxfP.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxOTYwOTk3LmpwZw==/315x250%23c/f%2BgxfP.jpg"
+    ],
+    "dateAdded": "2026-11-08"
+  },
+  {
+    "id": "itch-plinkidle",
+    "title": "PlinkIdle",
+    "developer": "black-heart-games-studio",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://black-heart-games-studio.itch.io/plinkidle",
+    "playInBrowserUrl": "https://black-heart-games-studio.itch.io/plinkidle",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$7.99",
+      "en": "$7.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Drop the ball. Upgrade your world. Watch the chaos unfold.",
+      "en": "Drop the ball. Upgrade your world. Watch the chaos unfold."
+    },
+    "description": {
+      "fr": "Drop the ball. Upgrade your world. Watch the chaos unfold.",
+      "en": "Drop the ball. Upgrade your world. Watch the chaos unfold."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI3NjcxMjE3LnBuZw==/315x250%23c/KSjizb.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI3NjcxMjE3LnBuZw==/315x250%23c/KSjizb.png"
+    ],
+    "dateAdded": "2026-11-08"
   }
 ];

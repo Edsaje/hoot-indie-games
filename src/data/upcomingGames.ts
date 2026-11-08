@@ -588,8 +588,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Voliware Inc",
     "publisher": "Voliware Inc",
     "expectedDate": {
-      "fr": "7 nov. 2026",
-      "en": "Nov 7, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
