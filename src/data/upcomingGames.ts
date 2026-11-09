@@ -549,67 +549,63 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5373980/37a96b3e5ef52e540d69568c568e9cf74364a6eb/header.jpg?t=1792486527"
   },
   {
-    "id": "where-are-the-brakes",
-    "title": "Where Are the Brakes?",
-    "developer": "JG Studio",
-    "publisher": "JG Studio",
+    "id": "boris-the-second-sun",
+    "title": "Boris & the Second Sun",
+    "developer": "ChamomillaGames",
+    "publisher": "ChamomillaGames",
     "expectedDate": {
       "fr": "Prochainement",
-      "en": "Prochainement"
+      "en": "9 Nov, 2026"
     },
     "genres": [
       {
-        "fr": "Action",
-        "en": "Action"
-      },
-      {
-        "fr": "Aventure",
-        "en": "Aventure"
+        "fr": "Puzzle",
+        "en": "Puzzle"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5485240/",
+    "steamUrl": "https://store.steampowered.com/app/5477930/",
     "description": {
-      "fr": "One shopping cart. Up to four players sharing the controls. Steer, jump and shoot through 10 hazardous stages and two boss battles in this co-op action game. Handle everything solo, or invite friends and find out whether your teamwork can survive without brakes.",
-      "en": "One shopping cart. Up to four players sharing the controls. Steer, jump and shoot through 10 hazardous stages and two boss battles in this co-op action game. Handle everything solo, or invite friends and find out whether your teamwork can survive without brakes."
-    },
-    "highlight": {
-      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
-      "en": "Highlighted among the most anticipated indie titles on Steam."
-    },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/99ef3614f4a4c5cd7f746c8fff28c74664ddea44/header.jpg?t=1793420062"
-  },
-  {
-    "id": "battle-runes-of-metalaria",
-    "title": "Battle Runes of Metalaria",
-    "developer": "Voliware Inc",
-    "publisher": "Voliware Inc",
-    "expectedDate": {
-      "fr": "Prochainement",
-      "en": "Prochainement"
-    },
-    "genres": [
-      {
-        "fr": "Action",
-        "en": "Action"
-      }
-    ],
-    "platforms": [
-      "PC"
-    ],
-    "steamUrl": "https://store.steampowered.com/app/3997770/",
-    "description": {
-      "fr": "Battle Runes of Metalaria is an action packed, chaos infused board game for up to four players. Stack your runes on the board to make vertical and horizontal combos or smash your opponents pieces to smithereens",
-      "en": "Battle Runes of Metalaria is an action packed, chaos infused board game for up to four players. Stack your runes on the board to make vertical and horizontal combos or smash your opponents pieces to smithereens"
+      "fr": "Your cat borrowed eight million, built a second sun in the bathroom, and named you guarantor. An absurd comedy visual novel with dubious contracts, a bathtub republic, a turn-based solar puzzle, and three ways to survive the evening.",
+      "en": "Your cat borrowed eight million, built a second sun in the bathroom, and named you guarantor. An absurd comedy visual novel with dubious contracts, a bathtub republic, a turn-based solar puzzle, and three ways to survive the evening."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/3e9e86f3d5b4a22a12371442071650118dee0362/header.jpg?t=1788998835"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/eabce82382c3e24104d3e69422d14f89f09dc89a/header.jpg?t=1792933084"
+  },
+  {
+    "id": "zolge-station-huga-waiwai-academy",
+    "title": "ZOLGE STATION: HUGA Waiwai Academy",
+    "developer": "HUGA Inc.",
+    "publisher": "HUGA Inc.",
+    "expectedDate": {
+      "fr": "Prochainement",
+      "en": "9 Nov, 2026"
+    },
+    "genres": [
+      {
+        "fr": "Free-to-play",
+        "en": "Free-to-play"
+      }
+    ],
+    "platforms": [
+      "PC"
+    ],
+    "steamUrl": "https://store.steampowered.com/app/5466110/",
+    "description": {
+      "fr": "Free Issue 00 includes an exclusive special stage of the wild run &amp; gun HIJURA SCARLET GEAR! A disk-magazine-style collection of indie studio HU-GA's work, also with the Final Re:Quest movie trailer in TRUE PIXEL, a special booklet and four Zolge Station talk specials. New issues arrive as DLC.",
+      "en": "Free Issue 00 includes an exclusive special stage of the wild run &amp; gun HIJURA SCARLET GEAR! A disk-magazine-style collection of indie studio HU-GA's work, also with the Final Re:Quest movie trailer in TRUE PIXEL, a special booklet and four Zolge Station talk specials. New issues arrive as DLC."
+    },
+    "highlight": {
+      "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
+      "en": "Highlighted among the most anticipated indie titles on Steam."
+    },
+    "hypeScore": 96,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/77fa3419e0119fc9e1e1502560d23567e1cb3d54/header.jpg?t=1793724086"
   }
 ];

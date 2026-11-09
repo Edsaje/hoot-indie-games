@@ -93567,5 +93567,76 @@
     "addedAt": "2026-11-07",
     "steamAppId": 5345750,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5345750/a94053a69a01fdb12bd2e0194d1a686173dbd00a/header.jpg?t=1793959282"
+  },
+  {
+    "id": "where-are-the-brakes",
+    "title": "Where Are the Brakes?",
+    "releaseYear": 2026,
+    "genre": [
+      "Action",
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "JG Studio",
+    "steamUrl": "https://store.steampowered.com/app/5485240/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/0d97f562d02e00aaca52b3670a121da7d1922ea1/ss_0d97f562d02e00aaca52b3670a121da7d1922ea1.1920x1080.jpg?t=1794130857",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/95e6ad1ac53489bd69af69680bf0af5cc008ab59/ss_95e6ad1ac53489bd69af69680bf0af5cc008ab59.1920x1080.jpg?t=1794130857",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/cf9d454a427056405fef5e17c7fa7d1461342876/ss_cf9d454a427056405fef5e17c7fa7d1461342876.1920x1080.jpg?t=1794130857",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/0e6e52bc4355f92d3fcecba602bb582a7bf9b998/ss_0e6e52bc4355f92d3fcecba602bb582a7bf9b998.1920x1080.jpg?t=1794130857",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/35f2514865789f684e0d8b33ac4051927c127b39/ss_35f2514865789f684e0d8b33ac4051927c127b39.1920x1080.jpg?t=1794130857",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/0d97f562d02e00aaca52b3670a121da7d1922ea1/ss_0d97f562d02e00aaca52b3670a121da7d1922ea1.1920x1080.jpg?t=1794130857"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "One shopping cart. Up to four players sharing the controls. Steer, jump and shoot through 10 hazardous stages and two boss battles in this co-op action game. Handle everything solo, or invite friends and find out whether your teamwork can survive without brakes.",
+        "en": "One shopping cart. Up to four players sharing the controls. Steer, jump and shoot through 10 hazardous stages and two boss battles in this co-op action game. Handle everything solo, or invite friends and find out whether your teamwork can survive without brakes."
+      }
+    },
+    "addedAt": "2026-11-09",
+    "steamAppId": 5485240,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5485240/99ef3614f4a4c5cd7f746c8fff28c74664ddea44/header.jpg?t=1794130857"
+  },
+  {
+    "id": "battle-runes-of-metalaria",
+    "title": "Battle Runes of Metalaria",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Voliware Inc",
+    "steamUrl": "https://store.steampowered.com/app/3997770/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/639f09e5451e8d5beb383f533771f262670f591e/ss_639f09e5451e8d5beb383f533771f262670f591e.1920x1080.jpg?t=1794162477",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/56654a6735188977ae7b4044cc6fa1a32d4a2c9c/ss_56654a6735188977ae7b4044cc6fa1a32d4a2c9c.1920x1080.jpg?t=1794162477",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/20b416b0715e8b99f58388a508dd7e2dfce2e2d1/ss_20b416b0715e8b99f58388a508dd7e2dfce2e2d1.1920x1080.jpg?t=1794162477",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/ed1446b1b4ab5152d1a1bf4e8a81b624ca5b4809/ss_ed1446b1b4ab5152d1a1bf4e8a81b624ca5b4809.1920x1080.jpg?t=1794162477",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/c96c20c3f3fb8a25d8e76a16a70c34b79a909a7d/ss_c96c20c3f3fb8a25d8e76a16a70c34b79a909a7d.1920x1080.jpg?t=1794162477",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/639f09e5451e8d5beb383f533771f262670f591e/ss_639f09e5451e8d5beb383f533771f262670f591e.1920x1080.jpg?t=1794162477"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Battle Runes of Metalaria is an action packed, chaos infused board game for up to four players. Stack your runes on the board to make vertical and horizontal combos or smash your opponents pieces to smithereens",
+        "en": "Battle Runes of Metalaria is an action packed, chaos infused board game for up to four players. Stack your runes on the board to make vertical and horizontal combos or smash your opponents pieces to smithereens"
+      }
+    },
+    "addedAt": "2026-11-09",
+    "steamAppId": 3997770,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/3e9e86f3d5b4a22a12371442071650118dee0362/header.jpg?t=1794162477"
   }
 ]

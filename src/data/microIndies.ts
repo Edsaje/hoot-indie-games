@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 122
+ * Total de pépites sélectionnées : 124
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5093,5 +5093,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI3NjcxMjE3LnBuZw==/315x250%23c/KSjizb.png"
     ],
     "dateAdded": "2026-11-08"
+  },
+  {
+    "id": "itch-dead-faces",
+    "title": "Dead Faces",
+    "developer": "azagamestudio",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://azagamestudio.itch.io/dead-faces",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Psychological Horror - You're losing your mind again Jack",
+      "en": "Psychological Horror - You're losing your mind again Jack"
+    },
+    "description": {
+      "fr": "Psychological Horror - You're losing your mind again Jack",
+      "en": "Psychological Horror - You're losing your mind again Jack"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI1NDc0MzM0LnBuZw==/315x250%23c/ovwQPg.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI1NDc0MzM0LnBuZw==/315x250%23c/ovwQPg.png"
+    ],
+    "dateAdded": "2026-11-09"
+  },
+  {
+    "id": "itch-indiepocalypse-82",
+    "title": "Indiepocalypse #82",
+    "developer": "pizzapranks",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pizzapranks.itch.io/indiepocalypse-82",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$15.00",
+      "en": "$15.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Issue #82 of a monthly indie game anthology collecting games from 10 developers.",
+      "en": "Issue #82 of a monthly indie game anthology collecting games from 10 developers."
+    },
+    "description": {
+      "fr": "Issue #82 of a monthly indie game anthology collecting games from 10 developers.",
+      "en": "Issue #82 of a monthly indie game anthology collecting games from 10 developers."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxOTA1MTg2LmdpZg==/original/mneHbP.gif",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxOTA1MTg2LmdpZg==/original/mneHbP.gif"
+    ],
+    "dateAdded": "2026-11-09"
   }
 ];

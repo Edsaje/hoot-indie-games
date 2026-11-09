@@ -1,16 +1,15 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-08";
+export const TODAY_DATE = "2026-11-09";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "cuphead",
-  "title": "Cuphead",
-  "releaseYear": 2017,
-  "releaseDate": "2017-09-29",
+  "id": "ender-lilies-quietus-of-the-knights",
+  "title": "ENDER LILIES: Quietus of the Knights",
+  "releaseYear": 2021,
+  "releaseDate": "2021-06-21",
   "genre": [
     "Action",
-    "Platformer",
-    "Co-op"
+    "RPG"
   ],
   "artStyle": {
     "fr": "2D Dessiné à la main",
@@ -20,25 +19,22 @@ export const TODAY_DAILY_GEM: Game = {
     "fr": "Vue de côté 2D",
     "en": "2D Side-scroller"
   },
-  "developer": "Studio MDHR",
-  "steamUrl": "https://store.steampowered.com/app/268910/Cuphead/",
+  "developer": "Live Wire",
+  "steamUrl": "https://store.steampowered.com/app/1369630/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_e3096a5555cb77d88db165c83d5ef3a24af1354a.1920x1080.jpg?t=1709068852",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_615455299355eaf552c638c7ea5b24a8b46e02dd.1920x1080.jpg?t=1709068852",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_483fb089be0093beeef03525276803a9ca4f66a1.1920x1080.jpg?t=1709068852",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_48477e4a865827aa0be6a44f00944d8d2a3e5eb9.1920x1080.jpg?t=1709068852",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_380296effbf1073bbedfd480e50cf246eb542b66.1920x1080.jpg?t=1709068852",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/268910/ss_aefad3850c3bc04000cbe0d620bea6807e0a0331.1920x1080.jpg?t=1709068852"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_1c2bf22139c82d0c46ccee075e1e71e08b88ab44.1920x1080.jpg?t=1788931074",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_a3d8c04253e525da1907fd8028ab66a318c1f0c1.1920x1080.jpg?t=1788931074",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_0076f81d06eb547dbec80d06a3148c1c614f540b.1920x1080.jpg?t=1788931074",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_c1180c9d99d525508066f4d919e280d1a4f8bb8e.1920x1080.jpg?t=1788931074",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_ae62391706e55f64eac21d81c9862e8f635662a8.1920x1080.jpg?t=1788931074",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_9b18286c32d4851f07ef2c17b4774962147b87cb.1920x1080.jpg?t=1788931074"
   ],
   "hints": {
     "tagline": {
-      "fr": "Affrontez des boss gigantesques dans un style cartoon inspiré des années 1930 animé à la main.",
-      "en": "A classic run and gun action game heavily focused on boss battles, inspired by 1930s cartoons.",
-      "es": "Un juego de acción clásico centrado en combates contra jefes, inspirado en los dibujos animados de los años 30.",
-      "de": "Ein klassisches Run-and-Gun-Actionspiel mit epischen Bosskämpfen im handgezeichneten Stil der 1930er.",
-      "ja": "1930年代のカートゥーンアニメにインスパイアされた、手描きセル画のボスバトルアクション。",
-      "pt-BR": "Enfrente chefes gigantescos em um estilo de desenho animado dos anos 1930 feito à mão."
+      "fr": "Découvrez l'histoire de Lily et des chevaliers immortels au royaume de Lointerre, touché par une pluie de mort. Dans cet action-RPG à défilement horizontal où les ennemis ne vous laisseront pas le moindre répit, percez les mystères d'un monde beau et tragique aux côtés de vos camarades.",
+      "en": "ENDER LILIES is a dark fantasy 2D action RPG about unraveling the mysteries of a destroyed kingdom. On this sorrowful journey, encounter horrific enemies against whom a moment of inattention could be fatal. Overcome these hardships and seek the truth with the help of fallen knights."
     },
-    "composer": "Kristofer Maddigan"
-  }
+    "composer": "Mili"
+  },
+  "addedAt": "2026-09-25"
 };
