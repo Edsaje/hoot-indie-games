@@ -579,33 +579,33 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/eabce82382c3e24104d3e69422d14f89f09dc89a/header.jpg?t=1792933084"
   },
   {
-    "id": "zolge-station-huga-waiwai-academy",
-    "title": "ZOLGE STATION: HUGA Waiwai Academy",
-    "developer": "HUGA Inc.",
-    "publisher": "HUGA Inc.",
+    "id": "great-space-race-of-3032",
+    "title": "Great Space Race of 3032",
+    "developer": "FTV Games",
+    "publisher": "FTV Games",
     "expectedDate": {
-      "fr": "Prochainement",
-      "en": "9 Nov, 2026"
+      "fr": "10 nov. 2026",
+      "en": "Nov 10, 2026"
     },
     "genres": [
       {
-        "fr": "Free-to-play",
-        "en": "Free-to-play"
+        "fr": "Course automobile",
+        "en": "Course automobile"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5466110/",
+    "steamUrl": "https://store.steampowered.com/app/4825260/",
     "description": {
-      "fr": "Free Issue 00 includes an exclusive special stage of the wild run &amp; gun HIJURA SCARLET GEAR! A disk-magazine-style collection of indie studio HU-GA's work, also with the Final Re:Quest movie trailer in TRUE PIXEL, a special booklet and four Zolge Station talk specials. New issues arrive as DLC.",
-      "en": "Free Issue 00 includes an exclusive special stage of the wild run &amp; gun HIJURA SCARLET GEAR! A disk-magazine-style collection of indie studio HU-GA's work, also with the Final Re:Quest movie trailer in TRUE PIXEL, a special booklet and four Zolge Station talk specials. New issues arrive as DLC."
+      "fr": "Test your piloting skills in a 6-DOF space racer. Match up against others in the matchmaking mode, compete against AI, or race the clock solo. Clear as many rings as you can, and clear the finish line to lock in your time, top speed and accuracy. Get there first to win.",
+      "en": "Test your piloting skills in a 6-DOF space racer. Match up against others in the matchmaking mode, compete against AI, or race the clock solo. Clear as many rings as you can, and clear the finish line to lock in your time, top speed and accuracy. Get there first to win."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 96,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/77fa3419e0119fc9e1e1502560d23567e1cb3d54/header.jpg?t=1793724086"
+    "hypeScore": 92,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/8deac86b6fcbc50bb8e47dd7db8ebabcc88002f9/header.jpg?t=1794171776"
   }
 ];

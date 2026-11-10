@@ -1,40 +1,40 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-09";
+export const TODAY_DATE = "2026-11-10";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "ender-lilies-quietus-of-the-knights",
-  "title": "ENDER LILIES: Quietus of the Knights",
-  "releaseYear": 2021,
-  "releaseDate": "2021-06-21",
+  "id": "satisfactory",
+  "title": "Satisfactory",
+  "releaseYear": 2024,
+  "releaseDate": "2024-09-10",
   "genre": [
-    "Action",
-    "RPG"
+    "Aventure",
+    "Simulation",
+    "Stratégie"
   ],
   "artStyle": {
-    "fr": "2D Dessiné à la main",
-    "en": "2D Hand-drawn"
+    "fr": "3D Stylisée",
+    "en": "Stylized 3D"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Première personne",
+    "en": "First-Person"
   },
-  "developer": "Live Wire",
-  "steamUrl": "https://store.steampowered.com/app/1369630/",
+  "developer": "Coffee Stain Studios",
+  "steamUrl": "https://store.steampowered.com/app/526870/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_1c2bf22139c82d0c46ccee075e1e71e08b88ab44.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_a3d8c04253e525da1907fd8028ab66a318c1f0c1.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_0076f81d06eb547dbec80d06a3148c1c614f540b.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_c1180c9d99d525508066f4d919e280d1a4f8bb8e.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_ae62391706e55f64eac21d81c9862e8f635662a8.1920x1080.jpg?t=1788931074",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/ss_9b18286c32d4851f07ef2c17b4774962147b87cb.1920x1080.jpg?t=1788931074"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_9083ccf8fbb22c4068a6e233e3de343f815f9dc1.1920x1080.jpg?t=1788349095",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_6f456011887f970dc230af5e1720065ca3430aae.1920x1080.jpg?t=1788349095",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_b1104309f1c22c85de6ad6c401e6d889411c14d2.1920x1080.jpg?t=1788349095",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_3f47e401fc3e09fd86500d2026da954de08a015b.1920x1080.jpg?t=1788349095",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_077e7ea98621faeb5b4a73ea0aaa91f41c6f66c9.1920x1080.jpg?t=1788349095",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/ss_cff8791f06839134d09f4c865758193a7023b92f.1920x1080.jpg?t=1788349095"
   ],
   "hints": {
     "tagline": {
-      "fr": "Découvrez l'histoire de Lily et des chevaliers immortels au royaume de Lointerre, touché par une pluie de mort. Dans cet action-RPG à défilement horizontal où les ennemis ne vous laisseront pas le moindre répit, percez les mystères d'un monde beau et tragique aux côtés de vos camarades.",
-      "en": "ENDER LILIES is a dark fantasy 2D action RPG about unraveling the mysteries of a destroyed kingdom. On this sorrowful journey, encounter horrific enemies against whom a moment of inattention could be fatal. Overcome these hardships and seek the truth with the help of fallen knights."
-    },
-    "composer": "Mili"
+      "fr": "Satisfactory est un jeu de construction d’usines en vue à la première personne dans un monde ouvert avec une touche d’exploration et de combats. Jouez seul ou entre amis, explorez une planète inconnue, construisez des usines à plusieurs niveaux et des tapis roulants à l’infini !",
+      "en": "Satisfactory is a first-person open-world factory building game with a dash of exploration and combat. Play alone or with friends, explore an alien planet, create multi-story factories, and enter conveyor belt heaven!"
+    }
   },
   "addedAt": "2026-09-25"
 };

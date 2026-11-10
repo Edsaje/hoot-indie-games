@@ -30443,6 +30443,22 @@
       "en": "Very Positive"
     }
   },
+  "5466110": {
+    "appId": 5466110,
+    "isFree": true,
+    "currency": "EUR",
+    "initialPriceCents": 0,
+    "finalPriceCents": 0,
+    "discountPercent": 0,
+    "formattedFinalPrice": "Gratuit",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
   "5485240": {
     "appId": 5485240,
     "isFree": false,

@@ -93638,5 +93638,41 @@
     "addedAt": "2026-11-09",
     "steamAppId": 3997770,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3997770/3e9e86f3d5b4a22a12371442071650118dee0362/header.jpg?t=1794162477"
+  },
+  {
+    "id": "zolge-station-huga-waiwai-academy",
+    "title": "ZOLGE STATION: HUGA Waiwai Academy",
+    "releaseYear": 2026,
+    "genre": [
+      "Free-to-play"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "HUGA Inc.",
+    "steamUrl": "https://store.steampowered.com/app/5466110/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/4e7dd4d3fe4a2fdc90d783dca4e03ceb90305f38/ss_4e7dd4d3fe4a2fdc90d783dca4e03ceb90305f38.1920x1080.jpg?t=1794284863",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/8e5e174cb94c7533cf82d100f34a0da63ab857e6/ss_8e5e174cb94c7533cf82d100f34a0da63ab857e6.1920x1080.jpg?t=1794284863",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/9d6f9a499c51657d6b9e41713788f610a0472a82/ss_9d6f9a499c51657d6b9e41713788f610a0472a82.1920x1080.jpg?t=1794284863",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/d379f3e6f866fc603426a1204c9f9d06e79c753b/ss_d379f3e6f866fc603426a1204c9f9d06e79c753b.1920x1080.jpg?t=1794284863",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/77b15f8583ba16be1d251335432fc2450faa10e6/ss_77b15f8583ba16be1d251335432fc2450faa10e6.1920x1080.jpg?t=1794284863",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/48fd3ce31e0cb8150c04bb188b17dbe64129b42d/ss_48fd3ce31e0cb8150c04bb188b17dbe64129b42d.1920x1080.jpg?t=1794284863"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Free Issue 00 includes an exclusive special stage of the wild run &amp; gun HIJURA SCARLET GEAR! A disk-magazine-style collection of indie studio HU-GA's work, also with the Final Re:Quest movie trailer in TRUE PIXEL, a special booklet and four Zolge Station talk specials. New issues arrive as DLC.",
+        "en": "Free Issue 00 includes an exclusive special stage of the wild run &amp; gun HIJURA SCARLET GEAR! A disk-magazine-style collection of indie studio HU-GA's work, also with the Final Re:Quest movie trailer in TRUE PIXEL, a special booklet and four Zolge Station talk specials. New issues arrive as DLC."
+      }
+    },
+    "addedAt": "2026-11-10",
+    "isFree": true,
+    "steamAppId": 5466110,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/77fa3419e0119fc9e1e1502560d23567e1cb3d54/header.jpg?t=1794284863"
   }
 ]

@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 124
+ * Total de pépites sélectionnées : 126
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5173,5 +5173,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxOTA1MTg2LmdpZg==/original/mneHbP.gif"
     ],
     "dateAdded": "2026-11-09"
+  },
+  {
+    "id": "itch-earth-regen",
+    "title": "Earth ReGen",
+    "developer": "disagreeg",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://disagreeg.itch.io/earth-regen",
+    "playInBrowserUrl": "https://disagreeg.itch.io/earth-regen",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Wire machines together and bring a dead planet back. A factory-building incremental.",
+      "en": "Wire machines together and bring a dead planet back. A factory-building incremental."
+    },
+    "description": {
+      "fr": "Wire machines together and bring a dead planet back. A factory-building incremental.",
+      "en": "Wire machines together and bring a dead planet back. A factory-building incremental."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxNjQ2NDMzLnBuZw==/315x250%23c/hXTd3l.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxNjQ2NDMzLnBuZw==/315x250%23c/hXTd3l.png"
+    ],
+    "dateAdded": "2026-11-10"
+  },
+  {
+    "id": "itch-idlecraft",
+    "title": "Idlecraft",
+    "developer": "nearlydonegames",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://nearlydonegames.itch.io/idlecraft",
+    "playInBrowserUrl": "https://nearlydonegames.itch.io/idlecraft",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A cozy Voxel-themed idle incremental. Hover to mine, upgrade, repeat.",
+      "en": "A cozy Voxel-themed idle incremental. Hover to mine, upgrade, repeat."
+    },
+    "description": {
+      "fr": "A cozy Voxel-themed idle incremental. Hover to mine, upgrade, repeat.",
+      "en": "A cozy Voxel-themed idle incremental. Hover to mine, upgrade, repeat."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMyMDQyNDQ0LnBuZw==/315x250%23c/HCiism.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMyMDQyNDQ0LnBuZw==/315x250%23c/HCiism.png"
+    ],
+    "dateAdded": "2026-11-10"
   }
 ];
