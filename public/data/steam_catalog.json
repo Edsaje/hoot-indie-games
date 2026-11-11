@@ -93674,5 +93674,40 @@
     "isFree": true,
     "steamAppId": 5466110,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5466110/77fa3419e0119fc9e1e1502560d23567e1cb3d54/header.jpg?t=1794284863"
+  },
+  {
+    "id": "great-space-race-of-3032",
+    "title": "Great Space Race of 3032",
+    "releaseYear": 2026,
+    "genre": [
+      "Course automobile"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "FTV Games",
+    "steamUrl": "https://store.steampowered.com/app/4825260/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/678d0007c9d3850fe5972dc90d925ba67240424c/ss_678d0007c9d3850fe5972dc90d925ba67240424c.1920x1080.jpg?t=1794384165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/d47f1847c900094f8e00ece3ec0cdd54a58c2b68/ss_d47f1847c900094f8e00ece3ec0cdd54a58c2b68.1920x1080.jpg?t=1794384165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/a9f42213f26464420b0af6793a0b9329251936a6/ss_a9f42213f26464420b0af6793a0b9329251936a6.1920x1080.jpg?t=1794384165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/8a7d9911c138367ae1d7641fa630a79275a7400f/ss_8a7d9911c138367ae1d7641fa630a79275a7400f.1920x1080.jpg?t=1794384165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/79e0637a27d0a73ae6d08b9830a708969e19e973/ss_79e0637a27d0a73ae6d08b9830a708969e19e973.1920x1080.jpg?t=1794384165",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/6ba326aae3012c9e6889ea11c34f57fac9edb278/ss_6ba326aae3012c9e6889ea11c34f57fac9edb278.1920x1080.jpg?t=1794384165"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Test your piloting skills in a 6-DOF space racer. Match up against others in the matchmaking mode, compete against AI, or race the clock solo. Clear as many rings as you can, and clear the finish line to lock in your time, top speed and accuracy. Get there first to win.",
+        "en": "Test your piloting skills in a 6-DOF space racer. Match up against others in the matchmaking mode, compete against AI, or race the clock solo. Clear as many rings as you can, and clear the finish line to lock in your time, top speed and accuracy. Get there first to win."
+      }
+    },
+    "addedAt": "2026-11-11",
+    "steamAppId": 4825260,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/8deac86b6fcbc50bb8e47dd7db8ebabcc88002f9/header.jpg?t=1794384165"
   }
 ]

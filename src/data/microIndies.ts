@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 126
+ * Total de pépites sélectionnées : 128
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5255,5 +5255,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMyMDQyNDQ0LnBuZw==/315x250%23c/HCiism.png"
     ],
     "dateAdded": "2026-11-10"
+  },
+  {
+    "id": "itch-generations-deep",
+    "title": "Generations Deep",
+    "developer": "notsospecialgames",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://notsospecialgames.itch.io/grandfathers-estate",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Grandfather made some zombies. Again.",
+      "en": "Grandfather made some zombies. Again."
+    },
+    "description": {
+      "fr": "Grandfather made some zombies. Again.",
+      "en": "Grandfather made some zombies. Again."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxNzE2Mzg5LnBuZw==/315x250%23c/RDRkBR.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxNzE2Mzg5LnBuZw==/315x250%23c/RDRkBR.png"
+    ],
+    "dateAdded": "2026-11-11"
+  },
+  {
+    "id": "itch-terraformer-wars",
+    "title": "Terraformer Wars",
+    "developer": "16bitnights",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://16bitnights.itch.io/terraformer-wars",
+    "playInBrowserUrl": "https://16bitnights.itch.io/terraformer-wars",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Autobattler, Incremental, Roguelike",
+      "en": "Autobattler, Incremental, Roguelike"
+    },
+    "description": {
+      "fr": "Autobattler, Incremental, Roguelike",
+      "en": "Autobattler, Incremental, Roguelike"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMwMDcyODc2LnBuZw==/315x250%23c/t%2BGl5X.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMwMDcyODc2LnBuZw==/315x250%23c/t%2BGl5X.png"
+    ],
+    "dateAdded": "2026-11-11"
   }
 ];

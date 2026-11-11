@@ -579,33 +579,33 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/eabce82382c3e24104d3e69422d14f89f09dc89a/header.jpg?t=1792933084"
   },
   {
-    "id": "great-space-race-of-3032",
-    "title": "Great Space Race of 3032",
-    "developer": "FTV Games",
-    "publisher": "FTV Games",
+    "id": "didgeridoo-man-the-legend-of-the-hill",
+    "title": "Didgeridoo Man - The Legend of the Hill",
+    "developer": "Studio Justin Braun",
+    "publisher": "Studio Justin Braun",
     "expectedDate": {
-      "fr": "10 nov. 2026",
-      "en": "Nov 10, 2026"
+      "fr": "11 nov. 2026",
+      "en": "Nov 11, 2026"
     },
     "genres": [
       {
-        "fr": "Course automobile",
-        "en": "Course automobile"
+        "fr": "Action",
+        "en": "Action"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/4825260/",
+    "steamUrl": "https://store.steampowered.com/app/5115730/",
     "description": {
-      "fr": "Test your piloting skills in a 6-DOF space racer. Match up against others in the matchmaking mode, compete against AI, or race the clock solo. Clear as many rings as you can, and clear the finish line to lock in your time, top speed and accuracy. Get there first to win.",
-      "en": "Test your piloting skills in a 6-DOF space racer. Match up against others in the matchmaking mode, compete against AI, or race the clock solo. Clear as many rings as you can, and clear the finish line to lock in your time, top speed and accuracy. Get there first to win."
+      "fr": "An absurd rhythm-arcade shooter: on a green hill, a man performs every note of the soundtrack live on his didgeridoo. Hit your targets, build combos, and whatever you do, don't miss, or he'll literally blow his top.",
+      "en": "An absurd rhythm-arcade shooter: on a green hill, a man performs every note of the soundtrack live on his didgeridoo. Hit your targets, build combos, and whatever you do, don't miss, or he'll literally blow his top."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 92,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/8deac86b6fcbc50bb8e47dd7db8ebabcc88002f9/header.jpg?t=1794171776"
+    "hypeScore": 95,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/1ef889dad516bf83b440e2ba4ac21d44e2478645/header.jpg?t=1793914764"
   }
 ];
