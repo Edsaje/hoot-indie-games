@@ -1,7 +1,7 @@
 /**
  * 🦉 Hoot Indie Games — Données Steam Store Officielles Certifiées (Prix, Promotions & Avis)
  * Généré automatiquement via Steam Store & Reviews API.
- * 0 Hallucination : données réelles et vérifiées pour 1816 jeux indépendants.
+ * 0 Hallucination : données réelles et vérifiées pour 1817 jeux indépendants.
  */
 
 export interface SteamStoreGameData {
@@ -29947,6 +29947,23 @@ export const STEAM_STORE_DATA: Record<number, SteamStoreGameData> = {
     "discountPercent": 15,
     "formattedFinalPrice": "5,77€",
     "formattedInitialPrice": "6,79€",
+    "totalReviews": 0,
+    "totalPositive": 0,
+    "positivePercent": 90,
+    "reviewScoreDesc": {
+      "fr": "Très positifs",
+      "en": "Very Positive"
+    }
+  },
+  "5115730": {
+    "appId": 5115730,
+    "isFree": false,
+    "currency": "EUR",
+    "initialPriceCents": 315,
+    "finalPriceCents": 252,
+    "discountPercent": 20,
+    "formattedFinalPrice": "2,52€",
+    "formattedInitialPrice": "3,15€",
     "totalReviews": 0,
     "totalPositive": 0,
     "positivePercent": 90,

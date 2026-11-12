@@ -93709,5 +93709,40 @@
     "addedAt": "2026-11-11",
     "steamAppId": 4825260,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4825260/8deac86b6fcbc50bb8e47dd7db8ebabcc88002f9/header.jpg?t=1794384165"
+  },
+  {
+    "id": "didgeridoo-man-the-legend-of-the-hill",
+    "title": "Didgeridoo Man - The Legend of the Hill",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Studio Justin Braun",
+    "steamUrl": "https://store.steampowered.com/app/5115730/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/09472f347e6e8d6920b16d85ba144d75a236a0a9/ss_09472f347e6e8d6920b16d85ba144d75a236a0a9.1920x1080.jpg?t=1794422708",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/be822101ff4d77eb4a8a7a72161a4c341b3f7e26/ss_be822101ff4d77eb4a8a7a72161a4c341b3f7e26.1920x1080.jpg?t=1794422708",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/3a7689f1a8117974d2e728ff51fbacc5fbbfc0df/ss_3a7689f1a8117974d2e728ff51fbacc5fbbfc0df.1920x1080.jpg?t=1794422708",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/4162bff1014f4dc00c6996dcf2c45f273ed72c94/ss_4162bff1014f4dc00c6996dcf2c45f273ed72c94.1920x1080.jpg?t=1794422708",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/bdcaeb8345d7e00b047c7d4594a7b8254cd2d7af/ss_bdcaeb8345d7e00b047c7d4594a7b8254cd2d7af.1920x1080.jpg?t=1794422708",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/09472f347e6e8d6920b16d85ba144d75a236a0a9/ss_09472f347e6e8d6920b16d85ba144d75a236a0a9.1920x1080.jpg?t=1794422708"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "An absurd rhythm-arcade shooter: on a green hill, a man performs every note of the soundtrack live on his didgeridoo. Hit your targets, build combos, and whatever you do, don't miss, or he'll literally blow his top.",
+        "en": "An absurd rhythm-arcade shooter: on a green hill, a man performs every note of the soundtrack live on his didgeridoo. Hit your targets, build combos, and whatever you do, don't miss, or he'll literally blow his top."
+      }
+    },
+    "addedAt": "2026-11-12",
+    "steamAppId": 5115730,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/1ef889dad516bf83b440e2ba4ac21d44e2478645/header.jpg?t=1794422708"
   }
 ]

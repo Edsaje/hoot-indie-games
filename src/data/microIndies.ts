@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 128
+ * Total de pépites sélectionnées : 130
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5336,5 +5336,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMwMDcyODc2LnBuZw==/315x250%23c/t%2BGl5X.png"
     ],
     "dateAdded": "2026-11-11"
+  },
+  {
+    "id": "itch-noise-s-halloween-bash",
+    "title": "Noise's Halloween Bash",
+    "developer": "pizza-tower-19-plus",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pizza-tower-19-plus.itch.io/noises-halloween-bash",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Isométrique / 2.5D",
+      "en": "Isometric / 2.5D"
+    },
+    "tagline": {
+      "fr": "A 2.5D Frankenstein's Platformer, set in the Pizza Tower Classic world!",
+      "en": "A 2.5D Frankenstein's Platformer, set in the Pizza Tower Classic world!"
+    },
+    "description": {
+      "fr": "A 2.5D Frankenstein's Platformer, set in the Pizza Tower Classic world!",
+      "en": "A 2.5D Frankenstein's Platformer, set in the Pizza Tower Classic world!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIzNzc5ODIxLnBuZw==/315x250%23c/LZpA0h.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIzNzc5ODIxLnBuZw==/315x250%23c/LZpA0h.png"
+    ],
+    "dateAdded": "2026-11-12"
+  },
+  {
+    "id": "itch-summer-of-58",
+    "title": "Summer of '58",
+    "developer": "emika-games",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://emika-games.itch.io/summer-of-58",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$1.34",
+      "en": "$1.34"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Première personne",
+      "en": "First-Person"
+    },
+    "tagline": {
+      "fr": "A psychological horror the first person.",
+      "en": "A psychological horror the first person."
+    },
+    "description": {
+      "fr": "A psychological horror the first person.",
+      "en": "A psychological horror the first person."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzY1Mzc0ODcucG5n/315x250%23c/6TjuaO.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzY1Mzc0ODcucG5n/315x250%23c/6TjuaO.png"
+    ],
+    "dateAdded": "2026-11-12"
   }
 ];

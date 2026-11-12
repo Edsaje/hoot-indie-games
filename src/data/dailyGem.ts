@@ -1,16 +1,17 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-11";
+export const TODAY_DATE = "2026-11-12";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "rv-there-yet",
-  "title": "RV There Yet?",
-  "releaseYear": 2025,
-  "releaseDate": "2025-10-21",
+  "id": "inscryption",
+  "title": "Inscryption",
+  "releaseYear": 2021,
+  "releaseDate": "2021-10-19",
   "genre": [
-    "Action",
-    "Aventure",
-    "Co-op"
+    "Deckbuilder",
+    "Horreur",
+    "Roguelike",
+    "Puzzle"
   ],
   "artStyle": {
     "fr": "3D Rétro Low-poly",
@@ -20,26 +21,26 @@ export const TODAY_DAILY_GEM: Game = {
     "fr": "Première personne",
     "en": "First-Person"
   },
-  "developer": "Nuggets Entertainment",
-  "steamUrl": "https://store.steampowered.com/app/3949040/",
-  "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/df3b0e300632f3cd1caf0aa9dc6213ebe79dac43/header_alt_assets_0.jpg?t=1789134289",
+  "developer": "Daniel Mullins Games",
+  "steamUrl": "https://store.steampowered.com/app/1092790/Inscryption/",
+  "itchUrl": "https://danielmullinsgames.itch.io/inscryption",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/ed2f7080c6622688a72a86ca85af600f2a2bdfb9/ss_ed2f7080c6622688a72a86ca85af600f2a2bdfb9.1920x1080.jpg?t=1789134289",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/7d246f94e4ec2ff4c7be3ded82bcdd558274d7c7/ss_7d246f94e4ec2ff4c7be3ded82bcdd558274d7c7.1920x1080.jpg?t=1789134289",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/f5663e0220e188d4c9db0789f0cbb4ddefd762d5/ss_f5663e0220e188d4c9db0789f0cbb4ddefd762d5.1920x1080.jpg?t=1789134289",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/9face7033df9bd0274428d6215711c5dec20f245/ss_9face7033df9bd0274428d6215711c5dec20f245.1920x1080.jpg?t=1789134289",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/aa6d58ff1f0eb5c5b3e6d7cc10c1576b62a745b0/ss_aa6d58ff1f0eb5c5b3e6d7cc10c1576b62a745b0.1920x1080.jpg?t=1789134289",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/9c06d0d1e31ab3e05b1ce24692a9397ca7bfabf1/ss_9c06d0d1e31ab3e05b1ce24692a9397ca7bfabf1.1920x1080.jpg?t=1789134289"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_0191a69b0e94a9a7784f5b81e27f06379910645a.1920x1080.jpg?t=1777572925",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_3b714682e9e0a214df1630a234e9f6764528eece.1920x1080.jpg?t=1777572925",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_7bfe728822807d232398df1cb1a5d64addd3d8fb.1920x1080.jpg?t=1777572925",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_79a146c36a3f0b728a8e0085327cec8c7fba82d6.1920x1080.jpg?t=1777572925",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_738220c84b63522c4ca8c77fbff1ddb252ea0fe9.1920x1080.jpg?t=1777572925",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1092790/ss_e3338b329e4d92b56121f2e849486ee805a56169.1920x1080.jpg?t=1777572925"
   ],
   "hints": {
     "tagline": {
-      "fr": "Embarquez pour un road-trip chaotique et hilarant en camping-car à travers des routes périlleuses.",
-      "en": "Pack up and set out on a hilarious physics-based road trip across wild terrain with your trusty motorhome.",
-      "es": "Emprende un accidentado y divertidísimo viaje por carretera en autocaravana con física alocada.",
-      "de": "Begib dich auf einen chaotischen Camping-Roadtrip mit physikbasierten Pannen und wildem Gelände.",
-      "ja": "ガタゴト揺れるキャンピングカーを運転し、ハプニング満載の悪路を仲間と突き進むドライブアクション。",
-      "pt-BR": "Embarque em uma viagem hilária de motorhome cheia de percalços e física imprevisível pelas estradas."
+      "fr": "Une odyssée noire et mystérieuse mêlant deckbuilding, escape room et horreur psychologique.",
+      "en": "An inky black card-based rogue-like that blends deckbuilding, escape-room puzzles, and psychological horror.",
+      "es": "Un oscuro roguelike de cartas que combina construcción de mazos, puzles de escape room y terror psicológico.",
+      "de": "Ein düsteres kartenbasiertes Roguelike, das Deckbuilding, Escape-Room-Rätsel und psychologischen Horror vereint.",
+      "ja": "デッキ構築、脱出ゲームパズル、そしてサイコロジカルホラーが融合した闇のカードアドベンチャー。",
+      "pt-BR": "Uma odisseia sombria que mistura construção de baralho, enigmas de escape room e terror psicológico."
     },
-    "composer": "road bumps"
+    "composer": "Jonah Senzel"
   }
 };

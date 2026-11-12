@@ -579,13 +579,13 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/eabce82382c3e24104d3e69422d14f89f09dc89a/header.jpg?t=1792933084"
   },
   {
-    "id": "didgeridoo-man-the-legend-of-the-hill",
-    "title": "Didgeridoo Man - The Legend of the Hill",
-    "developer": "Studio Justin Braun",
-    "publisher": "Studio Justin Braun",
+    "id": "too-ez",
+    "title": "TOO EZ!",
+    "developer": "Magnos Games",
+    "publisher": "Magnos Games",
     "expectedDate": {
-      "fr": "11 nov. 2026",
-      "en": "Nov 11, 2026"
+      "fr": "12 nov. 2026",
+      "en": "Nov 12, 2026"
     },
     "genres": [
       {
@@ -596,16 +596,16 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5115730/",
+    "steamUrl": "https://store.steampowered.com/app/5503160/",
     "description": {
-      "fr": "An absurd rhythm-arcade shooter: on a green hill, a man performs every note of the soundtrack live on his didgeridoo. Hit your targets, build combos, and whatever you do, don't miss, or he'll literally blow his top.",
-      "en": "An absurd rhythm-arcade shooter: on a green hill, a man performs every note of the soundtrack live on his didgeridoo. Hit your targets, build combos, and whatever you do, don't miss, or he'll literally blow his top."
+      "fr": "Un clip musical illustré, et cette fois, c'est vous qui jouez ! Visez avec la souris et cliquez en rythme. C'est tout. Jamais joué à un jeu de rythme ? Commencez par TOO EZ! Vous en êtes capable. TOO EZ!",
+      "en": "An illustrated music video, and this time you play it! Aim with your mouse and click to the beat. That's it. New to rhythm games? Start with TOO EZ! You can do it. TOO EZ!"
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
-    "hypeScore": 95,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/1ef889dad516bf83b440e2ba4ac21d44e2478645/header.jpg?t=1793914764"
+    "hypeScore": 94,
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/bff1ea957fe6ea5610a4e2bb4b1c4e8f997fd53c/header.jpg?t=1794059033"
   }
 ];
