@@ -18,11 +18,20 @@ Options -Indexes
   RewriteRule ^api/tracker/?$ api/track.php [L,QSA]
   RewriteRule ^api/track/?$ api/track.php [L,QSA]
 
-  # Redirection SPA standard vers index.html
-  RewriteRule ^index\.html$ - [L]
+  # Rétrocompatibilité des anciens liens d'images du perchoir
+  RewriteRule ^roost/(.+\.(png|jpg|jpeg|webp|svg|gif|ico))$ assets/roost/$1 [L,NC]
+
+  # Redirection 301 pour supprimer le slash final sur les routes SPA (ex: /roost/ -> /roost)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.+)/$ /$1 [L,R=301]
+
+  # Redirection SPA dynamique vers index.php (injection SEO canonique par route)
+  DirectoryIndex index.php index.html
+  RewriteRule ^index\.php$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule . /index.php [L]
 </IfModule>
 
 # Compression Gzip / Deflate pour maximiser les scores Core Web Vitals (Google PageSpeed)

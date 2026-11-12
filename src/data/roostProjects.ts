@@ -26,7 +26,7 @@ export const ROOST_PROJECTS: RoostProject[] = [
     tags: ['YouTube', 'Histoire de Jeux', 'Storytelling', 'Lore & Récits'],
     releaseYear: 2025,
     status: 'featured',
-    imageUrl: '/roost/youtube_hibouxe.png',
+    imageUrl: '/assets/roost/youtube_hibouxe.png',
     links: {
       videoUrl: 'https://www.youtube.com/hibouxe',
     },
@@ -82,7 +82,7 @@ export const ROOST_PROJECTS: RoostProject[] = [
     tags: ['C# / Godot', 'Tactical RPG', 'Pathfinding A*', 'Turn-based'],
     releaseYear: 2026,
     status: 'in-development',
-    imageUrl: '/roost/naheulbeuk_fan_game.png',
+    imageUrl: '/assets/roost/naheulbeuk_fan_game.png',
     links: {
       githubUrl: 'https://github.com/Edsaje/Donjon_de_Naheulbeuk_Fan_Game',
     },
@@ -138,7 +138,7 @@ export const ROOST_PROJECTS: RoostProject[] = [
     tags: ['Fullstack', 'Java', 'C# .NET', 'TypeScript', 'Portfolio'],
     releaseYear: 2026,
     status: 'featured',
-    imageUrl: '/roost/portfolio_quentin.png',
+    imageUrl: '/assets/roost/portfolio_quentin.png',
     links: {
       demoUrl: 'https://quentinbeaud.com/',
       githubUrl: 'https://github.com/Edsaje',
@@ -196,7 +196,7 @@ export const ROOST_PROJECTS: RoostProject[] = [
     tags: ['Dragon Quest', 'Fan-Traduction', 'Unreal Engine', 'Guide Steam'],
     releaseYear: 2026,
     status: 'released',
-    imageUrl: '/roost/torneko_guide_banner.jpg',
+    imageUrl: '/assets/roost/torneko_guide_banner.jpg',
     links: {
       demoUrl: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3798729607',
       githubUrl: 'https://github.com/Edsaje/French_Trad_Dragon_Quest_Heroes_Torneko-s_Mystery_Dungeon_-Classic-HD-',
@@ -253,7 +253,7 @@ export const ROOST_PROJECTS: RoostProject[] = [
     tags: ['Arcade', 'Canvas 2D', 'Vectrex 1982', 'Jouable Direct'],
     releaseYear: 2026,
     status: 'released',
-    imageUrl: '/roost/arcade_hall.png',
+    imageUrl: '/assets/roost/arcade_hall.png',
     links: {
       playUrl: '#arcade',
       githubUrl: 'https://github.com/Edsaje/hoot-indie-games',
@@ -310,7 +310,7 @@ export const ROOST_PROJECTS: RoostProject[] = [
     tags: ['Défis Quotidiens', 'Time Attack', 'Duel 1v1', 'Jouable Direct'],
     releaseYear: 2026,
     status: 'featured',
-    imageUrl: '/roost/minigames_hub.png',
+    imageUrl: '/assets/roost/minigames_hub.png',
     links: {
       playUrl: '#minigames',
       githubUrl: 'https://github.com/Edsaje/hoot-indie-games',

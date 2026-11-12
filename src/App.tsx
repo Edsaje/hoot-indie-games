@@ -593,6 +593,18 @@ function getRouteInfo(): { route: string; hash: string; pathname: string } {
         history.replaceState(null, '', targetHash);
       }
     }
+
+    // Synchronisation dynamique des balises SEO canoniques pour les robots et navigateurs
+    const activeRoute = targetClean || currentCleanPath;
+    const canonicalHref = activeRoute ? `https://hootindiegames.com/${activeRoute}` : 'https://hootindiegames.com/';
+    const canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.href = canonicalHref;
+    }
+    const ogUrlMeta = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
+    if (ogUrlMeta) {
+      ogUrlMeta.content = canonicalHref;
+    }
   }, [currentTab, activeMiniGame, i18n.language, t]);
 
   // Scroll to top automatically whenever tab or mini-game sub-mode changes (skipping initial mount)

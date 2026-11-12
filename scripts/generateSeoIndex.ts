@@ -342,14 +342,6 @@ export async function generateSeoIndexHtml(): Promise<string> {
           alternateName: 'Hibouxe',
           url: 'https://quentinbeaud.com',
         },
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: {
-            '@type': 'EntryPoint',
-            urlTemplate: `${CANONICAL_DOMAIN}/?q={search_term_string}`,
-          },
-          'query-input': 'required name=search_term_string',
-        },
         inLanguage: ['fr-FR', 'en-US'],
       },
       {
