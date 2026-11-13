@@ -1,41 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-12";
+export const TODAY_DATE = "2026-11-13";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "inkbound",
-  "title": "Inkbound",
-  "releaseYear": 2024,
-  "releaseDate": "2024-04-09",
+  "id": "cocoon",
+  "title": "COCOON",
+  "releaseYear": 2023,
+  "releaseDate": "2023-09-29",
   "genre": [
-    "Action",
-    "Massivement multijoueur",
-    "RPG",
-    "Simulation"
+    "Puzzle",
+    "Aventure",
+    "Sci-Fi"
   ],
   "artStyle": {
-    "fr": "2D Dessiné à la main",
-    "en": "2D Hand-drawn"
+    "fr": "3D Stylisée",
+    "en": "Stylized 3D"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Isométrique / 2.5D",
+    "en": "Isometric / 2.5D"
   },
-  "developer": "Shiny Shoe",
-  "steamUrl": "https://store.steampowered.com/app/1062810/",
+  "developer": "Geometric Interactive",
+  "steamUrl": "https://store.steampowered.com/app/1497440/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_5618a28d677751ed975ad5767d6fa449f5d96cd8.1920x1080.jpg?t=1780422654",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_523a73c664222d9fcb65887f44b1e0ae6fbbad82.1920x1080.jpg?t=1780422654",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_4ac918a25e5b6b4c70bacc85da00e5040b48fe4a.1920x1080.jpg?t=1780422654",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_446a8e540ff8cb714d67752bd2fdb3e2d303b85f.1920x1080.jpg?t=1780422654",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_9b236855b91d3d39dada77a4273e242e71c2dd77.1920x1080.jpg?t=1780422654",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1062810/ss_1a4926bb5d31ac10e7d4eba7a8e536cba4013604.1920x1080.jpg?t=1780422654"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_e1760582c4ed7da2bc737b878126864f83308ca0.1920x1080.jpg?t=1763721043",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_33edba0e9cbf89a896e9ec2e9b2731303c4ea83a.1920x1080.jpg?t=1763721043",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_33294bb3b7addea79361629d24023223dab0aa4c.1920x1080.jpg?t=1763721043",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_515d6e054265fde30ca72373ffaefd50e9276fc2.1920x1080.jpg?t=1763721043",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_c86c35b3d748565240b4d02879a18dd3ba0c18fd.1920x1080.jpg?t=1763721043",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1497440/ss_df2535ce031cdbeb300f2e2ad0b97d8bcbb6b5b4.1920x1080.jpg?t=1763721043"
   ],
   "hints": {
     "tagline": {
-      "fr": "Un roguelike tactique au tour par tour, par les créateurs de Monster Train. Jouez en solo ou en coopération, créez de puissants builds et sauvez l'Athénée.",
-      "en": "A turn-based tactical roguelike from the creators of Monster Train. Play solo or co-op, create powerful builds, and save the Atheneum."
-    }
-  },
-  "addedAt": "2026-10-20"
+      "fr": "Portez des mondes entiers sur votre dos et plongez dans leurs dimensions imbriquées pour résoudre des énigmes cosmiques.",
+      "en": "From the lead gameplay designer of LIMBO and INSIDE, COCOON takes you on an adventure across worlds within worlds.",
+      "es": "Lleva mundos dentro de otros mundos en tu espalda en esta aventura de puzles cósmica única.",
+      "de": "Trage ganze Welten auf deinem Rücken und tauche ein in ein kosmisches Rätselabenteuer der Meisterklasse.",
+      "ja": "オーブに宿る世界そのものを背負い、世界と世界を行き来して謎を解き明かす新感覚パズルアドベンチャー。",
+      "pt-BR": "Carregue mundos inteiros nas costas e salte entre dimensões interligadas neste inovador enigma cósmico."
+    },
+    "composer": "Jakob Schmid"
+  }
 };

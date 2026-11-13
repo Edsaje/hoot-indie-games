@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 130
+ * Total de pépites sélectionnées : 132
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5416,5 +5416,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzY1Mzc0ODcucG5n/315x250%23c/6TjuaO.png"
     ],
     "dateAdded": "2026-11-12"
+  },
+  {
+    "id": "itch-nymble-2-demo",
+    "title": "Nymble 2 Demo",
+    "developer": "xalezar",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://xalezar.itch.io/nymble-2",
+    "playInBrowserUrl": "https://xalezar.itch.io/nymble-2",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Jack reaches new heights in this turn-based puzzle-platformer sequel!",
+      "en": "Jack reaches new heights in this turn-based puzzle-platformer sequel!"
+    },
+    "description": {
+      "fr": "Jack reaches new heights in this turn-based puzzle-platformer sequel!",
+      "en": "Jack reaches new heights in this turn-based puzzle-platformer sequel!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI3OTkzMTA5LnBuZw==/315x250%23c/cmcwpL.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI3OTkzMTA5LnBuZw==/315x250%23c/cmcwpL.png"
+    ],
+    "dateAdded": "2026-11-13"
+  },
+  {
+    "id": "itch-find-the-clover",
+    "title": "Find the Clover",
+    "developer": "alexisgelin",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://alexisgelin.itch.io/find-the-clover",
+    "playInBrowserUrl": "https://alexisgelin.itch.io/find-the-clover",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Find a clover in a MIILION!",
+      "en": "Find a clover in a MIILION!"
+    },
+    "description": {
+      "fr": "Find a clover in a MIILION!",
+      "en": "Find a clover in a MIILION!"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxNzcyNDE3LnBuZw==/315x250%23c/6YpfY8.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxNzcyNDE3LnBuZw==/315x250%23c/6YpfY8.png"
+    ],
+    "dateAdded": "2026-11-13"
   }
 ];

@@ -584,8 +584,8 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "developer": "Magnos Games",
     "publisher": "Magnos Games",
     "expectedDate": {
-      "fr": "12 nov. 2026",
-      "en": "Nov 12, 2026"
+      "fr": "Prochainement",
+      "en": "Prochainement"
     },
     "genres": [
       {
