@@ -271,9 +271,15 @@ export async function generateSeoIndexHtml(): Promise<string> {
   const categorized = categorizeGames(allCuratedGames);
   const faqs = buildFaqSchema(totalCount);
 
-  // Compute today's Daily Gem for LCP image preload
-  const todayStr = new Date().toISOString().split('T')[0];
-  const dailyGame = getDailyGame(todayStr, 17, allCuratedGames);
+  // Compute today's Daily Gem for LCP image preload (synchronized with Paris timezone and INDIE_GAMES pool)
+  const PARIS_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Paris',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const todayStr = PARIS_DATE_FORMATTER.format(new Date());
+  const dailyGame = getDailyGame(todayStr, 17, INDIE_GAMES);
   const rawScreenshot = dailyGame?.screenshots?.[5] || dailyGame?.screenshots?.[0] || '';
   const rawDailyScreenshot = rawScreenshot.replace('1920x1080.jpg', '600x338.jpg');
   const dailyScreenshot = await prepareDailyHeroImage(rawDailyScreenshot, todayStr);

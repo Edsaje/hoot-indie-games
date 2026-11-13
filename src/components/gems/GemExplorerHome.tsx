@@ -81,13 +81,19 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // La pépite du jour en vedette (issue du calendrier mensuel déterministe)
-  const dailyGem = useMemo(() => {
-    if (currentDate === TODAY_DATE) {
-      return TODAY_DAILY_GEM;
-    }
+  // La pépite du jour en vedette (issue du calendrier mensuel déterministe unifié)
+  const scheduledGem = useMemo(() => {
     return getScheduledDailyGame(currentDate, 'dailyGem', INDIE_GAMES);
   }, [currentDate]);
+
+  const dailyGem = useMemo(() => {
+    // Si la date affichée correspond au build du jour et que l'ID concorde, utiliser TODAY_DAILY_GEM pour un LCP instantané
+    if (currentDate === TODAY_DATE && TODAY_DAILY_GEM && TODAY_DAILY_GEM.id === scheduledGem.id) {
+      return TODAY_DAILY_GEM;
+    }
+    // Source de vérité absolue : le calendrier mensuel déterministe
+    return scheduledGem;
+  }, [currentDate, scheduledGem]);
 
   // Check today's game completion status for all 8 daily disciplines
   const dailyStatus = useMemo(() => {
@@ -202,28 +208,33 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
 
                 {/* Thumbnail */}
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-950 mb-3 border border-[#4a3424] shadow-inner">
-                  <picture className="w-full h-full block">
-                    {currentDate === TODAY_DATE && (
-                      <source media="(max-width: 640px)" srcSet={`/daily-hero-mobile.webp?v=${TODAY_DATE}`} type="image/webp" />
-                    )}
-                    <img
-                      src={currentDate === TODAY_DATE ? `/daily-hero.webp?v=${TODAY_DATE}` : (dailyGem.screenshots[5] || dailyGem.screenshots[0] || '').replace('1920x1080.jpg', '600x338.jpg')}
-                      alt={dailyGem.title}
-                      width={520}
-                      height={292}
-                      fetchPriority="high"
-                      decoding="sync"
-                      onError={(e) => {
-                        const target = e.currentTarget;
-                        const fallback = (dailyGem.screenshots[5] || dailyGem.screenshots[0] || '').replace('1920x1080.jpg', '600x338.jpg');
-                        if (target.src !== fallback) {
-                          target.srcset = '';
-                          target.src = fallback;
-                        }
-                      }}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </picture>
+                  {(() => {
+                    const isPreloadedHero = currentDate === TODAY_DATE && TODAY_DAILY_GEM && dailyGem.id === TODAY_DAILY_GEM.id;
+                    const fallbackImg = (dailyGem.screenshots[5] || dailyGem.screenshots[0] || '').replace('1920x1080.jpg', '600x338.jpg');
+                    return (
+                      <picture className="w-full h-full block">
+                        {isPreloadedHero && (
+                          <source media="(max-width: 640px)" srcSet={`/daily-hero-mobile.webp?v=${TODAY_DATE}`} type="image/webp" />
+                        )}
+                        <img
+                          src={isPreloadedHero ? `/daily-hero.webp?v=${TODAY_DATE}` : fallbackImg}
+                          alt={dailyGem.title}
+                          width={520}
+                          height={292}
+                          fetchPriority="high"
+                          decoding="sync"
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (target.src !== fallbackImg) {
+                              target.srcset = '';
+                              target.src = fallbackImg;
+                            }
+                          }}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </picture>
+                    );
+                  })()}
                   <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/80 text-xs font-mono font-bold text-amber-400 border border-amber-500/30 shadow">
                     {dailyGem.releaseYear}
                   </div>
