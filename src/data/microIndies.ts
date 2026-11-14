@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 132
+ * Total de pépites sélectionnées : 134
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5498,5 +5498,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxNzcyNDE3LnBuZw==/315x250%23c/6YpfY8.png"
     ],
     "dateAdded": "2026-11-13"
+  },
+  {
+    "id": "itch-juice-galaxy-formerly-juice-world",
+    "title": "Juice Galaxy (formerly Juice World)",
+    "developer": "fishlicka",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://fishlicka.itch.io/juice-galaxy",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$5.00",
+      "en": "$5.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Floppy ragdoll rpg sandbox with physics-based combat",
+      "en": "Floppy ragdoll rpg sandbox with physics-based combat"
+    },
+    "description": {
+      "fr": "Floppy ragdoll rpg sandbox with physics-based combat",
+      "en": "Floppy ragdoll rpg sandbox with physics-based combat"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzEzNDIzMDA4LnBuZw==/315x250%23c/RdYM64.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzEzNDIzMDA4LnBuZw==/315x250%23c/RdYM64.png"
+    ],
+    "dateAdded": "2026-11-14"
+  },
+  {
+    "id": "itch-cantata",
+    "title": "Cantata",
+    "developer": "firfireweed",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://firfireweed.itch.io/cantata",
+    "playInBrowserUrl": "https://firfireweed.itch.io/cantata",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A low fantasy IF about song, strength, & finding your voice.",
+      "en": "A low fantasy IF about song, strength, & finding your voice."
+    },
+    "description": {
+      "fr": "A low fantasy IF about song, strength, & finding your voice.",
+      "en": "A low fantasy IF about song, strength, & finding your voice."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIzNTQ0MDg2LnBuZw==/315x250%23c/d%2FB1T%2B.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIzNTQ0MDg2LnBuZw==/315x250%23c/d%2FB1T%2B.png"
+    ],
+    "dateAdded": "2026-11-14"
   }
 ];
