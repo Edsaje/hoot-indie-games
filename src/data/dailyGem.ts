@@ -1,46 +1,39 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-14";
+export const TODAY_DATE = "2026-11-15";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "project-zomboid",
-  "title": "Project Zomboid",
-  "releaseYear": 2013,
-  "releaseDate": "2013-11-08",
+  "id": "the-cosmic-wheel-sisterhood",
+  "title": "The Cosmic Wheel Sisterhood",
+  "releaseYear": 2023,
+  "releaseDate": "2023-08-16",
   "genre": [
-    "Survie",
-    "RPG",
-    "Simulation",
-    "Horreur",
-    "Sandbox"
+    "Aventure"
   ],
   "artStyle": {
-    "fr": "3D Stylisée",
-    "en": "Stylized 3D"
+    "fr": "Pixel Art",
+    "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Isométrique / 2.5D",
-    "en": "Isometric / 2.5D"
+    "fr": "Vue de côté 2D",
+    "en": "2D Side-scroller"
   },
-  "developer": "The Indie Stone",
-  "steamUrl": "https://store.steampowered.com/app/108600/",
+  "developer": "Deconstructeam",
+  "steamUrl": "https://store.steampowered.com/app/1340480/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/e0dd37d69051f7da85896d11027ab018d23893fa/ss_e0dd37d69051f7da85896d11027ab018d23893fa.1920x1080.jpg?t=1787740093",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/d9df2102dd12526700b15660bc5ec8f039dc8742/ss_d9df2102dd12526700b15660bc5ec8f039dc8742.1920x1080.jpg?t=1787740093",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/4c8860818ac52c685bbe0988aa137d52bad4aac5/ss_4c8860818ac52c685bbe0988aa137d52bad4aac5.1920x1080.jpg?t=1787740093",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/ss_eb1862af5109e4658e2538d897cbd16b87ad1818.1920x1080.jpg?t=1787740093",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/ss_507e952789822b69868d768e1e4476946f37b1fb.1920x1080.jpg?t=1787740093",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/ss_eca8be032b3f5508bf5bea74cfbc823a4df047ce.1920x1080.jpg?t=1787740093"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_0a4b74eb8dcd857d4ea1ba745240346a6bafb628.1920x1080.jpg?t=1765878706",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_9c7c68a96bcc0a6627df91c898dad89615358d6b.1920x1080.jpg?t=1765878706",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_202fda9f73ada18292724378c0db9a37915e7dd7.1920x1080.jpg?t=1765878706",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_b8887e4dbe5687ecd1e258e0f128c193eed4f0ff.1920x1080.jpg?t=1765878706",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_2a342c131f62dbe8887f33822d60754d33283da1.1920x1080.jpg?t=1765878706",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_900d503b9ba05eb073131ff7fd42f945ac219f4a.1920x1080.jpg?t=1765878706"
   ],
   "hints": {
     "tagline": {
-      "fr": "Voici comment vous êtes mort : survivez à l'apocalypse zombie dans ce bac à sable impitoyable et ultra-détaillé.",
-      "en": "The ultimate zombie survival sandbox: scavenge, build, craft, fight and survive alone or with friends.",
-      "es": "El simulador definitivo de supervivencia zombi: saquea, construye, fabrica y sobrevive solo o con amigos.",
-      "de": "Das ultimative Zombie-Survival-Erlebnis: Plündere, baue, koche und überlebe in einer gnadenlosen Apokalypse.",
-      "ja": "物資調達、バリケード構築、感染への恐怖。細部まで徹底して再現された究極のゾンビサバイバルRPG。",
-      "pt-BR": "Esta é a história de como você morreu: sobreviva ao apocalipse zumbi neste impiedoso e detalhado sandbox."
+      "fr": "Plongez dans un récit envoûtant en incarnant Fortuna, une cartomancienne condamnée à l'exil sur son astéroïde. Fabriquez votre jeu de tarot, retrouvez votre liberté et déterminez le destin de la communauté cosmique des sorcières.",
+      "en": "Immerse yourself in an enchanting narrative experience as Fortuna, a fortune-teller Witch condemned to exile on her asteroid home. Craft your own Tarot deck, regain your freedom, and shape the fate of the cosmic Witch society."
     },
-    "composer": "Zach Beever"
-  }
+    "composer": "fingerspit"
+  },
+  "addedAt": "2026-09-25"
 };

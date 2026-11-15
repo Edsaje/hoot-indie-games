@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 134
+ * Total de pépites sélectionnées : 136
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5579,5 +5579,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzIzNTQ0MDg2LnBuZw==/315x250%23c/d%2FB1T%2B.png"
     ],
     "dateAdded": "2026-11-14"
+  },
+  {
+    "id": "itch-odd-realm",
+    "title": "Odd Realm",
+    "developer": "unknownorigingames",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://unknownorigingames.itch.io/oddrealm",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$19.99",
+      "en": "$19.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Take control of a group of settlers to build a settlement that survives the passing seasons.",
+      "en": "Take control of a group of settlers to build a settlement that survives the passing seasons."
+    },
+    "description": {
+      "fr": "Take control of a group of settlers to build a settlement that survives the passing seasons.",
+      "en": "Take control of a group of settlers to build a settlement that survives the passing seasons."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzgyMjM4ODAucG5n/315x250%23c/dlI2ih.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzgyMjM4ODAucG5n/315x250%23c/dlI2ih.png"
+    ],
+    "dateAdded": "2026-11-15"
+  },
+  {
+    "id": "itch-stellar-fury",
+    "title": "Stellar Fury",
+    "developer": "figamesllc",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://figamesllc.itch.io/stellar-fury",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$15.00",
+      "en": "$15.00"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "Pixel Art",
+      "en": "Pixel Art"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "An danmaku style shoot 'em up with gritty 90s PC pixel art. The first DOSmaku",
+      "en": "An danmaku style shoot 'em up with gritty 90s PC pixel art. The first DOSmaku"
+    },
+    "description": {
+      "fr": "An danmaku style shoot 'em up with gritty 90s PC pixel art. The first DOSmaku",
+      "en": "An danmaku style shoot 'em up with gritty 90s PC pixel art. The first DOSmaku"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIzMDI5MTczLnBuZw==/315x250%23c/cpB3PI.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIzMDI5MTczLnBuZw==/315x250%23c/cpB3PI.png"
+    ],
+    "dateAdded": "2026-11-15"
   }
 ];
