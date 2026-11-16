@@ -79,9 +79,10 @@ export function loadOdysseyState(): OdysseySaveState {
     if (!raw) return getDefaultOdysseyState();
 
     const parsed = JSON.parse(raw);
-    if (!parsed || parsed.version !== 1) {
+    if (!parsed || typeof parsed !== 'object' || (parsed.version && parsed.version > 1)) {
       return getDefaultOdysseyState();
     }
+    parsed.version = 1;
 
     const defaultState = getDefaultOdysseyState();
     const currentBiomeId =

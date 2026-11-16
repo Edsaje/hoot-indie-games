@@ -540,7 +540,7 @@ export function applyCloudSaveToLocalStorage(
 
     // 7. Odyssée Sylvestre (Idle Game)
     if (cloudData.odysseyState && typeof cloudData.odysseyState === 'object') {
-      const cloudOdyssey = cloudData.odysseyState;
+      const cloudOdyssey = { ...cloudData.odysseyState, version: 1 as const };
       if (isReplace) {
         localStorage.setItem('hoot_odyssey_save_v1', JSON.stringify(cloudOdyssey));
         window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: { ...cloudOdyssey, fromCloud: true } }));
@@ -613,6 +613,7 @@ export function applyCloudSaveToLocalStorage(
             const mergedStarSap = Math.max(0, Math.min(primarySap + extraEarned, mergedTotalSap));
 
             const mergedOdyssey = {
+              version: 1,
               ...(isLocalNewer ? localOdyssey : cloudOdyssey),
               currentBiomeId: activeBiome,
               currentRouteNumber: activeRoute,
@@ -668,8 +669,9 @@ export function applyCloudSaveToLocalStorage(
             window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: { ...mergedOdyssey, fromCloud: true } }));
           }
         } catch {
-          localStorage.setItem('hoot_odyssey_save_v1', JSON.stringify(cloudOdyssey));
-          window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: { ...cloudOdyssey, fromCloud: true } }));
+          const safeFallback = { ...cloudOdyssey, version: 1 as const };
+          localStorage.setItem('hoot_odyssey_save_v1', JSON.stringify(safeFallback));
+          window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: { ...safeFallback, fromCloud: true } }));
         }
       }
     }
@@ -690,6 +692,97 @@ export function applyCloudSaveToLocalStorage(
   }
 }
 
+const SOVEREIGN_SYNC_API = '/api/user_cloud_sync.php';
+
+async function fetchFromSovereignServer(identifiers: {
+  steamId?: string;
+  userId?: string;
+  username?: string;
+  syncKey?: string;
+}): Promise<{ success: boolean; exists: boolean; data?: UserCloudSavePayload; message?: string }> {
+  try {
+    const syncKey = identifiers.syncKey || getOrCreateCloudSyncKey();
+    const params = new URLSearchParams({ action: 'load' });
+    if (identifiers.steamId) params.set('steamId', identifiers.steamId);
+    if (identifiers.userId) params.set('userId', identifiers.userId);
+    if (identifiers.username) params.set('username', identifiers.username);
+    if (syncKey) params.set('syncKey', syncKey);
+
+    const res = await fetch(`${SOVEREIGN_SYNC_API}?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'X-Sync-Key': syncKey,
+      },
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      if (res.status === 404) return { success: true, exists: false };
+      const errJson = await res.json().catch(() => null);
+      throw new Error(errJson?.message || `Erreur serveur (${res.status})`);
+    }
+
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      exists: Boolean(json.exists),
+      data: json.data,
+      message: json.message,
+    };
+  } catch (err: any) {
+    return { success: false, exists: false, message: err.message };
+  }
+}
+
+async function pushToSovereignServer(
+  identifiers: { steamId?: string; userId?: string; username?: string; syncKey?: string },
+  payload: UserCloudSavePayload,
+  options?: { strategy?: 'merge' | 'replace'; odysseyStrategy?: 'replace' }
+): Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> {
+  try {
+    const syncKey = identifiers.syncKey || getOrCreateCloudSyncKey();
+    const params = new URLSearchParams({ action: 'save' });
+    if (identifiers.steamId) params.set('steamId', identifiers.steamId);
+    if (identifiers.userId) params.set('userId', identifiers.userId);
+    if (identifiers.username) params.set('username', identifiers.username);
+    if (options?.strategy) params.set('strategy', options.strategy);
+    if (options?.odysseyStrategy) params.set('odysseyStrategy', options.odysseyStrategy);
+
+    const bodyData = {
+      ...payload,
+      syncStrategy: options?.strategy,
+      odysseyStrategy: options?.odysseyStrategy,
+      syncKey,
+    };
+
+    const res = await fetch(`${SOVEREIGN_SYNC_API}?${params.toString()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'X-Sync-Key': syncKey,
+      },
+      credentials: 'include',
+      body: JSON.stringify(bodyData),
+    });
+
+    if (!res.ok) {
+      const errJson = await res.json().catch(() => null);
+      throw new Error(errJson?.message || `Erreur serveur (${res.status})`);
+    }
+
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      message: json.message || 'Sauvegarde synchronisée avec succès dans le Cloud Souverain (OVH) !',
+      data: json.data || payload,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.message };
+  }
+}
+
 /**
  * Charge la sauvegarde cloud distante pour un utilisateur
  */
@@ -697,120 +790,128 @@ export async function fetchUserCloudSave(identifiers: {
   steamId?: string;
   userId?: string;
   username?: string;
+  syncKey?: string;
 }): Promise<{ success: boolean; exists: boolean; data?: UserCloudSavePayload; message?: string }> {
   try {
     const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    if (supabase) {
+      if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
+        throw new Error('Not authenticated');
+      }
 
-    if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
-      throw new Error('Not authenticated');
+      let query = supabase.from('user_profiles').select('id, save_data');
+      
+      const isValidUUID = (id?: string) => Boolean(id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id));
+      const savedUUID = typeof window !== 'undefined' ? localStorage.getItem('hoot_supabase_profile_uuid') : null;
+      const effectiveUUID = isValidUUID(identifiers.userId) ? identifiers.userId : (isValidUUID(savedUUID || '') ? savedUUID : null);
+
+      if (effectiveUUID) {
+        query = query.eq('id', effectiveUUID);
+      } else if (identifiers.steamId) {
+        query = query.eq('steam_id', identifiers.steamId);
+      } else if (identifiers.username) {
+        query = query.eq('username', identifiers.username);
+      }
+
+      const { data, error } = await query.maybeSingle();
+
+      if (error) {
+        if (error.code === 'PGRST116') return { success: true, exists: false };
+        throw error;
+      }
+
+      if (data?.id && typeof window !== 'undefined') {
+        localStorage.setItem('hoot_supabase_profile_uuid', data.id);
+      }
+
+      return { success: true, exists: !!data, data: data?.save_data };
     }
-
-    let query = supabase.from('user_profiles').select('id, save_data');
-    
-    const isValidUUID = (id?: string) => Boolean(id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id));
-    const savedUUID = typeof window !== 'undefined' ? localStorage.getItem('hoot_supabase_profile_uuid') : null;
-    const effectiveUUID = isValidUUID(identifiers.userId) ? identifiers.userId : (isValidUUID(savedUUID || '') ? savedUUID : null);
-
-    if (effectiveUUID) {
-      query = query.eq('id', effectiveUUID);
-    } else if (identifiers.steamId) {
-      query = query.eq('steam_id', identifiers.steamId);
-    } else if (identifiers.username) {
-      query = query.eq('username', identifiers.username);
-    }
-
-    const { data, error } = await query.maybeSingle();
-
-    if (error) {
-      if (error.code === 'PGRST116') return { success: true, exists: false };
-      throw error;
-    }
-
-    if (data?.id && typeof window !== 'undefined') {
-      localStorage.setItem('hoot_supabase_profile_uuid', data.id);
-    }
-
-    return { success: true, exists: !!data, data: data?.save_data };
   } catch (err: any) {
-    return { success: false, exists: false, message: err.message };
+    console.warn('[UserCloudSync] Supabase indisponible, repli vers le serveur souverain:', err?.message);
   }
+
+  // Repli transparent sur le serveur souverain Hoot (OVHcloud)
+  return fetchFromSovereignServer(identifiers);
 }
 
 /**
  * Envoie une sauvegarde vers le cloud distant
  */
 export async function pushUserCloudSave(
-  identifiers: { steamId?: string; userId?: string; username?: string },
+  identifiers: { steamId?: string; userId?: string; username?: string; syncKey?: string },
   payload: UserCloudSavePayload,
   _options?: { strategy?: 'merge' | 'replace'; odysseyStrategy?: 'replace' }
 ): Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> {
+  payload.syncedAt = new Date().toISOString();
+
   try {
     const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
-
-    if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
-      throw new Error('Not authenticated');
-    }
-
-    payload.syncedAt = new Date().toISOString();
-
-    const isValidUUID = (id?: string) => Boolean(id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id));
-    const savedUUID = typeof window !== 'undefined' ? localStorage.getItem('hoot_supabase_profile_uuid') : null;
-    let targetId = isValidUUID(identifiers.userId) ? identifiers.userId : (isValidUUID(savedUUID || '') ? savedUUID : null);
-
-    if (!targetId && identifiers.steamId) {
-      const { data: existing } = await supabase.from('user_profiles').select('id').eq('steam_id', identifiers.steamId).maybeSingle();
-      if (existing?.id) {
-        targetId = existing.id;
-        if (typeof window !== 'undefined' && targetId) localStorage.setItem('hoot_supabase_profile_uuid', targetId);
+    if (supabase) {
+      if (!identifiers.userId && !identifiers.steamId && !identifiers.username) {
+        throw new Error('Not authenticated');
       }
-    }
-    if (!targetId && identifiers.username) {
-      const { data: existing } = await supabase.from('user_profiles').select('id').eq('username', identifiers.username).maybeSingle();
-      if (existing?.id) {
-        targetId = existing.id;
-        if (typeof window !== 'undefined' && targetId) localStorage.setItem('hoot_supabase_profile_uuid', targetId);
+
+      const isValidUUID = (id?: string) => Boolean(id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id));
+      const savedUUID = typeof window !== 'undefined' ? localStorage.getItem('hoot_supabase_profile_uuid') : null;
+      let targetId = isValidUUID(identifiers.userId) ? identifiers.userId : (isValidUUID(savedUUID || '') ? savedUUID : null);
+
+      if (!targetId && identifiers.steamId) {
+        const { data: existing } = await supabase.from('user_profiles').select('id').eq('steam_id', identifiers.steamId).maybeSingle();
+        if (existing?.id) {
+          targetId = existing.id;
+          if (typeof window !== 'undefined' && targetId) localStorage.setItem('hoot_supabase_profile_uuid', targetId);
+        }
       }
-    }
-
-    const payloadData: any = {
-      username: identifiers.username || `unknown_${Math.random().toString(36).substring(2, 9)}`,
-      save_data: payload,
-      last_synced_at: new Date().toISOString()
-    };
-    if (identifiers.steamId) payloadData.steam_id = identifiers.steamId;
-
-    let error = null;
-    if (targetId) {
-      const { error: updErr } = await supabase.from('user_profiles').update(payloadData).eq('id', targetId);
-      error = updErr;
-    } else {
-      const { data: insData, error: insErr } = await supabase.from('user_profiles').insert(payloadData).select('id').single();
-      error = insErr;
-      if (insData?.id && typeof window !== 'undefined') {
-        localStorage.setItem('hoot_supabase_profile_uuid', insData.id);
+      if (!targetId && identifiers.username) {
+        const { data: existing } = await supabase.from('user_profiles').select('id').eq('username', identifiers.username).maybeSingle();
+        if (existing?.id) {
+          targetId = existing.id;
+          if (typeof window !== 'undefined' && targetId) localStorage.setItem('hoot_supabase_profile_uuid', targetId);
+        }
       }
+
+      const payloadData: any = {
+        username: identifiers.username || `unknown_${Math.random().toString(36).substring(2, 9)}`,
+        save_data: payload,
+        last_synced_at: new Date().toISOString()
+      };
+      if (identifiers.steamId) payloadData.steam_id = identifiers.steamId;
+
+      let error = null;
+      if (targetId) {
+        const { error: updErr } = await supabase.from('user_profiles').update(payloadData).eq('id', targetId);
+        error = updErr;
+      } else {
+        const { data: insData, error: insErr } = await supabase.from('user_profiles').insert(payloadData).select('id').single();
+        error = insErr;
+        if (insData?.id && typeof window !== 'undefined') {
+          localStorage.setItem('hoot_supabase_profile_uuid', insData.id);
+        }
+      }
+
+      if (!error) {
+        return { success: true, message: 'Sauvegarde Cloud effectuée', data: payload };
+      }
+      console.warn('[UserCloudSync] Erreur écriture Supabase, repli vers serveur souverain:', error);
     }
-
-    if (error) throw error;
-
-    return { success: true, message: 'Sauvegarde Cloud effectuee', data: payload };
   } catch (err: any) {
-    return { success: false, message: err.message };
+    console.warn('[UserCloudSync] Supabase indisponible, repli vers le serveur souverain:', err?.message);
   }
+
+  // Repli transparent sur le serveur souverain Hoot (OVHcloud)
+  return pushToSovereignServer(identifiers, payload, _options);
 }
 
 /**
  * Force la synchronisation immédiate de l'état réinitialisé de l'Odyssée (Hard Reset)
  */
 export async function forcePushOdysseyReset(
-  identifiers: { steamId?: string; userId?: string; username?: string },
+  identifiers: { steamId?: string; userId?: string; username?: string; syncKey?: string },
   freshOdysseyState: OdysseySaveState
 ): Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> {
   const local = gatherLocalSaveData();
-  local.odysseyState = freshOdysseyState;
-  const res = await pushUserCloudSave(identifiers, local, { odysseyStrategy: 'replace' });
+  local.odysseyState = { ...freshOdysseyState, version: 1 as const };
+  const res = await pushUserCloudSave(identifiers, local, { strategy: 'replace', odysseyStrategy: 'replace' });
   if (res.success && res.data) {
     applyCloudSaveToLocalStorage(res.data, { strategy: 'replace' });
   }
@@ -857,12 +958,19 @@ export async function syncUserCloudSave(
     steamId?: string;
     userId?: string;
     username?: string;
+    syncKey?: string;
   },
   _options?: { force?: boolean; strategy?: 'merge' | 'replace' }
 ): Promise<{ success: boolean; message: string; data?: UserCloudSavePayload }> {
-  if (!identifiers.steamId && !identifiers.userId && !identifiers.username) {
+  const syncKey = identifiers.syncKey || getOrCreateCloudSyncKey();
+  if (!identifiers.steamId && !identifiers.userId && !identifiers.username && !syncKey) {
     return { success: false, message: 'Aucun identifiant utilisateur disponible pour la synchronisation.' };
   }
+
+  const effectiveIdentifiers = {
+    ...identifiers,
+    syncKey,
+  };
 
   // Si une synchronisation est déjà en vol, gérer les requêtes concurrentes
   if (inFlightSyncPromise) {
@@ -897,7 +1005,7 @@ export async function syncUserCloudSave(
       const isReplace = _options?.strategy === 'replace';
 
       // 1. Récupération des données distantes
-      const cloudRes = await fetchUserCloudSave(identifiers);
+      const cloudRes = await fetchUserCloudSave(effectiveIdentifiers);
 
       // Si des données distantes existent et qu'on est en mode replace (connexion à un compte existant sur PC partagé)
       if (cloudRes.success && cloudRes.exists && cloudRes.data && isReplace) {
@@ -918,17 +1026,27 @@ export async function syncUserCloudSave(
 
       // 3. On envoie l'état local fusionné au serveur pour persistance
       const updatedLocal = gatherLocalSaveData();
-      const pushRes = await pushUserCloudSave(identifiers, updatedLocal);
+      const pushRes = await pushUserCloudSave(effectiveIdentifiers, updatedLocal, _options);
 
       lastSyncTimestamp = Date.now();
       lastSyncedDataHash = computeSaveFingerprint(updatedLocal);
 
-      if (pushRes.success && pushRes.data) {
-        applyCloudSaveToLocalStorage(pushRes.data, { strategy: 'merge' });
-        return { success: true, message: 'Compte synchronisé avec succès sur le Cloud Souverain !', data: pushRes.data };
+      if (pushRes.success) {
+        if (pushRes.data) {
+          applyCloudSaveToLocalStorage(pushRes.data, { strategy: 'merge' });
+        }
+        return {
+          success: true,
+          message: pushRes.message || 'Compte synchronisé avec succès sur le Cloud Souverain (OVH) !',
+          data: pushRes.data || updatedLocal,
+        };
       }
 
-      return { success: true, message: 'Synchronisation terminée.', data: updatedLocal };
+      return {
+        success: false,
+        message: pushRes.message || 'Échec de synchronisation.',
+        data: updatedLocal,
+      };
     } catch (err: any) {
       console.warn('[UserCloudSync] Échec synchronisation cloud:', err);
       return { success: false, message: err.message || 'Erreur réseau lors de la synchronisation cloud.' };

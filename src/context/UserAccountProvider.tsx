@@ -20,7 +20,7 @@ import {
 
 // Dynamic wrappers for non-critical services to keep critical startup bundle tiny
 const syncUserCloudSave = async (
-  identity: { steamId?: string; userId?: string; username?: string },
+  identity: { steamId?: string; userId?: string; username?: string; syncKey?: string },
   options?: { force?: boolean; strategy?: 'merge' | 'replace' }
 ) => {
   const mod = await import('../services/userCloudSyncService');
@@ -28,7 +28,7 @@ const syncUserCloudSave = async (
 };
 
 const forcePushOdysseyReset = async (
-  identity: { steamId?: string; userId?: string; username?: string },
+  identity: { steamId?: string; userId?: string; username?: string; syncKey?: string },
   freshOdysseyState: any
 ) => {
   const mod = await import('../services/userCloudSyncService');
@@ -319,9 +319,10 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       clearTimeout(timer);
       timer = setTimeout(() => {
         const steamId = profile.steam?.steamId;
+        const userId = profile.id;
         const username = profile.username;
-        if (steamId || (username && username !== 'Hibou Mystère')) {
-          syncUserCloudSave({ steamId, userId: profile.id, username }).catch(() => {});
+        if (steamId || userId || (username && username !== 'Hibou Mystère') || isAuthenticated) {
+          syncUserCloudSave({ steamId, userId, username }).catch(() => {});
         }
       }, 3000);
     };
@@ -331,7 +332,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       clearTimeout(timer);
       window.removeEventListener('hoot_feathers_updated', handleFeathersChanged as any);
     };
-  }, [profile.steam?.steamId, profile.id, profile.username]);
+  }, [profile.steam?.steamId, profile.id, profile.username, isAuthenticated]);
 
   // Sauvegarde automatique cloud de l'Odyssée Sylvestre (Idle Game)
   useEffect(() => {
@@ -341,10 +342,11 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
     const triggerOdysseySync = () => {
       const steamId = profile.steam?.steamId;
+      const userId = profile.id;
       const username = profile.username;
-      if (steamId || (username && username !== 'Hibou Mystère')) {
+      if (steamId || userId || (username && username !== 'Hibou Mystère') || isAuthenticated) {
         lastOdysseySync = Date.now();
-        syncUserCloudSave({ steamId, userId: profile.id, username }).catch(() => {});
+        syncUserCloudSave({ steamId, userId, username }).catch(() => {});
       }
     };
 
@@ -353,13 +355,14 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       if (e?.detail?.fromCloud) return;
 
       const steamId = profile.steam?.steamId;
+      const userId = profile.id;
       const username = profile.username;
 
       if (e?.detail?.reset) {
         clearTimeout(odysseyTimer);
-        if (steamId || (username && username !== 'Hibou Mystère')) {
+        if (steamId || userId || (username && username !== 'Hibou Mystère') || isAuthenticated) {
           lastOdysseySync = Date.now();
-          forcePushOdysseyReset({ steamId, userId: profile.id, username }, e.detail).catch(() => {});
+          forcePushOdysseyReset({ steamId, userId, username }, e.detail).catch(() => {});
         }
         return;
       }
@@ -396,7 +399,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       window.removeEventListener('beforeunload', handleFlushSync);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [profile.steam?.steamId, profile.id, profile.username]);
+  }, [profile.steam?.steamId, profile.id, profile.username, isAuthenticated]);
 
   // Vérification de la session serveur souveraine Hoot au démarrage (Cookie HttpOnly, différée après affichage initial)
   useEffect(() => {
