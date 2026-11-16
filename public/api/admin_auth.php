@@ -209,7 +209,7 @@ function isCreatorAdminAuthorized($explicitKey = null) {
         }
 
         // Si non trouvé dans les en-têtes HTTP, vérifier dans le corps de requête JSON chiffré POST
-        if (empty($inputKey) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (empty($inputKey) && (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST')) {
             if (!empty($GLOBALS['parsedJsonBody']['adminKey']) && is_string($GLOBALS['parsedJsonBody']['adminKey'])) {
                 $inputKey = trim($GLOBALS['parsedJsonBody']['adminKey']);
             } elseif (!empty($_POST['adminKey']) && is_string($_POST['adminKey'])) {
@@ -317,6 +317,7 @@ if (!function_exists('saveModerationDb')) {
 if (!function_exists('getUserSovereignRole')) {
     function getUserSovereignRole($username, $steamId = null, $userId = null) {
         $cleanUser = normalizeUsernameKey($username);
+        $rawLower = strtolower(trim((string)$username));
 
         // 1. Créateur officiel : seul et unique Administrateur
         if (isCreatorAdminAuthorized() || ($cleanUser === 'hibouxe' && strval($steamId) === ADMIN_STEAM_ID)) {
@@ -336,16 +337,25 @@ if (!function_exists('getUserSovereignRole')) {
                 return $r;
             }
         }
+        if (!empty($rawLower) && isset($modDb['roles'][$rawLower])) {
+            $r = $modDb['roles'][$rawLower];
+            if (in_array($r, ['moderator', 'vip', 'user'], true)) {
+                return $r;
+            }
+        }
 
         // 3. Base des pseudonymes (registered_usernames.json)
         $uFile = getUsernamesStoragePath();
         if (file_exists($uFile)) {
             $raw = @file_get_contents($uFile);
             $uData = $raw ? json_decode($raw, true) : null;
-            if (is_array($uData) && isset($uData['usernames'][$cleanUser])) {
-                $r = $uData['usernames'][$cleanUser]['role'] ?? 'user';
-                if ($r === 'admin') $r = 'user'; // seul hibouxe officiel est admin
-                return $r;
+            if (is_array($uData)) {
+                $entry = $uData['usernames'][$cleanUser] ?? ($uData['usernames'][$rawLower] ?? null);
+                if ($entry) {
+                    $r = $entry['role'] ?? 'user';
+                    if ($r === 'admin') $r = 'user'; // seul hibouxe officiel est admin
+                    return $r;
+                }
             }
         }
 
@@ -359,6 +369,7 @@ if (!function_exists('getUserSovereignRole')) {
 if (!function_exists('checkIsUserBanned')) {
     function checkIsUserBanned($username, $userId = null, $steamId = null, $ip = null) {
         $cleanUser = normalizeUsernameKey($username);
+        $rawLower = strtolower(trim((string)$username));
 
         // Le créateur officiel ne peut JAMAIS être banni
         if ($cleanUser === 'hibouxe' || strval($steamId) === ADMIN_STEAM_ID) {
@@ -367,9 +378,15 @@ if (!function_exists('checkIsUserBanned')) {
 
         $modDb = loadModerationDb();
 
-        // 1. Vérification dans moderation_bans.json par pseudo normalisé
+        // 1. Vérification dans moderation_bans.json par pseudo normalisé ou brut
+        $b = null;
         if (!empty($cleanUser) && isset($modDb['bannedUsers'][$cleanUser])) {
             $b = $modDb['bannedUsers'][$cleanUser];
+        } elseif (!empty($rawLower) && isset($modDb['bannedUsers'][$rawLower])) {
+            $b = $modDb['bannedUsers'][$rawLower];
+        }
+
+        if ($b) {
             return [
                 'banned' => true,
                 'reason' => $b['reason'] ?? 'Compte suspendu par la modération.',
