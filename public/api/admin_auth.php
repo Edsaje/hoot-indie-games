@@ -177,7 +177,11 @@ function isCreatorAdminAuthorized($explicitKey = null) {
     }
 
     // 2. Jeton Maître Secret (.admin_pass) passé via header X-Admin-Key ou paramètre adminKey
-    $adminPassFile = __DIR__ . '/.admin_pass';
+    $savesDir = getUserSavesDir();
+    $adminPassFile = $savesDir . '/.admin_pass';
+    if (!file_exists($adminPassFile) && file_exists(__DIR__ . '/.admin_pass')) {
+        @copy(__DIR__ . '/.admin_pass', $adminPassFile);
+    }
     if (!file_exists($adminPassFile)) {
         // Génération automatique d'un secret cryptographique fort s'il n'existe pas
         $newPass = bin2hex(random_bytes(32));
