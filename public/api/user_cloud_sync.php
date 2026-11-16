@@ -30,11 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-if (session_status() === PHP_SESSION_NONE) {
-    @ini_set('session.cookie_httponly', 1);
-    @ini_set('session.cookie_samesite', 'Lax');
-    @session_start();
-}
+startSecureHootSession();
 
 $savesDir = __DIR__ . '/user_saves';
 if (!is_dir($savesDir)) {
@@ -551,6 +547,42 @@ function mergeSaveData($existing, $incoming, $options = []) {
 // ACTIONS REST : LOAD & SAVE
 // =============================================================
 
+function isAuthorizedForSaveRecord($existingData, $inputSyncKey, $sessionUserId, $sessionSteamId, $isAdminSession) {
+    if (!$existingData || !is_array($existingData)) {
+        return true;
+    }
+    if ($isAdminSession) {
+        return true;
+    }
+    // 1. Clé de synchronisation concordante
+    if (!empty($existingData['syncKeyHash']) && !empty($inputSyncKey)) {
+        if (hash_equals($existingData['syncKeyHash'], hash('sha256', $inputSyncKey))) {
+            return true;
+        }
+    }
+    // 2. Session Steam vérifiée concordante
+    if (!empty($sessionSteamId) && !empty($existingData['steamId']) && strval($existingData['steamId']) === strval($sessionSteamId)) {
+        return true;
+    }
+    // 3. Session Compte Hoot vérifiée concordante
+    if (!empty($sessionUserId) && !empty($existingData['userId']) && strval($existingData['userId']) === strval($sessionUserId)) {
+        return true;
+    }
+    // Si la sauvegarde contient une clé, un compte ou un SteamId, elle est strictement protégée
+    $isProtected = !empty($existingData['syncKeyHash']) || !empty($existingData['userId']) || !empty($existingData['steamId']);
+    if ($isProtected) {
+        return false;
+    }
+    return true;
+}
+
+$isTargetingCreator = (
+    (!empty($reqSteamId) && $reqSteamId === ADMIN_STEAM_ID) ||
+    (!empty($reqUsername) && strtolower(trim($reqUsername)) === 'hibouxe') ||
+    (!empty($existingData['steamId']) && $existingData['steamId'] === ADMIN_STEAM_ID) ||
+    (!empty($existingData['username']) && strtolower(trim($existingData['username'])) === 'hibouxe')
+);
+
 switch ($action) {
     case 'load':
         if (!$existingData) {
@@ -562,33 +594,26 @@ switch ($action) {
             exit;
         }
 
-        // Sécurité Anti-IDOR : Protection en lecture si une clé de synchronisation est définie
-        if (!empty($existingData['syncKeyHash'])) {
-            $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
-            $isAuthorized = false;
+        // Protection du compte officiel du créateur
+        if ($isTargetingCreator && !$isAdminSession && $sessionSteamId !== ADMIN_STEAM_ID) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => 'forbidden_creator_access',
+                'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
 
-            if (!empty($inputHash) && hash_equals($existingData['syncKeyHash'], $inputHash)) {
-                $isAuthorized = true;
-            }
-            if (!$isAuthorized && $isAdminSession) {
-                $isAuthorized = true;
-            }
-            if (!$isAuthorized && !empty($sessionSteamId) && !empty($existingData['steamId']) && strval($existingData['steamId']) === strval($sessionSteamId)) {
-                $isAuthorized = true;
-            }
-            if (!$isAuthorized && !empty($sessionUserId) && !empty($existingData['userId']) && strval($existingData['userId']) === strval($sessionUserId)) {
-                $isAuthorized = true;
-            }
-
-            if (!$isAuthorized) {
-                http_response_code(403);
-                echo json_encode([
-                    'success' => false,
-                    'error' => 'invalid_sync_key',
-                    'message' => 'Clé de synchronisation cloud non concordante. Lecture refusée.'
-                ], JSON_UNESCAPED_UNICODE);
-                exit;
-            }
+        // Sécurité Anti-IDOR : Protection en lecture
+        if (!isAuthorizedForSaveRecord($existingData, $inputSyncKey, $sessionUserId, $sessionSteamId, $isAdminSession)) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => 'unauthorized_save_access',
+                'message' => 'Autorisation refusée pour la lecture de cette sauvegarde cloud.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
         }
 
         $clientData = $existingData;
@@ -621,45 +646,44 @@ switch ($action) {
             $incoming = array_merge($incoming, $subPayload);
         }
 
-        // Sécurité Anti-IDOR : Vérification stricte anti-écrasement
-        if ($existingData && !empty($existingData['syncKeyHash'])) {
-            $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
-            $isAuthorized = false;
+        // Protection du compte officiel du créateur
+        if ($isTargetingCreator && !$isAdminSession && $sessionSteamId !== ADMIN_STEAM_ID) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'forbidden_creator_access', 'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
 
-            if (!empty($inputHash) && hash_equals($existingData['syncKeyHash'], $inputHash)) {
-                $isAuthorized = true;
-            }
-            if (!$isAuthorized && $isAdminSession) {
-                $isAuthorized = true;
-            }
-            if (!$isAuthorized && !empty($sessionSteamId) && !empty($existingData['steamId']) && strval($existingData['steamId']) === strval($sessionSteamId)) {
-                $isAuthorized = true;
-            }
-            if (!$isAuthorized && !empty($sessionUserId) && !empty($existingData['userId']) && strval($existingData['userId']) === strval($sessionUserId)) {
-                $isAuthorized = true;
-            }
-
-            if (!$isAuthorized) {
+        // Sécurité Anti-IDOR : Vérification stricte anti-usurpation / anti-écrasement
+        if ($existingData) {
+            if (!isAuthorizedForSaveRecord($existingData, $inputSyncKey, $sessionUserId, $sessionSteamId, $isAdminSession)) {
                 http_response_code(403);
                 echo json_encode([
                     'success' => false,
-                    'error' => 'invalid_sync_key',
-                    'message' => 'Clé de synchronisation cloud non concordante. Écriture refusée.'
+                    'error' => 'unauthorized_save_overwrite',
+                    'message' => 'Autorisation refusée pour la mise à jour de cette sauvegarde cloud.'
                 ], JSON_UNESCAPED_UNICODE);
                 exit;
             }
-        }
-
-        // Protection du compte officiel du créateur
-        $isTargetingCreator = (
-            (!empty($reqSteamId) && $reqSteamId === ADMIN_STEAM_ID) ||
-            (!empty($reqUsername) && strtolower(trim($reqUsername)) === 'hibouxe') ||
-            (($existingData['steamId'] ?? '') === ADMIN_STEAM_ID)
-        );
-        if ($isTargetingCreator && !$isAdminSession && $sessionSteamId !== ADMIN_STEAM_ID) {
-            http_response_code(403);
-            echo json_encode(['success' => false, 'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée.'], JSON_UNESCAPED_UNICODE);
-            exit;
+        } else {
+            // Création d'une nouvelle sauvegarde : vérification que les identifiants réclamés appartiennent bien à la session
+            if (!empty($reqUserId) && strpos($reqUserId, 'local_') !== 0 && !$isAdminSession && $sessionUserId !== $reqUserId) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'unauthorized_user_registration',
+                    'message' => 'Création refusée : session non concordante avec l\'identifiant utilisateur.'
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            if (!empty($reqSteamId) && !$isAdminSession && $sessionSteamId !== $reqSteamId) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'unauthorized_steam_registration',
+                    'message' => 'Création refusée : session Steam non concordante.'
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
         }
 
         $mergeOptions = [
@@ -702,6 +726,14 @@ switch ($action) {
                 @file_put_contents($steamFile, $encodedJson, LOCK_EX);
             } elseif ($primarySaveFile === $steamFile) {
                 @file_put_contents($userFile, $encodedJson, LOCK_EX);
+            }
+        }
+
+        // Si l'utilisateur est authentifié avec une session souveraine, synchroniser le fichier user_<id>.json
+        if (!empty($sessionUserId)) {
+            $accountFile = $savesDir . '/user_' . cleanIdent($sessionUserId) . '.json';
+            if ($primarySaveFile !== $accountFile) {
+                @file_put_contents($accountFile, $encodedJson, LOCK_EX);
             }
         }
 

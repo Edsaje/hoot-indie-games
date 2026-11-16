@@ -11,7 +11,16 @@ header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: public, max-age=86400'); // Cache 24h pour les phrases identiques
 
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $text = trim((string)($_GET['q'] ?? ''));
+if (mb_strlen($text, 'UTF-8') > 500) {
+    $text = mb_substr($text, 0, 500, 'UTF-8');
+}
 $targetLang = trim((string)($_GET['tl'] ?? 'en'));
 $sourceLang = trim((string)($_GET['sl'] ?? 'autodetect'));
 

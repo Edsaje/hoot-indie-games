@@ -118,13 +118,30 @@ if (!function_exists('sendCorsHeaders')) {
 }
 
 /**
+ * Démarre une session PHP sécurisée avec attributs stricts (HttpOnly, SameSite, Secure)
+ */
+if (!function_exists('startSecureHootSession')) {
+    function startSecureHootSession() {
+        if (session_status() === PHP_SESSION_NONE) {
+            @ini_set('session.cookie_httponly', '1');
+            @ini_set('session.cookie_samesite', 'Lax');
+            $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+                       (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') ||
+                       (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+            if ($isHttps) {
+                @ini_set('session.cookie_secure', '1');
+            }
+            @session_start();
+        }
+    }
+}
+
+/**
  * Gestion des jetons CSRF pour les formulaires d'administration
  */
 if (!function_exists('getAdminCsrfToken')) {
     function getAdminCsrfToken() {
-        if (session_status() === PHP_SESSION_NONE) {
-            @session_start();
-        }
+        startSecureHootSession();
         if (empty($_SESSION['admin_csrf_token'])) {
             $_SESSION['admin_csrf_token'] = bin2hex(random_bytes(32));
         }
@@ -152,9 +169,7 @@ if (!function_exists('extractCsrfTokenFromRequest')) {
 
 if (!function_exists('validateAdminCsrfToken')) {
     function validateAdminCsrfToken($token = null) {
-        if (session_status() === PHP_SESSION_NONE) {
-            @session_start();
-        }
+        startSecureHootSession();
         if ($token === null || $token === '') {
             $token = extractCsrfTokenFromRequest();
         }
@@ -169,11 +184,7 @@ if (!function_exists('validateAdminCsrfToken')) {
  */
 function isCreatorAdminAuthorized($explicitKey = null) {
     // 1. Session PHP vérifiée (Steam OpenID officiel, session admin ou compte créateur authentifié)
-    if (session_status() === PHP_SESSION_NONE) {
-        @ini_set('session.cookie_httponly', 1);
-        @ini_set('session.cookie_samesite', 'Lax');
-        @session_start();
-    }
+    startSecureHootSession();
     if (!empty($_SESSION['admin_auth']) && $_SESSION['admin_auth'] === true && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID) {
         return true;
     }

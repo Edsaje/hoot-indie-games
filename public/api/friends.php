@@ -19,15 +19,11 @@ sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
-if (session_status() === PHP_SESSION_NONE) {
-    @ini_set('session.cookie_httponly', 1);
-    @ini_set('session.cookie_samesite', 'Lax');
-    @session_start();
-}
+startSecureHootSession();
 
 function isCallerAuthorizedForCode($db, $friendCode) {
     if (isCreatorAdminAuthorized()) return true;
-    if (empty($friendCode) || !isset($db['players'][$friendCode])) return true;
+    if (empty($friendCode) || !isset($db['players'][$friendCode])) return false;
     $player = $db['players'][$friendCode];
     $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
     $sessionSteamId = $_SESSION['verified_steam_id'] ?? ($_SESSION['steam_id'] ?? null);
@@ -500,7 +496,7 @@ if ($action === 'register') {
         $steamId = strval($sessionSteamId);
     }
 
-    $userId = !empty($sessionUserId) ? $sessionUserId : (!empty($rawUserId) ? $rawUserId : null);
+    $userId = !empty($sessionUserId) ? $sessionUserId : (!empty($rawUserId) && strpos($rawUserId, 'local_') === 0 ? $rawUserId : null);
     $elo = max(500, min(3000, (int)($body['elo'] ?? 1000)));
     $streak = max(0, min(9999, (int)($body['streak'] ?? 0)));
 

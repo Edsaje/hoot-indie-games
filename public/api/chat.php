@@ -317,28 +317,7 @@ function isCallerAuthorizedForUsername($username) {
         return false;
     }
 
-    // Vérification dans registered_usernames.json
-    $uFile = getUsernamesStoragePath();
-    if (file_exists($uFile)) {
-        $raw = @file_get_contents($uFile);
-        if ($raw) {
-            $data = json_decode($raw, true);
-            if (is_array($data) && isset($data['usernames'][$norm])) {
-                $entry = $data['usernames'][$norm];
-                $regSteam = strval($entry['steamId'] ?? '');
-                $regUser = strval($entry['userId'] ?? '');
-                if (!empty($regSteam) && $sessionSteam !== $regSteam) {
-                    return false;
-                }
-                if (!empty($regUser) && $sessionUserId !== $regUser) {
-                    return false;
-                }
-                return true;
-            }
-        }
-    }
-
-    // Vérification dans .accounts.json
+    // 1. Vérification dans .accounts.json pour la session courante
     $accountsFile = getUserSavesDir() . '/.accounts.json';
     if (file_exists($accountsFile) && !empty($sessionUserId)) {
         $rawA = @file_get_contents($accountsFile);
@@ -353,7 +332,38 @@ function isCallerAuthorizedForUsername($username) {
         }
     }
 
-    return true;
+    // 2. Vérification dans registered_usernames.json
+    $uFile = getUsernamesStoragePath();
+    if (file_exists($uFile)) {
+        $raw = @file_get_contents($uFile);
+        if ($raw) {
+            $data = json_decode($raw, true);
+            if (is_array($data) && isset($data['usernames'][$norm])) {
+                $entry = $data['usernames'][$norm];
+                $regSteam = strval($entry['steamId'] ?? '');
+                $regUser = strval($entry['userId'] ?? '');
+                if (!empty($regSteam) && $sessionSteam === $regSteam) {
+                    return true;
+                }
+                if (!empty($regUser) && $sessionUserId === $regUser) {
+                    return true;
+                }
+                // Si l'entrée existe pour ce pseudo mais ne correspond pas à la session : Refus catégorique
+                return false;
+            }
+        }
+    }
+
+    // 3. Cas des joueurs Steam par défaut (sans compte email ni pseudo personnalisé)
+    if (!empty($sessionSteam)) {
+        $expectedSteamNick = normalizeChatUsername('Explorateur_' . substr($sessionSteam, -4));
+        if ($norm === $expectedSteamNick) {
+            return true;
+        }
+    }
+
+    // [DÉFENSE PAR DÉFAUT CWE-285] Refus systématique si aucune correspondance positive certifiée
+    return false;
 }
 
 // Initialisation du fichier de données s'il n'existe pas
@@ -559,6 +569,29 @@ if ($action === 'send_message') {
             'error' => 'Vous devez être connecté à un compte pour participer au tchat.'
         ], JSON_UNESCAPED_UNICODE);
         exit;
+    }
+
+    // Vérification stricte de l'e-mail pour les comptes locaux / email (protection anti-spam & anti-bots)
+    if (empty($steamId) && !isCreatorAdminAuthorized()) {
+        $isVerified = !empty($_SESSION['hoot_email_verified']);
+        if (!$isVerified && !empty($userId)) {
+            $accFile = getUserSavesDir() . '/.accounts.json';
+            if (file_exists($accFile)) {
+                $accData = @json_decode(@file_get_contents($accFile), true);
+                if (isset($accData['users'][$userId]['emailVerified'])) {
+                    $isVerified = (bool)$accData['users'][$userId]['emailVerified'];
+                }
+            }
+        }
+        if (!$isVerified) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => 'email_unverified',
+                'message' => 'Veuillez confirmer votre adresse e-mail pour participer au tchat communautaire.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
     }
 
     $isCreator = false;

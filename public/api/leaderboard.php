@@ -15,6 +15,11 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 require_once __DIR__ . '/admin_auth.php';
 sendCorsHeaders();
+if (session_status() === PHP_SESSION_NONE) {
+    @ini_set('session.cookie_httponly', 1);
+    @ini_set('session.cookie_samesite', 'Lax');
+    @session_start();
+}
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -246,11 +251,28 @@ if ($method === 'POST') {
         $updatedCount = 0;
         $normOldNick = mb_strtolower(trim($oldNickname), 'UTF-8');
 
-        // [SÉCURITÉ CWE-639 IDOR] Un profil ne peut être mis à jour que si un accountId est fourni ou par l'admin
-        if (empty($accountId) && !isCreatorAdminAuthorized()) {
+        // [SÉCURITÉ CWE-639 IDOR] Un profil ne peut être mis à jour que si un accountId est fourni et authentifié
+        if (empty($accountId) && !$isAdmin) {
             http_response_code(400);
             echo json_encode(['status' => 'error', 'message' => 'Identifiant de compte (accountId) obligatoire pour actualiser un profil.']);
             exit;
+        }
+
+        $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
+        $sessionSteamId = strval($_SESSION['verified_steam_id'] ?? $_SESSION['steam_id'] ?? $_SESSION['admin_steam_id'] ?? '');
+
+        if (!$isAdmin) {
+            $isAuthorized = false;
+            if (!empty($sessionUserId) && $accountId === $sessionUserId) {
+                $isAuthorized = true;
+            } elseif (!empty($sessionSteamId) && ($accountId === $sessionSteamId || $accountId === 'steam_' . $sessionSteamId)) {
+                $isAuthorized = true;
+            }
+            if (!$isAuthorized) {
+                http_response_code(403);
+                echo json_encode(['status' => 'error', 'message' => 'Vous ne pouvez modifier que les scores associés à votre propre compte.']);
+                exit;
+            }
         }
 
         foreach ($data as $catKey => &$catGames) {
@@ -381,6 +403,13 @@ if ($method === 'POST') {
         $avatar = 'owl_wood';
     }
 
+    // Sécurité anti-usurpation d'accountId : un utilisateur non admin ne peut pas revendiquer l'identité du créateur
+    if (!$isAdmin) {
+        if ($accountId === 'admin_hibouxe' || strpos($accountId, '76561198035270542') !== false) {
+            $accountId = '';
+        }
+    }
+
     $entryId = 'score_' . bin2hex(random_bytes(8));
     $entryDate = date('Y-m-d');
 
@@ -389,8 +418,12 @@ if ($method === 'POST') {
         $data[$category][$game] = [];
     }
 
-    // Si l'accountId est connu, synchroniser son pseudo & avatar sur l'ensemble de ses scores dans TOUS les jeux
-    if (!empty($accountId)) {
+    // Si l'accountId est connu et authentifié, synchroniser son pseudo & avatar sur l'ensemble de ses scores dans TOUS les jeux
+    $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
+    $sessionSteamId = strval($_SESSION['verified_steam_id'] ?? $_SESSION['steam_id'] ?? $_SESSION['admin_steam_id'] ?? '');
+    $isAccountVerified = $isAdmin || (!empty($sessionUserId) && $accountId === $sessionUserId) || (!empty($sessionSteamId) && ($accountId === $sessionSteamId || $accountId === 'steam_' . $sessionSteamId));
+
+    if (!empty($accountId) && $isAccountVerified) {
         foreach ($data as $catKey => &$catGames) {
             if (!is_array($catGames)) continue;
             foreach ($catGames as $gameKey => &$entries) {
