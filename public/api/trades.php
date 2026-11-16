@@ -202,6 +202,23 @@ switch ($action) {
         }
 
         $trade = &$allTrades[$foundIndex];
+        $fromTradeCode = strtoupper(trim($trade['fromFriendCode'] ?? ''));
+        $toTradeCode = strtoupper(trim($trade['toFriendCode'] ?? ''));
+
+        // [SÉCURITÉ CWE-285] Contrôle strict des permissions :
+        // - 'accept' et 'decline' ne peuvent être effectués que par le destinataire (toFriendCode)
+        // - 'cancel' ne peut être effectué que par l'émetteur de l'offre (fromFriendCode)
+        if (($response === 'accept' || $response === 'decline') && !empty($friendCode) && $friendCode !== $toTradeCode) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Seul le destinataire de l\'offre peut accepter ou refuser cet échange.']);
+            exit;
+        }
+        if ($response === 'cancel' && !empty($friendCode) && $friendCode !== $fromTradeCode) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Seul l\'émetteur de l\'offre peut annuler cet échange.']);
+            exit;
+        }
+
         $now = time();
 
         if ($response === 'accept') {

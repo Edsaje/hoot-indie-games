@@ -562,6 +562,35 @@ switch ($action) {
             exit;
         }
 
+        // Sécurité Anti-IDOR : Protection en lecture si une clé de synchronisation est définie
+        if (!empty($existingData['syncKeyHash'])) {
+            $inputHash = !empty($inputSyncKey) ? hash('sha256', $inputSyncKey) : '';
+            $isAuthorized = false;
+
+            if (!empty($inputHash) && hash_equals($existingData['syncKeyHash'], $inputHash)) {
+                $isAuthorized = true;
+            }
+            if (!$isAuthorized && $isAdminSession) {
+                $isAuthorized = true;
+            }
+            if (!$isAuthorized && !empty($sessionSteamId) && !empty($existingData['steamId']) && strval($existingData['steamId']) === strval($sessionSteamId)) {
+                $isAuthorized = true;
+            }
+            if (!$isAuthorized && !empty($sessionUserId) && !empty($existingData['userId']) && strval($existingData['userId']) === strval($sessionUserId)) {
+                $isAuthorized = true;
+            }
+
+            if (!$isAuthorized) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'invalid_sync_key',
+                    'message' => 'Clé de synchronisation cloud non concordante. Lecture refusée.'
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+        }
+
         $clientData = $existingData;
         unset($clientData['syncKeyHash']);
 

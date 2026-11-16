@@ -218,7 +218,8 @@ switch ($action) {
 
         if ($user) {
             $clientUser = sanitizeAccountForClient($user);
-            if (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID || ($clientUser['username'] ?? '') === 'Hibouxe' || ($clientUser['role'] ?? '') === 'admin') {
+            $isLegitAdmin = (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID);
+            if ($isLegitAdmin) {
                 $_SESSION['admin_auth'] = true;
                 $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
             }
@@ -305,6 +306,18 @@ switch ($action) {
         if (empty($cleanUsername)) {
             $defaultName = explode('@', $email)[0];
             $cleanUsername = preg_replace('/[^a-zA-Z0-9_\-]/', '', $defaultName) ?: 'Explorateur';
+        }
+
+        // Sécurité stricte : Interdiction absolue de s'inscrire sous un pseudonyme protégé ou officiel
+        $forbiddenUsernames = ['hibouxe', 'edsaje', 'admin', 'administrator', 'system', 'moderateur', 'moderator', 'staff', 'support'];
+        if (in_array(strtolower($cleanUsername), $forbiddenUsernames, true) && $incomingSteamId !== ADMIN_STEAM_ID) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'reserved_username',
+                'message' => 'Ce pseudonyme est réservé par l\'administration du site.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
         }
 
         $now = date('c');
@@ -437,7 +450,8 @@ switch ($action) {
         }
 
         $clientUser = sanitizeAccountForClient($accounts['users'][$userId]);
-        if (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID || ($clientUser['username'] ?? '') === 'Hibouxe' || ($clientUser['role'] ?? '') === 'admin') {
+        $isLegitAdmin = (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID);
+        if ($isLegitAdmin) {
             $_SESSION['admin_auth'] = true;
             $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
         }
@@ -747,10 +761,10 @@ switch ($action) {
 
             $input = json_decode(file_get_contents('php://input'), true) ?: [];
             $password = trim($input['password'] ?? '');
-            if (!empty($user['passwordHash']) && !empty($password)) {
-                if (!password_verify($password, $user['passwordHash'])) {
+            if (!empty($user['passwordHash'])) {
+                if (empty($password) || !password_verify($password, $user['passwordHash'])) {
                     http_response_code(403);
-                    echo json_encode(['success' => false, 'error' => 'invalid_password', 'message' => 'Mot de passe incorrect.'], JSON_UNESCAPED_UNICODE);
+                    echo json_encode(['success' => false, 'error' => 'invalid_password', 'message' => 'Mot de passe requis et valide pour supprimer définitivement votre compte.'], JSON_UNESCAPED_UNICODE);
                     exit;
                 }
             }

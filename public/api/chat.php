@@ -300,6 +300,62 @@ function checkIsUserAdminOrModerator($steamId, $userId, $username = '', $email =
     return ['authorized' => false, 'role' => 'user'];
 }
 
+// Vérifie si la session actuelle est légitime et autorisée pour un pseudonyme donné (Protection Anti-Usurpation MP)
+function isCallerAuthorizedForUsername($username) {
+    if (isCreatorAdminAuthorized()) return true;
+    $norm = normalizeChatUsername($username);
+    if (empty($norm) || $norm === 'hiboumystere') return false;
+    if (in_array($norm, ['hibouxe', 'edsaje'], true)) {
+        return isCreatorAdminAuthorized();
+    }
+
+    $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
+    $sessionSteam = strval($_SESSION['verified_steam_id'] ?? $_SESSION['steam_id'] ?? $_SESSION['admin_steam_id'] ?? '');
+
+    // Si aucune session active
+    if (empty($sessionUserId) && empty($sessionSteam)) {
+        return false;
+    }
+
+    // Vérification dans registered_usernames.json
+    $uFile = getUsernamesStoragePath();
+    if (file_exists($uFile)) {
+        $raw = @file_get_contents($uFile);
+        if ($raw) {
+            $data = json_decode($raw, true);
+            if (is_array($data) && isset($data['usernames'][$norm])) {
+                $entry = $data['usernames'][$norm];
+                $regSteam = strval($entry['steamId'] ?? '');
+                $regUser = strval($entry['userId'] ?? '');
+                if (!empty($regSteam) && $sessionSteam !== $regSteam) {
+                    return false;
+                }
+                if (!empty($regUser) && $sessionUserId !== $regUser) {
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+
+    // Vérification dans .accounts.json
+    $accountsFile = getUserSavesDir() . '/.accounts.json';
+    if (file_exists($accountsFile) && !empty($sessionUserId)) {
+        $rawA = @file_get_contents($accountsFile);
+        if ($rawA) {
+            $accData = json_decode($rawA, true);
+            if (isset($accData['users'][$sessionUserId])) {
+                $uName = normalizeChatUsername($accData['users'][$sessionUserId]['username'] ?? '');
+                if ($uName === $norm) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
 // Initialisation du fichier de données s'il n'existe pas
 function getChatData($dataFile) {
     if (!file_exists($dataFile)) {
@@ -1385,6 +1441,13 @@ if ($action === 'fetch_private_conversations') {
         exit;
     }
 
+    // [SÉCURITÉ CWE-285] Vérification stricte d'autorisation d'accès aux conversations privées
+    if (!isCallerAuthorizedForUsername($cleanUsername)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé. Vous devez être connecté à ce compte pour consulter ces conversations.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     $allMsgs = loadPrivateMessages($privateDataFile);
     $cleanNorm = strtolower($cleanUsername);
     $convMap = [];
@@ -1463,6 +1526,13 @@ if ($action === 'fetch_private_messages') {
         exit;
     }
 
+    // [SÉCURITÉ CWE-285] Vérification stricte d'autorisation d'accès aux messages privés
+    if (!isCallerAuthorizedForUsername($cleanUsername)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé. Vous devez être connecté à ce compte pour consulter ces messages.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     $allMsgs = loadPrivateMessages($privateDataFile);
     $cleanNorm = strtolower($cleanUsername);
     $messages = [];
@@ -1530,6 +1600,13 @@ if ($action === 'send_private_message') {
     $senderUserId = trim($jsonBody['senderUserId'] ?? $_POST['senderUserId'] ?? '');
     $senderSteamId = trim($jsonBody['senderSteamId'] ?? $_POST['senderSteamId'] ?? '');
 
+    // [SÉCURITÉ CWE-285] Vérification stricte d'anti-usurpation d'identité en messagerie privée
+    if (!isCallerAuthorizedForUsername($senderUsername)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé. Vous ne pouvez pas envoyer de message sous cette identité sans être authentifié.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     // 0. Bouclier de suspension / ban souverain : les joueurs suspendus ne peuvent pas envoyer de MP
     $banCheck = checkIsUserBanned($senderUsername, $senderUserId, $senderSteamId, getClientIp());
     if ($banCheck['banned']) {
@@ -1593,6 +1670,12 @@ if ($action === 'mark_private_read') {
     $convId = trim($_REQUEST['conversationId'] ?? $jsonBody['conversationId'] ?? '');
     $cleanUsername = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
 
+    if (!isCallerAuthorizedForUsername($cleanUsername)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden']);
+        exit;
+    }
+
     if (!empty($convId) && !empty($cleanUsername)) {
         $allMsgs = loadPrivateMessages($privateDataFile);
         $cleanNorm = strtolower($cleanUsername);
@@ -1620,6 +1703,12 @@ if ($action === 'delete_private_message') {
     $cleanUsername = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
     $rawHard = $jsonBody['hardDelete'] ?? $_REQUEST['hardDelete'] ?? false;
     $hardDelete = ($rawHard === true || $rawHard === 1 || $rawHard === 'true' || $rawHard === '1');
+
+    if (!isCallerAuthorizedForUsername($cleanUsername)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden']);
+        exit;
+    }
 
     if (!empty($msgId) && !empty($cleanUsername)) {
         $allMsgs = loadPrivateMessages($privateDataFile);
