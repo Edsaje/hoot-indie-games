@@ -22,7 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$roomsFile = __DIR__ . '/versus_rooms.json';
+$savesDir = __DIR__ . '/user_saves';
+if (!is_dir($savesDir)) {
+    @mkdir($savesDir, 0755, true);
+}
+$roomsFile = $savesDir . '/versus_rooms.json';
 
 // Verrouillage et lecture résiliente de la base des salons (avec retry en cas de contention)
 function loadRoomsData($file) {

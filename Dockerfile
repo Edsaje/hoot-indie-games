@@ -16,12 +16,6 @@ RUN npm ci
 # Copie des sources et compilation
 COPY . .
 
-# Argument pour injecter d'éventuelles clés publiques Supabase au build
-ARG VITE_SUPABASE_URL=""
-ARG VITE_SUPABASE_ANON_KEY=""
-ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
-ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
-
 RUN npm run build
 
 # --- Stage 2: Runtime Apache + PHP 8.3 ---

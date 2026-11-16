@@ -1,10 +1,11 @@
-import { getSupabaseClient, isSupabaseConfigured } from './supabase';
 /**
- * 🦉 Hoot Indie Games — Service Frontend de Tchat Souverain
+ * 🦉 Hoot Indie Games — Service Frontend de Tchat & Messagerie Souveraine
  * 
- * Communique avec public/api/chat.php avec résilience hors-ligne / localhost
+ * Communique à 100% avec public/api/chat.php sur le serveur OVH Hoot Indie Games,
+ * avec résilience et stockage local en mode hors-ligne.
  */
-import { ADMIN_STEAM_ID, normalizeUsername } from '../utils/usernameValidation';
+
+import { normalizeUsername } from '../utils/usernameValidation';
 
 export type ChatChannel = 'global' | 'fr' | 'en' | 'es' | 'de' | 'ja' | 'pt-BR' | 'feedback';
 export type FeedbackCategory = 'suggestion' | 'bug' | 'idea' | 'love' | 'general';
@@ -80,21 +81,21 @@ export const CHAT_CHANNELS: ChatChannelInfo[] = [
     name: '日本語',
     label: '日本語',
     icon: '🇯🇵',
-    description: 'インディーゲーム探索者のための日本語ラウンジ',
+    description: 'インディーゲーム愛好家のための日本語ラウンジ',
   },
   {
     id: 'pt-BR',
     name: 'Português',
     label: 'Português',
     icon: '🇧🇷',
-    description: 'Espaço para os jogadores e exploradores de língua portuguesa',
+    description: 'Salão lusófono para os exploradores de jogos indie',
   },
   {
     id: 'feedback',
-    name: 'Retours & Idées',
-    label: 'Retours & Idées',
+    name: 'Suggestions & Bugs',
+    label: 'Feedback',
     icon: '💡',
-    description: 'Boîte à idées, signalements et suggestions pour améliorer le site',
+    description: 'Proposez des pépites, signalez un bug ou partagez vos idées',
   },
 ];
 
@@ -106,33 +107,16 @@ export const FEEDBACK_CATEGORIES: { id: FeedbackCategory; label: string; icon: s
   { id: 'general', label: 'Avis Général', icon: '💬', badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' },
 ];
 
+const CHAT_API = '/api/chat.php';
 const LOCAL_STORAGE_CHAT_KEY = 'hoot_local_chat_messages_v1';
 
-// Messages initiaux de démonstration si le backend PHP n'est pas disponible (hors-ligne ou local)
 function getLocalFallbackMessages(): ChatMessage[] {
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_CHAT_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map((m: ChatMessage) => {
-          const isCreatorMsg = Boolean(
-            m.isCreator ||
-            m.avatarId === 'hibouxe_creator' ||
-            m.steamId === ADMIN_STEAM_ID ||
-            (m.title && m.title.toLowerCase().includes('créateur'))
-          );
-          if (isCreatorMsg) {
-            return {
-              ...m,
-              username: 'Hibouxe',
-              isCreator: true,
-              avatarId: 'hibouxe_creator',
-            };
-          }
-          return m;
-        });
-      }
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
   } catch {
     // Ignore
@@ -195,47 +179,35 @@ export async function fetchChatMessages(
   since: number = 0
 ): Promise<{ success: boolean; messages: ChatMessage[]; serverTime: number }> {
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const params = new URLSearchParams({
+      action: 'get_messages',
+      channel,
+      since: since.toString(),
+    });
 
-    let query = supabase.from('chat_messages').select('*').order('created_at', { ascending: false });
-    if (channel !== 'all') {
-      query = query.eq('room_id', channel).limit(60);
-    } else {
-      query = query.limit(150);
+    const res = await fetch(`${CHAT_API}?${params.toString()}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'include',
+    });
+
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.messages)) {
+        return {
+          success: true,
+          messages: json.messages,
+          serverTime: json.serverTime || Math.floor(Date.now() / 1000),
+        };
+      }
     }
-
-    if (since > 0) {
-      query = query.gt('created_at', new Date(since * 1000).toISOString());
-    }
-
-    const { data, error } = await query;
-    if (error) throw error;
-
-    const messages: ChatMessage[] = (data || []).map((row: any) => ({
-      id: row.id,
-      channel: row.room_id as ChatChannel,
-      username: row.username || row.user_profiles?.username || 'Inconnu',
-      avatarId: row.avatar_id || 'default',
-      title: row.title || undefined,
-      activeFrame: row.active_frame || undefined,
-      text: row.content,
-      timestamp: Math.floor(new Date(row.created_at).getTime() / 1000),
-      isDeleted: row.is_deleted,
-      category: (row.category as FeedbackCategory) || undefined,
-      scoreData: row.score_data || null,
-      userId: row.user_id || undefined,
-    }));
-
-    return { success: true, messages: messages.reverse(), serverTime: Math.floor(Date.now() / 1000) };
-  } catch (err) {
-    if (!isSupabaseConfigured) {
-      const local = getLocalFallbackMessages();
-      const filtered = channel === 'all' ? local : local.filter((m) => m.channel === channel);
-      return { success: true, messages: filtered, serverTime: Math.floor(Date.now() / 1000) };
-    }
-    return { success: false, messages: [], serverTime: 0 };
+  } catch (_err) {
+    // Fallback local en cas de déconnexion réseau
   }
+
+  const local = getLocalFallbackMessages();
+  const filtered = channel === 'all' ? local : local.filter((m) => m.channel === channel);
+  return { success: true, messages: filtered, serverTime: Math.floor(Date.now() / 1000) };
 }
 
 /**
@@ -265,7 +237,6 @@ export async function sendChatMessage(payload: {
   warning?: string;
   flaggedWords?: string[];
 }> {
-  // Garde-fou préliminaire : vérification d'adresse e-mail obligatoire
   if (payload.emailVerified === false) {
     throw new Error('email_not_verified');
   }
@@ -275,7 +246,7 @@ export async function sendChatMessage(payload: {
     return { success: false, error: 'Le message ne peut pas être vide.' };
   }
 
-  // Contrôle anti-hameçonnage en amont
+  // Contrôle anti-hameçonnage préventif
   const phishingCheck = checkTextForPhishing(cleanText);
   if (phishingCheck.isSuspicious) {
     return {
@@ -287,95 +258,120 @@ export async function sendChatMessage(payload: {
   }
 
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const res = await fetch(`${CHAT_API}?action=send_message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
 
-    const insertPayload: Record<string, any> = {
-      room_id: payload.channel,
-      username: payload.username,
-      avatar_id: payload.avatarId,
-      content: cleanText,
-      category: payload.category || null,
-      score_data: payload.scoreData || null,
-      title: payload.title || null,
-      active_frame: payload.activeFrame || null,
-    };
-    if (payload.userId) {
-      insertPayload.user_id = payload.userId;
+    const json = await res.json().catch(() => null);
+
+    if (res.ok && json?.success && json.message) {
+      return { success: true, message: json.message };
+    } else if (json?.error) {
+      return {
+        success: false,
+        error: json.error,
+        warning: json.message,
+        flaggedWords: json.flaggedWords,
+      };
     }
-
-    const { data, error } = await supabase.from('chat_messages').insert(insertPayload).select().single();
-
-    if (error) throw error;
-
-    const newMessage: ChatMessage = {
-      id: data.id,
-      channel: data.room_id as ChatChannel,
-      username: data.username || payload.username,
-      avatarId: data.avatar_id || payload.avatarId,
-      title: data.title || payload.title,
-      activeFrame: data.active_frame || payload.activeFrame,
-      text: data.content,
-      timestamp: Math.floor(new Date(data.created_at).getTime() / 1000),
-      category: (data.category as FeedbackCategory) || payload.category,
-      scoreData: data.score_data || payload.scoreData || null,
-      userId: data.user_id || payload.userId,
-      steamId: payload.steamId,
-    };
-
-    return { success: true, message: newMessage };
-  } catch (err: any) {
-    console.warn('Envoi via Supabase échoué, repli sur le stockage local:', err);
-
-    // Fallback local si backend injoignable ou hors-ligne
-    const now = Math.floor(Date.now() / 1000);
-    const isCreator =
-      payload.username.toLowerCase() === 'hibouxe' ||
-      payload.avatarId === 'hibouxe_creator';
-
-    const localMsg: ChatMessage = {
-      id: `local_msg_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-      channel: payload.channel,
-      username: payload.username,
-      avatarId: payload.avatarId,
-      title: payload.title || (isCreator ? 'Fondateur du Perchoir' : 'Oisillon du Perchoir'),
-      activeFrame: payload.activeFrame,
-      text: cleanText,
-      timestamp: now,
-      isCreator,
-      category: payload.category || 'general',
-      scoreData: payload.scoreData || null,
-      userId: payload.userId,
-      steamId: payload.steamId,
-    };
-
-    try {
-      const all = getLocalFallbackMessages();
-      all.push(localMsg);
-      localStorage.setItem(LOCAL_STORAGE_CHAT_KEY, JSON.stringify(all.slice(-100)));
-      return { success: true, message: localMsg };
-    } catch {
-      // Ignore
-    }
-
-    return { success: false, error: err?.message || 'Erreur réseau.' };
+  } catch (_err) {
+    // Fallback local
   }
+
+  // Fallback local si serveur hors-ligne
+  const now = Math.floor(Date.now() / 1000);
+  const isCreator =
+    payload.username.toLowerCase() === 'hibouxe' ||
+    payload.avatarId === 'hibouxe_creator';
+
+  const localMsg: ChatMessage = {
+    id: `local_msg_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+    channel: payload.channel,
+    username: payload.username,
+    avatarId: payload.avatarId,
+    title: payload.title || (isCreator ? 'Fondateur du Perchoir' : 'Oisillon du Perchoir'),
+    activeFrame: payload.activeFrame,
+    text: cleanText,
+    timestamp: now,
+    isCreator,
+    category: payload.category || 'general',
+    scoreData: payload.scoreData || null,
+    userId: payload.userId,
+    steamId: payload.steamId,
+  };
+
+  try {
+    const all = getLocalFallbackMessages();
+    all.push(localMsg);
+    localStorage.setItem(LOCAL_STORAGE_CHAT_KEY, JSON.stringify(all.slice(-100)));
+  } catch {
+    // Ignore
+  }
+
+  return { success: true, message: localMsg };
 }
 
 /**
- * Supprime ou modère un message dans le cache local (mode hors-ligne ou messages locaux)
+ * Supprime ou modère un message de la discussion (Auteur, Modérateur ou Admin)
  */
+export async function deleteChatMessage(
+  messageId: string,
+  auth: {
+    steamId?: string;
+    userId?: string;
+    email?: string;
+    username?: string;
+    role?: string;
+    isAdmin?: boolean;
+    isModerator?: boolean;
+  },
+  hardDelete: boolean = false
+): Promise<{ success: boolean; message?: string; hardDeleted?: boolean }> {
+  try {
+    const res = await fetch(`${CHAT_API}?action=delete_message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        messageId,
+        hardDelete,
+        ...auth,
+      }),
+    });
+
+    const json = await res.json().catch(() => null);
+    if (res.ok && json?.success) {
+      deleteLocalFallbackMessage(messageId, auth, hardDelete);
+      return { success: true, message: json.message || 'Message supprimé avec succès.', hardDeleted: Boolean(json.hardDeleted) };
+    }
+  } catch (_err) {
+    // Fallback local
+  }
+
+  const localDeleted = deleteLocalFallbackMessage(messageId, auth, hardDelete);
+  if (localDeleted) {
+    return { success: true, message: 'Message retiré du stockage local.', hardDeleted: hardDelete };
+  }
+
+  return { success: false, message: 'Erreur lors de la modération du message.' };
+}
+
 function deleteLocalFallbackMessage(
   messageId: string,
-  auth?: { steamId?: string; userId?: string; username?: string; isAdmin?: boolean; isModerator?: boolean },
-  hardDelete: boolean = false
+  auth: { username?: string; userId?: string; steamId?: string; isAdmin?: boolean; isModerator?: boolean },
+  hardDelete: boolean
 ): boolean {
   try {
-    const raw = localStorage.getItem(LOCAL_STORAGE_CHAT_KEY);
-    if (!raw) return false;
-    const list: ChatMessage[] = JSON.parse(raw);
-    if (!Array.isArray(list)) return false;
-
+    const list = getLocalFallbackMessages();
     const idx = list.findIndex((m) => m.id === messageId);
     if (idx === -1) return false;
 
@@ -408,61 +404,6 @@ function deleteLocalFallbackMessage(
   }
 }
 
-/**
- * Supprime ou modère un message de la discussion (Auteur, Modérateur ou Admin)
- * Supporte le masquage simple (soft-delete) ou l'effacement définitif (hard-delete / purge).
- */
-export async function deleteChatMessage(
-  messageId: string,
-  auth: {
-    steamId?: string;
-    userId?: string;
-    email?: string;
-    username?: string;
-    role?: string;
-    isAdmin?: boolean;
-    isModerator?: boolean;
-  },
-  hardDelete: boolean = false
-): Promise<{ success: boolean; message?: string; hardDeleted?: boolean }> {
-  try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
-
-    if (hardDelete) {
-      const { error } = await supabase.from('chat_messages').delete().eq('id', messageId);
-      if (error) throw error;
-      deleteLocalFallbackMessage(messageId, auth, hardDelete);
-      return { success: true, message: 'Message supprimé définitivement.', hardDeleted: true };
-    } else {
-      const maskedContent = auth?.isAdmin
-        ? '[Message retiré par l\'administrateur]'
-        : auth?.isModerator
-        ? '[Message retiré par la modération]'
-        : '[Message retiré par l\'auteur]';
-
-      const { error } = await supabase
-        .from('chat_messages')
-        .update({
-          is_deleted: true,
-          content: maskedContent,
-        })
-        .eq('id', messageId);
-
-      if (error) throw error;
-      deleteLocalFallbackMessage(messageId, auth, hardDelete);
-      return { success: true, message: 'Message retiré avec succès.', hardDeleted: false };
-    }
-  } catch (err: any) {
-    const localDeleted = deleteLocalFallbackMessage(messageId, auth, hardDelete);
-    if (localDeleted) {
-      return { success: true, message: 'Message retiré du stockage local.', hardDeleted: hardDelete };
-    }
-    console.error('Error deleting chat message:', err);
-    return { success: false, message: err?.message || 'Erreur lors de la modération du message.' };
-  }
-}
-
 export interface ChatModerationLog {
   id: string;
   type?: 'profanity_detected' | 'phishing_blocked';
@@ -490,12 +431,11 @@ export function checkTextForPhishing(text: string, isStaff = false): PhishingChe
   if (isStaff) return { isSuspicious: false };
   const lower = text.toLowerCase();
 
-  // 1. Détection de domaines usurpateurs ou raccourcisseurs
   const suspiciousDomains = [
     'steamcommuni', 'steamcomun', 'steamgift', 'steam-gift', 'steam-wallet',
     'steamtrade', 'steam-promo', 'steampowered-', 'grabify', 'iplogger',
     'bit.ly', 'tinyurl.com', 'is.gd', 'cutt.ly', 'discorcl', 'dlscord', 'discrod',
-    'discord-nitro', 'discord-gift', 'free-nitro', '2no.co', 'yip.su'
+    'discord-nitro', 'discord-gift', 'free-nitro', '2no.co', 'yip.su',
   ];
   for (const s of suspiciousDomains) {
     if (lower.includes(s)) {
@@ -507,11 +447,10 @@ export function checkTextForPhishing(text: string, isStaff = false): PhishingChe
     }
   }
 
-  // 2. Mots-clés de faux cadeaux / arnaques Steam
   const scamKeywords = [
     'free steam', 'carte steam gratuite', 'code steam gratuit', 'free nitro',
     'nitro gratuit', 'carte 50€ steam', 'carte 100€', 'vote for my team',
-    'vote pour mon équipe', 'claim your gift', 'réclame ton cadeau'
+    'vote pour mon équipe', 'claim your gift', 'réclame ton cadeau',
   ];
   for (const kw of scamKeywords) {
     if (lower.includes(kw)) {
@@ -523,8 +462,10 @@ export function checkTextForPhishing(text: string, isStaff = false): PhishingChe
     }
   }
 
-  // 3. Divulgation de données sensibles
-  if ((lower.includes('mot de passe') || lower.includes('password') || lower.includes('mdp')) && (lower.includes(':') || lower.includes('est') || lower.includes('is'))) {
+  if (
+    (lower.includes('mot de passe') || lower.includes('password') || lower.includes('mdp')) &&
+    (lower.includes(':') || lower.includes('est') || lower.includes('is'))
+  ) {
     return {
       isSuspicious: true,
       reason: 'sensitive_data',
@@ -538,40 +479,33 @@ export function checkTextForPhishing(text: string, isStaff = false): PhishingChe
 /**
  * Récupère le journal des alertes anti-injures (Modérateur ou Admin)
  */
-export async function fetchChatModerationLogs(_auth: {
+export async function fetchChatModerationLogs(auth: {
   steamId?: string;
   userId?: string;
 }): Promise<{ success: boolean; logs?: ChatModerationLog[] }> {
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const params = new URLSearchParams({
+      action: 'get_moderation_logs',
+      steamId: auth.steamId || '',
+      userId: auth.userId || '',
+    });
 
-    const { data, error } = await supabase
-      .from('chat_moderation_logs')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const res = await fetch(`${CHAT_API}?${params.toString()}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'include',
+    });
 
-    if (error) throw error;
-
-    const logs: ChatModerationLog[] = data.map((row: any) => ({
-      id: row.id,
-      type: row.type,
-      timestamp: Math.floor(new Date(row.created_at).getTime() / 1000),
-      date: new Date(row.created_at).toLocaleString(),
-      username: row.username,
-      userId: row.user_id,
-      steamId: row.steam_id,
-      channel: row.channel,
-      flaggedWords: row.flagged_words ? JSON.parse(row.flagged_words) : [],
-      originalText: row.original_text,
-      status: row.status,
-    }));
-
-    return { success: true, logs };
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.logs)) {
+        return { success: true, logs: json.logs };
+      }
+    }
   } catch (err) {
     console.error('Error fetching moderation logs:', err);
-    return { success: false, logs: [] };
   }
+  return { success: false, logs: [] };
 }
 
 /**
@@ -579,21 +513,22 @@ export async function fetchChatModerationLogs(_auth: {
  */
 export async function dismissChatModerationLog(
   logId: string,
-  _auth: { steamId?: string; userId?: string }
+  auth: { steamId?: string; userId?: string }
 ): Promise<{ success: boolean }> {
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const res = await fetch(`${CHAT_API}?action=dismiss_moderation_log`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ logId, ...auth }),
+    });
 
-    const { error } = await supabase
-      .from('chat_moderation_logs')
-      .update({ status: 'dismissed' })
-      .eq('id', logId);
-
-    if (error) throw error;
-    return { success: true };
-  } catch (err) {
-    console.error('Error dismissing log:', err);
+    const json = await res.json().catch(() => null);
+    return { success: Boolean(json?.success) };
+  } catch {
     return { success: false };
   }
 }
@@ -603,29 +538,26 @@ export async function dismissChatModerationLog(
  */
 export async function purgeUserChatMessages(
   target: { username?: string; userId?: string },
-  _auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
+  auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
 ): Promise<{ success: boolean; count?: number; message?: string }> {
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const res = await fetch(`${CHAT_API}?action=purge_user_messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ ...target, ...auth }),
+    });
 
-    let query = supabase.from('chat_messages').delete();
-    
-    if (target.username) {
-      query = query.eq('username', target.username);
-    } else if (target.userId) {
-      query = query.eq('user_id', target.userId);
-    } else {
-      return { success: false, message: 'Cible introuvable.' };
+    const json = await res.json().catch(() => null);
+    if (res.ok && json?.success) {
+      return { success: true, count: json.count || 0, message: json.message };
     }
-
-    const { error, count } = await query;
-    if (error) throw error;
-
-    return { success: true, count: count || 0, message: 'Messages purgés avec succès.' };
+    return { success: false, message: json?.message || 'Erreur lors de la purge.' };
   } catch (err: any) {
-    console.error('Error purging messages:', err);
-    return { success: false, message: err?.message || 'Erreur lors de la purge.' };
+    return { success: false, message: err?.message || 'Erreur réseau.' };
   }
 }
 
@@ -657,57 +589,33 @@ export interface UserModerationInfoResult {
  */
 export async function getUserModerationInfo(
   target: { username?: string; userId?: string },
-  _auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
+  auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
 ): Promise<UserModerationInfoResult> {
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const params = new URLSearchParams({
+      action: 'get_user_moderation_info',
+      targetUsername: target.username || '',
+      targetUserId: target.userId || '',
+      steamId: auth.steamId || '',
+      userId: auth.userId || '',
+    });
 
-    let query = supabase.from('chat_messages').select('*').order('created_at', { ascending: false }).limit(50);
-    let profileQuery = supabase.from('user_profiles').select('*');
+    const res = await fetch(`${CHAT_API}?${params.toString()}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'include',
+    });
 
-    if (target.username) {
-      query = query.eq('username', target.username);
-      profileQuery = profileQuery.eq('username', target.username);
-    } else if (target.userId) {
-      query = query.eq('user_id', target.userId);
-      profileQuery = profileQuery.eq('id', target.userId);
-    } else {
-      return { success: false, message: 'Cible non spécifiée.' };
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success) {
+        return json;
+      }
     }
-
-    const { data: messagesData, error: msgError } = await query;
-    if (msgError) throw msgError;
-
-    const { data: profileData } = await profileQuery.maybeSingle();
-
-    const recentMessages = (messagesData || []).map((row: any) => ({
-      id: row.id,
-      channel: row.room_id,
-      text: row.content,
-      timestamp: Math.floor(new Date(row.created_at).getTime() / 1000),
-      isDeleted: row.is_deleted
-    }));
-
-    const user: UserModerationProfile = {
-      username: profileData?.username || target.username || 'Inconnu',
-      role: 'user', // We don't have roles in user_profiles yet, default to user
-      isBanned: false, // We don't have ban logic in user_profiles yet
-      steamId: profileData?.steam_id,
-      registeredAt: profileData ? Math.floor(new Date(profileData.created_at).getTime() / 1000) : undefined,
-    };
-
-    return {
-      success: true,
-      user,
-      messageCount: messagesData?.length || 0,
-      recentMessages,
-    };
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : 'Erreur réseau.';
     console.error('Error fetching moderation info:', err);
-    return { success: false, message: errorMsg };
   }
+  return { success: false, message: 'Impossible de récupérer les informations de modération.' };
 }
 
 export interface UserModerationActionPayload {
@@ -721,36 +629,30 @@ export interface UserModerationActionPayload {
 }
 
 /**
- * Exécute une action de modération sur un utilisateur (bannissement, changement de rôle, réinitialisation de pseudo)
+ * Exécute une action de modération sur un utilisateur
  */
 export async function executeUserModeration(
   actionPayload: UserModerationActionPayload,
-  _auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
+  auth: { steamId?: string; userId?: string; username?: string; role?: string; isAdmin?: boolean }
 ): Promise<{ success: boolean; message?: string }> {
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const res = await fetch(`${CHAT_API}?action=execute_user_moderation`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ ...actionPayload, ...auth }),
+    });
 
-    if (actionPayload.subAction === 'toggle_ban') {
-      // For now, we simulate success since we don't have a bans table yet
-      return { success: true, message: actionPayload.ban ? 'Utilisateur banni.' : 'Bannissement levé.' };
+    const json = await res.json().catch(() => null);
+    if (res.ok && json?.success) {
+      return { success: true, message: json.message };
     }
-
-    if (actionPayload.subAction === 'set_role') {
-      return { success: true, message: 'Rôle mis à jour.' };
-    }
-
-    if (actionPayload.subAction === 'reset_username' && actionPayload.targetUsername) {
-      const { error } = await supabase.from('chat_messages').delete().eq('username', actionPayload.targetUsername);
-      if (error) throw error;
-      return { success: true, message: 'Pseudo réinitialisé.' };
-    }
-
-    return { success: false, message: 'Action non reconnue.' };
+    return { success: false, message: json?.message || 'Erreur lors de la modération.' };
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : 'Erreur réseau lors de la modération.';
-    console.error('Error executing moderation:', err);
-    return { success: false, message: errorMsg };
+    return { success: false, message: err instanceof Error ? err.message : 'Erreur réseau.' };
   }
 }
 
@@ -824,66 +726,33 @@ export async function fetchPrivateConversations(auth: {
   }
 
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const params = new URLSearchParams({
+      action: 'fetch_private_conversations',
+      username: cleanUsername,
+    });
 
-    const { data, error } = await supabase
-      .from('private_messages')
-      .select('*')
-      .or(`sender_username.eq.${cleanUsername},recipient_username.eq.${cleanUsername}`)
-      .order('created_at', { ascending: false });
+    const res = await fetch(`${CHAT_API}?${params.toString()}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'include',
+    });
 
-    if (error) throw error;
-
-    const convMap = new Map<string, PrivateConversation>();
-    let totalUnread = 0;
-
-    for (const msg of data || []) {
-      const convId = msg.conversation_id;
-      const isSender = msg.sender_username === cleanUsername;
-      const otherUsername = isSender ? msg.recipient_username : msg.sender_username;
-
-      if (!convMap.has(convId)) {
-        convMap.set(convId, {
-          conversationId: convId,
-          participantUsernames: [cleanUsername, otherUsername],
-          otherParticipant: {
-            username: otherUsername,
-            avatarId: isSender ? 'owl' : (msg.sender_avatar_id || 'owl'), // Just an approximation
-          },
-          unreadCount: (!isSender && !msg.is_read) ? 1 : 0,
-          updatedAt: Math.floor(new Date(msg.created_at).getTime() / 1000),
-          lastMessage: {
-            id: msg.id,
-            senderUsername: msg.sender_username,
-            recipientUsername: msg.recipient_username,
-            text: msg.content,
-            timestamp: Math.floor(new Date(msg.created_at).getTime() / 1000),
-            read: msg.is_read
-          }
-        });
-      } else {
-        const conv = convMap.get(convId)!;
-        if (!isSender && !msg.is_read) {
-          conv.unreadCount += 1;
-        }
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.conversations)) {
+        return {
+          success: true,
+          conversations: json.conversations,
+          totalUnread: json.totalUnread || 0,
+          serverTime: json.serverTime || Math.floor(Date.now() / 1000),
+        };
       }
     }
-
-    for (const conv of convMap.values()) {
-      totalUnread += conv.unreadCount;
-    }
-
-    return {
-      success: true,
-      conversations: Array.from(convMap.values()),
-      totalUnread,
-      serverTime: Math.floor(Date.now() / 1000)
-    };
   } catch (err) {
-    console.error('Error fetching private convs:', err);
-    return { success: false, conversations: [], totalUnread: 0, serverTime: Math.floor(Date.now() / 1000) };
+    console.error('[Chat] Erreur récupération conversations privées:', err);
   }
+
+  return { success: false, conversations: [], totalUnread: 0, serverTime: Math.floor(Date.now() / 1000) };
 }
 
 /**
@@ -915,68 +784,55 @@ export async function fetchPrivateMessages(
   const convId = cleanTarget.includes('__') ? cleanTarget : getCanonicalConvKey(cleanUsername, cleanTarget);
 
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const params = new URLSearchParams({
+      action: 'fetch_private_messages',
+      conversationId: convId,
+      username: cleanUsername,
+      markRead: markRead ? '1' : '0',
+    });
 
-    const { data, error } = await supabase
-      .from('private_messages')
-      .select('*')
-      .eq('conversation_id', convId)
-      .order('created_at', { ascending: false })
-      .limit(50);
+    const res = await fetch(`${CHAT_API}?${params.toString()}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'include',
+    });
 
-    if (error) throw error;
-
-    const messages: PrivateMessage[] = (data || []).map((row: any) => ({
-      id: row.id,
-      conversationId: row.conversation_id,
-      senderUsername: row.sender_username,
-      senderAvatarId: row.sender_avatar_id || 'owl',
-      recipientUsername: row.recipient_username,
-      text: row.content,
-      timestamp: Math.floor(new Date(row.created_at).getTime() / 1000),
-      read: row.is_read,
-      isDeleted: row.is_deleted
-    }));
-
-    if (markRead && data?.length) {
-      const unreadIds = data.filter((m: any) => !m.is_read && m.recipient_username === cleanUsername).map((m: any) => m.id);
-      if (unreadIds.length > 0) {
-        await supabase.from('private_messages').update({ is_read: true }).in('id', unreadIds);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.messages)) {
+        const otherParticipantUsername = convId.split('__').find((u) => u !== normalizeUsername(cleanUsername)) || cleanTarget;
+        return {
+          success: true,
+          messages: json.messages,
+          conversationId: convId,
+          serverTime: json.serverTime || Math.floor(Date.now() / 1000),
+          otherParticipant: {
+            username: otherParticipantUsername,
+            avatarId: 'owl',
+          },
+        };
       }
     }
-
-    const otherParticipantUsername = convId.split('__').find(u => u !== normalizeUsername(cleanUsername)) || cleanTarget;
-
-    return {
-      success: true,
-      messages: messages.reverse(),
-      otherParticipant: {
-        username: otherParticipantUsername,
-        avatarId: 'owl', // Approximate
-      },
-      conversationId: convId,
-      serverTime: Math.floor(Date.now() / 1000),
-    };
   } catch (err) {
-    console.error('Error fetching private messages:', err);
-    return {
-      success: false,
-      messages: [],
-      conversationId: convId,
-      serverTime: Math.floor(Date.now() / 1000),
-    };
+    console.error('[Chat] Erreur récupération messages privés:', err);
   }
+
+  return {
+    success: false,
+    messages: [],
+    conversationId: convId,
+    serverTime: Math.floor(Date.now() / 1000),
+  };
 }
 
 /**
  * Envoie un message privé à un autre joueur
  */
 export async function sendPrivateMessage(payload: {
-  recipientUsername: string;
-  text: string;
   username: string;
   avatarId: string;
+  recipientUsername: string;
+  text: string;
   title?: string;
   activeFrame?: string;
   steamId?: string;
@@ -993,7 +849,6 @@ export async function sendPrivateMessage(payload: {
   warning?: string;
   flaggedWords?: string[];
 }> {
-  // Garde-fou préliminaire : vérification d'adresse e-mail obligatoire
   if (payload.emailVerified === false) {
     throw new Error('email_not_verified');
   }
@@ -1011,42 +866,39 @@ export async function sendPrivateMessage(payload: {
   const convId = getCanonicalConvKey(payload.username, cleanRecipient);
 
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const res = await fetch(`${CHAT_API}?action=send_private_message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        ...payload,
+        senderUsername: payload.username,
+        senderAvatarId: payload.avatarId,
+        conversationId: convId,
+      }),
+    });
 
-    const { data, error } = await supabase.from('private_messages').insert({
-      conversation_id: convId,
-      sender_username: payload.username,
-      sender_avatar_id: payload.avatarId,
-      recipient_username: cleanRecipient,
-      content: cleanText
-    }).select().single();
-
-    if (error) throw error;
-
-    const newMessage: PrivateMessage = {
-      id: data.id,
-      conversationId: data.conversation_id,
-      senderUsername: data.sender_username,
-      senderAvatarId: data.sender_avatar_id,
-      recipientUsername: data.recipient_username,
-      text: data.content,
-      timestamp: Math.floor(new Date(data.created_at).getTime() / 1000),
-      read: data.is_read
-    };
-
-    return {
-      success: true,
-      message: newMessage,
-      conversationId: convId,
-    };
+    const json = await res.json().catch(() => null);
+    if (res.ok && json?.success && json.message) {
+      return {
+        success: true,
+        message: json.message,
+        conversationId: convId,
+      };
+    } else if (json?.error) {
+      return { success: false, error: json.error };
+    }
   } catch (err: any) {
     console.error('Error sending private message:', err);
-    return {
-      success: false,
-      error: 'Erreur réseau lors de l\'envoi du message privé.',
-    };
   }
+
+  return {
+    success: false,
+    error: 'Erreur réseau lors de l\'envoi du message privé.',
+  };
 }
 
 /**
@@ -1060,19 +912,19 @@ export async function markPrivateConversationRead(
   if (!cleanUsername || cleanUsername === 'Hibou Mystère' || !conversationId) return { success: false };
 
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const res = await fetch(`${CHAT_API}?action=mark_private_read`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ conversationId, username: cleanUsername }),
+    });
 
-    const { error } = await supabase
-      .from('private_messages')
-      .update({ is_read: true })
-      .eq('conversation_id', conversationId)
-      .eq('recipient_username', cleanUsername);
-
-    if (error) throw error;
-    return { success: true };
-  } catch (err) {
-    console.error('Error marking private conv read:', err);
+    const json = await res.json().catch(() => null);
+    return { success: Boolean(json?.success) };
+  } catch {
     return { success: false };
   }
 }
@@ -1090,21 +942,24 @@ export async function deletePrivateMessage(
   if (!cleanUsername || cleanUsername === 'Hibou Mystère' || !messageId || !conversationId) return { success: false };
 
   try {
-    const supabase = await getSupabaseClient();
-    if (!supabase) throw new Error('Supabase not configured');
+    const res = await fetch(`${CHAT_API}?action=delete_private_message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        messageId,
+        conversationId,
+        username: cleanUsername,
+        hardDelete,
+      }),
+    });
 
-    if (hardDelete) {
-      const { error } = await supabase.from('private_messages').delete().eq('id', messageId);
-      if (error) throw error;
-    } else {
-      const { error } = await supabase.from('private_messages').update({ is_deleted: true }).eq('id', messageId);
-      if (error) throw error;
-    }
-    
-    return { success: true };
-  } catch (err) {
-    console.error('Error deleting private message:', err);
+    const json = await res.json().catch(() => null);
+    return { success: Boolean(json?.success) };
+  } catch {
     return { success: false };
   }
 }
-

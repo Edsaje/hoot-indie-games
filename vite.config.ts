@@ -38,7 +38,6 @@ export default defineConfig({
             !dep.includes('data-') &&
             !dep.includes('cardsData') &&
             !dep.includes('framer-motion') &&
-            !dep.includes('supabase') &&
             !dep.includes('lucide-icons')
         );
       },
@@ -65,11 +64,6 @@ export default defineConfig({
             {
               name: 'i18n-core',
               test: /[\\/]node_modules[\\/](i18next|react-i18next)[\\/]|[\\/]src[\\/]i18n[\\/]locales[\\/]fr\.json$/,
-              priority: 20,
-            },
-            {
-              name: 'supabase',
-              test: /[\\/]node_modules[\\/](@supabase|supabase)[\\/]/,
               priority: 20,
             },
             {
