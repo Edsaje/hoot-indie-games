@@ -244,7 +244,7 @@ function resolveUserFriendCode($db, $query) {
 
 // Purge automatique et réconciliation des joueurs bannis ou dont le compte a été supprimé/libéré
 function purgeBannedAndDeletedFriends(&$db, $dataFile) {
-    $uFile = __DIR__ . '/registered_usernames.json';
+    $uFile = getUsernamesStoragePath();
     if (!file_exists($uFile) || !isset($db['players']) || !is_array($db['players'])) {
         return false;
     }
@@ -539,7 +539,7 @@ if ($action === 'register') {
 
     $nowIso = gmdate('Y-m-d\TH:i:s\Z');
     // Sécurité souveraine : vérifier que le joueur n'est pas banni par la modération
-    $uFile = __DIR__ . '/registered_usernames.json';
+    $uFile = getUsernamesStoragePath();
     if (file_exists($uFile) && $friendCode !== 'HOOT-HIBOU') {
         $rawU = @file_get_contents($uFile);
         if ($rawU) {

@@ -33,8 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 const FORBIDDEN_NORMALIZED_NAMES = ['hibouxe', 'edsaje', 'admin', 'administrator', 'moderateur', 'moderator', 'staff', 'support', 'root', 'superadmin'];
 
-$storageFile = __DIR__ . '/registered_usernames.json';
-$rateLimitFile = __DIR__ . '/usernames_ratelimit.json';
+$savesDir = getUserSavesDir();
+$storageFile = getUsernamesStoragePath();
+$rateLimitFile = $savesDir . '/usernames_ratelimit.json';
 
 // Récupération IP client fiable (sans spoofing X-Forwarded-For)
 function getClientIp() {
@@ -295,18 +296,16 @@ if ($method === 'GET') {
 
     $db = loadUsernamesData($storageFile);
 
-    // Vérification compte banni
-    if (!empty($db['bannedUsers'])) {
-        if ((!empty($steamId) && in_array($steamId, $db['bannedUsers'])) ||
-            (!empty($userId) && in_array($userId, $db['bannedUsers']))) {
-            echo json_encode([
-                'success' => true,
-                'available' => false,
-                'reason' => 'banned',
-                'message' => 'Ce compte est suspendu par la modération.'
-            ]);
-            exit;
-        }
+    // Vérification compte banni souveraine
+    $banInfo = checkIsUserBanned($cleanDisplay, $userId, $steamId, $clientIp);
+    if ($banInfo['banned']) {
+        echo json_encode([
+            'success' => true,
+            'available' => false,
+            'reason' => 'banned',
+            'message' => 'Ce compte est suspendu par la modération : ' . ($banInfo['reason'] ?? 'Non-respect des règles.')
+        ]);
+        exit;
     }
 
     $customForbidden = $db['forbiddenNames'] ?? [];
@@ -445,14 +444,12 @@ if ($method === 'POST') {
 
     $preDb = loadUsernamesData($storageFile);
 
-    // Vérification compte banni
-    if (!empty($preDb['bannedUsers'])) {
-        if ((!empty($steamId) && in_array($steamId, $preDb['bannedUsers'])) ||
-            (!empty($userId) && in_array($userId, $preDb['bannedUsers']))) {
-            http_response_code(403);
-            echo json_encode(['success' => false, 'error' => 'banned', 'message' => 'Ce compte est suspendu par la modération.']);
-            exit;
-        }
+    // Vérification compte banni souveraine
+    $banInfo = checkIsUserBanned($cleanDisplay, $userId, $steamId, $clientIp);
+    if ($banInfo['banned']) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'banned', 'message' => 'Ce compte est suspendu par la modération : ' . ($banInfo['reason'] ?? 'Non-respect des règles.')]);
+        exit;
     }
 
     // Vérification des noms interdits et protégés
@@ -565,7 +562,8 @@ if ($method === 'POST') {
     // Enregistrer le nouveau pseudo : LE RÔLE ADMIN NE PEUT JAMAIS ÊTRE CRÉÉ PAR REQUÊTE PUBLIQUE
     $nowIso = date('c');
     $isOfficialCreator = isCreatorAdminAuthorized() && (strval($steamId) === ADMIN_STEAM_ID) && ($normalized === 'hibouxe');
-    $assignedRole = $isOfficialCreator ? 'admin' : 'user';
+    $existingRole = $claimed['role'] ?? getUserSovereignRole($normalized, $steamId, $userId);
+    $assignedRole = $isOfficialCreator ? 'admin' : (in_array($existingRole, ['moderator', 'vip'], true) ? $existingRole : 'user');
 
     $db['usernames'][$normalized] = [
         'displayName' => $cleanDisplay,
@@ -617,7 +615,7 @@ if ($method === 'POST') {
         'message' => 'Pseudonyme validé et enregistré avec succès !',
         'isAdmin' => $isOfficialCreator,
         'role' => $savedRole,
-        'isModerator' => false,
+        'isModerator' => ($savedRole === 'moderator'),
         'customTitle' => $db['usernames'][$normalized]['customTitle'] ?? ''
     ]);
     exit;

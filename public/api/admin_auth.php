@@ -220,3 +220,223 @@ function isCreatorAdminAuthorized($explicitKey = null) {
 
     return false;
 }
+
+/**
+ * -------------------------------------------------------------
+ * 🦉 GESTION PERSISTANTE DU STOCKAGE SOUVERAIN (DOCKER USER_SAVES)
+ * -------------------------------------------------------------
+ */
+
+if (!function_exists('getUserSavesDir')) {
+    function getUserSavesDir() {
+        $dir = __DIR__ . '/user_saves';
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        return $dir;
+    }
+}
+
+if (!function_exists('getUsernamesStoragePath')) {
+    function getUsernamesStoragePath() {
+        $savesDir = getUserSavesDir();
+        $primary = $savesDir . '/registered_usernames.json';
+        if (!file_exists($primary) && file_exists(__DIR__ . '/registered_usernames.json')) {
+            @copy(__DIR__ . '/registered_usernames.json', $primary);
+        }
+        return $primary;
+    }
+}
+
+if (!function_exists('getModerationBansPath')) {
+    function getModerationBansPath() {
+        $savesDir = getUserSavesDir();
+        $file = $savesDir . '/moderation_bans.json';
+        if (!file_exists($file)) {
+            $initial = [
+                'bannedUsers' => [],
+                'roles' => [
+                    'hibouxe' => 'admin'
+                ]
+            ];
+            @file_put_contents($file, json_encode($initial, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+        return $file;
+    }
+}
+
+if (!function_exists('normalizeUsernameKey')) {
+    function normalizeUsernameKey($name) {
+        if (empty($name)) return '';
+        $clean = mb_strtolower(trim((string)$name), 'UTF-8');
+        $transliterator = [
+            'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a',
+            'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e',
+            'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i',
+            'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o',
+            'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ü'=>'u',
+            'ý'=>'y', 'ÿ'=>'y', 'ç'=>'c', 'ñ'=>'n'
+        ];
+        $clean = strtr($clean, $transliterator);
+        return preg_replace('/[^a-z0-9]/', '', $clean);
+    }
+}
+
+if (!function_exists('loadModerationDb')) {
+    function loadModerationDb() {
+        $file = getModerationBansPath();
+        $raw = @file_get_contents($file);
+        $data = $raw ? json_decode($raw, true) : null;
+        if (!is_array($data)) {
+            $data = ['bannedUsers' => [], 'roles' => ['hibouxe' => 'admin']];
+        }
+        if (!isset($data['bannedUsers']) || !is_array($data['bannedUsers'])) {
+            $data['bannedUsers'] = [];
+        }
+        if (!isset($data['roles']) || !is_array($data['roles'])) {
+            $data['roles'] = ['hibouxe' => 'admin'];
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('saveModerationDb')) {
+    function saveModerationDb(array $data) {
+        $file = getModerationBansPath();
+        return @file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX) !== false;
+    }
+}
+
+/**
+ * Détermine le rôle d'un joueur dans le système souverain
+ */
+if (!function_exists('getUserSovereignRole')) {
+    function getUserSovereignRole($username, $steamId = null, $userId = null) {
+        $cleanUser = normalizeUsernameKey($username);
+
+        // 1. Créateur officiel : seul et unique Administrateur
+        if (isCreatorAdminAuthorized() || ($cleanUser === 'hibouxe' && strval($steamId) === ADMIN_STEAM_ID)) {
+            return 'admin';
+        }
+
+        // Les noms protégés ne peuvent jamais obtenir de rôle via requête client
+        if (in_array($cleanUser, ['edsaje', 'hibouxe'], true)) {
+            return 'user';
+        }
+
+        // 2. Base de modération dédiée (moderation_bans.json)
+        $modDb = loadModerationDb();
+        if (!empty($cleanUser) && isset($modDb['roles'][$cleanUser])) {
+            $r = $modDb['roles'][$cleanUser];
+            if (in_array($r, ['moderator', 'vip', 'user'], true)) {
+                return $r;
+            }
+        }
+
+        // 3. Base des pseudonymes (registered_usernames.json)
+        $uFile = getUsernamesStoragePath();
+        if (file_exists($uFile)) {
+            $raw = @file_get_contents($uFile);
+            $uData = $raw ? json_decode($raw, true) : null;
+            if (is_array($uData) && isset($uData['usernames'][$cleanUser])) {
+                $r = $uData['usernames'][$cleanUser]['role'] ?? 'user';
+                if ($r === 'admin') $r = 'user'; // seul hibouxe officiel est admin
+                return $r;
+            }
+        }
+
+        return 'user';
+    }
+}
+
+/**
+ * Vérifie de manière robuste si un compte est suspendu ou banni
+ */
+if (!function_exists('checkIsUserBanned')) {
+    function checkIsUserBanned($username, $userId = null, $steamId = null, $ip = null) {
+        $cleanUser = normalizeUsernameKey($username);
+
+        // Le créateur officiel ne peut JAMAIS être banni
+        if ($cleanUser === 'hibouxe' || strval($steamId) === ADMIN_STEAM_ID) {
+            return ['banned' => false];
+        }
+
+        $modDb = loadModerationDb();
+
+        // 1. Vérification dans moderation_bans.json par pseudo normalisé
+        if (!empty($cleanUser) && isset($modDb['bannedUsers'][$cleanUser])) {
+            $b = $modDb['bannedUsers'][$cleanUser];
+            return [
+                'banned' => true,
+                'reason' => $b['reason'] ?? 'Compte suspendu par la modération.',
+                'bannedAt' => $b['bannedAt'] ?? time(),
+                'bannedBy' => $b['bannedBy'] ?? 'Staff'
+            ];
+        }
+
+        // 2. Vérification par userId
+        if (!empty($userId)) {
+            foreach ($modDb['bannedUsers'] as $b) {
+                if (!empty($b['userId']) && $b['userId'] === $userId) {
+                    return [
+                        'banned' => true,
+                        'reason' => $b['reason'] ?? 'Compte suspendu par la modération.',
+                        'bannedAt' => $b['bannedAt'] ?? time(),
+                        'bannedBy' => $b['bannedBy'] ?? 'Staff'
+                    ];
+                }
+            }
+        }
+
+        // 3. Vérification par steamId
+        if (!empty($steamId)) {
+            $st = strval($steamId);
+            foreach ($modDb['bannedUsers'] as $b) {
+                if (!empty($b['steamId']) && strval($b['steamId']) === $st) {
+                    return [
+                        'banned' => true,
+                        'reason' => $b['reason'] ?? 'Compte suspendu par la modération.',
+                        'bannedAt' => $b['bannedAt'] ?? time(),
+                        'bannedBy' => $b['bannedBy'] ?? 'Staff'
+                    ];
+                }
+            }
+        }
+
+        // 4. Vérification dans registered_usernames.json
+        $uFile = getUsernamesStoragePath();
+        if (file_exists($uFile)) {
+            $raw = @file_get_contents($uFile);
+            $uData = $raw ? json_decode($raw, true) : null;
+            if (is_array($uData)) {
+                // Dans la liste bannedUsers
+                if (!empty($uData['bannedUsers']) && is_array($uData['bannedUsers'])) {
+                    if ((!empty($steamId) && in_array(strval($steamId), $uData['bannedUsers'], true)) ||
+                        (!empty($userId) && in_array($userId, $uData['bannedUsers'], true))) {
+                        return [
+                            'banned' => true,
+                            'reason' => 'Compte suspendu par la modération.',
+                            'bannedAt' => time(),
+                            'bannedBy' => 'Admin'
+                        ];
+                    }
+                }
+                // Dans l'entrée du pseudo
+                if (!empty($cleanUser) && isset($uData['usernames'][$cleanUser])) {
+                    $entry = $uData['usernames'][$cleanUser];
+                    if (($entry['status'] ?? '') === 'banned' || !empty($entry['isBanned'])) {
+                        return [
+                            'banned' => true,
+                            'reason' => $entry['banReason'] ?? 'Compte suspendu par la modération.',
+                            'bannedAt' => $entry['bannedAt'] ?? time(),
+                            'bannedBy' => 'Admin'
+                        ];
+                    }
+                }
+            }
+        }
+
+        return ['banned' => false];
+    }
+}
+

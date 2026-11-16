@@ -758,7 +758,7 @@ switch ($action) {
             }
 
             // 2. Nettoyage dans usernames.json si le joueur avait un pseudo réservé
-            $usernamesFile = __DIR__ . '/registered_usernames.json';
+            $usernamesFile = getUsernamesStoragePath();
             if (file_exists($usernamesFile)) {
                 $uData = json_decode(@file_get_contents($usernamesFile), true);
                 if (is_array($uData)) {

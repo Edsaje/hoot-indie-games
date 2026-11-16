@@ -27,15 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$savesDir = __DIR__ . '/user_saves';
-if (!is_dir($savesDir)) {
-    @mkdir($savesDir, 0755, true);
-}
-
+$savesDir = getUserSavesDir();
 $dataFile = $savesDir . '/chat_messages.json';
 $rateLimitFile = $savesDir . '/chat_ratelimit.json';
 $logsFile = $savesDir . '/chat_moderation_logs.json';
 $privateDataFile = $savesDir . '/chat_private_messages.json';
+$moderationFile = getModerationBansPath();
+$usernamesFile = getUsernamesStoragePath();
 
 // Whitelist des salons autorisés
 $validChannels = ['global', 'fr', 'en', 'es', 'de', 'ja', 'pt-BR', 'feedback'];
@@ -262,25 +260,35 @@ function checkIsUserAdminOrModerator($steamId, $userId, $username = '', $email =
         return ['authorized' => false, 'role' => 'user'];
     }
 
-    // 2. Modérateurs enregistrés : vérification obligatoire contre la session serveur
+    // 2. Modérateurs enregistrés : vérification obligatoire contre la session serveur ou identifiant certifié
     if (session_status() === PHP_SESSION_NONE) {
         @session_start();
     }
-    $sessionSteam = strval($_SESSION['admin_steam_id'] ?? $_SESSION['steam_id'] ?? '');
+    $sessionSteam = strval($_SESSION['admin_steam_id'] ?? $_SESSION['verified_steam_id'] ?? $_SESSION['steam_id'] ?? '');
 
-    $usernamesFile = __DIR__ . '/registered_usernames.json';
-    if (!empty($sessionSteam) && file_exists($usernamesFile)) {
-        $raw = @file_get_contents($usernamesFile);
-        if ($raw) {
-            $uData = json_decode($raw, true);
-            if (is_array($uData) && isset($uData['usernames']) && !empty($normUser)) {
-                if (isset($uData['usernames'][$normUser])) {
+    $targetRole = getUserSovereignRole($normUser, $steamId, $userId);
+    if ($targetRole === 'moderator') {
+        $uFile = getUsernamesStoragePath();
+        if (file_exists($uFile)) {
+            $raw = @file_get_contents($uFile);
+            if ($raw) {
+                $uData = json_decode($raw, true);
+                if (is_array($uData) && isset($uData['usernames'][$normUser])) {
                     $entry = $uData['usernames'][$normUser];
-                    if (($entry['role'] ?? '') === 'moderator' && ($entry['steamId'] ?? '') === $sessionSteam) {
+                    $regSteam = strval($entry['steamId'] ?? '');
+                    $regUser = strval($entry['userId'] ?? '');
+                    if ((!empty($sessionSteam) && $sessionSteam === $regSteam) ||
+                        (!empty($regSteam) && strval($steamId) === $regSteam) ||
+                        (!empty($regUser) && $regUser === $userId)) {
                         return ['authorized' => true, 'role' => 'moderator'];
                     }
                 }
             }
+        }
+
+        $modDb = loadModerationDb();
+        if (($modDb['roles'][$normUser] ?? '') === 'moderator') {
+            return ['authorized' => true, 'role' => 'moderator'];
         }
     }
 
@@ -422,6 +430,24 @@ if ($action === 'get_messages') {
 if ($action === 'send_message') {
     $ip = getClientIp();
 
+    $rawUsername = trim($body['username'] ?? 'Explorateur');
+    $userId = trim($body['userId'] ?? '');
+    $email = trim($body['email'] ?? '');
+    $steamId = trim($body['steamId'] ?? '');
+
+    // 0. Bouclier de modération souverain : suspension et bans persistants
+    $banCheck = checkIsUserBanned($rawUsername, $userId, $steamId, $ip);
+    if ($banCheck['banned']) {
+        http_response_code(403);
+        echo json_encode([
+            'success' => false,
+            'error' => 'account_banned',
+            'message' => 'Votre compte est suspendu par la modération.',
+            'warning' => '🚫 Votre compte est suspendu par la modération : ' . ($banCheck['reason'] ?: 'Non-respect des règles de la communauté.')
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     // Vérifier le rate limiting
     if (!checkRateLimit($rateLimitFile, $ip)) {
         http_response_code(429);
@@ -518,7 +544,6 @@ if ($action === 'send_message') {
     $flaggedPhishing = detectPhishingAndSuspiciousLinks($rawText, $isStaffUser);
     if (!empty($flaggedPhishing)) {
         // Enregistrement de l'incident de sécurité pour les administrateurs et modérateurs
-        $logsFile = __DIR__ . '/chat_moderation_logs.json';
         $logs = [];
         if (file_exists($logsFile)) {
             $rawLogs = @file_get_contents($logsFile);
@@ -560,7 +585,6 @@ if ($action === 'send_message') {
     $flaggedProfanities = detectProfanities($rawText);
     if (!empty($flaggedProfanities)) {
         // Enregistrement de l'incident pour les administrateurs et modérateurs
-        $logsFile = __DIR__ . '/chat_moderation_logs.json';
         $logs = [];
         if (file_exists($logsFile)) {
             $rawLogs = @file_get_contents($logsFile);
@@ -794,6 +818,30 @@ if ($action === 'delete_message') {
     $data['messages'][$targetIndex]['scoreData'] = null;
 
     @file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    // Journal de modération si supprimé par l'équipe staff
+    if (!$isOwnMessage) {
+        $logs = [];
+        if (file_exists($logsFile)) {
+            $rawL = @file_get_contents($logsFile);
+            if ($rawL) $logs = json_decode($rawL, true) ?: [];
+        }
+        $logs[] = [
+            'id' => 'mod_del_' . time() . '_' . substr(md5(uniqid($messageId, true)), 0, 6),
+            'type' => 'message_deleted',
+            'timestamp' => time(),
+            'date' => date('c'),
+            'username' => $targetMsg['username'] ?? 'Inconnu',
+            'userId' => $targetMsg['userId'] ?? '',
+            'channel' => $targetMsg['channel'] ?? 'global',
+            'flaggedWords' => ['delete_message'],
+            'originalText' => "Message supprimé par " . ($isCallerAdmin ? 'Hibouxe' : ($username ?: 'Modérateur')) . " : " . ($targetMsg['text'] ?? ''),
+            'status' => 'deleted'
+        ];
+        if (count($logs) > 200) $logs = array_slice($logs, -200);
+        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
     echo json_encode(['success' => true, 'messageId' => $messageId, 'message' => 'Message supprimé avec succès.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -802,17 +850,17 @@ if ($action === 'delete_message') {
 // JOURNAL DES INCIDENTS ANTI-INJURES (ADMIN OU MODÉRATEUR)
 // -------------------------------------------------------------
 if ($action === 'get_moderation_logs') {
-    $steamId = trim($_REQUEST['steamId'] ?? '');
-    $userId = trim($_REQUEST['userId'] ?? '');
+    $steamId = trim($_REQUEST['steamId'] ?? $jsonBody['steamId'] ?? '');
+    $userId = trim($_REQUEST['userId'] ?? $jsonBody['userId'] ?? '');
+    $username = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
 
-    $auth = checkIsUserAdminOrModerator($steamId, $userId);
+    $auth = checkIsUserAdminOrModerator($steamId, $userId, $username);
     if (!$auth['authorized']) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'forbidden'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé. Réservé à l\'équipe de modération.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $logsFile = __DIR__ . '/chat_moderation_logs.json';
     $logs = [];
     if (file_exists($logsFile)) {
         $raw = @file_get_contents($logsFile);
@@ -829,18 +877,18 @@ if ($action === 'get_moderation_logs') {
 // ARCHIVER / CLORE UN SIGNALEMENT D'INCIDENT (ADMIN OU MODÉRATEUR)
 // -------------------------------------------------------------
 if ($action === 'dismiss_moderation_log') {
-    $steamId = trim($_REQUEST['steamId'] ?? '');
-    $userId = trim($_REQUEST['userId'] ?? '');
-    $logId = trim($_REQUEST['logId'] ?? '');
+    $steamId = trim($_REQUEST['steamId'] ?? $jsonBody['steamId'] ?? '');
+    $userId = trim($_REQUEST['userId'] ?? $jsonBody['userId'] ?? '');
+    $username = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
+    $logId = trim($_REQUEST['logId'] ?? $jsonBody['logId'] ?? '');
 
-    $auth = checkIsUserAdminOrModerator($steamId, $userId);
+    $auth = checkIsUserAdminOrModerator($steamId, $userId, $username);
     if (!$auth['authorized']) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'forbidden'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $logsFile = __DIR__ . '/chat_moderation_logs.json';
     if (file_exists($logsFile)) {
         $raw = @file_get_contents($logsFile);
         if ($raw) {
@@ -862,13 +910,33 @@ if ($action === 'dismiss_moderation_log') {
 if ($action === 'purge_user_messages') {
     $steamId = trim($_REQUEST['steamId'] ?? $jsonBody['steamId'] ?? '');
     $userId = trim($_REQUEST['userId'] ?? $jsonBody['userId'] ?? '');
+    $callerUsername = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
     $targetUsername = trim($_REQUEST['targetUsername'] ?? $jsonBody['targetUsername'] ?? '');
     $targetUserId = trim($_REQUEST['targetUserId'] ?? $jsonBody['targetUserId'] ?? '');
+    $targetNorm = normalizeChatUsername($targetUsername);
 
-    $auth = checkIsUserAdminOrModerator($steamId, $userId);
+    $auth = checkIsUserAdminOrModerator($steamId, $userId, $callerUsername);
     if (!$auth['authorized']) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'forbidden'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Action non autorisée.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $isCallerAdmin = ($auth['role'] === 'admin');
+    $isCallerModerator = ($auth['role'] === 'moderator');
+
+    // Protection absolue du créateur
+    if ($targetNorm === 'hibouxe') {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden_target', 'message' => 'Les messages du créateur ne peuvent pas être purgés.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Protection des modérateurs
+    $targetRole = getUserSovereignRole($targetNorm, null, $targetUserId);
+    if ($isCallerModerator && ($targetRole === 'admin' || $targetRole === 'moderator')) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden_target', 'message' => 'Les modérateurs ne peuvent pas purger les messages d\'autres membres du personnel.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -876,9 +944,8 @@ if ($action === 'purge_user_messages') {
     if (file_exists($dataFile)) {
         $data = json_decode(@file_get_contents($dataFile), true) ?: ['messages' => []];
         $filtered = [];
-        $targetNorm = strtolower($targetUsername);
         foreach ($data['messages'] as $m) {
-            $mNorm = strtolower($m['username'] ?? '');
+            $mNorm = normalizeChatUsername($m['username'] ?? '');
             $mUid = $m['userId'] ?? '';
             $match = (!empty($targetNorm) && $mNorm === $targetNorm) || (!empty($targetUserId) && $mUid === $targetUserId);
             if ($match) {
@@ -891,6 +958,26 @@ if ($action === 'purge_user_messages') {
         @file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
     }
 
+    // Journal de modération
+    $logs = [];
+    if (file_exists($logsFile)) {
+        $rawL = @file_get_contents($logsFile);
+        if ($rawL) $logs = json_decode($rawL, true) ?: [];
+    }
+    $logs[] = [
+        'id' => 'mod_purge_' . time() . '_' . substr(md5(uniqid($targetNorm, true)), 0, 6),
+        'type' => 'messages_purged',
+        'timestamp' => time(),
+        'date' => date('c'),
+        'username' => $targetUsername,
+        'userId' => $targetUserId,
+        'flaggedWords' => ['purge'],
+        'originalText' => "Purge de $count message(s) effectuée par " . ($callerUsername ?: ($isCallerAdmin ? 'Hibouxe' : 'Modérateur')),
+        'status' => 'purged'
+    ];
+    if (count($logs) > 200) $logs = array_slice($logs, -200);
+    @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
     echo json_encode(['success' => true, 'count' => $count, 'message' => "Messages purgés avec succès ($count messages supprimés)."], JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -899,41 +986,81 @@ if ($action === 'purge_user_messages') {
 // INFOS DE MODÉRATION D'UN UTILISATEUR
 // -------------------------------------------------------------
 if ($action === 'get_user_moderation_info') {
+    $steamId = trim($_REQUEST['steamId'] ?? $jsonBody['steamId'] ?? '');
+    $userId = trim($_REQUEST['userId'] ?? $jsonBody['userId'] ?? '');
+    $callerUsername = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
     $targetUsername = trim($_REQUEST['targetUsername'] ?? $jsonBody['targetUsername'] ?? '');
     $targetUserId = trim($_REQUEST['targetUserId'] ?? $jsonBody['targetUserId'] ?? '');
-    $targetNorm = strtolower($targetUsername);
+    $targetNorm = normalizeChatUsername($targetUsername);
+
+    $auth = checkIsUserAdminOrModerator($steamId, $userId, $callerUsername);
+    if (!$auth['authorized']) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Accès refusé. Réservé à l\'équipe de modération.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $uFile = getUsernamesStoragePath();
+    $rawU = file_exists($uFile) ? @file_get_contents($uFile) : null;
+    $uData = $rawU ? json_decode($rawU, true) : ['usernames' => []];
+    $claimed = $uData['usernames'][$targetNorm] ?? null;
+
+    $targetSteamId = $claimed['steamId'] ?? null;
+    $banInfo = checkIsUserBanned($targetUsername, $targetUserId, $targetSteamId);
+
+    $isTargetCreator = ($targetNorm === 'hibouxe' || strval($targetSteamId) === ADMIN_STEAM_ID);
+    $targetRole = $isTargetCreator ? 'admin' : getUserSovereignRole($targetUsername, $targetSteamId, $targetUserId);
 
     $messages = [];
+    $totalCount = 0;
+    $foundAvatarId = $claimed['avatarId'] ?? '';
+    $foundTitle = $claimed['customTitle'] ?? '';
+    $foundFrame = $claimed['activeFrame'] ?? '';
+
     if (file_exists($dataFile)) {
-        $data = json_decode(@file_get_contents($dataFile), true) ?: ['messages' => []];
-        foreach (array_reverse($data['messages']) as $m) {
-            $mNorm = strtolower($m['username'] ?? '');
+        $chatData = json_decode(@file_get_contents($dataFile), true) ?: ['messages' => []];
+        foreach (array_reverse($chatData['messages']) as $m) {
+            $mNorm = normalizeChatUsername($m['username'] ?? '');
             $mUid = $m['userId'] ?? '';
-            if ((!empty($targetNorm) && $mNorm === $targetNorm) || (!empty($targetUserId) && $mUid === $targetUserId)) {
-                $messages[] = [
-                    'id' => $m['id'] ?? '',
-                    'channel' => $m['channel'] ?? 'global',
-                    'text' => $m['text'] ?? '',
-                    'timestamp' => $m['timestamp'] ?? 0,
-                    'isDeleted' => !empty($m['isDeleted']),
-                ];
-                if (count($messages) >= 50) break;
+            $match = (!empty($targetNorm) && $mNorm === $targetNorm) || (!empty($targetUserId) && $mUid === $targetUserId);
+            if ($match) {
+                $totalCount++;
+                if (empty($foundAvatarId) && !empty($m['avatarId'])) $foundAvatarId = $m['avatarId'];
+                if (empty($foundTitle) && !empty($m['title'])) $foundTitle = $m['title'];
+                if (empty($foundFrame) && !empty($m['activeFrame'])) $foundFrame = $m['activeFrame'];
+
+                if (count($messages) < 50) {
+                    $messages[] = [
+                        'id' => $m['id'] ?? '',
+                        'channel' => $m['channel'] ?? 'global',
+                        'text' => $m['text'] ?? '',
+                        'timestamp' => $m['timestamp'] ?? 0,
+                        'isDeleted' => !empty($m['isDeleted']),
+                    ];
+                }
             }
         }
     }
 
     $userProfile = [
-        'username' => $targetUsername ?: 'Inconnu',
-        'role' => ($targetNorm === 'hibouxe') ? 'admin' : 'user',
-        'isBanned' => false,
-        'steamId' => '',
-        'registeredAt' => time(),
+        'username' => $claimed['displayName'] ?? ($targetUsername ?: 'Explorateur'),
+        'role' => $targetRole,
+        'isBanned' => $banInfo['banned'],
+        'banReason' => $banInfo['reason'] ?? null,
+        'bannedAt' => $banInfo['bannedAt'] ?? null,
+        'steamId' => $targetSteamId,
+        'avatarId' => $foundAvatarId ?: ($isTargetCreator ? 'hibouxe_creator' : 'owl'),
+        'title' => $foundTitle ?: ($isTargetCreator ? 'Fondateur du Perchoir' : 'Oisillon du Perchoir'),
+        'activeFrame' => $foundFrame,
+        'registeredAt' => isset($claimed['claimedAt']) ? strtotime($claimed['claimedAt']) : null,
+        'isCreator' => $isTargetCreator,
+        'isModerator' => ($targetRole === 'moderator'),
     ];
 
     echo json_encode([
         'success' => true,
         'user' => $userProfile,
-        'messageCount' => count($messages),
+        'messageCount' => $totalCount,
         'recentMessages' => $messages,
     ], JSON_UNESCAPED_UNICODE);
     exit;
@@ -945,38 +1072,254 @@ if ($action === 'get_user_moderation_info') {
 if ($action === 'execute_user_moderation') {
     $steamId = trim($_REQUEST['steamId'] ?? $jsonBody['steamId'] ?? '');
     $userId = trim($_REQUEST['userId'] ?? $jsonBody['userId'] ?? '');
+    $callerUsername = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
     $subAction = trim($_REQUEST['subAction'] ?? $jsonBody['subAction'] ?? '');
     $targetUsername = trim($_REQUEST['targetUsername'] ?? $jsonBody['targetUsername'] ?? '');
+    $targetUserId = trim($_REQUEST['targetUserId'] ?? $jsonBody['targetUserId'] ?? '');
+    $targetSteamId = trim($_REQUEST['targetSteamId'] ?? $jsonBody['targetSteamId'] ?? '');
+    $reason = trim($_REQUEST['reason'] ?? $jsonBody['reason'] ?? '');
+    $role = trim($_REQUEST['role'] ?? $jsonBody['role'] ?? '');
 
-    $auth = checkIsUserAdminOrModerator($steamId, $userId);
+    $auth = checkIsUserAdminOrModerator($steamId, $userId, $callerUsername);
     if (!$auth['authorized']) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'forbidden'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Action non autorisée. Réservé à l\'administration et à la modération.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
+    $isCallerAdmin = ($auth['role'] === 'admin');
+    $isCallerModerator = ($auth['role'] === 'moderator');
+
+    $targetNorm = normalizeChatUsername($targetUsername);
+    if (empty($targetNorm)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'missing_target', 'message' => 'Utilisateur cible manquant.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Protection inaliénable du créateur
+    if ($targetNorm === 'hibouxe' || $targetSteamId === ADMIN_STEAM_ID) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden_target', 'message' => 'Le profil du créateur ne peut faire l\'objet d\'aucune action de modération.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Protection des modérateurs : un modérateur ne peut modérer un autre modérateur
+    $targetRole = getUserSovereignRole($targetNorm, $targetSteamId, $targetUserId);
+    if ($isCallerModerator && ($targetRole === 'admin' || $targetRole === 'moderator')) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'forbidden_target', 'message' => 'Les modérateurs ne peuvent pas modérer d\'autres membres du personnel.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $modDb = loadModerationDb();
+    $uFile = getUsernamesStoragePath();
+    $rawU = file_exists($uFile) ? @file_get_contents($uFile) : null;
+    $uData = $rawU ? json_decode($rawU, true) : ['usernames' => [], 'userToName' => [], 'bannedUsers' => []];
+    if (!isset($uData['usernames'])) $uData['usernames'] = [];
+    if (!isset($uData['bannedUsers'])) $uData['bannedUsers'] = [];
+
+    // Tenter de récupérer steamId et userId de la cible si non passés
+    if (empty($targetSteamId) && isset($uData['usernames'][$targetNorm]['steamId'])) {
+        $targetSteamId = strval($uData['usernames'][$targetNorm]['steamId']);
+    }
+    if (empty($targetUserId) && isset($uData['usernames'][$targetNorm]['userId'])) {
+        $targetUserId = strval($uData['usernames'][$targetNorm]['userId']);
+    }
+
+    $logs = [];
+    if (file_exists($logsFile)) {
+        $rawL = @file_get_contents($logsFile);
+        if ($rawL) $logs = json_decode($rawL, true) ?: [];
+    }
+
+    // 1. BANNIR OU DÉBANNIR
     if ($subAction === 'toggle_ban') {
         $ban = !empty($_REQUEST['ban'] ?? $jsonBody['ban'] ?? false);
-        echo json_encode(['success' => true, 'message' => $ban ? 'Utilisateur suspendu avec succès.' : 'Suspension levée avec succès.']);
+        $cleanReason = htmlspecialchars(strip_tags($reason), ENT_QUOTES, 'UTF-8');
+        if (empty($cleanReason)) {
+            $cleanReason = $ban ? 'Non-respect des règles de la communauté' : 'Suspension levée';
+        }
+
+        if ($ban) {
+            $modDb['bannedUsers'][$targetNorm] = [
+                'username' => $targetUsername,
+                'userId' => $targetUserId,
+                'steamId' => $targetSteamId,
+                'bannedAt' => time(),
+                'reason' => $cleanReason,
+                'bannedBy' => $callerUsername ?: ($isCallerAdmin ? 'Hibouxe' : 'Modérateur')
+            ];
+
+            if (isset($uData['usernames'][$targetNorm])) {
+                $uData['usernames'][$targetNorm]['status'] = 'banned';
+                $uData['usernames'][$targetNorm]['isBanned'] = true;
+                $uData['usernames'][$targetNorm]['banReason'] = $cleanReason;
+                $uData['usernames'][$targetNorm]['bannedAt'] = time();
+            }
+            if (!empty($targetSteamId) && !in_array($targetSteamId, $uData['bannedUsers'], true)) {
+                $uData['bannedUsers'][] = $targetSteamId;
+            }
+            if (!empty($targetUserId) && !in_array($targetUserId, $uData['bannedUsers'], true)) {
+                $uData['bannedUsers'][] = $targetUserId;
+            }
+
+            $incident = [
+                'id' => 'mod_ban_' . time() . '_' . substr(md5(uniqid($targetNorm, true)), 0, 6),
+                'type' => 'user_banned',
+                'timestamp' => time(),
+                'date' => date('c'),
+                'username' => $targetUsername,
+                'userId' => $targetUserId,
+                'steamId' => $targetSteamId,
+                'flaggedWords' => ['ban'],
+                'originalText' => "Joueur banni par " . ($callerUsername ?: ($isCallerAdmin ? 'Hibouxe' : 'Modérateur')) . " : " . $cleanReason,
+                'status' => 'banned'
+            ];
+            $logs[] = $incident;
+        } else {
+            // Débannir
+            unset($modDb['bannedUsers'][$targetNorm]);
+            foreach ($modDb['bannedUsers'] as $k => $bEntry) {
+                if ((!empty($targetUserId) && ($bEntry['userId'] ?? '') === $targetUserId) ||
+                    (!empty($targetSteamId) && ($bEntry['steamId'] ?? '') === $targetSteamId)) {
+                    unset($modDb['bannedUsers'][$k]);
+                }
+            }
+
+            if (isset($uData['usernames'][$targetNorm])) {
+                $uData['usernames'][$targetNorm]['status'] = 'active';
+                $uData['usernames'][$targetNorm]['isBanned'] = false;
+                unset($uData['usernames'][$targetNorm]['banReason']);
+            }
+            if (!empty($targetSteamId)) {
+                $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$targetSteamId]));
+            }
+            if (!empty($targetUserId)) {
+                $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$targetUserId]));
+            }
+
+            $incident = [
+                'id' => 'mod_unban_' . time() . '_' . substr(md5(uniqid($targetNorm, true)), 0, 6),
+                'type' => 'user_unbanned',
+                'timestamp' => time(),
+                'date' => date('c'),
+                'username' => $targetUsername,
+                'userId' => $targetUserId,
+                'steamId' => $targetSteamId,
+                'flaggedWords' => ['unban'],
+                'originalText' => "Suspension levée par " . ($callerUsername ?: ($isCallerAdmin ? 'Hibouxe' : 'Modérateur')),
+                'status' => 'active'
+            ];
+            $logs[] = $incident;
+        }
+
+        saveModerationDb($modDb);
+        @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        if (count($logs) > 200) $logs = array_slice($logs, -200);
+        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        echo json_encode([
+            'success' => true,
+            'message' => $ban ? "Utilisateur « {$targetUsername} » suspendu avec succès." : "Suspension levée pour « {$targetUsername} »."
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    if ($subAction === 'reset_username' && !empty($targetUsername)) {
+    // 2. CHANGER LE RÔLE D'UN JOUEUR (ADMIN UNIQUEMENT)
+    if ($subAction === 'set_role') {
+        if (!$isCallerAdmin) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'forbidden', 'message' => 'Seul l\'administrateur créateur peut attribuer ou modifier des rôles.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if (!in_array($role, ['user', 'vip', 'moderator'], true)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'invalid_role', 'message' => 'Rôle invalide. Rôles autorisés : user, vip, moderator.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($role === 'user') {
+            unset($modDb['roles'][$targetNorm]);
+        } else {
+            $modDb['roles'][$targetNorm] = $role;
+        }
+
+        if (isset($uData['usernames'][$targetNorm])) {
+            $uData['usernames'][$targetNorm]['role'] = $role;
+            $uData['usernames'][$targetNorm]['isModerator'] = ($role === 'moderator');
+        }
+
+        $incident = [
+            'id' => 'mod_role_' . time() . '_' . substr(md5(uniqid($targetNorm, true)), 0, 6),
+            'type' => 'role_changed',
+            'timestamp' => time(),
+            'date' => date('c'),
+            'username' => $targetUsername,
+            'userId' => $targetUserId,
+            'steamId' => $targetSteamId,
+            'flaggedWords' => [$role],
+            'originalText' => "Rôle modifié par Hibouxe : $role",
+            'status' => 'role_updated'
+        ];
+        $logs[] = $incident;
+
+        saveModerationDb($modDb);
+        @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        if (count($logs) > 200) $logs = array_slice($logs, -200);
+        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        echo json_encode([
+            'success' => true,
+            'message' => "Rôle de « {$targetUsername} » mis à jour en : {$role}."
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // 3. RÉINITIALISER LE PSEUDONYME ABUSIF
+    if ($subAction === 'reset_username') {
         if (file_exists($dataFile)) {
-            $data = json_decode(@file_get_contents($dataFile), true) ?: ['messages' => []];
-            $targetNorm = strtolower($targetUsername);
-            foreach ($data['messages'] as &$m) {
-                if (strtolower($m['username'] ?? '') === $targetNorm) {
+            $chatData = json_decode(@file_get_contents($dataFile), true) ?: ['messages' => []];
+            foreach ($chatData['messages'] as &$m) {
+                if (normalizeChatUsername($m['username'] ?? '') === $targetNorm) {
                     $m['username'] = 'Explorateur_Anonyme';
                 }
             }
-            @file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            unset($m);
+            @file_put_contents($dataFile, json_encode($chatData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         }
-        echo json_encode(['success' => true, 'message' => 'Pseudo réinitialisé avec succès.']);
+
+        if (isset($uData['usernames'][$targetNorm])) {
+            $uData['usernames'][$targetNorm]['displayName'] = 'Explorateur_Anonyme';
+        }
+
+        $incident = [
+            'id' => 'mod_reset_' . time() . '_' . substr(md5(uniqid($targetNorm, true)), 0, 6),
+            'type' => 'username_reset',
+            'timestamp' => time(),
+            'date' => date('c'),
+            'username' => $targetUsername,
+            'userId' => $targetUserId,
+            'steamId' => $targetSteamId,
+            'flaggedWords' => ['reset_username'],
+            'originalText' => "Pseudonyme abusif réinitialisé par " . ($callerUsername ?: ($isCallerAdmin ? 'Hibouxe' : 'Modérateur')),
+            'status' => 'reset'
+        ];
+        $logs[] = $incident;
+
+        @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        if (count($logs) > 200) $logs = array_slice($logs, -200);
+        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        echo json_encode([
+            'success' => true,
+            'message' => "Le pseudonyme de « {$targetUsername} » a été réinitialisé avec succès."
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    echo json_encode(['success' => true, 'message' => 'Action de modération appliquée.']);
+    echo json_encode(['success' => true, 'message' => 'Action de modération appliquée.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -1152,6 +1495,21 @@ if ($action === 'send_private_message') {
     $recipientUsername = trim($jsonBody['recipientUsername'] ?? $_POST['recipientUsername'] ?? '');
     $rawText = trim($jsonBody['text'] ?? $_POST['text'] ?? '');
     $conversationId = trim($jsonBody['conversationId'] ?? $_POST['conversationId'] ?? '');
+    $senderUserId = trim($jsonBody['senderUserId'] ?? $_POST['senderUserId'] ?? '');
+    $senderSteamId = trim($jsonBody['senderSteamId'] ?? $_POST['senderSteamId'] ?? '');
+
+    // 0. Bouclier de suspension / ban souverain : les joueurs suspendus ne peuvent pas envoyer de MP
+    $banCheck = checkIsUserBanned($senderUsername, $senderUserId, $senderSteamId, getClientIp());
+    if ($banCheck['banned']) {
+        http_response_code(403);
+        echo json_encode([
+            'success' => false,
+            'error' => 'account_banned',
+            'message' => 'Votre compte est suspendu par la modération.',
+            'warning' => '🚫 Votre compte est suspendu : ' . ($banCheck['reason'] ?: 'Non-respect des règles.')
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 
     if (empty($senderUsername) || empty($recipientUsername) || empty($rawText)) {
         http_response_code(400);

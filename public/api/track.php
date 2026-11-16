@@ -162,7 +162,10 @@ function normalizeUsernameAdmin($name) {
 }
 
 // Chargement et réparation / initialisation robuste de la base des utilisateurs
-function loadAndEnsureUsernamesDb($uFile) {
+function loadAndEnsureUsernamesDb($uFile = null) {
+    if (empty($uFile)) {
+        $uFile = getUsernamesStoragePath();
+    }
     $default = [
         'usernames' => [
             'hibouxe' => [
@@ -846,7 +849,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             exit;
         }
 
-        $uFile = __DIR__ . '/registered_usernames.json';
+        $uFile = getUsernamesStoragePath();
         $uData = loadAndEnsureUsernamesDb($uFile);
         if (isset($uData['usernames'][$target])) {
             $steamIdAssociated = $uData['usernames'][$target]['steamId'] ?? null;
@@ -911,7 +914,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             exit;
         }
 
-        $uFile = __DIR__ . '/registered_usernames.json';
+        $uFile = getUsernamesStoragePath();
         $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (!isset($uData['usernames'][$target])) {
@@ -962,11 +965,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
         if (!empty($newRole) && in_array($newRole, ['admin', 'moderator', 'vip', 'user'], true)) {
             // Seul Hibouxe peut être administrateur
-            $uData['usernames'][$target]['role'] = ($target === 'hibouxe') ? 'admin' : ($newRole === 'admin' ? 'moderator' : $newRole);
+            $finalRole = ($target === 'hibouxe') ? 'admin' : ($newRole === 'admin' ? 'moderator' : $newRole);
+            $uData['usernames'][$target]['role'] = $finalRole;
+            $modDb = loadModerationDb();
+            if ($finalRole === 'user') {
+                unset($modDb['roles'][$target]);
+            } else {
+                $modDb['roles'][$target] = $finalRole;
+            }
+            saveModerationDb($modDb);
         }
         if (!empty($newStatus) && in_array($newStatus, ['active', 'banned'], true)) {
             $uData['usernames'][$target]['status'] = $newStatus;
+            $uData['usernames'][$target]['isBanned'] = ($newStatus === 'banned');
             $stId = $uData['usernames'][$target]['steamId'] ?? null;
+            $uId = $uData['usernames'][$target]['userId'] ?? null;
             if ($stId) {
                 if (!isset($uData['bannedUsers']) || !is_array($uData['bannedUsers'])) {
                     $uData['bannedUsers'] = [];
@@ -977,7 +990,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                     $uData['bannedUsers'] = array_values(array_diff($uData['bannedUsers'], [$stId]));
                 }
             }
-            setUserBanStatusInFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null, ($newStatus === 'banned'));
+            setUserBanStatusInFriendsData($target, $stId, $uId, ($newStatus === 'banned'));
+
+            // Synchronisation souveraine avec moderation_bans.json
+            $modDb = loadModerationDb();
+            if ($newStatus === 'banned') {
+                $modDb['bannedUsers'][$target] = [
+                    'username' => $uData['usernames'][$target]['displayName'] ?? $target,
+                    'userId' => $uId,
+                    'steamId' => $stId,
+                    'bannedAt' => time(),
+                    'reason' => 'Suspendu via le tableau de bord administrateur',
+                    'bannedBy' => 'Hibouxe'
+                ];
+            } else {
+                unset($modDb['bannedUsers'][$target]);
+                foreach ($modDb['bannedUsers'] as $bKey => $bEntry) {
+                    if ((!empty($uId) && ($bEntry['userId'] ?? '') === $uId) ||
+                        (!empty($stId) && ($bEntry['steamId'] ?? '') === $stId)) {
+                        unset($modDb['bannedUsers'][$bKey]);
+                    }
+                }
+            }
+            saveModerationDb($modDb);
         }
         if ($newCustomTitle !== '') {
             $uData['usernames'][$target]['customTitle'] = $newCustomTitle;
@@ -1014,7 +1049,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             exit;
         }
 
-        $uFile = __DIR__ . '/registered_usernames.json';
+        $uFile = getUsernamesStoragePath();
         $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (!isset($uData['usernames'][$target])) {
@@ -1024,12 +1059,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         $uData['usernames'][$target]['status'] = $isBanned ? 'banned' : 'active';
+        $uData['usernames'][$target]['isBanned'] = $isBanned;
         $uData['usernames'][$target]['updatedAt'] = date('c');
 
         if (!isset($uData['bannedUsers']) || !is_array($uData['bannedUsers'])) {
             $uData['bannedUsers'] = [];
         }
         $stId = $uData['usernames'][$target]['steamId'] ?? null;
+        $uId = $uData['usernames'][$target]['userId'] ?? null;
         if ($stId) {
             if ($isBanned) {
                 if (!in_array($stId, $uData['bannedUsers'])) $uData['bannedUsers'][] = $stId;
@@ -1038,7 +1075,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             }
         }
 
-        setUserBanStatusInFriendsData($target, $stId, $uData['usernames'][$target]['userId'] ?? null, $isBanned);
+        setUserBanStatusInFriendsData($target, $stId, $uId, $isBanned);
+
+        // Synchronisation avec moderation_bans.json
+        $modDb = loadModerationDb();
+        if ($isBanned) {
+            $modDb['bannedUsers'][$target] = [
+                'username' => $uData['usernames'][$target]['displayName'] ?? $target,
+                'userId' => $uId,
+                'steamId' => $stId,
+                'bannedAt' => time(),
+                'reason' => 'Suspendu via le tableau de bord administrateur',
+                'bannedBy' => 'Hibouxe'
+            ];
+        } else {
+            unset($modDb['bannedUsers'][$target]);
+            foreach ($modDb['bannedUsers'] as $bKey => $bEntry) {
+                if ((!empty($uId) && ($bEntry['userId'] ?? '') === $uId) ||
+                    (!empty($stId) && ($bEntry['steamId'] ?? '') === $stId)) {
+                    unset($modDb['bannedUsers'][$bKey]);
+                }
+            }
+        }
+        saveModerationDb($modDb);
 
         @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         echo json_encode([
@@ -1115,7 +1174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         }
 
         // Résolution de l'utilisateur dans registered_usernames.json
-        $uFile = __DIR__ . '/registered_usernames.json';
+        $uFile = getUsernamesStoragePath();
         $uData = loadAndEnsureUsernamesDb($uFile);
 
         $resolvedSteamId = null;
@@ -1250,7 +1309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
     if ($action === 'manage_forbidden_names') {
         $subaction = trim($_POST['subaction'] ?? $_GET['subaction'] ?? 'list');
         $rawWord = trim($_POST['word'] ?? $_GET['word'] ?? '');
-        $uFile = __DIR__ . '/registered_usernames.json';
+        $uFile = getUsernamesStoragePath();
         $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (!isset($uData['forbiddenNames']) || !is_array($uData['forbiddenNames'])) {
@@ -1317,7 +1376,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
             exit;
         }
 
-        $uFile = __DIR__ . '/registered_usernames.json';
+        $uFile = getUsernamesStoragePath();
         $uData = loadAndEnsureUsernamesDb($uFile);
 
         if (isset($uData['usernames'][$norm])) {
@@ -1639,7 +1698,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         unset($stats['today_hashes']);
 
         // Chargement des pseudonymes enregistrés
-        $uFile = __DIR__ . '/registered_usernames.json';
+        $uFile = getUsernamesStoragePath();
         $uDec = loadAndEnsureUsernamesDb($uFile);
         $uList = [];
         $bannedCount = 0;
@@ -2037,7 +2096,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
 
             <!-- GESTION DES UTILISATEURS & PSEUDONYMES -->
             <?php
-            $uDbFile = __DIR__ . '/registered_usernames.json';
+            $uDbFile = getUsernamesStoragePath();
             $uDbData = loadAndEnsureUsernamesDb($uDbFile);
             $registeredUsersList = $uDbData['usernames'] ?? [];
             ?>

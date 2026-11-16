@@ -272,11 +272,11 @@ export async function sendChatMessage(payload: {
 
     if (res.ok && json?.success && json.message) {
       return { success: true, message: json.message };
-    } else if (json?.error) {
+    } else if (json) {
       return {
         success: false,
-        error: json.error,
-        warning: json.message,
+        error: json.error || 'Erreur lors de l\'envoi.',
+        warning: json.warning || json.message,
         flaggedWords: json.flaggedWords,
       };
     }
@@ -888,8 +888,8 @@ export async function sendPrivateMessage(payload: {
         message: json.message,
         conversationId: convId,
       };
-    } else if (json?.error) {
-      return { success: false, error: json.error };
+    } else if (json) {
+      return { success: false, error: json.warning || json.message || json.error || 'Erreur lors de l\'envoi du message privé.' };
     }
   } catch (err: any) {
     console.error('Error sending private message:', err);
