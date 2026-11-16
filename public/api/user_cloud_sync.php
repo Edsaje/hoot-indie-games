@@ -217,6 +217,12 @@ foreach ($candidateFiles as $file) {
             if (is_array($dec)) {
                 $existingSaveFile = $file;
                 $existingData = $dec;
+                // Si les données sont encapsulées sous une clé 'payload', les dérouler à la racine
+                if (isset($existingData['payload']) && is_array($existingData['payload'])) {
+                    $sub = $existingData['payload'];
+                    unset($existingData['payload']);
+                    $existingData = array_merge($existingData, $sub);
+                }
                 break;
             }
         }
@@ -577,6 +583,13 @@ switch ($action) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Données de sauvegarde invalides ou vides.'], JSON_UNESCAPED_UNICODE);
             exit;
+        }
+
+        // Support transparent si le payload est imbriqué sous une clé 'payload'
+        if (isset($incoming['payload']) && is_array($incoming['payload'])) {
+            $subPayload = $incoming['payload'];
+            unset($incoming['payload']);
+            $incoming = array_merge($incoming, $subPayload);
         }
 
         // Sécurité Anti-IDOR : Vérification stricte anti-écrasement

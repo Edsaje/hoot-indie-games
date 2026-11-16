@@ -724,10 +724,16 @@ async function fetchFromSovereignServer(identifiers: {
     }
 
     const json = await res.json();
+    let data = json.data;
+    if (data && data.payload && typeof data.payload === 'object') {
+      const sub = data.payload;
+      delete data.payload;
+      data = { ...data, ...sub };
+    }
     return {
       success: Boolean(json.success),
       exists: Boolean(json.exists),
-      data: json.data,
+      data,
       message: json.message,
     };
   } catch (err: any) {
@@ -773,10 +779,16 @@ async function pushToSovereignServer(
     }
 
     const json = await res.json();
+    let data = json.data;
+    if (data && data.payload && typeof data.payload === 'object') {
+      const sub = data.payload;
+      delete data.payload;
+      data = { ...data, ...sub };
+    }
     return {
       success: Boolean(json.success),
       message: json.message || 'Sauvegarde synchronisée avec succès dans le Cloud Souverain (OVH) !',
-      data: json.data || payload,
+      data: data || payload,
     };
   } catch (err: any) {
     return { success: false, message: err.message };
