@@ -1,39 +1,46 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-15";
+export const TODAY_DATE = "2026-11-16";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "the-cosmic-wheel-sisterhood",
-  "title": "The Cosmic Wheel Sisterhood",
-  "releaseYear": 2023,
-  "releaseDate": "2023-08-16",
+  "id": "openfront",
+  "title": "OpenFront",
+  "releaseYear": 2026,
+  "releaseDate": "2026-09-17",
   "genre": [
-    "Aventure"
+    "Massivement multijoueur",
+    "Stratégie",
+    "Simulation",
+    "Gestion"
   ],
   "artStyle": {
-    "fr": "Pixel Art",
-    "en": "Pixel Art"
+    "fr": "Monochrome / Minimaliste",
+    "en": "Monochrome"
   },
   "camera": {
-    "fr": "Vue de côté 2D",
-    "en": "2D Side-scroller"
+    "fr": "Vue du dessus 2D",
+    "en": "2D Top-down"
   },
-  "developer": "Deconstructeam",
-  "steamUrl": "https://store.steampowered.com/app/1340480/",
+  "developer": "OpenFront Inc, Evan Pellegrini",
+  "steamUrl": "https://store.steampowered.com/app/3560670/",
+  "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/b33eddb983569a4b0b4ac6ba5a23554b3dc3755f/header.jpg?t=1789729231",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_0a4b74eb8dcd857d4ea1ba745240346a6bafb628.1920x1080.jpg?t=1765878706",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_9c7c68a96bcc0a6627df91c898dad89615358d6b.1920x1080.jpg?t=1765878706",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_202fda9f73ada18292724378c0db9a37915e7dd7.1920x1080.jpg?t=1765878706",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_b8887e4dbe5687ecd1e258e0f128c193eed4f0ff.1920x1080.jpg?t=1765878706",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_2a342c131f62dbe8887f33822d60754d33283da1.1920x1080.jpg?t=1765878706",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1340480/ss_900d503b9ba05eb073131ff7fd42f945ac219f4a.1920x1080.jpg?t=1765878706"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/e4bb7a01224734f6393a5b2ed182a58487ab7071/ss_e4bb7a01224734f6393a5b2ed182a58487ab7071.1920x1080.jpg?t=1789729231",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789729231",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a66ab60ca56f5942913e14566e21bedb7f5a5a07/ss_a66ab60ca56f5942913e14566e21bedb7f5a5a07.1920x1080.jpg?t=1789729231",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/578a0bf1e70bc6dad974c310f0841e8f4bbfb15e/ss_578a0bf1e70bc6dad974c310f0841e8f4bbfb15e.1920x1080.jpg?t=1789729231",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789729231",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/388957578e4ef7bdfd2382f13cbbc01d40dd3f89/ss_388957578e4ef7bdfd2382f13cbbc01d40dd3f89.1920x1080.jpg?t=1789729231"
   ],
   "hints": {
     "tagline": {
-      "fr": "Plongez dans un récit envoûtant en incarnant Fortuna, une cartomancienne condamnée à l'exil sur son astéroïde. Fabriquez votre jeu de tarot, retrouvez votre liberté et déterminez le destin de la communauté cosmique des sorcières.",
-      "en": "Immerse yourself in an enchanting narrative experience as Fortuna, a fortune-teller Witch condemned to exile on her asteroid home. Craft your own Tarot deck, regain your freedom, and shape the fate of the cosmic Witch society."
+      "fr": "Prenez le commandement d'armées massives dans un jeu de stratégie multijoueur colossal en temps réel.",
+      "en": "A massively multiplayer real-time strategy game pitting hundreds of players against one another in grand campaigns.",
+      "es": "Un juego de estrategia en tiempo real masivo donde cientos de jugadores compiten en batallas geopolíticas.",
+      "de": "Befehlige riesige Armeen in diesem massiven Multiplayer-Echtzeit-Strategiespiel um globale Vorherrschaft.",
+      "ja": "何百人ものプレイヤーが領土を奪い合う、壮大なスケールで展開される大規模マルチプレイヤー戦略シミュレーション。",
+      "pt-BR": "Comande exércitos massivos em uma gigantesca guerra geopolítica multijogador em tempo real."
     },
-    "composer": "fingerspit"
-  },
-  "addedAt": "2026-09-25"
+    "composer": "Evan Pellegrini"
+  }
 };

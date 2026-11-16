@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 136
+ * Total de pépites sélectionnées : 138
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5659,5 +5659,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzIzMDI5MTczLnBuZw==/315x250%23c/cpB3PI.png"
     ],
     "dateAdded": "2026-11-15"
+  },
+  {
+    "id": "itch-devil-s-liminal",
+    "title": "DEVIL'S LIMINAL",
+    "developer": "heptad",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://heptad.itch.io/devils-liminal",
+    "playInBrowserUrl": "https://heptad.itch.io/devils-liminal",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$13.99",
+      "en": "$13.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A demon's pact, a final summer.",
+      "en": "A demon's pact, a final summer."
+    },
+    "description": {
+      "fr": "A demon's pact, a final summer.",
+      "en": "A demon's pact, a final summer."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5NjkyNjgyLnBuZw==/315x250%23c/3fvUao.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5NjkyNjgyLnBuZw==/315x250%23c/3fvUao.png"
+    ],
+    "dateAdded": "2026-11-16"
+  },
+  {
+    "id": "itch-the-binding-of-isaac-mobile-unofficial-android-port",
+    "title": "The Binding of Isaac: Mobile (Unofficial Android Port)",
+    "developer": "sytstudio",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://sytstudio.itch.io/isaac-mobile",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue du dessus 2D",
+      "en": "2D Top-down"
+    },
+    "tagline": {
+      "fr": "Experience The Binding of Isaac on Android. Full game, native controls and engine",
+      "en": "Experience The Binding of Isaac on Android. Full game, native controls and engine"
+    },
+    "description": {
+      "fr": "Experience The Binding of Isaac on Android. Full game, native controls and engine",
+      "en": "Experience The Binding of Isaac on Android. Full game, native controls and engine"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMxMjI2ODkyLnBuZw==/315x250%23c/BPzJhV.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMxMjI2ODkyLnBuZw==/315x250%23c/BPzJhV.png"
+    ],
+    "dateAdded": "2026-11-16"
   }
 ];
