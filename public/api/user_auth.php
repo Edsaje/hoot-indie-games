@@ -218,6 +218,10 @@ switch ($action) {
 
         if ($user) {
             $clientUser = sanitizeAccountForClient($user);
+            if (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID || ($clientUser['username'] ?? '') === 'Hibouxe' || ($clientUser['role'] ?? '') === 'admin') {
+                $_SESSION['admin_auth'] = true;
+                $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+            }
             $_SESSION['hoot_email_verified'] = (bool)($clientUser['emailVerified'] ?? true);
             echo json_encode([
                 'success' => true,
@@ -228,6 +232,10 @@ switch ($action) {
         } else {
             // Utilisateur connecté uniquement avec Steam sans compte email (vérifié par défaut)
             $isHibouxe = ($steamId === ADMIN_STEAM_ID || $isAdminSession);
+            if ($isHibouxe) {
+                $_SESSION['admin_auth'] = true;
+                $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+            }
             $_SESSION['hoot_email_verified'] = true;
             echo json_encode([
                 'success' => true,
@@ -429,6 +437,10 @@ switch ($action) {
         }
 
         $clientUser = sanitizeAccountForClient($accounts['users'][$userId]);
+        if (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID || ($clientUser['username'] ?? '') === 'Hibouxe' || ($clientUser['role'] ?? '') === 'admin') {
+            $_SESSION['admin_auth'] = true;
+            $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+        }
         echo json_encode([
             'success' => true,
             'message' => 'Connexion réussie ! Vos données ont été chargées.',

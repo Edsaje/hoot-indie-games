@@ -353,6 +353,9 @@ export async function deleteChatMessage(
       deleteLocalFallbackMessage(messageId, auth, hardDelete);
       return { success: true, message: json.message || 'Message supprimé avec succès.', hardDeleted: Boolean(json.hardDeleted) };
     }
+    if (json && (json.message || json.error)) {
+      return { success: false, message: json.message || json.error, hardDeleted: false };
+    }
   } catch (_err) {
     // Fallback local
   }

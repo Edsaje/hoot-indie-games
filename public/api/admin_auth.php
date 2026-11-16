@@ -168,11 +168,24 @@ if (!function_exists('validateAdminCsrfToken')) {
  * Sécurité absolue : Aucun en-tête client (Host, User-Agent, Referer, etc.) ne peut contourner cette vérification.
  */
 function isCreatorAdminAuthorized($explicitKey = null) {
-    // 1. Session PHP vérifiée (obtenue lors du login Steam OpenID officiel sur track.php validé par Valve)
+    // 1. Session PHP vérifiée (Steam OpenID officiel, session admin ou compte créateur authentifié)
     if (session_status() === PHP_SESSION_NONE) {
+        @ini_set('session.cookie_httponly', 1);
+        @ini_set('session.cookie_samesite', 'Lax');
         @session_start();
     }
     if (!empty($_SESSION['admin_auth']) && $_SESSION['admin_auth'] === true && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID) {
+        return true;
+    }
+    $sessionSteam = strval($_SESSION['admin_steam_id'] ?? $_SESSION['verified_steam_id'] ?? $_SESSION['steam_id'] ?? '');
+    if ($sessionSteam === ADMIN_STEAM_ID) {
+        $_SESSION['admin_auth'] = true;
+        $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+        return true;
+    }
+    if (strval($_SESSION['hoot_user_id'] ?? '') === 'admin_hibouxe') {
+        $_SESSION['admin_auth'] = true;
+        $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
         return true;
     }
 

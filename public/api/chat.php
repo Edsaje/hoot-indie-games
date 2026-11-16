@@ -20,6 +20,11 @@ header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 require_once __DIR__ . '/admin_auth.php';
 sendCorsHeaders();
+if (session_status() === PHP_SESSION_NONE) {
+    @ini_set('session.cookie_httponly', 1);
+    @ini_set('session.cookie_samesite', 'Lax');
+    @session_start();
+}
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -726,6 +731,8 @@ if ($action === 'delete_message') {
     $userId = trim($body['userId'] ?? $_REQUEST['userId'] ?? '');
     $email = trim($body['email'] ?? $_REQUEST['email'] ?? '');
     $username = trim($body['username'] ?? $_REQUEST['username'] ?? '');
+    $rawHard = $body['hardDelete'] ?? $_REQUEST['hardDelete'] ?? false;
+    $hardDelete = ($rawHard === true || $rawHard === 1 || $rawHard === 'true' || $rawHard === '1');
 
     if (empty($messageId)) {
         http_response_code(400);
@@ -751,7 +758,7 @@ if ($action === 'delete_message') {
         exit;
     }
 
-    if (!empty($targetMsg['isDeleted'])) {
+    if (!empty($targetMsg['isDeleted']) && !$hardDelete) {
         echo json_encode(['success' => true, 'messageId' => $messageId, 'message' => 'Ce message a déjà été supprimé.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
@@ -764,28 +771,34 @@ if ($action === 'delete_message') {
     $callerNorm = normalizeChatUsername($username);
     $cleanSteam = trim(strval($steamId));
 
-    $targetIsCreator = !empty($targetMsg['isCreator']) || $targetNorm === 'hibouxe';
+    $targetIsCreator = !empty($targetMsg['isCreator'])
+                    || $targetNorm === 'hibouxe'
+                    || (!empty($targetMsg['userId']) && $targetMsg['userId'] === 'admin_hibouxe')
+                    || (!empty($targetMsg['steamId']) && $targetMsg['steamId'] === ADMIN_STEAM_ID);
     $targetIsModerator = !empty($targetMsg['isModerator']);
 
-    $isOwnMessage = (!empty($callerNorm) && $targetNorm === $callerNorm)
-                 || (!empty($userId) && !empty($targetMsg['userId']) && $targetMsg['userId'] === $userId)
-                 || (!empty($cleanSteam) && !empty($targetMsg['steamId']) && $targetMsg['steamId'] === $cleanSteam);
-
-    // [DÉFENSE EN PROFONDEUR] Les messages officiels du créateur et des modérateurs ne peuvent JAMAIS
-    // être supprimés via une simple revendication de pseudo sans authentification serveur certifiée
-    if ($targetIsCreator && !$isCallerAdmin) {
-        $isOwnMessage = false;
-    }
-    if ($targetIsModerator && !$isCallerAdmin && !$isCallerModerator) {
-        $isOwnMessage = false;
+    // Détermination si c'est son propre message
+    $isOwnMessage = false;
+    if ($targetIsCreator) {
+        if ($isCallerAdmin || $cleanSteam === ADMIN_STEAM_ID || $userId === 'admin_hibouxe' || (isCreatorAdminAuthorized() && $callerNorm === 'hibouxe')) {
+            $isOwnMessage = true;
+        }
+    } elseif ($targetIsModerator) {
+        if ($isCallerAdmin || ($isCallerModerator && !empty($cleanSteam) && !empty($targetMsg['steamId']) && $targetMsg['steamId'] === $cleanSteam)) {
+            $isOwnMessage = true;
+        }
+    } else {
+        $isOwnMessage = (!empty($userId) && !empty($targetMsg['userId']) && $targetMsg['userId'] === $userId)
+                     || (!empty($cleanSteam) && !empty($targetMsg['steamId']) && $targetMsg['steamId'] === $cleanSteam)
+                     || (!empty($callerNorm) && $targetNorm === $callerNorm);
     }
 
     // RÈGLES DE PERMISSIONS :
-    // 1. L'Admin / Créateur (Hibouxe) peut supprimer TOUS les messages
+    // 1. L'Admin / Créateur (Hibouxe) peut supprimer ou faire disparaître TOUS les messages
     if ($isCallerAdmin) {
         // Autorisé pour tous les messages
     }
-    // 2. Les modérateurs peuvent supprimer les messages des utilisateurs et leur propre message
+    // 2. Les modérateurs peuvent supprimer ou faire disparaître les messages des utilisateurs et leur propre message
     else if ($isCallerModerator) {
         // Interdiction absolue de toucher aux messages de l'admin / créateur
         if ($targetIsCreator) {
@@ -801,7 +814,7 @@ if ($action === 'delete_message') {
         }
         // Messages des utilisateurs et son propre message autorisés
     }
-    // 3. Les utilisateurs peuvent supprimer leur propre message
+    // 3. Les utilisateurs peuvent supprimer ou faire disparaître leur propre message
     else if ($isOwnMessage) {
         // Autorisé pour son propre message
     } else {
@@ -810,7 +823,44 @@ if ($action === 'delete_message') {
         exit;
     }
 
+    // Journal de modération si supprimé par le staff sur le message de quelqu'un d'autre
+    if (!$isOwnMessage && ($isCallerAdmin || $isCallerModerator)) {
+        $logs = [];
+        if (file_exists($logsFile)) {
+            $rawL = @file_get_contents($logsFile);
+            if ($rawL) $logs = json_decode($rawL, true) ?: [];
+        }
+        $logs[] = [
+            'id' => 'mod_del_' . time() . '_' . substr(md5(uniqid($messageId, true)), 0, 6),
+            'type' => $hardDelete ? 'message_hard_deleted' : 'message_deleted',
+            'timestamp' => time(),
+            'date' => date('c'),
+            'username' => $targetMsg['username'] ?? 'Inconnu',
+            'userId' => $targetMsg['userId'] ?? '',
+            'channel' => $targetMsg['channel'] ?? 'global',
+            'flaggedWords' => ['delete_message'],
+            'originalText' => ($hardDelete ? "Message effacé définitivement" : "Message masqué") . " par " . ($isCallerAdmin ? 'Hibouxe' : ($username ?: 'Modérateur')) . " : " . ($targetMsg['text'] ?? ''),
+            'status' => $hardDelete ? 'hard_deleted' : 'deleted'
+        ];
+        if (count($logs) > 200) $logs = array_slice($logs, -200);
+        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
     // Application de la suppression
+    if ($hardDelete) {
+        array_splice($data['messages'], $targetIndex, 1);
+        @file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        echo json_encode([
+            'success' => true,
+            'messageId' => $messageId,
+            'hardDeleted' => true,
+            'message' => 'Message retiré définitivement de la discussion.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Masquage normal (soft delete)
     $data['messages'][$targetIndex]['isDeleted'] = true;
     $data['messages'][$targetIndex]['text'] = $isOwnMessage
         ? '[Message retiré par l\'auteur]'
@@ -819,30 +869,12 @@ if ($action === 'delete_message') {
 
     @file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
-    // Journal de modération si supprimé par l'équipe staff
-    if (!$isOwnMessage) {
-        $logs = [];
-        if (file_exists($logsFile)) {
-            $rawL = @file_get_contents($logsFile);
-            if ($rawL) $logs = json_decode($rawL, true) ?: [];
-        }
-        $logs[] = [
-            'id' => 'mod_del_' . time() . '_' . substr(md5(uniqid($messageId, true)), 0, 6),
-            'type' => 'message_deleted',
-            'timestamp' => time(),
-            'date' => date('c'),
-            'username' => $targetMsg['username'] ?? 'Inconnu',
-            'userId' => $targetMsg['userId'] ?? '',
-            'channel' => $targetMsg['channel'] ?? 'global',
-            'flaggedWords' => ['delete_message'],
-            'originalText' => "Message supprimé par " . ($isCallerAdmin ? 'Hibouxe' : ($username ?: 'Modérateur')) . " : " . ($targetMsg['text'] ?? ''),
-            'status' => 'deleted'
-        ];
-        if (count($logs) > 200) $logs = array_slice($logs, -200);
-        @file_put_contents($logsFile, json_encode($logs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-    }
-
-    echo json_encode(['success' => true, 'messageId' => $messageId, 'message' => 'Message supprimé avec succès.'], JSON_UNESCAPED_UNICODE);
+    echo json_encode([
+        'success' => true,
+        'messageId' => $messageId,
+        'hardDeleted' => false,
+        'message' => 'Message masqué avec succès.'
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -1586,16 +1618,22 @@ if ($action === 'mark_private_read') {
 if ($action === 'delete_private_message') {
     $msgId = trim($_REQUEST['messageId'] ?? $jsonBody['messageId'] ?? '');
     $cleanUsername = trim($_REQUEST['username'] ?? $jsonBody['username'] ?? '');
+    $rawHard = $jsonBody['hardDelete'] ?? $_REQUEST['hardDelete'] ?? false;
+    $hardDelete = ($rawHard === true || $rawHard === 1 || $rawHard === 'true' || $rawHard === '1');
 
     if (!empty($msgId) && !empty($cleanUsername)) {
         $allMsgs = loadPrivateMessages($privateDataFile);
         $cleanNorm = strtolower($cleanUsername);
         $modified = false;
-        foreach ($allMsgs as &$msg) {
+        foreach ($allMsgs as $idx => &$msg) {
             if (($msg['id'] ?? '') === $msgId) {
                 if (strtolower($msg['senderUsername'] ?? '') === $cleanNorm || strtolower($msg['recipientUsername'] ?? '') === $cleanNorm) {
-                    $msg['isDeleted'] = true;
-                    $msg['text'] = '[Message privé retiré]';
+                    if ($hardDelete) {
+                        array_splice($allMsgs, $idx, 1);
+                    } else {
+                        $msg['isDeleted'] = true;
+                        $msg['text'] = '[Message privé retiré]';
+                    }
                     $modified = true;
                     break;
                 }
@@ -1606,7 +1644,7 @@ if ($action === 'delete_private_message') {
         }
     }
 
-    echo json_encode(['success' => true]);
+    echo json_encode(['success' => true, 'hardDeleted' => $hardDelete]);
     exit;
 }
 
