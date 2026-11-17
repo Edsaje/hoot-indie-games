@@ -32,6 +32,7 @@ import { DifficultySelector, type GameDifficulty } from '../common/DifficultySel
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { telemetry } from '../../services/telemetry';
 import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
+import { loadSecureJson, saveSecureJson } from '../../utils/securityAntiCheat';
 
 interface LinkleGameProps {
   currentDate: string;
@@ -135,9 +136,8 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
     });
 
     try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) {
-        const parsed = JSON.parse(saved);
+      const parsed = loadSecureJson<any>(storageKey);
+      if (parsed) {
         const solvedCats = puzzle.categories.filter((c) =>
           (parsed.solvedCategoryIds || []).includes(c.id)
         );
@@ -234,17 +234,14 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
     prevGuesses: string[][]
   ) => {
     try {
-      localStorage.setItem(
-        storageKey,
-        JSON.stringify({
-          date: puzzle.date || currentDate,
-          solvedCategoryIds: solvedCats.map((c) => c.id),
-          mistakesRemaining: mistakes,
-          isCompleted: completed,
-          isWon: won,
-          previousGuesses: prevGuesses,
-        })
-      );
+      saveSecureJson(storageKey, {
+        date: puzzle.date || currentDate,
+        solvedCategoryIds: solvedCats.map((c) => c.id),
+        mistakesRemaining: mistakes,
+        isCompleted: completed,
+        isWon: won,
+        previousGuesses: prevGuesses,
+      });
     } catch {
       // Ignore
     }
@@ -281,14 +278,10 @@ export const LinkleGame: React.FC<LinkleGameProps> = ({ currentDate, onSelectDat
 
   const checkDailyTrifecta = () => {
     try {
-      const s1 = localStorage.getItem(`screenle_state_${currentDate}`);
-      const s2 = localStorage.getItem(`indledle_state_${currentDate}`);
-      if (s1 && s2) {
-        const p1 = JSON.parse(s1);
-        const p2 = JSON.parse(s2);
-        if (p1.isWon && p2.isWon) {
-          unlockAchievement('daily_trifecta');
-        }
+      const p1 = loadSecureJson<any>(`screenle_state_${currentDate}`);
+      const p2 = loadSecureJson<any>(`indledle_state_${currentDate}`);
+      if (p1?.isWon && p2?.isWon) {
+        unlockAchievement('daily_trifecta');
       }
     } catch {
       // Ignore

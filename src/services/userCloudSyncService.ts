@@ -5,6 +5,7 @@
 
 import { ACHIEVEMENTS_LIST } from '../data/achievements';
 import type { OdysseySaveState } from '../types/odyssey';
+import { loadSecureJson, saveSecureJson } from '../utils/securityAntiCheat';
 
 export interface AdminRewardNotification {
   id: string;
@@ -135,9 +136,9 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
       const k = localStorage.key(i);
       if (k && modePrefixes.some((p) => k.startsWith(p))) {
         try {
-          const val = localStorage.getItem(k);
-          if (val) {
-            dailyGameStates[k] = JSON.parse(val);
+          const parsed = loadSecureJson<any>(k);
+          if (parsed) {
+            dailyGameStates[k] = parsed;
           }
         } catch {}
       }
@@ -384,7 +385,7 @@ export function applyCloudSaveToLocalStorage(
       if (cloudData.dailyGameStates && typeof cloudData.dailyGameStates === 'object') {
         for (const [stateKey, cloudState] of Object.entries(cloudData.dailyGameStates)) {
           if (cloudState && typeof cloudState === 'object') {
-            localStorage.setItem(stateKey, JSON.stringify(cloudState));
+            saveSecureJson(stateKey, cloudState);
           }
         }
       }
@@ -393,13 +394,12 @@ export function applyCloudSaveToLocalStorage(
       let hasDailyChanges = false;
       for (const [stateKey, cloudState] of Object.entries(cloudData.dailyGameStates)) {
         if (!cloudState || typeof cloudState !== 'object') continue;
-        const localRaw = localStorage.getItem(stateKey);
-        if (!localRaw) {
-          localStorage.setItem(stateKey, JSON.stringify(cloudState));
+        const localState = loadSecureJson<any>(stateKey);
+        if (!localState) {
+          saveSecureJson(stateKey, cloudState);
           hasDailyChanges = true;
         } else {
           try {
-            const localState = JSON.parse(localRaw);
             const isWon = Boolean(localState.isWon || (cloudState as any).isWon);
             const isCompleted = Boolean(localState.isCompleted || (cloudState as any).isCompleted);
             const localGuesses = Array.isArray(localState.guesses) ? localState.guesses : [];
@@ -412,10 +412,10 @@ export function applyCloudSaveToLocalStorage(
               isCompleted,
               guesses,
             };
-            localStorage.setItem(stateKey, JSON.stringify(mergedDailyState));
+            saveSecureJson(stateKey, mergedDailyState);
             hasDailyChanges = true;
           } catch {
-            localStorage.setItem(stateKey, JSON.stringify(cloudState));
+            saveSecureJson(stateKey, cloudState);
             hasDailyChanges = true;
           }
         }

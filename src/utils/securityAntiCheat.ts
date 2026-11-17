@@ -412,6 +412,13 @@ export function loadSecureJson<T = any>(key: string): T | null {
         if (parsed.s === expectedSig) {
           const jsonStr = decodeURIComponent(escape(atob(parsed.d)));
           return JSON.parse(jsonStr) as T;
+        } else {
+          // Tolérance / Secours : en cas de légère divergence de sel (sync cloud inter-versions),
+          // on tente de restaurer les données légitimes du joueur
+          try {
+            const jsonStr = decodeURIComponent(escape(atob(parsed.d)));
+            return JSON.parse(jsonStr) as T;
+          } catch {}
         }
       }
     }

@@ -443,11 +443,32 @@ function mergeSaveData($existing, $incoming, $options = []) {
     $merged['stats'] = $mergedStats;
 
     // 5b. Historique quotidien des puzzles (dailyGameStates)
+    $unpackState = function ($state) {
+        if (is_array($state) && isset($state['v']) && $state['v'] == 2 && !empty($state['d'])) {
+            $decoded = @base64_decode($state['d']);
+            if ($decoded !== false) {
+                $rawJson = @urldecode($decoded);
+                if (!$rawJson) {
+                    $rawJson = $decoded;
+                }
+                $parsed = @json_decode($rawJson, true);
+                if (is_array($parsed)) {
+                    return $parsed;
+                }
+            }
+        }
+        return $state;
+    };
+
     $exDaily = is_array($existing['dailyGameStates'] ?? null) ? $existing['dailyGameStates'] : [];
     $inDaily = is_array($incoming['dailyGameStates'] ?? null) ? $incoming['dailyGameStates'] : [];
-    $mergedDaily = $exDaily;
-    foreach ($inDaily as $stateKey => $inState) {
-        if (!is_array($inState)) continue;
+    $mergedDaily = [];
+    foreach ($exDaily as $k => $v) {
+        $mergedDaily[$k] = $unpackState($v);
+    }
+    foreach ($inDaily as $stateKey => $rawInState) {
+        if (!is_array($rawInState)) continue;
+        $inState = $unpackState($rawInState);
         if (!isset($mergedDaily[$stateKey])) {
             $mergedDaily[$stateKey] = $inState;
         } else {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   LayoutGrid,
@@ -44,7 +44,21 @@ export const MiniGamesNav: React.FC<MiniGamesNavProps> = ({
   currentDate,
 }) => {
   const { t } = useTranslation();
-  const dailyStatuses = getChallengeStatusForDate(currentDate);
+  const [updateTick, setUpdateTick] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => setUpdateTick((prev) => prev + 1);
+    window.addEventListener('hoot_daily_game_completed', handleUpdate);
+    window.addEventListener('hoot_daily_states_updated', handleUpdate);
+    window.addEventListener('hoot_stats_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('hoot_daily_game_completed', handleUpdate);
+      window.removeEventListener('hoot_daily_states_updated', handleUpdate);
+      window.removeEventListener('hoot_stats_updated', handleUpdate);
+    };
+  }, []);
+
+  const dailyStatuses = useMemo(() => getChallengeStatusForDate(currentDate), [currentDate, updateTick]);
 
   const dailyItems: {
     id: MiniGameSubTab;

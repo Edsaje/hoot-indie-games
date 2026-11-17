@@ -8,6 +8,7 @@ import type {
 import type { UserProfile } from '../types/user';
 import { getTodayDateString, getChallengeStatusForDate } from '../utils/streakManager';
 import { ADMIN_STEAM_ID } from '../utils/usernameValidation';
+import { loadSecureJson } from '../utils/securityAntiCheat';
 
 const FRIENDS_STORAGE_KEY = 'hoot_friends_list_v2';
 const API_BASE = '/api/friends.php';
@@ -64,9 +65,8 @@ export function extractCurrentDailyScores(dateStr = getTodayDateString()): Frien
 
     try {
       if (typeof window !== 'undefined' && window.localStorage) {
-        const saved = localStorage.getItem(`${disc}_state_${dateStr}`);
-        if (saved) {
-          const parsed = JSON.parse(saved);
+        const parsed = loadSecureJson<any>(`${disc}_state_${dateStr}`);
+        if (parsed) {
           if (Array.isArray(parsed.guesses)) {
             guessCount = parsed.guesses.length;
           } else if (Array.isArray(parsed.guessIds)) {

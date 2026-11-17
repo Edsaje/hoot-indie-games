@@ -4,6 +4,8 @@
  * in Hoot Indie Games.
  */
 
+import { loadSecureJson } from './securityAntiCheat';
+
 const PARIS_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'Europe/Paris',
   year: 'numeric',
@@ -97,9 +99,8 @@ export const getChallengeStatusForDate = (dateStr: string): DateChallengeStatus 
   const getStatus = (key: string): DayPlayStatus => {
     try {
       if (typeof window === 'undefined' || !window.localStorage) return 'unplayed';
-      const saved = localStorage.getItem(key);
-      if (!saved) return 'unplayed';
-      const parsed = JSON.parse(saved);
+      const parsed = loadSecureJson<any>(key);
+      if (!parsed) return 'unplayed';
       if (parsed.isWon) return 'won';
       if (parsed.isCompleted) return 'lost';
       return 'unplayed';

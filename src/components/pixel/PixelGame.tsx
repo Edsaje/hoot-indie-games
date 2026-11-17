@@ -33,6 +33,7 @@ import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { telemetry } from '../../services/telemetry';
 import { getClueLabel, getClueValue } from '../../utils/localization';
 import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
+import { loadSecureJson, saveSecureJson } from '../../utils/securityAntiCheat';
 
 interface PixelGameProps {
   currentDate: string;
@@ -83,9 +84,8 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
     }
 
     try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const saved: SavedPixelState = JSON.parse(raw);
+      const saved = loadSecureJson<SavedPixelState>(storageKey);
+      if (saved) {
         return saved;
       }
     } catch {
@@ -129,7 +129,7 @@ export const PixelGame: React.FC<PixelGameProps> = ({ currentDate, onSelectDate 
         isWon: won,
         attemptsCount: nextGuesses.length,
       };
-      localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+      saveSecureJson(storageKey, stateToSave);
     } catch {
       // Ignorer
     }

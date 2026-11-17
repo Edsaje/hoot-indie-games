@@ -193,10 +193,12 @@ export const GameStatsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         modeStats.currentStreak = 0;
       }
 
-      if (typeof window !== 'undefined' && isWon) {
+      if (typeof window !== 'undefined') {
         window.dispatchEvent(
-          new CustomEvent('hoot_daily_game_completed', { detail: { mode, dateStr } })
+          new CustomEvent('hoot_daily_game_completed', { detail: { mode, dateStr, isWon } })
         );
+        window.dispatchEvent(new CustomEvent('hoot_daily_states_updated'));
+        window.dispatchEvent(new CustomEvent('hoot_stats_updated', { detail: { [mode]: modeStats } }));
       }
 
       return {

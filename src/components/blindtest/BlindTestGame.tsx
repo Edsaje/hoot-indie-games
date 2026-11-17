@@ -46,6 +46,7 @@ import { type ShareCardData } from '../../utils/generateShareCard';
 import { telemetry } from '../../services/telemetry';
 import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
 import { getClueLabel, getClueValue } from '../../utils/localization';
+import { loadSecureJson, saveSecureJson } from '../../utils/securityAntiCheat';
 
 interface BlindTestGameProps {
   currentDate: string;
@@ -91,9 +92,8 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
     }
 
     try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const saved: SavedBlindTestState = JSON.parse(raw);
+      const saved = loadSecureJson<SavedBlindTestState>(storageKey);
+      if (saved) {
         return saved;
       }
     } catch {
@@ -194,7 +194,7 @@ export const BlindTestGame: React.FC<BlindTestGameProps> = ({ currentDate, onSel
         isWon: won,
         attemptsCount: nextGuesses.length,
       };
-      localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+      saveSecureJson(storageKey, stateToSave);
     } catch {
       // Ignorer
     }

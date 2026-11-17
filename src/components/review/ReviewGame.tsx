@@ -33,6 +33,7 @@ import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { telemetry } from '../../services/telemetry';
 import { getClueLabel, getClueValue, getBilingualText } from '../../utils/localization';
 import { DailyGameNextBanner } from '../minigames/DailyGameNextBanner';
+import { loadSecureJson, saveSecureJson } from '../../utils/securityAntiCheat';
 
 interface ReviewGameProps {
   currentDate: string;
@@ -78,9 +79,8 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
     }
 
     try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const saved: SavedReviewState = JSON.parse(raw);
+      const saved = loadSecureJson<SavedReviewState>(storageKey);
+      if (saved) {
         return saved;
       }
     } catch {
@@ -114,7 +114,7 @@ export const ReviewGame: React.FC<ReviewGameProps> = ({ currentDate, onSelectDat
         isWon: won,
         attemptsCount: nextGuesses.length,
       };
-      localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+      saveSecureJson(storageKey, stateToSave);
     } catch {
       // Ignorer
     }

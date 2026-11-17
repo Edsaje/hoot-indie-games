@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Camera,
@@ -132,7 +132,21 @@ export const DailyGameNextBanner: React.FC<DailyGameNextBannerProps> = ({
   onNavigateGame,
 }) => {
   const { t } = useTranslation();
-  const statuses = useMemo(() => getChallengeStatusForDate(currentDate), [currentDate]);
+  const [updateTick, setUpdateTick] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => setUpdateTick((prev) => prev + 1);
+    window.addEventListener('hoot_daily_game_completed', handleUpdate);
+    window.addEventListener('hoot_daily_states_updated', handleUpdate);
+    window.addEventListener('hoot_stats_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('hoot_daily_game_completed', handleUpdate);
+      window.removeEventListener('hoot_daily_states_updated', handleUpdate);
+      window.removeEventListener('hoot_stats_updated', handleUpdate);
+    };
+  }, []);
+
+  const statuses = useMemo(() => getChallengeStatusForDate(currentDate), [currentDate, updateTick]);
   const todayStr = getTodayDateString();
   const isToday = currentDate === todayStr;
 
