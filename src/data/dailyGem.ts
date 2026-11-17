@@ -1,46 +1,45 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-16";
+export const TODAY_DATE = "2026-11-17";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "openfront",
-  "title": "OpenFront",
-  "releaseYear": 2026,
-  "releaseDate": "2026-09-17",
+  "id": "fields-of-mistria",
+  "title": "Fields of Mistria",
+  "releaseYear": 2024,
+  "releaseDate": "2026-08-05",
   "genre": [
-    "Massivement multijoueur",
-    "Stratégie",
     "Simulation",
-    "Gestion"
+    "RPG",
+    "Farming",
+    "Cozy"
   ],
   "artStyle": {
-    "fr": "Monochrome / Minimaliste",
-    "en": "Monochrome"
+    "fr": "Pixel Art",
+    "en": "Pixel Art"
   },
   "camera": {
     "fr": "Vue du dessus 2D",
     "en": "2D Top-down"
   },
-  "developer": "OpenFront Inc, Evan Pellegrini",
-  "steamUrl": "https://store.steampowered.com/app/3560670/",
-  "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/b33eddb983569a4b0b4ac6ba5a23554b3dc3755f/header.jpg?t=1789729231",
+  "developer": "NPC Studio",
+  "steamUrl": "https://store.steampowered.com/app/2142790/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/e4bb7a01224734f6393a5b2ed182a58487ab7071/ss_e4bb7a01224734f6393a5b2ed182a58487ab7071.1920x1080.jpg?t=1789729231",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789729231",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a66ab60ca56f5942913e14566e21bedb7f5a5a07/ss_a66ab60ca56f5942913e14566e21bedb7f5a5a07.1920x1080.jpg?t=1789729231",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/578a0bf1e70bc6dad974c310f0841e8f4bbfb15e/ss_578a0bf1e70bc6dad974c310f0841e8f4bbfb15e.1920x1080.jpg?t=1789729231",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900/ss_a4ae79cab4ff4e18f3aae9eaa8d8920d06a7b900.1920x1080.jpg?t=1789729231",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3560670/388957578e4ef7bdfd2382f13cbbc01d40dd3f89/ss_388957578e4ef7bdfd2382f13cbbc01d40dd3f89.1920x1080.jpg?t=1789729231"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/da8367fe734a77cc4d400199a9661eeea84170b1/ss_da8367fe734a77cc4d400199a9661eeea84170b1.1920x1080.jpg?t=1785944891",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/9933944638583f30c37fc4a51977de639f86624c/ss_9933944638583f30c37fc4a51977de639f86624c.1920x1080.jpg?t=1785944891",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/72a83ad1fd494bca5a01d876137f545d562ee735/ss_72a83ad1fd494bca5a01d876137f545d562ee735.1920x1080.jpg?t=1785944891",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/72b3122d8f42afe7359eeac6cef959cf03caabcf/ss_72b3122d8f42afe7359eeac6cef959cf03caabcf.1920x1080.jpg?t=1785944891",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/54ee7238977f0c2b75a075916a6f7cf396eabe8a/ss_54ee7238977f0c2b75a075916a6f7cf396eabe8a.1920x1080.jpg?t=1785944891",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/a3b1416dc3b0152fa31b359fc492316b5c331c5b/ss_a3b1416dc3b0152fa31b359fc492316b5c331c5b.1920x1080.jpg?t=1785944891"
   ],
   "hints": {
     "tagline": {
-      "fr": "Prenez le commandement d'armées massives dans un jeu de stratégie multijoueur colossal en temps réel.",
-      "en": "A massively multiplayer real-time strategy game pitting hundreds of players against one another in grand campaigns.",
-      "es": "Un juego de estrategia en tiempo real masivo donde cientos de jugadores compiten en batallas geopolíticas.",
-      "de": "Befehlige riesige Armeen in diesem massiven Multiplayer-Echtzeit-Strategiespiel um globale Vorherrschaft.",
-      "ja": "何百人ものプレイヤーが領土を奪い合う、壮大なスケールで展開される大規模マルチプレイヤー戦略シミュレーション。",
-      "pt-BR": "Comande exércitos massivos em uma gigantesca guerra geopolítica multijogador em tempo real."
+      "fr": "Redonnez vie à un village magique dans cette simulation de ferme nostalgique et colorée.",
+      "en": "Build the farm of your dreams as you discover a world full of magic, romance, and adventure in this farming sim.",
+      "es": "Construye la granja de tus sueños mientras descubres magia, romance y amistad en este encantador simulador.",
+      "de": "Erwecke ein verträumtes Dorf zu neuem Glanz in dieser nostalgischen Farmsimulation voller Magie und Charme.",
+      "ja": "魔法とロマンス、そして冒険が待つ美しい町で、夢の牧場生活を築き上げる心温まる農場シミュレーション。",
+      "pt-BR": "Restaure uma vila mágica e viva a vida no campo nesta charmosa e nostálgica simulação de fazenda."
     },
-    "composer": "Evan Pellegrini"
+    "composer": "Joseph \"Tettix\" Garber"
   }
 };

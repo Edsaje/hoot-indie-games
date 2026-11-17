@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 138
+ * Total de pépites sélectionnées : 140
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5740,5 +5740,85 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMxMjI2ODkyLnBuZw==/315x250%23c/BPzJhV.png"
     ],
     "dateAdded": "2026-11-16"
+  },
+  {
+    "id": "itch-don-t-look-back",
+    "title": "Don't Look Back",
+    "developer": "ash-ashtroom",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://ash-ashtroom.itch.io/dont-look-back",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "He said \"don't look back.\" Now we're falling and it's your fault, probably.",
+      "en": "He said \"don't look back.\" Now we're falling and it's your fault, probably."
+    },
+    "description": {
+      "fr": "He said \"don't look back.\" Now we're falling and it's your fault, probably.",
+      "en": "He said \"don't look back.\" Now we're falling and it's your fault, probably."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMyMjc0NDM1LmpwZw==/315x250%23c/OSEO25.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMyMjc0NDM1LmpwZw==/315x250%23c/OSEO25.jpg"
+    ],
+    "dateAdded": "2026-11-17"
+  },
+  {
+    "id": "itch-scp-containment-breach-hd-edition",
+    "title": "SCP Containment Breach: HD Edition",
+    "developer": "cbhdedition",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://cbhdedition.itch.io/containment-breach-hd-edition",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "(v0.5.0) HD remaster of SCP: Containment Breach",
+      "en": "(v0.5.0) HD remaster of SCP: Containment Breach"
+    },
+    "description": {
+      "fr": "(v0.5.0) HD remaster of SCP: Containment Breach",
+      "en": "(v0.5.0) HD remaster of SCP: Containment Breach"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzMyNDA1OTEwLnBuZw==/315x250%23c/j8PA6B.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzMyNDA1OTEwLnBuZw==/315x250%23c/j8PA6B.png"
+    ],
+    "dateAdded": "2026-11-17"
   }
 ];
