@@ -86,7 +86,11 @@ export const OdysseyHub: React.FC = () => {
       }
     };
     window.addEventListener('hoot_odyssey_updated', handleSaveRestored as any);
-    return () => window.removeEventListener('hoot_odyssey_updated', handleSaveRestored as any);
+    window.addEventListener('hoot_cloud_save_restored', handleSaveRestored as any);
+    return () => {
+      window.removeEventListener('hoot_odyssey_updated', handleSaveRestored as any);
+      window.removeEventListener('hoot_cloud_save_restored', handleSaveRestored as any);
+    };
   }, []);
 
   // Sauvegarde automatique périodique (toutes les 10 secondes)

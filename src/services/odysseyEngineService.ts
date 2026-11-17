@@ -62,7 +62,7 @@ export function getDefaultOdysseyState(): OdysseySaveState {
       firefliesCaught: 0,
       rebirthsCount: 0,
     },
-    lastSavedAt: Date.now(),
+    lastSavedAt: 0,
   };
 }
 

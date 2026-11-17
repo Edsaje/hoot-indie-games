@@ -553,13 +553,43 @@ export function applyCloudSaveToLocalStorage(
           } else {
             const localSavedAt = Number(localOdyssey.lastSavedAt || 0);
             const cloudSavedAt = Number(cloudOdyssey.lastSavedAt || 0);
-            const isLocalNewer = localSavedAt >= cloudSavedAt;
+
+            const isLocalEmpty = (
+              Number(localOdyssey.totalStarSapEarned || 0) === 0 &&
+              Number(localOdyssey.highestBiomeUnlocked || 1) === 1 &&
+              Object.keys(localOdyssey.treeUpgrades || {}).length === 0 &&
+              Object.keys(localOdyssey.capturedGames || {}).length === 0
+            );
+            const isCloudEmpty = (
+              Number(cloudOdyssey.totalStarSapEarned || 0) === 0 &&
+              Number(cloudOdyssey.highestBiomeUnlocked || 1) === 1 &&
+              Object.keys(cloudOdyssey.treeUpgrades || {}).length === 0 &&
+              Object.keys(cloudOdyssey.capturedGames || {}).length === 0
+            );
+
+            let isLocalNewer: boolean;
+            if (isLocalEmpty && !isCloudEmpty) {
+              isLocalNewer = false;
+            } else if (!isLocalEmpty && isCloudEmpty) {
+              isLocalNewer = true;
+            } else {
+              isLocalNewer = localSavedAt >= cloudSavedAt;
+            }
 
             const primary = isLocalNewer ? localOdyssey : cloudOdyssey;
             const secondary = isLocalNewer ? cloudOdyssey : localOdyssey;
 
-            const activeBiome = primary.currentBiomeId || secondary.currentBiomeId || 'biome_1_clearing';
-            const activeRoute = Math.max(1, Math.min(5, Number(primary.currentRouteNumber || secondary.currentRouteNumber || 1)));
+            const primaryBiome = primary.currentBiomeId || 'biome_1_clearing';
+            const secondaryBiome = secondary.currentBiomeId || 'biome_1_clearing';
+            const activeBiome = (primaryBiome === 'biome_1_clearing' && secondaryBiome !== 'biome_1_clearing')
+              ? secondaryBiome
+              : primaryBiome;
+
+            const primaryRoute = Math.max(1, Math.min(5, Number(primary.currentRouteNumber || 1)));
+            const secondaryRoute = Math.max(1, Math.min(5, Number(secondary.currentRouteNumber || 1)));
+            const activeRoute = (primaryRoute === 1 && secondaryRoute > 1 && primaryBiome === 'biome_1_clearing')
+              ? secondaryRoute
+              : primaryRoute;
             const activeAutoAdvance = typeof primary.autoAdvance === 'boolean'
               ? primary.autoAdvance
               : (typeof secondary.autoAdvance === 'boolean' ? secondary.autoAdvance : false);
@@ -707,12 +737,20 @@ async function fetchFromSovereignServer(identifiers: {
     if (identifiers.username) params.set('username', identifiers.username);
     if (syncKey) params.set('syncKey', syncKey);
 
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+      'X-Sync-Key': syncKey,
+    };
+    if (typeof window !== 'undefined') {
+      const adminKey = localStorage.getItem('hoot_admin_key');
+      if (adminKey) {
+        headers['X-Admin-Key'] = adminKey;
+      }
+    }
+
     const res = await fetch(`${SOVEREIGN_SYNC_API}?${params.toString()}`, {
       method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'X-Sync-Key': syncKey,
-      },
+      headers,
       credentials: 'include',
     });
 
@@ -761,14 +799,23 @@ async function pushToSovereignServer(
       syncKey,
     };
 
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Sync-Key': syncKey,
+    };
+    if (typeof window !== 'undefined') {
+      const adminKey = localStorage.getItem('hoot_admin_key');
+      if (adminKey) {
+        headers['X-Admin-Key'] = adminKey;
+      }
+    }
+
     const res = await fetch(`${SOVEREIGN_SYNC_API}?${params.toString()}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-Sync-Key': syncKey,
-      },
+      headers,
       credentials: 'include',
+      keepalive: true,
       body: JSON.stringify(bodyData),
     });
 

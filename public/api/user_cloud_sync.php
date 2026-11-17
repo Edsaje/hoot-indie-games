@@ -162,7 +162,8 @@ if (empty($inputSyncKey) && !empty($parsedBody['syncKey'])) {
 
 $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
 $sessionSteamId = $_SESSION['steam_id'] ?? ($_SESSION['verified_steam_id'] ?? null);
-$isAdminSession = !empty($_SESSION['admin_auth']) && strval($_SESSION['admin_steam_id'] ?? '') === ADMIN_STEAM_ID;
+$explicitAdminKey = $_SERVER['HTTP_X_ADMIN_KEY'] ?? $_REQUEST['adminKey'] ?? null;
+$isAdminSession = isCreatorAdminAuthorized($explicitAdminKey);
 
 // Détermination des chemins candidats
 $candidateFiles = [];
@@ -250,9 +251,28 @@ function mergeOdysseyState($ex, $in, $forceReplace = false) {
         return $ex;
     }
 
-    $exSavedAt = floatval($ex['lastSavedAt'] ?? 0);
-    $inSavedAt = floatval($in['lastSavedAt'] ?? 0);
-    $isInNewer = ($inSavedAt >= $exSavedAt);
+    $isExEmpty = (
+        intval($ex['totalStarSapEarned'] ?? 0) === 0 &&
+        intval($ex['highestBiomeUnlocked'] ?? 1) === 1 &&
+        empty($ex['treeUpgrades']) &&
+        empty($ex['capturedGames'])
+    );
+    $isInEmpty = (
+        intval($in['totalStarSapEarned'] ?? 0) === 0 &&
+        intval($in['highestBiomeUnlocked'] ?? 1) === 1 &&
+        empty($in['treeUpgrades']) &&
+        empty($in['capturedGames'])
+    );
+
+    if ($isInEmpty && !$isExEmpty) {
+        $isInNewer = false;
+    } elseif (!$isInEmpty && $isExEmpty) {
+        $isInNewer = true;
+    } else {
+        $exSavedAt = floatval($ex['lastSavedAt'] ?? 0);
+        $inSavedAt = floatval($in['lastSavedAt'] ?? 0);
+        $isInNewer = ($inSavedAt >= $exSavedAt);
+    }
 
     $primary = $isInNewer ? $in : $ex;
     $secondary = $isInNewer ? $ex : $in;
@@ -322,10 +342,22 @@ function mergeOdysseyState($ex, $in, $forceReplace = false) {
         ? $primary['activeCompanions']
         : (is_array($secondary['activeCompanions'] ?? null) ? $secondary['activeCompanions'] : []);
 
+    $primaryBiome = $primary['currentBiomeId'] ?? 'biome_1_clearing';
+    $secondaryBiome = $secondary['currentBiomeId'] ?? 'biome_1_clearing';
+    $activeBiome = ($primaryBiome === 'biome_1_clearing' && $secondaryBiome !== 'biome_1_clearing')
+        ? $secondaryBiome
+        : $primaryBiome;
+
+    $primaryRoute = max(1, min(5, intval($primary['currentRouteNumber'] ?? 1)));
+    $secondaryRoute = max(1, min(5, intval($secondary['currentRouteNumber'] ?? 1)));
+    $activeRoute = ($primaryRoute === 1 && $secondaryRoute > 1 && $primaryBiome === 'biome_1_clearing')
+        ? $secondaryRoute
+        : $primaryRoute;
+
     return [
         'version' => 1,
-        'currentBiomeId' => $primary['currentBiomeId'] ?? ($secondary['currentBiomeId'] ?? 'biome_1_clearing'),
-        'currentRouteNumber' => max(1, min(5, intval($primary['currentRouteNumber'] ?? ($secondary['currentRouteNumber'] ?? 1)))),
+        'currentBiomeId' => $activeBiome,
+        'currentRouteNumber' => $activeRoute,
         'autoAdvance' => isset($primary['autoAdvance']) ? (bool)$primary['autoAdvance'] : (bool)($secondary['autoAdvance'] ?? false),
         'miniHudEnabled' => isset($primary['miniHudEnabled']) ? (bool)$primary['miniHudEnabled'] : (bool)($secondary['miniHudEnabled'] ?? false),
         'miniHudMobileEnabled' => isset($primary['miniHudMobileEnabled']) ? (bool)$primary['miniHudMobileEnabled'] : (bool)($secondary['miniHudMobileEnabled'] ?? false),
@@ -604,6 +636,13 @@ $isTargetingCreator = (
     (!empty($existingData['username']) && strtolower(trim($existingData['username'])) === 'hibouxe')
 );
 
+$isCreatorAuthorized = (
+    $isAdminSession ||
+    (!empty($sessionSteamId) && strval($sessionSteamId) === ADMIN_STEAM_ID) ||
+    (!empty($sessionUserId) && strval($sessionUserId) === 'admin_hibouxe') ||
+    (!empty($existingData['syncKeyHash']) && !empty($inputSyncKey) && hash_equals($existingData['syncKeyHash'], hash('sha256', $inputSyncKey)))
+);
+
 switch ($action) {
     case 'load':
         if (!$existingData) {
@@ -616,12 +655,12 @@ switch ($action) {
         }
 
         // Protection du compte officiel du créateur
-        if ($isTargetingCreator && !$isAdminSession && $sessionSteamId !== ADMIN_STEAM_ID) {
+        if ($isTargetingCreator && !$isCreatorAuthorized) {
             http_response_code(403);
             echo json_encode([
                 'success' => false,
                 'error' => 'forbidden_creator_access',
-                'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée.'
+                'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée ou une clé de synchronisation valide.'
             ], JSON_UNESCAPED_UNICODE);
             exit;
         }
@@ -668,9 +707,9 @@ switch ($action) {
         }
 
         // Protection du compte officiel du créateur
-        if ($isTargetingCreator && !$isAdminSession && $sessionSteamId !== ADMIN_STEAM_ID) {
+        if ($isTargetingCreator && !$isCreatorAuthorized) {
             http_response_code(403);
-            echo json_encode(['success' => false, 'error' => 'forbidden_creator_access', 'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['success' => false, 'error' => 'forbidden_creator_access', 'message' => 'Accès refusé : Le compte officiel du créateur nécessite impérativement une session authentifiée ou une clé de synchronisation valide.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
 

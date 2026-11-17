@@ -1506,7 +1506,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <span>{isAuthLoading ? 'Synchronisation en cours...' : '🔄 Forcer la Synchronisation & Fusion Cloud'}</span>
                     </button>
                     <p className="text-[11px] text-slate-400 text-center">
-                      La fusion intelligente conserve le maximum de vos plumes, succès débloqués, cartes, calendrier et records sans jamais écraser vos progrès.
+                      La fusion intelligente conserve le maximum de votre progression de l'Odyssée (biomes, sève, Indiedex), plumes, succès, cartes et calendrier sans jamais écraser vos progrès.
                     </p>
                   </div>
 
