@@ -192,6 +192,7 @@ function isCreatorAdminAuthorized($explicitKey = null) {
     if ($sessionSteam === ADMIN_STEAM_ID) {
         $_SESSION['admin_auth'] = true;
         $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+        $_SESSION['hoot_user_id'] = 'admin_hibouxe';
         return true;
     }
     if (strval($_SESSION['hoot_user_id'] ?? '') === 'admin_hibouxe') {
@@ -199,9 +200,38 @@ function isCreatorAdminAuthorized($explicitKey = null) {
         $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
         return true;
     }
+    if (strtolower(strval($_SESSION['hoot_user_email'] ?? '')) === 'quentin.beaud@hotmail.fr') {
+        $_SESSION['admin_auth'] = true;
+        $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+        $_SESSION['hoot_user_id'] = 'admin_hibouxe';
+        return true;
+    }
+
+    // Vérification via .accounts.json pour l'utilisateur en session
+    $sessionUserId = strval($_SESSION['hoot_user_id'] ?? '');
+    $savesDir = getUserSavesDir();
+    $accountsFile = $savesDir . '/.accounts.json';
+    if (!empty($sessionUserId) && file_exists($accountsFile)) {
+        $accRaw = @file_get_contents($accountsFile);
+        if ($accRaw) {
+            $accData = json_decode($accRaw, true);
+            if (is_array($accData) && isset($accData['users'][$sessionUserId])) {
+                $accUser = $accData['users'][$sessionUserId];
+                $accEmail = strtolower(strval($accUser['email'] ?? ''));
+                $accSteam = strval($accUser['steamId'] ?? '');
+                $accName  = strtolower(strval($accUser['username'] ?? ''));
+                $accRole  = strval($accUser['role'] ?? '');
+                if ($accEmail === 'quentin.beaud@hotmail.fr' || $accSteam === ADMIN_STEAM_ID || $accName === 'hibouxe' || $accRole === 'admin') {
+                    $_SESSION['admin_auth'] = true;
+                    $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+                    $_SESSION['hoot_user_id'] = 'admin_hibouxe';
+                    return true;
+                }
+            }
+        }
+    }
 
     // 2. Jeton Maître Secret (.admin_pass) passé via header X-Admin-Key ou paramètre adminKey
-    $savesDir = getUserSavesDir();
     $adminPassFile = $savesDir . '/.admin_pass';
     if (!file_exists($adminPassFile) && file_exists(__DIR__ . '/.admin_pass')) {
         @copy(__DIR__ . '/.admin_pass', $adminPassFile);
@@ -232,21 +262,102 @@ function isCreatorAdminAuthorized($explicitKey = null) {
             }
         }
 
-        // Si non trouvé dans les en-têtes HTTP, vérifier dans le corps de requête JSON chiffré POST
-        if (empty($inputKey) && (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST')) {
+        // Si non trouvé dans les en-têtes HTTP, vérifier dans le corps de requête POST ou variables globales
+        if (empty($inputKey)) {
             if (!empty($GLOBALS['parsedJsonBody']['adminKey']) && is_string($GLOBALS['parsedJsonBody']['adminKey'])) {
                 $inputKey = trim($GLOBALS['parsedJsonBody']['adminKey']);
             } elseif (!empty($_POST['adminKey']) && is_string($_POST['adminKey'])) {
                 $inputKey = trim($_POST['adminKey']);
+            } elseif (!empty($_REQUEST['adminKey']) && is_string($_REQUEST['adminKey'])) {
+                $inputKey = trim($_REQUEST['adminKey']);
+            } else {
+                $rawIn = @file_get_contents('php://input');
+                if (!empty($rawIn)) {
+                    $dec = @json_decode($rawIn, true);
+                    if (is_array($dec) && !empty($dec['adminKey']) && is_string($dec['adminKey'])) {
+                        $inputKey = trim($dec['adminKey']);
+                    }
+                }
             }
         }
 
         if (!empty($inputKey) && hash_equals($secret, $inputKey)) {
+            $_SESSION['admin_auth'] = true;
+            $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+            $_SESSION['hoot_user_id'] = 'admin_hibouxe';
             return true;
         }
     }
 
+    // 3. Jeton de Synchronisation Cloud Souverain du Créateur (user_admin_hibouxe.json)
+    $hibouxeSaveFile = $savesDir . '/user_admin_hibouxe.json';
+    if (file_exists($hibouxeSaveFile)) {
+        $rawSave = @file_get_contents($hibouxeSaveFile);
+        if ($rawSave) {
+            $saveData = @json_decode($rawSave, true);
+            if (is_array($saveData)) {
+                $masterSyncKey = trim(strval($saveData['syncKey'] ?? ''));
+                $masterSyncHash = trim(strval($saveData['syncKeyHash'] ?? ''));
+
+                $inputSyncKey = '';
+                if (!empty($_SERVER['HTTP_X_SYNC_KEY'])) {
+                    $inputSyncKey = trim($_SERVER['HTTP_X_SYNC_KEY']);
+                } elseif (!empty($_SERVER['REDIRECT_HTTP_X_SYNC_KEY'])) {
+                    $inputSyncKey = trim($_SERVER['REDIRECT_HTTP_X_SYNC_KEY']);
+                } elseif (function_exists('getallheaders')) {
+                    $headers = getallheaders();
+                    foreach ($headers as $k => $v) {
+                        if (strcasecmp($k, 'X-Sync-Key') === 0) {
+                            $inputSyncKey = trim($v);
+                            break;
+                        }
+                    }
+                }
+
+                if (empty($inputSyncKey)) {
+                    if (!empty($GLOBALS['parsedJsonBody']['syncKey']) && is_string($GLOBALS['parsedJsonBody']['syncKey'])) {
+                        $inputSyncKey = trim($GLOBALS['parsedJsonBody']['syncKey']);
+                    } elseif (!empty($_POST['syncKey']) && is_string($_POST['syncKey'])) {
+                        $inputSyncKey = trim($_POST['syncKey']);
+                    } elseif (!empty($_REQUEST['syncKey']) && is_string($_REQUEST['syncKey'])) {
+                        $inputSyncKey = trim($_REQUEST['syncKey']);
+                    } else {
+                        $rawIn = @file_get_contents('php://input');
+                        if (!empty($rawIn)) {
+                            $dec = @json_decode($rawIn, true);
+                            if (is_array($dec) && !empty($dec['syncKey']) && is_string($dec['syncKey'])) {
+                                $inputSyncKey = trim($dec['syncKey']);
+                            }
+                        }
+                    }
+                }
+
+                if (!empty($inputSyncKey)) {
+                    $isSyncKeyValid = (!empty($masterSyncKey) && hash_equals($masterSyncKey, $inputSyncKey)) ||
+                                      (!empty($masterSyncHash) && hash_equals($masterSyncHash, hash('sha256', $inputSyncKey)));
+                    if ($isSyncKeyValid) {
+                        $_SESSION['admin_auth'] = true;
+                        $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+                        $_SESSION['hoot_user_id'] = 'admin_hibouxe';
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
     return false;
+}
+
+if (!function_exists('getAdminMasterKey')) {
+    function getAdminMasterKey() {
+        $savesDir = getUserSavesDir();
+        $adminPassFile = $savesDir . '/.admin_pass';
+        if (file_exists($adminPassFile)) {
+            return trim(@file_get_contents($adminPassFile) ?: '');
+        }
+        return '';
+    }
 }
 
 /**

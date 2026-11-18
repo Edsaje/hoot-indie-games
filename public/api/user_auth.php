@@ -218,41 +218,62 @@ switch ($action) {
 
         if ($user) {
             $clientUser = sanitizeAccountForClient($user);
-            $isLegitAdmin = (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID);
+            $isLegitAdmin = (
+                (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID) ||
+                (strtolower(strval($clientUser['email'] ?? '')) === 'quentin.beaud@hotmail.fr') ||
+                (($clientUser['id'] ?? '') === 'admin_hibouxe') ||
+                (strtolower(strval($clientUser['username'] ?? '')) === 'hibouxe') ||
+                (($clientUser['role'] ?? '') === 'admin')
+            );
             if ($isLegitAdmin) {
                 $_SESSION['admin_auth'] = true;
                 $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+                $_SESSION['hoot_user_id'] = 'admin_hibouxe';
+                $clientUser['role'] = 'admin';
+                $clientUser['isAdmin'] = true;
             }
             $_SESSION['hoot_email_verified'] = (bool)($clientUser['emailVerified'] ?? true);
-            echo json_encode([
+            $respData = [
                 'success' => true,
                 'authenticated' => true,
                 'emailVerified' => (bool)($clientUser['emailVerified'] ?? true),
                 'user' => $clientUser,
-            ], JSON_UNESCAPED_UNICODE);
+            ];
+            if ($isLegitAdmin && function_exists('getAdminMasterKey')) {
+                $mk = getAdminMasterKey();
+                if (!empty($mk)) $respData['adminKey'] = $mk;
+            }
+            echo json_encode($respData, JSON_UNESCAPED_UNICODE);
         } else {
             // Utilisateur connecté uniquement avec Steam sans compte email (vérifié par défaut)
             $isHibouxe = ($steamId === ADMIN_STEAM_ID || $isAdminSession);
             if ($isHibouxe) {
                 $_SESSION['admin_auth'] = true;
                 $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+                $_SESSION['hoot_user_id'] = 'admin_hibouxe';
             }
             $_SESSION['hoot_email_verified'] = true;
-            echo json_encode([
+            $userObj = [
+                'id' => $isHibouxe ? 'admin_hibouxe' : 'steam_' . $steamId,
+                'steamId' => $steamId,
+                'username' => $isHibouxe ? 'Hibouxe' : 'Explorateur_' . substr($steamId, -4),
+                'role' => $isHibouxe ? 'admin' : 'user',
+                'isAdmin' => $isHibouxe,
+                'emailVerified' => true,
+                'avatarId' => $isHibouxe ? 'hibouxe_creator' : 'owl',
+                'title' => $isHibouxe ? '👑 Créateur du Site' : 'Explorateur',
+            ];
+            $respData = [
                 'success' => true,
                 'authenticated' => true,
                 'emailVerified' => true,
-                'user' => [
-                    'id' => $isHibouxe ? 'admin_hibouxe' : 'steam_' . $steamId,
-                    'steamId' => $steamId,
-                    'username' => $isHibouxe ? 'Hibouxe' : 'Explorateur_' . substr($steamId, -4),
-                    'role' => $isHibouxe ? 'admin' : 'user',
-                    'isAdmin' => $isHibouxe,
-                    'emailVerified' => true,
-                    'avatarId' => $isHibouxe ? 'hibouxe_creator' : 'owl',
-                    'title' => $isHibouxe ? '👑 Créateur du Site' : 'Explorateur',
-                ],
-            ], JSON_UNESCAPED_UNICODE);
+                'user' => $userObj,
+            ];
+            if ($isHibouxe && function_exists('getAdminMasterKey')) {
+                $mk = getAdminMasterKey();
+                if (!empty($mk)) $respData['adminKey'] = $mk;
+            }
+            echo json_encode($respData, JSON_UNESCAPED_UNICODE);
         }
         exit;
 
@@ -376,7 +397,22 @@ switch ($action) {
             || in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1'], true);
 
         $clientUser = sanitizeAccountForClient($newUser);
-        echo json_encode([
+        $isLegitAdmin = (
+            (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID) ||
+            (strtolower(strval($clientUser['email'] ?? '')) === 'quentin.beaud@hotmail.fr') ||
+            (($clientUser['id'] ?? '') === 'admin_hibouxe') ||
+            (strtolower(strval($clientUser['username'] ?? '')) === 'hibouxe') ||
+            (($clientUser['role'] ?? '') === 'admin')
+        );
+        if ($isLegitAdmin) {
+            $_SESSION['admin_auth'] = true;
+            $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+            $_SESSION['hoot_user_id'] = 'admin_hibouxe';
+            $clientUser['role'] = 'admin';
+            $clientUser['isAdmin'] = true;
+        }
+
+        $regResponse = [
             'success' => true,
             'message' => $emailVerified
                 ? 'Compte Hoot créé avec succès ! Vos données sont désormais sauvegardées en ligne.'
@@ -389,7 +425,12 @@ switch ($action) {
                 'token' => $token,
                 'verifyUrl' => $mailResult['verifyUrl'] ?? null,
             ] : null,
-        ], JSON_UNESCAPED_UNICODE);
+        ];
+        if ($isLegitAdmin && function_exists('getAdminMasterKey')) {
+            $mk = getAdminMasterKey();
+            if (!empty($mk)) $regResponse['adminKey'] = $mk;
+        }
+        echo json_encode($regResponse, JSON_UNESCAPED_UNICODE);
         exit;
 
     // -------------------------------------------------------------
@@ -450,17 +491,32 @@ switch ($action) {
         }
 
         $clientUser = sanitizeAccountForClient($accounts['users'][$userId]);
-        $isLegitAdmin = (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID);
+        $isLegitAdmin = (
+            (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID) ||
+            (strtolower(strval($clientUser['email'] ?? '')) === 'quentin.beaud@hotmail.fr') ||
+            (($clientUser['id'] ?? '') === 'admin_hibouxe') ||
+            (strtolower(strval($clientUser['username'] ?? '')) === 'hibouxe') ||
+            (($clientUser['role'] ?? '') === 'admin')
+        );
         if ($isLegitAdmin) {
             $_SESSION['admin_auth'] = true;
             $_SESSION['admin_steam_id'] = ADMIN_STEAM_ID;
+            $_SESSION['hoot_user_id'] = 'admin_hibouxe';
+            $clientUser['role'] = 'admin';
+            $clientUser['isAdmin'] = true;
         }
-        echo json_encode([
+
+        $loginResp = [
             'success' => true,
             'message' => 'Connexion réussie ! Vos données ont été chargées.',
             'emailVerified' => $emailVerified,
             'user' => $clientUser,
-        ], JSON_UNESCAPED_UNICODE);
+        ];
+        if ($isLegitAdmin && function_exists('getAdminMasterKey')) {
+            $mk = getAdminMasterKey();
+            if (!empty($mk)) $loginResp['adminKey'] = $mk;
+        }
+        echo json_encode($loginResp, JSON_UNESCAPED_UNICODE);
         exit;
 
     // -------------------------------------------------------------

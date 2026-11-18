@@ -439,6 +439,8 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $inputJson = file_get_contents('php://input');
 $jsonBody = !empty($inputJson) ? (json_decode($inputJson, true) ?: []) : [];
 $body = !empty($jsonBody) ? array_merge($_POST, $jsonBody) : $_POST;
+$GLOBALS['parsedJsonBody'] = $jsonBody;
+$GLOBALS['body'] = $body;
 
 $action = $_GET['action'] ?? $_POST['action'] ?? $jsonBody['action'] ?? $_REQUEST['action'] ?? ($method === 'POST' ? 'send_message' : 'get_messages');
 

@@ -239,6 +239,16 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       ]);
       const validFriends = list.filter((f) => !isSelfRef.current(f));
       setFriends(validFriends);
+
+      // Pour le Créateur : synchroniser automatiquement la liste des amis enregistrés sur le serveur
+      if (isSelfRef.current('HOOT-HIBOU') && validFriends.length > 0) {
+        const returnedCodes = validFriends.map((f) => f.friendCode.toUpperCase()).filter(Boolean);
+        const merged = Array.from(new Set([...friendCodesRef.current, ...returnedCodes])).filter((c) => !isSelfRef.current(c));
+        if (merged.length !== friendCodesRef.current.length || merged.some((c, i) => c !== friendCodesRef.current[i])) {
+          setFriendCodes(merged);
+          saveStoredFriendCodes(merged);
+        }
+      }
     } catch (err) {
       console.warn('Erreur rafraîchissement amis :', err);
     } finally {

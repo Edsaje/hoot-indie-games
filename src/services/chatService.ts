@@ -110,6 +110,28 @@ export const FEEDBACK_CATEGORIES: { id: FeedbackCategory; label: string; icon: s
 const CHAT_API = '/api/chat.php';
 const LOCAL_STORAGE_CHAT_KEY = 'hoot_local_chat_messages_v1';
 
+export function getChatAuthHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const adminKey = localStorage.getItem('hoot_admin_key');
+      if (adminKey) {
+        headers['X-Admin-Key'] = adminKey;
+      }
+      const syncKey = localStorage.getItem('hoot_cloud_sync_key_v1') || localStorage.getItem('hoot_cloud_sync_key');
+      if (syncKey) {
+        headers['X-Sync-Key'] = syncKey;
+      }
+    }
+  } catch {
+    // Ignore
+  }
+  return headers;
+}
+
 function getLocalFallbackMessages(): ChatMessage[] {
   if (typeof window === 'undefined') return [];
   try {
@@ -187,7 +209,7 @@ export async function fetchChatMessages(
 
     const res = await fetch(`${CHAT_API}?${params.toString()}`, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
     });
 
@@ -260,10 +282,7 @@ export async function sendChatMessage(payload: {
   try {
     const res = await fetch(`${CHAT_API}?action=send_message`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify(payload),
     });
@@ -334,16 +353,26 @@ export async function deleteChatMessage(
   hardDelete: boolean = false
 ): Promise<{ success: boolean; message?: string; hardDeleted?: boolean }> {
   try {
+    let adminKey = '';
+    let syncKey = '';
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        adminKey = localStorage.getItem('hoot_admin_key') || '';
+        syncKey = localStorage.getItem('hoot_cloud_sync_key_v1') || localStorage.getItem('hoot_cloud_sync_key') || '';
+      }
+    } catch {
+      // Ignore
+    }
+
     const res = await fetch(`${CHAT_API}?action=delete_message`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify({
         messageId,
         hardDelete,
+        adminKey: adminKey || undefined,
+        syncKey: syncKey || undefined,
         ...auth,
       }),
     });
@@ -495,7 +524,7 @@ export async function fetchChatModerationLogs(auth: {
 
     const res = await fetch(`${CHAT_API}?${params.toString()}`, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
     });
 
@@ -521,10 +550,7 @@ export async function dismissChatModerationLog(
   try {
     const res = await fetch(`${CHAT_API}?action=dismiss_moderation_log`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify({ logId, ...auth }),
     });
@@ -546,10 +572,7 @@ export async function purgeUserChatMessages(
   try {
     const res = await fetch(`${CHAT_API}?action=purge_user_messages`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify({ ...target, ...auth }),
     });
@@ -605,7 +628,7 @@ export async function getUserModerationInfo(
 
     const res = await fetch(`${CHAT_API}?${params.toString()}`, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
     });
 
@@ -641,10 +664,7 @@ export async function executeUserModeration(
   try {
     const res = await fetch(`${CHAT_API}?action=execute_user_moderation`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify({ ...actionPayload, ...auth }),
     });
@@ -736,7 +756,7 @@ export async function fetchPrivateConversations(auth: {
 
     const res = await fetch(`${CHAT_API}?${params.toString()}`, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
     });
 
@@ -796,7 +816,7 @@ export async function fetchPrivateMessages(
 
     const res = await fetch(`${CHAT_API}?${params.toString()}`, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
     });
 
@@ -871,10 +891,7 @@ export async function sendPrivateMessage(payload: {
   try {
     const res = await fetch(`${CHAT_API}?action=send_private_message`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify({
         ...payload,
@@ -917,10 +934,7 @@ export async function markPrivateConversationRead(
   try {
     const res = await fetch(`${CHAT_API}?action=mark_private_read`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify({ conversationId, username: cleanUsername }),
     });
@@ -947,10 +961,7 @@ export async function deletePrivateMessage(
   try {
     const res = await fetch(`${CHAT_API}?action=delete_private_message`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: getChatAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify({
         messageId,

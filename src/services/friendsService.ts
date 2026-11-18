@@ -16,6 +16,28 @@ const API_BASE = '/api/friends.php';
 // Caractères lisibles sans ambiguïté (sans 0, O, 1, I)
 const CODE_CHARS = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 
+function getFriendsApiHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const adminKey = localStorage.getItem('hoot_admin_key');
+      if (adminKey) {
+        headers['X-Admin-Key'] = adminKey;
+      }
+      const syncKey = localStorage.getItem('hoot_cloud_sync_key_v1') || localStorage.getItem('hoot_cloud_sync_key');
+      if (syncKey) {
+        headers['X-Sync-Key'] = syncKey;
+      }
+    }
+  } catch {
+    // Ignore
+  }
+  return headers;
+}
+
 /**
  * Génère ou récupère le code ami canonique de l'utilisateur
  */
@@ -171,7 +193,8 @@ export async function registerSelfOnServer(
 
     const res = await fetch(`${API_BASE}?action=register`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify(payload),
     });
 
@@ -206,7 +229,8 @@ export async function fetchFriendsData(
   try {
     const res = await fetch(`${API_BASE}?action=get_friends`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ codes: cleanedCodes, myCode: myCode || undefined }),
     });
 
@@ -278,7 +302,10 @@ export async function lookupFriend(query: string): Promise<{
   }
 
   try {
-    const res = await fetch(`${API_BASE}?action=lookup&query=${encodeURIComponent(clean)}`);
+    const res = await fetch(`${API_BASE}?action=lookup&query=${encodeURIComponent(clean)}`, {
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
+    });
     const data = await res.json();
     return data;
   } catch (err: unknown) {
@@ -298,7 +325,8 @@ export async function syncSteamFriendsList(mySteamId: string): Promise<{
   try {
     const res = await fetch(`${API_BASE}?action=sync_steam_friends`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ steamId: mySteamId }),
     });
 
@@ -338,7 +366,8 @@ export async function sendFriendRequestApi(
   try {
     const res = await fetch(`${API_BASE}?action=send_request`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify({
         fromCode: fromCode.trim().toUpperCase(),
         targetQuery: targetQuery.trim(),
@@ -369,7 +398,8 @@ export async function fetchFriendRequestsApi(
   try {
     const res = await fetch(`${API_BASE}?action=get_requests`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ myCode: myCode.trim().toUpperCase() }),
     });
 
@@ -405,7 +435,8 @@ export async function respondFriendRequestApi(
   try {
     const res = await fetch(`${API_BASE}?action=respond_request`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify({
         requestId,
         action,
@@ -431,7 +462,8 @@ export async function removeFriendApi(
   try {
     const res = await fetch(`${API_BASE}?action=remove_friend`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify({
         myCode: myCode.trim().toUpperCase(),
         targetCode: targetCode.trim().toUpperCase(),
@@ -456,7 +488,8 @@ export async function checkAreFriendsApi(
   try {
     const res = await fetch(`${API_BASE}?action=are_friends`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getFriendsApiHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ userA: userA.trim(), userB: userB.trim() }),
     });
 

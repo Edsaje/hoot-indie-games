@@ -23,18 +23,30 @@ startSecureHootSession();
 
 function isCallerAuthorizedForCode($db, $friendCode) {
     if (isCreatorAdminAuthorized()) return true;
-    if (empty($friendCode) || !isset($db['players'][$friendCode])) return false;
+    if ($friendCode === 'HOOT-HIBOU') {
+        return isCreatorAdminAuthorized();
+    }
+    if (empty($friendCode) || !isset($db['players'][$friendCode])) {
+        return true;
+    }
     $player = $db['players'][$friendCode];
     $sessionUserId = $_SESSION['hoot_user_id'] ?? null;
     $sessionSteamId = $_SESSION['verified_steam_id'] ?? ($_SESSION['steam_id'] ?? null);
 
     if (!empty($player['steamId'])) {
-        return (!empty($sessionSteamId) && strval($sessionSteamId) === strval($player['steamId']));
+        if (!empty($sessionSteamId) && strval($sessionSteamId) === strval($player['steamId'])) {
+            return true;
+        }
     }
     if (!empty($player['userId'])) {
-        return (!empty($sessionUserId) && $sessionUserId === $player['userId']);
+        if (!empty($sessionUserId) && $sessionUserId === $player['userId']) {
+            return true;
+        }
     }
-    return true;
+    if (empty($player['steamId']) && empty($player['userId'])) {
+        return true;
+    }
+    return false;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -455,6 +467,8 @@ function areFriendsMutual($db, $codeA, $codeB) {
 $action = $_GET['action'] ?? '';
 $inputRaw = file_get_contents('php://input');
 $body = json_decode($inputRaw, true) ?: [];
+$GLOBALS['parsedJsonBody'] = $body;
+$GLOBALS['body'] = $body;
 if (empty($action) && isset($body['action'])) {
     $action = $body['action'];
 }
@@ -656,9 +670,26 @@ if ($action === 'register') {
         if (!isset($db['friendships']['HOOT-HIBOU'])) {
             $db['friendships']['HOOT-HIBOU'] = [];
         }
-        // N'ajouter à HOOT-HIBOU que lors de la première inscription (pour respecter les retraits ultérieurs)
-        if ($isNewPlayer && !in_array($friendCode, $db['friendships']['HOOT-HIBOU'], true)) {
+        if (!in_array($friendCode, $db['friendships']['HOOT-HIBOU'], true)) {
             $db['friendships']['HOOT-HIBOU'][] = $friendCode;
+        }
+    } else {
+        // Enregistrement de HOOT-HIBOU : s'assurer qu'il a tous les joueurs existants en ami
+        if (!isset($db['friendships']['HOOT-HIBOU'])) {
+            $db['friendships']['HOOT-HIBOU'] = [];
+        }
+        foreach ($db['players'] as $otherCode => $otherData) {
+            if ($otherCode !== 'HOOT-HIBOU') {
+                if (!in_array($otherCode, $db['friendships']['HOOT-HIBOU'], true)) {
+                    $db['friendships']['HOOT-HIBOU'][] = $otherCode;
+                }
+                if (!isset($db['friendships'][$otherCode])) {
+                    $db['friendships'][$otherCode] = [];
+                }
+                if (!in_array('HOOT-HIBOU', $db['friendships'][$otherCode], true)) {
+                    $db['friendships'][$otherCode][] = 'HOOT-HIBOU';
+                }
+            }
         }
     }
 
@@ -703,22 +734,42 @@ if ($action === 'get_friends') {
 
     // Si myCode est fourni, fusionner avec sa liste d'amis mutuels sur le serveur
     $mutualCodes = [];
-    if ($myCode) {
-        $mutualList = $db['friendships'][$myCode] ?? [];
-        if ($myCode !== 'HOOT-HIBOU' && !in_array('HOOT-HIBOU', $mutualList, true)) {
-            // Uniquement si HOOT-HIBOU n'a pas retiré ce joueur
-            if (isset($db['friendships']['HOOT-HIBOU']) && in_array($myCode, $db['friendships']['HOOT-HIBOU'], true)) {
+    $isCreator = ($myCode === 'HOOT-HIBOU' || isCreatorAdminAuthorized());
+    if ($isCreator) {
+        // Le Créateur a TOUS les joueurs enregistrés en amis mutuels automatiquement
+        foreach ($db['players'] as $pCode => $pData) {
+            if ($pCode !== 'HOOT-HIBOU' && !$isBannedCode($pCode)) {
+                if (!in_array($pCode, $codes, true)) {
+                    $codes[] = $pCode;
+                }
+                if (!in_array($pCode, $mutualCodes, true)) {
+                    $mutualCodes[] = $pCode;
+                }
+            }
+        }
+    } else {
+        // Pour tout autre joueur : Hibouxe (HOOT-HIBOU) est TOUJOURS dans sa liste et mutuel
+        if (isset($db['players']['HOOT-HIBOU']) && !in_array('HOOT-HIBOU', $codes, true)) {
+            $codes[] = 'HOOT-HIBOU';
+        }
+        if (isset($db['players']['HOOT-HIBOU']) && !in_array('HOOT-HIBOU', $mutualCodes, true)) {
+            $mutualCodes[] = 'HOOT-HIBOU';
+        }
+
+        if ($myCode) {
+            $mutualList = $db['friendships'][$myCode] ?? [];
+            if (!in_array('HOOT-HIBOU', $mutualList, true)) {
                 $mutualList[] = 'HOOT-HIBOU';
             }
-        }
-        foreach ($mutualList as $mc) {
-            if ($mc && !in_array($mc, $codes, true) && !$isBannedCode($mc)) {
-                $codes[] = $mc;
+            foreach ($mutualList as $mc) {
+                if ($mc && !in_array($mc, $codes, true) && !$isBannedCode($mc)) {
+                    $codes[] = $mc;
+                }
             }
+            $mutualCodes = array_values(array_unique(array_filter(array_merge($mutualCodes, $mutualList), function($c) use ($myCode, $isBannedCode) {
+                return $c !== $myCode && !$isBannedCode($c);
+            })));
         }
-        $mutualCodes = array_values(array_unique(array_filter($mutualList, function($c) use ($myCode, $isBannedCode) {
-            return $c !== $myCode && !$isBannedCode($c);
-        })));
     }
 
     $now = time();
@@ -958,6 +1009,26 @@ if ($action === 'send_request' || $action === 'send_friend_request') {
             'success' => true,
             'isImmediate' => true,
             'message' => 'Hibouxe est votre compagnon d’accueil officiel au Perchoir !',
+            'player' => $targetPlayer
+        ]);
+        exit;
+    }
+
+    // Règle d'or : Invitation émise par Hibouxe (Créateur)
+    if ($fromCode === 'HOOT-HIBOU' || isCreatorAdminAuthorized()) {
+        if (!isset($db['friendships']['HOOT-HIBOU'])) $db['friendships']['HOOT-HIBOU'] = [];
+        if (!in_array($toCode, $db['friendships']['HOOT-HIBOU'], true)) {
+            $db['friendships']['HOOT-HIBOU'][] = $toCode;
+        }
+        if (!isset($db['friendships'][$toCode])) $db['friendships'][$toCode] = [];
+        if (!in_array('HOOT-HIBOU', $db['friendships'][$toCode], true)) {
+            $db['friendships'][$toCode][] = 'HOOT-HIBOU';
+        }
+        saveFriendsDatabase($dataFile, $db);
+        echo json_encode([
+            'success' => true,
+            'isImmediate' => true,
+            'message' => 'Compagnon ajouté avec succès au cercle de Hibouxe !',
             'player' => $targetPlayer
         ]);
         exit;

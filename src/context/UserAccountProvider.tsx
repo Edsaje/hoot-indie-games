@@ -405,6 +405,11 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     const runGetSession = () => {
       apiGetSession().then((res) => {
         if (res.success && res.authenticated && res.user) {
+          if ((res as any).adminKey) {
+            try {
+              localStorage.setItem('hoot_admin_key', (res as any).adminKey);
+            } catch {}
+          }
           const user = res.user;
           const isOfficialAdmin = Boolean(
             (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
@@ -901,6 +906,11 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       try {
         const res = await apiLogin(email, pass);
         if (res.success && res.user) {
+          if ((res as any).adminKey) {
+            try {
+              localStorage.setItem('hoot_admin_key', (res as any).adminKey);
+            } catch {}
+          }
           const user = res.user;
           const isOfficialAdmin = Boolean(
             (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
@@ -997,6 +1007,11 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
 
         const res = await apiRegister(email, pass, preferredUsername, currentSteamId);
         if (res.success && res.user) {
+          if ((res as any).adminKey) {
+            try {
+              localStorage.setItem('hoot_admin_key', (res as any).adminKey);
+            } catch {}
+          }
           const user = res.user;
           const isOfficialAdmin = Boolean(
             (user.steamId && String(user.steamId).trim() === ADMIN_STEAM_ID) ||
