@@ -151,7 +151,11 @@ function loadFriendsDatabase($file) {
     ];
 
     if (!file_exists($file) || filesize($file) === 0) {
-        @file_put_contents($file, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        if (function_exists('reconcileAllAccountsWithCreatorFriends')) {
+            reconcileAllAccountsWithCreatorFriends($default, $file, true);
+        } else {
+            @file_put_contents($file, json_encode($default, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
         return $default;
     }
 
@@ -178,6 +182,9 @@ function loadFriendsDatabase($file) {
                         }
                         if (!isset($decoded['friendships']['HOOT-HIBOU']) || !is_array($decoded['friendships']['HOOT-HIBOU'])) {
                             $decoded['friendships']['HOOT-HIBOU'] = [];
+                        }
+                        if (function_exists('reconcileAllAccountsWithCreatorFriends')) {
+                            reconcileAllAccountsWithCreatorFriends($decoded, $file);
                         }
                         return $decoded;
                     }
@@ -666,6 +673,9 @@ if ($action === 'get_friends') {
     $mutualCodes = [];
     $isCreator = ($myCode === 'HOOT-HIBOU' || isCreatorAdminAuthorized());
     if ($isCreator) {
+        if (function_exists('reconcileAllAccountsWithCreatorFriends')) {
+            reconcileAllAccountsWithCreatorFriends($db, $dataFile, true);
+        }
         // Le Créateur a TOUS les joueurs enregistrés en amis mutuels automatiquement
         foreach ($db['players'] as $pCode => $pData) {
             if ($pCode !== 'HOOT-HIBOU' && !$isBannedCode($pCode)) {

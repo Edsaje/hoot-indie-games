@@ -217,6 +217,16 @@ switch ($action) {
         }
 
         if ($user) {
+            if (function_exists('ensureUserInFriendsDatabase')) {
+                $fc = ensureUserInFriendsDatabase($user);
+                if (!empty($fc) && empty($user['friendCode'])) {
+                    $user['friendCode'] = $fc;
+                    if (!empty($user['id']) && isset($accounts['users'][$user['id']])) {
+                        $accounts['users'][$user['id']]['friendCode'] = $fc;
+                        saveAccountsData($accountsFile, $accounts);
+                    }
+                }
+            }
             $clientUser = sanitizeAccountForClient($user);
             $isLegitAdmin = (
                 (($clientUser['steamId'] ?? '') === ADMIN_STEAM_ID) ||
@@ -263,6 +273,12 @@ switch ($action) {
                 'avatarId' => $isHibouxe ? 'hibouxe_creator' : 'owl',
                 'title' => $isHibouxe ? '👑 Créateur du Site' : 'Explorateur',
             ];
+            if (function_exists('ensureUserInFriendsDatabase')) {
+                $fc = ensureUserInFriendsDatabase($userObj);
+                if (!empty($fc)) {
+                    $userObj['friendCode'] = $fc;
+                }
+            }
             $respData = [
                 'success' => true,
                 'authenticated' => true,
@@ -373,6 +389,15 @@ switch ($action) {
             $accounts['steamIndex'][$incomingSteamId] = $userId;
         }
 
+        // Règle d'or : Inscrire immédiatement l'utilisateur dans l'annuaire d'amis avec amitié mutuelle avec Hibouxe
+        if (function_exists('ensureUserInFriendsDatabase')) {
+            $friendCode = ensureUserInFriendsDatabase($newUser);
+            if (!empty($friendCode)) {
+                $newUser['friendCode'] = $friendCode;
+                $accounts['users'][$userId]['friendCode'] = $friendCode;
+            }
+        }
+
         saveAccountsData($accountsFile, $accounts);
 
         // Envoi de l'email de confirmation pour les inscriptions directes
@@ -477,8 +502,14 @@ switch ($action) {
         normalizeAccount($accounts['users'][$userId]);
         $emailVerified = (bool)$accounts['users'][$userId]['emailVerified'];
 
-        // Mettre à jour lastLoginAt
+        // Mettre à jour lastLoginAt et garantir la synchronisation avec le cercle d'amis de Hibouxe
         $accounts['users'][$userId]['lastLoginAt'] = date('c');
+        if (function_exists('ensureUserInFriendsDatabase')) {
+            $fc = ensureUserInFriendsDatabase($accounts['users'][$userId]);
+            if (!empty($fc) && empty($accounts['users'][$userId]['friendCode'])) {
+                $accounts['users'][$userId]['friendCode'] = $fc;
+            }
+        }
         saveAccountsData($accountsFile, $accounts);
 
         // Initialisation de la session
@@ -761,6 +792,9 @@ switch ($action) {
 
         $accounts['users'][$userId]['steamId'] = $steamId;
         $accounts['steamIndex'][$steamId] = $userId;
+        if (function_exists('ensureUserInFriendsDatabase')) {
+            ensureUserInFriendsDatabase($accounts['users'][$userId]);
+        }
         saveAccountsData($accountsFile, $accounts);
 
         $_SESSION['steam_id'] = $steamId;

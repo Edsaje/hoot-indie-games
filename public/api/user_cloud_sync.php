@@ -102,6 +102,18 @@ if ($action === 'verify_steam') {
             'message' => 'Authentification Steam validée.'
         ];
 
+        if (function_exists('ensureUserInFriendsDatabase')) {
+            $fc = ensureUserInFriendsDatabase([
+                'steamId' => $verifiedSteamId,
+                'username' => $isCreator ? 'Hibouxe' : ('Explorateur_' . substr($verifiedSteamId, -4)),
+                'avatarId' => $isCreator ? 'hibouxe_creator' : 'owl',
+                'title' => $isCreator ? '👑 Fondateur du Perchoir' : 'Explorateur',
+            ]);
+            if (!empty($fc)) {
+                $resData['friendCode'] = $fc;
+            }
+        }
+
         if ($isCreator) {
             $_SESSION['admin_auth'] = true;
             $_SESSION['admin_steam_id'] = $verifiedSteamId;
@@ -795,6 +807,17 @@ switch ($action) {
             if ($primarySaveFile !== $accountFile) {
                 @file_put_contents($accountFile, $encodedJson, LOCK_EX);
             }
+        }
+
+        // Synchroniser le profil avec l'annuaire d'amis (mise à jour du pseudo, avatar, titre et amitié mutuelle avec Hibouxe)
+        if (function_exists('ensureUserInFriendsDatabase') && !empty($merged['username']) && $merged['username'] !== 'Hibou Mystère') {
+            ensureUserInFriendsDatabase([
+                'id' => $merged['userId'] ?? $sessionUserId,
+                'steamId' => $merged['steamId'] ?? $sessionSteamId,
+                'username' => $merged['username'],
+                'avatarId' => $merged['avatarId'] ?? 'owl',
+                'title' => $merged['title'] ?? 'Oisillon du Perchoir',
+            ]);
         }
 
         $clientData = $merged;
