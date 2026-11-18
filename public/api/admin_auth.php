@@ -963,7 +963,7 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
             }
         }
 
-        if ($dirty && !empty($dataFile)) {
+        if (($dirty || !file_exists($dataFile)) && !empty($dataFile)) {
             @file_put_contents($dataFile, json_encode($db, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         }
         return $dirty;
