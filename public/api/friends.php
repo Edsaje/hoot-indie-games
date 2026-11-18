@@ -336,78 +336,8 @@ function purgeBannedAndDeletedFriends(&$db, $dataFile) {
                 $dirty = true;
             }
         }
-
-        // Est-il supprimé / libéré de la base des comptes ?
-        // (Ni actif ni banni dans registered_usernames.json -> réservation supprimée par l'admin)
-        $hasValidIdentity = false;
-        if (!empty($pName) && isset($validUsernames[$pName])) {
-            $hasValidIdentity = true;
-        }
-        if ($pSteam && isset($validSteamIds[$pSteam])) {
-            $hasValidIdentity = true;
-        }
-        if ($pUser && isset($validUserIds[$pUser])) {
-            $hasValidIdentity = true;
-        }
-
-        if (!$hasValidIdentity) {
-            $purgedCodes[] = $cleanCode;
-        }
     }
     unset($player);
-
-    if (!empty($purgedCodes)) {
-        $purgedMap = array_flip($purgedCodes);
-
-        // 1. Supprimer de players
-        foreach ($purgedCodes as $c) {
-            unset($db['players'][$c]);
-        }
-
-        // 2. Supprimer de usernameToCode
-        if (isset($db['usernameToCode']) && is_array($db['usernameToCode'])) {
-            foreach ($db['usernameToCode'] as $uKey => $cVal) {
-                if (isset($purgedMap[strtoupper(trim((string)$cVal))])) {
-                    unset($db['usernameToCode'][$uKey]);
-                }
-            }
-        }
-
-        // 3. Supprimer de steamToCode
-        if (isset($db['steamToCode']) && is_array($db['steamToCode'])) {
-            foreach ($db['steamToCode'] as $sKey => $cVal) {
-                if (isset($purgedMap[strtoupper(trim((string)$cVal))])) {
-                    unset($db['steamToCode'][$sKey]);
-                }
-            }
-        }
-
-        // 4. Supprimer de friendships
-        if (isset($db['friendships']) && is_array($db['friendships'])) {
-            foreach ($purgedCodes as $c) {
-                unset($db['friendships'][$c]);
-            }
-            foreach ($db['friendships'] as $ownerCode => &$fList) {
-                if (is_array($fList)) {
-                    $fList = array_values(array_filter($fList, function($c) use ($purgedMap) {
-                        return !isset($purgedMap[strtoupper(trim((string)$c))]);
-                    }));
-                }
-            }
-            unset($fList);
-        }
-
-        // 5. Supprimer de requests
-        if (isset($db['requests']) && is_array($db['requests'])) {
-            $db['requests'] = array_values(array_filter($db['requests'], function($r) use ($purgedMap) {
-                $from = strtoupper(trim((string)($r['fromCode'] ?? '')));
-                $to = strtoupper(trim((string)($r['toCode'] ?? '')));
-                return !isset($purgedMap[$from]) && !isset($purgedMap[$to]);
-            }));
-        }
-
-        $dirty = true;
-    }
 
     // Nettoyage additionnel des codes orphelins dans friendships
     if (isset($db['friendships']) && is_array($db['friendships'])) {
