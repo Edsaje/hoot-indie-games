@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 140
+ * Total de pépites sélectionnées : 142
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5820,5 +5820,87 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzMyNDA1OTEwLnBuZw==/315x250%23c/j8PA6B.png"
     ],
     "dateAdded": "2026-11-17"
+  },
+  {
+    "id": "itch-trees-hate-you-demo",
+    "title": "Trees Hate You (demo)",
+    "developer": "tykenn",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://tykenn.itch.io/trees-hate-you",
+    "playInBrowserUrl": "https://tykenn.itch.io/trees-hate-you",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Do NOT trust the trees",
+      "en": "Do NOT trust the trees"
+    },
+    "description": {
+      "fr": "Do NOT trust the trees",
+      "en": "Do NOT trust the trees"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI5MzA2MDE1LnBuZw==/315x250%23c/X3Aql0.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI5MzA2MDE1LnBuZw==/315x250%23c/X3Aql0.png"
+    ],
+    "dateAdded": "2026-11-18"
+  },
+  {
+    "id": "itch-traveloot",
+    "title": "Traveloot",
+    "developer": "fluffy-lotus",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://fluffy-lotus.itch.io/traveloot",
+    "playInBrowserUrl": "https://fluffy-lotus.itch.io/traveloot",
+    "isFree": true,
+    "pricingText": {
+      "fr": "Gratuit / Free 🆓",
+      "en": "100% Free 🆓"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "Run-based incremental game. Explore islands, gather resources, recruit adventurers, and grow through an upgrade tree.",
+      "en": "Run-based incremental game. Explore islands, gather resources, recruit adventurers, and grow through an upgrade tree."
+    },
+    "description": {
+      "fr": "Run-based incremental game. Explore islands, gather resources, recruit adventurers, and grow through an upgrade tree.",
+      "en": "Run-based incremental game. Explore islands, gather resources, recruit adventurers, and grow through an upgrade tree."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI2NTY3ODc3LnBuZw==/315x250%23c/3quE4A.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI2NTY3ODc3LnBuZw==/315x250%23c/3quE4A.png"
+    ],
+    "dateAdded": "2026-11-18"
   }
 ];
