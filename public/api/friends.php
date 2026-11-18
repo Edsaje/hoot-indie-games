@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$dataFile = __DIR__ . '/friends_data.json';
-$rateLimitFile = __DIR__ . '/friends_ratelimit.json';
+$dataFile = function_exists('getFriendsDatabasePath') ? getFriendsDatabasePath() : (getUserSavesDir() . '/friends_data.json');
+$rateLimitFile = getUserSavesDir() . '/friends_ratelimit.json';
 $steamKeyFile = __DIR__ . '/.steam_key';
 
 // Helper: Récupération IP client fiable (sans spoofing X-Forwarded-For)

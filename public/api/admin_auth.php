@@ -604,7 +604,12 @@ if (!function_exists('checkIsUserBanned')) {
 
 if (!function_exists('getFriendsDatabasePath')) {
     function getFriendsDatabasePath() {
-        return __DIR__ . '/friends_data.json';
+        $savesDir = getUserSavesDir();
+        $primary = $savesDir . '/friends_data.json';
+        if (!file_exists($primary) && file_exists(__DIR__ . '/friends_data.json')) {
+            @copy(__DIR__ . '/friends_data.json', $primary);
+        }
+        return $primary;
     }
 }
 
