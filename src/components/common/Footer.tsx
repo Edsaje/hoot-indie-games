@@ -303,7 +303,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger,
         </div>
 
         <div className="pt-8 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <span>© {new Date().getFullYear()} Hoot Indie Games — Quentin Beaud (Hibouxe / Edsaje)</span>
             {onOpenLegal && (
               <button
@@ -317,6 +317,10 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onEasterEggTrigger,
                 Mentions Légales &amp; Confidentialité
               </button>
             )}
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Souverain &amp; Zéro Traceur Tiers (Conforme RGPD / CNIL)
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <span>Fait pour les passionnés du jeu vidéo indépendant</span>

@@ -167,7 +167,7 @@ export async function pollVersusEvents(
       opponentConnected: Boolean(data.opponentConnected),
       roomClosed: Boolean(data.roomClosed),
     };
-  } catch (_err) {
+  } catch {
     return {
       success: false,
       events: [],

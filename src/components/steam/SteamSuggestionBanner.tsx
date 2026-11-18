@@ -117,17 +117,17 @@ export const SteamSuggestionBanner: React.FC<SteamSuggestionBannerProps> = ({
         }
       }
 
-      // Fallback résilient via proxy CORS si indisponibilité du backend local
+      // Fallback direct Steam si indisponibilité du backend local
       if (!dataFR) {
         try {
-          const corsUrlFR = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=french`)}`;
-          const corsUrlEN = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`)}`;
-          const [frRes, enRes] = await Promise.all([fetch(corsUrlFR), fetch(corsUrlEN)]);
+          const directUrlFR = `https://store.steampowered.com/api/appdetails?appids=${appId}&l=french`;
+          const directUrlEN = `https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`;
+          const [frRes, enRes] = await Promise.all([fetch(directUrlFR), fetch(directUrlEN)]);
           const [frJson, enJson] = await Promise.all([frRes.json(), enRes.json()]);
           dataFR = frJson?.[String(appId)]?.data;
           dataEN = enJson?.[String(appId)]?.data || dataFR;
         } catch {
-          // Si le fallback CORS échoue également
+          // Erreur ignorée
         }
       }
 

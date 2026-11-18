@@ -13,14 +13,14 @@ try {
   console.log('Tentative de synchronisation des résultats VPS (/tmp/results_part2.json)...');
   execSync('scp -o ConnectTimeout=3 debian@51.83.77.28:/tmp/results_part2.json "' + part2File + '"', { stdio: 'ignore' });
   console.log('✓ Résultats part 2 VPS synchronisés !');
-} catch (e) {
+} catch {
   console.warn('⚠️ Impossible de joindre le VPS pour part 2.');
 }
 
 try {
   execSync('scp -o ConnectTimeout=3 debian@51.83.77.28:/tmp/results_part1_remaining.json "' + part1RemFile + '"', { stdio: 'ignore' });
   console.log('✓ Résultats part 1 rem VPS synchronisés !');
-} catch (e) {
+} catch {
   // Not ready yet
 }
 

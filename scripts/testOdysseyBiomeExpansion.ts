@@ -20,14 +20,9 @@ import {
 } from '../src/data/odysseyRouteDex';
 import {
   synchronizeOdysseyMapping,
-  generateProceduralBiomeTemplate,
   calculateRouteHp,
   calculateRouteSap,
-  calculateMonsterLevel,
   getBiomeDpsTier,
-  MIN_ORPHAN_GAMES_FOR_NEW_WORLD,
-  GAMES_PER_ROUTE,
-  ROUTES_PER_WORLD,
 } from '../src/services/odysseyBiomeGenerator';
 
 function assert(condition: boolean, msg: string) {

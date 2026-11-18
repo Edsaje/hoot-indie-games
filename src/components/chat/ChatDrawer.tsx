@@ -120,14 +120,17 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
   const [sameLanguageMsgIds, setSameLanguageMsgIds] = useState<Record<string, boolean>>({});
 
   // Synchronisation des états en refs pour les boucles asynchrones
-  const translationsRef = useRef<Record<string, string>>({});
-  translationsRef.current = translations;
+  const translationsRef = useRef<Record<string, string>>(translations);
   const isAutoTranslateRef = useRef<boolean>(isAutoTranslate);
-  isAutoTranslateRef.current = isAutoTranslate;
   const currentLangCodeRef = useRef<string>(currentLangCode);
-  currentLangCodeRef.current = currentLangCode;
   const messagesRef = useRef<ChatMessage[]>(messages);
-  messagesRef.current = messages;
+
+  useEffect(() => {
+    translationsRef.current = translations;
+    isAutoTranslateRef.current = isAutoTranslate;
+    currentLangCodeRef.current = currentLangCode;
+    messagesRef.current = messages;
+  });
 
   // Ensembles pour le suivi : requêtes en cours de vol et messages déjà évalués pour la langue
   const inFlightIdsRef = useRef<Set<string>>(new Set());
@@ -291,11 +294,15 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
     setLoadingModLogs(false);
   }, [canModerate, profile.steam?.steamId, profile.id]);
 
-  useEffect(() => {
-    if (showModLogs) {
-      loadModLogs();
-    }
-  }, [showModLogs, loadModLogs]);
+  const toggleModLogs = useCallback(() => {
+    setShowModLogs((prev) => {
+      const next = !prev;
+      if (next) {
+        loadModLogs();
+      }
+      return next;
+    });
+  }, [loadModLogs]);
 
   const handleDismissLog = async (logId: string) => {
     soundFx.playClick();
@@ -613,7 +620,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ onOpenAuth, isModalActiv
             {canModerate && (
               <button
                 type="button"
-                onClick={() => setShowModLogs((prev) => !prev)}
+                onClick={toggleModLogs}
                 className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer ${
                   showModLogs
                     ? 'bg-blue-600/30 text-blue-300 border border-blue-400/50'

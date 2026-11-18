@@ -590,13 +590,17 @@ export const AdminGamesManager: React.FC<AdminGamesManagerProps> = ({
       }
 
       if (!dataFR) {
-        // Fallback CORS
-        const corsUrlFR = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=french`)}`;
-        const corsUrlEN = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`)}`;
-        const [frRes, enRes] = await Promise.all([fetch(corsUrlFR), fetch(corsUrlEN)]);
-        const [frJson, enJson] = await Promise.all([frRes.json(), enRes.json()]);
-        dataFR = frJson?.[appId]?.data as SteamAppDetails;
-        dataEN = (enJson?.[appId]?.data || dataFR) as SteamAppDetails;
+        // Fallback direct Steam Store si accessible
+        try {
+          const directUrlFR = `https://store.steampowered.com/api/appdetails?appids=${appId}&l=french`;
+          const directUrlEN = `https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`;
+          const [frRes, enRes] = await Promise.all([fetch(directUrlFR), fetch(directUrlEN)]);
+          const [frJson, enJson] = await Promise.all([frRes.json(), enRes.json()]);
+          dataFR = frJson?.[appId]?.data as SteamAppDetails;
+          dataEN = (enJson?.[appId]?.data || dataFR) as SteamAppDetails;
+        } catch {
+          // Erreur ignorée
+        }
       }
 
       if (!dataFR || !dataFR.name) {

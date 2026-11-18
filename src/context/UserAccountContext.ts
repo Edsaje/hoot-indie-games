@@ -9,7 +9,6 @@ export interface UserAccountContextType {
   isAdmin: boolean;
   isModerator: boolean;
   isCreator: boolean;
-  isSupabaseActive: boolean;
   updateProfile: (fields: Partial<UserProfile>) => void;
   setAvatar: (avatarId: IndieAvatarId) => void;
   setUsername: (name: string) => Promise<{ success: boolean; error?: string }>;

@@ -24,12 +24,17 @@ FROM php:8.3-apache
 # Activation des modules Apache indispensables (réécritures SPA, compression, sécurité)
 RUN a2enmod rewrite headers expires deflate mime
 
-# Configuration de la directive AllowOverride pour prise en charge du .htaccess
+# Configuration de la directive AllowOverride pour prise en charge du .htaccess et durcissement des données
 RUN { \
         echo '<Directory /var/www/html>'; \
         echo '    Options -Indexes +FollowSymLinks'; \
         echo '    AllowOverride All'; \
         echo '    Require all granted'; \
+        echo '</Directory>'; \
+        echo '<Directory /var/www/html/api/user_saves>'; \
+        echo '    php_admin_flag engine off'; \
+        echo '    Options -ExecCGI -Indexes'; \
+        echo '    Require all denied'; \
         echo '</Directory>'; \
         echo 'PassEnv RESEND_API_KEY BREVO_API_KEY STEAM_API_KEY'; \
     } > /etc/apache2/conf-available/security-and-override.conf \

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { UserProfile, IndieAvatarId, SteamAccountInfo } from '../types/user';
-import { getSupabaseClient, isSupabaseConfigured } from '../services/supabase';
 import {
   extractSteamIdFromOpenId,
   getAppIdFromSteamUrl,
@@ -493,48 +492,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
   }, [isAuthenticated]);
 
-  // Écoute de session Supabase si configuré (fallback)
-  useEffect(() => {
-    if (!isSupabaseConfigured) return;
-
-    let unsubscribe: (() => void) | undefined;
-    getSupabaseClient().then((client) => {
-      if (!client) return;
-
-      client.auth.getSession().then(({ data: { session } }: any) => {
-        if (session?.user) {
-          setIsAuthenticated(true);
-          setProfile((prev) => ({
-            ...prev,
-            id: session.user.id,
-            email: session.user.email,
-            isCloudSynced: true,
-          }));
-        }
-      });
-
-      const { data: { subscription } } = client.auth.onAuthStateChange((_event: any, session: any) => {
-        if (session?.user) {
-          setIsAuthenticated(true);
-          setProfile((prev) => ({
-            ...prev,
-            id: session.user.id,
-            email: session.user.email,
-            isCloudSynced: true,
-          }));
-        } else {
-          setIsAuthenticated(false);
-        }
-      });
-
-      unsubscribe = () => subscription?.unsubscribe();
-    });
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
-
   const isUserLoggedIn = isAuthenticated || Boolean(profile.steam?.steamId) || Boolean(profile.email);
 
   // Détection stricte : Le super-administrateur créateur est identifié UNIQUEMENT par des identifiants vérifiés côté serveur
@@ -546,7 +503,7 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
       profile.steam?.steamId && String(profile.steam.steamId).trim() === ADMIN_STEAM_ID
     );
 
-    // 2. Authentification par compte vérifié (Supabase/Email) avec email administrateur officiel
+    // 2. Authentification par compte vérifié souverain (Email/Mot de passe) avec email administrateur officiel
     const isOfficialEmail = Boolean(
       profile.email && profile.email.toLowerCase().trim() === 'quentin.beaud@hotmail.fr'
     );
@@ -817,8 +774,61 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       const rawProfile = localStorage.getItem('hoot_user_profile_v1');
       const profile = rawProfile ? JSON.parse(rawProfile) : {};
+
+      const rawCards = localStorage.getItem('hoot_cards_collection_v1');
+      const cardCollection = rawCards ? JSON.parse(rawCards) : undefined;
+
+      const rawOdyssey = localStorage.getItem('hoot_odyssey_save_v1');
+      const odysseyState = rawOdyssey ? JSON.parse(rawOdyssey) : undefined;
+
+      const rawStats = localStorage.getItem('hoot_indie_stats_v1') || localStorage.getItem('hoot_stats_v1');
+      const stats = rawStats ? JSON.parse(rawStats) : {};
+
+      const rawAch = localStorage.getItem('hoot_unlocked_achievements_v1');
+      const achievements = rawAch ? JSON.parse(rawAch) : [];
+
+      const rawTa = localStorage.getItem('hoot_time_attack_records_v1');
+      const timeAttackStats = rawTa ? JSON.parse(rawTa) : {};
+
+      const bonus = Number(localStorage.getItem('hoot_bonus_feathers_v1') || localStorage.getItem('hoot_golden_feathers_v1') || '0');
+      const spent = Number(localStorage.getItem('hoot_spent_feathers_v1') || '0');
+      const rawClaimed = localStorage.getItem('hoot_claimed_daily_feathers_v1');
+      const claimedDaily = rawClaimed ? JSON.parse(rawClaimed) : {};
+
+      const dailyGameStates: Record<string, any> = {};
+      const modePrefixes = [
+        'screenle_state_',
+        'indledle_state_',
+        'linkle_state_',
+        'profille_state_',
+        'chrono_state_',
+        'pixel_state_',
+        'review_state_',
+        'blindtest_state_',
+      ];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && modePrefixes.some((p) => k.startsWith(p))) {
+          try {
+            const rawVal = localStorage.getItem(k);
+            if (rawVal) dailyGameStates[k] = JSON.parse(rawVal);
+          } catch {}
+        }
+      }
+
       const exportObject = {
         profile,
+        feathers: {
+          bonus,
+          spent,
+          claimedDaily,
+        },
+        achievements,
+        stats,
+        dailyGameStates,
+        timeAttackStats,
+        cardCollection,
+        odysseyState,
         hootExportVersion: 2,
         exportedAt: new Date().toISOString(),
       };
@@ -961,30 +971,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           return { success: true };
         }
 
-        if (isSupabaseConfigured) {
-          const client = await getSupabaseClient();
-          if (client) {
-            const { data, error } = await client.auth.signInWithPassword({
-              email,
-              password: pass,
-            });
-            if (error) {
-              return { success: false, error: res.message || error.message };
-            }
-            const authUser = data?.user;
-            if (authUser) {
-              setIsAuthenticated(true);
-              setProfile((prev) => ({
-                ...prev,
-                id: authUser.id,
-                email: authUser.email ?? undefined,
-                isCloudSynced: true,
-              }));
-              return { success: true };
-            }
-          }
-        }
-
         return {
           success: false,
           error: res.message || 'Adresse e-mail ou mot de passe incorrect.',
@@ -1044,30 +1030,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           return { success: true };
         }
 
-        if (isSupabaseConfigured) {
-          const client = await getSupabaseClient();
-          if (client) {
-            const { data, error } = await client.auth.signUp({
-              email,
-              password: pass,
-            });
-            if (error) {
-              return { success: false, error: res.message || error.message };
-            }
-            const authUser = data?.user;
-            if (authUser) {
-              setIsAuthenticated(true);
-              setProfile((prev) => ({
-                ...prev,
-                id: authUser.id,
-                email: authUser.email ?? undefined,
-                isCloudSynced: true,
-              }));
-              return { success: true };
-            }
-          }
-        }
-
         return {
           success: false,
           error: res.message || 'Impossible de créer le compte.',
@@ -1083,33 +1045,17 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
   );
 
   const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
-    if (!isSupabaseConfigured) {
-      // Mode simulation hors-ligne / démonstration locale
-      const guestGoogleEmail = 'joueur.google@hoot.local';
-      const chosenName = profile.username && profile.username !== 'Hibou Mystère' ? profile.username : 'Chouette Exploratrice';
-      setProfile((prev) => ({
-        ...prev,
-        email: guestGoogleEmail,
-        username: chosenName,
-        isCloudSynced: false,
-      }));
-      setIsAuthenticated(true);
-      claimUsernameOnServer(chosenName, profile.id, profile.steam?.steamId).catch(() => {});
-      return { success: true };
-    }
-    const client = await getSupabaseClient();
-    if (!client) {
-      return { success: false, error: 'Service d\'authentification indisponible.' };
-    }
-    const { error } = await client.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin,
-      },
-    });
-    if (error) {
-      return { success: false, error: error.message };
-    }
+    // Mode simulation hors-ligne / démonstration locale
+    const guestGoogleEmail = 'joueur.google@hoot.local';
+    const chosenName = profile.username && profile.username !== 'Hibou Mystère' ? profile.username : 'Chouette Exploratrice';
+    setProfile((prev) => ({
+      ...prev,
+      email: guestGoogleEmail,
+      username: chosenName,
+      isCloudSynced: false,
+    }));
+    setIsAuthenticated(true);
+    claimUsernameOnServer(chosenName, profile.id, profile.steam?.steamId).catch(() => {});
     return { success: true };
   }, [profile.id, profile.username, profile.steam?.steamId]);
 
@@ -1166,12 +1112,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       await apiLogout();
     } catch {}
-    if (isSupabaseConfigured) {
-      try {
-        const client = await getSupabaseClient();
-        if (client) await client.auth.signOut();
-      } catch {}
-    }
     hasInitialSyncedRef.current = false;
     clearAllUserConnectedData();
     const cleanDefault = getDefaultProfile();
@@ -1186,12 +1126,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       const res = await apiDeleteAccount(password);
       if (res.success) {
-        if (isSupabaseConfigured) {
-          try {
-            const client = await getSupabaseClient();
-            if (client) await client.auth.signOut();
-          } catch {}
-        }
         hasInitialSyncedRef.current = false;
         clearAllUserConnectedData();
         const cleanDefault = getDefaultProfile();
@@ -1555,7 +1489,6 @@ export const UserAccountProvider: React.FC<{ children: ReactNode }> = ({ childre
           isAdmin,
           isModerator,
           isCreator,
-          isSupabaseActive: isSupabaseConfigured,
           updateProfile,
           setAvatar,
           setUsername,

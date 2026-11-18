@@ -1672,14 +1672,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 </div>
 
-                {/* Local JSON Export/Import */}
+                {/* Local JSON Export/Import & Droit à la portabilité RGPD */}
                 <div className="p-4 bg-[#131a29] border border-[#1e293b] rounded-2xl space-y-3">
                   <h4 className="text-sm font-bold text-white flex items-center gap-2">
                     <Download className="w-4 h-4 text-amber-400" />
-                    Sauvegarde & Restauration Manuelle (Fichier JSON)
+                    Portabilité & Sauvegarde Complète (Fichier JSON — Art. 20 RGPD)
                   </h4>
                   <p className="text-xs text-slate-400">
-                    Exportez votre progression complète dans un fichier JSON pour ne jamais perdre vos succès, même en naviguant en mode privé.
+                    Exportez l'intégralité de vos données de jeu (profil, succès, séries, classeur de cartes, progression Odyssée) dans un fichier JSON standard pour les archiver ou les transférer librement.
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 pt-1">
@@ -1688,14 +1688,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       className="flex-1 py-2 px-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-amber-500/50 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation cursor-pointer"
                     >
                       <Download className="w-3.5 h-3.5 text-amber-400" />
-                      <span>Exporter (Sauvegarde JSON)</span>
+                      <span>Exporter mes données complètes (JSON)</span>
                     </button>
                     <button
                       onClick={() => fileInputRef.current?.click()}
                       className="flex-1 py-2 px-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-amber-500/50 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation cursor-pointer"
                     >
                       <Upload className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>Importer un fichier JSON</span>
+                      <span>Restaurer une sauvegarde JSON</span>
                     </button>
                     <input
                       type="file"

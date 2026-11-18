@@ -145,7 +145,7 @@ async function fetchWithRetry(url: string, retries = 3): Promise<any> {
       if (attempt < retries) {
         await sleep(1000);
       }
-    } catch (e) {
+    } catch {
       if (attempt < retries) {
         await sleep(1000);
       }

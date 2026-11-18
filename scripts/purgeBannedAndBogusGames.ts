@@ -5,7 +5,6 @@ const CATALOG_PATH = path.join(process.cwd(), 'public/data/steam_catalog.json');
 const CACHE_PATH = path.join(process.cwd(), 'scripts/steam_cache.json');
 const STORE_CACHE_PATH = path.join(process.cwd(), 'scripts/steam_store_cache.json');
 const STORE_DATA_FILE = path.join(process.cwd(), 'src/data/steamStoreData.ts');
-const AUDIT_RULES_PATH = path.join(process.cwd(), 'scripts/auditRules.ts');
 
 export const BANNED_ADULT_AND_BOGUS_IDS = new Set<number>([
   // Contenu adulte, porno, hentai, sexuel, érotique proscrit

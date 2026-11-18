@@ -1,45 +1,44 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-17";
+export const TODAY_DATE = "2026-11-18";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "fields-of-mistria",
-  "title": "Fields of Mistria",
-  "releaseYear": 2024,
-  "releaseDate": "2026-08-05",
+  "id": "rain-world",
+  "title": "Rain World",
+  "releaseYear": 2017,
+  "releaseDate": "2017-03-28",
   "genre": [
-    "Simulation",
-    "RPG",
-    "Farming",
-    "Cozy"
+    "Survie",
+    "Platformer",
+    "Atmosphérique"
   ],
   "artStyle": {
     "fr": "Pixel Art",
     "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Vue du dessus 2D",
-    "en": "2D Top-down"
+    "fr": "Vue de côté 2D",
+    "en": "2D Side-scroller"
   },
-  "developer": "NPC Studio",
-  "steamUrl": "https://store.steampowered.com/app/2142790/",
+  "developer": "Videocult",
+  "steamUrl": "https://store.steampowered.com/app/312520/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/da8367fe734a77cc4d400199a9661eeea84170b1/ss_da8367fe734a77cc4d400199a9661eeea84170b1.1920x1080.jpg?t=1785944891",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/9933944638583f30c37fc4a51977de639f86624c/ss_9933944638583f30c37fc4a51977de639f86624c.1920x1080.jpg?t=1785944891",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/72a83ad1fd494bca5a01d876137f545d562ee735/ss_72a83ad1fd494bca5a01d876137f545d562ee735.1920x1080.jpg?t=1785944891",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/72b3122d8f42afe7359eeac6cef959cf03caabcf/ss_72b3122d8f42afe7359eeac6cef959cf03caabcf.1920x1080.jpg?t=1785944891",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/54ee7238977f0c2b75a075916a6f7cf396eabe8a/ss_54ee7238977f0c2b75a075916a6f7cf396eabe8a.1920x1080.jpg?t=1785944891",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2142790/a3b1416dc3b0152fa31b359fc492316b5c331c5b/ss_a3b1416dc3b0152fa31b359fc492316b5c331c5b.1920x1080.jpg?t=1785944891"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_cbd4e647d6b3bb3b311cb68fdf0cd8835d5919d7.1920x1080.jpg?t=1786047879",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_628274c84b196e270733f540139062f2787c4423.1920x1080.jpg?t=1786047879",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_d551eee41e60ba8f5f2005b3de41c5f2c27cb444.1920x1080.jpg?t=1786047879",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_5c8c0413e98f3521e3df370d4ad7018b771ce353.1920x1080.jpg?t=1786047879",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_becb0959f6479d07e05f2c14f48980a15b5e5192.1920x1080.jpg?t=1786047879",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/312520/ss_519831951a674f56ca80fd7e14884a7291d71e50.1920x1080.jpg?t=1786047879"
   ],
   "hints": {
     "tagline": {
-      "fr": "Redonnez vie à un village magique dans cette simulation de ferme nostalgique et colorée.",
-      "en": "Build the farm of your dreams as you discover a world full of magic, romance, and adventure in this farming sim.",
-      "es": "Construye la granja de tus sueños mientras descubres magia, romance y amistad en este encantador simulador.",
-      "de": "Erwecke ein verträumtes Dorf zu neuem Glanz in dieser nostalgischen Farmsimulation voller Magie und Charme.",
-      "ja": "魔法とロマンス、そして冒険が待つ美しい町で、夢の牧場生活を築き上げる心温まる農場シミュレーション。",
-      "pt-BR": "Restaure uma vila mágica e viva a vida no campo nesta charmosa e nostálgica simulação de fazenda."
+      "fr": "Incarnez un limace-chat vulnérable dans un écosystème prédateur impitoyable et pluvieux.",
+      "en": "You are a nomadic slugcat, both predator and prey in a broken, relentless ecosystem.",
+      "es": "Eres un gato-babosa nómada, a la vez depredador y presa en un ecosistema despiadado.",
+      "de": "Du bist eine nomadische Schneckenkatze in einem faszinierenden, aber gnadenlosen Ökosystem.",
+      "ja": "捕食者と被食者が交錯する過酷な生態系で、幼いスラッグキャットとして生き延びる終末サバイバル。",
+      "pt-BR": "Encarne um gato-lesma vulnerável em um ecossistema hostil e implacável assolado por chuvas torrenciais."
     },
-    "composer": "Joseph \"Tettix\" Garber"
+    "composer": "James Primate & Lydia Esrig"
   }
 };

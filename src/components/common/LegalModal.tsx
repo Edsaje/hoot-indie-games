@@ -143,9 +143,10 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
             Vous disposez d'un contrôle total sur l'ensemble de vos données :
           </p>
           <ul className="list-disc list-inside space-y-1 text-slate-400 pl-1">
-            <li><strong>Droit à la portabilité (Art. 20) :</strong> Téléchargez l'intégralité de vos sauvegardes au format JSON standard en 1 clic dans l'onglet Profil (section Sauvegarde &amp; Restauration Manuelle).</li>
-            <li><strong>Droit à l'effacement (Art. 17) :</strong> Supprimez définitivement votre compte et l'ensemble des données serveur associées en 1 clic depuis votre Profil (section Confidentialité), ou sur simple demande à <a href="mailto:contact@hootindiegames.com" className="text-rose-400 hover:underline">contact@hootindiegames.com</a>.</li>
+            <li><strong>Droit à la portabilité (Art. 20) :</strong> Téléchargez l'intégralité de vos données au format JSON standard en 1 clic dans l'onglet Profil (section Portabilité &amp; Sauvegarde Complète) : profil, succès, séries, classeur de cartes et progression Odyssée.</li>
+            <li><strong>Droit à l'effacement (Art. 17) :</strong> Supprimez définitivement votre compte et l'ensemble des données serveur associées en cascade (profil, sauvegardes cloud, collections, liens d'amitié) en 1 clic depuis votre Profil (section Confidentialité), ou sur simple demande à <a href="mailto:contact@hootindiegames.com" className="text-rose-400 hover:underline">contact@hootindiegames.com</a>.</li>
             <li><strong>Droit de rectification (Art. 16) :</strong> Modifiez votre pseudonyme, votre avatar ou votre mot de passe à tout moment.</li>
+            <li><strong>Durée de rétention des données :</strong> Les journaux de télémétrie anonymisés et agrégés sont purgés au-delà de 12 mois. Les données de compte sont conservées uniquement tant que le compte est actif et supprimées immédiatement lors de la clôture.</li>
           </ul>
         </section>
       </div>

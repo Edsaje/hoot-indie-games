@@ -811,6 +811,64 @@ switch ($action) {
                 }
             }
 
+            // 2.5. Cascade RGPD : Nettoyage définitif dans friends_data.json
+            $userUsername = $user['username'] ?? null;
+            $friendsFile = __DIR__ . '/friends_data.json';
+            if (!file_exists($friendsFile)) {
+                $friendsFile = $savesDir . '/friends_data.json';
+            }
+            if (file_exists($friendsFile)) {
+                $fp = @fopen($friendsFile, 'c+');
+                if ($fp && @flock($fp, LOCK_EX)) {
+                    $raw = @stream_get_contents($fp);
+                    $fDb = $raw ? json_decode($raw, true) : null;
+                    if (is_array($fDb) && isset($fDb['players'])) {
+                        $targetCodes = [];
+                        foreach ($fDb['players'] as $c => $p) {
+                            $cleanC = strtoupper(trim((string)$c));
+                            if ($cleanC === 'HOOT-HIBOU') continue;
+                            if ($steamId && !empty($p['steamId']) && strval($p['steamId']) === strval($steamId)) {
+                                $targetCodes[] = $cleanC;
+                            }
+                            if ($targetUserId && !empty($p['userId']) && strval($p['userId']) === strval($targetUserId)) {
+                                $targetCodes[] = $cleanC;
+                            }
+                        }
+                        $targetCodes = array_values(array_unique($targetCodes));
+                        if (!empty($targetCodes)) {
+                            $targetMap = array_flip($targetCodes);
+                            foreach ($targetCodes as $tc) {
+                                unset($fDb['players'][$tc]);
+                            }
+                            foreach ($fDb['players'] as $c => &$p) {
+                                if (isset($p['friends']) && is_array($p['friends'])) {
+                                    $p['friends'] = array_values(array_filter($p['friends'], function($fc) use ($targetMap) {
+                                        return !isset($targetMap[strtoupper(trim((string)$fc))]);
+                                    }));
+                                }
+                                if (isset($p['incomingRequests']) && is_array($p['incomingRequests'])) {
+                                    $p['incomingRequests'] = array_values(array_filter($p['incomingRequests'], function($fc) use ($targetMap) {
+                                        return !isset($targetMap[strtoupper(trim((string)$fc))]);
+                                    }));
+                                }
+                                if (isset($p['sentRequests']) && is_array($p['sentRequests'])) {
+                                    $p['sentRequests'] = array_values(array_filter($p['sentRequests'], function($fc) use ($targetMap) {
+                                        return !isset($targetMap[strtoupper(trim((string)$fc))]);
+                                    }));
+                                }
+                            }
+                            unset($p);
+                            ftruncate($fp, 0);
+                            rewind($fp);
+                            fwrite($fp, json_encode($fDb, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+                            fflush($fp);
+                        }
+                    }
+                    @flock($fp, LOCK_UN);
+                    @fclose($fp);
+                }
+            }
+
             // 3. Suppression dans la base des comptes
             if ($email && isset($accounts['emailIndex'][$email])) {
                 unset($accounts['emailIndex'][$email]);

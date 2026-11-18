@@ -75,7 +75,7 @@ export function validateUsernameFormat(
   }
 
   // Caractères autorisés : STRICTEMENT lettres, chiffres, tirets (-) et underscores (_)
-  const validCharsRegex = /^[a-zA-Z0-9_\-]+$/;
+  const validCharsRegex = /^[a-zA-Z0-9_-]+$/;
   if (!validCharsRegex.test(trimmed)) {
     return {
       valid: false,
@@ -92,8 +92,8 @@ export function validateUsernameFormat(
  */
 export function cleanDisplayName(name: string): string {
   if (!name) return '';
-  let cleaned = name.replace(/<[^>]*>/g, '').replace(/[\x00-\x1F\x7F]/g, '').trim();
-  cleaned = cleaned.replace(/[^a-zA-Z0-9_\-]/g, '');
+  let cleaned = name.replace(/<[^>]*>/g, '').trim();
+  cleaned = cleaned.replace(/[^a-zA-Z0-9_-]/g, '');
   cleaned = cleaned.trim();
   if (cleaned.length < 2) return '';
   if (cleaned.length > 24) return cleaned.slice(0, 24).trim();
