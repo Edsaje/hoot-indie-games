@@ -395,139 +395,6 @@ export async function generateSeoIndexHtml(): Promise<string> {
       },
       {
         '@type': 'ItemList',
-        '@id': `${CANONICAL_DOMAIN}/#navigation`,
-        name: 'Navigation Principale Hoot Indie Games',
-        itemListElement: [
-          {
-            '@type': 'SiteNavigationElement',
-            position: 1,
-            name: 'Pépites Certifiées',
-            description: `Catalogue officiel des ${totalCount} meilleures pépites du jeu vidéo indépendant certifiées Steam.`,
-            url: `${CANONICAL_DOMAIN}/gems`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 2,
-            name: 'Classeur de Cartes & Boosters Sylvestres',
-            description: `Collectionnez les ${totalCount} cartes de pépites indés, ouvrez des boosters quotidiens et admirez les reflets holographiques 3D.`,
-            url: `${CANONICAL_DOMAIN}/cards`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 3,
-            name: 'Hub des Mini-Jeux',
-            description: 'Les 8 disciplines quotidiennes, 8 bornes d\'arcade, quiz trivia, Time Attack et duels multijoueurs.',
-            url: `${CANONICAL_DOMAIN}/minigames`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 4,
-            name: 'Screenle (Capture)',
-            description: 'Devinette quotidienne du jeu indé par zoom progressif de capture d\'écran HD.',
-            url: `${CANONICAL_DOMAIN}/screenle`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 5,
-            name: 'Indledle (Classic)',
-            description: 'Le Wordle du jeu vidéo indépendant par année, genres, studio et caméra.',
-            url: `${CANONICAL_DOMAIN}/indledle`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 6,
-            name: 'Linkle (Connexions)',
-            description: 'Regroupez 16 jeux indés en 4 familles thématiques secrètes.',
-            url: `${CANONICAL_DOMAIN}/linkle`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 7,
-            name: 'Profille (Profil)',
-            description: 'Indices textuels dévoilés progressivement pour deviner le jeu.',
-            url: `${CANONICAL_DOMAIN}/profille`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 8,
-            name: 'Chrono (Timeline)',
-            description: 'Replacez les pépites indés sur la frise chronologique historique.',
-            url: `${CANONICAL_DOMAIN}/chrono`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 9,
-            name: 'Pixel & Silhouette',
-            description: 'Déduction par résolution de mosaïque de pixels et ombre chinoise.',
-            url: `${CANONICAL_DOMAIN}/pixel`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 10,
-            name: 'Critique Steam (Review)',
-            description: 'Déchiffrez les mots-clés biffés d\'une évaluation Steam authentique.',
-            url: `${CANONICAL_DOMAIN}/review`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 11,
-            name: 'Blind Test OST',
-            description: 'Quiz musical au synthétiseur Web Audio en paliers d\'écoute de 1 à 30 secondes.',
-            url: `${CANONICAL_DOMAIN}/blindtest`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 12,
-            name: 'Grand Quiz Trivia Indé',
-            description: 'Testez votre érudition vidéoludique sur 180 questions et anecdotes de développement indé.',
-            url: `${CANONICAL_DOMAIN}/quiz`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 13,
-            name: 'Time Attack',
-            description: 'Sprints contre-la-montre sur les 8 disciplines avec chrono milliseconde.',
-            url: `${CANONICAL_DOMAIN}/timeattack`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 14,
-            name: 'Arène Versus 1v1',
-            description: 'Duels multijoueurs en temps réel P2P WebRTC et Tournoi Décathlon Mixte.',
-            url: `${CANONICAL_DOMAIN}/versus`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 15,
-            name: 'Salle d\'Arcade Rétro',
-            description: '8 jeux d\'arcade cultes dont une réplique fidèle du Mine Storm Vectrex 1982.',
-            url: `${CANONICAL_DOMAIN}/arcade`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 16,
-            name: 'Micro-Pépites & Scène Itch.io',
-            description: 'Explorez les créations émergentes, jeux de Game Jams et pépites indés expérimentales.',
-            url: `${CANONICAL_DOMAIN}/micro`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 17,
-            name: 'Boîte à Outils & Radar 2025-2026',
-            description: 'Radar des sorties de jeux indépendants et boîte à outils pour joueurs.',
-            url: `${CANONICAL_DOMAIN}/toolbox`,
-          },
-          {
-            '@type': 'SiteNavigationElement',
-            position: 18,
-            name: 'Le Perchoir Sylvestre',
-            description: 'Portfolio créatif, essais narratifs et projets de Quentin Beaud (Hibouxe).',
-            url: `${CANONICAL_DOMAIN}/roost`,
-          },
-        ],
-      },
-      {
-        '@type': 'ItemList',
         '@id': `${CANONICAL_DOMAIN}/#catalog`,
         name: `Catalogue Officiel des ${totalCount} Pépites du Jeu Vidéo Indépendant`,
         description: 'Sélection certifiée des plus grands chefs-d\'œuvre et découvertes de la scène indépendante PC & Steam.',
@@ -700,66 +567,66 @@ export async function generateSeoIndexHtml(): Promise<string> {
 
   // Pre-rendered Hero Card Skeleton inside #root for instant 0.9s LCP and 0.00 CLS
   const heroSkeletonContent = `
-    <header class="sticky top-0 z-[48] w-full max-w-full bg-[#010805]/90 backdrop-blur-md border-b border-[#78350f] shadow-lg shadow-black/50" style="height: 64px; display: flex; align-items: center; padding: 0 1rem; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: #06241b; border: 1px solid #78350f; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">🦉</div>
-        <span style="font-weight: 900; font-size: 1rem; letter-spacing: 0.05em; color: #ffffff;">HOOT <span style="color: #f59e0b;">INDIE</span> GAMES</span>
+    <header class="sticky top-0 z-[48] w-full max-w-full bg-[#010805]/90 backdrop-blur-md border-b border-[#78350f] shadow-lg shadow-black/50 h-16 flex items-center px-4 justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-[#06241b] border border-[#78350f] flex items-center justify-center text-xl">🦉</div>
+        <span class="font-black text-base tracking-wider text-white">HOOT <span class="text-amber-500">INDIE</span> GAMES</span>
       </div>
     </header>
 
     <main class="flex-1 w-full relative z-10">
       <div class="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pt-4 sm:pt-6">
-        <div class="w-full max-w-xl mx-auto flex items-center justify-center p-1.5 rounded-2xl bg-[#06241b] border border-[#78350f] mb-6 shadow-xl" style="max-width: 576px; margin: 0 auto 1.5rem auto; padding: 0.375rem; border-radius: 1rem; background: #06241b; border: 1px solid #78350f; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 700;">
-          <span class="flex-1 py-2 px-2.5 sm:px-3 rounded-xl text-xs font-black bg-amber-500 text-slate-950 flex items-center justify-center gap-1.5" style="background: #f59e0b; color: #020617; padding: 0.5rem 0.75rem; border-radius: 0.75rem; font-weight: 900; display: inline-flex; align-items: center; gap: 0.35rem;">
-            🧭 Pépites <span class="text-[9px] font-mono px-1.5 py-0.2 rounded font-black bg-slate-950/20 text-slate-950" style="font-family: monospace; font-size: 0.65rem; background: rgba(0,0,0,0.2); padding: 0.1rem 0.35rem; border-radius: 0.25rem;">${totalCount}</span>
+        <div class="w-full max-w-xl mx-auto flex items-center justify-center p-1.5 rounded-2xl bg-[#06241b] border border-[#78350f] mb-6 shadow-xl text-xs font-bold gap-2">
+          <span class="flex-1 py-2 px-2.5 sm:px-3 rounded-xl text-xs font-black bg-amber-500 text-slate-950 flex items-center justify-center gap-1.5">
+            🧭 Pépites <span class="text-[9px] font-mono px-1.5 py-0.2 rounded font-black bg-slate-950/20 text-slate-950">${totalCount}</span>
           </span>
-          <span class="flex-1 py-2 px-2.5 sm:px-3 rounded-xl text-xs font-bold text-slate-300 flex items-center justify-center gap-1.5" style="color: #cbd5e1; padding: 0.5rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">
-            📁 Catalogue <span class="text-[9px] font-mono px-1.5 py-0.2 rounded font-black bg-amber-500/20 text-amber-300 border border-amber-500/30" style="font-family: monospace; font-size: 0.65rem; color: #fbbf24;">${catalogCount}</span>
+          <span class="flex-1 py-2 px-2.5 sm:px-3 rounded-xl text-xs font-bold text-slate-300 flex items-center justify-center gap-1.5">
+            📁 Catalogue <span class="text-[9px] font-mono px-1.5 py-0.2 rounded font-black bg-amber-500/20 text-amber-300 border border-amber-500/30">${catalogCount}</span>
           </span>
-          <span class="flex-1 py-2 px-2.5 sm:px-3 rounded-xl text-xs font-bold text-slate-300 flex items-center justify-center gap-1.5" style="color: #cbd5e1; padding: 0.5rem 0.75rem;">
+          <span class="flex-1 py-2 px-2.5 sm:px-3 rounded-xl text-xs font-bold text-slate-300 flex items-center justify-center gap-1.5">
             🌱 Micro-Indés
           </span>
         </div>
       </div>
 
-      <div class="w-full max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8" style="max-width: 1152px; margin: 0 auto 2rem auto; padding: 1rem; box-sizing: border-box;">
-        <div class="group relative rounded-2xl sm:rounded-3xl overflow-visible bg-gradient-to-br from-[#093a2b] via-[#05261c] to-[#021711] border-2 border-[#78350f] p-4 sm:p-8 lg:p-10 mb-6 sm:mb-10 shadow-[inset_0_2px_2px_rgba(217,119,6,0.3),0_16px_40px_rgba(0,0,0,0.8)]" style="border-radius: 1.5rem; background: linear-gradient(135deg, #093a2b, #05261c, #021711); border: 2px solid #78350f; padding: 1.5rem; box-sizing: border-box;">
-          <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center" style="display: grid; gap: 1.5rem;">
-            <div class="lg:col-span-7 space-y-3 sm:space-y-4" style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <div class="w-full max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 box-border">
+        <div class="group relative rounded-2xl sm:rounded-3xl overflow-visible bg-gradient-to-br from-[#093a2b] via-[#05261c] to-[#021711] border-2 border-[#78350f] p-4 sm:p-8 lg:p-10 mb-6 sm:mb-10 shadow-[inset_0_2px_2px_rgba(217,119,6,0.3),0_16px_40px_rgba(0,0,0,0.8)]">
+          <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+            <div class="lg:col-span-7 space-y-3 sm:space-y-4 flex flex-col gap-3">
               <div class="flex flex-wrap items-center gap-2">
-                <div class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider" style="display: inline-flex; align-items: center; gap: 0.35rem; width: fit-content; padding: 0.25rem 0.75rem; border-radius: 0.5rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+                <div class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider">
                   <span>🧭 EXPÉDITION PÉPITES</span>
                 </div>
               </div>
 
-              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight" style="font-size: clamp(1.5rem, 4vw, 2.75rem); font-weight: 900; color: #ffffff; margin: 0; line-height: 1.15; letter-spacing: -0.02em;">
-                Le Sanctuaire du <span class="text-amber-400" style="color: #f59e0b;">Jeu Vidéo Indépendant</span>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight m-0">
+                Le Sanctuaire du <span class="text-amber-400">Jeu Vidéo Indépendant</span>
               </h1>
 
-              <p class="text-xs sm:text-base text-slate-300 leading-relaxed max-w-xl" style="font-size: 0.95rem; color: #cbd5e1; margin: 0; line-height: 1.5; max-width: 576px;">
+              <p class="text-xs sm:text-base text-slate-300 leading-relaxed max-w-xl m-0">
                 Chaque jour, une merveille du jeu indépendant sélectionnée pour son génie de conception, son authenticité et son statut d'œuvre culte.
               </p>
 
-              <div class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem;">
-                <div class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-amber-500 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.25rem; border-radius: 1rem; background: #f59e0b; color: #020617; font-weight: 900; font-size: 0.85rem; text-transform: uppercase;">
+              <div class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2">
+                <div class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-amber-500 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider">
                   <span>📸 RELEVER LE DÉFI DU JOUR</span>
                 </div>
               </div>
             </div>
 
             <div class="lg:col-span-5 w-full">
-              <div class="rounded-2xl border border-[#78350f] bg-[#021711]/90 p-3.5 sm:p-5 flex flex-col justify-between shadow-2xl" style="background: #131a29; border: 1px solid #78350f; border-radius: 1rem; padding: 1rem; box-sizing: border-box;">
-                <div class="flex items-center justify-between mb-3" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow" style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0.5rem; border-radius: 0.375rem; background: #f59e0b; color: #020617; font-size: 0.75rem; font-weight: 900; text-transform: uppercase;">
+              <div class="rounded-2xl border border-[#78350f] bg-[#021711]/90 p-3.5 sm:p-5 flex flex-col justify-between shadow-2xl">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow">
                     ⭐ PÉPITE DU JOUR
                   </span>
-                  <span class="text-xs font-mono font-bold text-amber-200/80" style="font-size: 0.75rem; font-family: monospace; font-weight: 700; color: #fde68a;">
+                  <span class="text-xs font-mono font-bold text-amber-200/80">
                     ${escapeHtml(todayStr)}
                   </span>
                 </div>
 
-                <div class="relative aspect-video rounded-xl overflow-hidden bg-slate-950 mb-3 border border-[#4a3424] shadow-inner" style="position: relative; aspect-ratio: 16/9; border-radius: 0.75rem; overflow: hidden; background: #020617; border: 1px solid #4a3424; margin-bottom: 0.75rem;">
-                  <picture class="w-full h-full block" style="width: 100%; height: 100%; display: block;">
+                <div class="relative aspect-video rounded-xl overflow-hidden bg-slate-950 mb-3 border border-[#4a3424] shadow-inner">
+                  <picture class="w-full h-full block">
                     ${dailyScreenshot.mobile ? `<source media="(max-width: 640px)" srcset="${escapeHtml(dailyScreenshot.mobile)}" type="image/webp">` : ''}
                     <img
                       src="${escapeHtml(dailyScreenshot.desktop || rawDailyScreenshot)}"
@@ -769,19 +636,18 @@ export async function generateSeoIndexHtml(): Promise<string> {
                       fetchpriority="high"
                       decoding="sync"
                       class="w-full h-full object-cover"
-                      style="width: 100%; height: 100%; object-fit: cover; display: block;"
                     />
                   </picture>
-                  <div style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.15rem 0.5rem; border-radius: 0.375rem; background: rgba(0,0,0,0.8); font-size: 0.75rem; font-family: monospace; font-weight: 700; color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">
+                  <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/80 text-xs font-mono font-bold text-amber-400 border border-amber-500/30">
                     ${dailyGame.releaseYear}
                   </div>
                 </div>
 
                 <div>
-                  <h2 class="text-xl font-black text-[#fef3c7] mb-1 drop-shadow-sm truncate" style="font-size: 1.25rem; font-weight: 900; color: #fef3c7; margin: 0 0 0.25rem 0;">
+                  <h2 class="text-xl font-black text-[#fef3c7] mb-1 drop-shadow-sm truncate">
                     ${escapeHtml(dailyGame.title)}
                   </h2>
-                  <p class="text-xs text-amber-200/60 mb-2 truncate" style="font-size: 0.8rem; color: #fde68a; opacity: 0.7; margin: 0;">
+                  <p class="text-xs text-amber-200/60 mb-2 truncate">
                     ${escapeHtml(dailyGame.developer)} • ${escapeHtml(dailyGame.genre.join(', '))}
                   </p>
                 </div>
