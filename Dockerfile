@@ -44,6 +44,7 @@ WORKDIR /var/www/html
 
 # Copie du build final depuis le stage 1
 COPY --from=builder /app/dist/ /var/www/html/
+COPY --from=builder /app/tests/ /var/www/html/tests/
 
 # Création du dossier de stockage des sauvegardes et permissions www-data
 RUN mkdir -p /var/www/html/api/user_saves \
