@@ -36,6 +36,39 @@ export interface AuthApiResponse {
 const AUTH_API_URL = '/api/user_auth.php';
 
 /**
+ * Valide l'assertion Steam OpenID auprès du serveur souverain
+ */
+export async function apiVerifySteam(searchParamsString: string): Promise<
+  AuthApiResponse & {
+    verified?: boolean;
+    isCreator?: boolean;
+    csrfToken?: string | null;
+    adminKey?: string;
+    friendCode?: string;
+  }
+> {
+  try {
+    const res = await fetch(`${AUTH_API_URL}?action=verify_steam`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: searchParamsString,
+      signal: AbortSignal.timeout(12000),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return {
+      success: false,
+      error: 'network_error',
+      message: err?.message || 'Erreur réseau lors de la validation Steam.',
+    };
+  }
+}
+
+/**
  * Récupère la session active côté serveur (cookie de session HttpOnly)
  */
 export async function apiGetSession(): Promise<AuthApiResponse> {

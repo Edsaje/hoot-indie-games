@@ -26,6 +26,7 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 require_once __DIR__ . '/admin_auth.php';
 require_once __DIR__ . '/mailer.php';
+require_once __DIR__ . '/steam_verifier.php';
 sendCorsHeaders();
 header('Content-Type: application/json; charset=utf-8');
 
@@ -33,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
+
+startSecureHootSession();
 
 $savesDir = __DIR__ . '/user_saves';
 if (!is_dir($savesDir)) {
@@ -91,12 +94,8 @@ function sanitizeAccountForClient($user) {
     return $copy;
 }
 
-// Démarrer la session PHP de manière sécurisée
-if (session_status() === PHP_SESSION_NONE) {
-    @ini_set('session.cookie_httponly', 1);
-    @ini_set('session.cookie_samesite', 'Lax');
-    @session_start();
-}
+// Démarrer la session PHP de manière sécurisée et unifiée
+startSecureHootSession();
 
 $action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : '';
 
@@ -181,6 +180,17 @@ function recordMailSent($ipHash, $mailRateLimitFile) {
 }
 
 switch ($action) {
+    // -------------------------------------------------------------
+    // ACTION : VALIDATION STEAM OPENID 2.0 (AVEC VALVE)
+    // -------------------------------------------------------------
+    case 'verify_steam':
+        $verificationResult = verifySteamOpenIdAssertion($_REQUEST);
+        if (empty($verificationResult['success'])) {
+            http_response_code(400);
+        }
+        echo json_encode($verificationResult, JSON_UNESCAPED_UNICODE);
+        exit;
+
     // -------------------------------------------------------------
     // ACTION : ÉTAT DE LA SESSION ACTUELLE (GET /me ou /status)
     // -------------------------------------------------------------

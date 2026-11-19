@@ -79,10 +79,9 @@ export const OdysseyHub: React.FC = () => {
   // Écoute des synchronisations externes (Cloud Sync ou autre onglet)
   useEffect(() => {
     const handleSaveRestored = (e: any) => {
-      if (e?.detail && typeof e.detail.starSap === 'number') {
-        setOdysseyState(e.detail);
-      } else {
-        setOdysseyState(loadOdysseyState());
+      const next = e?.detail?.odysseyState || (typeof e?.detail?.starSap === 'number' ? e.detail : loadOdysseyState());
+      if (next && typeof next.starSap === 'number') {
+        setOdysseyState(next);
       }
     };
     window.addEventListener('hoot_odyssey_updated', handleSaveRestored as any);

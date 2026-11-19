@@ -45,7 +45,7 @@ import {
   fetchSteamProxyStatus,
   saveMasterSteamApiKey,
 } from '../../services/steamService';
-import { getOrCreateCloudSyncKey, setCloudSyncKey } from '../../services/userCloudSyncService';
+import { getOrCreateCloudSyncKey, setCloudSyncKey, getLastSyncTimestamp } from '../../services/userCloudSyncService';
 import { formatFeathers } from '../../utils/featherEconomy';
 import { INDIE_AVATARS } from '../../data/avatars';
 import type { IndieAvatarId } from '../../types/user';
@@ -1397,7 +1397,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
 
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Votre progression complète (<strong>Plumes d'Or 🪶</strong>, <strong>Succès 🏆</strong>, <strong>Boutique</strong>, <strong>Séries</strong> et <strong>Records Time Attack ⏱️</strong>) est sauvegardée et fusionnée de manière sécurisée sur notre serveur souverain OVHcloud.
+                    Votre progression complète (<strong>Odyssée Sylvestre 🌲</strong>, <strong>Jeux possédés 🎮</strong>, <strong>Plumes d'Or 🪶</strong>, <strong>Succès 🏆</strong>, <strong>Cartes & Boosters 🎴</strong>, <strong>Séries & Records Mini-Jeux ⏱️</strong>, <strong>Boutique & Cosmétiques</strong>) est sauvegardée et fusionnée automatiquement de manière souveraine sur notre serveur OVHcloud.
                   </p>
 
                   {/* Connected Identifier Card */}
@@ -1505,6 +1505,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <RefreshCw className={`w-4 h-4 ${isAuthLoading ? 'animate-spin' : ''}`} />
                       <span>{isAuthLoading ? 'Synchronisation en cours...' : '🔄 Forcer la Synchronisation & Fusion Cloud'}</span>
                     </button>
+                    <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
+                      <span>Dernière synchro réussie :</span>
+                      <span className="font-mono text-slate-300">
+                        {getLastSyncTimestamp() > 0
+                          ? new Date(getLastSyncTimestamp()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                          : 'Automatique à la connexion'}
+                      </span>
+                    </div>
                     <p className="text-[11px] text-slate-400 text-center">
                       La fusion intelligente conserve le maximum de votre progression de l'Odyssée (biomes, sève, Indiedex), plumes, succès, cartes et calendrier sans jamais écraser vos progrès.
                     </p>

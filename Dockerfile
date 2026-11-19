@@ -50,6 +50,10 @@ RUN mkdir -p /var/www/html/api/user_saves \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/api/user_saves
 
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 80
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
