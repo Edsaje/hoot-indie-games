@@ -20,13 +20,11 @@ import {
   Swords,
 } from 'lucide-react';
 import { TODAY_DAILY_GEM, TODAY_DATE } from '../../data/dailyGem';
-import { INDIE_GAMES } from '../../data/games';
 import { useUserAccount } from '../../context/useUserAccount';
 import { SteamIcon } from '../common/SteamIcon';
 import { ItchIcon } from '../common/ItchIcon';
 import { soundFx } from '../../utils/audio';
 import { getChallengeStatusForDate } from '../../utils/streakManager';
-import { getScheduledDailyGame } from '../../utils/monthlyScheduler';
 import type { NavTab } from '../common/Navbar';
 import type { ArcadeGameId } from '../arcade/ArcadeModal';
 import { SylvestreHudFrame } from '../sylvestre/SylvestreHudFrame';
@@ -34,7 +32,9 @@ import { SylvestreBranchDivider } from '../sylvestre/SylvestreBranchDivider';
 import { SylvestreIvyFrame } from '../sylvestre/SylvestreIvyFrame';
 import { getLocalizedText, getTranslatedGenre } from '../../utils/localization';
 
-import { RandomGemModal } from './RandomGemModal';
+const RandomGemModal = React.lazy(() =>
+  import('./RandomGemModal').then((m) => ({ default: m.RandomGemModal }))
+);
 import type { Game } from '../../types/game';
 
 const GemCatalogSection = React.lazy(() =>
@@ -81,19 +81,27 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // La pépite du jour en vedette (issue du calendrier mensuel déterministe unifié)
-  const scheduledGem = useMemo(() => {
-    return getScheduledDailyGame(currentDate, 'dailyGem', INDIE_GAMES);
-  }, [currentDate]);
+  // La pépite du jour en vedette (issue de TODAY_DAILY_GEM au premier rendu pour un LCP instantané, ou chargée dynamiquement pour une date passée)
+  const [dailyGem, setDailyGem] = useState<Game>(() => TODAY_DAILY_GEM);
 
-  const dailyGem = useMemo(() => {
-    // Si la date affichée correspond au build du jour et que l'ID concorde, utiliser TODAY_DAILY_GEM pour un LCP instantané
-    if (currentDate === TODAY_DATE && TODAY_DAILY_GEM && TODAY_DAILY_GEM.id === scheduledGem.id) {
-      return TODAY_DAILY_GEM;
+  useEffect(() => {
+    if (currentDate === TODAY_DATE && TODAY_DAILY_GEM) {
+      setDailyGem(TODAY_DAILY_GEM);
+      return;
     }
-    // Source de vérité absolue : le calendrier mensuel déterministe
-    return scheduledGem;
-  }, [currentDate, scheduledGem]);
+    let isMounted = true;
+    Promise.all([
+      import('../../data/games'),
+      import('../../utils/monthlyScheduler'),
+    ]).then(([{ INDIE_GAMES }, { getScheduledDailyGame }]) => {
+      if (!isMounted) return;
+      const scheduled = getScheduledDailyGame(currentDate, 'dailyGem', INDIE_GAMES);
+      setDailyGem(scheduled);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [currentDate]);
 
   // Check today's game completion status for all 8 daily disciplines
   const dailyStatus = useMemo(() => {
@@ -103,8 +111,9 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   const [randomPickedGame, setRandomPickedGame] = useState<Game | null>(null);
   const [highlightedGemId, setHighlightedGemId] = useState<string | null>(null);
 
-  const handleRandomPickFromHero = () => {
+  const handleRandomPickFromHero = async () => {
     soundFx.playClick();
+    const { INDIE_GAMES } = await import('../../data/games');
     const pool = INDIE_GAMES;
     if (!pool || pool.length === 0) return;
     let candidates = pool;
@@ -782,12 +791,16 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
       </div>
 
       {/* Modale Pépite Découverte au Hasard depuis le Hero */}
-      <RandomGemModal
-        game={randomPickedGame}
-        onClose={() => setRandomPickedGame(null)}
-        onPickAnother={handleRandomPickFromHero}
-        onLocateInCatalog={handleLocateRandomGemInCatalog}
-      />
+      {randomPickedGame && (
+        <React.Suspense fallback={null}>
+          <RandomGemModal
+            game={randomPickedGame}
+            onClose={() => setRandomPickedGame(null)}
+            onPickAnother={handleRandomPickFromHero}
+            onLocateInCatalog={handleLocateRandomGemInCatalog}
+          />
+        </React.Suspense>
+      )}
     </div>
   );
 };

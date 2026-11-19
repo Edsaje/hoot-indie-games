@@ -39,7 +39,9 @@ export default defineConfig({
             !dep.includes('data-') &&
             !dep.includes('cardsData') &&
             !dep.includes('framer-motion') &&
-            !dep.includes('lucide-icons')
+            !dep.includes('lucide-icons') &&
+            !dep.includes('securityAntiCheat') &&
+            !dep.includes('audio-')
         );
       },
     },

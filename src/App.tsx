@@ -214,11 +214,13 @@ function getRouteInfo(): { route: string; hash: string; pathname: string } {
   const [isLegalOpen, setIsLegalOpen] = useState<boolean>(false);
   
 
+  const [hasPendingAdminReward, setHasPendingAdminReward] = useState<boolean>(false);
+
   useEffect(() => {
     const handleRewardReceived = (e: Event) => {
       const customEvent = e as CustomEvent<unknown[]>;
       if (Array.isArray(customEvent.detail) && customEvent.detail.length > 0) {
-        
+        setHasPendingAdminReward(true);
       }
     };
     window.addEventListener('hoot_admin_reward_received', handleRewardReceived);
@@ -1049,8 +1051,8 @@ function getRouteInfo(): { route: string; hash: string; pathname: string } {
             />
           )}
 
-          {/* Célébration Décret Royal / Récompense Souveraine Hibouxe */}
-          <AdminRewardCelebrationModal />
+          {/* Célébration Décret Royal / Récompense Souveraine Hibouxe (Monté à la demande pour différer framer-motion) */}
+          {hasPendingAdminReward && <AdminRewardCelebrationModal />}
 
           {/* Centre d'Échange Bilatéral de Cartes */}
           {isTradeModalOpen && <TradeModal />}
