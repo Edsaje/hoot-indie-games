@@ -307,6 +307,13 @@ export function markTradeAsApplied(tradeId: string): void {
 
 export function applyTradeToLocalCollection(trade: CardTradeOffer, myFriendCode: string): void {
   try {
+    if (trade.id) {
+      const applied = getAppliedTradeIds();
+      if (applied.has(trade.id)) {
+        return; // Échange déjà appliqué localement (protection double application)
+      }
+    }
+
     const collection = getCardCollection();
     const isSender = trade.fromFriendCode === myFriendCode;
 
@@ -338,6 +345,9 @@ export function applyTradeToLocalCollection(trade: CardTradeOffer, myFriendCode:
     }
 
     saveCardCollection(collection);
+    if (trade.id) {
+      markTradeAsApplied(trade.id);
+    }
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('hoot_cards_updated'));
     }

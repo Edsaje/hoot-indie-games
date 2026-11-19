@@ -410,17 +410,24 @@ export function loadSecureJson<T = any>(key: string): T | null {
       if (parsed.d && parsed.s) {
         const expectedSig = sha256Sync(`${parsed.d}:${key}:${VAULT_STORAGE_SALT}`);
         if (parsed.s === expectedSig) {
-          const jsonStr = decodeURIComponent(escape(atob(parsed.d)));
-          return JSON.parse(jsonStr) as T;
+          try {
+            const jsonStr = decodeURIComponent(escape(atob(parsed.d)));
+            return JSON.parse(jsonStr) as T;
+          } catch {
+            return null;
+          }
         } else {
           // Tolérance / Secours : en cas de légère divergence de sel (sync cloud inter-versions),
           // on tente de restaurer les données légitimes du joueur
           try {
             const jsonStr = decodeURIComponent(escape(atob(parsed.d)));
             return JSON.parse(jsonStr) as T;
-          } catch {}
+          } catch {
+            return null;
+          }
         }
       }
+      return null;
     }
 
     // Fallback rétrocompatible pour les parties en cours enregistrées en JSON standard

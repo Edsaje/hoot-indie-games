@@ -48,7 +48,7 @@ check_step "Écriture atomique www-data vérifiée" \
     "docker exec -u www-data ${CONTAINER_NAME} touch /var/www/html/api/user_saves/.smoke_probe.tmp && docker exec -u www-data ${CONTAINER_NAME} rm /var/www/html/api/user_saves/.smoke_probe.tmp"
 
 # 4. Exécution de la suite de tests unitaires PHP dans le conteneur
-check_step "Suite de tests unitaires PHP (11 tests)" \
+check_step "Suite de tests unitaires PHP (20 tests validés)" \
     "docker exec ${CONTAINER_NAME} php /var/www/html/tests/run_php_tests.php > /dev/null"
 
 # 5. Page d'accueil HTTPS
@@ -67,7 +67,19 @@ check_step "API Cloud Sync Load HTTP 200 (${DOMAIN}/api/user_cloud_sync.php)" \
 check_step "Sécurité Anti-IDOR active (403 Forbidden sans session)" \
     "curl -s -o /dev/null -w '%{http_code}' '${DOMAIN}/api/user_cloud_sync.php?action=load&steamId=76561198035270542&syncKey=sync_probe_bad_key_1234567890' | grep -q '^403$'"
 
-# 9. Intégrité de la sauvegarde officielle du créateur Hibouxe
+# 9. Endpoint Chat Public (Le Perchoir)
+check_step "API Chat Public HTTP 200 (${DOMAIN}/api/chat.php)" \
+    "curl -fsS '${DOMAIN}/api/chat.php?action=get_messages&channel=all' | grep -q '\"success\":true'"
+
+# 10. Endpoint Échanges de Cartes
+check_step "API Trades HTTP 200 (${DOMAIN}/api/trades.php)" \
+    "curl -fsS '${DOMAIN}/api/trades.php?action=fetch&friendCode=smoke_test_probe' | grep -q '\"success\":true'"
+
+# 11. Endpoint Relais Multijoueur Versus
+check_step "API Versus Room HTTP 200 (${DOMAIN}/api/versus_room.php)" \
+    "curl -fsS '${DOMAIN}/api/versus_room.php?action=get_room&roomCode=PROBE99' | grep -q '\"success\":'"
+
+# 12. Intégrité de la sauvegarde officielle du créateur Hibouxe
 check_step "Intégrité sauvegarde Hibouxe (Biome 6 préservé)" \
     "docker exec ${CONTAINER_NAME} php -r '\$d=json_decode(file_get_contents(\"/var/www/html/api/user_saves/steam_76561198035270542.json\"),true); exit(\$d[\"odysseyState\"][\"highestBiomeUnlocked\"] >= 6 ? 0 : 1);'"
 

@@ -17,7 +17,6 @@ import {
   Bot,
   Lock,
   Mail,
-  Key,
   Cloud,
   ShieldCheck,
   ArrowRight,
@@ -155,8 +154,6 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     profile,
     isAuthenticated,
     isSteamConnected,
-    loginWithEmail,
-    signUpWithEmail,
     loginWithGoogle,
     connectSteamWithOpenId,
     updateProfile,
@@ -167,10 +164,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
   const { unlockAchievement } = useAchievements();
   const { allPlayableGames } = useSteamCatalog();
 
-  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
   const [authUsername, setAuthUsername] = useState<string>(profile.username || '');
-  const [authEmail, setAuthEmail] = useState<string>('');
-  const [authPassword, setAuthPassword] = useState<string>('');
   const [authLoading, setAuthLoading] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
@@ -241,49 +235,6 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
       localStorage.removeItem('hoot_versus_guest_enabled');
     }
     await logout();
-  };
-
-  const handleAccountSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!authEmail.trim() || !authPassword.trim()) {
-      setAuthError('Veuillez renseigner votre email et mot de passe.');
-      return;
-    }
-    if (authPassword.length < 6) {
-      setAuthError('Le mot de passe doit contenir au moins 6 caractères.');
-      return;
-    }
-    setAuthLoading(true);
-    setAuthError(null);
-
-    try {
-      if (authMode === 'signup') {
-        if (authUsername.trim()) {
-          setUsername(authUsername.trim());
-        }
-        const res = await signUpWithEmail(authEmail.trim(), authPassword);
-        setAuthLoading(false);
-        if (res.success) {
-          soundFx.playVictory();
-        } else {
-          soundFx.playError();
-          setAuthError(res.error || 'Erreur lors de la création du compte.');
-        }
-      } else {
-        const res = await loginWithEmail(authEmail.trim(), authPassword);
-        setAuthLoading(false);
-        if (res.success) {
-          soundFx.playVictory();
-        } else {
-          soundFx.playError();
-          setAuthError(res.error || 'Identifiants incorrects.');
-        }
-      }
-    } catch {
-      setAuthLoading(false);
-      soundFx.playError();
-      setAuthError('Une erreur inattendue est survenue.');
-    }
   };
 
   const [phase, setPhase] = useState<VersusPhase>('lobby');
@@ -1712,40 +1663,6 @@ if (phase !== 'playing' || isLockedOut || searchFocused) return;
               <div className="flex-grow border-t border-slate-800"></div>
             </div>
 
-            {/* Toggle Tabs */}
-            <div className="flex p-1 bg-[#0b0f19] rounded-xl border border-[#1e293b]">
-              <button
-                type="button"
-                onClick={() => {
-                  soundFx.playClick();
-                  setAuthMode('signup');
-                  setAuthError(null);
-                }}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
-                  authMode === 'signup'
-                    ? 'bg-amber-500 text-slate-950 shadow'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Créer un compte
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  soundFx.playClick();
-                  setAuthMode('login');
-                  setAuthError(null);
-                }}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
-                  authMode === 'login'
-                    ? 'bg-amber-500 text-slate-950 shadow'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Se connecter
-              </button>
-            </div>
-
             {authError && (
               <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl text-red-300 text-xs font-bold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
@@ -1753,69 +1670,24 @@ if (phase !== 'playing' || isLockedOut || searchFocused) return;
               </div>
             )}
 
-            <form onSubmit={handleAccountSubmit} className="space-y-4">
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Adresse Email</span>
-                </label>
-                <input
-                  type="email"
-                  value={authEmail}
-                  onChange={(e) => setAuthEmail(e.target.value)}
-                  placeholder="nom@exemple.com"
-                  required
-                  className="w-full px-4 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-600 focus:outline-none transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <Key className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Mot de passe (6 caractères min)</span>
-                </label>
-                <input
-                  type="password"
-                  value={authPassword}
-                  onChange={(e) => setAuthPassword(e.target.value)}
-                  placeholder="••••••••"
-                  minLength={6}
-                  required
-                  className="w-full px-4 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-600 focus:outline-none transition"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
-              >
-                {authLoading ? (
-                  <span>Chargement...</span>
-                ) : (
-                  <>
-                    <span>
-                      {authMode === 'signup'
-                        ? 'Créer mon compte et entrer dans l\'Arène'
-                        : 'Connexion et Accès à l\'Arène'}
-                    </span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </form>
-
-            {onOpenAuth && (
-              <div className="pt-2 text-center">
-                <button
-                  type="button"
-                  onClick={onOpenAuth}
-                  className="text-[11px] text-slate-400 hover:text-amber-400 underline transition cursor-pointer"
-                >
-                  Ouvrir le panneau complet d'authentification
-                </button>
-              </div>
-            )}
+            {/* Connexion / Inscription via la modale officielle AuthModal */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                if (authUsername.trim() && authUsername.trim() !== profile.username) {
+                  setUsername(authUsername.trim());
+                }
+                if (onOpenAuth) {
+                  onOpenAuth();
+                }
+              }}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98 cursor-pointer flex items-center justify-center gap-2.5"
+            >
+              <Mail className="w-4 h-4 text-slate-950" />
+              <span>Se connecter ou Créer un compte par Email</span>
+              <ArrowRight className="w-4 h-4 text-slate-950" />
+            </button>
           </div>
         </div>
       ) : (

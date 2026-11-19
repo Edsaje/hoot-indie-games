@@ -87,6 +87,11 @@ function saveRoomsData($file, array $data) {
     return false;
 }
 
+// Si le script est inclus depuis un test unitaire CLI, ne pas exécuter le contrôleur HTTP
+if (php_sapi_name() === 'cli' && (!isset($_SERVER['REQUEST_METHOD']) || empty($_SERVER['REQUEST_METHOD']))) {
+    return;
+}
+
 // Récupération des données POST/GET
 $rawInput = @file_get_contents('php://input');
 $jsonData = json_decode($rawInput, true) ?: [];

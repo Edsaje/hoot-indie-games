@@ -41,11 +41,14 @@ jobs:
       - name: 📐 Étape 2 : Validation des Types TypeScript (tsc -b)
         run: npx tsc -b
 
-      - name: ⚡ Étape 3 : Tests Unitaires Frontend (Vitest)
+      - name: 🛡️ Étape 3 : Audit d'Intégrité de Données (Règle Zéro Hallucination & Cartes)
+        run: npm run audit-db && npm run audit-cards
+
+      - name: ⚡ Étape 4 : Tests Unitaires Frontend (Vitest)
         run: npm test
 
-      - name: 🛡️ Étape 4 : Tests Unitaires Backend & Sécurité (PHP)
+      - name: 🛡️ Étape 5 : Tests Unitaires Backend & Sécurité (PHP)
         run: php tests/run_php_tests.php
 
-      - name: 🏗️ Étape 5 : Compilation Production Vite
+      - name: 🏗️ Étape 6 : Compilation Production Vite
         run: npm run build

@@ -30,43 +30,6 @@ $statsFile = __DIR__ . '/stats.json';
 $rateLimitFile = __DIR__ . '/track_rate_limits.json';
 $secretFile = __DIR__ . '/.secret';
 
-// Génération d'octets aléatoires sécurisés
-function getSecureRandomBytes($length = 32) {
-    if (function_exists('random_bytes')) {
-        try { return random_bytes($length); } catch (Exception $e) {}
-    }
-    if (function_exists('openssl_random_pseudo_bytes')) {
-        $bytes = openssl_random_pseudo_bytes($length, $strong);
-        if ($bytes !== false) return $bytes;
-    }
-    return md5(uniqid(mt_rand(), true) . microtime(true));
-}
-
-// Hachage sécurisé de mot de passe (Bcrypt standard)
-function securePasswordHash($password) {
-    if (function_exists('password_hash')) {
-        return password_hash($password, PASSWORD_BCRYPT);
-    }
-    $salt = bin2hex(getSecureRandomBytes(16));
-    return 'sha512$' . $salt . '$' . hash('sha512', $salt . $password);
-}
-
-// Vérification de mot de passe sécurisé
-function securePasswordVerify($password, $storedHash) {
-    if (function_exists('password_verify')) {
-        if (strpos($storedHash, '$2y$') === 0 || strpos($storedHash, '$2a$') === 0) {
-            return password_verify($password, $storedHash);
-        }
-    }
-    if (strpos($storedHash, 'sha512$') === 0) {
-        $parts = explode('$', $storedHash);
-        if (count($parts) === 3) {
-            return hash('sha512', $parts[1] . $password) === $parts[2];
-        }
-    }
-    return false;
-}
-
 if (!function_exists('sanitizeStr')) {
     function sanitizeStr($val) {
         return is_string($val) ? htmlspecialchars(strip_tags(trim($val)), ENT_QUOTES, 'UTF-8') : '';
@@ -79,7 +42,7 @@ function getOrCreateSecret($file) {
         $secret = trim(@file_get_contents($file));
         if (!empty($secret)) return $secret;
     }
-    $newSecret = bin2hex(getSecureRandomBytes(32));
+    $newSecret = bin2hex(random_bytes(32));
     if (!empty($file)) {
         @file_put_contents($file, $newSecret, LOCK_EX);
     }
@@ -88,8 +51,10 @@ function getOrCreateSecret($file) {
 $serverSecret = getOrCreateSecret($secretFile);
 
 // Récupération de l'adresse IP fiable (sans spoofing X-Forwarded-For)
-function getClientIp() {
-    return getAuthClientIp();
+if (!function_exists('getClientIp')) {
+    function getClientIp() {
+        return getAuthClientIp();
+    }
 }
 
 $clientIp = getClientIp();

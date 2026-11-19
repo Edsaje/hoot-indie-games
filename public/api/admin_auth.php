@@ -83,6 +83,12 @@ if (!function_exists('getAuthClientIp')) {
     }
 }
 
+if (!function_exists('getClientIp')) {
+    function getClientIp() {
+        return getAuthClientIp();
+    }
+}
+
 /**
  * Envoie des en-têtes CORS stricts limités aux domaines explicitement autorisés (CWE-942)
  * Pas de wildcard sur les sous-domaines (protection contre Subdomain Takeover).

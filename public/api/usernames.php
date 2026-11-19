@@ -38,8 +38,10 @@ $storageFile = getUsernamesStoragePath();
 $rateLimitFile = $savesDir . '/usernames_ratelimit.json';
 
 // Récupération IP client fiable (sans spoofing X-Forwarded-For)
-function getClientIp() {
-    return getAuthClientIp();
+if (!function_exists('getClientIp')) {
+    function getClientIp() {
+        return getAuthClientIp();
+    }
 }
 
 // Rate Limiting (max 60 requêtes / minute)

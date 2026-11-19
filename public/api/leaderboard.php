@@ -47,8 +47,10 @@ $validAvatars = [
 ];
 
 // Récupération IP client fiable (sans spoofing X-Forwarded-For)
-function getClientIp() {
-    return getAuthClientIp();
+if (!function_exists('getClientIp')) {
+    function getClientIp() {
+        return getAuthClientIp();
+    }
 }
 
 // Rate limiting (max 30 requêtes d'écriture par minute par IP)

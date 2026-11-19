@@ -26,8 +26,10 @@ $rateLimitFile = __DIR__ . '/community_stats_ratelimit.json';
 $validGames = ['screenle', 'indledle', 'linkle', 'profille', 'chrono', 'pixel', 'review', 'blindtest'];
 
 // Récupération IP client fiable (sans spoofing X-Forwarded-For)
-function getClientIp() {
-    return getAuthClientIp();
+if (!function_exists('getClientIp')) {
+    function getClientIp() {
+        return getAuthClientIp();
+    }
 }
 
 function checkRateLimit($rateLimitFile, $ip) {

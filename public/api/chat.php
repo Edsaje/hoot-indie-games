@@ -56,8 +56,10 @@ $validAvatars = [
 ];
 
 // Récupération IP client fiable (sans spoofing X-Forwarded-For)
-function getClientIp() {
-    return getAuthClientIp();
+if (!function_exists('getClientIp')) {
+    function getClientIp() {
+        return getAuthClientIp();
+    }
 }
 
 // Vérification du rate-limit (max 1 message toutes les 2.5 secondes, max 25 messages par 5 min)
@@ -435,6 +437,10 @@ function getChatData($dataFile) {
 }
 
 // Traitement des requêtes
+if (php_sapi_name() === 'cli' && (!isset($_SERVER['REQUEST_METHOD']) || empty($_SERVER['REQUEST_METHOD']))) {
+    return;
+}
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $inputJson = file_get_contents('php://input');
 $jsonBody = !empty($inputJson) ? (json_decode($inputJson, true) ?: []) : [];

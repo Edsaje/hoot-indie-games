@@ -59,8 +59,10 @@ $rateLimitFile = getUserSavesDir() . '/friends_ratelimit.json';
 $steamKeyFile = __DIR__ . '/.steam_key';
 
 // Helper: Récupération IP client fiable (sans spoofing X-Forwarded-For)
-function getClientIp() {
-    return getAuthClientIp();
+if (!function_exists('getClientIp')) {
+    function getClientIp() {
+        return getAuthClientIp();
+    }
 }
 
 // Rate limiting (max 60 requêtes par minute par IP)
