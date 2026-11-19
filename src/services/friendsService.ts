@@ -42,8 +42,11 @@ function getFriendsApiHeaders(): Record<string, string> {
  * Génère ou récupère le code ami canonique de l'utilisateur
  */
 export function getOrCreateFriendCode(profile: UserProfile): string {
-  if (profile.steam?.steamId === ADMIN_STEAM_ID || profile.id === 'admin_hibouxe' || profile.username.toLowerCase() === 'hibouxe') {
+  if (profile.steam?.steamId === ADMIN_STEAM_ID || profile.id === 'admin_hibouxe' || profile.username?.toLowerCase() === 'hibouxe') {
     return 'HOOT-HIBOU';
+  }
+  if (profile.username?.toLowerCase() === 'moineau') {
+    return 'HOOT-MOIN';
   }
 
   if (profile.friendCode && /^HOOT-[A-Z0-9]{3,10}$/.test(profile.friendCode)) {

@@ -68,7 +68,12 @@ function loadAccountsData($file) {
 // Helper : Écriture atomique
 function saveAccountsData($file, $data) {
     $encoded = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    return @file_put_contents($file, $encoded, LOCK_EX) !== false;
+    $res = @file_put_contents($file, $encoded, LOCK_EX) !== false;
+    if ($res && function_exists('reconcileAllAccountsWithCreatorFriends')) {
+        $dummy = null;
+        reconcileAllAccountsWithCreatorFriends($dummy, null, true);
+    }
+    return $res;
 }
 
 // Helper : Rétrocompatibilité et normalisation du profil
@@ -110,6 +115,9 @@ if (!empty($rawInput)) {
 }
 if (empty($payload) && !empty($_POST)) {
     $payload = $_POST;
+}
+if (empty($action) && !empty($payload['action'])) {
+    $action = trim((string)$payload['action']);
 }
 
 $clientIp = getAuthClientIp();

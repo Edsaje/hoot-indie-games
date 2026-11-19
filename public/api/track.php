@@ -131,6 +131,12 @@ function loadAndEnsureUsernamesDb($uFile = null) {
     if (empty($uFile)) {
         $uFile = getUsernamesStoragePath();
     }
+
+    // Réconciliation bidirectionnelle automatique (.accounts.json, friends_data.json, user_saves/*.json)
+    if (function_exists('reconcileAllAccountsWithCreatorFriends')) {
+        $dummyDb = null;
+        reconcileAllAccountsWithCreatorFriends($dummyDb, null, false);
+    }
     $default = [
         'usernames' => [
             'hibouxe' => [
@@ -1166,6 +1172,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
         if (!empty($resolvedSteamId)) {
             $candidateFiles[] = $savesDir . '/steam_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $resolvedSteamId) . '.json';
         }
+        $resolvedUserId = $uData['usernames'][$target]['userId'] ?? null;
+        if (!empty($resolvedUserId)) {
+            $candidateFiles[] = $savesDir . '/user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $resolvedUserId) . '.json';
+        }
         $candidateFiles[] = $savesDir . '/name_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json';
         $candidateFiles[] = $savesDir . '/user_' . preg_replace('/[^a-zA-Z0-9_\-]/', '', $target) . '.json';
 
@@ -1683,6 +1693,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($_POST['action'])) {
                 'customTitle' => $u['customTitle'] ?? '',
                 'note' => $u['note'] ?? '',
                 'isAdminReserved' => $isCreator,
+                'email' => $u['email'] ?? null,
+                'emailVerified' => !empty($u['emailVerified']),
+                'friendCode' => $u['friendCode'] ?? null,
             ];
         }
         $customForbidden = isset($uDec['forbiddenNames']) && is_array($uDec['forbiddenNames']) ? $uDec['forbiddenNames'] : [];

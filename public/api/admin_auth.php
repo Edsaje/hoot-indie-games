@@ -374,6 +374,9 @@ if (!function_exists('getAdminMasterKey')) {
 
 if (!function_exists('getUserSavesDir')) {
     function getUserSavesDir() {
+        if (!empty($GLOBALS['test_override_user_saves_dir'])) {
+            return $GLOBALS['test_override_user_saves_dir'];
+        }
         $dir = __DIR__ . '/user_saves';
         if (!is_dir($dir)) {
             @mkdir($dir, 0755, true);
@@ -767,10 +770,18 @@ if (!function_exists('ensureUserInFriendsDatabase')) {
 }
 
 if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
-    function reconcileAllAccountsWithCreatorFriends(&$db, $dataFile = null, $force = false) {
-        if (!is_array($db)) return false;
+    function reconcileAllAccountsWithCreatorFriends(&$db = null, $dataFile = null, $force = false) {
         if ($dataFile === null) {
             $dataFile = getFriendsDatabasePath();
+        }
+        if (!is_array($db)) {
+            if (file_exists($dataFile)) {
+                $raw = @file_get_contents($dataFile);
+                $db = $raw ? @json_decode($raw, true) : null;
+            }
+            if (!is_array($db)) {
+                $db = [];
+            }
         }
 
         if (!isset($db['players']) || !is_array($db['players'])) $db['players'] = [];
@@ -803,6 +814,9 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
 
             $findCode = function($userId, $steamId, $username) use (&$db) {
                 $norm = normalizeUsernameKey($username);
+                if ($norm === 'moineau') {
+                    return 'HOOT-MOIN';
+                }
                 if (!empty($norm) && isset($db['usernameToCode'][$norm])) {
                     return $db['usernameToCode'][$norm];
                 }
@@ -817,7 +831,7 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
                 return null;
             };
 
-            $addOrUpdate = function($userId, $steamId, $username, $avatarId = null, $title = null) use (&$db, &$dirty, $generateCode, $findCode) {
+            $addOrUpdate = function($userId, $steamId, $username, $avatarId = null, $title = null, $preferredCode = null) use (&$db, &$dirty, $generateCode, $findCode) {
                 $norm = normalizeUsernameKey($username);
                 if ($norm === 'hibouxe' || $norm === 'edsaje' || strval($steamId) === ADMIN_STEAM_ID || $userId === 'admin_hibouxe') {
                     return 'HOOT-HIBOU';
@@ -827,6 +841,9 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
                 }
 
                 $code = $findCode($userId, $steamId, $username);
+                if (!$code && !empty($preferredCode)) {
+                    $code = $preferredCode;
+                }
                 if (!$code) {
                     $code = $generateCode();
                     $cleanUsername = !empty($username) ? mb_substr(htmlspecialchars($username, ENT_QUOTES, 'UTF-8'), 0, 24) : 'Explorateur';
@@ -856,6 +873,34 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
                     ];
                     $dirty = true;
                 } else {
+                    if (!isset($db['players'][$code])) {
+                        $cleanUsername = !empty($username) ? mb_substr(htmlspecialchars($username, ENT_QUOTES, 'UTF-8'), 0, 24) : 'Explorateur';
+                        $db['players'][$code] = [
+                            'friendCode' => $code,
+                            'username' => $cleanUsername,
+                            'avatarId' => !empty($avatarId) ? preg_replace('/[^a-z0-9_]/', '', $avatarId) : 'owl',
+                            'title' => !empty($title) ? mb_substr(htmlspecialchars($title, ENT_QUOTES, 'UTF-8'), 0, 40) : 'Oisillon du Perchoir',
+                            'steamId' => !empty($steamId) ? strval($steamId) : null,
+                            'userId' => !empty($userId) ? strval($userId) : null,
+                            'elo' => 1000,
+                            'streak' => 0,
+                            'lastActive' => gmdate('Y-m-d\TH:i:s\Z'),
+                            'isOnline' => false,
+                            'dailyScores' => [
+                                'date' => gmdate('Y-m-d'),
+                                'totalWonToday' => 0,
+                                'screenle' => ['status' => 'unplayed'],
+                                'indledle' => ['status' => 'unplayed'],
+                                'linkle' => ['status' => 'unplayed'],
+                                'profille' => ['status' => 'unplayed'],
+                                'chrono' => ['status' => 'unplayed'],
+                                'pixel' => ['status' => 'unplayed'],
+                                'review' => ['status' => 'unplayed'],
+                                'blindtest' => ['status' => 'unplayed'],
+                            ]
+                        ];
+                        $dirty = true;
+                    }
                     if (!empty($userId) && empty($db['players'][$code]['userId'])) {
                         $db['players'][$code]['userId'] = $userId;
                         $dirty = true;
@@ -884,44 +929,75 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
 
             $savesDir = getUserSavesDir();
 
-            // 1. Réconciliation .accounts.json
+            // 0. Sceau Souverain : Seeding automatique de Moineau (amie et joueuse historique)
+            $moineauId = 'user_moineau_official';
+            $moineauEmail = 'moineau@quentinbeaud.com';
+            $moineauHash = '$2y$10$49a2eAjQTlf42lHMMW7Z1eNxGEDtPrdjoXdpc/0Er3eZy.HeO4QwK';
+
             $accountsFile = $savesDir . '/.accounts.json';
+            $acc = null;
             if (file_exists($accountsFile)) {
-                $raw = @file_get_contents($accountsFile);
-                if ($raw) {
-                    $acc = @json_decode($raw, true);
-                    if (is_array($acc) && !empty($acc['users']) && is_array($acc['users'])) {
-                        foreach ($acc['users'] as $uId => $u) {
-                            $uEmail = strtolower(strval($u['email'] ?? ''));
-                            $uSteam = strval($u['steamId'] ?? '');
-                            $uName = strval($u['username'] ?? '');
-                            if ($uEmail === 'quentin.beaud@hotmail.fr' || $uSteam === ADMIN_STEAM_ID || $uId === 'admin_hibouxe') {
-                                continue;
-                            }
-                            $addOrUpdate($uId, $uSteam, $uName, $u['avatarId'] ?? null, $u['title'] ?? null);
-                        }
+                $rawAcc = @file_get_contents($accountsFile);
+                if ($rawAcc) $acc = @json_decode($rawAcc, true);
+            }
+            if (!is_array($acc)) {
+                $acc = ['users' => [], 'emailIndex' => [], 'steamIndex' => []];
+            }
+            if (!isset($acc['users'][$moineauId]) && !isset($acc['emailIndex'][$moineauEmail])) {
+                $acc['users'][$moineauId] = [
+                    'id' => $moineauId,
+                    'email' => $moineauEmail,
+                    'username' => 'Moineau',
+                    'passwordHash' => $moineauHash,
+                    'steamId' => null,
+                    'emailVerified' => true,
+                    'verificationTokenHash' => null,
+                    'verificationOtpHash' => null,
+                    'verificationTokenExpiresAt' => null,
+                    'lastVerificationEmailSentAt' => null,
+                    'createdAt' => '2026-01-01T00:00:00Z',
+                    'lastLoginAt' => date('c'),
+                    'friendCode' => 'HOOT-MOIN'
+                ];
+                $acc['emailIndex'][$moineauEmail] = $moineauId;
+                @file_put_contents($accountsFile, json_encode($acc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            }
+
+            // Enregistrement explicite de Moineau dans l'annuaire d'amis
+            $addOrUpdate($moineauId, null, 'Moineau', 'owl', 'Amie du Perchoir', 'HOOT-MOIN');
+
+            // 1. Réconciliation .accounts.json
+            if (!empty($acc['users']) && is_array($acc['users'])) {
+                foreach ($acc['users'] as $uId => $u) {
+                    $uEmail = strtolower(strval($u['email'] ?? ''));
+                    $uSteam = strval($u['steamId'] ?? '');
+                    $uName = strval($u['username'] ?? '');
+                    if ($uEmail === 'quentin.beaud@hotmail.fr' || $uSteam === ADMIN_STEAM_ID || $uId === 'admin_hibouxe') {
+                        continue;
                     }
+                    $prefCode = !empty($u['friendCode']) ? strval($u['friendCode']) : null;
+                    $addOrUpdate($uId, $uSteam, $uName, $u['avatarId'] ?? null, $u['title'] ?? null, $prefCode);
                 }
             }
 
             // 2. Réconciliation registered_usernames.json
             $uFile = getUsernamesStoragePath();
+            $uData = null;
             if (file_exists($uFile)) {
-                $raw = @file_get_contents($uFile);
-                if ($raw) {
-                    $uData = @json_decode($raw, true);
-                    if (is_array($uData) && !empty($uData['usernames']) && is_array($uData['usernames'])) {
-                        foreach ($uData['usernames'] as $uname => $info) {
-                            $normName = normalizeUsernameKey($uname);
-                            if ($normName === 'hibouxe' || $normName === 'edsaje') continue;
-                            $st = !empty($info['steamId']) ? strval($info['steamId']) : null;
-                            if ($st === ADMIN_STEAM_ID) continue;
-                            $uid = !empty($info['userId']) ? strval($info['userId']) : null;
-                            if ($uid === 'admin_hibouxe') continue;
-                            $dName = $info['displayName'] ?? $uname;
-                            $addOrUpdate($uid, $st, $dName);
-                        }
-                    }
+                $rawU = @file_get_contents($uFile);
+                if ($rawU) $uData = @json_decode($rawU, true);
+            }
+            if (is_array($uData) && !empty($uData['usernames']) && is_array($uData['usernames'])) {
+                foreach ($uData['usernames'] as $uname => $info) {
+                    $normName = normalizeUsernameKey($uname);
+                    if ($normName === 'hibouxe' || $normName === 'edsaje') continue;
+                    $st = !empty($info['steamId']) ? strval($info['steamId']) : null;
+                    if ($st === ADMIN_STEAM_ID) continue;
+                    $uid = !empty($info['userId']) ? strval($info['userId']) : null;
+                    if ($uid === 'admin_hibouxe') continue;
+                    $dName = $info['displayName'] ?? $uname;
+                    $prefCode = !empty($info['friendCode']) ? strval($info['friendCode']) : null;
+                    $addOrUpdate($uid, $st, $dName, null, null, $prefCode);
                 }
             }
 
@@ -940,32 +1016,171 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
                                     $uid = !empty($sData['userId']) ? strval($sData['userId']) : (strpos($f, 'user_') === 0 ? substr($f, 5, -5) : null);
                                     $st = !empty($sData['steamId']) ? strval($sData['steamId']) : (strpos($f, 'steam_') === 0 ? substr($f, 6, -5) : null);
                                     if ($st === ADMIN_STEAM_ID || $uid === 'admin_hibouxe' || normalizeUsernameKey($sData['username']) === 'hibouxe') continue;
-                                    $addOrUpdate($uid, $st, $sData['username'], $sData['avatarId'] ?? null, $sData['title'] ?? null);
+                                    $prefCode = !empty($sData['friendCode']) ? strval($sData['friendCode']) : null;
+                                    $addOrUpdate($uid, $st, $sData['username'], $sData['avatarId'] ?? null, $sData['title'] ?? null, $prefCode);
                                 }
                             }
                         }
                     }
                 }
             }
-        }
 
-        // 4. GARANTIE D'AMITIÉ MUTUELLE AVEC HOOT-HIBOU POUR TOUS LES COMPTES
-        foreach ($db['players'] as $code => $p) {
-            if ($code === 'HOOT-HIBOU') continue;
+            // 4. GARANTIE D'AMITIÉ MUTUELLE AVEC HOOT-HIBOU POUR TOUS LES COMPTES
+            foreach ($db['players'] as $code => $p) {
+                if ($code === 'HOOT-HIBOU') continue;
 
-            // Ajouter le joueur dans la liste d'amis de Hibouxe
-            if (!in_array($code, $db['friendships']['HOOT-HIBOU'], true)) {
-                $db['friendships']['HOOT-HIBOU'][] = $code;
-                $dirty = true;
+                // Ajouter le joueur dans la liste d'amis de Hibouxe
+                if (!in_array($code, $db['friendships']['HOOT-HIBOU'], true)) {
+                    $db['friendships']['HOOT-HIBOU'][] = $code;
+                    $dirty = true;
+                }
+
+                // Ajouter Hibouxe dans la liste d'amis du joueur
+                if (!isset($db['friendships'][$code])) {
+                    $db['friendships'][$code] = [];
+                }
+                if (!in_array('HOOT-HIBOU', $db['friendships'][$code], true)) {
+                    $db['friendships'][$code][] = 'HOOT-HIBOU';
+                    $dirty = true;
+                }
             }
 
-            // Ajouter Hibouxe dans la liste d'amis du joueur
-            if (!isset($db['friendships'][$code])) {
-                $db['friendships'][$code] = [];
+            // 5. SYNCHRONISATION BIDIRECTIONNELLE VERS registered_usernames.json
+            if (!is_array($uData) || !isset($uData['usernames']) || !is_array($uData['usernames'])) {
+                $uData = [
+                    'usernames' => [
+                        'hibouxe' => [
+                            'displayName' => 'Hibouxe',
+                            'steamId' => ADMIN_STEAM_ID,
+                            'userId' => 'admin_hibouxe',
+                            'claimedAt' => '2026-01-01T00:00:00Z',
+                            'role' => 'admin',
+                            'status' => 'active',
+                            'customTitle' => '👑 Créateur du Site',
+                            'isAdminReserved' => true,
+                            'isAdmin' => true,
+                            'friendCode' => 'HOOT-HIBOU'
+                        ]
+                    ],
+                    'userToName' => [
+                        ADMIN_STEAM_ID => 'hibouxe',
+                        'steam_' . ADMIN_STEAM_ID => 'hibouxe'
+                    ],
+                    'forbiddenNames' => ['hibouxe', 'edsaje', 'admin'],
+                    'bannedUsers' => []
+                ];
             }
-            if (!in_array('HOOT-HIBOU', $db['friendships'][$code], true)) {
-                $db['friendships'][$code][] = 'HOOT-HIBOU';
-                $dirty = true;
+            $uDirty = false;
+
+            // A. Indexer tous les comptes .accounts.json dans registered_usernames.json
+            if (!empty($acc['users']) && is_array($acc['users'])) {
+                foreach ($acc['users'] as $uId => $u) {
+                    $uName = trim(strval($u['username'] ?? ''));
+                    if (empty($uName)) continue;
+                    $norm = normalizeUsernameKey($uName);
+                    if ($norm === 'edsaje') continue;
+                    $isHibouxe = ($norm === 'hibouxe' || ($u['steamId'] ?? '') === ADMIN_STEAM_ID || $uId === 'admin_hibouxe');
+
+                    if (!isset($uData['usernames'][$norm])) {
+                        $uData['usernames'][$norm] = [
+                            'displayName' => $uName,
+                            'steamId' => !empty($u['steamId']) ? strval($u['steamId']) : null,
+                            'userId' => strval($uId),
+                            'claimedAt' => $u['createdAt'] ?? date('c'),
+                            'lastSeenAt' => $u['lastLoginAt'] ?? date('c'),
+                            'role' => $isHibouxe ? 'admin' : 'user',
+                            'status' => 'active',
+                            'customTitle' => ($norm === 'moineau') ? 'Amie du Perchoir' : '',
+                            'note' => ($norm === 'moineau') ? 'Compte officiel Moineau' : '',
+                            'email' => $u['email'] ?? null,
+                            'emailVerified' => (bool)($u['emailVerified'] ?? false),
+                            'friendCode' => $u['friendCode'] ?? ($norm === 'moineau' ? 'HOOT-MOIN' : null),
+                            'isAdminReserved' => $isHibouxe,
+                        ];
+                        $uDirty = true;
+                    } else {
+                        $entry = &$uData['usernames'][$norm];
+                        if (empty($entry['email']) && !empty($u['email'])) {
+                            $entry['email'] = $u['email'];
+                            $uDirty = true;
+                        }
+                        if (!isset($entry['emailVerified']) && isset($u['emailVerified'])) {
+                            $entry['emailVerified'] = (bool)$u['emailVerified'];
+                            $uDirty = true;
+                        }
+                        if (empty($entry['friendCode']) && !empty($u['friendCode'])) {
+                            $entry['friendCode'] = $u['friendCode'];
+                            $uDirty = true;
+                        }
+                        if (empty($entry['userId']) && !empty($uId)) {
+                            $entry['userId'] = strval($uId);
+                            $uDirty = true;
+                        }
+                        if (empty($entry['steamId']) && !empty($u['steamId'])) {
+                            $entry['steamId'] = strval($u['steamId']);
+                            $uDirty = true;
+                        }
+                    }
+
+                    if (!empty($uId)) {
+                        $uData['userToName'][$uId] = $norm;
+                    }
+                    if (!empty($u['steamId'])) {
+                        $uData['userToName'][strval($u['steamId'])] = $norm;
+                        $uData['userToName']['steam_' . strval($u['steamId'])] = $norm;
+                    }
+                }
+            }
+
+            // B. Indexer tous les joueurs friends_data.json dans registered_usernames.json
+            foreach ($db['players'] as $pCode => $p) {
+                $pName = trim(strval($p['username'] ?? ''));
+                if (empty($pName)) continue;
+                $norm = normalizeUsernameKey($pName);
+                if ($norm === 'edsaje') continue;
+                $isHibouxe = ($norm === 'hibouxe' || ($p['steamId'] ?? '') === ADMIN_STEAM_ID || ($p['userId'] ?? '') === 'admin_hibouxe');
+
+                if (!isset($uData['usernames'][$norm])) {
+                    $uData['usernames'][$norm] = [
+                        'displayName' => $pName,
+                        'steamId' => !empty($p['steamId']) ? strval($p['steamId']) : null,
+                        'userId' => !empty($p['userId']) ? strval($p['userId']) : null,
+                        'claimedAt' => date('c'),
+                        'lastSeenAt' => $p['lastActive'] ?? date('c'),
+                        'role' => $isHibouxe ? 'admin' : 'user',
+                        'status' => 'active',
+                        'customTitle' => $p['title'] ?? '',
+                        'friendCode' => $pCode,
+                        'isAdminReserved' => $isHibouxe,
+                    ];
+                    $uDirty = true;
+                } else {
+                    $entry = &$uData['usernames'][$norm];
+                    if (empty($entry['friendCode']) && !empty($pCode)) {
+                        $entry['friendCode'] = $pCode;
+                        $uDirty = true;
+                    }
+                    if (empty($entry['userId']) && !empty($p['userId'])) {
+                        $entry['userId'] = strval($p['userId']);
+                        $uDirty = true;
+                    }
+                    if (empty($entry['steamId']) && !empty($p['steamId'])) {
+                        $entry['steamId'] = strval($p['steamId']);
+                        $uDirty = true;
+                    }
+                }
+
+                if (!empty($p['userId'])) {
+                    $uData['userToName'][$p['userId']] = $norm;
+                }
+                if (!empty($p['steamId'])) {
+                    $uData['userToName'][strval($p['steamId'])] = $norm;
+                    $uData['userToName']['steam_' . strval($p['steamId'])] = $norm;
+                }
+            }
+
+            if ($uDirty || !file_exists($uFile)) {
+                @file_put_contents($uFile, json_encode($uData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
             }
         }
 
@@ -973,6 +1188,12 @@ if (!function_exists('reconcileAllAccountsWithCreatorFriends')) {
             @file_put_contents($dataFile, json_encode($db, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
         }
         return $dirty;
+    }
+}
+
+if (!function_exists('reconcileAllUserRegistrations')) {
+    function reconcileAllUserRegistrations(&$db = null, $force = false) {
+        return reconcileAllAccountsWithCreatorFriends($db, null, $force);
     }
 }
 

@@ -103,6 +103,10 @@ function isNameForbidden($normalized, $steamId, $customForbidden = []) {
 
 // Chargement de la base des pseudos enregistrés
 function loadUsernamesData($file) {
+    if (function_exists('reconcileAllAccountsWithCreatorFriends')) {
+        $dummy = null;
+        reconcileAllAccountsWithCreatorFriends($dummy, null, false);
+    }
     $default = [
         'usernames' => [
             'hibouxe' => [

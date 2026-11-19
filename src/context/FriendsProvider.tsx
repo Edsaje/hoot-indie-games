@@ -12,6 +12,9 @@ function getOrCreateFriendCode(profile: any): string {
   if (profile.steam?.steamId === ADMIN_STEAM_ID || profile.id === 'admin_hibouxe' || profile.username?.toLowerCase() === 'hibouxe') {
     return 'HOOT-HIBOU';
   }
+  if (profile.username?.toLowerCase() === 'moineau') {
+    return 'HOOT-MOIN';
+  }
   if (profile.friendCode && /^HOOT-[A-Z0-9]{3,10}$/.test(profile.friendCode)) {
     return profile.friendCode;
   }
@@ -104,16 +107,22 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   profileRef.current = profile;
 
   const myFriendCode = useMemo(() => {
-    if (!isAuthenticated) return '';
-    return getOrCreateFriendCode(profile);
-  }, [isAuthenticated, profile.steam?.steamId, profile.id, profile.username, profile.friendCode]);
+    if (profile.friendCode && /^HOOT-[A-Z0-9]{3,10}$/.test(profile.friendCode)) {
+      return profile.friendCode;
+    }
+    const isCustomUser = !!profile.username && profile.username !== 'Hibou Mystère';
+    if (isAuthenticated || isSteamConnected || isCustomUser) {
+      return getOrCreateFriendCode(profile);
+    }
+    return '';
+  }, [isAuthenticated, isSteamConnected, profile.steam?.steamId, profile.id, profile.username, profile.friendCode]);
 
-  // Si le profil n'avait pas encore le friendCode stocké, on le persiste uniquement pour un utilisateur connecté
+  // Si le profil n'avait pas encore le friendCode stocké, on le persiste dès qu'il est résolu
   useEffect(() => {
-    if (isAuthenticated && myFriendCode && profile.friendCode !== myFriendCode) {
+    if (myFriendCode && profile.friendCode !== myFriendCode) {
       updateProfile({ friendCode: myFriendCode });
     }
-  }, [isAuthenticated, profile.friendCode, myFriendCode, updateProfile]);
+  }, [profile.friendCode, myFriendCode, updateProfile]);
 
   // Vérifie si un joueur ou un code correspond à l'utilisateur lui-même
   const isSelf = useCallback(
@@ -193,15 +202,15 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [friendCodes, isSelf]);
 
-  // Synchronisation de soi-même sur le serveur souverain (uniquement si connecté avec code ami)
+  // Synchronisation de soi-même sur le serveur souverain
   const syncSelf = useCallback(async () => {
-    if (!isAuthenticated || !myFriendCode) return;
+    if (!myFriendCode) return;
     try {
       await registerSelfOnServer(profileRef.current, myFriendCode);
     } catch {
       // Ignorer
     }
-  }, [isAuthenticated, myFriendCode]);
+  }, [myFriendCode]);
 
   // Récupération des demandes d'amitié reçues et envoyées
   const refreshRequests = useCallback(async () => {
@@ -260,7 +269,8 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const hasInitiallyLoadedRef = useRef(false);
   useEffect(() => {
     if (!hasInitiallyLoadedRef.current) {
-      if (!isAuthenticated || !profile.username || profile.username === 'Hibou Mystère') {
+      const isCustomUser = !!profile.username && profile.username !== 'Hibou Mystère';
+      if (!isAuthenticated && !isSteamConnected && !isCustomUser) {
         return;
       }
       hasInitiallyLoadedRef.current = true;
@@ -269,18 +279,18 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (win && typeof win.requestIdleCallback === 'function') {
         timer = win.requestIdleCallback(refreshFriends, { timeout: 9000 });
       } else {
-        timer = setTimeout(refreshFriends, 9000);
+        timer = setTimeout(refreshFriends, 1000);
       }
 
       return () => {
         if (win && typeof win.cancelIdleCallback === 'function' && timer) {
           win.cancelIdleCallback(timer);
-        } else {
+        } else if (timer) {
           clearTimeout(timer);
         }
       };
     }
-  }, [refreshFriends, isAuthenticated, profile.username]);
+  }, [refreshFriends, isAuthenticated, isSteamConnected, profile.username]);
 
   // Synchronisation périodique discrète toutes les 2 minutes (amis + invitations)
   useEffect(() => {

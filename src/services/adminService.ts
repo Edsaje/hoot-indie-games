@@ -67,6 +67,8 @@ export interface AdminUsernameEntry {
   customTitle?: string;
   note?: string;
   isAdminReserved?: boolean;
+  email?: string | null;
+  friendCode?: string | null;
 }
 
 export interface AdminCommunitySuggestion {

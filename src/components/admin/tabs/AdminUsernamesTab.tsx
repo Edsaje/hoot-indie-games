@@ -116,6 +116,8 @@ export const AdminUsernamesTab: React.FC<AdminUsernamesTabProps> = ({
         u.displayName.toLowerCase().includes(q) ||
         u.normalized.toLowerCase().includes(q) ||
         (u.steamId && u.steamId.includes(q)) ||
+        (u.friendCode && u.friendCode.toLowerCase().includes(q)) ||
+        (u.email && u.email.toLowerCase().includes(q)) ||
         (u.customTitle && u.customTitle.toLowerCase().includes(q)) ||
         (u.note && u.note.toLowerCase().includes(q))
       );
@@ -550,8 +552,14 @@ export const AdminUsernamesTab: React.FC<AdminUsernamesTabProps> = ({
                                 </span>
                               )}
                             </div>
-                            <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+                            <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1.5 flex-wrap">
                               <span>@{u.normalized}</span>
+                              {u.friendCode && (
+                                <span className="text-cyan-400/90 font-bold">• {u.friendCode}</span>
+                              )}
+                              {u.email && (
+                                <span className="text-slate-400 truncate max-w-[160px]" title={u.email}>• {u.email}</span>
+                              )}
                               {u.isAdminReserved && !isCreator && (
                                 <span className="text-amber-400/80">• Réservé admin</span>
                               )}
