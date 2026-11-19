@@ -3,7 +3,7 @@ import type { MicroIndieGame } from '../types/microIndie';
 /**
  * 🦉 Hoot Indie Games — La Clairière des Micro-Indés & Pépites Itch.io
  * Espace d'exposition dédié aux créateurs solo, aux jeux de game jams et aux pépites émergentes.
- * Total de pépites sélectionnées : 142
+ * Total de pépites sélectionnées : 144
  */
 
 export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
@@ -5902,5 +5902,86 @@ export const INITIAL_MICRO_INDIES: MicroIndieGame[] = [
       "https://img.itch.zone/aW1nLzI2NTY3ODc3LnBuZw==/315x250%23c/3quE4A.png"
     ],
     "dateAdded": "2026-11-18"
+  },
+  {
+    "id": "itch-cult-of-pin",
+    "title": "Cult of PiN",
+    "developer": "kennymakesgames",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://kennymakesgames.itch.io/pin",
+    "playInBrowserUrl": "https://kennymakesgames.itch.io/pin",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$14.99",
+      "en": "$14.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "A Roguelike-Pinball Deckbuilder",
+      "en": "A Roguelike-Pinball Deckbuilder"
+    },
+    "description": {
+      "fr": "A Roguelike-Pinball Deckbuilder",
+      "en": "A Roguelike-Pinball Deckbuilder"
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzIyNzIxMTY3LmpwZw==/315x250%23c/J4Y1ga.jpg",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzIyNzIxMTY3LmpwZw==/315x250%23c/J4Y1ga.jpg"
+    ],
+    "dateAdded": "2026-11-19"
+  },
+  {
+    "id": "itch-rolla",
+    "title": "ROLLA",
+    "developer": "pantaloon-io",
+    "releaseYear": 2026,
+    "platform": "itch",
+    "itchUrl": "https://pantaloon-io.itch.io/rolla",
+    "isFree": false,
+    "pricingText": {
+      "fr": "$7.99",
+      "en": "$7.99"
+    },
+    "genre": [
+      "Aventure"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "tagline": {
+      "fr": "ROLL. EAT. GROW. REPEAT.",
+      "en": "ROLL. EAT. GROW. REPEAT."
+    },
+    "description": {
+      "fr": "ROLL. EAT. GROW. REPEAT.",
+      "en": "ROLL. EAT. GROW. REPEAT."
+    },
+    "discoveredBy": "Hibouxe",
+    "likesCount": 1,
+    "featured": false,
+    "coverImage": "https://img.itch.zone/aW1nLzI3OTI0NjAyLnBuZw==/315x250%23c/ZBNpZE.png",
+    "screenshots": [
+      "https://img.itch.zone/aW1nLzI3OTI0NjAyLnBuZw==/315x250%23c/ZBNpZE.png"
+    ],
+    "dateAdded": "2026-11-19"
   }
 ];
