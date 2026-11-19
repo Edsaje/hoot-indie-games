@@ -578,11 +578,11 @@ export async function generateSeoIndexHtml(): Promise<string> {
   }
 
   let faqHtml = '';
-  for (const f of faqs) {
+  for (const f of faqs.slice(0, 3)) {
     faqHtml += `
-      <article style="margin-bottom: 1.5rem; background: #131a29; padding: 1.25rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
-        <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.1rem;">${escapeHtml(f.q)}</h3>
-        <p style="color: #cbd5e1; margin-bottom: 0; line-height: 1.6;">${escapeHtml(f.a)}</p>
+      <article style="margin-bottom: 1.25rem;">
+        <h3 style="color: #f8fafc; margin: 0 0 0.3rem 0; font-size: 1.05rem;">${escapeHtml(f.q)}</h3>
+        <p style="color: #cbd5e1; margin: 0; line-height: 1.5; font-size: 0.95rem;">${escapeHtml(f.a)}</p>
       </article>
     `;
   }
@@ -591,17 +591,17 @@ export async function generateSeoIndexHtml(): Promise<string> {
     <!-- Pre-rendered Semantic SEO Content for Search Engine Crawlers (Googlebot, Bingbot) -->
     <!-- When React mounts, this content is dynamically replaced by the interactive SPA -->
     <div id="seo-crawler-container" style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif;">
-      <header style="text-align: center; margin-bottom: 3rem; border-bottom: 1px solid #1e293b; padding-bottom: 2rem;">
-        <h1 style="color: #f59e0b; font-size: 2.2rem; margin-bottom: 0.5rem; letter-spacing: 1px;">
+      <header style="text-align: center; margin-bottom: 2.5rem; border-bottom: 1px solid #1e293b; padding-bottom: 1.5rem;">
+        <h1 style="color: #f59e0b; font-size: 2rem; margin-bottom: 0.5rem; letter-spacing: 1px;">
           🦉 Hoot Indie Games — Le Sanctuaire des Jeux Vidéo Indépendants
         </h1>
-        <p style="font-size: 1.2rem; color: #94a3b8; max-width: 860px; margin: 0 auto 1.5rem auto; line-height: 1.6;">
+        <p style="font-size: 1.1rem; color: #94a3b8; max-width: 860px; margin: 0 auto 1.25rem auto; line-height: 1.5;">
           Le sanctuaire du <strong>jeu vidéo indépendant</strong> : catalogue certifié de ${totalCount} pépites Steam, 
           <strong>classeur de cartes à collectionner &amp; boosters sylvestres</strong>, 
           <strong>17+ mini-jeux &amp; défis</strong> (8 défis quotidiens de déduction, 8 bornes d'arcade rétro 1982, grand quiz trivia), 
           sprints <strong>Time Attack</strong> et arène de <strong>duels 1v1</strong> en direct.
         </p>
-        <nav aria-label="Navigation Principale" style="display: flex; justify-content: center; gap: 1rem 1.5rem; flex-wrap: wrap; font-weight: 600;">
+        <nav aria-label="Navigation Principale" style="display: flex; justify-content: center; gap: 0.75rem 1.25rem; flex-wrap: wrap; font-weight: 600; font-size: 0.9rem;">
           <a href="/gems" style="color: #fbbf24; text-decoration: none;">💎 Pépites Certifiées</a>
           <a href="/cards" style="color: #fbbf24; text-decoration: none;">🃏 Cartes &amp; Boosters</a>
           <a href="/minigames" style="color: #fbbf24; text-decoration: none;">🎮 Hub des Mini-Jeux</a>
@@ -625,251 +625,70 @@ export async function generateSeoIndexHtml(): Promise<string> {
 
       <div role="main" class="seo-crawler-content">
         <!-- Section 1 : Introduction aux Jeux Indépendants -->
-        <section style="margin-bottom: 3rem;">
-          <h2 style="color: #38bdf8; font-size: 1.8rem; margin-bottom: 1rem;">
+        <section style="margin-bottom: 2rem;">
+          <h2 style="color: #38bdf8; font-size: 1.5rem; margin-bottom: 0.5rem;">
             🎮 Pourquoi les Jeux Vidéo Indépendants Réinventent le Jeu Vidéo
           </h2>
-          <p style="line-height: 1.7; color: #cbd5e1; font-size: 1.05rem;">
-            Le <strong>jeu vidéo indépendant</strong> (ou <em>indie game</em>) incarne aujourd'hui le laboratoire de créativité le plus vibrant de l'industrie vidéoludique mondiale. 
-            Loin des contraintes de rentabilité des superproductions AAA, les studios indépendants osent des mécaniques de jeu révolutionnaires, des narrations intimistes et bouleversantes, et des esthétiques artistiques artisanales inoubliables : du <strong>Pixel Art</strong> minutieux de <em>Celeste</em> et <em>Dead Cells</em> à la 3D contemplative d'<em>Outer Wilds</em>, en passant par le dessin à la main de <em>Hollow Knight</em> ou l'ingéniosité mathématique de <em>Balatro</em>.
-          </p>
-          <p style="line-height: 1.7; color: #cbd5e1; font-size: 1.05rem;">
-            Chez <strong>Hoot Indie Games</strong>, nous appliquons une <strong>charte de sélection officielle et rigoureuse</strong> : chaque jeu figurant dans notre sanctuaire est audité manuellement, certifié avec ses métadonnées Steam authentiques, ses captures d'écran en haute résolution et ses avis de joueurs vérifiés.
+          <p style="line-height: 1.6; color: #cbd5e1; font-size: 0.95rem;">
+            Le <strong>jeu vidéo indépendant</strong> incarne le laboratoire de créativité le plus vibrant de l'industrie : des chefs-d'œuvre comme <em>Hollow Knight</em>, <em>Outer Wilds</em>, <em>Celeste</em>, <em>Hades</em> ou <em>Balatro</em> osent des mécaniques novatrices et des directions artistiques artisanales. Chez <strong>Hoot Indie Games</strong>, chaque jeu certifié est audité manuellement avec ses métadonnées Steam authentiques.
           </p>
         </section>
 
-        <!-- Section 1 bis : Le Classeur Sylvestre & Cartes à Collectionner -->
-        <section id="cards" style="margin-bottom: 3.5rem; background: #06241b; border: 1px solid #059669; border-radius: 12px; padding: 2rem;">
-          <h2 style="color: #34d399; font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;">
-            🃏 La Collection Sylvestre : Cartes &amp; Boosters de Pépites
+        <!-- Section 2 : Les Mini-Jeux et Défis Quotidiens -->
+        <section id="minigames" style="margin-bottom: 2rem;">
+          <h2 style="color: #f59e0b; font-size: 1.5rem; margin-bottom: 0.5rem;">
+            🏆 8 Disciplines Quotidiennes, Arcade &amp; Duels Versus
           </h2>
-          <p style="color: #cbd5e1; margin-bottom: 1.5rem; font-size: 1.05rem; line-height: 1.6;">
-            Chaque chef-d'œuvre certifié du sanctuaire prend vie sous forme d'une <strong>carte à collectionner officielle</strong> aux illustrations soignées et effets holographiques 3D.
-            Complétez votre panthéon de jeux indés et feuilletez votre classeur interactif.
+          <p style="line-height: 1.6; color: #cbd5e1; font-size: 0.95rem; margin-bottom: 0.5rem;">
+            Chaque jour à minuit, testez votre culture indie à travers 8 défis de déduction : 
+            <strong>Screenle</strong> (capture zoomée), <strong>Indledle</strong> (Wordle du jeu indé), 
+            <strong>Linkle</strong> (16 connexions secrètes), <strong>Profille</strong> (indices d'identité), 
+            <strong>Chrono</strong> (frise chronologique), <strong>Pixel &amp; Silhouette</strong> (mosaïque dé-pixellisée), 
+            <strong>Critique Steam</strong> (avis caviardé) et <strong>Blind Test OST</strong> (extraits musicaux interactifs).
           </p>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
-            <article style="background: #093a2b; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #10b981;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">🎴 ${totalCount} Cartes &amp; 4 Raretés</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Explorez un classeur virtuel complet de <strong>${totalCount} cartes uniques</strong> réparties en 4 niveaux de rareté : 
-                <em>Commune</em> (~65%), <em>Rare</em> (~24%), <em>Épique</em> (~9%) et <em>Légendaire</em> (~2%), avec des finitions holographiques brillantes et des reflets dynamiques.
-              </p>
-              <a href="#cards" style="color: #34d399; font-size: 0.85rem; font-weight: 600;">Ouvrir le Classeur Sylvestre →</a>
-            </article>
-            <article style="background: #093a2b; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #f59e0b;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">📦 Boosters Quotidiens &amp; Plumes</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Ouvrez un <strong>booster de 5 cartes</strong> chaque jour et gagnez des <strong>Plumes Sylvestres</strong> en relevant vos défis quotidiens, en battant des records d'arcade ou en complétant vos séries de victoires.
-              </p>
-              <a href="#cards" style="color: #fbbf24; font-size: 0.85rem; font-weight: 600;">Ouvrir mes Boosters →</a>
-            </article>
-            <article style="background: #093a2b; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #38bdf8;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">✨ Reflets Holographiques 3D</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Inspectez chaque carte en 3D avec un shader holographique interactif réagissant au mouvement de votre souris ou à l'inclinaison de votre smartphone pour révéler les auras secrètes des jeux mythiques.
-              </p>
-              <a href="#cards" style="color: #38bdf8; font-size: 0.85rem; font-weight: 600;">Voir les Effets Holo →</a>
-            </article>
-          </div>
+          <p style="line-height: 1.6; color: #cbd5e1; font-size: 0.95rem;">
+            Profitez également des sprints <strong>Time Attack</strong> solo, de l'<strong>Arène Versus 1v1</strong> P2P WebRTC sans serveur tiers, du <strong>Grand Quiz Trivia</strong> (180 questions) et de 8 bornes d'<strong>arcade rétro</strong> (Snake, Pong, Breakout, Flappy, Moon Runner, Space Invaders, Tetris, Mine Storm Vectrex 1982).
+          </p>
         </section>
 
-        <!-- Section 2 : Les 8 Disciplines de Déduction Quotidiennes -->
-        <section id="minigames" style="margin-bottom: 3.5rem; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 2rem;">
-          <h2 style="color: #f59e0b; font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;">
-            🏆 Les 8 Disciplines de Déduction Quotidiennes Gratuites
+        <!-- Section 3 : La Collection Sylvestre & Cartes -->
+        <section id="cards" style="margin-bottom: 2rem;">
+          <h2 style="color: #34d399; font-size: 1.5rem; margin-bottom: 0.5rem;">
+            🃏 La Collection Sylvestre : Cartes &amp; Boosters
           </h2>
-          <p style="color: #94a3b8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-            Chaque jour à minuit, testez votre culture des chefs-d'œuvre indépendants à travers 8 formats de réflexion uniques et complémentaires :
+          <p style="line-height: 1.6; color: #cbd5e1; font-size: 0.95rem;">
+            Collectionnez ${totalCount} cartes virtuelles officielles déclinées en 4 raretés (Commune, Rare, Épique, Légendaire) avec finitions holographiques 3D dynamiques. Ouvrez un booster de 5 cartes chaque jour et utilisez vos Plumes Sylvestres remportées lors des défis pour compléter votre classeur.
           </p>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem;">
-            <!-- 1. Screenle -->
-            <article id="screenle" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #06b6d4;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">📸 1. Screenle : Capture du Jour</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Identifiez le chef-d'œuvre indépendant secret à partir d'une capture d'écran ultra-zoomée. 
-                À chaque essai manqué, le champ visuel s'élargit progressivement pour révéler des détails cruciaux.
-              </p>
-              <a href="#screenle" style="color: #38bdf8; font-size: 0.85rem; font-weight: 600;">Lancer le défi Screenle →</a>
-            </article>
-
-            <!-- 2. Indledle -->
-            <article id="indledle" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #f59e0b;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">🔍 2. Indledle : Le Wordle du Jeu Indé</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Déduisez le titre secret en analysant l'année de sortie (plus récent / plus ancien), les genres correspondants, le studio créateur, le style artistique et la caméra.
-              </p>
-              <a href="#indledle" style="color: #fbbf24; font-size: 0.85rem; font-weight: 600;">Lancer le défi Indledle →</a>
-            </article>
-
-            <!-- 3. Linkle -->
-            <article id="linkle" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #a855f7;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">🧩 3. Linkle : 16 Connexions Secrètes</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Une grille de 16 jeux vidéo indépendants reliés par 4 thématiques secrètes (mécaniques communes, compositeurs partagés, univers visuels, années marquantes).
-              </p>
-              <a href="#linkle" style="color: #c084fc; font-size: 0.85rem; font-weight: 600;">Lancer le défi Linkle →</a>
-            </article>
-
-            <!-- 4. Profille -->
-            <article id="profille" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #10b981;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">📋 4. Profille : La Fiche d'Identité</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Découvrez le jeu du jour en débloquant pas à pas ses indices d'identité : année de publication, studio de développement, tags Steam et phrase d'accroche narrative.
-              </p>
-              <a href="#profille" style="color: #34d399; font-size: 0.85rem; font-weight: 600;">Lancer le défi Profille →</a>
-            </article>
-
-            <!-- 5. Chrono -->
-            <article id="chrono" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #14b8a6;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">⏳ 5. Chrono : La Frise Historique</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Replacez 5 jeux vidéo indépendants majeurs sur une frise temporelle dans leur ordre exact de sortie pour mesurer votre maîtrise de l'histoire du jeu indé.
-              </p>
-              <a href="#chrono" style="color: #2dd4bf; font-size: 0.85rem; font-weight: 600;">Lancer le défi Chrono →</a>
-            </article>
-
-            <!-- 6. Pixel & Silhouette -->
-            <article id="pixel" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #6366f1;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">🎨 6. Pixel &amp; Silhouette : Mosaïque</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Reconnaissez une scène emblématique à travers une mosaïque dé-pixellisée progressive combinée à la silhouette d'ombre chinoise de son protagoniste.
-              </p>
-              <a href="#pixel" style="color: #818cf8; font-size: 0.85rem; font-weight: 600;">Lancer le défi Pixel →</a>
-            </article>
-
-            <!-- 7. Critique Steam -->
-            <article id="review" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #f43f5e;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">💬 7. Critique Steam : L'Avis Caviardé</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Déchiffrez une véritable évaluation Steam officielle dont les mots-clés révélateurs ont été biffés. Révélez les indices un par un et devinez le titre encensé.
-              </p>
-              <a href="#review" style="color: #fb7185; font-size: 0.85rem; font-weight: 600;">Lancer le défi Critique →</a>
-            </article>
-
-            <!-- 8. Blind Test OST -->
-            <article id="blindtest" style="background: #131a29; padding: 1.25rem; border-radius: 8px; border-top: 3px solid #8b5cf6;">
-              <h3 style="color: #f8fafc; margin-top: 0; font-size: 1.15rem;">🎵 8. Blind Test OST : Quiz Musical</h3>
-              <p style="line-height: 1.5; color: #cbd5e1; font-size: 0.95rem;">
-                Écoutez des extraits musicaux au synthétiseur Web Audio en temps réel en paliers d'écoute progressifs (1s à 30s) et reconnaissez les bandes originales cultes.
-              </p>
-              <a href="#blindtest" style="color: #a78bfa; font-size: 0.85rem; font-weight: 600;">Lancer le Blind Test OST →</a>
-            </article>
-          </div>
         </section>
 
-        <!-- Section 3 : Modes Compétitifs (Time Attack & Versus 1v1) -->
-        <section style="margin-bottom: 3.5rem;">
-          <h2 style="color: #38bdf8; font-size: 1.8rem; margin-bottom: 1rem;">
-            ⚡ Compétition : Sprints Time Attack &amp; Arène Versus 1v1
+        <!-- Section 4 : Le Catalogue des Pépites par Genre -->
+        <section id="catalogue-pepites" style="margin-bottom: 2rem;">
+          <h2 style="color: #38bdf8; font-size: 1.5rem; margin-bottom: 0.5rem;">
+            📚 Le Catalogue de Référence des Meilleurs Jeux Indépendants
           </h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
-            <article id="timeattack" style="background: #131a29; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; border-left: 4px solid #f59e0b;">
-              <h3 style="color: #fbbf24; margin-top: 0; font-size: 1.3rem;">⚡ Time Attack : Sprints Solo Contre-la-Montre</h3>
-              <p style="line-height: 1.6; color: #cbd5e1;">
-                Le <strong>Time Attack</strong> de Hoot Indie Games met vos réflexes à rude épreuve sur les 8 disciplines de déduction.
-                Chronométré à la milliseconde près, ce mode récompense la rapidité et la précision avec un multiplicateur de combo,
-                un système de bonus/pénalités et la sauvegarde locale de vos records de vitesse.
-              </p>
-              <a href="#timeattack" style="color: #f59e0b; font-weight: 600;">Accéder au Hub Time Attack →</a>
-            </article>
-
-            <article id="versus" style="background: #131a29; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; border-left: 4px solid #f43f5e;">
-              <h3 style="color: #fb7185; margin-top: 0; font-size: 1.3rem;">⚔️ Arène Versus 1v1 : Duels Directs P2P WebRTC</h3>
-              <p style="line-height: 1.6; color: #cbd5e1;">
-                Affrontez un ami ou un rival en direct dans l'<strong>Arène 1v1</strong> sans téléchargement ni intermédiaire grâce à la synchronisation pair-à-pair WebRTC.
-                Partagez un simple code de salon pour lancer un duel sur votre discipline favorite ou vous mesurer au <strong>Tournoi Décathlon Mixte</strong> (8 épreuves consécutives) avec boutons de validation rapide [1-4].
-              </p>
-              <a href="#versus" style="color: #f43f5e; font-weight: 600;">Rejoindre l'Arène Versus →</a>
-            </article>
-          </div>
-        </section>
-
-        <!-- Section 4 : La Salle d'Arcade Rétro -->
-        <section id="arcade" style="margin-bottom: 3.5rem; background: #0b0f19; border: 1px solid #1e293b; border-radius: 12px; padding: 2rem;">
-          <h2 style="color: #10b981; font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem;">
-            🕹️ La Salle d'Arcade Rétro &amp; Le Vectrex Mine Storm 1982
-          </h2>
-          <p style="line-height: 1.7; color: #cbd5e1; font-size: 1.05rem;">
-            En hommage aux racines du jeu indépendant et du homebrew, Hoot Indie Games abrite une véritable salle d'arcade rétro jouable instantanément dans votre navigateur :
-            <strong>Snake Sylvestre</strong>, <strong>Pong Nocturne</strong>, <strong>Casse-Briques</strong>, <strong>Flappy Hibou</strong>, <strong>Moon Runner</strong>, <strong>Space Invaders</strong>, <strong>Tetris des Pépites</strong>, 
-            ainsi qu'une émulation vectorielle fidèle du légendaire <strong>Mine Storm</strong> paru sur la console <em>Vectrex en 1982</em>.
-          </p>
-          <a href="#arcade" style="color: #34d399; font-weight: 600;">Jouer aux 8 bornes rétro d'arcade →</a>
-        </section>
-
-        <!-- Section 4 bis : Le Grand Quiz Trivia -->
-        <section id="quiz" style="margin-bottom: 3.5rem; background: #131a29; border: 1px solid #1e293b; border-radius: 12px; padding: 2rem; border-left: 4px solid #f59e0b;">
-          <h2 style="color: #fbbf24; font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;">
-            ❓ Le Grand Quiz Trivia du Jeu Vidéo Indépendant (180 Questions)
-          </h2>
-          <p style="line-height: 1.6; color: #cbd5e1; font-size: 1.05rem;">
-            Mettez votre culture indie à l'épreuve à travers <strong>180 questions thématiques</strong> couvrant les bandes originales légendaires, le lore énigmatique, les mécaniques de gameplay pionnières et les anecdotes de studios indépendants. Chaque question dévoile une explication sourcée pour apprendre en s'amusant.
-          </p>
-          <a href="#quiz" style="color: #f59e0b; font-weight: 600;">Lancer le Grand Quiz Trivia →</a>
-        </section>
-
-        <!-- Section 5 : Boîte à Outils & Radar des Sorties 2025-2026 -->
-        <section id="toolbox" style="margin-bottom: 3.5rem; background: #131a29; border: 1px solid #1e293b; border-radius: 12px; padding: 2rem;">
-          <h2 style="color: #38bdf8; font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem;">
-            🧰 Boîte à Outils du Joueur &amp; Radar des Sorties Indés 2025-2026
-          </h2>
-          <p style="line-height: 1.7; color: #cbd5e1; font-size: 1.05rem;">
-            Restez à la pointe de l'actualité avec notre <strong>Radar des sorties indépendantes 2025-2026</strong>. 
-            Suivez les pépites en développement les plus prometteuses (telles que <em>Hollow Knight: Silksong</em>, <em>Mina the Hollower</em> ou <em>Judas</em>), 
-            consultez les fiches techniques, les dates estimées et ajoutez-les directement à votre liste de souhaits Steam.
-          </p>
-          <a href="#toolbox" style="color: #38bdf8; font-weight: 600;">Explorer la Boîte à Outils &amp; le Radar →</a>
-        </section>
-
-        <!-- Section 5 bis : Micro-Pépites & Scène Expérimentale Itch.io -->
-        <section id="micro" style="margin-bottom: 3.5rem; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 2rem; border-left: 4px solid #a855f7;">
-          <h2 style="color: #c084fc; font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;">
-            🌱 Micro-Pépites &amp; Scène Indé Expérimentale Itch.io
-          </h2>
-          <p style="line-height: 1.6; color: #cbd5e1; font-size: 1.05rem;">
-            Au-delà des grands succès commerciaux Steam, Hoot Indie Games met en lumière l'artisanat des créateurs de Game Jams, prototypes narratifs et productions expérimentales gratuites ou à prix libre. Découvrez les pépites confidentielles qui feront les grands genres de demain.
-          </p>
-          <a href="#micro" style="color: #c084fc; font-weight: 600;">Explorer les Micro-Pépites →</a>
-        </section>
-
-        <!-- Section 6 : Le Grand Catalogue des ${totalCount} Pépites -->
-        <section id="catalogue-pepites" style="margin-bottom: 3.5rem;">
-          <h2 style="color: #38bdf8; font-size: 1.8rem; margin-bottom: 0.5rem;">
-            📚 Le Catalogue de Référence des ${totalCount} Meilleures Pépites du Jeu Vidéo Indépendant
-          </h2>
-          <p style="color: #94a3b8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-            Explorez notre sélection exhaustive de chefs-d'œuvre et découvertes incontournables du jeu vidéo indépendant certifiés sur PC et Steam, triés par genres et styles visuels.
-          </p>
           ${catalogHtml}
         </section>
 
-        <!-- Section 7 : Foire Aux Questions (FAQ) -->
-        <section id="faq-jeux-independants" style="margin-bottom: 3.5rem;">
-          <h2 style="color: #f59e0b; font-size: 1.8rem; margin-bottom: 1rem;">
-            💡 Foire Aux Questions : Tout Savoir sur les Jeux Vidéo Indépendants
+        <!-- Section 5 : Foire Aux Questions -->
+        <section id="faq-jeux-independants" style="margin-bottom: 2rem;">
+          <h2 style="color: #f59e0b; font-size: 1.5rem; margin-bottom: 0.5rem;">
+            💡 Foire Aux Questions
           </h2>
           ${faqHtml}
         </section>
 
-        <!-- Section 8 : Le Créateur et l'Écosystème -->
-        <section id="roost" style="margin-bottom: 2rem; background: #131a29; border: 1px solid #1e293b; border-radius: 12px; padding: 2rem;">
-          <h2 style="color: #10b981; font-size: 1.5rem; margin-top: 0;">
+        <!-- Section 6 : Le Créateur et l'Écosystème -->
+        <section id="roost" style="margin-bottom: 1.5rem;">
+          <h2 style="color: #10b981; font-size: 1.3rem; margin-bottom: 0.5rem;">
             🦉 À Propos de Hoot Indie Games &amp; Quentin Beaud (Hibouxe / Edsaje)
           </h2>
-          <p style="line-height: 1.6; color: #cbd5e1;">
-            Conçu avec passion par <strong>Quentin Beaud</strong> (alias <em>Hibouxe</em> sur YouTube et <em>Edsaje</em> sur GitHub), 
-            Hoot Indie Games est un sanctuaire open-source dédié à promouvoir la créativité des studios indépendants, 
-            à sauvegarder le patrimoine vidéoludique rétro (reproduction du <em>Mine Storm</em> Vectrex 1982) et à proposer des outils de déduction modernes et gratuits à la communauté des joueurs.
-          </p>
-          <p style="margin-bottom: 0;">
-            Découvrez le portfolio et les créations sur <a href="https://quentinbeaud.com" target="_blank" rel="noopener noreferrer" style="color: #10b981; font-weight: 600;">quentinbeaud.com</a>, 
-            les vidéos d'essais sur YouTube <a href="https://youtube.com/@Hibouxe" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; font-weight: 600;">@Hibouxe</a> 
-            et le code source officiel sur <a href="https://github.com/Edsaje/hoot-indie-games" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; font-weight: 600;">GitHub (Edsaje)</a>.
+          <p style="line-height: 1.6; color: #cbd5e1; font-size: 0.95rem;">
+            Conçu avec passion par <strong>Quentin Beaud</strong> (alias <em>Hibouxe</em> sur YouTube et <em>Edsaje</em> sur GitHub), Hoot Indie Games est un sanctuaire open-source dédié à valoriser le jeu vidéo indépendant et à sauvegarder le patrimoine vidéoludique. Découvrez le portfolio sur <a href="https://quentinbeaud.com" target="_blank" rel="noopener noreferrer" style="color: #10b981; font-weight: 600;">quentinbeaud.com</a> et le code source sur <a href="https://github.com/Edsaje/hoot-indie-games" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; font-weight: 600;">GitHub</a>.
           </p>
         </section>
       </div>
 
-      <footer style="text-align: center; border-top: 1px solid #1e293b; padding-top: 2rem; color: #64748b; font-size: 0.9rem;">
+      <footer style="text-align: center; border-top: 1px solid #1e293b; padding-top: 1.5rem; color: #64748b; font-size: 0.85rem;">
         <p>© 2026 Hoot Indie Games • Le Sanctuaire des Jeux Vidéo Indépendants • Tous droits réservés aux studios et créateurs respectifs.</p>
         <p>Hoot Indie Games n'est pas affilié à Valve Corporation. Steam et le logo Steam sont des marques déposées de Valve Corporation.</p>
       </footer>
