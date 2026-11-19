@@ -85,7 +85,7 @@ check_step "Intégrité sauvegarde Hibouxe (Biome 6 préservé)" \
 
 # 13. Durcissement PHP & Apache (expose_php = Off, upload_progress = Off)
 check_step "Durcissement PHP & Apache (expose_php=Off, upload_progress=Off)" \
-    "docker exec ${CONTAINER_NAME} php -i | grep -q 'expose_php => Off' && docker exec ${CONTAINER_NAME} php -i | grep -q 'session.upload_progress.enabled => Off'"
+    "docker exec ${CONTAINER_NAME} php -r 'exit(ini_get(\"expose_php\") === \"\" && ini_get(\"session.upload_progress.enabled\") === \"\" ? 0 : 1);'"
 
 echo "--------------------------------------------------------"
 echo -e "Résultat : ${PASSED} réussis, ${FAILED} échoués."
