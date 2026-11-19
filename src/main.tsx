@@ -24,19 +24,3 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
-
-// Nettoyage discret du conteneur SEO statique une fois React opérationnel (sans bloquer le TTI)
-if (typeof window !== 'undefined') {
-  const cleanupSeo = () => {
-    const el = document.getElementById('seo-crawler-container');
-    if (el) {
-      el.remove();
-    }
-  };
-  const win = window as any;
-  if (typeof win.requestIdleCallback === 'function') {
-    win.requestIdleCallback(cleanupSeo, { timeout: 2500 });
-  } else {
-    setTimeout(cleanupSeo, 1000);
-  }
-}

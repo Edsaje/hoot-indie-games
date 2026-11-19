@@ -1047,8 +1047,9 @@ export async function generateSeoIndexHtml(): Promise<string> {
     </style>
   </head>
   <body class="bg-[#010604] text-slate-100 antialiased" style="margin: 0; background-color: #010604; color: #f1f5f9;">
-    <div id="root"></div>
-    ${rootPrerenderContent}
+    <div id="root">
+      ${rootPrerenderContent}
+    </div>
     <script type="module" src="/src/main.tsx"></script>
     <!-- Structured Data (JSON-LD Schema.org) placed at the end of body for fast initial DOM paint -->
     <script type="application/ld+json">
