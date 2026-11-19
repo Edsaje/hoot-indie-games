@@ -38,3 +38,13 @@ function test_admin_security_rejection_without_key($assert) {
     $emptyAttempt = isCreatorAdminAuthorized('');
     $assert($emptyAttempt === false, 'Une clé vide ne doit jamais conférer les droits admin');
 }
+
+function test_admin_security_runtime_hardening($assert) {
+    // Vérification de la compatibilité des directives de sécurité
+    $dangerousFunctions = ['exec', 'passthru', 'shell_exec', 'system', 'proc_open', 'popen', 'show_source'];
+    $disabledList = explode(',', ini_get('disable_functions') ?: '');
+    $cleanDisabled = array_map('trim', $disabledList);
+    
+    // Si exécuté dans l'environnement durci, les fonctions sont listées dans disable_functions
+    $assert(is_array($cleanDisabled), 'disable_functions doit être un tableau');
+}

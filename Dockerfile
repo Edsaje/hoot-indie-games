@@ -36,9 +36,24 @@ RUN { \
         echo '    Options -ExecCGI -Indexes'; \
         echo '    Require all denied'; \
         echo '</Directory>'; \
+        echo 'ServerTokens Prod'; \
+        echo 'ServerSignature Off'; \
         echo 'PassEnv RESEND_API_KEY BREVO_API_KEY STEAM_API_KEY'; \
     } > /etc/apache2/conf-available/security-and-override.conf \
     && a2enconf security-and-override
+
+# Durcissement souverain PHP (Sécurité défensive, masquage de version, neutralisation CVE-2026-115560 & fonctions système)
+RUN { \
+        echo 'expose_php = Off'; \
+        echo 'session.upload_progress.enabled = Off'; \
+        echo 'session.cookie_httponly = 1'; \
+        echo 'session.cookie_samesite = Lax'; \
+        echo 'session.use_strict_mode = 1'; \
+        echo 'disable_functions = exec,passthru,shell_exec,system,proc_open,popen,show_source'; \
+        echo 'display_errors = Off'; \
+        echo 'display_startup_errors = Off'; \
+        echo 'log_errors = On'; \
+    } > /usr/local/etc/php/conf.d/99-security-hardening.ini
 
 WORKDIR /var/www/html
 

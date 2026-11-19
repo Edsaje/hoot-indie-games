@@ -83,6 +83,10 @@ check_step "API Versus Room HTTP 200 (${DOMAIN}/api/versus_room.php)" \
 check_step "Intégrité sauvegarde Hibouxe (Biome 6 préservé)" \
     "docker exec ${CONTAINER_NAME} php -r '\$d=json_decode(file_get_contents(\"/var/www/html/api/user_saves/steam_76561198035270542.json\"),true); exit(\$d[\"odysseyState\"][\"highestBiomeUnlocked\"] >= 6 ? 0 : 1);'"
 
+# 13. Durcissement PHP & Apache (expose_php = Off, upload_progress = Off)
+check_step "Durcissement PHP & Apache (expose_php=Off, upload_progress=Off)" \
+    "docker exec ${CONTAINER_NAME} php -i | grep -q 'expose_php => Off' && docker exec ${CONTAINER_NAME} php -i | grep -q 'session.upload_progress.enabled => Off'"
+
 echo "--------------------------------------------------------"
 echo -e "Résultat : ${PASSED} réussis, ${FAILED} échoués."
 
