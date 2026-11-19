@@ -7,18 +7,6 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    {
-      name: 'async-css-delivery',
-      transformIndexHtml: {
-        order: 'post',
-        handler(html) {
-          return html.replace(
-            /<link rel="stylesheet" crossorigin href="([^"]+)">/g,
-            '<link rel="preload" as="style" href="$1">\n    <link rel="stylesheet" href="$1" media="print" onload="this.media=\'all\'">\n    <noscript><link rel="stylesheet" href="$1"></noscript>'
-          );
-        },
-      },
-    },
   ],
   server: {
     proxy: {
