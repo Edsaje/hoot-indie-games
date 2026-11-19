@@ -67,6 +67,7 @@ export interface UserCloudSavePayload {
     vectrexPhosphor?: boolean;
   };
   quizHighScore?: number;
+  retroVisualFilter?: string;
   userPreferences?: {
     hideOwnedGames?: boolean;
     soundEnabled?: boolean;
@@ -96,6 +97,8 @@ export const STORAGE_ODYSSEY = 'hoot_odyssey_save_v1';
 export const STORAGE_CARDS = 'hoot_cards_collection_v1';
 export const STORAGE_BOOSTERS_STOCK = 'hoot_free_boosters_stock_v2';
 export const STORAGE_LAST_BOOSTER = 'hoot_last_daily_booster_claim_v1';
+export const STORAGE_RETRO_FILTER = 'hoot_retro_filter';
+export const STORAGE_QUIZ_BEST_SCORE = 'hoot_quiz_highscore';
 
 const ARCADE_GAMES = ['breakout', 'flappy', 'invaders', 'pong', 'run', 'snake', 'tetris', 'vectrex'];
 
@@ -297,6 +300,7 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
       likedMicroIndies,
       arcadeStats,
       quizHighScore,
+      retroVisualFilter: localStorage.getItem(STORAGE_RETRO_FILTER) || undefined,
       userPreferences,
       syncedAt: new Date().toISOString(),
     };
@@ -560,6 +564,11 @@ export function applyCloudSaveToLocalStorage(
       if (typeof p.sfxVolume === 'number') localStorage.setItem('hoot_sfx_volume', String(p.sfxVolume));
       if (p.lang) localStorage.setItem('hoot_lang', p.lang);
       if (p.crtUnlocked) localStorage.setItem('hoot_crt_unlocked', 'true');
+    }
+
+    // 13. Filtre Visuel Rétro
+    if (cloudData.retroVisualFilter) {
+      localStorage.setItem('hoot_retro_filter', cloudData.retroVisualFilter);
     }
 
     // Événement global pour tous les composants

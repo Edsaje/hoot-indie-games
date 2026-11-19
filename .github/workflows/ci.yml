@@ -1,0 +1,51 @@
+name: 🦉 Hoot CI — Batterie de Tests & Validation Qualité
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-and-tests:
+    name: 🧪 Lint, Types, Vitest & Tests PHP
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 Récupération des sources (Git Checkout)
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configuration de Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: 🐘 Configuration de PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, json, curl
+
+      - name: 📦 Installation des dépendances npm
+        run: npm ci
+
+      - name: 🔍 Étape 1 : Analyse Statique & Linting (Oxlint)
+        run: npm run lint
+
+      - name: 📐 Étape 2 : Validation des Types TypeScript (tsc -b)
+        run: npx tsc -b
+
+      - name: ⚡ Étape 3 : Tests Unitaires Frontend (Vitest)
+        run: npm test
+
+      - name: 🛡️ Étape 4 : Tests Unitaires Backend & Sécurité (PHP)
+        run: php tests/run_php_tests.php
+
+      - name: 🏗️ Étape 5 : Compilation Production Vite
+        run: npm run build

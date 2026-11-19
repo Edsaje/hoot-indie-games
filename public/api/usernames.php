@@ -621,5 +621,7 @@ if ($method === 'POST') {
     exit;
 }
 
-http_response_code(405);
-echo json_encode(['success' => false, 'error' => 'method_not_allowed', 'message' => 'Méthode non autorisée.']);
+if (php_sapi_name() !== 'cli') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'method_not_allowed', 'message' => 'Méthode non autorisée.']);
+}
