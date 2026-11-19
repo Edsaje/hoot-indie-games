@@ -31,6 +31,12 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - name: 🐘 Configuration de PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, json, curl
+
       - name: 📦 Installation des dépendances
         run: npm ci
 
@@ -48,6 +54,9 @@ jobs:
 
       - name: 🧪 Batterie de Tests Automatisée & Non-Régression (Vitest)
         run: npm test
+
+      - name: 🛡️ Tests Backend PHP & Sécurité
+        run: php tests/run_php_tests.php
 
       - name: 🏗️ Compilation de production du site (Vite / React)
         run: npm run build

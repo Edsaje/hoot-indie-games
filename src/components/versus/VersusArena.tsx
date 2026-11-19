@@ -1,39 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Swords,
-  Users,
-  Zap,
   Clock,
-  Trophy,
-  Copy,
-  Check,
-  RotateCcw,
-  Sparkles,
   Search,
-  CheckCircle2,
   AlertCircle,
-  Radio,
-  Bot,
-  Lock,
-  Mail,
-  Cloud,
-  ShieldCheck,
-  ArrowRight,
-  User,
-  LogOut,
-  Camera,
-  Sliders,
-  MessageSquareQuote,
-  Music,
-  Calendar,
-  Target,
-  FileSearch,
-  Dices,
-  Disc,
   Play,
   Pause,
   ThumbsUp,
+  Sliders,
+  Disc,
+  Calendar,
+  Target,
+  CheckCircle2,
+  Zap,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
@@ -52,97 +31,24 @@ import { useSteamCatalog } from '../../context/useSteamCatalog';
 import { INDIE_AVATARS } from '../../data/avatars';
 import { soundFx } from '../../utils/audio';
 import { telemetry } from '../../services/telemetry';
-import { SteamIcon } from '../common/SteamIcon';
 import { getRandomReviewPuzzle, type ReviewPuzzle } from '../../data/reviewPuzzles';
 import { getBilingualText } from '../../utils/localization';
 import { getRandomBlindTestPuzzle, noteToFrequency, type BlindTestPuzzle } from '../../data/blindtestPuzzles';
 import { obfuscateGameId, deobfuscateGameId, drawProtectedImageToCanvas } from '../../utils/securityAntiCheat';
-
-type VersusPhase = 'lobby' | 'waiting_friend' | 'queueing' | 'countdown' | 'playing' | 'round_end' | 'match_end';
-
-interface OpponentData {
-  id: string;
-  name: string;
-  avatarId: string;
-  elo: number;
-  score: number;
-  isBot?: boolean;
-}
-
-interface PeerMessage {
-  type:
-    | 'handshake'
-    | 'handshake_ack'
-    | 'start_countdown'
-    | 'round_start'
-    | 'guess_wrong'
-    | 'round_won'
-    | 'round_timeout'
-    | 'rematch_ready'
-    | 'player_left'
-    | 'duel_chat';
-  profile?: {
-    name: string;
-    avatarId: string;
-    elo: number;
-  };
-  gameId?: string;
-  secretToken?: string;
-  roundNum?: number;
-  guessTitle?: string;
-  gameTitle?: string;
-  score?: number;
-  discipline?: VersusDiscipline;
-  choiceIds?: string[];
-  puzzleSeed?: string;
-  chatText?: string;
-  chatEmote?: string;
-  senderName?: string;
-}
-
-function generateRoomCode(): string {
-  return `HOOT-${Math.floor(100 + Math.random() * 900)}`;
-}
-
-function generatePeerId(): string {
-  return `peer_${Math.random().toString(36).substring(2, 7)}`;
-}
-
-const BOT_NAMES = [
-  'Grand-Duc de la Canopée',
-  'Chouette Harfang',
-  'Effraie des Ombres',
-  'SilksongBeliever',
-  'KnightOfHallownest',
-  'CelesteSpeedrunner',
-  'BalatroAddict',
-];
-
-function getRandomBot(playerElo: number): OpponentData {
-  const name = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
-  const avatar = INDIE_AVATARS[Math.floor(Math.random() * INDIE_AVATARS.length)];
-  const elo = Math.max(800, playerElo + Math.floor((Math.random() - 0.5) * 80));
-  return {
-    id: generatePeerId(),
-    name,
-    avatarId: avatar.id,
-    elo,
-    score: 0,
-    isBot: true,
-  };
-}
-
-function pickRandomGame(pool: Game[]): Game {
-  if (!pool || pool.length === 0) return INDIE_GAMES[0];
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function getBotDecision(): { willGuess: boolean; delayMs: number } {
-  return {
-    willGuess: Math.random() < 0.72,
-    delayMs: (8 + Math.random() * 8) * 1000,
-  };
-}
+import {
+  type VersusPhase,
+  type OpponentData,
+  type PeerMessage,
+  generateRoomCode,
+  generatePeerId,
+  getRandomBot,
+  pickRandomGame,
+  getBotDecision,
+  getDisciplineMeta,
+} from './versusConstants';
+import { VersusAuthGate } from './VersusAuthGate';
+import { VersusLobbyView } from './VersusLobbyView';
+import { VersusPostMatchView } from './VersusPostMatchView';
 
 interface VersusArenaProps {
   onOpenAuth?: () => void;
@@ -1229,75 +1135,7 @@ export const VersusArena: React.FC<VersusArenaProps> = ({ onOpenAuth }) => {
     }
   };
 
-  const VERSUS_DISCIPLINES: { id: VersusDiscipline; label: string; icon: any; color: string; desc: string }[] = [
-    {
-      id: 'all',
-      label: 'Décathlon Indé (Mixte)',
-      icon: Dices,
-      color: 'from-amber-500 to-orange-600',
-      desc: 'Alterne les épreuves : Capture, Pixel, Critique Steam, Blind Test, Chronologie...',
-    },
-    {
-      id: 'screenle',
-      label: 'Capture d\'écran',
-      icon: Camera,
-      color: 'from-amber-500 to-amber-600',
-      desc: 'Dé-zoom & dé-floutage progressif d\'une capture',
-    },
-    {
-      id: 'pixel',
-      label: 'Pixel & Silhouette',
-      icon: Sliders,
-      color: 'from-rose-500 to-pink-600',
-      desc: 'Mosaïque pixellisée qui s\'affine seconde par seconde',
-    },
-    {
-      id: 'review',
-      label: 'Critique Steam',
-      icon: MessageSquareQuote,
-      color: 'from-cyan-500 to-blue-600',
-      desc: 'Avis Steam de joueurs authentiques caviardés (████)',
-    },
-    {
-      id: 'blindtest',
-      label: 'Blind Test OST',
-      icon: Music,
-      color: 'from-fuchsia-500 to-pink-600',
-      desc: 'Extrait sonore synthétisé en direct et visualiseur',
-    },
-    {
-      id: 'chrono',
-      label: 'Chronologie',
-      icon: Calendar,
-      color: 'from-orange-500 to-amber-600',
-      desc: 'Défis temporels : avant, après et millésimes cultes',
-    },
-    {
-      id: 'profille',
-      label: 'Profil Identité',
-      icon: FileSearch,
-      color: 'from-purple-500 to-indigo-600',
-      desc: 'Déduction par studio de dev, année et genre',
-    },
-    {
-      id: 'indledle',
-      label: 'Classic Indle',
-      icon: Target,
-      color: 'from-emerald-500 to-teal-600',
-      desc: 'Déduction progressive par attributs et moteur',
-    },
-    {
-      id: 'linkle',
-      label: 'Connexions',
-      icon: Sparkles,
-      color: 'from-sky-500 to-indigo-500',
-      desc: 'Repérez le lien commun ou complétez le groupe',
-    },
-  ];
 
-  const getDisciplineMeta = (disc: VersusDiscipline) => {
-    return VERSUS_DISCIPLINES.find((d) => d.id === disc) || VERSUS_DISCIPLINES[0];
-  };
 
   const handlePlayerGuessRef = useRef(handlePlayerGuess);
   useEffect(() => {
@@ -1512,462 +1350,44 @@ if (phase !== 'playing' || isLockedOut || searchFocused) return;
 
       {/* COMPTE REQUIS POUR LE 1V1 */}
       {!hasAccount ? (
-        <div className="max-w-xl mx-auto space-y-6 animate-in fade-in duration-300">
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
-              <Lock className="w-3.5 h-3.5 text-amber-400" />
-              <span>Compte Joueur Requis • Cloud Souverain</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-              Accédez à l'Arène 1v1
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-              Pour défier vos amis en direct, affronter le Grand-Duc et sauvegarder votre cote ELO sur notre cloud souverain, connectez-vous ou créez votre compte joueur gratuit.
-            </p>
-          </div>
-
-          {/* Avantages du compte */}
-          <div className="grid grid-cols-3 gap-3 p-3 bg-[#131a29]/80 border border-[#1e293b] rounded-2xl text-center text-xs">
-            <div className="p-2 space-y-1">
-              <ShieldCheck className="w-5 h-5 mx-auto text-amber-400" />
-              <div className="font-bold text-white text-[11px]">Classement ELO</div>
-              <div className="text-[10px] text-slate-400">Progression garantie</div>
-            </div>
-            <div className="p-2 space-y-1">
-              <Cloud className="w-5 h-5 mx-auto text-emerald-400" />
-              <div className="font-bold text-white text-[11px]">Cloud Souverain</div>
-              <div className="text-[10px] text-slate-400">0 perte de données</div>
-            </div>
-            <div className="p-2 space-y-1">
-              <Swords className="w-5 h-5 mx-auto text-indigo-400" />
-              <div className="font-bold text-white text-[11px]">Duels P2P</div>
-              <div className="text-[10px] text-slate-400">Temps réel direct</div>
-            </div>
-          </div>
-
-          {/* Carte Formulaire & Méthodes 1 Clic */}
-          <div className="p-6 sm:p-8 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-amber-500/30 rounded-3xl shadow-2xl space-y-6">
-            {/* Champ Pseudo Rapide */}
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Votre Pseudo de Duelliste</span>
-                </span>
-                <span className="text-[10px] text-slate-400 font-normal">Personnalisable à tout moment</span>
-              </label>
-              <input
-                type="text"
-                value={authUsername}
-                onChange={(e) => setAuthUsername(e.target.value)}
-                placeholder="Ex: Maître Du Hibou"
-                className="w-full px-4 py-2.5 bg-[#0b0f19] border border-[#1e293b] focus:border-amber-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-600 focus:outline-none transition"
-              />
-            </div>
-
-            {/* Méthodes 1 Clic */}
-            <div className="space-y-2.5">
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Création &amp; Connexion en 1 Clic</span>
-                </span>
-                <span className="text-emerald-400 font-bold">Sans mot de passe</span>
-              </div>
-
-              {/* 1. Continuer avec Steam */}
-              <button
-                type="button"
-                onClick={handleSteam1Click}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-[#171a21] hover:bg-[#1f2430] border border-[#2a475e] hover:border-cyan-400/60 text-white font-bold text-xs transition shadow-lg group cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
-                    <SteamIcon className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-sm font-black text-slate-100 group-hover:text-cyan-300 transition flex items-center gap-2">
-                      <span>Continuer avec Steam</span>
-                    </div>
-                    <div className="text-[11px] text-slate-400 font-normal">
-                      Connexion 1 clic &amp; synchro bibliothèque Valve
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[11px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-lg border border-cyan-500/20 shrink-0">
-                  Recommandé
-                </span>
-              </button>
-
-              {/* 2. Continuer avec Google */}
-              <button
-                type="button"
-                onClick={handleGoogle1Click}
-                disabled={authLoading}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-[#131a29] hover:bg-slate-800 border border-[#1e293b] hover:border-slate-600 text-white font-bold text-xs transition shadow-md cursor-pointer disabled:opacity-50"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-                      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z"/>
-                      <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.97 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-                      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-slate-200">
-                      Continuer avec Google
-                    </div>
-                    <div className="text-[11px] text-slate-400 font-normal">
-                      Connexion &amp; compte cloud en 1 clic
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded-lg shrink-0">
-                  1 Clic
-                </span>
-              </button>
-
-              {/* 3. Bouton Compte Joueur Local 1 Clic */}
-              <button
-                type="button"
-                onClick={handleInstantGuest1Click}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-500/60 text-white font-bold text-xs transition shadow-md group cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-amber-300 group-hover:text-amber-200 transition">
-                      Création Express 1 Clic (Profil Local)
-                    </div>
-                    <div className="text-[11px] text-slate-400 font-normal">
-                      Accès immédiat à l'arène avec sauvegarde locale de votre ELO
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-lg border border-amber-500/30 shrink-0">
-                  Instantané
-                </span>
-              </button>
-            </div>
-
-            {/* Séparateur */}
-            <div className="relative flex py-1 items-center">
-              <div className="flex-grow border-t border-slate-800"></div>
-              <span className="flex-shrink mx-3 text-[10px] font-black uppercase tracking-wider text-slate-400">
-                Ou par e-mail &amp; mot de passe
-              </span>
-              <div className="flex-grow border-t border-slate-800"></div>
-            </div>
-
-            {authError && (
-              <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl text-red-300 text-xs font-bold flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
-                <span>{authError}</span>
-              </div>
-            )}
-
-            {/* Connexion / Inscription via la modale officielle AuthModal */}
-            <button
-              type="button"
-              onClick={() => {
-                soundFx.playClick();
-                if (authUsername.trim() && authUsername.trim() !== profile.username) {
-                  setUsername(authUsername.trim());
-                }
-                if (onOpenAuth) {
-                  onOpenAuth();
-                }
-              }}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98 cursor-pointer flex items-center justify-center gap-2.5"
-            >
-              <Mail className="w-4 h-4 text-slate-950" />
-              <span>Se connecter ou Créer un compte par Email</span>
-              <ArrowRight className="w-4 h-4 text-slate-950" />
-            </button>
-          </div>
-        </div>
+        <VersusAuthGate
+          authUsername={authUsername}
+          setAuthUsername={setAuthUsername}
+          authLoading={authLoading}
+          authError={authError}
+          handleSteam1Click={handleSteam1Click}
+          handleGoogle1Click={handleGoogle1Click}
+          handleInstantGuest1Click={handleInstantGuest1Click}
+          onOpenAuth={onOpenAuth}
+          currentUsername={profile.username}
+          onApplyUsername={(name) => setUsername(name)}
+        />
       ) : (
         <>
-          {/* LOBBY / CHOIX DU MODE */}
-      {phase === 'lobby' && (
-        <div className="space-y-8">
-          {/* Header */}
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
-              <Swords className="w-4 h-4" />
-              Arène Multijoueur 1v1 • Relais Souverain (0 Popup)
-            </div>
-            <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-              Arène Face-à-Face
-            </h1>
-            <p className="text-sm text-slate-400 mt-2 max-w-lg mx-auto leading-relaxed">
-              Défiez un ami en direct sur notre relais souverain sécurisé ou entraînez vos réflexes solo contre le Grand-Duc. Première personne à 2 victoires l'emporte !
-            </p>
-          </div>
-
-          {/* Profil Joueur ELO & Statut Compte */}
-          <div className="max-w-md mx-auto p-4 bg-[#131a29] border border-[#1e293b] rounded-2xl shadow-lg space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${playerAvatar.bgGradient} flex items-center justify-center text-2xl shadow-md overflow-hidden p-1`}
-                >
-                  {playerAvatar.imageUrl ? (
-                    <img src={playerAvatar.imageUrl} alt={playerAvatar.name} className="w-full h-full object-contain" />
-                  ) : (
-                    playerAvatar.emoji
-                  )}
-                </div>
-                <div>
-                  <div className="text-sm font-black text-white">{profile.username}</div>
-                  <div className="text-xs text-amber-400 font-semibold">{profile.title}</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-[10px] uppercase font-bold text-slate-400">Votre Rang ELO</div>
-                <div className="text-lg font-black text-indigo-400 font-mono">
-                  {profile.versusStats.eloRating}
-                </div>
-              </div>
-            </div>
-
-            {/* Barre de statut du compte joueur & bouton changer */}
-            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-              <div className="flex items-center gap-1.5">
-                {isSteamConnected ? (
-                  <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
-                    <SteamIcon className="w-3.5 h-3.5" />
-                    <span>Steam ({profile.steam?.personaName || profile.username})</span>
-                  </span>
-                ) : profile.email ? (
-                  <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>Cloud ({profile.email})</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 text-amber-400 font-semibold">
-                    <User className="w-3.5 h-3.5" />
-                    <span>Compte Joueur Local</span>
-                  </span>
-                )}
-              </div>
-
-              <button
-                type="button"
-                onClick={handleSwitchAccount}
-                className="text-slate-400 hover:text-white flex items-center gap-1 text-[11px] font-semibold transition cursor-pointer"
-                title="Changer de compte ou se déconnecter"
-              >
-                <LogOut className="w-3 h-3" />
-                <span>Changer</span>
-              </button>
-            </div>
-          </div>
-
-          {/* SÉLECTEUR DE DISCIPLINE DE DUEL */}
-          <div className="max-w-3xl mx-auto space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-2">
-                <Dices className="w-4 h-4 text-amber-400" />
-                <span>Discipline du Duel</span>
-              </span>
-              <span className="text-[11px] text-amber-400 font-bold">
-                {selectedDiscipline === 'all'
-                  ? 'Épreuves tournantes par manche'
-                  : `Manches 100% ${getDisciplineMeta(selectedDiscipline).label}`}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              {VERSUS_DISCIPLINES.map((disc) => {
-                const IconComponent = disc.icon;
-                const isSelected = selectedDiscipline === disc.id;
-                return (
-                  <button
-                    key={disc.id}
-                    type="button"
-                    onClick={() => {
-                      soundFx.playClick();
-                      setSelectedDiscipline(disc.id);
-                    }}
-                    className={`p-3 rounded-2xl border text-left transition-all active:scale-95 cursor-pointer relative overflow-hidden group ${
-                      isSelected
-                        ? 'bg-amber-500/15 border-amber-500/60 shadow-lg shadow-amber-500/10'
-                        : 'bg-[#131a29] border-[#1e293b] hover:border-slate-700 text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 mb-1">
-                      <div
-                        className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
-                          isSelected ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400 group-hover:text-white'
-                        }`}
-                      >
-                        <IconComponent className="w-3.5 h-3.5" />
-                      </div>
-                      <span className={`text-xs font-black truncate ${isSelected ? 'text-white' : 'text-slate-200'}`}>
-                        {disc.label}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-400 line-clamp-1 leading-snug">
-                      {disc.desc}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Cartes des Modes */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {/* Mode 1: Duel Réel entre Amis (Relais Souverain) */}
-            <div className="p-6 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-amber-500/30 hover:border-amber-500/60 rounded-3xl shadow-xl flex flex-col justify-between transition-all group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6" />
-                </div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-xl font-black text-white">
-                    Duel 1v1 en Direct
-                  </h3>
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase tracking-wider border border-emerald-500/30">
-                    0 Popup
-                  </span>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                  Connexion sécurisée via notre relais souverain OVHcloud. Aucun popup de réseau local, zéro configuration. Partagez un code ou le lien à un ami pour vous affronter en temps réel.
-                </p>
-
-                <button
-                  onClick={handleCreateRoom}
-                  className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/20 mb-3 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <Radio className="w-4 h-4" />
-                  Créer un Salon Privé (Hôte)
-                </button>
-
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={joinCodeInput}
-                    onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
-                    placeholder="HOOT-..."
-                    maxLength={10}
-                    className="flex-1 px-3 py-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl text-xs font-mono font-bold text-white uppercase placeholder-slate-600 focus:outline-none focus:border-amber-500"
-                  />
-                  <button
-                    onClick={handleJoinRoom}
-                    disabled={!joinCodeInput.trim()}
-                    className="py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors disabled:opacity-40 cursor-pointer"
-                  >
-                    Rejoindre
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Mode 2: Entraînement Solo contre le Grand-Duc */}
-            <div className="p-6 bg-gradient-to-b from-[#131a29] to-[#0e1422] border border-[#1e293b] hover:border-indigo-500/40 rounded-3xl shadow-xl flex flex-col justify-between transition-all group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mb-4">
-                  <Bot className="w-6 h-6" />
-                </div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-xl font-black text-white">
-                    Entraînement Solo
-                  </h3>
-                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold uppercase tracking-wider border border-slate-700">
-                    Chrono IA
-                  </span>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Affrontez l'intelligence du Grand-Duc pour affûter vos réflexes de reconnaissance rapide sans attendre un adversaire humain.
-                </p>
-              </div>
-
-              <div className="pt-6">
-                <button
-                  onClick={handleStartSoloBot}
-                  className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all border border-slate-700 cursor-pointer active:scale-95"
-                >
-                  <Zap className="w-4 h-4 text-amber-400" />
-                  Défier le Grand-Duc en Solo
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* EN ATTENTE D'UN AMI (HÔTE) */}
-      {phase === 'waiting_friend' && (
-        <div className="max-w-md mx-auto text-center py-12 px-6 bg-[#131a29] border border-amber-500/30 rounded-3xl shadow-2xl space-y-6 animate-in fade-in">
-          <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-amber-500/30 animate-ping" />
-            <div className="w-16 h-16 rounded-full bg-amber-500/10 border-2 border-amber-500 flex items-center justify-center text-amber-400 shadow-xl">
-              <Radio className="w-8 h-8 animate-pulse" />
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-xl font-black text-white">Salon Privé Ouvert</h3>
-            <p className="text-xs text-slate-300 mt-1">
-              Transmettez ce code à votre ami pour qu'il vous rejoigne en un clic.
-            </p>
-          </div>
-
-          <div className="p-4 bg-[#0b0f19] border border-amber-500/40 rounded-2xl space-y-3">
-            <div className="text-[11px] text-slate-400 uppercase font-bold tracking-wider">
-              Code du Salon :
-            </div>
-            <div className="text-2xl font-black text-amber-400 tracking-widest font-mono">
-              {roomCode}
-            </div>
-            <button
-              onClick={handleCopyInvite}
-              className="w-full py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer"
-            >
-              {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              {copiedLink ? 'Lien copié dans le presse-papier !' : 'Copier le lien d\'invitation direct'}
-            </button>
-          </div>
-
-          <div className="flex gap-2 justify-center">
-            <button
-              onClick={() => {
-                soundFx.playClick();
+          {/* LOBBY / EN ATTENTE / QUEUEING */}
+          {(phase === 'lobby' || phase === 'waiting_friend' || phase === 'queueing') && (
+            <VersusLobbyView
+              phase={phase}
+              profile={profile}
+              playerAvatar={playerAvatar}
+              isSteamConnected={isSteamConnected}
+              handleSwitchAccount={handleSwitchAccount}
+              selectedDiscipline={selectedDiscipline}
+              setSelectedDiscipline={setSelectedDiscipline}
+              handleCreateRoom={handleCreateRoom}
+              joinCodeInput={joinCodeInput}
+              setJoinCodeInput={setJoinCodeInput}
+              handleJoinRoom={handleJoinRoom}
+              handleStartSoloBot={handleStartSoloBot}
+              roomCode={roomCode}
+              handleCopyInvite={handleCopyInvite}
+              copiedLink={copiedLink}
+              onCancelWaiting={() => {
                 cleanupP2P();
                 setPhase('lobby');
               }}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-colors cursor-pointer"
-            >
-              Annuler et fermer le salon
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* RECHERCHE DU BOT SOLO */}
-      {phase === 'queueing' && (
-        <div className="max-w-md mx-auto text-center py-16 px-4 bg-[#131a29] border border-[#1e293b] rounded-3xl shadow-2xl space-y-6">
-          <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-indigo-500/20 animate-ping" />
-            <div className="w-20 h-20 rounded-full bg-indigo-500/10 border-2 border-indigo-500 flex items-center justify-center text-indigo-400 shadow-xl">
-              <Bot className="w-10 h-10 animate-bounce" />
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-xl font-black text-white">Éveil du Grand-Duc...</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Calibrage d'un défi chronométré adapté à vos {profile.versusStats.eloRating} ELO
-            </p>
-          </div>
-        </div>
-      )}
+            />
+          )}
 
       {/* COMPTE À REBOURS */}
       {phase === 'countdown' && opponent && (
@@ -2278,99 +1698,23 @@ if (phase !== 'playing' || isLockedOut || searchFocused) return;
 
       {/* FIN DE MATCH */}
       {phase === 'match_end' && opponent && (
-        <div className="max-w-md mx-auto text-center py-10 px-6 bg-[#131a29] border border-[#1e293b] rounded-3xl shadow-2xl space-y-6">
-          {playerScore > opponentScore ? (
-            <>
-              <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border-2 border-amber-500 text-amber-400 flex items-center justify-center mx-auto shadow-xl">
-                <Trophy className="w-8 h-8" />
-              </div>
-              <div>
-                <div className="text-xs font-black text-amber-400 uppercase tracking-wider mb-1">
-                  Victoire Éclatante !
-                </div>
-                <h3 className="text-3xl font-black text-white">
-                  Score : {playerScore} - {opponentScore}
-                </h3>
-                <p className="text-xs text-slate-400 mt-2">
-                  Félicitations ! Vous avez terrassé {opponent.name} avec brio.
-                </p>
-              </div>
-
-              <div className="p-3 bg-[#0b0f19] border border-[#1e293b] rounded-2xl flex items-center justify-around text-xs">
-                <div>
-                  <div className="text-[10px] uppercase text-slate-400">Plumes Gagnées</div>
-                  <div className="text-sm font-black text-amber-400 flex items-center justify-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    +30
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase text-slate-400">Progression ELO</div>
-                  <div className="text-sm font-black text-emerald-400">+22</div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border-2 border-rose-500 text-rose-400 flex items-center justify-center mx-auto shadow-xl">
-                <Swords className="w-8 h-8" />
-              </div>
-              <div>
-                <div className="text-xs font-black text-rose-400 uppercase tracking-wider mb-1">
-                  Défaite Honorable
-                </div>
-                <h3 className="text-3xl font-black text-white">
-                  Score : {playerScore} - {opponentScore}
-                </h3>
-                <p className="text-xs text-slate-400 mt-2">
-                  {opponent.name} s'est montré plus rapide cette fois-ci.
-                </p>
-              </div>
-
-              <div className="p-3 bg-[#0b0f19] border border-[#1e293b] rounded-2xl flex items-center justify-around text-xs">
-                <div>
-                  <div className="text-[10px] uppercase text-slate-400">Consolation</div>
-                  <div className="text-sm font-black text-amber-400 flex items-center justify-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    +5 Plumes
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase text-slate-400">Progression ELO</div>
-                  <div className="text-sm font-black text-slate-400">-12</div>
-                </div>
-              </div>
-            </>
-          )}
-
-          <div className="flex gap-3 pt-2">
-            <button
-              onClick={() => {
-                soundFx.playClick();
-                if (opponent.isBot) {
-                  isHostRef.current = true;
-                  startCountdownScreen(opponent);
-                } else {
-                  launchMatchP2P();
-                }
-              }}
-              className="flex-1 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition-colors shadow-md cursor-pointer"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Revanche
-            </button>
-            <button
-              onClick={() => {
-                soundFx.playClick();
-                cleanupP2P();
-                setPhase('lobby');
-              }}
-              className="flex-1 py-3 px-4 rounded-2xl bg-[#0b0f19] border border-[#1e293b] hover:bg-slate-800 text-white font-bold text-xs transition-colors cursor-pointer"
-            >
-              Retour au Salon
-            </button>
-          </div>
-        </div>
+        <VersusPostMatchView
+          playerScore={playerScore}
+          opponentScore={opponentScore}
+          opponent={opponent}
+          onRematch={() => {
+            if (opponent.isBot) {
+              isHostRef.current = true;
+              startCountdownScreen(opponent);
+            } else {
+              launchMatchP2P();
+            }
+          }}
+          onReturnToLobby={() => {
+            cleanupP2P();
+            setPhase('lobby');
+          }}
+        />
       )}
       </>
     )}
