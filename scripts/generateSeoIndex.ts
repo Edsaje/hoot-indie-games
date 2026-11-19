@@ -1048,8 +1048,13 @@ export async function generateSeoIndexHtml(): Promise<string> {
   </head>
   <body class="bg-[#010604] text-slate-100 antialiased" style="margin: 0; background-color: #010604; color: #f1f5f9;">
     <div id="root">
-      ${rootPrerenderContent}
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #010604;">
+        <div style="width: 40px; height: 40px; border: 3px solid rgba(245, 158, 11, 0.2); border-top-color: #f59e0b; border-radius: 50%; animation: hoot-spin 0.8s linear infinite;"></div>
+      </div>
     </div>
+    <noscript>
+      ${rootPrerenderContent}
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
     <!-- Structured Data (JSON-LD Schema.org) placed at the end of body for fast initial DOM paint -->
     <script type="application/ld+json">
