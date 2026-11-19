@@ -48,7 +48,7 @@ check_step "Écriture atomique www-data vérifiée" \
     "docker exec -u www-data ${CONTAINER_NAME} touch /var/www/html/api/user_saves/.smoke_probe.tmp && docker exec -u www-data ${CONTAINER_NAME} rm /var/www/html/api/user_saves/.smoke_probe.tmp"
 
 # 4. Exécution de la suite de tests unitaires PHP dans le conteneur
-check_step "Suite de tests unitaires PHP (20 tests validés)" \
+check_step "Suite de tests unitaires PHP (24 tests validés)" \
     "docker exec ${CONTAINER_NAME} php /var/www/html/tests/run_php_tests.php > /dev/null"
 
 # 5. Page d'accueil HTTPS

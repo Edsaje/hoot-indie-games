@@ -116,19 +116,21 @@ $clientIp = getAuthClientIp();
 $ipHash = hash('sha256', $clientIp . '_hoot_auth');
 
 // Rate limiting anti-bruteforce général (max 15 tentatives par 10 minutes)
-function checkRateLimit($ipHash, $rateLimitFile) {
-    $limits = [];
-    if (file_exists($rateLimitFile)) {
-        $limits = json_decode(@file_get_contents($rateLimitFile), true) ?: [];
+if (!function_exists('checkAuthRateLimit')) {
+    function checkAuthRateLimit($ipHash, $rateLimitFile) {
+        $limits = [];
+        if (file_exists($rateLimitFile)) {
+            $limits = json_decode(@file_get_contents($rateLimitFile), true) ?: [];
+        }
+        $now = time();
+        if (!isset($limits[$ipHash]) || ($now - $limits[$ipHash]['resetAt']) > 600) {
+            $limits[$ipHash] = ['count' => 1, 'resetAt' => $now + 600];
+        } else {
+            $limits[$ipHash]['count']++;
+        }
+        @file_put_contents($rateLimitFile, json_encode($limits), LOCK_EX);
+        return ($limits[$ipHash]['count'] <= 15);
     }
-    $now = time();
-    if (!isset($limits[$ipHash]) || ($now - $limits[$ipHash]['resetAt']) > 600) {
-        $limits[$ipHash] = ['count' => 1, 'resetAt' => $now + 600];
-    } else {
-        $limits[$ipHash]['count']++;
-    }
-    @file_put_contents($rateLimitFile, json_encode($limits), LOCK_EX);
-    return ($limits[$ipHash]['count'] <= 15);
 }
 
 // Rate limiting strict pour l'envoi d'e-mails (minimum 60 secondes entre deux envois par IP et par compte)
@@ -177,6 +179,10 @@ function recordMailSent($ipHash, $mailRateLimitFile) {
         if ($ts < $cutoff) unset($limits[$k]);
     }
     @file_put_contents($mailRateLimitFile, json_encode($limits), LOCK_EX);
+}
+
+if (php_sapi_name() === 'cli' && (!isset($_SERVER['REQUEST_METHOD']) || empty($_SERVER['REQUEST_METHOD']))) {
+    return;
 }
 
 switch ($action) {
@@ -308,7 +314,7 @@ switch ($action) {
     // -------------------------------------------------------------
     case 'register':
     case 'signup':
-        if (!checkRateLimit($ipHash, $rateLimitFile)) {
+        if (!checkAuthRateLimit($ipHash, $rateLimitFile)) {
             http_response_code(429);
             echo json_encode([
                 'success' => false,
@@ -473,7 +479,7 @@ switch ($action) {
     // -------------------------------------------------------------
     case 'login':
     case 'signin':
-        if (!checkRateLimit($ipHash, $rateLimitFile)) {
+        if (!checkAuthRateLimit($ipHash, $rateLimitFile)) {
             http_response_code(429);
             echo json_encode([
                 'success' => false,
