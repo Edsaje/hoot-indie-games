@@ -63,14 +63,38 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
       }
     };
 
-    let timerId: { isIdle: boolean; id: any } | null = null;
-    if (typeof requestIdleCallback !== 'undefined') {
-      const handle = requestIdleCallback(() => loadService(), { timeout: 800 });
-      timerId = { isIdle: true, id: handle };
-    } else {
-      const id = setTimeout(loadService, 50);
-      timerId = { isIdle: false, id };
+    let hasLoaded = false;
+    const trigger = () => {
+      if (hasLoaded || !isMounted) return;
+      hasLoaded = true;
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('scroll', trigger);
+        window.removeEventListener('click', trigger);
+        window.removeEventListener('touchstart', trigger);
+        window.removeEventListener('keydown', trigger);
+      }
+      loadService();
+    };
+
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
+      if (
+        hash.includes('catalog') ||
+        hash.includes('minigames') ||
+        path.includes('catalog') ||
+        path.includes('minigames')
+      ) {
+        trigger();
+      } else {
+        window.addEventListener('scroll', trigger, { passive: true, once: true });
+        window.addEventListener('click', trigger, { passive: true, once: true });
+        window.addEventListener('touchstart', trigger, { passive: true, once: true });
+        window.addEventListener('keydown', trigger, { passive: true, once: true });
+      }
     }
+
+    const timer = setTimeout(trigger, 4000);
 
     const handleUpdate = async () => {
       if (!steamCatalogRef.current) return;
@@ -92,10 +116,12 @@ export const SteamCatalogProvider: React.FC<SteamCatalogProviderProps> = ({ chil
     window.addEventListener('hoot_steam_store_data_updated', handleUpdate);
     return () => {
       isMounted = false;
-      if (timerId?.isIdle && typeof cancelIdleCallback !== 'undefined') {
-        cancelIdleCallback(timerId.id);
-      } else if (timerId) {
-        clearTimeout(timerId.id);
+      clearTimeout(timer);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('scroll', trigger);
+        window.removeEventListener('click', trigger);
+        window.removeEventListener('touchstart', trigger);
+        window.removeEventListener('keydown', trigger);
       }
       window.removeEventListener('hoot_steam_catalog_updated', handleUpdate);
       window.removeEventListener('hoot_steam_store_data_updated', handleUpdate);
