@@ -546,65 +546,35 @@ export async function generateSeoIndexHtml(): Promise<string> {
   let catalogHtml = '';
   for (const [categoryName, games] of Object.entries(categorized)) {
     if (games.length === 0) continue;
-    const featuredGames = games.slice(0, 1);
-    const otherGames = games.slice(1);
+    const topGame = games[0];
+    const otherGames = games.slice(1, 6);
 
     catalogHtml += `
-      <section class="seo-category" style="margin-bottom: 2.5rem;">
-        <h3 style="color: #f59e0b; font-size: 1.4rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; margin-top: 1.5rem;">
+      <section class="seo-category" style="margin-bottom: 2rem;">
+        <h3 style="color: #f59e0b; font-size: 1.3rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; margin-top: 1.5rem;">
           ${escapeHtml(categoryName)} (${games.length} jeux)
         </h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <p style="margin: 0.5rem 0 0.75rem 0; font-size: 0.95rem; color: #cbd5e1; line-height: 1.5;">
+          En vedette : <strong>${escapeHtml(topGame.title)}</strong> (${topGame.releaseYear}) par ${escapeHtml(topGame.developer)} — <em>« ${escapeHtml(topGame.hints.tagline.fr)} »</em>.
+          ${topGame.steamUrl ? ` <a href="${escapeHtml(topGame.steamUrl)}" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline;">Fiche Steam</a>` : ''}
+        </p>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.85rem;">
     `;
 
-    for (const game of featuredGames) {
+    for (const game of otherGames) {
       catalogHtml += `
-        <article class="seo-game-card" style="background: #131a29; border: 1px solid #1e293b; border-radius: 8px; padding: 1rem; color: #cbd5e1;">
-          <h4 style="color: #f8fafc; margin: 0 0 0.4rem 0; font-size: 1.1rem;">
-            ${escapeHtml(game.title)} <span style="color: #f59e0b; font-size: 0.85rem; font-weight: normal;">(${game.releaseYear})</span>
-          </h4>
-          <p style="margin: 0 0 0.4rem 0; font-size: 0.85rem; color: #94a3b8;">
-            <strong>Studio :</strong> ${escapeHtml(game.developer)} | <strong>Genres :</strong> ${escapeHtml(game.genre.join(', '))}
-          </p>
-          <p style="margin: 0 0 0.6rem 0; font-size: 0.9rem; font-style: italic; color: #e2e8f0; line-height: 1.4;">
-            « ${escapeHtml(game.hints.tagline.fr)} »
-          </p>
-          ${
-            game.steamUrl
-              ? `<a href="${escapeHtml(game.steamUrl)}" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; font-size: 0.85rem; text-decoration: underline;">Voir sur Steam</a>`
-              : ''
-          }
-        </article>
-      `;
-    }
-
-    if (otherGames.length > 0) {
-      catalogHtml += `
-        </div>
-        <div style="margin-top: 1rem; background: #0b0f19; padding: 1rem; border-radius: 8px; border: 1px solid #1e293b;">
-          <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: 600;">Autres pépites de la catégorie :</p>
-          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.85rem;">
-      `;
-      for (const game of otherGames.slice(0, 8)) {
-        catalogHtml += `
           <li>
             ${game.steamUrl ? `<a href="${escapeHtml(game.steamUrl)}" target="_blank" rel="noopener noreferrer" style="color: #cbd5e1; text-decoration: none;">` : ''}
             <strong>${escapeHtml(game.title)}</strong> (${game.releaseYear}) - ${escapeHtml(game.developer)}
             ${game.steamUrl ? `</a>` : ''}
           </li>
-        `;
-      }
-      catalogHtml += `
-          </ul>
-        </div>
-      </section>
-      `;
-    } else {
-      catalogHtml += `
-        </div>
-      </section>
       `;
     }
+
+    catalogHtml += `
+        </ul>
+      </section>
+    `;
   }
 
   let faqHtml = '';
@@ -1094,7 +1064,13 @@ ${JSON.stringify(jsonLdGraph)}
 </html>
 `;
 
-  return fullHtml;
+  const minifiedHtml = fullHtml
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/>\s+</g, '><')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  return minifiedHtml;
 }
 
 // Run when executed directly

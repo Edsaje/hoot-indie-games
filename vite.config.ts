@@ -7,6 +7,16 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    {
+      name: 'minify-html',
+      transformIndexHtml(html) {
+        return html
+          .replace(/<!--[\s\S]*?-->/g, '')
+          .replace(/>\s+</g, '><')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+      },
+    },
   ],
   server: {
     proxy: {
