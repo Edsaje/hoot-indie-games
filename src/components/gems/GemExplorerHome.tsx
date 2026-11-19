@@ -111,6 +111,19 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
   const [randomPickedGame, setRandomPickedGame] = useState<Game | null>(null);
   const [highlightedGemId, setHighlightedGemId] = useState<string | null>(null);
 
+  // Split below-the-fold render into secondary macro-task to keep initial critical mount < 50ms
+  const [isBelowFoldReady, setIsBelowFoldReady] = useState(() => {
+    return typeof window === 'undefined' || (typeof navigator !== 'undefined' && /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent));
+  });
+
+  useEffect(() => {
+    if (isBelowFoldReady) return;
+    const timer = setTimeout(() => {
+      setIsBelowFoldReady(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [isBelowFoldReady]);
+
   const handleRandomPickFromHero = async () => {
     soundFx.playClick();
     const { INDIE_GAMES } = await import('../../data/games');
@@ -315,7 +328,10 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
         </div>
       </div>
 
-      {/* Living Forest Branch Divider with Animated Rustling Leaves */}
+      {/* Below-the-fold content: deferred to macro-task queue for sub-50ms critical React mount */}
+      {isBelowFoldReady ? (
+        <>
+          {/* Living Forest Branch Divider with Animated Rustling Leaves */}
       <SylvestreBranchDivider glow="amber" withLeaves={true} className="my-10" />
 
       {/* Daily Games Launchpad */}
@@ -761,8 +777,12 @@ export const GemExplorerHome: React.FC<GemExplorerHomeProps> = ({
         </div>
       </div>
 
-      {/* Living Forest Branch Divider with Animated Rustling Leaves */}
-      <SylvestreBranchDivider glow="emerald" withLeaves={true} className="my-10" />
+          {/* Living Forest Branch Divider with Animated Rustling Leaves */}
+          <SylvestreBranchDivider glow="emerald" withLeaves={true} className="my-10" />
+        </>
+      ) : (
+        <div className="min-h-[650px] w-full" aria-hidden="true" />
+      )}
 
       {/* Interactive Catalog Section (Lazy Loaded on viewport approach) */}
       <div ref={catalogAnchorRef}>
