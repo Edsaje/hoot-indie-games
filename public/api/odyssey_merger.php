@@ -56,11 +56,15 @@ function mergeOdysseyState($ex, $in, $forceReplace = false) {
         $exSapTotal = floatval($ex['totalStarSapEarned'] ?? 0);
         $inSapTotal = floatval($in['totalStarSapEarned'] ?? 0);
 
-        // Si l'un des deux a une avance massive (ex: Biome 6 vs Biome 1 ou 10x plus de sève), il est prioritaire
-        if ($exBiome > $inBiome + 1 || ($exSapTotal > 10000 && $inSapTotal < $exSapTotal * 0.1)) {
-            $isInNewer = false;
-        } elseif ($inBiome > $exBiome + 1 || ($inSapTotal > 10000 && $exSapTotal < $inSapTotal * 0.1)) {
+        // Priorité absolue au biome le plus élevé et à la sève maximale
+        if ($inBiome > $exBiome) {
             $isInNewer = true;
+        } elseif ($exBiome > $inBiome) {
+            $isInNewer = false;
+        } elseif ($inSapTotal > $exSapTotal * 1.05) {
+            $isInNewer = true;
+        } elseif ($exSapTotal > $inSapTotal * 1.05) {
+            $isInNewer = false;
         } else {
             $exSavedAt = floatval($ex['lastSavedAt'] ?? 0);
             $inSavedAt = floatval($in['lastSavedAt'] ?? 0);

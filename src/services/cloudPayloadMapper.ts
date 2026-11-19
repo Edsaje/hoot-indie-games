@@ -311,7 +311,7 @@ export function gatherLocalSaveData(): UserCloudSavePayload {
  */
 export function applyCloudSaveToLocalStorage(
   cloudData: UserCloudSavePayload,
-  options?: { strategy?: 'merge' | 'replace' }
+  options?: { strategy?: 'merge' | 'replace'; odysseyStrategy?: 'merge' | 'replace' }
 ): void {
   if (typeof window === 'undefined' || !window.localStorage || !cloudData) return;
   const isReplace = options?.strategy === 'replace';
@@ -491,7 +491,10 @@ export function applyCloudSaveToLocalStorage(
     if (cloudData.odysseyState && typeof cloudData.odysseyState === 'object') {
       const localOdysseyRaw = localStorage.getItem(STORAGE_ODYSSEY);
       const localOdyssey = localOdysseyRaw ? JSON.parse(localOdysseyRaw) : null;
-      const mergedOdyssey = mergeOdysseySaveStates(localOdyssey, cloudData.odysseyState, isReplace);
+      // Ne jamais écraser une progression locale plus avancée lors d'une simple connexion de compte :
+      // la monotonicité doit toujours prévaloir, sauf si un reset explicite de l'Odyssée a été demandé
+      const forceOdysseyReplace = options?.odysseyStrategy === 'replace';
+      const mergedOdyssey = mergeOdysseySaveStates(localOdyssey, cloudData.odysseyState, forceOdysseyReplace);
       if (mergedOdyssey) {
         localStorage.setItem(STORAGE_ODYSSEY, JSON.stringify(mergedOdyssey));
         window.dispatchEvent(new CustomEvent('hoot_odyssey_updated', { detail: { ...mergedOdyssey, fromCloud: true } }));

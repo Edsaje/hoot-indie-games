@@ -52,9 +52,13 @@ export function mergeOdysseySaveStates(
 
   // 1. Détermination de la source maîtresse
   let isLocalPrimary: boolean;
-  if (localBiome > cloudBiome + 1 || (localSapTotal > 10000 && cloudSapTotal < localSapTotal * 0.1)) {
+  if (localBiome > cloudBiome) {
     isLocalPrimary = true;
-  } else if (cloudBiome > localBiome + 1 || (cloudSapTotal > 10000 && localSapTotal < cloudSapTotal * 0.1)) {
+  } else if (cloudBiome > localBiome) {
+    isLocalPrimary = false;
+  } else if (localSapTotal > cloudSapTotal * 1.05) {
+    isLocalPrimary = true;
+  } else if (cloudSapTotal > localSapTotal * 1.05) {
     isLocalPrimary = false;
   } else {
     isLocalPrimary = localSavedAt >= cloudSavedAt;
