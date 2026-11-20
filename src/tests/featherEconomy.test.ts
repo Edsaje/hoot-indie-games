@@ -15,7 +15,9 @@ describe('featherEconomy — Économie des Plumes d’Or, Cooldowns & Boutique',
 
   it('formate correctement les Plumes d’Or avec séparateurs ou symbole infini pour le créateur', () => {
     expect(formatFeathers(0)).toBe('0');
-    expect(formatFeathers(1500)).toBe('1\u202f500'); // Ou "1 500" selon locale fr
+    expect(formatFeathers(1500)).toBe((1500).toLocaleString());
+    expect(formatFeathers(1500, 'fr-FR')).toBe('1\u202f500');
+    expect(formatFeathers(1500, 'en-US')).toBe('1,500');
     expect(formatFeathers(Infinity)).toBe('∞');
     expect(formatFeathers(99999999999)).toBe('∞');
   });

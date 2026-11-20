@@ -194,11 +194,11 @@ export function isLocalAdminProfile(): boolean {
  * Affiche le symbole '∞' si le compte dispose de plumes infinies (compte administrateur/créateur),
  * sinon formate le nombre avec séparateurs de milliers.
  */
-export function formatFeathers(amount: number): string {
+export function formatFeathers(amount: number, locale?: string): string {
   if (amount === Infinity || !isFinite(amount) || amount >= 999999999) {
     return '∞';
   }
-  return amount.toLocaleString();
+  return amount.toLocaleString(locale);
 }
 
 /**

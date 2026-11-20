@@ -32,23 +32,23 @@ jobs:
           php-version: '8.3'
           extensions: mbstring, json, curl
 
-      - name: 📦 Installation des dépendances npm
+      - name: "📦 Installation des dépendances npm"
         run: npm ci
 
-      - name: 🔍 Étape 1 : Analyse Statique & Linting (Oxlint)
+      - name: "🔍 Étape 1 : Analyse Statique & Linting (Oxlint)"
         run: npm run lint
 
-      - name: 📐 Étape 2 : Validation des Types TypeScript (tsc -b)
+      - name: "📐 Étape 2 : Validation des Types TypeScript (tsc -b)"
         run: npx tsc -b
 
-      - name: 🛡️ Étape 3 : Audit d'Intégrité de Données (Règle Zéro Hallucination & Cartes)
+      - name: "🛡️ Étape 3 : Audit d'Intégrité de Données (Règle Zéro Hallucination & Cartes)"
         run: npm run audit-db && npm run audit-cards
 
-      - name: ⚡ Étape 4 : Tests Unitaires Frontend (Vitest)
+      - name: "⚡ Étape 4 : Tests Unitaires Frontend (Vitest)"
         run: npm test
 
-      - name: 🛡️ Étape 5 : Tests Unitaires Backend & Sécurité (PHP)
+      - name: "🛡️ Étape 5 : Tests Unitaires Backend & Sécurité (PHP)"
         run: php tests/run_php_tests.php
 
-      - name: 🏗️ Étape 6 : Compilation Production Vite
+      - name: "🏗️ Étape 6 : Compilation Production Vite"
         run: npm run build
