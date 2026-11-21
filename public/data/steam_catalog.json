@@ -93744,5 +93744,75 @@
     "addedAt": "2026-11-12",
     "steamAppId": 5115730,
     "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5115730/1ef889dad516bf83b440e2ba4ac21d44e2478645/header.jpg?t=1794422708"
+  },
+  {
+    "id": "boris-the-second-sun",
+    "title": "Boris & the Second Sun",
+    "releaseYear": 2026,
+    "genre": [
+      "Puzzle"
+    ],
+    "artStyle": {
+      "fr": "2D Dessiné à la main",
+      "en": "2D Hand-drawn"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "ChamomillaGames",
+    "steamUrl": "https://store.steampowered.com/app/5477930/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/c46744d46939a64a4c003ff774be20c6b7a50b89/ss_c46744d46939a64a4c003ff774be20c6b7a50b89.1920x1080.jpg?t=1792933084",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/f30796dccf5896598b3fe439e6c5850751067c8e/ss_f30796dccf5896598b3fe439e6c5850751067c8e.1920x1080.jpg?t=1792933084",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/2a15b742da815c048e926d28308201b0d5c6726c/ss_2a15b742da815c048e926d28308201b0d5c6726c.1920x1080.jpg?t=1792933084",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/45b4a99923261a697168d6b4128d0de31a2d7edf/ss_45b4a99923261a697168d6b4128d0de31a2d7edf.1920x1080.jpg?t=1792933084",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/036799a9da7961c07b8d98f729926da1a1704304/ss_036799a9da7961c07b8d98f729926da1a1704304.1920x1080.jpg?t=1792933084",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/2a15b742da815c048e926d28308201b0d5c6726c/ss_2a15b742da815c048e926d28308201b0d5c6726c.1920x1080.jpg?t=1792933084"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Your cat borrowed eight million, built a second sun in the bathroom, and named you guarantor. An absurd comedy visual novel with dubious contracts, a bathtub republic, a turn-based solar puzzle, and three ways to survive the evening.",
+        "en": "Your cat borrowed eight million, built a second sun in the bathroom, and named you guarantor. An absurd comedy visual novel with dubious contracts, a bathtub republic, a turn-based solar puzzle, and three ways to survive the evening."
+      }
+    },
+    "addedAt": "2026-11-21",
+    "steamAppId": 5477930,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/eabce82382c3e24104d3e69422d14f89f09dc89a/header.jpg?t=1792933084"
+  },
+  {
+    "id": "too-ez",
+    "title": "TOO EZ!",
+    "releaseYear": 2026,
+    "genre": [
+      "Action"
+    ],
+    "artStyle": {
+      "fr": "3D Stylisée",
+      "en": "Stylized 3D"
+    },
+    "camera": {
+      "fr": "Vue de côté 2D",
+      "en": "2D Side-scroller"
+    },
+    "developer": "Magnos Games",
+    "steamUrl": "https://store.steampowered.com/app/5503160/",
+    "screenshots": [
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/0928f15e314757b4dffdd822ccc02987386268d5/ss_0928f15e314757b4dffdd822ccc02987386268d5.1920x1080.jpg?t=1795177950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/90ca99a282f08ce2d2a17b54652dd93907fad5c7/ss_90ca99a282f08ce2d2a17b54652dd93907fad5c7.1920x1080.jpg?t=1795177950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/fda3c30bc9a40d92841f295713c8c86afdacd169/ss_fda3c30bc9a40d92841f295713c8c86afdacd169.1920x1080.jpg?t=1795177950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/16f5c93248631291e3c8cdaee467e479d7b459a5/ss_16f5c93248631291e3c8cdaee467e479d7b459a5.1920x1080.jpg?t=1795177950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/9cade2bd82779c9cf091096b9cae3a67a5dc2b5d/ss_9cade2bd82779c9cf091096b9cae3a67a5dc2b5d.1920x1080.jpg?t=1795177950",
+      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/2f5bfde218619aa63c88ebae3af050175a866c54/ss_2f5bfde218619aa63c88ebae3af050175a866c54.1920x1080.jpg?t=1795177950"
+    ],
+    "hints": {
+      "tagline": {
+        "fr": "Un clip musical illustré, et cette fois, c'est vous qui jouez ! Visez avec la souris et cliquez en rythme. C'est tout. Jamais joué à un jeu de rythme ? Commencez par TOO EZ! Vous en êtes capable. TOO EZ!",
+        "en": "An illustrated music video, and this time you play it! Aim with your mouse and click to the beat. That's it. New to rhythm games? Start with TOO EZ! You can do it. TOO EZ!"
+      }
+    },
+    "addedAt": "2026-11-21",
+    "steamAppId": 5503160,
+    "headerImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/bff1ea957fe6ea5610a4e2bb4b1c4e8f997fd53c/header.jpg?t=1795177950"
   }
 ]

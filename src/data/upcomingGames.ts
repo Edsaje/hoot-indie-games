@@ -549,63 +549,71 @@ export const UPCOMING_INDIE_GAMES: UpcomingGame[] = [
     "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5373980/37a96b3e5ef52e540d69568c568e9cf74364a6eb/header.jpg?t=1792486527"
   },
   {
-    "id": "boris-the-second-sun",
-    "title": "Boris & the Second Sun",
-    "developer": "ChamomillaGames",
-    "publisher": "ChamomillaGames",
+    "id": "egg-souls",
+    "title": "Egg Souls",
+    "developer": "LeafX Studio",
+    "publisher": "LeafX Studio",
     "expectedDate": {
-      "fr": "Prochainement",
-      "en": "9 Nov, 2026"
+      "fr": "22 nov. 2026",
+      "en": "22 Nov, 2026"
     },
     "genres": [
       {
-        "fr": "Puzzle",
-        "en": "Puzzle"
+        "fr": "Aventure",
+        "en": "Aventure"
+      },
+      {
+        "fr": "Indépendant",
+        "en": "Indépendant"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5477930/",
+    "steamUrl": "https://store.steampowered.com/app/3953900/",
     "description": {
-      "fr": "Your cat borrowed eight million, built a second sun in the bathroom, and named you guarantor. An absurd comedy visual novel with dubious contracts, a bathtub republic, a turn-based solar puzzle, and three ways to survive the evening.",
-      "en": "Your cat borrowed eight million, built a second sun in the bathroom, and named you guarantor. An absurd comedy visual novel with dubious contracts, a bathtub republic, a turn-based solar puzzle, and three ways to survive the evening."
+      "fr": "Nobody believed in the egg. Can you prove that it will reach the nest?",
+      "en": "Nobody believed in the egg. Can you prove that it will reach the nest?"
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 93,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5477930/eabce82382c3e24104d3e69422d14f89f09dc89a/header.jpg?t=1792933084"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3953900/877a659ab9fecbff0d4805b2e3adb7e7e18bd5d0/header.jpg?t=1794937337"
   },
   {
-    "id": "too-ez",
-    "title": "TOO EZ!",
-    "developer": "Magnos Games",
-    "publisher": "Magnos Games",
+    "id": "gorse-roll",
+    "title": "Gorse Roll",
+    "developer": "Oliver Lenz, Feral Rebel Works",
+    "publisher": "Oliver Lenz, Feral Rebel Works",
     "expectedDate": {
-      "fr": "20 nov. 2026",
-      "en": "20 nov. 2026"
+      "fr": "22 nov. 2026",
+      "en": "Nov 22, 2026"
     },
     "genres": [
       {
         "fr": "Action",
         "en": "Action"
+      },
+      {
+        "fr": "Stratégie",
+        "en": "Stratégie"
       }
     ],
     "platforms": [
       "PC"
     ],
-    "steamUrl": "https://store.steampowered.com/app/5503160/",
+    "steamUrl": "https://store.steampowered.com/app/5544230/",
     "description": {
-      "fr": "Un clip musical illustré, et cette fois, c'est vous qui jouez ! Visez avec la souris et cliquez en rythme. C'est tout. Jamais joué à un jeu de rythme ? Commencez par TOO EZ! Vous en êtes capable. TOO EZ!",
-      "en": "An illustrated music video, and this time you play it! Aim with your mouse and click to the beat. That's it. New to rhythm games? Start with TOO EZ! You can do it. TOO EZ!"
+      "fr": "Steer a ray-traced glass marble along floating roads of ice, mirrors and spinning floors. Race the clock through five worlds, hunt hidden sun crystals to earn a sixth, then build your own courses in an editor that traces every change as you make it.",
+      "en": "Steer a ray-traced glass marble along floating roads of ice, mirrors and spinning floors. Race the clock through five worlds, hunt hidden sun crystals to earn a sixth, then build your own courses in an editor that traces every change as you make it."
     },
     "highlight": {
       "fr": "Sélectionné parmi les jeux indépendants les plus attendus sur Steam.",
       "en": "Highlighted among the most anticipated indie titles on Steam."
     },
     "hypeScore": 94,
-    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5503160/bff1ea957fe6ea5610a4e2bb4b1c4e8f997fd53c/header.jpg?t=1794059033"
+    "coverUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5544230/d7bd4ca9511606b3f67c9fd52ba2f0a96ed30ab8/header.jpg?t=1794857004"
   }
 ];

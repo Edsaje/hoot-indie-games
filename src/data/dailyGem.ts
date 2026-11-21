@@ -1,44 +1,46 @@
 import type { Game } from '../types/game';
 
-export const TODAY_DATE = "2026-11-20";
+export const TODAY_DATE = "2026-11-21";
 
 export const TODAY_DAILY_GEM: Game = {
-  "id": "the-witness",
-  "title": "The Witness",
-  "releaseYear": 2016,
-  "releaseDate": "2016-01-26",
+  "id": "graveyard-keeper",
+  "title": "Graveyard Keeper",
+  "releaseYear": 2018,
+  "releaseDate": "2018-08-15",
   "genre": [
-    "Puzzle",
-    "Exploration",
-    "Mystère"
+    "Gestion",
+    "RPG",
+    "Simulation",
+    "Artisanat",
+    "Dark Fantasy"
   ],
   "artStyle": {
-    "fr": "3D Stylisée",
-    "en": "Stylized 3D"
+    "fr": "Pixel Art",
+    "en": "Pixel Art"
   },
   "camera": {
-    "fr": "Première personne",
-    "en": "First-Person"
+    "fr": "Vue du dessus 2D",
+    "en": "2D Top-down"
   },
-  "developer": "Thekla, Inc.",
-  "steamUrl": "https://store.steampowered.com/app/210970/",
+  "developer": "Lazy Bear Games",
+  "steamUrl": "https://store.steampowered.com/app/599140/",
   "screenshots": [
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/210970/ss_9c73ac83c8acfb69db6166f239fdba2ffa099b32.1920x1080.jpg?t=1720810823",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/210970/ss_6a7964a4dede8ad7d8b4e413e8b291defbbaa55b.1920x1080.jpg?t=1720810823",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/210970/ss_583fdbf6aa66a179d60a2261bab7b10c102e36e8.1920x1080.jpg?t=1720810823",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/210970/ss_05033717114ac8a697fbf45c149d26bb1cfc6893.1920x1080.jpg?t=1720810823",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/210970/ss_86c4e2f0fd7cc62d3bfbc4a6cd8f7423650610bb.1920x1080.jpg?t=1720810823",
-    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/210970/ss_fabb0939200a1f2bbb40b775c8e07645f21dc44a.1920x1080.jpg?t=1720810823"
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/599140/ss_7616d4343808620c0853a9ee5f1e21597a20b042.1920x1080.jpg?t=1789490186",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/599140/ss_9533ec3b7abd3300e9873dcd0d2bd5794a8fe54b.1920x1080.jpg?t=1789490186",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/599140/ss_13f5648759859d6e681200be67581ca3cc4aecda.1920x1080.jpg?t=1789490186",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/599140/ss_2edf1779ad9992da1ae8f0f982a80f8945506154.1920x1080.jpg?t=1789490186",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/599140/ss_a929a220c5acd0ed33e47eda1448fcd2347dd718.1920x1080.jpg?t=1789490186",
+    "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/599140/ss_ed94df58a35110c78a5de4ea20a6922a5f13aaa9.1920x1080.jpg?t=1789490186"
   ],
   "hints": {
     "tagline": {
-      "fr": "Percez les secrets d'une île mystérieuse et solitaire en résolvant des centaines de tracés énigmatiques.",
-      "en": "An open-world puzzle game with dozens of locations to explore and over 500 puzzles on a quiet, beautiful island.",
-      "es": "Un juego de puzles en mundo abierto con más de 500 ingeniosos acertijos en una isla solitaria y hermosa.",
-      "de": "Erkunde eine friedliche, malerische Insel und löse hunderte von cleveren Linienrätseln in deinem eigenen Rhythmus.",
-      "ja": "美しく静寂な島を自由に巡り、世界そのものに隠された500以上の直線パズルを解き明かす傑作オープンワールド。",
-      "pt-BR": "Desvende os segredos de uma ilha solitária e fascinante resolvendo centenas de labirintos reflexivos."
+      "fr": "Gérez un cimetière médiéval en jonglant avec des dilemmes moraux douteux et une bonne dose d'humour noir.",
+      "en": "Build and manage a medieval graveyard while making ethically questionable decisions in this dark comedy sim.",
+      "es": "Gestiona un cementerio medieval, optimiza recursos y toma decisiones éticamente dudosas con humor negro.",
+      "de": "Leite einen mittelalterlichen Friedhof mit fragwürdiger Moral, finsterem Witz und cleverem Handwerk.",
+      "ja": "中世の墓守となり、遺体の埋葬から臓器の密売まで倫理を問われる選択を重ねながら発展させるブラックコメディ経営シム。",
+      "pt-BR": "Administre um cemitério medieval enfrentando dilemas éticos duvidosos com muito humor negro e comércio."
     },
-    "composer": "Wabi Sabi Sound"
+    "composer": "Hamza El Hamri"
   }
 };
